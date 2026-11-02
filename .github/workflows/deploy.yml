@@ -1,0 +1,61 @@
+name: Déployer
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - backend/**
+      - infrastructure/**
+      - frontend/**
+      - LICENCES.md
+      - .github/workflows/deploy.yml
+  workflow_dispatch:
+
+concurrency:
+  group: production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+          cache: pip
+          cache-dependency-path: backend/requirements*.txt
+
+      - name: Installer les dépendances
+        working-directory: backend
+        run: pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Lancer les tests
+        working-directory: backend
+        run: python -m pytest
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Préparer la connexion SSH
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/id_ed25519
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/id_ed25519
+
+      # La clé est limitée côté serveur à l'exécution de cdp-deploy
+      - name: Déployer
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+        run: ssh -o BatchMode=yes "deploy@$DEPLOY_HOST"

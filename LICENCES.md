@@ -92,3 +92,4 @@ Ces éléments servent au backend et ne sont pas inclus dans le jeu exporté. Le
 | Service | Version | Licence |
 | --- | --- | --- |
 | PostgreSQL (`infrastructure/docker-compose.yml`) | 17 | PostgreSQL License |
+| Caddy (`frontend/Dockerfile`) | 2 | Apache 2.0 |
