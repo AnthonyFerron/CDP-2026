@@ -1,0 +1,6 @@
+# Cache et imports de Godot, régénérés à l'ouverture du projet
+.godot/
+/android/
+
+# Exports du jeu
+/build/
