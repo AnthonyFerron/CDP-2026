@@ -39,19 +39,27 @@ Les touches suivent la position physique sur le clavier : ZQSD en AZERTY, WASD e
 | `frontend/scripts/` | Scripts partagés qui n'appartiennent à aucune scène |
 | `backend/` | API Python |
 | `docs/` | Documentation technique |
-| `infrastructure/` | Base de données locale avec Docker |
+| `infrastructure/` | Base de données locale et production avec Docker |
 
 Un script propre à une scène se range à côté de celle-ci. Les fichiers et dossiers sont nommés en `snake_case`.
 
 ## Hébergement
 
-Le jeu est publié sur <https://anthonyferron.github.io/CDP-2026/> à chaque push sur `main`, par le workflow `.github/workflows/deploy-web.yml`. Il exporte le préréglage `Web` de `frontend/export_presets.cfg`, à versionner sans jamais y laisser de mot de passe ou de chemin local.
+Le jeu est publié sur <https://codequest.anthonyferron.com>, avec l'API sous `/api/` sur le même domaine. Le serveur exporte le préréglage `Web` de `frontend/export_presets.cfg`, à versionner sans jamais y laisser de mot de passe ou de chemin local.
 
-Pour une mise à jour de Godot, changer `GODOT_VERSION` dans le workflow.
+Pour une mise à jour de Godot, changer `GODOT_VERSION` dans `frontend/Dockerfile`, ainsi que dans `.github/workflows/deploy-web.yml`, qui publie sur GitHub Pages et ne se lance plus que manuellement.
 
 ## Licences
 
 `LICENCES.md` liste tout ce que le projet utilise. Ajouter une ligne pour chaque modèle, texture, son, police ou bibliothèque venant de l'extérieur, avant de le commiter.
+
+## Déploiement
+
+Chaque push sur `main` qui modifie `backend/`, `frontend/` ou `infrastructure/` lance les tests de l'API, puis déploie le jeu et l'API sur le serveur de production avec Docker Compose (voir `.github/workflows/deploy.yml`). Si les tests échouent, rien n'est déployé.
+
+Le serveur se prépare une seule fois avec `sudo bash infrastructure/setup-server.sh`, qui affiche les secrets à créer dans GitHub. Les secrets de production se trouvent dans `/opt/cdp-2026/.env` et ne sont jamais versionnés. Après avoir modifié ce fichier, relancer `cdp-deploy` en tant qu'utilisateur `deploy`.
+
+Le domaine est défini par `SITE_ADDRESS` dans ce fichier. Il pointe vers le serveur avec un enregistrement DNS sans proxy Cloudflare, et Caddy obtient le certificat HTTPS tout seul.
 
 ## Travailler avec Git
 

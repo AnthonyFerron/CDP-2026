@@ -1,0 +1,8 @@
+*
+!frontend
+!infrastructure/Caddyfile
+!LICENCES.md
+frontend/.godot
+frontend/build
+frontend/Dockerfile
+frontend/Dockerfile.dockerignore

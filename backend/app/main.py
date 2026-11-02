@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -29,7 +30,10 @@ def database_health():
         }
 
     except SQLAlchemyError:
-        return {
-            "status": "error",
-            "database": "disconnected"
-        }
+        return JSONResponse(
+            status_code=503,
+            content={
+                "status": "error",
+                "database": "disconnected"
+            }
+        )
