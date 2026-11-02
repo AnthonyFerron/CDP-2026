@@ -1,0 +1,74 @@
+name: Déployer le jeu web
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+env:
+  GODOT_VERSION: 4.7.2
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          lfs: true
+
+      - name: Restaurer Godot depuis le cache
+        id: godot-cache
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/godot
+            ~/.local/share/godot/export_templates
+          key: godot-${{ env.GODOT_VERSION }}-web
+
+      - name: Installer Godot et les modèles d'export web
+        if: steps.godot-cache.outputs.cache-hit != 'true'
+        run: |
+          base="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable"
+          curl -fsSL -o godot.zip "$base/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          unzip -q godot.zip -d ~/godot
+          curl -fsSL -o templates.tpz "$base/Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
+          templates=~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+          mkdir -p "$templates"
+          unzip -q -j templates.tpz 'templates/web_nothreads_*' 'templates/version.txt' -d "$templates"
+
+      - name: Exporter le jeu
+        run: |
+          godot="$HOME/godot/Godot_v${GODOT_VERSION}-stable_linux.x86_64"
+          mkdir -p frontend/build/web
+          "$godot" --headless --path frontend --import
+          "$godot" --headless --path frontend --export-release "Web" build/web/index.html
+          test -f frontend/build/web/index.html
+
+      - name: Joindre les licences au site
+        run: |
+          base="https://raw.githubusercontent.com/godotengine/godot/${GODOT_VERSION}-stable"
+          cp LICENCES.md frontend/build/web/LICENCES.md
+          curl -fsSL -o frontend/build/web/GODOT_LICENSE.txt "$base/LICENSE.txt"
+          curl -fsSL -o frontend/build/web/GODOT_COPYRIGHT.txt "$base/COPYRIGHT.txt"
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: frontend/build/web
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
