@@ -11,7 +11,7 @@ Jeu 3D développé avec Godot 4.7 en GDScript.
    git lfs install
    ```
 
-3. Cloner le dépôt, puis importer `project.godot` depuis le gestionnaire de projets de Godot.
+3. Cloner le dépôt, puis importer `frontend/project.godot` depuis le gestionnaire de projets de Godot.
 4. Lancer le jeu avec `F5`.
 
 ## Commandes
@@ -31,13 +31,27 @@ Les touches suivent la position physique sur le clavier : ZQSD en AZERTY, WASD e
 
 | Dossier | Contenu |
 | --- | --- |
-| `assets/` | Modèles, textures, matériaux, audio et polices |
-| `scenes/levels/` | Niveaux |
-| `scenes/player/` | Personnage joueur (scène et script) |
-| `scenes/ui/` | Interfaces |
-| `scripts/` | Scripts partagés qui n'appartiennent à aucune scène |
+| `frontend/` | Projet Godot |
+| `frontend/assets/` | Modèles, textures, matériaux, audio et polices |
+| `frontend/scenes/levels/` | Niveaux |
+| `frontend/scenes/player/` | Personnage joueur (scène et script) |
+| `frontend/scenes/ui/` | Interfaces |
+| `frontend/scripts/` | Scripts partagés qui n'appartiennent à aucune scène |
+| `backend/` | API Python |
+| `docs/` | Documentation technique |
+| `infrastructure/` | Base de données locale avec Docker |
 
 Un script propre à une scène se range à côté de celle-ci. Les fichiers et dossiers sont nommés en `snake_case`.
+
+## Hébergement
+
+Le jeu est publié sur <https://anthonyferron.github.io/CDP-2026/> à chaque push sur `main`, par le workflow `.github/workflows/deploy-web.yml`. Il exporte le préréglage `Web` de `frontend/export_presets.cfg`, à versionner sans jamais y laisser de mot de passe ou de chemin local.
+
+Pour une mise à jour de Godot, changer `GODOT_VERSION` dans le workflow.
+
+## Licences
+
+`LICENCES.md` liste tout ce que le projet utilise. Ajouter une ligne pour chaque modèle, texture, son, police ou bibliothèque venant de l'extérieur, avant de le commiter.
 
 ## Travailler avec Git
 

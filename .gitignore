@@ -3,7 +3,7 @@
 /android/
 
 # Exports du jeu
-/build/
+**/build/
 
 # Godot
 **/.godot/
