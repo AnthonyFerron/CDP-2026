@@ -9,13 +9,27 @@ Liste de tout ce que le projet utilise et qui n'a pas été créé pour lui. À 
 | Élément | Origine | Licence |
 | --- | --- | --- |
 | Code GDScript, scènes, `icon.svg` | Créés pour le projet | Aucune licence choisie : tous droits réservés par défaut |
-| Modèles, textures, sons, polices | Aucun pour le moment | Sans objet |
+| Modèles 3D et leurs textures | Kits Kenney, listés ci-dessous | CC0 1.0 |
+| Sons, polices | Aucun pour le moment | Sans objet |
 
 Pour chaque modèle, texture, son ou police venant de l'extérieur, ajouter une ligne ici avec son auteur, sa source et sa licence.
 
 | Fichier | Auteur | Source | Licence |
 | --- | --- | --- | --- |
-| Aucun | | | |
+| `frontend/assets/models/kenney/3d_road_tiles/` : 3D Road Tiles | Kenney Vleugels pour Kenney | [kenney.nl](https://kenney.nl/assets) | CC0 1.0 |
+| `frontend/assets/models/kenney/castle_kit/` : Castle Kit 2.0 | Kenney | [kenney.nl](https://kenney.nl/assets) | CC0 1.0 |
+| `frontend/assets/models/kenney/fantasy_town_kit/` : Fantasy Town Kit 2.0 | Kenney | [kenney.nl](https://kenney.nl/assets) | CC0 1.0 |
+| `frontend/assets/models/kenney/food_kit/` : Food Kit 2.0 | Kenney | [kenney.nl](https://kenney.nl/assets) | CC0 1.0 |
+| `frontend/assets/models/kenney/furniture_kit/` : Furniture Kit 2.0 | Kenney | [kenney.nl](https://kenney.nl/assets) | CC0 1.0 |
+| `frontend/assets/models/kenney/graveyard_kit/` : Graveyard Kit 5.0 | Kenney | [kenney.nl](https://kenney.nl/assets) | CC0 1.0 |
+| `frontend/assets/models/kenney/mini_arena/` : Mini Arena 1.1 | Kenney, Tony Schär | [kenney.nl](https://kenney.nl/assets) | CC0 1.0 |
+| `frontend/assets/models/kenney/mini_dungeon/` : Mini Dungeon 2.0 | Kenney | [kenney.nl](https://kenney.nl/assets) | CC0 1.0 |
+| `frontend/assets/models/kenney/mini_forest/` : Mini Forest 1.0 | Kenney | [kenney.nl](https://kenney.nl/assets) | CC0 1.0 |
+| `frontend/assets/models/kenney/modular_dungeon_kit/` : Modular Dungeon Kit 2.1 | Kenney | [kenney.nl](https://kenney.nl/assets) | CC0 1.0 |
+| `frontend/assets/models/kenney/nature_kit/` : Nature Kit 2.1 | Kenney | [kenney.nl](https://kenney.nl/assets) | CC0 1.0 |
+| `frontend/assets/models/kenney/survival_kit/` : Survival Kit 2.0 | Kenney | [kenney.nl](https://kenney.nl/assets) | CC0 1.0 |
+
+Le fichier `License.txt` de chaque kit est conservé dans son dossier. Le créditer n'est pas obligatoire, mais Kenney le demande à titre de soutien.
 
 ### Moteur
 
