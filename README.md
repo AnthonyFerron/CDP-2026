@@ -23,6 +23,7 @@ Les touches suivent la position physique sur le clavier : ZQSD en AZERTY, WASD e
 | Se déplacer | ZQSD / WASD |
 | Sprinter | Maj gauche |
 | Sauter | Espace |
+| Interagir | E |
 | Regarder autour | Souris |
 | Libérer la souris | Échap |
 | Reprendre la souris | Clic |

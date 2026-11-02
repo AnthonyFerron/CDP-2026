@@ -1,6 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scenes/player/player.gd" id="1_player"]
+[ext_resource type="Script" path="res://scripts/interaction_controller.gd" id="2_interaction"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
 radius = 0.4
@@ -48,3 +49,6 @@ margin = 0.1
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot/SpringArm3D"]
 current = true
+
+[node name="Interaction" type="Node" parent="."]
+script = ExtResource("2_interaction")
