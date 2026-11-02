@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://bodd6xijjn3ka"]
+
+[ext_resource type="Texture2D" uid="uid://b4muouknv130a" path="res://assets/textures/kenney_prototype-textures/PNG/Green/texture_02.png" id="1_suq4g"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_suq4g"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w1ig2"]
+albedo_texture = ExtResource("1_suq4g")
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_x8yxi"]
+top_radius = 12.550781
+bottom_radius = 12.550781
+height = 41.70117
+
+[node name="Node3D" type="Node3D" unique_id=1882103080]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=49359281]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.42620564, -14.45747, -5.2070293)
+material_override = SubResource("StandardMaterial3D_w1ig2")
+mesh = SubResource("CylinderMesh_x8yxi")
+
+[node name="Player" parent="." unique_id=1019453717 instance=ExtResource("2_suq4g")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.02779007, 24.176119, -9.903248)
