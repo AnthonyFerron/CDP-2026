@@ -56,7 +56,7 @@ Le volcan entre en éruption au bout de 60 minutes (`GameState.TOTAL_TIME`). Le 
 | Plaine | La discussion oubliée : six fragments cachés dans les livres de la bibliothèque, à remettre dans l'ordre sur la tablette | Projenomicon | Ordre de la conversation : restauration à organiser, objectifs, inventaire, planning, suivi, vérification et clôture |
 | Désert | Les runes de l'algorithme : runes à ramasser ou à dégager du sable en maintenant E, à poser sur la table ronde de la cave | Algonicon | Jarre : TANT QUE, Puiser, Porter. Porte : SI, Ouvrir, SINON. « POUR » et « Fermer » sont des leurres |
 | Marais | Le tombeau des lettres oubliées : mécanisme à cinq cercles dans la crypte souterraine | Logiconomicon | CODIA décalé de +3, −3, +3, −3, +3 : **FLGFD** |
-| Village | À venir | Codonomicon | — |
+| Village | Les cinq codes oubliés : dix fragments de papier cachés dans la mairie (touche I pour les relire), cinq extraits de code à résoudre dans l'ordre sur le dispositif du bureau du maire | Codonomicon | HTML : **3**. CSS : **green**. Python : **10**. PHP : **2**. TypeScript : **12** |
 
 ## Organisation du projet
 

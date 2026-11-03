@@ -6,6 +6,7 @@ pour un changement durable, modifier ce script puis le relancer depuis le dossie
     python tools/build_village.py
 """
 
+import math
 import random
 from pathlib import Path
 
@@ -177,7 +178,120 @@ def build_mills(scene):
     scene.add_box((30.0, 4.0 + 5.0, -30.0), (3.0, 10.0, 3.0))
 
 
+# Intérieur de la mairie, sous la carte : l'accueil au rez-de-chaussée, le bureau du maire à l'étage,
+# et la salle secrète derrière le mur ouest du bureau. Coordonnées locales au nœud Interior de village.tscn.
+HALL_OUTPUT = OUTPUT.parent / "village_hall.tscn"
+OFFICE_FLOOR = 4.5
+# Boîte englobante (position, taille) de chaque meuble du kit, à l'échelle 1 : leur origine est dans un coin.
+FURNITURE_BOXES = {
+    "furniture_kit/desk": ((-0.01, -0.38), (0.73, 0.56)),
+    "furniture_kit/bookcaseClosedWide": ((0.0, -0.25), (0.8, 0.25)),
+    "furniture_kit/bookcaseOpen": ((0.0, -0.25), (0.4, 0.25)),
+    "furniture_kit/bookcaseClosedDoors": ((-0.16, -0.25), (0.56, 0.27)),
+    "furniture_kit/kitchenCabinetDrawer": ((0.0, -0.45), (0.43, 0.48)),
+    "furniture_kit/sideTableDrawers": ((-0.01, -0.21), (0.53, 0.39)),
+    "furniture_kit/tableCloth": ((0.0, -0.45), (0.84, 0.45)),
+    "furniture_kit/chairDesk": ((-0.17, -0.28), (0.48, 0.44)),
+    "furniture_kit/chair": ((0.0, -0.2), (0.2, 0.2)),
+    "furniture_kit/bench": ((0.0, -0.2), (0.4, 0.2)),
+    "furniture_kit/rugRectangle": ((0.0, -0.92), (1.57, 0.92)),
+    "furniture_kit/coatRackStanding": ((-0.14, -0.14), (0.27, 0.27)),
+    "furniture_kit/cardboardBoxClosed": ((0.0, -0.21), (0.21, 0.21)),
+    "furniture_kit/books": ((0.0, -0.09), (0.15, 0.09)),
+    "graveyard_kit/altar-stone": ((-0.52, -0.33), (1.04, 0.65)),
+    "graveyard_kit/candle-multiple": ((-0.12, -0.13), (0.26, 0.27)),
+    "mini_dungeon/barrel": ((-0.26, -0.26), (0.52, 0.52)),
+    "survival_kit/box-large": ((-0.13, -0.25), (0.25, 0.5)),
+}
+
+
+def furniture(scene, model, center, degrees=0.0, scale=2.6, height=None):
+    """Pose un meuble centré sur le point donné, avec une collision de sa taille si une hauteur est donnée."""
+    (px, pz), (sx, sz) = FURNITURE_BOXES[model]
+    local_x, local_z = (px + sx / 2) * scale, (pz + sz / 2) * scale
+    c, s = math.cos(math.radians(degrees)), math.sin(math.radians(degrees))
+    # Rotation autour de y : x' = c x + s z, z' = -s x + c z.
+    x = center[0] - (c * local_x + s * local_z)
+    z = center[2] - (-s * local_x + c * local_z)
+    scene.add(model, (x, center[1], z), degrees, scale)
+    if height:
+        width, depth = (sx * scale, sz * scale) if round(degrees) % 180 == 0 else (sz * scale, sx * scale)
+        scene.add_box((center[0], center[1] + height / 2, center[2]), (width, height, depth))
+
+
+def room_walls(scene, cx, cz, width, depth, base, doors, skip=(), models=("wall", "wall-detail-cross", "wall", "wall-detail-horizontal")):
+    """Murs de pierre d'une pièce, sans fenêtres : elle est sous terre. Les portes sont des couples (côté, case)."""
+    for side, index, count, center, outward in edge_tiles(cx, cz, width, depth):
+        if side in skip:
+            continue
+        if (side, index) in doors:
+            wall(scene, "wall-doorway-round", center, outward, base=base, solid=False)
+            # Montants et linteau de la porte.
+            along = (0, 1) if outward[0] else (1, 0)
+            for sign in (-1, 1):
+                size = (0.5, WALL_HEIGHT, 1.05) if outward[0] else (1.05, WALL_HEIGHT, 0.5)
+                scene.add_box((center[0] + along[0] * sign * 1.48, base + WALL_HEIGHT / 2, center[1] + along[1] * sign * 1.48), size)
+            lintel = (0.5, 1.1, 1.9) if outward[0] else (1.9, 1.1, 0.5)
+            scene.add_box((center[0], base + WALL_HEIGHT - 0.55, center[1]), lintel)
+        else:
+            wall(scene, models[(index + len(side)) % len(models)], center, outward, base=base)
+    half_w, half_d = width * TILE / 2, depth * TILE / 2
+    for sx in (-1, 1):
+        for sz in (-1, 1):
+            scene.add("fantasy_town_kit/pillar-stone", (cx + sx * half_w, base, cz + sz * half_d), 0.0, WALL_SCALE)
+
+
+def build_hall_interior():
+    scene = Scene("VillageHall")
+    # Rez-de-chaussée : l'accueil des habitants. Porte au sud, escalier le long du mur est.
+    room_walls(scene, 0.0, 0.0, 4, 3, 0.0, doors={("south", 1)})
+    furniture(scene, "furniture_kit/desk", (-2.0, 0.0, -0.6), 180.0, 2.8, height=1.1)
+    furniture(scene, "furniture_kit/chairDesk", (-2.0, 0.0, -2.2), 180.0, 2.6)
+    furniture(scene, "furniture_kit/sideTableDrawers", (0.4, 0.0, -0.8), 180.0, 2.6, height=1.0)
+    for z in (-3.5, -1.0, 1.5):
+        furniture(scene, "furniture_kit/bookcaseClosedDoors", (-7.3, 0.0, z), 90.0, 3.2, height=2.7)
+    furniture(scene, "furniture_kit/bookcaseOpen", (-3.0, 0.0, -5.4), 0.0, 3.2, height=2.8)
+    furniture(scene, "furniture_kit/bookcaseOpen", (-1.6, 0.0, -5.4), 0.0, 3.2, height=2.8)
+    furniture(scene, "furniture_kit/kitchenCabinetDrawer", (2.0, 0.0, -5.3), 0.0, 2.6, height=1.2)
+    furniture(scene, "furniture_kit/tableCloth", (-4.6, 0.0, 3.4), 0.0, 3.0, height=1.0)
+    for x, z, degrees in ((-5.8, 2.2, 0.0), (-3.4, 4.6, 180.0)):
+        furniture(scene, "furniture_kit/chair", (x, 0.0, z), degrees, 3.0)
+    for x, z in ((-5.2, 3.3), (-4.0, 3.6)):
+        furniture(scene, "furniture_kit/books", (x, 1.0, z), 30.0, 3.0)
+    for x in (1.0, 3.0):
+        furniture(scene, "furniture_kit/bench", (x, 0.0, 5.4), 0.0, 3.0, height=0.8)
+    furniture(scene, "survival_kit/box-large", (-7.0, 0.0, 4.6), 0.0, 3.6, height=0.9)
+    furniture(scene, "mini_dungeon/barrel", (-5.6, 0.0, 5.2), 0.0, 2.6, height=1.2)
+    furniture(scene, "furniture_kit/rugRectangle", (-2.0, 0.02, 2.6), 90.0, 2.6)
+    furniture(scene, "furniture_kit/coatRackStanding", (-3.6, 0.0, 5.3), 0.0, 2.6)
+
+    # Étage : le bureau du maire, avec le dispositif des cinq codes contre le mur nord.
+    room_walls(scene, 0.0, 0.0, 4, 3, OFFICE_FLOOR, doors={("west", 1)})
+    furniture(scene, "furniture_kit/desk", (-1.0, OFFICE_FLOOR, -0.6), 180.0, 2.8, height=1.1)
+    furniture(scene, "furniture_kit/chairDesk", (-1.0, OFFICE_FLOOR, -2.2), 180.0, 2.6)
+    furniture(scene, "furniture_kit/sideTableDrawers", (1.4, OFFICE_FLOOR, -0.8), 180.0, 2.6, height=1.0)
+    furniture(scene, "furniture_kit/bookcaseOpen", (-5.0, OFFICE_FLOOR, 5.4), 180.0, 3.2, height=2.8)
+    furniture(scene, "furniture_kit/bookcaseClosedDoors", (1.6, OFFICE_FLOOR, 5.4), 180.0, 3.2, height=2.7)
+    furniture(scene, "furniture_kit/kitchenCabinetDrawer", (-6.6, OFFICE_FLOOR, -5.3), 0.0, 2.6, height=1.2)
+    furniture(scene, "furniture_kit/rugRectangle", (-1.0, OFFICE_FLOOR + 0.02, 1.4), 0.0, 2.6)
+    furniture(scene, "furniture_kit/coatRackStanding", (3.6, OFFICE_FLOOR, 5.3), 0.0, 2.6)
+    for x in (-4.4, 2.4):
+        scene.add("fantasy_town_kit/banner-red", (x, OFFICE_FLOOR + 0.6, -5.6), 90.0, 3.4)
+    # Collisions du garde-corps autour de la trémie de l'escalier, dessiné dans village.tscn.
+    scene.add_box((4.5, OFFICE_FLOOR + 0.6, -1.1), (0.3, 1.2, 6.2))
+    scene.add_box((6.2, OFFICE_FLOOR + 0.6, 2.1), (3.4, 1.2, 0.3))
+
+    # Salle secrète, derrière la bibliothèque du bureau : un pupitre de pierre et des bougies.
+    room_walls(scene, -12.0, 0.0, 2, 2, OFFICE_FLOOR, doors=set(), skip=("east",))
+    furniture(scene, "graveyard_kit/altar-stone", (-12.6, OFFICE_FLOOR, 0.0), 90.0, 2.0, height=1.0)
+    for x, z in ((-14.8, -3.0), (-14.8, 3.0), (-9.6, -3.2), (-9.6, 3.2)):
+        furniture(scene, "graveyard_kit/candle-multiple", (x, OFFICE_FLOOR, z), 0.0, 2.4)
+    HALL_OUTPUT.write_text(scene.text(), encoding="utf-8", newline="\n")
+    print(f"{HALL_OUTPUT.name} : {len(scene.visuals)} modèles, {len(scene.colliders)} collisions")
+
+
 def main():
+    build_hall_interior()
     rng = random.Random(5815)
     scene = Scene("VillageProps")
     build_rampart(scene, rng)

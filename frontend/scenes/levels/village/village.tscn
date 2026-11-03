@@ -33,6 +33,16 @@
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_ash_1.wav" id="43_step1"]
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_ash_2.wav" id="44_step2"]
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_ash_3.wav" id="45_step3"]
+[ext_resource type="AudioStream" path="res://assets/audio/tablet_chime_2.wav" id="46_chime"]
+[ext_resource type="AudioStream" path="res://assets/audio/tablet_reset.wav" id="47_reject"]
+[ext_resource type="AudioStream" path="res://assets/audio/stone_door.wav" id="48_rumble"]
+[ext_resource type="PackedScene" path="res://scenes/levels/village/village_hall.tscn" id="50_hall"]
+[ext_resource type="Script" path="res://scenes/levels/village/paper_fragment.gd" id="51_fragment"]
+[ext_resource type="Script" path="res://scenes/levels/village/storage.gd" id="52_storage"]
+[ext_resource type="Script" path="res://scripts/interactable.gd" id="53_interactable"]
+[ext_resource type="PackedScene" path="res://scenes/levels/village/code_puzzle.tscn" id="54_code_puzzle"]
+[ext_resource type="PackedScene" path="res://scenes/levels/village/paper_notebook.tscn" id="55_notebook"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/furniture_kit/bookcaseClosedWide.glb" id="56_shelf"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_dusk"]
 sky_top_color = Color(0.26, 0.28, 0.42, 1)
@@ -88,6 +98,225 @@ shader_parameter/ripple_strength = 0.6
 [sub_resource type="PlaneMesh" id="PlaneMesh_stream"]
 material = SubResource("ShaderMaterial_stream")
 size = Vector2(7.5, 170)
+
+[sub_resource type="StandardMaterial3D" id="Material_wood_dark"]
+albedo_color = Color(0.3, 0.2, 0.13, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="Material_wood"]
+albedo_color = Color(0.45, 0.31, 0.2, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="Material_plaster"]
+albedo_color = Color(0.55, 0.5, 0.45, 1)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="Material_stone"]
+albedo_color = Color(0.35, 0.34, 0.36, 1)
+roughness = 1.0
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ramp"]
+size = Vector3(3, 0.3, 10.06)
+
+[sub_resource type="BoxMesh" id="BoxMesh_console"]
+material = SubResource("Material_wood_dark")
+size = Vector3(5.8, 1.1, 0.8)
+
+[sub_resource type="BoxMesh" id="BoxMesh_backboard"]
+material = SubResource("Material_stone")
+size = Vector3(5.8, 2.4, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_console"]
+size = Vector3(5.8, 3.6, 1.0)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_shelf"]
+size = Vector3(0.95, 3.0, 3.04)
+
+[sub_resource type="BoxMesh" id="BoxMesh_post"]
+material = SubResource("Material_wood_dark")
+size = Vector3(0.14, 1.1, 0.14)
+
+[sub_resource type="StandardMaterial3D" id="Material_codonomicon"]
+albedo_color = Color(0.3, 0.15, 0.5, 1)
+emission_enabled = true
+emission = Color(0.45, 0.2, 0.8, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_codonomicon"]
+material = SubResource("Material_codonomicon")
+size = Vector3(0.55, 0.14, 0.75)
+
+[sub_resource type="BoxMesh" id="BoxMesh_GroundFloor"]
+material = SubResource("Material_wood_dark")
+size = Vector3(16.6, 0.3, 12.6)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_GroundFloor"]
+size = Vector3(16.6, 0.3, 12.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_OfficeFloorWest"]
+material = SubResource("Material_wood")
+size = Vector3(12.8, 0.5, 12.6)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_OfficeFloorWest"]
+size = Vector3(12.8, 0.5, 12.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_OfficeFloorNorth"]
+material = SubResource("Material_wood")
+size = Vector3(3.8, 0.5, 2.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_OfficeFloorNorth"]
+size = Vector3(3.8, 0.5, 2.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_OfficeFloorSouth"]
+material = SubResource("Material_wood")
+size = Vector3(3.8, 0.5, 4.3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_OfficeFloorSouth"]
+size = Vector3(3.8, 0.5, 4.3)
+
+[sub_resource type="BoxMesh" id="BoxMesh_OfficeCeiling"]
+material = SubResource("Material_plaster")
+size = Vector3(16.6, 0.3, 12.6)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_OfficeCeiling"]
+size = Vector3(16.6, 0.3, 12.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_SecretFloor"]
+material = SubResource("Material_stone")
+size = Vector3(8.3, 0.5, 8.6)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_SecretFloor"]
+size = Vector3(8.3, 0.5, 8.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_SecretCeiling"]
+material = SubResource("Material_plaster")
+size = Vector3(8.3, 0.3, 8.6)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_SecretCeiling"]
+size = Vector3(8.3, 0.3, 8.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_step0"]
+material = SubResource("Material_wood")
+size = Vector3(3, 0.3, 0.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_step1"]
+material = SubResource("Material_wood")
+size = Vector3(3, 0.6, 0.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_step2"]
+material = SubResource("Material_wood")
+size = Vector3(3, 0.9, 0.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_step3"]
+material = SubResource("Material_wood")
+size = Vector3(3, 1.2, 0.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_step4"]
+material = SubResource("Material_wood")
+size = Vector3(3, 1.5, 0.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_step5"]
+material = SubResource("Material_wood")
+size = Vector3(3, 1.8, 0.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_step6"]
+material = SubResource("Material_wood")
+size = Vector3(3, 2.1, 0.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_step7"]
+material = SubResource("Material_wood")
+size = Vector3(3, 2.4, 0.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_step8"]
+material = SubResource("Material_wood")
+size = Vector3(3, 2.7, 0.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_step9"]
+material = SubResource("Material_wood")
+size = Vector3(3, 3, 0.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_step10"]
+material = SubResource("Material_wood")
+size = Vector3(3, 3.3, 0.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_step11"]
+material = SubResource("Material_wood")
+size = Vector3(3, 3.6, 0.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_step12"]
+material = SubResource("Material_wood")
+size = Vector3(3, 3.9, 0.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_step13"]
+material = SubResource("Material_wood")
+size = Vector3(3, 4.2, 0.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_step14"]
+material = SubResource("Material_wood")
+size = Vector3(3, 4.5, 0.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_rail0"]
+material = SubResource("Material_wood_dark")
+size = Vector3(0.12, 0.12, 6.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_rail1"]
+material = SubResource("Material_wood_dark")
+size = Vector3(3.3, 0.12, 0.12)
+
+[sub_resource type="StandardMaterial3D" id="Material_section0"]
+resource_local_to_scene = true
+albedo_color = Color(0.2, 0.22, 0.3, 1)
+emission_enabled = true
+emission = Color(0.4, 0.45, 0.7, 1)
+emission_energy_multiplier = 0.6
+
+[sub_resource type="BoxMesh" id="BoxMesh_section0"]
+material = SubResource("Material_section0")
+size = Vector3(0.95, 0.95, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="Material_section1"]
+resource_local_to_scene = true
+albedo_color = Color(0.2, 0.22, 0.3, 1)
+emission_enabled = true
+emission = Color(0.4, 0.45, 0.7, 1)
+emission_energy_multiplier = 0.6
+
+[sub_resource type="BoxMesh" id="BoxMesh_section1"]
+material = SubResource("Material_section1")
+size = Vector3(0.95, 0.95, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="Material_section2"]
+resource_local_to_scene = true
+albedo_color = Color(0.2, 0.22, 0.3, 1)
+emission_enabled = true
+emission = Color(0.4, 0.45, 0.7, 1)
+emission_energy_multiplier = 0.6
+
+[sub_resource type="BoxMesh" id="BoxMesh_section2"]
+material = SubResource("Material_section2")
+size = Vector3(0.95, 0.95, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="Material_section3"]
+resource_local_to_scene = true
+albedo_color = Color(0.2, 0.22, 0.3, 1)
+emission_enabled = true
+emission = Color(0.4, 0.45, 0.7, 1)
+emission_energy_multiplier = 0.6
+
+[sub_resource type="BoxMesh" id="BoxMesh_section3"]
+material = SubResource("Material_section3")
+size = Vector3(0.95, 0.95, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="Material_section4"]
+resource_local_to_scene = true
+albedo_color = Color(0.2, 0.22, 0.3, 1)
+emission_enabled = true
+emission = Color(0.4, 0.45, 0.7, 1)
+emission_energy_multiplier = 0.6
+
+[sub_resource type="BoxMesh" id="BoxMesh_section4"]
+material = SubResource("Material_section4")
+size = Vector3(0.95, 0.95, 0.06)
 
 [node name="Village" type="Node3D"]
 script = ExtResource("1_village")
@@ -249,12 +478,498 @@ text = "Le Village détruit"
 font_size = 64
 outline_size = 16
 
-[node name="PuzzleSite" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, -27)
+[node name="HallDoor" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, -20.2)
+script = ExtResource("53_interactable")
+prompt = "Entrer dans la mairie"
+radius = 3.2
+
+[node name="OutsideSpawn" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, -17.4)
+
+[node name="Interior" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -40, 0)
+
+[node name="Hall" parent="Interior" instance=ExtResource("50_hall")]
+
+[node name="Slabs" type="StaticBody3D" parent="Interior"]
+
+[node name="GroundFloor" type="MeshInstance3D" parent="Interior/Slabs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, 0)
+mesh = SubResource("BoxMesh_GroundFloor")
+
+[node name="GroundFloorShape" type="CollisionShape3D" parent="Interior/Slabs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, 0)
+shape = SubResource("BoxShape3D_GroundFloor")
+
+[node name="OfficeFloorWest" type="MeshInstance3D" parent="Interior/Slabs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.9, 4.25, 0)
+mesh = SubResource("BoxMesh_OfficeFloorWest")
+
+[node name="OfficeFloorWestShape" type="CollisionShape3D" parent="Interior/Slabs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.9, 4.25, 0)
+shape = SubResource("BoxShape3D_OfficeFloorWest")
+
+[node name="OfficeFloorNorth" type="MeshInstance3D" parent="Interior/Slabs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.4, 4.25, -5.25)
+mesh = SubResource("BoxMesh_OfficeFloorNorth")
+
+[node name="OfficeFloorNorthShape" type="CollisionShape3D" parent="Interior/Slabs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.4, 4.25, -5.25)
+shape = SubResource("BoxShape3D_OfficeFloorNorth")
+
+[node name="OfficeFloorSouth" type="MeshInstance3D" parent="Interior/Slabs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.4, 4.25, 4.15)
+mesh = SubResource("BoxMesh_OfficeFloorSouth")
+
+[node name="OfficeFloorSouthShape" type="CollisionShape3D" parent="Interior/Slabs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.4, 4.25, 4.15)
+shape = SubResource("BoxShape3D_OfficeFloorSouth")
+
+[node name="OfficeCeiling" type="MeshInstance3D" parent="Interior/Slabs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.65, 0)
+mesh = SubResource("BoxMesh_OfficeCeiling")
+
+[node name="OfficeCeilingShape" type="CollisionShape3D" parent="Interior/Slabs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.65, 0)
+shape = SubResource("BoxShape3D_OfficeCeiling")
+
+[node name="SecretFloor" type="MeshInstance3D" parent="Interior/Slabs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.15, 4.25, 0)
+mesh = SubResource("BoxMesh_SecretFloor")
+
+[node name="SecretFloorShape" type="CollisionShape3D" parent="Interior/Slabs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.15, 4.25, 0)
+shape = SubResource("BoxShape3D_SecretFloor")
+
+[node name="SecretCeiling" type="MeshInstance3D" parent="Interior/Slabs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.15, 8.65, 0)
+mesh = SubResource("BoxMesh_SecretCeiling")
+
+[node name="SecretCeilingShape" type="CollisionShape3D" parent="Interior/Slabs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.15, 8.65, 0)
+shape = SubResource("BoxShape3D_SecretCeiling")
+
+[node name="RampShape" type="CollisionShape3D" parent="Interior/Slabs"]
+transform = Transform3D(1, 0, 0, 0, 0.894427, -0.447214, 0, 0.447214, 0.894427, 6.05, 2.1158, 0.4329)
+shape = SubResource("BoxShape3D_ramp")
+
+[node name="Stairs" type="Node3D" parent="Interior"]
+
+[node name="Step0" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 0.15, 4.7)
+mesh = SubResource("BoxMesh_step0")
+
+[node name="Step1" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 0.3, 4.1)
+mesh = SubResource("BoxMesh_step1")
+
+[node name="Step2" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 0.45, 3.5)
+mesh = SubResource("BoxMesh_step2")
+
+[node name="Step3" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 0.6, 2.9)
+mesh = SubResource("BoxMesh_step3")
+
+[node name="Step4" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 0.75, 2.3)
+mesh = SubResource("BoxMesh_step4")
+
+[node name="Step5" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 0.9, 1.7)
+mesh = SubResource("BoxMesh_step5")
+
+[node name="Step6" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 1.05, 1.1)
+mesh = SubResource("BoxMesh_step6")
+
+[node name="Step7" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 1.2, 0.5)
+mesh = SubResource("BoxMesh_step7")
+
+[node name="Step8" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 1.35, -0.1)
+mesh = SubResource("BoxMesh_step8")
+
+[node name="Step9" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 1.5, -0.7)
+mesh = SubResource("BoxMesh_step9")
+
+[node name="Step10" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 1.65, -1.3)
+mesh = SubResource("BoxMesh_step10")
+
+[node name="Step11" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 1.8, -1.9)
+mesh = SubResource("BoxMesh_step11")
+
+[node name="Step12" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 1.95, -2.5)
+mesh = SubResource("BoxMesh_step12")
+
+[node name="Step13" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 2.1, -3.1)
+mesh = SubResource("BoxMesh_step13")
+
+[node name="Step14" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 2.25, -3.7)
+mesh = SubResource("BoxMesh_step14")
+
+[node name="Railing" type="Node3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.5, 0)
+
+[node name="Rail0_50" type="MeshInstance3D" parent="Interior/Railing"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.5, -1.1)
+mesh = SubResource("BoxMesh_rail0")
+
+[node name="Rail0_105" type="MeshInstance3D" parent="Interior/Railing"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 1.05, -1.1)
+mesh = SubResource("BoxMesh_rail0")
+
+[node name="Post0_0" type="MeshInstance3D" parent="Interior/Railing"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.55, -4.2)
+mesh = SubResource("BoxMesh_post")
+
+[node name="Post0_1" type="MeshInstance3D" parent="Interior/Railing"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.55, -3.16667)
+mesh = SubResource("BoxMesh_post")
+
+[node name="Post0_2" type="MeshInstance3D" parent="Interior/Railing"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.55, -2.13333)
+mesh = SubResource("BoxMesh_post")
+
+[node name="Post0_3" type="MeshInstance3D" parent="Interior/Railing"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.55, -1.1)
+mesh = SubResource("BoxMesh_post")
+
+[node name="Post0_4" type="MeshInstance3D" parent="Interior/Railing"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.55, -0.0666667)
+mesh = SubResource("BoxMesh_post")
+
+[node name="Post0_5" type="MeshInstance3D" parent="Interior/Railing"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.55, 0.966667)
+mesh = SubResource("BoxMesh_post")
+
+[node name="Post0_6" type="MeshInstance3D" parent="Interior/Railing"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.55, 2)
+mesh = SubResource("BoxMesh_post")
+
+[node name="Rail1_50" type="MeshInstance3D" parent="Interior/Railing"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.15, 0.5, 2)
+mesh = SubResource("BoxMesh_rail1")
+
+[node name="Rail1_105" type="MeshInstance3D" parent="Interior/Railing"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.15, 1.05, 2)
+mesh = SubResource("BoxMesh_rail1")
+
+[node name="Post1_0" type="MeshInstance3D" parent="Interior/Railing"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.55, 2)
+mesh = SubResource("BoxMesh_post")
+
+[node name="Post1_1" type="MeshInstance3D" parent="Interior/Railing"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.6, 0.55, 2)
+mesh = SubResource("BoxMesh_post")
+
+[node name="Post1_2" type="MeshInstance3D" parent="Interior/Railing"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.7, 0.55, 2)
+mesh = SubResource("BoxMesh_post")
+
+[node name="Post1_3" type="MeshInstance3D" parent="Interior/Railing"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.8, 0.55, 2)
+mesh = SubResource("BoxMesh_post")
+
+[node name="InsideSpawn" type="Marker3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.3, 4.3)
+
+[node name="Exit" type="Node3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1.2, 5.7)
+script = ExtResource("53_interactable")
+prompt = "Sortir de la mairie"
+radius = 2.0
+
+[node name="LightHall" type="OmniLight3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 3.4, 0)
+script = ExtResource("12_flicker")
+light_color = Color(1, 0.75, 0.48, 1)
+light_energy = 2.2
+omni_range = 11.0
+flicker = 0.1
+
+[node name="LightStairs" type="OmniLight3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 3.4, 3)
+script = ExtResource("12_flicker")
+light_color = Color(1, 0.75, 0.48, 1)
+light_energy = 1.4
+omni_range = 11.0
+flicker = 0.1
+
+[node name="LightOffice" type="OmniLight3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 7.9, -1)
+script = ExtResource("12_flicker")
+light_color = Color(1, 0.75, 0.48, 1)
+light_energy = 2.2
+omni_range = 11.0
+flicker = 0.1
+
+[node name="LightOfficeEast" type="OmniLight3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 7.9, 4)
+script = ExtResource("12_flicker")
+light_color = Color(1, 0.75, 0.48, 1)
+light_energy = 1.2
+omni_range = 11.0
+flicker = 0.1
+
+[node name="Fragments" type="Node3D" parent="Interior"]
+
+[node name="Fragment0" type="Node3D" parent="Interior/Fragments"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4, 1.12, -0.4)
+script = ExtResource("51_fragment")
+radius = 2.2
+fragment = 0
+
+[node name="Fragment2" type="Node3D" parent="Interior/Fragments"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.3, 1.02, 3.1)
+script = ExtResource("51_fragment")
+radius = 2.2
+fragment = 2
+
+[node name="Fragment3" type="Node3D" parent="Interior/Fragments"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 1.02, -0.8)
+script = ExtResource("51_fragment")
+radius = 2.2
+fragment = 3
+hidden_at_start = true
+
+[node name="Fragment4" type="Node3D" parent="Interior/Fragments"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.4, 0.03, -1)
+script = ExtResource("51_fragment")
+radius = 2.2
+fragment = 4
+hidden_at_start = true
+
+[node name="Fragment7" type="Node3D" parent="Interior/Fragments"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 1.05, -5.15)
+script = ExtResource("51_fragment")
+radius = 2.2
+fragment = 7
+
+[node name="Fragment8" type="Node3D" parent="Interior/Fragments"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, 0.03, 5.55)
+script = ExtResource("51_fragment")
+radius = 2.2
+fragment = 8
+
+[node name="Fragment5" type="Node3D" parent="Interior/Fragments"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 5.62, -0.4)
+script = ExtResource("51_fragment")
+radius = 2.2
+fragment = 5
+
+[node name="Fragment1" type="Node3D" parent="Interior/Fragments"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 5.52, -0.8)
+script = ExtResource("51_fragment")
+radius = 2.2
+fragment = 1
+hidden_at_start = true
+
+[node name="Fragment9" type="Node3D" parent="Interior/Fragments"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 5.55, 5.15)
+script = ExtResource("51_fragment")
+radius = 2.2
+fragment = 9
+
+[node name="Fragment6" type="Node3D" parent="Interior/Fragments"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 4.53, 4.5)
+script = ExtResource("51_fragment")
+radius = 2.2
+fragment = 6
+hidden_at_start = true
+
+[node name="Storages" type="Node3D" parent="Interior"]
+
+[node name="ReceptionDrawer" type="Node3D" parent="Interior/Storages"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0.7, -0.8)
+script = ExtResource("52_storage")
+radius = 2.2
+furniture_name = "le tiroir de l'accueil"
+fragment = NodePath("../../Fragments/Fragment3")
+
+[node name="ArchiveCabinet" type="Node3D" parent="Interior/Storages"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 1.3, -1)
+script = ExtResource("52_storage")
+radius = 2.2
+furniture_name = "l'armoire des archives"
+fragment = NodePath("../../Fragments/Fragment4")
+
+[node name="ArchiveCabinetNorth" type="Node3D" parent="Interior/Storages"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 1.3, -3.5)
+script = ExtResource("52_storage")
+radius = 2.2
+furniture_name = "l'armoire aux registres"
+
+[node name="ArchiveCabinetSouth" type="Node3D" parent="Interior/Storages"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 1.3, 1.5)
+script = ExtResource("52_storage")
+radius = 2.2
+furniture_name = "l'armoire aux actes"
+
+[node name="Dresser" type="Node3D" parent="Interior/Storages"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.7, -5)
+script = ExtResource("52_storage")
+radius = 2.2
+furniture_name = "le meuble à tiroirs"
+
+[node name="MayorDrawer" type="Node3D" parent="Interior/Storages"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 5.2, -0.8)
+script = ExtResource("52_storage")
+radius = 2.2
+furniture_name = "le tiroir du bureau"
+fragment = NodePath("../../Fragments/Fragment1")
+
+[node name="MayorCabinet" type="Node3D" parent="Interior/Storages"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 5.8, 5.1)
+script = ExtResource("52_storage")
+radius = 2.2
+furniture_name = "l'armoire du maire"
+fragment = NodePath("../../Fragments/Fragment6")
+
+[node name="OfficeDresser" type="Node3D" parent="Interior/Storages"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.6, 5.2, -5)
+script = ExtResource("52_storage")
+radius = 2.2
+furniture_name = "la commode"
+
+[node name="Device" type="Node3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 4.5, -5.4)
+
+[node name="Console" type="MeshInstance3D" parent="Interior/Device"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0.1)
+mesh = SubResource("BoxMesh_console")
+
+[node name="Backboard" type="MeshInstance3D" parent="Interior/Device"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3, -0.25)
+mesh = SubResource("BoxMesh_backboard")
+
+[node name="Body" type="StaticBody3D" parent="Interior/Device"]
+
+[node name="Shape" type="CollisionShape3D" parent="Interior/Device/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+shape = SubResource("BoxShape3D_console")
+
+[node name="Sections" type="Node3D" parent="Interior/Device"]
+
+[node name="Section0" type="MeshInstance3D" parent="Interior/Device/Sections"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2, 2.45, -0.12)
+mesh = SubResource("BoxMesh_section0")
+
+[node name="Language0" type="Label3D" parent="Interior/Device"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2, 1.7, -0.13)
+pixel_size = 0.0028
+modulate = Color(0.85, 0.88, 1, 1)
+text = "HTML"
+font_size = 64
+outline_size = 10
+
+[node name="Section1" type="MeshInstance3D" parent="Interior/Device/Sections"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 2.45, -0.12)
+mesh = SubResource("BoxMesh_section1")
+
+[node name="Language1" type="Label3D" parent="Interior/Device"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 1.7, -0.13)
+pixel_size = 0.0028
+modulate = Color(0.85, 0.88, 1, 1)
+text = "CSS"
+font_size = 64
+outline_size = 10
+
+[node name="Section2" type="MeshInstance3D" parent="Interior/Device/Sections"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.45, -0.12)
+mesh = SubResource("BoxMesh_section2")
+
+[node name="Language2" type="Label3D" parent="Interior/Device"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, -0.13)
+pixel_size = 0.0028
+modulate = Color(0.85, 0.88, 1, 1)
+text = "Python"
+font_size = 64
+outline_size = 10
+
+[node name="Section3" type="MeshInstance3D" parent="Interior/Device/Sections"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 2.45, -0.12)
+mesh = SubResource("BoxMesh_section3")
+
+[node name="Language3" type="Label3D" parent="Interior/Device"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 1.7, -0.13)
+pixel_size = 0.0028
+modulate = Color(0.85, 0.88, 1, 1)
+text = "PHP"
+font_size = 64
+outline_size = 10
+
+[node name="Section4" type="MeshInstance3D" parent="Interior/Device/Sections"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 2.45, -0.12)
+mesh = SubResource("BoxMesh_section4")
+
+[node name="Language4" type="Label3D" parent="Interior/Device"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 1.7, -0.13)
+pixel_size = 0.0028
+modulate = Color(0.85, 0.88, 1, 1)
+text = "JS / TS"
+font_size = 64
+outline_size = 10
+
+[node name="Inscription" type="Label3D" parent="Interior/Device"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.25, -0.13)
+pixel_size = 0.0026
+modulate = Color(1, 0.88, 0.6, 1)
+text = "CINQ LANGAGES, CINQ ÉPREUVES, UN SEUL SAVOIR"
+font_size = 64
+outline_size = 10
+
+[node name="Interactable" type="Node3D" parent="Interior/Device"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0.6)
+script = ExtResource("53_interactable")
+prompt = "Examiner le dispositif des cinq codes"
+radius = 3.0
+
+[node name="SecretShelf" type="Node3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.25, 4.5, 0)
+
+[node name="Model" parent="Interior/SecretShelf" instance=ExtResource("56_shelf")]
+transform = Transform3D(2.32683e-16, 0, 3.8, 0, 3.8, 0, -3.8, 0, 2.32683e-16, 0.475, 0, 1.52)
+
+[node name="Body" type="StaticBody3D" parent="Interior/SecretShelf"]
+
+[node name="Shape" type="CollisionShape3D" parent="Interior/SecretShelf/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("BoxShape3D_shelf")
+
+[node name="SecretLight" type="OmniLight3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 7.5, 0)
+light_color = Color(0.75, 0.6, 1, 1)
+light_energy = 2.4
+omni_range = 9.0
+
+[node name="Book" type="Node3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.6, 5.6, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Interior/Book"]
+mesh = SubResource("BoxMesh_codonomicon")
+
+[node name="Glow" type="OmniLight3D" parent="Interior/Book"]
+light_color = Color(0.7, 0.45, 1, 1)
+light_energy = 1.2
+omni_range = 3.0
+
+[node name="Interactable" type="Node3D" parent="Interior/Book"]
+script = ExtResource("53_interactable")
+prompt = "Prendre le Codonomicon"
+radius = 2.6
 
 [node name="Player" parent="." instance=ExtResource("8_player")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0.3, 57)
-respawn_height = -30.0
+respawn_height = -80.0
 first_person = true
 footstep_sounds = Array[AudioStream]([ExtResource("43_step1"), ExtResource("44_step2"), ExtResource("45_step3")])
 
@@ -262,5 +977,21 @@ footstep_sounds = Array[AudioStream]([ExtResource("43_step1"), ExtResource("44_s
 stream = ExtResource("40_ambience")
 volume_db = -6.0
 autoplay = true
+
+[node name="ChimeSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("46_chime")
+volume_db = -4.0
+
+[node name="RejectSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("47_reject")
+volume_db = -2.0
+
+[node name="RumbleSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("48_rumble")
+volume_db = -2.0
+
+[node name="CodePuzzle" parent="." instance=ExtResource("54_code_puzzle")]
+
+[node name="PaperNotebook" parent="." instance=ExtResource("55_notebook")]
 
 [node name="Hud" parent="." instance=ExtResource("9_hud")]
