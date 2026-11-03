@@ -25,9 +25,10 @@ func _ready() -> void:
 	if not terrain.is_node_ready():
 		await terrain.ready
 	_rng.seed = 5814
-	_scatter(cactus_models, cactus_count, Vector2(3.0, 5.0), true, 0.35)
-	_scatter(rock_models, rock_count, Vector2(2.0, 5.0), false, 0.0)
-	_scatter(ruin_models, ruin_count, Vector2(2.5, 3.5), true, 0.6, true)
+	# Rayons de collision à l'échelle 1 : tige des cactus, corps des rochers, colonnes et briques couchées.
+	_scatter(cactus_models, cactus_count, Vector2(3.0, 5.0), true, 0.17)
+	_scatter(rock_models, rock_count, Vector2(2.0, 5.0), true, 0.3)
+	_scatter(ruin_models, ruin_count, Vector2(2.5, 3.5), true, 0.32, true)
 	_add_wrecks()
 	_add_border_rocks()
 	_add_quicksands()
@@ -64,7 +65,7 @@ func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, soli
 		var basis := Basis(Vector3.UP, _rng.randf() * TAU)
 		if tilted:
 			basis = basis * Basis(Vector3.FORWARD, deg_to_rad(_rng.randf_range(70.0, 90.0)))
-		var origin := Vector3(spot.x, terrain.height_at(spot.x, spot.y) - 0.15, spot.y)
+		var origin := Vector3(spot.x, terrain.footing_height(spot.x, spot.y) - 0.15, spot.y)
 		if tilted:
 			origin.y += 0.3 * scale_factor
 		groups[placed % groups.size()].append(Transform3D(basis.scaled(Vector3.ONE * scale_factor), origin))
@@ -90,7 +91,7 @@ func _add_wrecks() -> void:
 	for spot: Vector3 in [Vector3(26.0, 32.0, 40.0), Vector3(-30.0, 4.0, 200.0), Vector3(30.0, -18.0, 120.0), Vector3(-14.0, -38.0, 300.0)]:
 		var model: PackedScene = wreck_models[int(spot.z) % wreck_models.size()]
 		var wreck: Node3D = model.instantiate()
-		wreck.position = Vector3(spot.x, terrain.height_at(spot.x, spot.y) - 0.1, spot.y)
+		wreck.position = Vector3(spot.x, terrain.footing_height(spot.x, spot.y) - 0.1, spot.y)
 		wreck.rotation.y = deg_to_rad(spot.z)
 		wreck.scale = Vector3.ONE * 4.5
 		add_child(wreck)
@@ -110,7 +111,9 @@ func _add_border_rocks() -> void:
 		var angle := TAU * i / border_rock_count + _rng.randf_range(-0.05, 0.05)
 		var spot := Vector2.from_angle(angle) * (DesertTerrain.PLAY_RADIUS + _rng.randf_range(2.0, 8.0))
 		var basis := Basis(Vector3.UP, _rng.randf() * TAU).scaled(Vector3.ONE * _rng.randf_range(12.0, 20.0))
-		items[i % items.size()].append(Transform3D(basis, Vector3(spot.x, terrain.height_at(spot.x, spot.y) - 1.0, spot.y)))
+		# Ces rochers sont énormes : enfoncés d'un dixième de leur taille pour ne pas flotter au-dessus des pentes.
+		var sink := basis.get_scale().x * 0.12
+		items[i % items.size()].append(Transform3D(basis, Vector3(spot.x, terrain.footing_height(spot.x, spot.y) - sink, spot.y)))
 	for index in rock_models.size():
 		var transforms: Array[Transform3D] = []
 		transforms.assign(items[index])

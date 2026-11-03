@@ -176,7 +176,7 @@ func _add_lanterns() -> void:
 	add_child(lanterns)
 	for spot in LANTERNS:
 		var lantern: Node3D = lantern_model.instantiate()
-		var ground := terrain.height_at(spot.x, spot.y)
+		var ground := terrain.footing_height(spot.x, spot.y)
 		var fallen := spot.z > 0.5
 		lantern.scale = Vector3.ONE * 2.2
 		lantern.rotation.y = 0.0 if spot.x < 0.0 else PI
@@ -366,7 +366,7 @@ func _is_free(spot: Vector2, crater_margin: float) -> bool:
 
 func _ground_transform(spot: Vector2, scale_factor: float) -> Transform3D:
 	var basis := Basis(Vector3.UP, _rng.randf() * TAU).scaled(Vector3.ONE * scale_factor)
-	return Transform3D(basis, Vector3(spot.x, terrain.height_at(spot.x, spot.y) - 0.05, spot.y))
+	return Transform3D(basis, Vector3(spot.x, terrain.footing_height(spot.x, spot.y) - 0.05, spot.y))
 
 
 func _add_multimesh(

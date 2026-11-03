@@ -39,6 +39,11 @@ const COLOR_TRAIL := Color(0.3, 0.26, 0.25)
 var _relief := FastNoiseLite.new()
 
 
+## Hauteurs aux sommets de la grille du maillage.
+var _heights := PackedFloat32Array()
+var _cells := 0
+
+
 func _ready() -> void:
 	_relief.seed = 2026
 	_relief.frequency = 0.035
@@ -52,6 +57,20 @@ func height_at(x: float, z: float) -> float:
 	height *= 1.0 - _flat_mask(x, z)
 	var distance := Vector2(x, z).length()
 	return height + BORDER_HEIGHT * smoothstep(PLAY_RADIUS, PLAY_RADIUS + BORDER_WIDTH, distance)
+
+
+## Hauteur du sol tel qu'il est maillé, à l'interpolation de ses triangles : c'est sur elle que le décor se pose.
+func surface_height(x: float, z: float) -> float:
+	if _heights.is_empty():
+		return height_at(x, z)
+	return GridHeight.sample(_heights, _cells, SIZE, CELL_SIZE, x, z)
+
+
+## Hauteur où poser le pied d'un objet : le sol maillé, un peu plus bas sur une pente pour ne jamais flotter.
+func footing_height(x: float, z: float) -> float:
+	if _heights.is_empty():
+		return height_at(x, z)
+	return surface_height(x, z) - 0.6 * GridHeight.slope(_heights, _cells, SIZE, CELL_SIZE, x, z)
 
 
 func _crater_profile(x: float, z: float, crater: Vector4) -> float:
@@ -107,6 +126,7 @@ func _build() -> void:
 	var heights := PackedFloat32Array()
 	var glows := PackedVector2Array()
 	heights.resize((cells + 1) * (cells + 1))
+	_cells = cells
 	glows.resize((cells + 1) * (cells + 1))
 	for row in cells + 1:
 		for column in cells + 1:
@@ -156,6 +176,7 @@ func _build() -> void:
 	mesh_instance.mesh = mesh
 	add_child(mesh_instance)
 
+	_heights = heights
 	var shape := ConcavePolygonShape3D.new()
 	shape.set_faces(vertices)
 	var collision := CollisionShape3D.new()

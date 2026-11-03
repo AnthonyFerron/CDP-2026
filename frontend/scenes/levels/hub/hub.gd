@@ -104,7 +104,7 @@ func _place_player() -> void:
 		var portal := _portal(GameState.last_zone)
 		var toward_camp := -Vector3(portal.global_position.x, 0.0, portal.global_position.z).normalized()
 		position = portal.global_position + toward_camp * RETURN_DISTANCE
-		position.y = _terrain.height_at(position.x, position.z) + 0.3
+		position.y = _terrain.surface_height(position.x, position.z) + 0.3
 	var look := -Vector3(position.x, 0.0, position.z).normalized() if position.length() > 1.0 else Vector3.FORWARD
 	_player.global_position = position
 	_player.get_node("CameraPivot").rotation.y = atan2(-look.x, -look.z)

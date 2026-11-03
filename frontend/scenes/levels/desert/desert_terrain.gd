@@ -32,6 +32,11 @@ const COLOR_RIDGE := Color(0.78, 0.55, 0.32)
 var _dunes := FastNoiseLite.new()
 
 
+## Hauteurs aux sommets de la grille du maillage.
+var _heights := PackedFloat32Array()
+var _cells := 0
+
+
 func _ready() -> void:
 	_dunes.seed = 5814
 	_dunes.frequency = 0.02
@@ -49,6 +54,20 @@ func height_at(x: float, z: float) -> float:
 		height -= 0.5 * (1.0 - smoothstep(0.6, 1.2, ratio))
 	var distance := Vector2(x, z).length()
 	return height + BORDER_HEIGHT * smoothstep(PLAY_RADIUS, PLAY_RADIUS + BORDER_WIDTH, distance)
+
+
+## Hauteur du sol tel qu'il est maillé, à l'interpolation de ses triangles : c'est sur elle que le décor se pose.
+func surface_height(x: float, z: float) -> float:
+	if _heights.is_empty():
+		return height_at(x, z)
+	return GridHeight.sample(_heights, _cells, SIZE, CELL_SIZE, x, z)
+
+
+## Hauteur où poser le pied d'un objet : le sol maillé, un peu plus bas sur une pente pour ne jamais flotter.
+func footing_height(x: float, z: float) -> float:
+	if _heights.is_empty():
+		return height_at(x, z)
+	return surface_height(x, z) - 0.6 * GridHeight.slope(_heights, _cells, SIZE, CELL_SIZE, x, z)
 
 
 ## Vaut 1 sur l'esplanade et le chemin, où le sol reste plat.
@@ -78,6 +97,7 @@ func _build() -> void:
 
 	var heights := PackedFloat32Array()
 	heights.resize((cells + 1) * (cells + 1))
+	_cells = cells
 	for row in cells + 1:
 		for column in cells + 1:
 			heights[row * (cells + 1) + column] = height_at(
@@ -121,6 +141,7 @@ func _build() -> void:
 	mesh_instance.mesh = mesh
 	add_child(mesh_instance)
 
+	_heights = heights
 	var shape := ConcavePolygonShape3D.new()
 	shape.set_faces(vertices)
 	var collision := CollisionShape3D.new()

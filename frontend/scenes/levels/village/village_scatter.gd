@@ -24,10 +24,11 @@ func _ready() -> void:
 	if not terrain.is_node_ready():
 		await terrain.ready
 	_rng.seed = 5815
-	_scatter(grass_models, grass_count, Vector2(2.5, 4.5), false, false)
-	_scatter(rubble_models, rubble_count, Vector2(1.5, 3.0), false, false)
-	_scatter(tree_models, tree_count, Vector2(3.5, 5.5), true, true)
-	_scatter(rock_models, rock_count, Vector2(2.0, 4.0), true, true)
+	_scatter(grass_models, grass_count, Vector2(2.5, 4.5), 0.0, false)
+	_scatter(rubble_models, rubble_count, Vector2(1.5, 3.0), 0.0, false)
+	# Collision au tronc des arbres et au corps des rochers, à l'échelle 1.
+	_scatter(tree_models, tree_count, Vector2(3.5, 5.5), 0.08, true)
+	_scatter(rock_models, rock_count, Vector2(2.0, 4.0), 0.4, true)
 	_add_border_trees()
 
 
@@ -46,7 +47,9 @@ func _is_free(spot: Vector2, outside_town: bool) -> bool:
 	return true
 
 
-func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, solid: bool, outside_town: bool) -> void:
+## Disperse des modèles ; un rayon non nul leur donne une collision de ce rayon, à l'échelle 1.
+func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, radius: float, outside_town: bool) -> void:
+	var solid := radius > 0.0
 	var body: StaticBody3D
 	if solid:
 		body = StaticBody3D.new()
@@ -62,12 +65,12 @@ func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, soli
 		if not _is_free(spot, outside_town):
 			continue
 		var scale_factor := _rng.randf_range(scale_range.x, scale_range.y)
-		var origin := Vector3(spot.x, terrain.height_at(spot.x, spot.y) - 0.05, spot.y)
+		var origin := Vector3(spot.x, terrain.footing_height(spot.x, spot.y) - 0.05, spot.y)
 		var basis := Basis(Vector3.UP, _rng.randf() * TAU).scaled(Vector3.ONE * scale_factor)
 		groups[placed % groups.size()].append(Transform3D(basis, origin))
 		if solid:
 			var shape := CylinderShape3D.new()
-			shape.radius = 0.35 * scale_factor
+			shape.radius = radius * scale_factor
 			shape.height = 3.0
 			var collision := CollisionShape3D.new()
 			collision.shape = shape
@@ -88,7 +91,7 @@ func _add_border_trees() -> void:
 		var angle := TAU * i / border_tree_count + _rng.randf_range(-0.05, 0.05)
 		var spot := Vector2.from_angle(angle) * (VillageTerrain.PLAY_RADIUS + _rng.randf_range(1.0, 8.0))
 		var basis := Basis(Vector3.UP, _rng.randf() * TAU).scaled(Vector3.ONE * _rng.randf_range(5.0, 7.0))
-		groups[i % groups.size()].append(Transform3D(basis, Vector3(spot.x, terrain.height_at(spot.x, spot.y) - 0.1, spot.y)))
+		groups[i % groups.size()].append(Transform3D(basis, Vector3(spot.x, terrain.footing_height(spot.x, spot.y) - 0.1, spot.y)))
 	for index in tree_models.size():
 		var transforms: Array[Transform3D] = []
 		transforms.assign(groups[index])

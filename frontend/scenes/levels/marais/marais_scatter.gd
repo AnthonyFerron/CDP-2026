@@ -195,7 +195,7 @@ func _random_spot(radius: float) -> Vector2:
 
 func _ground_transform(spot: Vector2, scale_factor: float) -> Transform3D:
 	var basis := Basis(Vector3.UP, _rng.randf() * TAU).scaled(Vector3.ONE * scale_factor)
-	return Transform3D(basis, Vector3(spot.x, terrain.height_at(spot.x, spot.y) - 0.05, spot.y))
+	return Transform3D(basis, Vector3(spot.x, terrain.footing_height(spot.x, spot.y) - 0.05, spot.y))
 
 
 func _add_multimesh(mesh: Mesh, transforms: Array[Transform3D]) -> MultiMeshInstance3D:

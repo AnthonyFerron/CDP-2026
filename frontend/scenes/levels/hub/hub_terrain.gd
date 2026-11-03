@@ -65,27 +65,14 @@ func height_at(x: float, z: float) -> float:
 func surface_height(x: float, z: float) -> float:
 	if _heights.is_empty():
 		return height_at(x, z)
-	var gx := clampf((x + SIZE * 0.5) / CELL_SIZE, 0.0, _cells - 0.001)
-	var gz := clampf((z + SIZE * 0.5) / CELL_SIZE, 0.0, _cells - 0.001)
-	var column := int(gx)
-	var row := int(gz)
-	var u := gx - column
-	var v := gz - row
-	var first := row * (_cells + 1) + column
-	var h0 := _heights[first]
-	var h1 := _heights[first + 1]
-	var h2 := _heights[first + _cells + 1]
-	var h3 := _heights[first + _cells + 2]
-	if u + v <= 1.0:
-		return h0 + u * (h1 - h0) + v * (h2 - h0)
-	return h3 + (1.0 - u) * (h2 - h3) + (1.0 - v) * (h1 - h3)
+	return GridHeight.sample(_heights, _cells, SIZE, CELL_SIZE, x, z)
 
 
 ## Pente du sol affiché au point donné : 0 à plat, 1 pour 45 degrés.
 func slope_at(x: float, z: float) -> float:
-	var dx := surface_height(x + 0.5, z) - surface_height(x - 0.5, z)
-	var dz := surface_height(x, z + 0.5) - surface_height(x, z - 0.5)
-	return Vector2(dx, dz).length()
+	if _heights.is_empty():
+		return 0.0
+	return GridHeight.slope(_heights, _cells, SIZE, CELL_SIZE, x, z)
 
 
 ## Destinations reliées au feu de camp par un chemin.
