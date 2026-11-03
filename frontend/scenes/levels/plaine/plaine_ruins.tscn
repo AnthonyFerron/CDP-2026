@@ -12,7 +12,14 @@
 [ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/rock-large.glb" id="10_model"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/rock-wide.glb" id="11_model"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/furniture_kit/bookcaseClosedWide.glb" id="12_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/furniture_kit/books.glb" id="13_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/campfire_stones.glb" id="13_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/tent_detailedOpen.glb" id="14_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/log_stack.glb" id="15_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/chest.glb" id="16_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/barrel.glb" id="17_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/box-large.glb" id="18_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/cart.glb" id="19_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/furniture_kit/books.glb" id="20_model"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
 size = Vector3(4, 4, 0.5)
@@ -67,6 +74,24 @@ size = Vector3(0.8, 2.5, 2.56)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_18"]
 size = Vector3(3.469, 0.8, 3.481)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_19"]
+size = Vector3(3.132, 2, 2.412)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_20"]
+size = Vector3(1.092, 0.9, 1.846)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_21"]
+size = Vector3(0.884, 0.8, 1.326)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_22"]
+size = Vector3(1.352, 1.2, 1.352)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_23"]
+size = Vector3(0.9, 0.9, 1.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_24"]
+size = Vector3(4.043, 1.82, 2.704)
 
 [node name="PlaineRuins" type="Node3D"]
 
@@ -189,13 +214,43 @@ transform = Transform3D(0, 0, -3.2, 0, 3.2, 0, 3.2, 0, 0, 6.6, 0, -5.28)
 [node name="bookcaseClosedWide_38" parent="Models" instance=ExtResource("12_model")]
 transform = Transform3D(1.6, 2.77128, 0, 0, 0, -3.2, -2.77128, 1.6, 0, 11.7653, 0, 7.47651)
 
-[node name="books_39" parent="Models" instance=ExtResource("13_model")]
+[node name="campfire_stones_39" parent="Models" instance=ExtResource("13_model")]
+transform = Transform3D(2.59808, 0, -1.5, 0, 3, 0, 1.5, 0, 2.59808, 13.948, 0, 41.97)
+
+[node name="tent_detailedOpen_40" parent="Models" instance=ExtResource("14_model")]
+transform = Transform3D(3.11769, 0, 1.8, 0, 3.6, 0, -1.8, 0, 3.11769, 12.1249, 0, 38.1593)
+
+[node name="tent_detailedOpen_41" parent="Models" instance=ExtResource("14_model")]
+transform = Transform3D(0.62513, 0, -3.54531, 0, 3.6, 0, 3.54531, 0, 0.62513, 18.0944, 0, 41.6486)
+
+[node name="log_stack_42" parent="Models" instance=ExtResource("15_model")]
+transform = Transform3D(1.69098, 0, 1.97499, 0, 2.6, 0, -1.97499, 0, 1.69098, 11.2482, 0, 43.1503)
+
+[node name="log_stack_43" parent="Models" instance=ExtResource("15_model")]
+transform = Transform3D(2.01912, 0, 1.63803, 0, 2.6, 0, -1.63803, 0, 2.01912, 14.0976, 0, 45.0252)
+
+[node name="chest_44" parent="Models" instance=ExtResource("16_model")]
+transform = Transform3D(3.34835, 0, -0.5904, 0, 3.4, 0, 0.5904, 0, 3.34835, 15.6841, 0.136, 44.1551)
+
+[node name="barrel_45" parent="Models" instance=ExtResource("17_model")]
+transform = Transform3D(-1.51587, 0, -2.11238, 0, 2.6, 0, 2.11238, 0, -1.51587, 10.2555, 0, 41.6856)
+
+[node name="barrel_46" parent="Models" instance=ExtResource("17_model")]
+transform = Transform3D(2.33533, 0, 1.14291, 0, 2.6, 0, -1.14291, 0, 2.33533, 9.06269, 0, 42.1517)
+
+[node name="box_large_47" parent="Models" instance=ExtResource("18_model")]
+transform = Transform3D(2.75776, 0, 2.31404, 0, 3.6, 0, -2.31404, 0, 2.75776, 17.9243, 0, 44.0152)
+
+[node name="cart_48" parent="Models" instance=ExtResource("19_model")]
+transform = Transform3D(0, -0.95766, 2.63114, 2.8, 0, 0, -0, 2.63114, 0.95766, 16.3136, 0.896, 35.5647)
+
+[node name="books_49" parent="Models" instance=ExtResource("20_model")]
 transform = Transform3D(4.33013, 0, 2.5, 0, 5, 0, -2.5, 0, 4.33013, -3, 0, 12.5)
 
-[node name="books_40" parent="Models" instance=ExtResource("13_model")]
+[node name="books_50" parent="Models" instance=ExtResource("20_model")]
 transform = Transform3D(-4.69846, 0, -1.7101, 0, 5, 0, 1.7101, 0, -4.69846, 4.5, 0, 13.5)
 
-[node name="books_41" parent="Models" instance=ExtResource("13_model")]
+[node name="books_51" parent="Models" instance=ExtResource("20_model")]
 transform = Transform3D(0.86824, 0, 4.92404, 0, 5, 0, -4.92404, 0, 0.86824, -9, 0, 12.5)
 
 [node name="Collision" type="StaticBody3D" parent="."]
@@ -331,3 +386,39 @@ shape = SubResource("BoxShape3D_17")
 [node name="Box32" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 13.5, 0.4, 7)
 shape = SubResource("BoxShape3D_18")
+
+[node name="Box33" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.86603, 0, 0.5, 0, 1, 0, -0.5, 0, 0.86603, 12.0823, 1, 38.1215)
+shape = SubResource("BoxShape3D_19")
+
+[node name="Box34" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.17365, 0, -0.98481, 0, 1, 0, 0.98481, 0, 0.17365, 18.1445, 1, 41.6215)
+shape = SubResource("BoxShape3D_19")
+
+[node name="Box35" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.65038, 0, 0.75961, 0, 1, 0, -0.75961, 0, 0.65038, 11.2411, 0.45, 43.1785)
+shape = SubResource("BoxShape3D_20")
+
+[node name="Box36" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.77659, 0, 0.63001, 0, 1, 0, -0.63001, 0, 0.77659, 14.0856, 0.45, 45.0517)
+shape = SubResource("BoxShape3D_20")
+
+[node name="Box37" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.98481, 0, -0.17365, 0, 1, 0, 0.17365, 0, 0.98481, 15.6517, 0.4, 44.3392)
+shape = SubResource("BoxShape3D_21")
+
+[node name="Box38" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(-0.58303, 0, -0.81245, 0, 1, 0, 0.81245, 0, -0.58303, 10.2555, 0.6, 41.6856)
+shape = SubResource("BoxShape3D_22")
+
+[node name="Box39" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.8982, 0, 0.43958, 0, 1, 0, -0.43958, 0, 0.8982, 9.06269, 0.6, 42.1517)
+shape = SubResource("BoxShape3D_22")
+
+[node name="Box40" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.76604, 0, 0.64279, 0, 1, 0, -0.64279, 0, 0.76604, 17.9105, 0.45, 44.0268)
+shape = SubResource("BoxShape3D_23")
+
+[node name="Box41" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 16.134, 0.91, 36.3038)
+shape = SubResource("BoxShape3D_24")

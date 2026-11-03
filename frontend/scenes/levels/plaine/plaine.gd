@@ -66,6 +66,8 @@ func _ready() -> void:
 	_exit_door.interacted.connect(_travel.bind(false))
 	for book: SearchableBook in _books.get_children():
 		book.interacted.connect(_on_book_searched.bind(book))
+	for note: Readable in $Exterior/Lore.get_children():
+		note.interacted.connect(_read_note.bind(note))
 
 	_tablet.interacted.connect(_open_tablet)
 	_puzzle.closed.connect(_close_panel)
@@ -149,6 +151,11 @@ func _on_book_searched(book: SearchableBook) -> void:
 	book.mark_searched()
 	_open_panel()
 	_hud.show_text(book.title, text)
+
+
+func _read_note(note: Readable) -> void:
+	_open_panel()
+	_hud.show_text(note.title, note.body)
 
 
 func found_fragments() -> Dictionary:

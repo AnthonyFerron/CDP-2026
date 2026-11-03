@@ -77,6 +77,8 @@ func _ready() -> void:
 	_puzzle.closed.connect(_close_panel)
 	_notebook.closed.connect(_close_panel)
 	_book_pickup.interacted.connect(_on_book_taken)
+	for note: Readable in $Lore.get_children():
+		note.interacted.connect(_read_note.bind(note))
 
 	_book_pickup.enabled = false
 	_secret_light.visible = false
@@ -151,6 +153,11 @@ func _open_device() -> void:
 	_open_panel()
 	_hud.set_crosshair_visible(false)
 	_puzzle.open(found_fragments())
+
+
+func _read_note(note: Readable) -> void:
+	_open_panel()
+	_hud.show_text(note.title, note.body)
 
 
 func _open_panel() -> void:

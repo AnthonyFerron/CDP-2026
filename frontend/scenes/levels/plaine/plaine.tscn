@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="10_hud"]
 [ext_resource type="Script" path="res://scripts/interactable.gd" id="11_interactable"]
 [ext_resource type="Script" path="res://scripts/readable.gd" id="12_readable"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/statue_obelisk.glb" id="92_obelisk"]
 [ext_resource type="Script" path="res://scenes/levels/plaine/searchable_book.gd" id="40_searchable"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/signpost.glb" id="13_signpost"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/grass_large.glb" id="20_grass_large"]
@@ -34,6 +35,9 @@
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_ash_4.wav" id="39_step4"]
 
 [ext_resource type="Script" path="res://scenes/levels/hub/volcano.gd" id="90_volcano"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_plaque"]
+size = Vector3(1.1, 3.0, 1.1)
+
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ash"]
 sky_top_color = Color(0.14, 0.11, 0.16, 1)
 sky_horizon_color = Color(0.42, 0.28, 0.3, 1)
@@ -434,6 +438,33 @@ mesh = SubResource("BoxMesh_book")
 script = ExtResource("11_interactable")
 prompt = "Prendre le Projenomicon"
 radius = 2.2
+
+[node name="Lore" type="Node3D" parent="Exterior"]
+
+[node name="Plaque" type="Node3D" parent="Exterior/Lore"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.6, 0, 15.5)
+script = ExtResource("12_readable")
+title = "La plaque de la bibliothèque"
+body = "Bibliothèque royale de Codia, fondée sous le règne de Codeon II pour garder le savoir du royaume. Sous la date, une devise : « Un projet bien mené commence par un but, et s'achève par un bilan. »"
+prompt = "Lire la plaque"
+radius = 2.6
+
+[node name="Model" parent="Exterior/Lore/Plaque" instance=ExtResource("92_obelisk")]
+transform = Transform3D(3.4, 0, 0, 0, 3.4, 0, 0, 0, 3.4, 0, -0.05, 0)
+
+[node name="Body" type="StaticBody3D" parent="Exterior/Lore/Plaque"]
+
+[node name="Shape" type="CollisionShape3D" parent="Exterior/Lore/Plaque/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("BoxShape3D_plaque")
+
+[node name="Journal" type="Node3D" parent="Exterior/Lore"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.65, 0.8, 44.35)
+script = ExtResource("12_readable")
+title = "Le journal d'un soldat"
+body = "Jour douze. Les flammes ont pris la bibliothèque royale à l'aube. Le capitaine nous a ordonné de sauver les livres, mais le Projenomicon était déjà descendu sous la terre, avec la bibliothécaire et son registre. Si quelqu'un lit ces lignes : les archives sont sous les ruines, et leurs pages ont gardé l'ordre de la discussion."
+prompt = "Lire le journal"
+radius = 2.4
 
 [node name="Volcano" type="Node3D" parent="Exterior"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, -6, -215)

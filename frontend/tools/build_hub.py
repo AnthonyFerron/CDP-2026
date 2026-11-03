@@ -39,7 +39,7 @@ HOUSE_SPOTS = [(24.0, a) for a in (-112.5, -67.5, -22.5, 22.5, 70.0, 110.0, 160.
     (38.0, a) for a in (-112.5, -67.5, -22.5, 22.5, 72.0, 108.0, 162.0, 198.0)
 ]
 # Chemins qui partent du feu de camp : portails, château et bunker.
-ROADS = [(-38.0, -38.0), (38.0, -38.0), (38.0, 38.0), (-38.0, 38.0), (0.0, CASTLE_FRONT), BUNKER]
+ROADS = [(-38.0, -38.0), (38.0, -38.0), (38.0, 38.0), (-38.0, 38.0), (0.0, CASTLE_FRONT), BUNKER, (0.0, 55.0), (-53.0, 0.0)]
 OUTWARDS = {"north": (0, -1), "south": (0, 1), "east": (1, 0), "west": (-1, 0)}
 DOOR_YAWS = {"south": 0.0, "north": 180.0, "east": 90.0, "west": -90.0}
 
@@ -223,7 +223,7 @@ def house_floor(scene, rng, house, ruined):
                 scene.add("fantasy_town_kit/planks-half", (x - TILE * 0.25, -0.2, z), 0.0, TILE)
 
 
-def ruined_house(scene, rng, house):
+def ruined_house(scene, rng, house, furnisher=None):
     cx, cz, width, depth, door_side, style, floors = house
     plain, broken, window, window_small = wall_models(style)
     for side, index, count, center, outward in edge_tiles(cx, cz, width, depth):
@@ -249,10 +249,10 @@ def ruined_house(scene, rng, house):
         point = (cx + rng.uniform(-half_w + 1.8, half_w - 1.8), 0.0, cz + rng.uniform(-half_d + 1.8, half_d - 1.8))
         furniture(scene, "fantasy_town_kit/poles-horizontal", point, rng.uniform(0, 180), 3.0, tilt=90.0)
     house_floor(scene, rng, house, True)
-    furnish(scene, house, True, rng)
+    (furnisher or furnish)(scene, house, True, rng)
 
 
-def rebuilt_house(scene, rng, house):
+def rebuilt_house(scene, rng, house, furnisher=None):
     cx, cz, width, depth, door_side, style, floors = house
     plain, _, window, window_small = wall_models(style)
     for side, index, count, center, outward in edge_tiles(cx, cz, width, depth):
@@ -275,7 +275,7 @@ def rebuilt_house(scene, rng, house):
     roof(scene, cx, cz, width, depth, WALL_HEIGHT * floors)
     scene.add("fantasy_town_kit/chimney", (cx - half_w + 1.2, WALL_HEIGHT * floors, cz), 0.0, 3.0)
     house_floor(scene, rng, house, False)
-    furnish(scene, house, False, rng)
+    (furnisher or furnish)(scene, house, False, rng)
 
 
 def house_layout(rng):
@@ -312,7 +312,7 @@ def build_streets(scene, houses):
             side = 1 if index % 2 else -1
             x, z = dx * distance - dz * side * 2.7, dz * distance + dx * side * 2.7
             # Ni dans une maison, ni sur les étals du marché, ni sur la fontaine.
-            if clear_of(houses, x, z, 1.2) and not (-18.0 < x < -11.0 and -7.0 < z < 7.0) and math.hypot(x - 30.0, z - 4.2) > 3.8:
+            if clear_of(houses + [house for _, house, _, _ in LANDMARKS], x, z, 1.2) and not (-18.0 < x < -11.0 and -7.0 < z < 7.0) and math.hypot(x - 30.0, z - 4.2) > 3.8:
                 scene.add("fantasy_town_kit/lantern", (x, 0.0, z), 0.0, 2.2)
                 scene.add_box((x, 1.0, z), (0.45, 2.0, 0.45))
 
@@ -339,7 +339,7 @@ def build_village(scene, rng):
     # Étals du marché, qui reviennent avec le deuxième livre ; charrette renversée tant qu'il manque.
     scene.repair("Market", 2)
     furniture(scene, "fantasy_town_kit/cart", (-13.0, 0.0, -4.0), 60.0, 3.0, height=1.6, roll=90.0)
-    furniture(scene, "fantasy_town_kit/wheel", (-14.5, 0.0, 2.0), 30.0, 3.0, tilt=90.0)
+    furniture(scene, "fantasy_town_kit/wheel", (-11.6, 0.0, -6.8), 30.0, 3.0, tilt=90.0)
     scene.rebuilt("Market")
     for x, z, degrees, model in ((-15.0, -4.0, 90.0, "stall-red"), (-15.0, 4.0, 90.0, "stall-green"), (15.0, -10.0, -90.0, "stall")):
         scene.add(f"fantasy_town_kit/{model}", (x, 0.0, z), degrees, 3.0)
@@ -624,6 +624,153 @@ def build_shelter():
     print(f"{BUNKER_OUTPUT.name} : {len(scene.visuals)} modèles, {len(scene.colliders)} collisions")
 
 
+# Bâtiments publics du village, autour du cœur : (nom, maison, palier de réparation, ameublement).
+# Leur porte regarde le feu de camp. Les panneaux et leurs textes sont posés dans hub.tscn.
+LANDMARKS = [
+    ("School", (0.0, 60.0, 3, 2, "north", "stone", 2), 2, "school"),
+    ("Tavern", (-60.0, 0.0, 3, 2, "east", "wood", 2), 1, "tavern"),
+    ("Chapel", (-56.0, -30.0, 2, 3, "east", "stone", 1), 3, "chapel"),
+    ("Forge", (55.0, 18.0, 2, 2, "west", "stone", 1), 1, "forge"),
+    ("Farm", (44.0, 64.0, 2, 2, "north", "wood", 1), 2, "farm"),
+]
+
+
+def furnish_school(scene, house, ruined, rng):
+    """Salle de classe : pupitres en rangs face au bureau du maître, étagère de livres."""
+    frame = HouseFrame(house)
+    hu, hv = frame.half_u, frame.half_v
+    furniture(scene, "furniture_kit/desk", frame.at(0.0, -hv + 1.1), frame.turn(0.0), 2.8, height=1.1, roll=90.0 if ruined else 0.0)
+    for row in range(2):
+        # Deux rangées de pupitres de part et d'autre de l'allée qui mène de la porte au maître.
+        for column in (-4.0, -1.9, 1.9, 4.0):
+            spot = frame.at(column, -0.4 + row * 2.2)
+            tipped = ruined and rng.random() < 0.6
+            furniture(scene, "furniture_kit/desk", spot, frame.turn(180.0 + (rng.uniform(-30, 30) if ruined else 0.0)), 1.8,
+                      height=0.7, roll=90.0 if tipped else 0.0)
+    furniture(scene, "furniture_kit/bookcaseOpen", frame.at(-hu + 0.6, -hv + 1.1), frame.turn(90.0), 3.0, height=2.6,
+              roll=90.0 if ruined else 0.0)
+    furniture(scene, "furniture_kit/bookcaseOpen", frame.at(hu - 0.6, -hv + 1.1), frame.turn(-90.0), 3.0, height=2.6)
+    if not ruined:
+        furniture(scene, "furniture_kit/rugRectangle", frame.at(0.0, 0.7, 0.02), frame.turn(0.0), 3.2)
+
+
+def furnish_tavern(scene, house, ruined, rng):
+    """La Chope du Dragon : comptoir et tabourets, tables et chaises, tonneaux de bière."""
+    frame = HouseFrame(house)
+    hu, hv = frame.half_u, frame.half_v
+    for index in range(3):
+        furniture(scene, "furniture_kit/kitchenBar", frame.at(-1.2 + index * 1.15, -hv + 0.7), frame.turn(0.0), 2.6, height=1.1)
+        furniture(scene, "furniture_kit/stoolBar", frame.at(-1.2 + index * 1.15, -hv + 1.9), frame.turn(0.0), 2.4,
+                  roll=90.0 if ruined and index != 1 else 0.0)
+    for x in (-hu + 1.0, -hu + 2.1):
+        furniture(scene, "mini_dungeon/barrel", frame.at(x, -hv + 0.8), frame.turn(0.0), 2.6, height=1.2)
+    # Deux tables l'une derrière l'autre, dans la longueur de la salle.
+    for v in (0.2, 3.2):
+        table = frame.at(-0.8, v)
+        furniture(scene, "furniture_kit/tableRound", table, frame.turn(0.0), 2.2, height=0.8, tilt=90.0 if ruined and v > 1 else 0.0)
+        for side in (-1, 1):
+            furniture(scene, "furniture_kit/chair", frame.at(-0.8 + side * 1.3, v), frame.turn(90.0 * side), 2.6,
+                      tilt=90.0 if ruined and rng.random() < 0.5 else 0.0)
+
+
+def furnish_chapel(scene, house, ruined, rng):
+    """Chapelle : autel et croix au fond, bancs en deux rangées de part et d'autre de l'allée."""
+    frame = HouseFrame(house)
+    hu, hv = frame.half_u, frame.half_v
+    furniture(scene, "graveyard_kit/altar-wood", frame.at(0.0, -hv + 1.0), frame.turn(0.0), 2.4, height=1.3)
+    furniture(scene, "graveyard_kit/cross", frame.at(0.0, -hv + 0.25), frame.turn(0.0), 2.6, height=2.7, roll=90.0 if ruined else 0.0)
+    for row in range(3):
+        for side in (-1, 1):
+            furniture(scene, "graveyard_kit/bench", frame.at(side * 1.6, -1.6 + row * 1.9), frame.turn(180.0 + (rng.uniform(-25, 25) if ruined else 0.0)),
+                      2.2, height=1.0, roll=90.0 if ruined and rng.random() < 0.5 else 0.0)
+    for side in (-1, 1):
+        furniture(scene, "graveyard_kit/candle-multiple", frame.at(side * 1.6, -hv + 0.7), frame.turn(0.0), 2.6)
+
+
+def furnish_forge(scene, house, ruined, rng):
+    """Forge : enclume et meule, établi, tonneaux et outils."""
+    frame = HouseFrame(house)
+    hu, hv = frame.half_u, frame.half_v
+    furniture(scene, "survival_kit/workbench-anvil", frame.at(-1.0, -0.6), frame.turn(0.0), 4.0, height=1.2, roll=90.0 if ruined else 0.0)
+    furniture(scene, "survival_kit/workbench-grind", frame.at(1.6, -hv + 1.0), frame.turn(180.0), 4.0, height=1.2)
+    furniture(scene, "survival_kit/workbench", frame.at(-hu + 1.0, 1.0), frame.turn(90.0), 5.0, height=1.2)
+    furniture(scene, "mini_dungeon/barrel", frame.at(hu - 0.8, -hv + 0.8), frame.turn(0.0), 2.6, height=1.2)
+    furniture(scene, "survival_kit/chest", frame.at(hu - 0.8, 1.4), frame.turn(-90.0), 3.4, height=0.8)
+    furniture(scene, "nature_kit/log_stack", frame.at(-hu + 0.9, -hv + 1.1), frame.turn(0.0), 3.0, height=1.0)
+
+
+def furnish_farm(scene, house, ruined, rng):
+    """Ferme : lit, table, et dehors les champs, le foin et l'enclos."""
+    furnish(scene, house, ruined, rng)
+    cx, cz = house[0], house[1]
+    # Champ à l'est de la ferme : rangées de terre et de cultures, qui repoussent avec le village.
+    for row in range(5):
+        z = cz - 5.0 + row * 2.4
+        for column in range(4):
+            x = cx + 8.0 + column * 2.4
+            scene.add("nature_kit/crops_dirtRow", (x, 0.0, z), 0.0, 2.4)
+            if not ruined:
+                crop = ("nature_kit/crops_wheatStageB", "nature_kit/crops_cornStageD", "nature_kit/crop_pumpkin")[row % 3]
+                scene.add(crop, (x, 0.0, z), rng.uniform(0, 360), 2.4)
+    # Enclos et foin au sud de la ferme.
+    for index in range(4):
+        x = cx - 4.0 + index * 2.8
+        furniture(scene, "nature_kit/fence_simple", (x, 0.0, cz + 7.0), 0.0, 2.8, height=1.0, roll=90.0 if ruined and index == 2 else 0.0)
+    for x, z in ((cx - 2.5, cz + 9.0), (cx + 1.5, cz + 9.4)):
+        furniture(scene, "graveyard_kit/hay-bale", (x, 0.0, z), rng.uniform(0, 60), 2.6, height=1.0)
+
+
+FURNISHERS = {"school": furnish_school, "tavern": furnish_tavern, "chapel": furnish_chapel, "forge": furnish_forge, "farm": furnish_farm}
+
+
+def build_landmarks(scene, rng):
+    """Bâtiments publics du village, en ruine puis rebâtis à leur palier, et le cimetière de la chapelle."""
+    for name, house, stage, kind in LANDMARKS:
+        scene.repair(name, stage)
+        ruined_house(scene, random.Random(name), house, FURNISHERS[kind])
+        scene.rebuilt(name)
+        rebuilt_house(scene, random.Random(name + "!"), house, FURNISHERS[kind])
+    scene.group = "Fixed"
+    # Cimetière des soldats tombés contre les Quatre Dragons, devant la chapelle, de part et d'autre de l'allée.
+    for row in range(2):
+        for index in range(3):
+            for side in (-1, 1):
+                x = -49.5 + index * 1.8
+                z = -30.0 + side * (3.4 + row * 1.6)
+                model = "graveyard_kit/gravestone-cross" if (index + row) % 2 else "graveyard_kit/gravestone-round"
+                furniture(scene, model, (x, 0.0, z), 90.0, 2.4, height=1.2)
+    furniture(scene, "nature_kit/statue_obelisk", (-45.0, 0.0, -36.0), 0.0, 3.4, height=3.0)
+
+
+def build_mine(scene, rng):
+    """Mine d'argent au pied des montagnes, au nord-est : galerie boisée sous un tertre de roche, effondrée."""
+    mx, mz = 86.0, -42.0
+    # Tertre de roche autour de l'entrée, qui regarde le village : deux étages de gros blocs.
+    for index in range(12):
+        angle = math.radians(-20 + index * 30)
+        if index in (5, 6):
+            continue
+        for ring, (radius, y, scale) in enumerate(((7.0, 0.0, 8.0), (4.0, 3.2, 8.5))):
+            x, z = mx + 2.0 + math.cos(angle) * radius, mz - 2.0 + math.sin(angle) * radius
+            scene.add("castle_kit/rocks-large", (x, y, z), rng.uniform(0, 360), scale * rng.uniform(0.9, 1.1))
+        x, z = mx + 2.0 + math.cos(angle) * 7.0, mz - 2.0 + math.sin(angle) * 7.0
+        scene.add_box((x, 2.4, z), (5.0, 4.8, 5.0))
+    scene.add("castle_kit/rocks-large", (mx + 2.0, 5.6, mz - 2.0), 30.0, 9.0)
+    scene.add_box((mx + 2.0, 3.0, mz - 2.0), (8.0, 6.0, 8.0))
+    # Boisage de l'entrée, sous le tertre, et l'éboulis qui la bouche.
+    for offset in (0.0, 1.6):
+        furniture(scene, "mini_dungeon/wood-structure", (mx - 2.6 + offset, 0.0, mz + 2.6 - offset), -45.0, 4.6)
+    scene.add_box((mx - 1.6, 2.3, mz + 1.6), (5.0, 4.6, 1.4), -45.0)
+    for x, z in ((mx - 2.2, mz + 2.2), (mx - 1.2, mz + 1.4), (mx - 3.0, mz + 1.6)):
+        furniture(scene, "survival_kit/resource-stone-large", (x, 0.0, z), rng.uniform(0, 360), 6.0)
+    # Chariot de minerai renversé, outils et caisses abandonnés devant.
+    furniture(scene, "fantasy_town_kit/cart", (mx - 9.0, 0.0, mz + 6.5), 30.0, 2.6, height=1.4, roll=90.0)
+    for x, z, yaw in ((mx - 5.0, mz + 7.0, 20.0), (mx - 6.0, mz + 8.0, 70.0)):
+        furniture(scene, "survival_kit/tool-pickaxe", (x, 0.0, z), yaw, 4.0, tilt=90.0)
+    for x, z in ((mx - 9.5, mz + 2.0), (mx - 9.0, mz + 3.4)):
+        furniture(scene, "survival_kit/box-large", (x, 0.0, z), 30.0, 3.6, height=0.9)
+
+
 def main():
     build_shelter()
     rng = random.Random(5814)
@@ -632,6 +779,8 @@ def main():
     build_village(scene, rng)
     build_castle(scene, rng)
     build_bunker(scene, rng)
+    build_landmarks(scene, rng)
+    build_mine(scene, rng)
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(scene.text(), encoding="utf-8", newline="\n")
     print(f"{OUTPUT.name} : {len(scene.visuals)} modèles, {len(scene.colliders)} collisions")

@@ -8,7 +8,9 @@ pour un changement durable, modifier ce script puis le relancer depuis le dossie
 
 from pathlib import Path
 
-from build_plaine import Scene, furniture
+import random
+
+from build_plaine import Scene, camp, furniture
 
 OUTPUT_DIR = Path(__file__).resolve().parent.parent / "scenes" / "levels" / "desert"
 GATE_SCALE = 5.0
@@ -61,6 +63,8 @@ def build_sanctuary(scene):
     scene.add("mini_arena/bricks", (-12.0, 0.0, -1.0), 70.0, 3.2)
     furniture(scene, "mini_arena/column-damaged", (6.5, 0.0, 6.5), 0.0, 3.0, tilt=90.0)
     scene.add("survival_kit/floor-hole", (0.0, 0.03, -6.0), 0.0, 5.0)
+    # Campement d'une caravane surprise par la tempête, à l'ouest, sur un replat entre les dunes.
+    camp(scene, random.Random(9), -36.0, -30.0, 40.0)
 
 
 def build_cellar(scene):

@@ -71,8 +71,13 @@ func footing_height(x: float, z: float) -> float:
 
 
 ## Vaut 1 sur l'esplanade et le chemin, où le sol reste plat.
+## Replat du campement de la caravane : (x, z, rayon), comme dans tools/build_desert.py.
+const CAMP := Vector3(-36.0, -30.0, 7.0)
+
+
 func _flat_mask(x: float, z: float) -> float:
 	var plaza := 1.0 - smoothstep(PLAZA.z, PLAZA.z + 8.0, Vector2(x - PLAZA.x, z - PLAZA.y).length())
+	plaza = maxf(plaza, 1.0 - smoothstep(CAMP.z, CAMP.z + 6.0, Vector2(x - CAMP.x, z - CAMP.y).length()))
 	var path := 1.0 - smoothstep(PATH_HALF_WIDTH, PATH_HALF_WIDTH + 5.0, absf(x))
 	path *= smoothstep(PATH_START - 6.0, PATH_START, z) * smoothstep(PATH_END + 6.0, PATH_END, z)
 	return maxf(plaza, path)

@@ -43,6 +43,7 @@
 [ext_resource type="PackedScene" path="res://scenes/levels/village/code_puzzle.tscn" id="54_code_puzzle"]
 [ext_resource type="PackedScene" path="res://scenes/levels/village/paper_notebook.tscn" id="55_notebook"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/furniture_kit/bookcaseClosedWide.glb" id="56_shelf"]
+[ext_resource type="Script" path="res://scripts/readable.gd" id="57_readable"]
 [ext_resource type="Script" path="res://scenes/levels/hub/volcano.gd" id="90_volcano"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_dusk"]
@@ -115,6 +116,10 @@ roughness = 1.0
 [sub_resource type="StandardMaterial3D" id="Material_stone"]
 albedo_color = Color(0.35, 0.34, 0.36, 1)
 roughness = 1.0
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_post"]
+height = 2.0
+radius = 0.35
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ramp"]
 size = Vector3(3, 0.3, 10.06)
@@ -478,6 +483,42 @@ modulate = Color(1, 0.88, 0.75, 1)
 text = "Le Village détruit"
 font_size = 64
 outline_size = 16
+
+[node name="Lore" type="Node3D" parent="."]
+
+[node name="Notice" type="Node3D" parent="Lore"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6, 0, 13)
+script = ExtResource("57_readable")
+title = "L'avis du maire"
+body = "Proclamation du maire : les registres de la mairie ont été mis à l'abri dans le bureau, à l'étage. Seul celui qui comprendra les cinq langages des anciens bâtisseurs pourra ouvrir la salle des archives."
+prompt = "Lire : L'avis du maire"
+radius = 2.6
+
+[node name="Post" parent="Lore/Notice" instance=ExtResource("15_signpost")]
+transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, -0, 0, 2.4, 0, 0, 0)
+
+[node name="Body" type="StaticBody3D" parent="Lore/Notice"]
+
+[node name="Shape" type="CollisionShape3D" parent="Lore/Notice/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CylinderShape3D_post")
+
+[node name="Memorial" type="Node3D" parent="Lore"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.0, 0, 37.5)
+script = ExtResource("57_readable")
+title = "Le mémorial des gardes"
+body = "Ici, les gardes de Codia ont tenu la porte trois jours et trois nuits face aux Dragons du Chaos. Quand elle a cédé, ils ont mis les habitants à l'abri dans le bunker du roi."
+prompt = "Lire : Le mémorial des gardes"
+radius = 2.6
+
+[node name="Post" parent="Lore/Memorial" instance=ExtResource("15_signpost")]
+transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, -0, 0, 2.4, 0, 0, 0)
+
+[node name="Body" type="StaticBody3D" parent="Lore/Memorial"]
+
+[node name="Shape" type="CollisionShape3D" parent="Lore/Memorial/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CylinderShape3D_post")
 
 [node name="HallDoor" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, -20.2)

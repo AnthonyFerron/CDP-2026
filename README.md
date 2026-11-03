@@ -40,6 +40,7 @@ Le jeu démarre dans le hub, `frontend/scenes/levels/hub/hub.tscn`, à l'intéri
 - Les portails s'ouvrent dans l'ordre Plaine, Désert, Marais, Village : chacun attend que le livre de la zone précédente soit posé au château.
 - Un livre trouvé vole jusqu'à la main du joueur, qui le tient en bas de l'écran. Il faut le rapporter soi-même dans la salle des livres, au cœur du donjon du château, et le poser sur son piédestal, devant le trône du roi : il quitte alors la main pour s'y poser.
 - Chaque livre posé répare une partie du village : quatre maisons par livre, en commençant par les plus proches du camp, puis le marché, la cour du château, la fontaine, les drapeaux et les toits des tours du donjon. Un plan large montre le village qui se relève, et le ciel s'éclaircit.
+- Autour du cœur du village : la taverne et la forge (premier livre), l'école et la ferme avec ses champs (deuxième), la chapelle et le cimetière des soldats (troisième), et la mine d'argent effondrée au pied des montagnes, au nord-est. Chaque lieu a son panneau à lire, qui raconte un peu de l'histoire de Codia.
 - Dès que le quatrième livre est trouvé, Merlon rejoint la salle du château. Le dernier livre posé, il y accomplit le rituel, puis la bonne fin se joue.
 
 L'autoload `GameState` (`frontend/scripts/game_state.gd`) garde les livres trouvés, les livres posés et la dernière zone, et les sauvegarde dans `user://sauvegarde.cfg` à chaque changement. Pour ajouter une zone, renseigner sa scène dans `ZONE_SCENES`, sa place dans `ZONE_ORDER` et son livre dans `ZONE_BOOKS`, puis appeler `GameState.collect_book()` quand le livre est pris.
@@ -56,7 +57,7 @@ Le volcan entre en éruption au bout de 60 minutes (`GameState.TOTAL_TIME`). Le 
 | --- | --- | --- | --- |
 | Plaine | La discussion oubliée : six fragments cachés dans les livres de la bibliothèque, à remettre dans l'ordre sur la tablette | Projenomicon | Ordre de la conversation : restauration à organiser, objectifs, inventaire, planning, suivi, vérification et clôture |
 | Désert | Les runes de l'algorithme : runes à ramasser ou à dégager du sable en maintenant E, à poser sur la table ronde de la cave | Algonicon | Jarre : TANT QUE, Puiser, Porter. Porte : SI, Ouvrir, SINON. « POUR » et « Fermer » sont des leurres |
-| Marais | Le tombeau des lettres oubliées : mécanisme à cinq cercles dans la crypte souterraine | Logiconomicon | CODIA décalé de +3, −3, +3, −3, +3 : **FLGFD** |
+| Marais | Le tombeau des lettres oubliées : mécanisme à cinq cercles dans la crypte souterraine ; les épitaphes des rois Codeon I à IV redonnent la règle | Logiconomicon | CODIA décalé de +3, −3, +3, −3, +3 : **FLGFD** |
 | Village | Les cinq codes oubliés : dix fragments de papier cachés dans la mairie (touche I pour les relire), cinq extraits de code à résoudre dans l'ordre sur le dispositif du bureau du maire | Codonomicon | HTML : **3**. CSS : **green**. Python : **10**. PHP : **2**. TypeScript : **12** |
 
 ## Organisation du projet

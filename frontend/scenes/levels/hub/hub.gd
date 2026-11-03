@@ -61,6 +61,8 @@ func _ready() -> void:
 	for character: Readable in $Characters.get_children():
 		character.interacted.connect(_read.bind(character))
 	$Castle/Inscription.interacted.connect(_read.bind($Castle/Inscription))
+	for sign: Readable in $Lore.get_children().filter(func(node: Node) -> bool: return node is Readable):
+		sign.interacted.connect(_read.bind(sign))
 	_bunker.interacted.connect(_travel.bind(true))
 	_bunker_exit.interacted.connect(_on_bunker_exit)
 	for zone in ZONES:

@@ -68,6 +68,8 @@ func _ready() -> void:
 	for clue: Readable in _clues.get_children():
 		clue.interacted.connect(_read.bind(clue))
 	_inscription.interacted.connect(_read.bind(_inscription))
+	for epitaph: Readable in $Interior/Kings.find_children("Epitaph", "Node3D", true, false):
+		epitaph.interacted.connect(_read.bind(epitaph))
 	_door_interactable.interacted.connect(_travel.bind(true))
 	_exit.interacted.connect(_travel.bind(false))
 	_mechanism_interactable.interacted.connect(_open_mechanism)

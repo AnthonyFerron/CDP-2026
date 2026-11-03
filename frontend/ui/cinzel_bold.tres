@@ -1,6 +1,6 @@
-[gd_resource type="FontVariation" format=3]
+[gd_resource type="FontVariation" format=3 uid="uid://bmf6cibxclx2l"]
 
-[ext_resource type="FontFile" path="res://assets/fonts/Cinzel.ttf" id="1_cinzel"]
+[ext_resource type="FontFile" uid="uid://b0uln7vj2q36j" path="res://assets/fonts/Cinzel.ttf" id="1_cinzel"]
 
 [resource]
 base_font = ExtResource("1_cinzel")

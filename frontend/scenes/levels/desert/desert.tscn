@@ -467,6 +467,14 @@ radius = 2.0
 
 [node name="Clues" type="Node3D" parent="Interior"]
 
+[node name="Caravan" type="Node3D" parent="Exterior/Clues"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33.25, 0.8, -30.75)
+script = ExtResource("12_readable")
+title = "Le carnet du caravanier"
+body = "Carnet d'un caravanier. Trois jours que la tempête nous tient. Le vieux guide dit que les bâtisseurs du sanctuaire écrivaient leurs ordres sur des runes, et qu'il suffit de les remettre dans l'ordre pour que le sable rende ce qu'il garde. Nous en avons vu briller sous les dunes, autour de l'esplanade. Certains tas ne cachent rien : il faut creuser quand même."
+prompt = "Lire le carnet"
+radius = 2.4
+
 [node name="Inscription" type="Node3D" parent="Interior/Clues"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, -11.6)
 script = ExtResource("12_readable")

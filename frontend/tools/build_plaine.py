@@ -7,6 +7,7 @@ pour un changement durable, modifier ce script puis le relancer depuis le dossie
 """
 
 import math
+import random
 from pathlib import Path
 
 OUTPUT_DIR = Path(__file__).resolve().parent.parent / "scenes" / "levels" / "plaine"
@@ -194,6 +195,30 @@ MODEL_BOXES = {
     "castle_kit/tree-large": ((-0.44, 0.0, -0.44), (0.89, 1.85, 0.89)),
     "castle_kit/tree-small": ((-0.37, 0.0, -0.36), (0.74, 1.35, 0.72)),
     "fantasy_town_kit/pillar-stone": ((-0.08, 0.0, -0.08), (0.16, 1.0, 0.16)),
+    "survival_kit/workbench-anvil": ((-0.15, 0.0, -0.15), (0.32, 0.3, 0.3)),
+    "survival_kit/workbench-grind": ((-0.13, -0.09, -0.16), (0.26, 0.31, 0.33)),
+    "mini_dungeon/wood-structure": ((-0.54, 0.0, -0.54), (1.09, 1.0, 1.09)),
+    "mini_dungeon/wood-support": ((-0.54, 0.0, -0.12), (1.09, 1.0, 0.24)),
+    "survival_kit/resource-stone-large": ((-0.19, 0.0, -0.17), (0.38, 0.16, 0.34)),
+    "survival_kit/tool-pickaxe": ((-0.09, 0.0, -0.02), (0.18, 0.24, 0.04)),
+    "nature_kit/crops_dirtRow": ((-0.5, 0.0, -0.28), (1.0, 0.05, 0.62)),
+    "nature_kit/crops_wheatStageB": ((-0.27, 0.0, -0.22), (0.54, 0.53, 0.45)),
+    "nature_kit/crops_cornStageD": ((-0.15, 0.0, -0.2), (0.43, 1.25, 0.35)),
+    "nature_kit/crop_pumpkin": ((-0.22, 0.0, -0.23), (0.44, 0.33, 0.45)),
+    "nature_kit/fence_simple": ((-0.5, 0.0, -0.5), (1.0, 0.35, 0.07)),
+    "graveyard_kit/cross": ((-0.33, 0.0, -0.13), (0.67, 1.05, 0.25)),
+    "graveyard_kit/altar-wood": ((-0.52, 0.0, -0.33), (1.05, 0.54, 0.66)),
+    "graveyard_kit/bench": ((-0.4, 0.0, -0.23), (0.81, 0.53, 0.46)),
+    "graveyard_kit/gravestone-round": ((-0.22, 0.0, -0.13), (0.45, 0.58, 0.25)),
+    "graveyard_kit/gravestone-cross": ((-0.22, 0.0, -0.16), (0.45, 0.91, 0.33)),
+    "furniture_kit/kitchenBar": ((0.0, 0.0, -0.21), (0.43, 0.42, 0.21)),
+    "furniture_kit/stoolBar": ((0.0, 0.0, -0.23), (0.27, 0.44, 0.23)),
+    "nature_kit/statue_obelisk": ((-0.15, 0.0, -0.15), (0.31, 0.88, 0.31)),
+    "nature_kit/log_stack": ((-0.22, 0.0, -0.35), (0.42, 0.35, 0.71)),
+    "nature_kit/tent_detailedOpen": ((-0.44, 0.0, -0.35), (0.87, 0.56, 0.67)),
+    "nature_kit/campfire_stones": ((-0.25, 0.0, -0.26), (0.54, 0.08, 0.52)),
+    "survival_kit/chest": ((-0.13, -0.04, -0.14), (0.26, 0.21, 0.39)),
+    "fantasy_town_kit/stall-bench": ((-0.13, 0.0, -0.47), (0.26, 0.23, 0.94)),
     "fantasy_town_kit/stall-red": ((-0.5, 0.0, -0.5), (1.0, 1.24, 1.0)),
     "fantasy_town_kit/stall-green": ((-0.5, 0.0, -0.5), (1.0, 1.24, 1.0)),
     "fantasy_town_kit/stall": ((-0.32, 0.0, -0.5), (0.65, 0.37, 1.0)),
@@ -238,6 +263,27 @@ def furniture(scene, model, center, degrees=0.0, scale=2.6, height=None, tilt=0.
             scene.add_box((center[0], center[1] + height / 2, center[2]), (sx * scale, height, sz * scale), degrees)
         else:
             scene.add_box((center[0], center[1] + height / 2, center[2]), (size[0], height, size[2]))
+
+
+def camp(scene, rng, cx, cz, heading):
+    """Campement à l'abandon autour d'un feu éteint : deux tentes, des caisses, des tonneaux et une charrette couchée.
+    heading oriente l'ensemble ; tout est posé au sol et a sa collision."""
+    import math as _math
+
+    def at(u, v):
+        c, s = _math.cos(_math.radians(heading)), _math.sin(_math.radians(heading))
+        return (cx + c * u + s * v, 0.0, cz - s * u + c * v)
+
+    furniture(scene, "nature_kit/campfire_stones", at(0.0, 0.0), heading, 3.0)
+    for u, yaw in ((-3.6, 60.0), (3.4, -50.0)):
+        furniture(scene, "nature_kit/tent_detailedOpen", at(u, -2.4), heading + yaw, 3.6, height=2.0)
+    for u, v in ((-1.8, 2.4), (1.6, 2.6)):
+        furniture(scene, "nature_kit/log_stack", at(u, v), heading + rng.uniform(60, 120), 2.6, height=0.9)
+    furniture(scene, "survival_kit/chest", at(2.6, 1.2), heading + 20.0, 3.4, height=0.8)
+    for u, v in ((-3.4, 1.6), (-4.2, 2.6)):
+        furniture(scene, "mini_dungeon/barrel", at(u, v), rng.uniform(0, 360), 2.6, height=1.2)
+    furniture(scene, "survival_kit/box-large", at(4.4, -0.2), heading + 70.0, 3.6, height=0.9)
+    furniture(scene, "fantasy_town_kit/cart", at(-1.0, -6.0), heading + 100.0, 2.8, height=1.5, roll=90.0)
 
 
 def against_wall(scene, model, point, inward, along_offset=0.0, scale=3.2, width=0.8, depth=0.25, height=0.8):
@@ -323,6 +369,8 @@ def build_ruins():
         ((13.5, 0.0, 7.0), 60.0, 90.0),
     ):
         furniture(scene, "furniture_kit/bookcaseClosedWide", position, degrees, 3.2, height=2.5, tilt=tilt)
+    # Campement des soldats envoyés défendre la bibliothèque, sur le replat au bord du chemin.
+    camp(scene, random.Random(7), 14.0, 42.0, -30.0)
     for position, degrees in (((-3.0, 0.0, 12.5), 30.0), ((4.5, 0.0, 13.5), 200.0), ((-9.0, 0.0, 12.5), 80.0)):
         scene.add("furniture_kit/books", position, degrees, 5.0)
     return scene

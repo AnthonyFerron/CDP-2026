@@ -15,6 +15,13 @@ const PORTALS := {
 const CASTLE_GATE := Vector2(0.0, -50.0)
 const CASTLE_AREA := Rect2(-25.0, -95.0, 50.0, 45.0)
 const BUNKER := Vector2(78.0, 0.0)
+## Bâtiments publics et mine, comme dans tools/build_hub.py : (x, z, rayon) d'un replat sans arbres.
+const LANDMARKS: Array[Vector3] = [
+	Vector3(0.0, 60.0, 10.0), Vector3(-60.0, 0.0, 10.0), Vector3(-54.0, -30.0, 11.0),
+	Vector3(55.0, 18.0, 8.0), Vector3(50.0, 64.0, 14.0), Vector3(84.0, -40.0, 13.0),
+]
+## Chemins qui mènent à l'école et à la taverne.
+const LANES: Array[Vector2] = [Vector2(0.0, 55.0), Vector2(-53.0, 0.0)]
 ## Le village occupe ce rayon autour du feu de camp ; une rue en fait le tour entre ses deux rangs de maisons.
 const VILLAGE_RADIUS := 46.0
 const RING_STREET := 31.0
@@ -77,7 +84,7 @@ func slope_at(x: float, z: float) -> float:
 
 ## Destinations reliées au feu de camp par un chemin.
 static func destinations() -> Array:
-	return PORTALS.values() + [CASTLE_GATE, BUNKER]
+	return PORTALS.values() + [CASTLE_GATE, BUNKER] + LANES
 
 
 ## Distance d'un point au rectangle de l'enceinte du château, nulle à l'intérieur.
@@ -91,6 +98,8 @@ func flat_mask(x: float, z: float) -> float:
 	var point := Vector2(x, z)
 	var mask := 1.0 - smoothstep(VILLAGE_RADIUS, VILLAGE_RADIUS + 8.0, point.length())
 	mask = maxf(mask, 1.0 - smoothstep(3.0, 10.0, castle_distance(point)))
+	for landmark in LANDMARKS:
+		mask = maxf(mask, 1.0 - smoothstep(landmark.z, landmark.z + 6.0, point.distance_to(Vector2(landmark.x, landmark.y))))
 	for target: Vector2 in destinations():
 		mask = maxf(mask, 1.0 - smoothstep(5.0, 11.0, point.distance_to(target)))
 		var along := Geometry2D.get_closest_point_to_segment(point, Vector2.ZERO, target)

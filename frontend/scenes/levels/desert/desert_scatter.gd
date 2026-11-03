@@ -43,7 +43,7 @@ func is_free(spot: Vector2, margin: float) -> bool:
 	for sand in DesertTerrain.QUICKSANDS:
 		if spot.distance_to(Vector2(sand.x, sand.y)) < sand.z + 1.5 + margin:
 			return false
-	return true
+	return spot.distance_to(Vector2(DesertTerrain.CAMP.x, DesertTerrain.CAMP.y)) > DesertTerrain.CAMP.z + 2.0 + margin
 
 
 func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, solid: bool, radius: float, tilted := false) -> void:

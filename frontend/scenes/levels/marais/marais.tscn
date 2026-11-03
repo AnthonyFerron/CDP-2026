@@ -469,6 +469,14 @@ mesh = SubResource("BoxMesh_lid")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
 shape = SubResource("BoxShape3D_tomb")
 
+[node name="Epitaph" type="Node3D" parent="Interior/Kings/King1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("12_readable")
+title = "Roi Codeon I"
+body = "Codeon I, le Fondateur. Il donna son nom au royaume de Codia, et c'est par ce nom que tout commence."
+prompt = "Lire l'épitaphe"
+radius = 2.6
+
 [node name="Name" type="Label3D" parent="Interior/Kings/King1"]
 transform = Transform3D(-1, 0, 1.22465e-16, 0, 1, 0, -1.22465e-16, 0, -1, 0, 0.6, -1.52)
 pixel_size = 0.0035
@@ -491,6 +499,14 @@ mesh = SubResource("BoxMesh_lid")
 [node name="Shape" type="CollisionShape3D" parent="Interior/Kings/King2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
 shape = SubResource("BoxShape3D_tomb")
+
+[node name="Epitaph" type="Node3D" parent="Interior/Kings/King2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("12_readable")
+title = "Roi Codeon II"
+body = "Codeon II, le Hardi. Sous son règne, le royaume avança de trois pas vers la lumière."
+prompt = "Lire l'épitaphe"
+radius = 2.6
 
 [node name="Name" type="Label3D" parent="Interior/Kings/King2"]
 transform = Transform3D(-1, 0, 1.22465e-16, 0, 1, 0, -1.22465e-16, 0, -1, 0, 0.6, -1.52)
@@ -515,6 +531,14 @@ mesh = SubResource("BoxMesh_lid")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
 shape = SubResource("BoxShape3D_tomb")
 
+[node name="Epitaph" type="Node3D" parent="Interior/Kings/King3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("12_readable")
+title = "Roi Codeon III"
+body = "Codeon III, le Prudent. Là où son père avait avancé, il recula de trois pas, pour garder ce qui était acquis."
+prompt = "Lire l'épitaphe"
+radius = 2.6
+
 [node name="Name" type="Label3D" parent="Interior/Kings/King3"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0.6, 1.52)
 pixel_size = 0.0035
@@ -537,6 +561,14 @@ mesh = SubResource("BoxMesh_lid")
 [node name="Shape" type="CollisionShape3D" parent="Interior/Kings/King4"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
 shape = SubResource("BoxShape3D_tomb")
+
+[node name="Epitaph" type="Node3D" parent="Interior/Kings/King4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("12_readable")
+title = "Roi Codeon IV"
+body = "Codeon IV, le Juste. Il reprit la marche en avant, de trois pas encore, puis ferma la mine d'argent. Son fils, Codeon V, règne aujourd'hui."
+prompt = "Lire l'épitaphe"
+radius = 2.6
 
 [node name="Name" type="Label3D" parent="Interior/Kings/King4"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0.6, 1.52)

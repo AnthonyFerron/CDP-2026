@@ -51,6 +51,9 @@ func _is_free(spot: Vector2, margin: float) -> bool:
 	for target: Vector2 in HubTerrain.destinations():
 		if spot.distance_to(target) < 6.0 + margin:
 			return false
+	for landmark in HubTerrain.LANDMARKS:
+		if spot.distance_to(Vector2(landmark.x, landmark.y)) < landmark.z + margin:
+			return false
 	return true
 
 

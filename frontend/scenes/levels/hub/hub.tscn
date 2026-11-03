@@ -945,6 +945,198 @@ light_color = Color(0.6, 0.45, 1, 1)
 light_energy = 1.2
 omni_range = 4.0
 
+[node name="Lore" type="Node3D" parent="."]
+
+[node name="SchoolSign" type="Node3D" parent="Lore"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -2.6, 0, 54.6)
+script = ExtResource("10_readable")
+title = "L'école de Codia"
+body = "Avant la guerre, Merlon y apprenait aux enfants l'art des instructions : découper un problème, mettre les étapes dans l'ordre, vérifier chaque résultat. Sur le tableau, quelqu'un a écrit à la craie : « Un bon programme, comme un bon royaume, tient sur quatre livres. »"
+prompt = "Lire : L'école de Codia"
+radius = 2.6
+
+[node name="Post" parent="Lore/SchoolSign" instance=ExtResource("15_signpost")]
+transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, -0, 0, 2.4, 0, 0, 0)
+
+[node name="Body" type="StaticBody3D" parent="Lore/SchoolSign"]
+
+[node name="Shape" type="CollisionShape3D" parent="Lore/SchoolSign/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CylinderShape3D_character")
+
+[node name="SchoolSignName" type="Label3D" parent="Lore"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9.6, 55.4)
+pixel_size = 0.007
+billboard = 1
+modulate = Color(1, 0.9, 0.7, 1)
+text = "École de Codia"
+font_size = 64
+outline_size = 14
+
+[node name="TavernSign" type="Node3D" parent="Lore"]
+transform = Transform3D(6.12323e-17, 0, 1, 0, 1, 0, -1, 0, 6.12323e-17, -52.6, 0, 4.6)
+script = ExtResource("10_readable")
+title = "La Chope du Dragon"
+body = "On raconte ici que Devlyn a vaincu les Quatre Dragons du Chaos avec une seule boucle bien écrite. Le tavernier jure que la dernière bière tirée avant la guerre attend encore au fond d'un tonneau, pour le jour où Codia renaîtra."
+prompt = "Lire : La Chope du Dragon"
+radius = 2.6
+
+[node name="Post" parent="Lore/TavernSign" instance=ExtResource("15_signpost")]
+transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, -0, 0, 2.4, 0, 0, 0)
+
+[node name="Body" type="StaticBody3D" parent="Lore/TavernSign"]
+
+[node name="Shape" type="CollisionShape3D" parent="Lore/TavernSign/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CylinderShape3D_character")
+
+[node name="TavernSignName" type="Label3D" parent="Lore"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -53.4, 9.6, 0)
+pixel_size = 0.007
+billboard = 1
+modulate = Color(1, 0.9, 0.7, 1)
+text = "La Chope du Dragon"
+font_size = 64
+outline_size = 14
+
+[node name="ChapelSign" type="Node3D" parent="Lore"]
+transform = Transform3D(6.12323e-17, 0, 1, 0, 1, 0, -1, 0, 6.12323e-17, -50.8, 0, -26.4)
+script = ExtResource("10_readable")
+title = "La chapelle des Quatre Livres"
+body = "Les anciens priaient ici devant quatre lutrins vides. Une prière est gravée au-dessus de l'autel : « Que l'ordre du Projenomicon, la rigueur de l'Algonicon, la logique du Logiconomicon et la clarté du Codonomicon veillent sur Codia. »"
+prompt = "Lire : La chapelle des Quatre Livres"
+radius = 2.6
+
+[node name="Post" parent="Lore/ChapelSign" instance=ExtResource("15_signpost")]
+transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, -0, 0, 2.4, 0, 0, 0)
+
+[node name="Body" type="StaticBody3D" parent="Lore/ChapelSign"]
+
+[node name="Shape" type="CollisionShape3D" parent="Lore/ChapelSign/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CylinderShape3D_character")
+
+[node name="ChapelSignName" type="Label3D" parent="Lore"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -51.4, 6, -30)
+pixel_size = 0.007
+billboard = 1
+modulate = Color(1, 0.9, 0.7, 1)
+text = "Chapelle"
+font_size = 64
+outline_size = 14
+
+[node name="Memorial" type="Node3D" parent="Lore"]
+transform = Transform3D(6.12323e-17, 0, 1, 0, 1, 0, -1, 0, 6.12323e-17, -44, 0, -36)
+script = ExtResource("10_readable")
+title = "Le mémorial des soldats"
+body = "Aux soldats de Codia, tombés face aux Quatre Dragons du Chaos. Leurs noms se sont effacés de la pierre ; leur courage, lui, ne s'efface pas."
+prompt = "Lire : Le mémorial des soldats"
+radius = 2.6
+
+[node name="Post" parent="Lore/Memorial" instance=ExtResource("15_signpost")]
+transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, -0, 0, 2.4, 0, 0, 0)
+
+[node name="Body" type="StaticBody3D" parent="Lore/Memorial"]
+
+[node name="Shape" type="CollisionShape3D" parent="Lore/Memorial/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CylinderShape3D_character")
+
+[node name="ForgeSign" type="Node3D" parent="Lore"]
+transform = Transform3D(6.12323e-17, 0, -1, 0, 1, 0, 1, 0, 6.12323e-17, 49.8, 0, 22.6)
+script = ExtResource("10_readable")
+title = "La forge de Bran"
+body = "Bran y forgeait les gonds des grands portails, du temps où ils menaient à des terres prospères. Sur l'enclume, une marque : la couronne de l'atelier royal, et le nom de son maître, Bran le Jeune."
+prompt = "Lire : La forge de Bran"
+radius = 2.6
+
+[node name="Post" parent="Lore/ForgeSign" instance=ExtResource("15_signpost")]
+transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, -0, 0, 2.4, 0, 0, 0)
+
+[node name="Body" type="StaticBody3D" parent="Lore/ForgeSign"]
+
+[node name="Shape" type="CollisionShape3D" parent="Lore/ForgeSign/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CylinderShape3D_character")
+
+[node name="ForgeSignName" type="Label3D" parent="Lore"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50.4, 6, 18)
+pixel_size = 0.007
+billboard = 1
+modulate = Color(1, 0.9, 0.7, 1)
+text = "Forge"
+font_size = 64
+outline_size = 14
+
+[node name="FarmSign" type="Node3D" parent="Lore"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 48.6, 0, 58.6)
+script = ExtResource("10_readable")
+title = "La ferme du roi"
+body = "Elle nourrissait tout le village. Depuis la guerre, la terre ne donne plus rien. Mira dit que les champs repousseront quand les livres seront revenus au château."
+prompt = "Lire : La ferme du roi"
+radius = 2.6
+
+[node name="Post" parent="Lore/FarmSign" instance=ExtResource("15_signpost")]
+transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, -0, 0, 2.4, 0, 0, 0)
+
+[node name="Body" type="StaticBody3D" parent="Lore/FarmSign"]
+
+[node name="Shape" type="CollisionShape3D" parent="Lore/FarmSign/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CylinderShape3D_character")
+
+[node name="FarmSignName" type="Label3D" parent="Lore"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44, 6, 59.4)
+pixel_size = 0.007
+billboard = 1
+modulate = Color(1, 0.9, 0.7, 1)
+text = "Ferme"
+font_size = 64
+outline_size = 14
+
+[node name="MineSign" type="Node3D" parent="Lore"]
+transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 77.6, 0, -34.6)
+script = ExtResource("10_readable")
+title = "La mine d'argent"
+body = "La galerie s'est effondrée pendant la guerre. Un écriteau est cloué au boisage : « Fermée par ordre du roi Codeon IV. Les mineurs ont rejoint le bunker. »"
+prompt = "Lire : La mine d'argent"
+radius = 2.6
+
+[node name="Post" parent="Lore/MineSign" instance=ExtResource("15_signpost")]
+transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, -0, 0, 2.4, 0, 0, 0)
+
+[node name="Body" type="StaticBody3D" parent="Lore/MineSign"]
+
+[node name="Shape" type="CollisionShape3D" parent="Lore/MineSign/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CylinderShape3D_character")
+
+[node name="MineSignName" type="Label3D" parent="Lore"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 82, 10.5, -38)
+pixel_size = 0.007
+billboard = 1
+modulate = Color(1, 0.9, 0.7, 1)
+text = "Mine d'argent"
+font_size = 64
+outline_size = 14
+
+[node name="NoticeBoard" type="Node3D" parent="Lore"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -2.6, 0, -9.6)
+script = ExtResource("10_readable")
+title = "Avis aux habitants"
+body = "Par ordre du roi Codeon V : le couvre-feu tombe au coucher du soleil. Les volontaires pour la reconstruction se présentent à Bran. Quiconque rapportera l'un des livres de la vision de Merlon sera reçu au château."
+prompt = "Lire : Avis aux habitants"
+radius = 2.6
+
+[node name="Post" parent="Lore/NoticeBoard" instance=ExtResource("15_signpost")]
+transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, -0, 0, 2.4, 0, 0, 0)
+
+[node name="Body" type="StaticBody3D" parent="Lore/NoticeBoard"]
+
+[node name="Shape" type="CollisionShape3D" parent="Lore/NoticeBoard/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CylinderShape3D_character")
+
 [node name="CastleLabel" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 19, -46)
 pixel_size = 0.008

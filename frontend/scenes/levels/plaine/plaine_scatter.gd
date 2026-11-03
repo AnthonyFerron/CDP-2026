@@ -390,6 +390,8 @@ func _is_free(spot: Vector2, crater_margin: float) -> bool:
 		return false
 	if absf(spot.x) < 4.5 and spot.y > 0.0:
 		return false
+	if spot.distance_to(Vector2(PlaineTerrain.CAMP.x, PlaineTerrain.CAMP.y)) < PlaineTerrain.CAMP.z + 2.0:
+		return false
 	for crater in PlaineTerrain.CRATERS:
 		if Vector2(spot.x - crater.x, spot.y - crater.y).length() < crater.z * crater_margin:
 			return false

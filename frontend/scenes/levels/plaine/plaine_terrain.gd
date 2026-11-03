@@ -81,8 +81,13 @@ func _crater_profile(x: float, z: float, crater: Vector4) -> float:
 
 
 ## Vaut 1 sous les ruines et sur le chemin du portail, où le sol doit rester plat.
+## Replat du campement des soldats, au bord du chemin : (x, z, rayon), comme dans tools/build_plaine.py.
+const CAMP := Vector3(14.0, 42.0, 7.0)
+
+
 func _flat_mask(x: float, z: float) -> float:
 	var ruins := 1.0 - smoothstep(RUINS_RADIUS, RUINS_RADIUS + 8.0, Vector2(x, z).length())
+	ruins = maxf(ruins, 1.0 - smoothstep(CAMP.z, CAMP.z + 5.0, Vector2(x - CAMP.x, z - CAMP.y).length()))
 	var path := 1.0 - smoothstep(PATH_HALF_WIDTH, PATH_HALF_WIDTH + 4.0, absf(x))
 	return maxf(ruins, path if z > 0.0 else 0.0)
 
