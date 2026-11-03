@@ -57,7 +57,7 @@ Pour une mise à jour de Godot, changer `GODOT_VERSION` dans `frontend/Dockerfil
 
 ## Sons
 
-Les sons de la Plaine (vent, lave, pas) sont synthétisés par `frontend/tools/generate_sounds.py`, sans dépendance externe. Pour en modifier un, changer sa fonction dans le script puis le relancer depuis `frontend` avec `python tools/generate_sounds.py`.
+Les sons du jeu (vent, lave, marais, pas, feu, porte) sont synthétisés par `frontend/tools/generate_sounds.py`, sans dépendance externe. Pour en modifier un, changer sa fonction dans le script puis le relancer depuis `frontend` avec `python tools/generate_sounds.py`.
 
 ## Licences
 

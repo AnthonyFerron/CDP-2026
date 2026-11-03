@@ -26,6 +26,8 @@ extends CharacterBody3D
 @export var stride_length := 1.9
 @export var footstep_volume_db := -6.0
 
+## Multiplie la vitesse, par exemple pour ralentir le joueur dans l'eau.
+var speed_multiplier := 1.0
 var _spawn_position: Vector3
 var _stride := 0.0
 var _footsteps: AudioStreamPlayer
@@ -83,6 +85,7 @@ func _physics_process(delta: float) -> void:
 	var input := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
 	var direction := Vector3(input.x, 0.0, input.y).rotated(Vector3.UP, _camera_pivot.rotation.y)
 	var speed := sprint_speed if Input.is_action_pressed("sprint") else walk_speed
+	speed *= speed_multiplier
 	var target_velocity := direction * speed
 
 	velocity.x = move_toward(velocity.x, target_velocity.x, acceleration * delta)

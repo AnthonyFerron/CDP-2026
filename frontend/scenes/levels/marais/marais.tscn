@@ -1,0 +1,292 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/levels/marais/marais.gd" id="1_marais"]
+[ext_resource type="Script" path="res://scenes/levels/marais/marais_terrain.gd" id="2_terrain"]
+[ext_resource type="Script" path="res://scenes/levels/marais/marais_scatter.gd" id="3_scatter"]
+[ext_resource type="Shader" path="res://scenes/levels/marais/marais_ground.gdshader" id="4_ground"]
+[ext_resource type="Shader" path="res://scenes/levels/marais/swamp_water.gdshader" id="5_water"]
+[ext_resource type="PackedScene" path="res://scenes/levels/marais/marais_props.tscn" id="6_props"]
+[ext_resource type="PackedScene" path="res://scenes/levels/marais/brazier.tscn" id="7_brazier"]
+[ext_resource type="PackedScene" path="res://scenes/props/portal/portal.tscn" id="8_portal"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="9_player"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="10_hud"]
+[ext_resource type="Script" path="res://scripts/interactable.gd" id="11_interactable"]
+[ext_resource type="Script" path="res://scripts/readable.gd" id="12_readable"]
+[ext_resource type="Script" path="res://scripts/fire_effect.gd" id="13_fire"]
+[ext_resource type="Script" path="res://scripts/flickering_light.gd" id="14_flicker"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/crypt-large-door.glb" id="15_door"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/character-ghost.glb" id="16_ghost"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/signpost.glb" id="17_signpost"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/pine-crooked.glb" id="20_pine_crooked"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/pine.glb" id="21_pine"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/tree_thin_dark.glb" id="22_tree_thin"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/tree_default_dark.glb" id="23_tree_default"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/crops_bambooStageB.glb" id="24_reed"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/lily_large.glb" id="25_lily_large"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/lily_small.glb" id="26_lily_small"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/plant_bushLarge.glb" id="27_bush"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/mushroom_redGroup.glb" id="28_mushroom"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/log_large.glb" id="29_log"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/path_wood.glb" id="30_plank"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/trunk-long.glb" id="31_post"]
+[ext_resource type="AudioStream" path="res://assets/audio/marais_ambience.wav" id="40_ambience"]
+[ext_resource type="AudioStream" path="res://assets/audio/stone_door.wav" id="41_door_sound"]
+[ext_resource type="AudioStream" path="res://assets/audio/fire_crackle.wav" id="42_crackle"]
+[ext_resource type="AudioStream" path="res://assets/audio/footstep_mud_1.wav" id="43_mud1"]
+[ext_resource type="AudioStream" path="res://assets/audio/footstep_mud_2.wav" id="44_mud2"]
+[ext_resource type="AudioStream" path="res://assets/audio/footstep_mud_3.wav" id="45_mud3"]
+[ext_resource type="AudioStream" path="res://assets/audio/footstep_splash_1.wav" id="46_splash1"]
+[ext_resource type="AudioStream" path="res://assets/audio/footstep_splash_2.wav" id="47_splash2"]
+[ext_resource type="AudioStream" path="res://assets/audio/footstep_splash_3.wav" id="48_splash3"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_night"]
+sky_top_color = Color(0.03, 0.045, 0.07, 1)
+sky_horizon_color = Color(0.13, 0.17, 0.17, 1)
+ground_bottom_color = Color(0.03, 0.04, 0.04, 1)
+ground_horizon_color = Color(0.13, 0.17, 0.17, 1)
+
+[sub_resource type="Sky" id="Sky_night"]
+sky_material = SubResource("ProceduralSkyMaterial_night")
+
+[sub_resource type="Environment" id="Environment_marais"]
+background_mode = 2
+sky = SubResource("Sky_night")
+ambient_light_source = 3
+ambient_light_color = Color(0.42, 0.52, 0.5, 1)
+ambient_light_energy = 0.7
+tonemap_mode = 2
+glow_enabled = true
+glow_intensity = 0.7
+glow_bloom = 0.06
+glow_hdr_threshold = 0.9
+fog_enabled = true
+fog_light_color = Color(0.16, 0.21, 0.2, 1)
+fog_density = 0.028
+fog_sky_affect = 0.6
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ground"]
+render_priority = 0
+shader = ExtResource("4_ground")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ripples"]
+seed = 9
+frequency = 0.02
+fractal_octaves = 3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ripples"]
+width = 256
+height = 256
+seamless = true
+noise = SubResource("FastNoiseLite_ripples")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_water"]
+render_priority = 0
+shader = ExtResource("5_water")
+shader_parameter/ripple_noise = SubResource("NoiseTexture2D_ripples")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_water"]
+material = SubResource("ShaderMaterial_water")
+size = Vector2(180, 180)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_book"]
+albedo_color = Color(0.1, 0.35, 0.25, 1)
+emission_enabled = true
+emission = Color(0.3, 1, 0.55, 1)
+emission_energy_multiplier = 1.2
+
+[sub_resource type="BoxMesh" id="BoxMesh_book"]
+material = SubResource("StandardMaterial3D_book")
+size = Vector3(0.6, 0.14, 0.8)
+
+[node name="Marais" type="Node3D"]
+script = ExtResource("1_marais")
+ground_steps = Array[AudioStream]([ExtResource("43_mud1"), ExtResource("44_mud2"), ExtResource("45_mud3")])
+water_steps = Array[AudioStream]([ExtResource("46_splash1"), ExtResource("47_splash2"), ExtResource("48_splash3")])
+door_sound = ExtResource("41_door_sound")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_marais")
+
+[node name="Moon" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.7071068, 0.5, -0.5, 0, 0.7071068, 0.7071068, 0.7071068, -0.5, 0.5, 0, 40, 0)
+light_color = Color(0.62, 0.72, 0.9, 1)
+light_energy = 0.45
+shadow_enabled = true
+directional_shadow_max_distance = 60.0
+
+[node name="Terrain" type="StaticBody3D" parent="."]
+script = ExtResource("2_terrain")
+ground_material = SubResource("ShaderMaterial_ground")
+
+[node name="Water" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_water")
+cast_shadow = 0
+
+[node name="Scatter" type="Node3D" parent="." node_paths=PackedStringArray("terrain")]
+script = ExtResource("3_scatter")
+terrain = NodePath("../Terrain")
+tree_models = Array[PackedScene]([ExtResource("20_pine_crooked"), ExtResource("21_pine"), ExtResource("22_tree_thin"), ExtResource("23_tree_default")])
+reed_model = ExtResource("24_reed")
+lily_models = Array[PackedScene]([ExtResource("25_lily_large"), ExtResource("26_lily_small")])
+bush_model = ExtResource("27_bush")
+mushroom_model = ExtResource("28_mushroom")
+log_model = ExtResource("29_log")
+plank_model = ExtResource("30_plank")
+post_model = ExtResource("31_post")
+
+[node name="Props" parent="." instance=ExtResource("6_props")]
+
+[node name="Portal" parent="." instance=ExtResource("8_portal")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0.4, 63)
+closed_prompt = "Portail éteint"
+open_prompt = "Retourner au hub"
+
+[node name="Sign" parent="." instance=ExtResource("17_signpost")]
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, -0, 0, 2.5, -4, 0.4, 56)
+
+[node name="SignText" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 3.8, 56)
+pixel_size = 0.007
+billboard = 1
+modulate = Color(0.8, 0.92, 0.85, 1)
+text = "Le Marais"
+font_size = 64
+outline_size = 16
+
+[node name="Campfire" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 0.55, 21)
+script = ExtResource("13_fire")
+size = 1.6
+light_energy = 3.0
+light_range = 9.0
+crackle_sound = ExtResource("42_crackle")
+
+[node name="GateLightNorth" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 3.8, -0.3)
+script = ExtResource("14_flicker")
+light_color = Color(1, 0.75, 0.4, 1)
+light_energy = 1.6
+omni_range = 7.0
+flicker = 0.2
+
+[node name="GateLightSouth" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 3.8, 6.3)
+script = ExtResource("14_flicker")
+light_color = Color(1, 0.75, 0.4, 1)
+light_energy = 1.6
+omni_range = 7.0
+flicker = 0.2
+
+[node name="CryptLight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, -31)
+script = ExtResource("14_flicker")
+light_color = Color(0.5, 0.9, 0.7, 1)
+light_energy = 1.2
+omni_range = 9.0
+flicker = 0.1
+
+[node name="Clues" type="Node3D" parent="."]
+
+[node name="Notebook" type="Node3D" parent="Clues"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.6, 1.4, 25.6)
+script = ExtResource("12_readable")
+title = "Journal du gardien, an 5803"
+body = "Les quatre feux du caveau comptent à la manière des anciens. Le feu le plus à droite vaut un ; chaque feu vaut le double de son voisin de droite. Allumés, ils s'additionnent ; éteints, ils ne comptent pas. Le caveau ne s'ouvre qu'au bon nombre."
+prompt = "Lire le journal"
+radius = 2.2
+
+[node name="KeeperTomb" type="Node3D" parent="Clues"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.2, 1.4, 1.5)
+script = ExtResource("12_readable")
+title = "Tombe du gardien"
+body = "Ci-gît Aldric, gardien du Marais. Né en 5761, mort en 5803. Même la mort ne lui a pas fait quitter son poste."
+prompt = "Lire l'épitaphe"
+radius = 3
+
+[node name="AdaTomb" type="Node3D" parent="Clues"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 1.2, 7.4)
+script = ExtResource("12_readable")
+title = "Une tombe usée"
+body = "Ici repose Ada, qui savait tout écrire avec des zéros et des uns."
+prompt = "Lire l'épitaphe"
+radius = 2
+
+[node name="Ghost" type="Node3D" parent="Clues"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 1.6, 3.6)
+script = ExtResource("12_readable")
+title = "Le fantôme du gardien"
+body = "Je n'ai jamais quitté ce marais, voyageur. Depuis le jour de ma mort, je compte chaque hiver qui passe sur ma tombe. Nous sommes en l'an 5814, n'est-ce pas ? Alors tu sais depuis combien d'années je veille."
+prompt = "Parler au fantôme"
+radius = 3.6
+
+[node name="Plaque" type="Node3D" parent="Clues"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.2, 1.4, -34.4)
+script = ExtResource("12_readable")
+title = "Plaque de la crypte"
+body = "Caveau du gardien. Que brûlent les feux qui disent ses années de veille, et le marais rendra ce qu'il garde."
+prompt = "Lire la plaque"
+radius = 2.8
+
+[node name="Ghost" type="Node3D" parent="."]
+transform = Transform3D(1.83697e-16, 0, -3, 0, 3, 0, 3, 0, 1.83697e-16, 19, 1.6, 3.6)
+
+[node name="Model" parent="Ghost" instance=ExtResource("16_ghost")]
+
+[node name="Braziers" type="Node3D" parent="."]
+
+[node name="Eight" parent="Braziers" instance=ExtResource("7_brazier")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0.4, -29.5)
+value = 8
+
+[node name="Four" parent="Braziers" instance=ExtResource("7_brazier")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0.4, -29.5)
+value = 4
+
+[node name="Two" parent="Braziers" instance=ExtResource("7_brazier")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.4, -29.5)
+value = 2
+
+[node name="One" parent="Braziers" instance=ExtResource("7_brazier")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.4, -29.5)
+value = 1
+
+[node name="CryptDoor" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.26, 0.4, -37)
+
+[node name="Model" parent="CryptDoor" instance=ExtResource("15_door")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 1.26, 0, 0)
+
+[node name="Sound" type="AudioStreamPlayer3D" parent="CryptDoor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.26, 1.5, 0)
+unit_size = 4.0
+
+[node name="BookTarget" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3, -33.6)
+
+[node name="Book" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3, -33.6)
+
+[node name="Mesh" type="MeshInstance3D" parent="Book"]
+mesh = SubResource("BoxMesh_book")
+
+[node name="Glow" type="OmniLight3D" parent="Book"]
+light_color = Color(0.4, 1, 0.6, 1)
+light_energy = 1.5
+omni_range = 4.0
+
+[node name="Interactable" type="Node3D" parent="Book"]
+script = ExtResource("11_interactable")
+prompt = "Prendre le Binarium"
+radius = 2.4
+
+[node name="Player" parent="." instance=ExtResource("9_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0.6, 57)
+respawn_height = -40.0
+first_person = true
+
+[node name="Ambience" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("40_ambience")
+volume_db = -6.0
+autoplay = true
+
+[node name="Hud" parent="." instance=ExtResource("10_hud")]

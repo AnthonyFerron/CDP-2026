@@ -1,4 +1,4 @@
-"""Génère les sons de la Plaine dans assets/audio/, sans dépendance externe.
+"""Génère les sons du jeu dans assets/audio/, sans dépendance externe.
 
 Pour modifier un son, changer sa fonction dans ce script puis le relancer depuis le dossier frontend :
 
@@ -113,11 +113,130 @@ def footstep(seed):
     return normalize(samples, 0.7)
 
 
+def add_event(samples, start, event):
+    """Ajoute un son court dans une boucle, en repassant au début s'il dépasse la fin."""
+    for i, value in enumerate(event):
+        samples[(start + i) % len(samples)] += value
+
+
+def swamp():
+    """Nuit au marais : clapotis, grillons et grenouilles, en boucle de 12 s."""
+    rng = random.Random(3)
+    length, fade = RATE * 12, RATE
+    water = lowpass(lowpass(noise(length + fade, rng), 300), 400)
+    samples = seamless([w * (0.7 + 0.3 * math.sin(2 * math.pi * i / RATE / 3.0)) for i, w in enumerate(water)], length, fade)
+    samples = normalize(samples, 0.25)
+    for _ in range(46):
+        start = rng.randrange(length)
+        pitch = rng.uniform(4200, 5200)
+        chirp = []
+        for i in range(int(RATE * 0.12)):
+            t = i / RATE
+            gate = 1.0 if math.sin(2 * math.pi * 55 * t) > 0 else 0.0
+            chirp.append(0.05 * gate * math.sin(2 * math.pi * pitch * t) * math.exp(-t * 12))
+        add_event(samples, start, chirp)
+    for _ in range(7):
+        start = rng.randrange(length)
+        pitch = rng.uniform(110, 190)
+        croak = []
+        for i in range(int(RATE * 0.35)):
+            t = i / RATE
+            pulse = 0.5 + 0.5 * math.sin(2 * math.pi * 28 * t)
+            tone = math.sin(2 * math.pi * pitch * t) + 0.5 * math.sin(2 * math.pi * pitch * 2.1 * t)
+            croak.append(0.22 * tone * pulse * math.exp(-t * 6) * (1 - math.exp(-t * 200)))
+        add_event(samples, start, croak)
+    return normalize(samples, 0.6)
+
+
+def mud_step(seed):
+    """Pas dans la boue : un bruit sourd et collant."""
+    rng = random.Random(seed)
+    count = int(RATE * 0.28)
+    squelch = lowpass(highpass(noise(count, rng), 180), rng.uniform(700, 1000))
+    samples = []
+    for i in range(count):
+        t = i / RATE
+        envelope = (1 - math.exp(-t * 300)) * math.exp(-t * 16)
+        wobble = 1.0 + 0.5 * math.sin(2 * math.pi * rng.uniform(25, 35) * t)
+        samples.append(squelch[i] * envelope * wobble + math.sin(2 * math.pi * 60 * t) * math.exp(-t * 30) * 0.4)
+    return normalize(samples, 0.65)
+
+
+def splash_step(seed):
+    """Pas dans l'eau peu profonde : une gerbe, puis des gouttes."""
+    rng = random.Random(seed)
+    count = int(RATE * 0.4)
+    spray = highpass(noise(count, rng), 900)
+    samples = [spray[i] * (1 - math.exp(-i / RATE * 400)) * math.exp(-i / RATE * 14) for i in range(count)]
+    for _ in range(5):
+        start = rng.randrange(int(RATE * 0.08), int(RATE * 0.3))
+        pitch = rng.uniform(900, 1800)
+        for i in range(int(RATE * 0.05)):
+            t = i / RATE
+            if start + i < count:
+                samples[start + i] += 0.3 * math.sin(2 * math.pi * pitch * (1 + t * 6) * t) * math.exp(-t * 70)
+    return normalize(samples, 0.6)
+
+
+def fire_crackle():
+    """Feu qui crépite, en boucle de 6 s."""
+    rng = random.Random(5)
+    length, fade = RATE * 6, RATE // 2
+    roar = lowpass(noise(length + fade, rng), 500)
+    samples = normalize(seamless(roar, length, fade), 0.3)
+    for _ in range(90):
+        start = rng.randrange(length)
+        size = rng.uniform(0.2, 0.8)
+        crack = [size * rng.uniform(-1, 1) * math.exp(-i / RATE * 400) for i in range(int(RATE * 0.02))]
+        add_event(samples, start, crack)
+    return normalize(samples, 0.55)
+
+
+def fire_ignite():
+    """Souffle d'un feu qui prend."""
+    rng = random.Random(6)
+    count = int(RATE * 0.7)
+    base = noise(count, rng)
+    samples = []
+    cutoff_low = lowpass(base, 400)
+    cutoff_high = lowpass(base, 2500)
+    for i in range(count):
+        t = i / RATE
+        mix = min(1.0, t / 0.35)
+        envelope = (1 - math.exp(-t * 30)) * math.exp(-t * 4.5)
+        samples.append(envelope * (cutoff_low[i] * (1 - mix) + cutoff_high[i] * mix))
+    return normalize(samples, 0.7)
+
+
+def stone_door():
+    """Lourde porte de pierre qui pivote en raclant le sol."""
+    rng = random.Random(7)
+    count = int(RATE * 2.6)
+    grind = lowpass(noise(count, rng), 260)
+    rough = lowpass(noise(count, rng), 18)
+    samples = []
+    for i in range(count):
+        t = i / RATE
+        envelope = min(1.0, t / 0.15) * min(1.0, (2.6 - t) / 0.4)
+        samples.append(grind[i] * envelope * (0.6 + 2.5 * abs(rough[i])))
+    thud = [math.sin(2 * math.pi * 48 * i / RATE) * math.exp(-i / RATE * 9) for i in range(int(RATE * 0.5))]
+    for i, value in enumerate(thud):
+        samples[count - len(thud) + i] += value * 0.8
+    return normalize(samples, 0.75)
+
+
 def main():
     write_wav("plaine_wind.wav", wind(), loop=True)
     write_wav("plaine_lava.wav", lava(), loop=True)
     for index in range(4):
         write_wav(f"footstep_ash_{index + 1}.wav", footstep(10 + index))
+    write_wav("marais_ambience.wav", swamp(), loop=True)
+    for index in range(3):
+        write_wav(f"footstep_mud_{index + 1}.wav", mud_step(20 + index))
+        write_wav(f"footstep_splash_{index + 1}.wav", splash_step(30 + index))
+    write_wav("fire_crackle.wav", fire_crackle(), loop=True)
+    write_wav("fire_ignite.wav", fire_ignite())
+    write_wav("stone_door.wav", stone_door())
 
 
 if __name__ == "__main__":

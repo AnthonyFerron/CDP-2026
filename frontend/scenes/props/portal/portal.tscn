@@ -1,7 +1,7 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://scenes/levels/plaine/portal.gd" id="1_portal"]
-[ext_resource type="Shader" path="res://scenes/levels/plaine/portal.gdshader" id="2_shader"]
+[ext_resource type="Script" path="res://scenes/props/portal/portal.gd" id="1_portal"]
+[ext_resource type="Shader" path="res://scenes/props/portal/portal.gdshader" id="2_shader"]
 [ext_resource type="Script" path="res://scripts/interactable.gd" id="3_interactable"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_stone"]
