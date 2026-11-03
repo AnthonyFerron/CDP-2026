@@ -63,7 +63,7 @@ Pour une mise à jour de Godot, changer `GODOT_VERSION` dans `frontend/Dockerfil
 
 ## Sons
 
-Les sons du jeu (vent, lave, marais, désert, cave, hub, pas, feu, porte, tablettes) sont synthétisés par `frontend/tools/generate_sounds.py`, sans dépendance externe. Pour en modifier un, changer sa fonction dans le script puis le relancer depuis `frontend` avec `python tools/generate_sounds.py`.
+Les sons du jeu (vent, lave, marais, désert, cave, hub, village, ruisseau, pas, feu, porte, tablettes) sont synthétisés par `frontend/tools/generate_sounds.py`, sans dépendance externe. Pour en modifier un, changer sa fonction dans le script puis le relancer depuis `frontend` avec `python tools/generate_sounds.py`.
 
 ## Licences
 

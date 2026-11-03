@@ -326,6 +326,48 @@ def grass_step(seed):
     return normalize(samples, 0.5)
 
 
+def village():
+    """Village en ruine au crépuscule : vent, bois qui grince et corbeaux au loin, en boucle de 14 s."""
+    rng = random.Random(12)
+    length, fade = RATE * 14, RATE
+    gusts = lowpass(lowpass(noise(length + fade, rng), 420), 600)
+    samples = [g * (0.55 + 0.45 * math.sin(2 * math.pi * i / RATE / 7.0)) for i, g in enumerate(gusts)]
+    samples = normalize(seamless(samples, length, fade), 0.35)
+    for _ in range(4):
+        start = rng.randrange(length)
+        pitch = rng.uniform(90, 140)
+        creak = []
+        for i in range(int(RATE * 0.9)):
+            t = i / RATE
+            sweep = pitch * (1 + 0.4 * math.sin(math.pi * t / 0.9))
+            buzz = 1.0 if math.sin(2 * math.pi * sweep * t) > 0.6 else -0.3
+            creak.append(0.08 * buzz * math.sin(math.pi * t / 0.9))
+        add_event(samples, start, lowpass(creak, 900))
+    for _ in range(5):
+        start = rng.randrange(length)
+        for call in range(rng.randint(2, 3)):
+            caw = highpass(lowpass(noise(int(RATE * 0.28), rng), 1600), 500)
+            caw = [c * 0.25 * math.sin(math.pi * i / len(caw)) * (0.6 + 0.4 * math.sin(2 * math.pi * 30 * i / RATE))
+                   for i, c in enumerate(caw)]
+            add_event(samples, start + call * int(RATE * 0.42), caw)
+    return normalize(samples, 0.55)
+
+
+def stream():
+    """Ruisseau qui court sur les galets, en boucle de 6 s."""
+    rng = random.Random(13)
+    length, fade = RATE * 6, RATE // 2
+    rush = highpass(lowpass(noise(length + fade, rng), 2400), 250)
+    samples = normalize(seamless(rush, length, fade), 0.3)
+    for _ in range(60):
+        start = rng.randrange(length)
+        pitch = rng.uniform(500, 1400)
+        bubble = [0.12 * math.sin(2 * math.pi * pitch * (1 + i / RATE * 8) * i / RATE) * math.exp(-i / RATE * 60)
+                  for i in range(int(RATE * 0.06))]
+        add_event(samples, start, bubble)
+    return normalize(samples, 0.5)
+
+
 def main():
     write_wav("plaine_wind.wav", wind(), loop=True)
     write_wav("plaine_lava.wav", lava(), loop=True)
@@ -346,6 +388,8 @@ def main():
         write_wav(f"tablet_chime_{index + 1}.wav", tablet_chime(pitch))
     write_wav("tablet_reset.wav", tablet_reset())
     write_wav("hub_ambience.wav", hub(), loop=True)
+    write_wav("village_ambience.wav", village(), loop=True)
+    write_wav("stream.wav", stream(), loop=True)
     for index in range(3):
         write_wav(f"footstep_grass_{index + 1}.wav", grass_step(50 + index))
 

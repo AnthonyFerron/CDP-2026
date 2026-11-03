@@ -1,0 +1,266 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/levels/village/village.gd" id="1_village"]
+[ext_resource type="Script" path="res://scenes/levels/village/village_terrain.gd" id="2_terrain"]
+[ext_resource type="Script" path="res://scenes/levels/village/village_scatter.gd" id="3_scatter"]
+[ext_resource type="Shader" path="res://scenes/levels/marais/marais_ground.gdshader" id="4_ground"]
+[ext_resource type="Shader" path="res://scenes/levels/marais/swamp_water.gdshader" id="5_water"]
+[ext_resource type="PackedScene" path="res://scenes/levels/village/village_props.tscn" id="6_props"]
+[ext_resource type="PackedScene" path="res://scenes/props/portal/portal.tscn" id="7_portal"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="8_player"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="9_hud"]
+[ext_resource type="Script" path="res://scripts/fire_effect.gd" id="10_fire"]
+[ext_resource type="Script" path="res://scripts/smoke_effect.gd" id="11_smoke"]
+[ext_resource type="Script" path="res://scripts/flickering_light.gd" id="12_flicker"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/windmill.glb" id="13_windmill"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/watermill.glb" id="14_watermill"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/signpost.glb" id="15_signpost"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/grass_large.glb" id="20_grass"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/grass_leafsLarge.glb" id="21_grass_leafs"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/plant_bush.glb" id="22_bush"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_arena/bricks.glb" id="23_bricks"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/rocks-small.glb" id="24_rocks_small"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/debris-wood.glb" id="25_debris_wood"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/tree_default.glb" id="26_tree_default"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/tree_oak.glb" id="27_tree_oak"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/tree_thin_dark.glb" id="28_tree_thin"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/pine-crooked.glb" id="29_pine"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/rock_largeB.glb" id="30_rock"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/rocks-large.glb" id="31_rocks_large"]
+[ext_resource type="AudioStream" path="res://assets/audio/village_ambience.wav" id="40_ambience"]
+[ext_resource type="AudioStream" path="res://assets/audio/stream.wav" id="41_stream"]
+[ext_resource type="AudioStream" path="res://assets/audio/fire_crackle.wav" id="42_crackle"]
+[ext_resource type="AudioStream" path="res://assets/audio/footstep_ash_1.wav" id="43_step1"]
+[ext_resource type="AudioStream" path="res://assets/audio/footstep_ash_2.wav" id="44_step2"]
+[ext_resource type="AudioStream" path="res://assets/audio/footstep_ash_3.wav" id="45_step3"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_dusk"]
+sky_top_color = Color(0.26, 0.28, 0.42, 1)
+sky_horizon_color = Color(0.92, 0.58, 0.38, 1)
+ground_bottom_color = Color(0.15, 0.13, 0.12, 1)
+ground_horizon_color = Color(0.92, 0.58, 0.38, 1)
+sun_angle_max = 15.0
+
+[sub_resource type="Sky" id="Sky_dusk"]
+sky_material = SubResource("ProceduralSkyMaterial_dusk")
+
+[sub_resource type="Environment" id="Environment_village"]
+background_mode = 2
+sky = SubResource("Sky_dusk")
+ambient_light_source = 3
+ambient_light_color = Color(0.78, 0.68, 0.62, 1)
+ambient_light_energy = 0.55
+tonemap_mode = 3
+glow_enabled = true
+glow_intensity = 0.6
+glow_bloom = 0.05
+glow_hdr_threshold = 1.0
+fog_enabled = true
+fog_light_color = Color(0.62, 0.5, 0.44, 1)
+fog_density = 0.012
+fog_sky_affect = 0.35
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ground"]
+render_priority = 0
+shader = ExtResource("4_ground")
+shader_parameter/wet_height = -0.2
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ripples"]
+seed = 15
+frequency = 0.03
+fractal_octaves = 3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ripples"]
+width = 256
+height = 256
+seamless = true
+noise = SubResource("FastNoiseLite_ripples")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_stream"]
+render_priority = 0
+shader = ExtResource("5_water")
+shader_parameter/ripple_noise = SubResource("NoiseTexture2D_ripples")
+shader_parameter/water_color = Color(0.1, 0.17, 0.2, 1)
+shader_parameter/scum_color = Color(0.1, 0.17, 0.2, 1)
+shader_parameter/opacity = 0.8
+shader_parameter/ripple_strength = 0.6
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_stream"]
+material = SubResource("ShaderMaterial_stream")
+size = Vector2(7.5, 170)
+
+[node name="Village" type="Node3D"]
+script = ExtResource("1_village")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_village")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.5, 0.19, -0.845, 0, 0.976, 0.218, 0.866, -0.109, 0.488, 0, 40, 0)
+light_color = Color(1, 0.72, 0.48, 1)
+light_energy = 1.1
+shadow_enabled = true
+directional_shadow_max_distance = 80.0
+
+[node name="Terrain" type="StaticBody3D" parent="."]
+script = ExtResource("2_terrain")
+ground_material = SubResource("ShaderMaterial_ground")
+
+[node name="Stream" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -38, -0.45, 0)
+mesh = SubResource("PlaneMesh_stream")
+cast_shadow = 0
+
+[node name="Scatter" type="Node3D" parent="." node_paths=PackedStringArray("terrain")]
+script = ExtResource("3_scatter")
+terrain = NodePath("../Terrain")
+grass_models = Array[PackedScene]([ExtResource("20_grass"), ExtResource("21_grass_leafs"), ExtResource("22_bush")])
+rubble_models = Array[PackedScene]([ExtResource("23_bricks"), ExtResource("24_rocks_small"), ExtResource("25_debris_wood")])
+tree_models = Array[PackedScene]([ExtResource("26_tree_default"), ExtResource("27_tree_oak"), ExtResource("28_tree_thin"), ExtResource("29_pine")])
+rock_models = Array[PackedScene]([ExtResource("30_rock"), ExtResource("31_rocks_large")])
+
+[node name="Props" parent="." instance=ExtResource("6_props")]
+
+[node name="WindmillRotor" type="Node3D" parent="."]
+transform = Transform3D(6.12323e-17, 0, 1, 0, 1, 0, -1, 0, 6.12323e-17, 30, 11, -28.3)
+
+[node name="Model" parent="WindmillRotor" instance=ExtResource("13_windmill")]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
+
+[node name="WaterWheel" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35.6, 1.0, -14)
+
+[node name="Model" parent="WaterWheel" instance=ExtResource("14_watermill")]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
+
+[node name="StreamSound0" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -38, 0, 6)
+stream = ExtResource("41_stream")
+volume_db = -4.0
+unit_size = 6.0
+max_distance = 35.0
+autoplay = true
+
+[node name="StreamSound1" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -38, 0, -22)
+stream = ExtResource("41_stream")
+volume_db = -4.0
+unit_size = 6.0
+max_distance = 35.0
+autoplay = true
+
+[node name="Fires" type="Node3D" parent="."]
+
+[node name="Fire0" type="Node3D" parent="Fires"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 0.25, 20.5)
+script = ExtResource("10_fire")
+size = 1.2
+light_energy = 2.4
+light_range = 8.0
+crackle_sound = ExtResource("42_crackle")
+crackle_volume_db = -10.0
+
+[node name="Fire1" type="Node3D" parent="Fires"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0.25, -4.5)
+script = ExtResource("10_fire")
+size = 1
+light_energy = 2.4
+light_range = 8.0
+crackle_sound = ExtResource("42_crackle")
+crackle_volume_db = -10.0
+
+[node name="Fire2" type="Node3D" parent="Fires"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27, 0.25, -1)
+script = ExtResource("10_fire")
+size = 0.9
+light_energy = 2.4
+light_range = 8.0
+crackle_sound = ExtResource("42_crackle")
+crackle_volume_db = -10.0
+
+[node name="Fire3" type="Node3D" parent="Fires"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0.25, 7)
+script = ExtResource("10_fire")
+size = 0.8
+light_energy = 2.4
+light_range = 8.0
+crackle_sound = ExtResource("42_crackle")
+crackle_volume_db = -10.0
+
+[node name="Smokes" type="Node3D" parent="."]
+
+[node name="Smoke0" type="CPUParticles3D" parent="Smokes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 3.5, 20)
+script = ExtResource("11_smoke")
+radius = 1.5
+
+[node name="Smoke1" type="CPUParticles3D" parent="Smokes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 3.5, -6)
+script = ExtResource("11_smoke")
+radius = 1.2
+
+[node name="Smoke2" type="CPUParticles3D" parent="Smokes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 3.5, 12)
+script = ExtResource("11_smoke")
+radius = 1
+
+[node name="Smoke3" type="CPUParticles3D" parent="Smokes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 3.5, -28)
+script = ExtResource("11_smoke")
+radius = 1.4
+
+[node name="Smoke4" type="CPUParticles3D" parent="Smokes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 3.5, -2)
+script = ExtResource("11_smoke")
+radius = 1
+
+[node name="LanternLight0" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4, 3.0, 30)
+script = ExtResource("12_flicker")
+light_color = Color(1, 0.7, 0.35, 1)
+light_energy = 1.4
+omni_range = 7.0
+flicker = 0.2
+
+[node name="LanternLight1" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4, 3.0, -14)
+script = ExtResource("12_flicker")
+light_color = Color(1, 0.7, 0.35, 1)
+light_energy = 1.4
+omni_range = 7.0
+flicker = 0.2
+
+[node name="Portal" parent="." instance=ExtResource("7_portal")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0, 63)
+closed_prompt = "Portail éteint"
+open_prompt = "Retourner au hub"
+inner_color = Color(0.85, 0.7, 1, 1)
+outer_color = Color(0.45, 0.2, 0.8, 1)
+
+[node name="Sign" parent="." instance=ExtResource("15_signpost")]
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, -0, 0, 2.5, -4.5, 0, 55)
+
+[node name="SignText" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 3.8, 55)
+pixel_size = 0.007
+billboard = 1
+modulate = Color(1, 0.88, 0.75, 1)
+text = "Le Village détruit"
+font_size = 64
+outline_size = 16
+
+[node name="PuzzleSite" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, -27)
+
+[node name="Player" parent="." instance=ExtResource("8_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0.3, 57)
+respawn_height = -30.0
+first_person = true
+footstep_sounds = Array[AudioStream]([ExtResource("43_step1"), ExtResource("44_step2"), ExtResource("45_step3")])
+
+[node name="Ambience" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("40_ambience")
+volume_db = -6.0
+autoplay = true
+
+[node name="Hud" parent="." instance=ExtResource("9_hud")]

@@ -11,7 +11,7 @@ const ZONE_SCENES := {
 	&"plaine": "res://scenes/levels/plaine/plaine.tscn",
 	&"desert": "res://scenes/levels/desert/desert.tscn",
 	&"marais": "res://scenes/levels/marais/marais.tscn",
-	&"village": "",
+	&"village": "res://scenes/levels/village/village.tscn",
 }
 const BOOK_COUNT := 4
 
