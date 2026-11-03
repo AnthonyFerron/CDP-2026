@@ -12,40 +12,80 @@ const PORTALS := {
 	&"village": Vector2(-38.0, 38.0),
 }
 ## Porte du château, et rectangle de son enceinte (x, z, largeur, profondeur).
-const CASTLE_GATE := Vector2(0.0, -54.0)
-const CASTLE_AREA := Rect2(-25.0, -94.0, 50.0, 40.0)
+const CASTLE_GATE := Vector2(0.0, -50.0)
+const CASTLE_AREA := Rect2(-25.0, -95.0, 50.0, 45.0)
 const BUNKER := Vector2(78.0, 0.0)
 ## Le village occupe ce rayon autour du feu de camp ; une rue en fait le tour entre ses deux rangs de maisons.
 const VILLAGE_RADIUS := 46.0
 const RING_STREET := 31.0
 const PATH_HALF_WIDTH := 1.6
-const SIZE := 230.0
-const CELL_SIZE := 1.5
+const SIZE := 280.0
+const CELL_SIZE := 2.0
 const PLAY_RADIUS := 100.0
-const BORDER_WIDTH := 10.0
-const BORDER_HEIGHT := 9.0
+## Montagnes qui ferment l'horizon, et limite invisible que le joueur ne peut franchir.
+const BORDER_WIDTH := 30.0
+const BORDER_HEIGHT := 30.0
+const LIMIT_RADIUS := 106.0
 
 const COLOR_GRASS := Color(0.3, 0.42, 0.18)
 const COLOR_GRASS_DARK := Color(0.2, 0.3, 0.13)
 const COLOR_PATH := Color(0.42, 0.33, 0.22)
 const COLOR_HILL := Color(0.26, 0.33, 0.17)
+const COLOR_ROCK := Color(0.4, 0.38, 0.36)
 
 @export var ground_material: Material
 
 var _relief := FastNoiseLite.new()
+var _peaks := FastNoiseLite.new()
+## Hauteurs aux sommets de la grille du maillage, pour retrouver la hauteur exacte du sol affiché.
+var _heights := PackedFloat32Array()
+var _cells := 0
 
 
 func _ready() -> void:
 	_relief.seed = 5800
 	_relief.frequency = 0.03
+	_peaks.seed = 5801
+	_peaks.frequency = 0.035
 	_build()
+	_build_limit()
 
 
+## Hauteur du relief, continue ; le sol affiché la suit par triangles, voir surface_height.
 func height_at(x: float, z: float) -> float:
 	var height := (_relief.get_noise_2d(x, z) * 0.5 + 0.5) * 1.6
 	height *= 1.0 - flat_mask(x, z)
 	var distance := Vector2(x, z).length()
-	return height + BORDER_HEIGHT * smoothstep(PLAY_RADIUS, PLAY_RADIUS + BORDER_WIDTH, distance)
+	var rise := smoothstep(PLAY_RADIUS, PLAY_RADIUS + BORDER_WIDTH, distance)
+	return height + BORDER_HEIGHT * rise * rise * (0.65 + 0.7 * (_peaks.get_noise_2d(x, z) * 0.5 + 0.5))
+
+
+## Hauteur du sol tel qu'il est maillé, à la même interpolation que ses triangles : c'est sur elle
+## que le décor se pose, sans flotter au-dessus d'une pente.
+func surface_height(x: float, z: float) -> float:
+	if _heights.is_empty():
+		return height_at(x, z)
+	var gx := clampf((x + SIZE * 0.5) / CELL_SIZE, 0.0, _cells - 0.001)
+	var gz := clampf((z + SIZE * 0.5) / CELL_SIZE, 0.0, _cells - 0.001)
+	var column := int(gx)
+	var row := int(gz)
+	var u := gx - column
+	var v := gz - row
+	var first := row * (_cells + 1) + column
+	var h0 := _heights[first]
+	var h1 := _heights[first + 1]
+	var h2 := _heights[first + _cells + 1]
+	var h3 := _heights[first + _cells + 2]
+	if u + v <= 1.0:
+		return h0 + u * (h1 - h0) + v * (h2 - h0)
+	return h3 + (1.0 - u) * (h2 - h3) + (1.0 - v) * (h1 - h3)
+
+
+## Pente du sol affiché au point donné : 0 à plat, 1 pour 45 degrés.
+func slope_at(x: float, z: float) -> float:
+	var dx := surface_height(x + 0.5, z) - surface_height(x - 0.5, z)
+	var dz := surface_height(x, z + 0.5) - surface_height(x, z - 0.5)
+	return Vector2(dx, dz).length()
 
 
 ## Destinations reliées au feu de camp par un chemin.
@@ -91,7 +131,9 @@ func _face_color(x: float, z: float) -> Color:
 	var color := COLOR_GRASS_DARK.lerp(COLOR_GRASS, _relief.get_noise_2d(z * 2.0, x * 2.0) * 0.5 + 0.5)
 	color = color.lerp(COLOR_PATH, path_mask(x, z))
 	var distance := Vector2(x, z).length()
-	return color.lerp(COLOR_HILL, smoothstep(PLAY_RADIUS, PLAY_RADIUS + BORDER_WIDTH, distance))
+	color = color.lerp(COLOR_HILL, smoothstep(PLAY_RADIUS, PLAY_RADIUS + 10.0, distance))
+	# Roche nue en haut des montagnes.
+	return color.lerp(COLOR_ROCK, smoothstep(12.0, 24.0, height_at(x, z)))
 
 
 func _build() -> void:
@@ -104,6 +146,7 @@ func _build() -> void:
 
 	var heights := PackedFloat32Array()
 	heights.resize((cells + 1) * (cells + 1))
+	_cells = cells
 	for row in cells + 1:
 		for column in cells + 1:
 			heights[row * (cells + 1) + column] = height_at(
@@ -147,8 +190,24 @@ func _build() -> void:
 	mesh_instance.mesh = mesh
 	add_child(mesh_instance)
 
+	_heights = heights
 	var shape := ConcavePolygonShape3D.new()
 	shape.set_faces(vertices)
 	var collision := CollisionShape3D.new()
 	collision.shape = shape
 	add_child(collision)
+
+
+## Mur invisible en cercle au pied des montagnes : le joueur ne peut pas les gravir jusqu'au bord du monde.
+func _build_limit() -> void:
+	var segments := 72
+	var length := TAU * LIMIT_RADIUS / segments + 0.5
+	for index in segments:
+		var angle := TAU * index / segments
+		var shape := BoxShape3D.new()
+		shape.size = Vector3(length, 40.0, 1.0)
+		var collision := CollisionShape3D.new()
+		collision.shape = shape
+		collision.position = Vector3(cos(angle) * LIMIT_RADIUS, 15.0, sin(angle) * LIMIT_RADIUS)
+		collision.rotation.y = -angle + PI * 0.5
+		add_child(collision)

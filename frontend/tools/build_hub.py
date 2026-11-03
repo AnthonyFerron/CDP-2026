@@ -1,4 +1,4 @@
-"""Génère les objets fixes du hub : le camp des survivants, le village de Codia, le château et le bunker.
+"""Génère les objets fixes du hub : le camp des survivants, le village de Codia, le château du roi et le bunker.
 
 Le village se reconstruit au fil des livres posés au château : chaque élément réparable est écrit
 deux fois, en ruine et reconstruit, sous un nœud qui porte le nombre de livres qui le répare.
@@ -13,23 +13,31 @@ import math
 import random
 from pathlib import Path
 
-from build_plaine import WALL_HEIGHT, WALL_SCALE, OUTWARD_ANGLES, Scene, doorway, wall
+from build_plaine import WALL_HEIGHT, WALL_SCALE, OUTWARD_ANGLES, Scene, doorway, furniture, wall
 
 OUTPUT = Path(__file__).resolve().parent.parent / "scenes" / "levels" / "hub" / "hub_props.tscn"
 TILE = WALL_SCALE
-CASTLE_SCALE = 5.0
-# Enceinte du château, au nord : de x = -25 à 25, de z = -94 (fond) à -54 (porte).
+# Enceinte du château, au nord : de x = -25 à 25, de z = -95 (fond) à -50 (porterie).
+CURTAIN_SCALE = 5.0
 CASTLE_X = 25.0
-CASTLE_BACK = -94.0
-CASTLE_FRONT = -54.0
-# Salle des livres, au fond de la cour : 5 cases sur 3, porte au sud.
-HALL = (0.0, -84.0, 5, 3)
+CASTLE_BACK = -95.0
+CASTLE_FRONT = -50.0
+# Donjon au fond de la cour : murs de 4 m d'épaisseur autour de la salle des livres,
+# qui va de x = -10 à 10 et de z = -87 à -75. Mêmes valeurs dans le script qui écrit hub.tscn.
+KEEP_SCALE = 4.0
+KEEP_X = 12.0
+KEEP_BACK = -89.0
+KEEP_FRONT = -73.0
+KEEP_LAYER = 4.4
 BUNKER = (78.0, 0.0)
 # Maisons du village : (rayon, angle en degrés) depuis le feu de camp, entre les chemins.
 HOUSE_SPOTS = [(24.0, a) for a in (-112.5, -67.5, -22.5, 22.5, 70.0, 110.0, 160.0, 200.0)] + [
     (38.0, a) for a in (-112.5, -67.5, -22.5, 22.5, 72.0, 108.0, 162.0, 198.0)
 ]
+# Chemins qui partent du feu de camp : portails, château et bunker.
+ROADS = [(-38.0, -38.0), (38.0, -38.0), (38.0, 38.0), (-38.0, 38.0), (0.0, CASTLE_FRONT), BUNKER]
 OUTWARDS = {"north": (0, -1), "south": (0, 1), "east": (1, 0), "west": (-1, 0)}
+DOOR_YAWS = {"south": 0.0, "north": 180.0, "east": 90.0, "west": -90.0}
 
 
 class StagedScene(Scene):
@@ -96,13 +104,13 @@ class StagedScene(Scene):
         self.group = f"Repairs/{name}/Rebuilt"
 
 
-def edge_tiles(cx, cz, width, depth):
+def edge_tiles(cx, cz, width, depth, tile=TILE):
     """Renvoie, pour chaque côté, les centres des cases de mur et la direction vers l'extérieur."""
-    half_w, half_d = width * TILE / 2, depth * TILE / 2
+    half_w, half_d = width * tile / 2, depth * tile / 2
     for side, (dx, dz) in OUTWARDS.items():
         count = depth if dx else width
         for index in range(count):
-            offset = -((count - 1) * TILE) / 2 + index * TILE
+            offset = -((count - 1) * tile) / 2 + index * tile
             if dx:
                 yield side, index, count, (cx + dx * half_w, cz + offset), (dx, dz)
             else:
@@ -128,6 +136,63 @@ def roof(scene, cx, cz, width, depth, base):
                 scene.add("fantasy_town_kit/roof", (x, base, z), OUTWARD_ANGLES[outward], TILE)
 
 
+class HouseFrame:
+    """Repère d'une maison tourné vers sa porte : u le long de la façade, v vers la porte."""
+
+    def __init__(self, house):
+        self.cx, self.cz, width, depth, self.door, _, _ = house
+        self.yaw = DOOR_YAWS[self.door]
+        turned = self.door in ("east", "west")
+        self.half_u = (depth if turned else width) * TILE / 2 - 0.35
+        self.half_v = (width if turned else depth) * TILE / 2 - 0.35
+        # Position de la porte le long de la façade : la case du milieu, décalée si le côté a un nombre pair de cases.
+        count = depth if turned else width
+        offset = -((count - 1) * TILE) / 2 + (count // 2) * TILE
+        dx, dz = OUTWARDS[self.door]
+        door_x, door_z = (0.0, offset) if dx else (offset, 0.0)
+        c, s = math.cos(math.radians(self.yaw)), math.sin(math.radians(self.yaw))
+        self.door_u = c * door_x - s * door_z
+
+    def at(self, u, v, y=0.0):
+        c, s = math.cos(math.radians(self.yaw)), math.sin(math.radians(self.yaw))
+        return (self.cx + c * u + s * v, y, self.cz - s * u + c * v)
+
+    def turn(self, degrees):
+        return self.yaw + degrees
+
+
+def furnish(scene, house, ruined, rng):
+    """Meubles d'une maison : lit, table, cuisine et étagère ; renversés et cassés dans les ruines."""
+    frame = HouseFrame(house)
+    hu, hv = frame.half_u, frame.half_v
+    tilt = (lambda: rng.choice((80.0, 90.0, 0.0))) if ruined else (lambda: 0.0)
+    # Lit contre le mur du fond, à gauche ; cuisine contre le mur du fond, à droite.
+    furniture(scene, "furniture_kit/bedSingle", frame.at(-hu + 1.4, -hv + 1.6), frame.turn(0.0), 1.6,
+              height=None if ruined else 0.8, tilt=-12.0 if ruined else 0.0)
+    for index, model in enumerate(("kitchenCabinet", "kitchenStove", "kitchenSink")):
+        if ruined and index == 1:
+            continue
+        furniture(scene, f"furniture_kit/{model}", frame.at(hu - 0.6 - index * 1.15, -hv + 0.65), frame.turn(0.0), 2.6,
+                  height=1.2)
+    # Table et chaises au milieu, étagère contre le mur de droite.
+    table = frame.at(0.6, 0.2)
+    furniture(scene, "furniture_kit/tableRound", table, frame.turn(rng.uniform(0, 90)), 2.2,
+              height=None if ruined else 0.8, tilt=88.0 if ruined else 0.0)
+    for side in (-1, 1):
+        furniture(scene, "furniture_kit/chair", frame.at(0.6 + side * 1.3, 0.2), frame.turn(90.0 * side), 2.6, tilt=tilt())
+    furniture(scene, "furniture_kit/bookcaseOpenLow", frame.at(hu - 0.4, 0.6), frame.turn(-90.0), 3.0, height=1.2)
+    if ruined:
+        scene.add("survival_kit/resource-planks", frame.at(rng.uniform(-1, 1), rng.uniform(-1, 1)), rng.uniform(0, 360), 3.0)
+        scene.add("castle_kit/rocks-small", frame.at(-hu + 1.0, hv - 1.2), rng.uniform(0, 360), 1.4)
+    else:
+        furniture(scene, "furniture_kit/rugRound", frame.at(0.6, 0.2, 0.02), frame.turn(0.0), 2.6)
+        furniture(scene, "furniture_kit/pottedPlant", frame.at(-hu + 0.5, hv - 0.6), frame.turn(0.0), 2.6)
+        # Tonneau et caisse dehors, contre la façade, du côté opposé à la porte.
+        side = -1.0 if frame.door_u >= 0 else 1.0
+        furniture(scene, "survival_kit/barrel", frame.at(side * (hu - 0.4), hv + 0.9), frame.turn(0.0), 3.2, height=1.1)
+        furniture(scene, "survival_kit/box", frame.at(side * (hu - 1.5), hv + 0.9), frame.turn(20.0), 3.2, height=0.8)
+
+
 def ruined_house(scene, rng, house):
     cx, cz, width, depth, door_side, style, floors = house
     plain, broken, window, window_small = wall_models(style)
@@ -138,6 +203,7 @@ def ruined_house(scene, rng, house):
         roll = rng.random()
         if roll < 0.2:
             scene.add("castle_kit/rocks-small", (center[0], 0.0, center[1]), rng.uniform(0, 360), 1.6)
+            scene.add_box((center[0], 0.4, center[1]), (1.6, 0.8, 1.6))
             continue
         if roll < 0.55:
             wall(scene, broken, center, outward, height=3.0)
@@ -151,7 +217,7 @@ def ruined_house(scene, rng, house):
     for beam in range(rng.randint(1, 2)):
         x = cx + rng.uniform(-half_w + 1, half_w - 1)
         scene.add("fantasy_town_kit/poles-horizontal", (x, WALL_HEIGHT - 1.8, cz), 0.0, WALL_SCALE, tilt=rng.uniform(-25.0, 25.0))
-    scene.add("survival_kit/resource-planks", (cx + rng.uniform(-1, 1), 0.0, cz + rng.uniform(-1, 1)), rng.uniform(0, 360), 3.0)
+    furnish(scene, house, True, rng)
 
 
 def rebuilt_house(scene, rng, house):
@@ -160,8 +226,9 @@ def rebuilt_house(scene, rng, house):
     for side, index, count, center, outward in edge_tiles(cx, cz, width, depth):
         if side == door_side and index == count // 2:
             doorway(scene, center, outward)
-            scene.add("fantasy_town_kit/lantern", (center[0] + outward[0] * 0.6 + outward[1] * 1.6, 0.0,
-                                                   center[1] + outward[1] * 0.6 + outward[0] * 1.6), 0.0, 2.2)
+            along = (outward[1], outward[0])
+            scene.add("fantasy_town_kit/lantern", (center[0] + outward[0] * 0.5 + along[0] * 1.6, 0.0,
+                                                   center[1] + outward[1] * 0.5 + along[1] * 1.6), 0.0, 2.2)
         else:
             wall(scene, rng.choice((plain, window, window_small, window)), center, outward)
         if floors > 1:
@@ -175,6 +242,7 @@ def rebuilt_house(scene, rng, house):
                 scene.add(pillar, (cx + sx * half_w, floor * WALL_HEIGHT, cz + sz * half_d), 0.0, WALL_SCALE)
     roof(scene, cx, cz, width, depth, WALL_HEIGHT * floors)
     scene.add("fantasy_town_kit/chimney", (cx - half_w + 1.2, WALL_HEIGHT * floors, cz), 0.0, 3.0)
+    furnish(scene, house, False, rng)
 
 
 def house_layout(rng):
@@ -194,6 +262,27 @@ def house_layout(rng):
     return houses
 
 
+def clear_of(houses, x, z, margin):
+    """Vrai si le point est à plus de margin des murs de toutes les maisons."""
+    for cx, cz, width, depth, *_ in houses:
+        if abs(x - cx) < width * TILE / 2 + margin and abs(z - cz) < depth * TILE / 2 + margin:
+            return False
+    return True
+
+
+def build_streets(scene, houses):
+    """Lanternes le long des chemins, en quinconce, là où elles ne gênent ni maison ni étal."""
+    for tx, tz in ROADS:
+        length = math.hypot(tx, tz)
+        dx, dz = tx / length, tz / length
+        for index, distance in enumerate(range(10, int(min(length, 50.0)) - 3, 8)):
+            side = 1 if index % 2 else -1
+            x, z = dx * distance - dz * side * 2.7, dz * distance + dx * side * 2.7
+            if clear_of(houses, x, z, 1.2) and not (-18.0 < x < -11.0 and -7.0 < z < 7.0):
+                scene.add("fantasy_town_kit/lantern", (x, 0.0, z), 0.0, 2.2)
+                scene.add_box((x, 1.0, z), (0.45, 2.0, 0.45))
+
+
 def build_village(scene, rng):
     """Seize maisons, réparées quatre par quatre : d'abord les plus proches du camp."""
     houses = house_layout(rng)
@@ -204,6 +293,15 @@ def build_village(scene, rng):
         ruined_house(scene, random.Random(number), house)
         scene.rebuilt(name)
         rebuilt_house(scene, random.Random(100 + number), house)
+    scene.group = "Fixed"
+    build_streets(scene, houses)
+    # Charrettes, foin et tonneaux entre les maisons.
+    for model, x, z, degrees, height in (
+        ("fantasy_town_kit/cart-high", -30.0, 2.0, 80.0, 2.4), ("graveyard_kit/hay-bale", -27.5, -1.5, 15.0, 1.0),
+        ("graveyard_kit/hay-bale-bundled", -28.0, 4.6, -30.0, 1.1), ("mini_dungeon/barrel", 30.0, 4.0, 0.0, 1.2),
+        ("mini_dungeon/barrel", 31.2, 2.8, 0.0, 1.2), ("fantasy_town_kit/cart-high", 4.5, 30.0, 10.0, 2.4),
+    ):
+        furniture(scene, model, (x, 0.0, z), degrees, 2.4 if "cart" in model else 2.6, height=height)
     # Étals du marché, qui reviennent avec le deuxième livre ; charrette renversée tant qu'il manque.
     scene.repair("Market", 2)
     scene.add("fantasy_town_kit/cart", (-13.0, 0.6, -4.0), 60.0, 3.0, tilt=80.0)
@@ -229,14 +327,15 @@ def build_village(scene, rng):
 def build_camp(scene):
     """Camp des survivants autour du feu : tentes, bancs de rondins, provisions et établi."""
     scene.add("survival_kit/campfire-pit", (0.0, 0.0, 0.0), 0.0, 6.0)
+    scene.add_box((0.0, 0.3, 0.0), (1.8, 0.6, 1.8))
     for index in range(5):
         angle = math.radians(90 + index * 72)
         x, z = math.cos(angle) * 3.0, math.sin(angle) * 3.0
         scene.add("nature_kit/log", (x, 0.0, z), -math.degrees(angle), 4.0)
         scene.add_box((x, 0.35, z), (0.9, 0.7, 2.4), -math.degrees(angle))
-    for x, z, degrees in ((10.5, 1.0, -100.0), (-10.5, 1.0, 100.0), (7.5, 9.0, -150.0), (-7.5, 9.0, 150.0)):
+    for x, z, degrees in ((12.0, 5.2, -115.0), (-10.5, 1.0, 100.0), (6.0, 10.0, -150.0), (-7.5, 9.0, 150.0)):
         scene.add("mini_forest/tent", (x, 0.0, z), degrees, 3.2)
-        scene.add_box((x, 1.6, z), (3.6, 3.2, 3.2), degrees)
+        scene.add_box((x, 1.4, z), (3.4, 2.8, 3.0), degrees)
     for model, x, z, degrees, scale, size in (
         ("survival_kit/workbench", 8.5, -4.0, -60.0, 5.0, (1.5, 1.2, 1.5)),
         ("survival_kit/barrel", -8.0, -3.5, 0.0, 4.0, (1.0, 1.4, 1.0)),
@@ -251,87 +350,161 @@ def build_camp(scene):
     scene.add("food_kit/bread", (9.6, 1.0, -5.6), 15.0, 2.5)
 
 
-def castle_wall(scene, x, z, along_x):
-    scene.add("castle_kit/wall", (x, 0.0, z), 0.0 if along_x else 90.0, CASTLE_SCALE)
-    size = (CASTLE_SCALE, 6.6, 2.4) if along_x else (2.4, 6.6, CASTLE_SCALE)
+def curtain_wall(scene, x, z, along_x):
+    scene.add("castle_kit/wall", (x, 0.0, z), 0.0 if along_x else 90.0, CURTAIN_SCALE)
+    size = (CURTAIN_SCALE, 6.6, CURTAIN_SCALE) if along_x else (CURTAIN_SCALE, 6.6, CURTAIN_SCALE)
     scene.add_box((x, 3.3, z), size)
 
 
-def castle_tower(scene, x, z, floors=3):
+def square_tower(scene, x, z, scale, floors, roofed=True):
+    """Tour carrée : base, étages à fenêtres, couronnement, et son toit si elle en a un. Renvoie sa hauteur."""
     y = 0.0
-    for model, height in [("tower-square-base", 1.0)] + [("tower-square-mid-windows", 1.0)] * (floors - 2) + [("tower-square-top", 0.3)]:
-        scene.add(f"castle_kit/{model}", (x, y, z), 0.0, CASTLE_SCALE)
-        y += height * CASTLE_SCALE
-    scene.add("castle_kit/tower-square-roof", (x, y, z), 0.0, CASTLE_SCALE)
-    scene.add_box((x, y / 2, z), (CASTLE_SCALE, y, CASTLE_SCALE))
+    for model in ["tower-square-base"] + ["tower-square-mid-windows"] * (floors - 2) + ["tower-square-mid"]:
+        scene.add(f"castle_kit/{model}", (x, y, z), 0.0, scale)
+        y += scale
+    scene.add("castle_kit/tower-square-top", (x, y, z), 0.0, scale)
+    scene.add_box((x, (y + 0.3 * scale) / 2, z), (scale, y + 0.3 * scale, scale))
+    if roofed:
+        scene.add("castle_kit/tower-square-roof", (x, y + 0.3 * scale, z), 0.0, scale)
+    return y + 0.3 * scale
+
+
+def round_tower(scene, x, z, scale):
+    """Grosse tour d'angle de l'enceinte, hexagonale, coiffée d'un toit pointu. Renvoie sa hauteur."""
+    y = 0.0
+    for model, height in (("tower-hexagon-base", 1.31), ("tower-hexagon-mid", 0.46), ("tower-hexagon-mid", 0.46), ("tower-hexagon-top", 0.13)):
+        scene.add(f"castle_kit/{model}", (x, y, z), 0.0, scale)
+        y += height * scale
+    scene.add("castle_kit/tower-hexagon-roof", (x, y, z), 0.0, scale)
+    scene.add_box((x, y / 2, z), (0.8 * scale, y, 0.7 * scale))
     return y
 
 
 def build_castle(scene, rng):
-    """Château du roi : une enceinte à tours d'angle, une cour, et la salle des livres au fond."""
-    half = CASTLE_SCALE / 2
-    steps = int(CASTLE_X * 2 / CASTLE_SCALE)
+    """Château du roi : enceinte à tours d'angle, porterie voûtée, cour, et donjon qui abrite la salle des livres."""
+    half = CURTAIN_SCALE / 2
+    steps = int(CASTLE_X * 2 / CURTAIN_SCALE)
     for index in range(steps):
-        x = -CASTLE_X + half + index * CASTLE_SCALE
-        castle_wall(scene, x, CASTLE_BACK, True)
+        x = -CASTLE_X + half + index * CURTAIN_SCALE
+        curtain_wall(scene, x, CASTLE_BACK + half, True)
         if abs(x) > 8.0:
-            castle_wall(scene, x, CASTLE_FRONT, True)
-    for index in range(int((CASTLE_FRONT - CASTLE_BACK) / CASTLE_SCALE)):
-        z = CASTLE_BACK + half + index * CASTLE_SCALE
-        for x in (-CASTLE_X, CASTLE_X):
-            castle_wall(scene, x, z, False)
-    tops = []
-    for x in (-CASTLE_X, CASTLE_X):
-        for z in (CASTLE_BACK, CASTLE_FRONT):
-            tops.append((x, castle_tower(scene, x, z, 4), z))
-    # Tours de la porte, qui encadrent un passage libre.
+            curtain_wall(scene, x, CASTLE_FRONT - half, True)
+    for index in range(1, int((CASTLE_FRONT - CASTLE_BACK) / CURTAIN_SCALE) - 1):
+        z = CASTLE_BACK + half + index * CURTAIN_SCALE
+        for x in (-CASTLE_X + half, CASTLE_X - half):
+            curtain_wall(scene, x, z, False)
+    corners = [(x, z) for x in (-CASTLE_X + half, CASTLE_X - half) for z in (CASTLE_BACK + half, CASTLE_FRONT - half)]
+    # Pointe de chaque toit, où planter un drapeau : 0,83 tuile pour le toit hexagonal, 2 pour le toit carré.
+    tops = [(x, round_tower(scene, x, z, 7.0) + 0.83 * 7.0 - 0.2, z) for x, z in corners]
+
+    # Porterie : deux tours carrées et une arche voûtée entre elles, la herse relevée.
+    gate_z = CASTLE_FRONT - half
     for x in (-7.5, 7.5):
-        tops.append((x, castle_tower(scene, x, CASTLE_FRONT, 3), CASTLE_FRONT))
-        scene.add("castle_kit/flag-banner-long", (x, 6.0, CASTLE_FRONT + CASTLE_SCALE / 2 + 0.1), 0.0, 4.0)
+        tops.append((x, square_tower(scene, x, gate_z, CURTAIN_SCALE, 4) + 2.01 * CURTAIN_SCALE - 0.3, gate_z))
+    scene.add("castle_kit/tower-square-arch", (0.0, 0.0, gate_z), 0.0, 10.5)
+    scene.add("castle_kit/wall", (0.0, 10.4, gate_z), 0.0, CURTAIN_SCALE)
+    for sign in (-1, 1):
+        scene.add_box((sign * 3.75, 5.3, gate_z), (2.5, 10.6, 9.8))
+    scene.add_box((0.0, 11.0, gate_z), (5.0, 7.2, 9.8))
+    scene.add("castle_kit/metal-gate", (0.0, 5.2, gate_z + 2.6), 90.0, 5.0)
+    for x in (-4.4, 4.4):
+        scene.add("castle_kit/flag-banner-long", (x, 4.0, gate_z + 4.95), 90.0, 3.0)
 
-    # Salle des livres : pierre, porte voûtée, colonnes, bannières et torches.
-    cx, cz, width, depth = HALL
-    for side, index, count, center, outward in edge_tiles(cx, cz, width, depth):
-        if side == "south" and index == count // 2:
-            doorway(scene, center, outward)
-        else:
-            wall(scene, "wall-window-stone" if side != "north" and index % 2 else "wall", center, outward)
-        wall(scene, "wall", center, outward, base=WALL_HEIGHT, solid=False)
-    half_w, half_d = width * TILE / 2, depth * TILE / 2
-    for sx in (-1, 1):
-        for sz in (-1, 1):
+    # Donjon : deux rangées de murs épais, quatre tours carrées et un portail voûté au sud.
+    keep_half = KEEP_SCALE / 2
+    for layer in range(2):
+        y = layer * KEEP_LAYER
+        for x in range(int(-KEEP_X), int(KEEP_X) + 1, int(KEEP_SCALE)):
+            for z in (KEEP_BACK, KEEP_FRONT):
+                if z == KEEP_FRONT and x == 0 and layer == 0:
+                    continue
+                scene.add("castle_kit/wall", (x, y, z), 0.0, KEEP_SCALE)
+        for z in range(int(KEEP_BACK + KEEP_SCALE), int(KEEP_FRONT), int(KEEP_SCALE)):
+            for x in (-KEEP_X, KEEP_X):
+                scene.add("castle_kit/wall", (x, y, z), 90.0, KEEP_SCALE)
+    height = KEEP_LAYER + 1.31 * KEEP_SCALE
+    for x in range(int(-KEEP_X), int(KEEP_X) + 1, int(KEEP_SCALE)):
+        scene.add_box((x, height / 2, KEEP_BACK), (KEEP_SCALE, height, KEEP_SCALE))
+        if x != 0:
+            scene.add_box((x, height / 2, KEEP_FRONT), (KEEP_SCALE, height, KEEP_SCALE))
+    scene.add_box((0.0, (height + KEEP_LAYER) / 2, KEEP_FRONT), (KEEP_SCALE, height - KEEP_LAYER, KEEP_SCALE))
+    for x in (-KEEP_X, KEEP_X):
+        scene.add_box((x, height / 2, (KEEP_BACK + KEEP_FRONT) / 2), (KEEP_SCALE, height, KEEP_FRONT - KEEP_BACK))
+    scene.add("castle_kit/tower-square-arch", (0.0, 0.0, KEEP_FRONT), 0.0, 6.0)
+    for sign in (-1, 1):
+        scene.add_box((sign * 2.05, 2.2, KEEP_FRONT), (1.5, 4.4, 5.6))
+    for x in (-6.0, 6.0):
+        scene.add("castle_kit/flag-banner-long", (x, 4.6, KEEP_FRONT + keep_half + 0.1), 90.0, 3.0)
+    keep_corners = [(x, z) for x in (-KEEP_X - 1.0, KEEP_X + 1.0) for z in (KEEP_BACK - 0.5, KEEP_FRONT + 0.5)]
+
+    # Salle des livres : colonnes, bannières et boucliers contre les murs, tapis jusqu'au trône.
+    for x in (-7.0, -2.4, 2.4, 7.0):
+        for z in (-85.6, -76.4):
             for floor in range(2):
-                scene.add("fantasy_town_kit/pillar-stone", (cx + sx * half_w, floor * WALL_HEIGHT, cz + sz * half_d), 0.0, WALL_SCALE)
-    for x in (-7.0, 7.0):
-        scene.add("fantasy_town_kit/banner-red", (x, 3.2, cz - half_d + 0.5), 90.0, 3.4)
-    for x in (-2.0, 2.0):
-        scene.add("fantasy_town_kit/banner-green", (x, 6.0, cz + half_d + 0.3), -90.0, 3.4)
+                scene.add("fantasy_town_kit/pillar-stone", (x, floor * WALL_HEIGHT, z), 0.0, WALL_SCALE)
+    # Le drap de la bannière est décalé de 0,4 tuile de son origine, comme les murs du kit.
+    for z in (-84.0, -78.0):
+        for x, degrees in ((-8.55, 180.0), (8.55, 0.0)):
+            scene.add("fantasy_town_kit/banner-red", (x, 2.6, z), degrees, 3.4)
+    for x, degrees in ((-9.75, 90.0), (9.75, -90.0)):
+        for z in (-86.0, -81.0, -76.0):
+            furniture(scene, "mini_dungeon/shield-round", (x, 4.6, z), degrees, 3.0)
+    for z in (-77.5, -83.0):
+        furniture(scene, "furniture_kit/rugRectangle", (0.0, 0.03, z), 90.0, 3.6)
 
-    # Cour : ruines de la guerre, rangées au deuxième livre ; drapeaux hissés au troisième.
+    # Cour : puits, écurie, chariot, provisions, râteliers d'armes, arbres et braseros.
+    furniture(scene, "castle_kit/tree-large", (-20.0, 0.0, -88.0), 20.0, 5.0, height=6.0)
+    furniture(scene, "castle_kit/tree-small", (20.5, 0.0, -88.5), 70.0, 5.0, height=5.0)
+    scene.add("fantasy_town_kit/fountain-square", (-15.0, 0.0, -60.0), 0.0, 1.6)
+    scene.add_box((-15.0, 0.4, -60.0), (3.2, 0.8, 3.2))
+    for z in (-62.0, -66.0):
+        scene.add("fantasy_town_kit/fence", (14.0, 0.0, z), 0.0, 4.0)
+        scene.add_box((15.7, 0.8, z), (0.3, 1.6, 4.0))
+    scene.add("fantasy_town_kit/fence", (18.0, 0.0, -68.0), 90.0, 4.0)
+    scene.add_box((18.0, 0.8, -66.3), (4.0, 1.6, 0.3))
+    for model, x, z, degrees, height in (
+        ("graveyard_kit/hay-bale", 19.0, -62.5, 10.0, 1.0), ("graveyard_kit/hay-bale-bundled", 20.5, -65.0, -20.0, 1.1),
+        ("fantasy_town_kit/cart-high", 10.5, -57.0, 20.0, 2.4), ("mini_dungeon/barrel", -9.0, -56.5, 0.0, 1.2),
+        ("mini_dungeon/barrel", -10.2, -57.6, 0.0, 1.2), ("mini_dungeon/chest", -11.5, -56.4, 15.0, 0.8),
+        ("survival_kit/box-large", -20.5, -72.0, 90.0, 0.9),
+    ):
+        furniture(scene, model, (x, 0.0, z), degrees, 2.4 if "cart" in model else 2.6, height=height)
+    # Râtelier de lances contre l'enceinte ouest.
+    for z in (-57.5, -59.0, -60.5):
+        furniture(scene, "mini_dungeon/weapon-spear", (-21.8, 0.0, z), 90.0, 3.4, height=2.0)
+    for x, z in ((-4.5, -69.5), (4.5, -69.5), (-4.0, -55.5), (4.0, -55.5)):
+        furniture(scene, "graveyard_kit/fire-basket", (x, 0.0, z), 0.0, 3.0, height=0.6)
+
+    # Cour : ruines de la guerre, rangées au deuxième livre.
     scene.repair("CastleCourt", 2)
-    scene.add("castle_kit/siege-catapult-demolished", (-15.0, 0.0, -64.0), 30.0, 4.0)
-    scene.add_box((-15.0, 1.5, -64.0), (6.0, 3.0, 6.0), 30.0)
-    scene.add("castle_kit/siege-tower-demolished", (16.0, 0.0, -68.0), -20.0, 4.0)
-    scene.add_box((16.0, 2.0, -68.0), (8.0, 4.0, 7.0), -20.0)
-    for x, z in ((-6.0, -70.0), (9.0, -60.0), (-19.0, -78.0)):
+    scene.add("castle_kit/siege-catapult-demolished", (-12.0, 0.0, -64.0), 30.0, 4.0)
+    scene.add_box((-12.0, 1.5, -64.0), (6.0, 3.0, 6.0), 30.0)
+    scene.add("castle_kit/siege-tower-demolished", (16.0, 0.0, -76.0), -20.0, 4.0)
+    scene.add_box((16.0, 2.0, -76.0), (8.0, 4.0, 7.0), -20.0)
+    for x, z in ((-6.0, -63.0), (8.0, -60.0), (-19.0, -78.0)):
         scene.add("castle_kit/rocks-large", (x, 0.0, z), rng.uniform(0, 360), 2.4)
+        scene.add_box((x, 0.6, z), (2.6, 1.2, 2.6))
     scene.rebuilt("CastleCourt")
-    scene.add("castle_kit/siege-catapult", (-17.0, 0.0, -62.0), 30.0, 4.0)
-    scene.add_box((-17.0, 1.5, -62.0), (5.0, 3.0, 5.0), 30.0)
-    for x, z in ((-12.0, -76.0), (12.0, -76.0)):
+    furniture(scene, "castle_kit/siege-catapult", (-13.0, 0.0, -64.0), 30.0, 3.4, height=3.0)
+    furniture(scene, "castle_kit/siege-ballista", (16.0, 0.0, -77.0), -30.0, 3.4, height=2.4)
+    for x, z in ((-8.0, -61.0), (8.0, -61.0)):
         scene.add("nature_kit/plant_bushLarge", (x, 0.0, z), rng.uniform(0, 360), 3.0)
+    # Drapeaux hissés au troisième livre.
     scene.repair("CastleFlags", 3)
     scene.rebuilt("CastleFlags")
     for x, y, z in tops:
-        scene.add("castle_kit/flag", (x, y + CASTLE_SCALE * 2.0, z), 0.0, 4.0)
-    # Toit de la salle, reposé avec le quatrième livre.
-    scene.repair("HallRoof", 4)
-    scene.rebuilt("HallRoof")
-    for column in range(width):
-        for row in range(depth):
-            x = cx - (width - 1) * TILE / 2 + column * TILE
-            z = cz - (depth - 1) * TILE / 2 + row * TILE
-            scene.add("fantasy_town_kit/roof-flat", (x, WALL_HEIGHT * 2, z), 0.0, TILE)
+        scene.add("castle_kit/flag", (x, y, z), 0.0, 4.0)
+    for x in (-17.5, 17.5):
+        scene.add("castle_kit/flag-banner-long", (x, 1.4, CASTLE_FRONT - CURTAIN_SCALE - 0.1), 90.0, 3.0)
+    # Tours du donjon : leurs toits effondrés sont relevés avec le quatrième livre.
+    scene.repair("KeepRoofs", 4)
+    for x, z in keep_corners:
+        top = square_tower(scene, x, z, CURTAIN_SCALE, 5, roofed=False)
+        scene.add("castle_kit/rocks-small", (x + 0.8, top, z - 0.6), rng.uniform(0, 360), 2.0)
+    scene.rebuilt("KeepRoofs")
+    for x, z in keep_corners:
+        top = square_tower(scene, x, z, CURTAIN_SCALE, 5)
+        scene.add("castle_kit/flag", (x, top + 2.01 * CURTAIN_SCALE - 0.3, z), 0.0, 4.0)
     scene.group = "Fixed"
 
 

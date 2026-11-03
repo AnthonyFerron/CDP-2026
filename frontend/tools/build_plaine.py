@@ -139,6 +139,74 @@ def doorway(scene, center, outward):
     scene.add_box((x, (WALL_HEIGHT + DOORWAY_HEIGHT) / 2, z), lintel)
 
 
+# Boîte englobante (coin, taille) des modèles à l'échelle 1 : la plupart ont leur origine dans un coin,
+# et certains descendent sous leur origine.
+MODEL_BOXES = {
+    "furniture_kit/desk": ((-0.01, 0.0, -0.38), (0.73, 0.38, 0.56)),
+    "furniture_kit/bookcaseClosedWide": ((0.0, 0.0, -0.25), (0.8, 0.79, 0.25)),
+    "furniture_kit/bookcaseOpen": ((0.0, 0.0, -0.25), (0.4, 0.88, 0.25)),
+    "furniture_kit/bookcaseOpenLow": ((0.0, 0.0, -0.25), (0.4, 0.4, 0.25)),
+    "furniture_kit/bookcaseClosedDoors": ((-0.16, 0.0, -0.25), (0.56, 0.85, 0.27)),
+    "furniture_kit/kitchenCabinetDrawer": ((0.0, 0.0, -0.45), (0.43, 0.45, 0.48)),
+    "furniture_kit/kitchenCabinet": ((0.0, 0.0, -0.45), (0.43, 0.45, 0.48)),
+    "furniture_kit/kitchenStove": ((0.0, 0.0, -0.45), (0.43, 0.45, 0.48)),
+    "furniture_kit/kitchenSink": ((0.0, 0.0, -0.45), (0.43, 0.49, 0.48)),
+    "furniture_kit/sideTableDrawers": ((-0.01, 0.0, -0.21), (0.53, 0.38, 0.39)),
+    "furniture_kit/sideTable": ((-0.01, 0.0, -0.21), (0.53, 0.38, 0.22)),
+    "furniture_kit/cabinetBed": ((-0.01, 0.0, -0.21), (0.27, 0.23, 0.22)),
+    "furniture_kit/tableCloth": ((0.0, 0.0, -0.45), (0.84, 0.33, 0.45)),
+    "furniture_kit/tableRound": ((0.0, -0.27, -0.8), (0.69, 0.37, 0.8)),
+    "furniture_kit/chairDesk": ((-0.17, 0.0, -0.28), (0.48, 0.42, 0.44)),
+    "furniture_kit/chair": ((0.0, 0.0, -0.2), (0.2, 0.47, 0.2)),
+    "furniture_kit/bench": ((0.0, 0.0, -0.2), (0.4, 0.47, 0.2)),
+    "furniture_kit/bedSingle": ((-0.06, -0.13, -1.89), (1.62, 0.51, 1.89)),
+    "furniture_kit/bedDouble": ((-0.06, -0.13, -1.89), (1.62, 0.51, 1.91)),
+    "furniture_kit/rugRectangle": ((0.0, 0.0, -0.92), (1.57, 0.01, 0.92)),
+    "furniture_kit/rugRound": ((0.0, 0.0, -0.92), (0.92, 0.01, 0.92)),
+    "furniture_kit/coatRackStanding": ((-0.14, 0.0, -0.14), (0.27, 0.77, 0.27)),
+    "furniture_kit/lampRoundFloor": ((-0.02, 0.0, -0.15), (0.15, 0.86, 0.18)),
+    "furniture_kit/pottedPlant": ((-0.04, 0.0, -0.24), (0.25, 0.54, 0.29)),
+    "furniture_kit/cardboardBoxClosed": ((0.0, 0.0, -0.21), (0.21, 0.28, 0.21)),
+    "furniture_kit/books": ((0.0, 0.0, -0.09), (0.15, 0.1, 0.09)),
+    "graveyard_kit/altar-stone": ((-0.52, 0.0, -0.33), (1.04, 0.49, 0.65)),
+    "graveyard_kit/candle-multiple": ((-0.12, 0.0, -0.13), (0.26, 0.2, 0.27)),
+    "graveyard_kit/fire-basket": ((-0.21, 0.0, -0.21), (0.42, 0.17, 0.42)),
+    "graveyard_kit/hay-bale": ((-0.3, 0.01, -0.2), (0.61, 0.35, 0.4)),
+    "graveyard_kit/hay-bale-bundled": ((-0.3, 0.0, -0.22), (0.61, 0.38, 0.43)),
+    "graveyard_kit/lightpost-single": ((-0.1, 0.0, -0.1), (0.21, 1.27, 0.46)),
+    "mini_dungeon/barrel": ((-0.26, 0.0, -0.26), (0.52, 0.48, 0.52)),
+    "mini_dungeon/chest": ((-0.25, -0.05, -0.25), (0.5, 0.3, 0.7)),
+    "mini_dungeon/table": ((-0.44, 0.0, -0.32), (0.88, 0.31, 0.65)),
+    "mini_dungeon/weapon-spear": ((-0.07, 0.0, -0.06), (0.15, 0.6, 0.12)),
+    "mini_dungeon/shield-round": ((-0.19, -0.19, -0.05), (0.38, 0.38, 0.11)),
+    "survival_kit/box-large": ((-0.13, 0.0, -0.25), (0.25, 0.25, 0.5)),
+    "survival_kit/barrel": ((-0.12, 0.0, -0.12), (0.24, 0.34, 0.24)),
+    "survival_kit/box": ((-0.13, 0.0, -0.13), (0.25, 0.25, 0.25)),
+    "fantasy_town_kit/cart-high": ((-0.32, 0.0, -0.64), (0.65, 0.86, 1.39)),
+    "castle_kit/siege-ballista": ((-0.66, -0.2, -0.6), (1.33, 1.11, 1.2)),
+    "castle_kit/siege-catapult": ((-1.42, -0.2, -0.47), (2.15, 1.38, 0.94)),
+    "castle_kit/tree-large": ((-0.44, 0.0, -0.44), (0.89, 1.85, 0.89)),
+    "castle_kit/tree-small": ((-0.37, 0.0, -0.36), (0.74, 1.35, 0.72)),
+}
+
+
+def furniture(scene, model, center, degrees=0.0, scale=2.6, height=None, tilt=0.0):
+    """Pose un modèle centré sur le point donné, posé au sol, avec une collision de sa taille si une hauteur est donnée."""
+    (px, py, pz), (sx, sy, sz) = MODEL_BOXES[model]
+    local_x, local_z = (px + sx / 2) * scale, (pz + sz / 2) * scale
+    c, s = math.cos(math.radians(degrees)), math.sin(math.radians(degrees))
+    # Rotation autour de y : x' = c x + s z, z' = -s x + c z.
+    x = center[0] - (c * local_x + s * local_z)
+    z = center[2] - (-s * local_x + c * local_z)
+    scene.add(model, (x, center[1] - py * scale, z), degrees, scale, tilt=tilt)
+    if height:
+        if round(degrees) % 90:
+            scene.add_box((center[0], center[1] + height / 2, center[2]), (sx * scale, height, sz * scale), degrees)
+        else:
+            width, depth = (sx * scale, sz * scale) if round(degrees) % 180 == 0 else (sz * scale, sx * scale)
+            scene.add_box((center[0], center[1] + height / 2, center[2]), (width, height, depth))
+
+
 def against_wall(scene, model, point, inward, along_offset=0.0, scale=3.2, width=0.8, depth=0.25, height=0.8):
     """Adosse un meuble au mur, centré sur le point donné, sa face tournée vers la pièce."""
     x, z = point

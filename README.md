@@ -37,8 +37,8 @@ En version de debug, `F1` ouvre un menu temporaire qui permet de passer d'un niv
 Le jeu démarre dans le hub, `frontend/scenes/levels/hub/hub.tscn` : le village de Codia, avec le camp des survivants autour du feu, le château du roi au nord et le bunker à l'est, deux lieux distincts. Le joueur revient devant le portail de la zone qu'il quitte.
 
 - Les portails s'ouvrent dans l'ordre Plaine, Désert, Marais, Village : chacun attend que le livre de la zone précédente soit trouvé.
-- Un livre trouvé reste sur le joueur. Il faut le rapporter soi-même dans la salle des livres, au fond du château, et le poser sur son piédestal.
-- Chaque livre posé répare une partie du village : quatre maisons par livre, en commençant par les plus proches du camp, puis le marché, la cour du château, la fontaine, les drapeaux et le toit de la salle. Un plan large montre le village qui se relève, et le ciel s'éclaircit.
+- Un livre trouvé reste sur le joueur. Il faut le rapporter soi-même dans la salle des livres, au cœur du donjon du château, et le poser sur son piédestal, devant le trône du roi.
+- Chaque livre posé répare une partie du village : quatre maisons par livre, en commençant par les plus proches du camp, puis le marché, la cour du château, la fontaine, les drapeaux et les toits des tours du donjon. Un plan large montre le village qui se relève, et le ciel s'éclaircit.
 - Le bunker reste scellé.
 
 L'autoload `GameState` (`frontend/scripts/game_state.gd`) garde les livres trouvés, les livres posés et la dernière zone, et les sauvegarde dans `user://sauvegarde.cfg` à chaque changement. Pour ajouter une zone, renseigner sa scène dans `ZONE_SCENES`, sa place dans `ZONE_ORDER` et son livre dans `ZONE_BOOKS`, puis appeler `GameState.collect_book()` quand le livre est pris.

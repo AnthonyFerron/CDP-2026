@@ -2,15 +2,19 @@
 class_name HubScatter
 extends Node3D
 ## Habille le hub : arbres, buissons, rochers, et des fleurs dont le nombre suit les livres rapportés.
-## Les placements sont reproductibles et les petits détails disparaissent au loin.
+## Les placements sont reproductibles, posés sur le sol tel qu'il est maillé, et les petits détails
+## disparaissent au loin.
 
 @export var terrain: HubTerrain
 @export var tree_models: Array[PackedScene]
 @export var bush_models: Array[PackedScene]
 @export var rock_models: Array[PackedScene]
 @export var flower_models: Array[PackedScene]
-@export var tree_count := 220
-@export var border_tree_count := 130
+## Rayon du tronc de chaque arbre, et de chaque rocher, à l'échelle 1 : leur collision.
+@export var tree_radii: Array[float] = [0.07, 0.07, 0.08, 0.06, 0.06]
+@export var rock_radii: Array[float] = [0.34, 0.52]
+@export var tree_count := 240
+@export var forest_tree_count := 420
 @export var bush_count := 380
 @export var rock_count := 110
 @export var flower_count := 1500
@@ -25,11 +29,11 @@ func _ready() -> void:
 	if not terrain.is_node_ready():
 		await terrain.ready
 	_rng.seed = 5800
-	_scatter(tree_models, tree_count, Vector2(3.2, 5.0), 0.5, true)
-	_add_border_trees()
-	_scatter(bush_models, bush_count, Vector2(3.0, 5.0), 0.2, false)
-	_scatter(rock_models, rock_count, Vector2(2.0, 4.0), 0.4, true)
-	_flowers = _scatter(flower_models, flower_count, Vector2(2.0, 3.0), 0.05, false)
+	_scatter(tree_models, tree_count, Vector2(3.2, 5.0), tree_radii, 0.45, 0.12)
+	_add_forest()
+	_scatter(bush_models, bush_count, Vector2(3.0, 5.0), [], 0.7, 0.05)
+	_scatter(rock_models, rock_count, Vector2(2.0, 4.0), rock_radii, 0.7, 0.1)
+	_flowers = _scatter(flower_models, flower_count, Vector2(2.0, 3.0), [], 0.6, 0.0)
 	set_life(0.0)
 
 
@@ -40,7 +44,7 @@ func set_life(life: float) -> void:
 
 
 func _is_free(spot: Vector2, margin: float) -> bool:
-	if terrain.flat_mask(spot.x, spot.y) > 0.2 or spot.length() > HubTerrain.PLAY_RADIUS:
+	if terrain.flat_mask(spot.x, spot.y) > 0.2 or spot.length() > HubTerrain.LIMIT_RADIUS - 2.0:
 		return false
 	if HubTerrain.castle_distance(spot) < 6.0 + margin or spot.distance_to(HubTerrain.BUNKER) < 14.0:
 		return false
@@ -50,9 +54,12 @@ func _is_free(spot: Vector2, margin: float) -> bool:
 	return true
 
 
-func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, radius: float, solid: bool) -> Array[MultiMesh]:
+## Disperse des modèles sur le plateau. Un rayon par modèle leur donne une collision à leur taille ;
+## sans rayon, ils se traversent. Les pentes trop fortes sont évitées, et chaque pied s'enfonce un peu
+## pour ne jamais flotter.
+func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, radii: Array, max_slope: float, sink: float) -> Array[MultiMesh]:
 	var body: StaticBody3D
-	if solid:
+	if not radii.is_empty():
 		body = StaticBody3D.new()
 		add_child(body)
 	var groups: Array[Array] = []
@@ -62,39 +69,52 @@ func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, radi
 	for attempt in count * 12:
 		if placed >= count:
 			break
-		var spot := Vector2.from_angle(_rng.randf() * TAU) * sqrt(_rng.randf()) * HubTerrain.PLAY_RADIUS
+		var spot := Vector2.from_angle(_rng.randf() * TAU) * sqrt(_rng.randf()) * HubTerrain.LIMIT_RADIUS
 		if not _is_free(spot, 1.0):
 			continue
+		var slope := terrain.slope_at(spot.x, spot.y)
+		if slope > max_slope:
+			continue
+		var model := placed % groups.size()
 		var scale_factor := _rng.randf_range(scale_range.x, scale_range.y)
-		var origin := Vector3(spot.x, terrain.height_at(spot.x, spot.y) - 0.05, spot.y)
+		var ground := terrain.surface_height(spot.x, spot.y)
+		var origin := Vector3(spot.x, ground - sink * scale_factor - slope * 0.6, spot.y)
 		var basis := Basis(Vector3.UP, _rng.randf() * TAU).scaled(Vector3.ONE * scale_factor)
-		groups[placed % groups.size()].append(Transform3D(basis, origin))
-		if solid:
+		groups[model].append(Transform3D(basis, origin))
+		if body:
 			var shape := CylinderShape3D.new()
-			shape.radius = radius * scale_factor * 0.6
+			shape.radius = float(radii[model % radii.size()]) * scale_factor
 			shape.height = 3.0
 			var collision := CollisionShape3D.new()
 			collision.shape = shape
-			collision.position = origin + Vector3.UP * 1.5
+			collision.position = Vector3(spot.x, ground + 1.5, spot.y)
 			body.add_child(collision)
 		placed += 1
 	var multimeshes: Array[MultiMesh] = []
 	for index in models.size():
 		var transforms: Array[Transform3D] = []
 		transforms.assign(groups[index])
-		multimeshes.append(_add_multimesh(_load_mesh(models[index]), transforms, solid).multimesh)
+		multimeshes.append(_add_multimesh(_load_mesh(models[index]), transforms, body != null).multimesh)
 	return multimeshes
 
 
-func _add_border_trees() -> void:
+## Forêt sur les pentes des montagnes, au-delà de la limite du joueur : elle ferme l'horizon.
+func _add_forest() -> void:
 	var groups: Array[Array] = []
 	for model in tree_models:
 		groups.append([])
-	for i in border_tree_count:
-		var angle := TAU * i / border_tree_count + _rng.randf_range(-0.04, 0.04)
-		var spot := Vector2.from_angle(angle) * (HubTerrain.PLAY_RADIUS + _rng.randf_range(1.0, 8.0))
-		var basis := Basis(Vector3.UP, _rng.randf() * TAU).scaled(Vector3.ONE * _rng.randf_range(4.5, 6.5))
-		groups[i % groups.size()].append(Transform3D(basis, Vector3(spot.x, terrain.height_at(spot.x, spot.y) - 0.1, spot.y)))
+	var placed := 0
+	for attempt in forest_tree_count * 6:
+		if placed >= forest_tree_count:
+			break
+		var spot := Vector2.from_angle(_rng.randf() * TAU) * _rng.randf_range(HubTerrain.LIMIT_RADIUS + 1.0, HubTerrain.PLAY_RADIUS + 24.0)
+		if terrain.slope_at(spot.x, spot.y) > 1.0:
+			continue
+		var scale_factor := _rng.randf_range(4.5, 6.5)
+		var ground := terrain.surface_height(spot.x, spot.y) - 0.2 * scale_factor
+		var basis := Basis(Vector3.UP, _rng.randf() * TAU).scaled(Vector3.ONE * scale_factor)
+		groups[placed % groups.size()].append(Transform3D(basis, Vector3(spot.x, ground, spot.y)))
+		placed += 1
 	for index in tree_models.size():
 		var transforms: Array[Transform3D] = []
 		transforms.assign(groups[index])

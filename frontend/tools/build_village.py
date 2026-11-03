@@ -10,7 +10,7 @@ import math
 import random
 from pathlib import Path
 
-from build_plaine import WALL_HEIGHT, WALL_SCALE, WALL_THICKNESS, Scene, doorway, wall
+from build_plaine import WALL_HEIGHT, WALL_SCALE, WALL_THICKNESS, Scene, doorway, furniture, wall
 
 OUTPUT = Path(__file__).resolve().parent.parent / "scenes" / "levels" / "village" / "village_props.tscn"
 TILE = WALL_SCALE
@@ -182,43 +182,6 @@ def build_mills(scene):
 # et la salle secrète derrière le mur ouest du bureau. Coordonnées locales au nœud Interior de village.tscn.
 HALL_OUTPUT = OUTPUT.parent / "village_hall.tscn"
 OFFICE_FLOOR = 4.5
-# Boîte englobante (position, taille) de chaque meuble du kit, à l'échelle 1 : leur origine est dans un coin.
-FURNITURE_BOXES = {
-    "furniture_kit/desk": ((-0.01, -0.38), (0.73, 0.56)),
-    "furniture_kit/bookcaseClosedWide": ((0.0, -0.25), (0.8, 0.25)),
-    "furniture_kit/bookcaseOpen": ((0.0, -0.25), (0.4, 0.25)),
-    "furniture_kit/bookcaseClosedDoors": ((-0.16, -0.25), (0.56, 0.27)),
-    "furniture_kit/kitchenCabinetDrawer": ((0.0, -0.45), (0.43, 0.48)),
-    "furniture_kit/sideTableDrawers": ((-0.01, -0.21), (0.53, 0.39)),
-    "furniture_kit/tableCloth": ((0.0, -0.45), (0.84, 0.45)),
-    "furniture_kit/chairDesk": ((-0.17, -0.28), (0.48, 0.44)),
-    "furniture_kit/chair": ((0.0, -0.2), (0.2, 0.2)),
-    "furniture_kit/bench": ((0.0, -0.2), (0.4, 0.2)),
-    "furniture_kit/rugRectangle": ((0.0, -0.92), (1.57, 0.92)),
-    "furniture_kit/coatRackStanding": ((-0.14, -0.14), (0.27, 0.27)),
-    "furniture_kit/cardboardBoxClosed": ((0.0, -0.21), (0.21, 0.21)),
-    "furniture_kit/books": ((0.0, -0.09), (0.15, 0.09)),
-    "graveyard_kit/altar-stone": ((-0.52, -0.33), (1.04, 0.65)),
-    "graveyard_kit/candle-multiple": ((-0.12, -0.13), (0.26, 0.27)),
-    "mini_dungeon/barrel": ((-0.26, -0.26), (0.52, 0.52)),
-    "survival_kit/box-large": ((-0.13, -0.25), (0.25, 0.5)),
-}
-
-
-def furniture(scene, model, center, degrees=0.0, scale=2.6, height=None):
-    """Pose un meuble centré sur le point donné, avec une collision de sa taille si une hauteur est donnée."""
-    (px, pz), (sx, sz) = FURNITURE_BOXES[model]
-    local_x, local_z = (px + sx / 2) * scale, (pz + sz / 2) * scale
-    c, s = math.cos(math.radians(degrees)), math.sin(math.radians(degrees))
-    # Rotation autour de y : x' = c x + s z, z' = -s x + c z.
-    x = center[0] - (c * local_x + s * local_z)
-    z = center[2] - (-s * local_x + c * local_z)
-    scene.add(model, (x, center[1], z), degrees, scale)
-    if height:
-        width, depth = (sx * scale, sz * scale) if round(degrees) % 180 == 0 else (sz * scale, sx * scale)
-        scene.add_box((center[0], center[1] + height / 2, center[2]), (width, height, depth))
-
-
 def room_walls(scene, cx, cz, width, depth, base, doors, skip=(), models=("wall", "wall-detail-cross", "wall", "wall-detail-horizontal")):
     """Murs de pierre d'une pièce, sans fenêtres : elle est sous terre. Les portes sont des couples (côté, case)."""
     for side, index, count, center, outward in edge_tiles(cx, cz, width, depth):
@@ -276,7 +239,8 @@ def build_hall_interior():
     furniture(scene, "furniture_kit/rugRectangle", (-1.0, OFFICE_FLOOR + 0.02, 1.4), 0.0, 2.6)
     furniture(scene, "furniture_kit/coatRackStanding", (3.6, OFFICE_FLOOR, 5.3), 0.0, 2.6)
     for x in (-4.4, 2.4):
-        scene.add("fantasy_town_kit/banner-red", (x, OFFICE_FLOOR + 0.6, -5.6), 90.0, 3.4)
+        # Le drap est décalé de 0,4 tuile de l'origine du modèle, vers le mur.
+        scene.add("fantasy_town_kit/banner-red", (x, OFFICE_FLOOR + 0.6, -4.35), 90.0, 3.4)
     # Collisions du garde-corps autour de la trémie de l'escalier, dessiné dans village.tscn.
     scene.add_box((4.5, OFFICE_FLOOR + 0.6, -1.1), (0.3, 1.2, 6.2))
     scene.add_box((6.2, OFFICE_FLOOR + 0.6, 2.1), (3.4, 1.2, 0.3))
