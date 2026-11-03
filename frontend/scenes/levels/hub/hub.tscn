@@ -1,0 +1,484 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/levels/hub/hub.gd" id="1_hub"]
+[ext_resource type="Script" path="res://scenes/levels/hub/hub_terrain.gd" id="2_terrain"]
+[ext_resource type="Script" path="res://scenes/levels/hub/hub_scatter.gd" id="3_scatter"]
+[ext_resource type="Shader" path="res://scenes/levels/hub/hub_ground.gdshader" id="4_ground"]
+[ext_resource type="PackedScene" path="res://scenes/levels/hub/hub_props.tscn" id="5_props"]
+[ext_resource type="PackedScene" path="res://scenes/props/portal/portal.tscn" id="6_portal"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="7_player"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="8_hud"]
+[ext_resource type="Script" path="res://scripts/interactable.gd" id="9_interactable"]
+[ext_resource type="Script" path="res://scripts/readable.gd" id="10_readable"]
+[ext_resource type="Script" path="res://scripts/fire_effect.gd" id="11_fire"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/character-keeper.glb" id="12_merlon"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_forest/character-archer.glb" id="13_archer"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/character-human.glb" id="14_human"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/signpost.glb" id="15_signpost"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/tree_default.glb" id="20_tree_default"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/tree_oak.glb" id="21_tree_oak"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/tree_fat.glb" id="22_tree_fat"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_forest/tree.glb" id="23_tree_forest"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_forest/tree-high.glb" id="24_tree_high"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/plant_bush.glb" id="25_bush"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/plant_bushLarge.glb" id="26_bush_large"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/rock_largeB.glb" id="27_rock"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/rocks-large.glb" id="28_rocks"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/flower_redA.glb" id="29_flower_red"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/flower_yellowA.glb" id="30_flower_yellow"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/flower_purpleA.glb" id="31_flower_purple"]
+[ext_resource type="AudioStream" path="res://assets/audio/hub_ambience.wav" id="40_ambience"]
+[ext_resource type="AudioStream" path="res://assets/audio/fire_crackle.wav" id="41_crackle"]
+[ext_resource type="AudioStream" path="res://assets/audio/footstep_grass_1.wav" id="42_grass1"]
+[ext_resource type="AudioStream" path="res://assets/audio/footstep_grass_2.wav" id="43_grass2"]
+[ext_resource type="AudioStream" path="res://assets/audio/footstep_grass_3.wav" id="44_grass3"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_hub"]
+sky_top_color = Color(0.3, 0.29, 0.36, 1)
+sky_horizon_color = Color(0.5, 0.45, 0.45, 1)
+ground_bottom_color = Color(0.18, 0.16, 0.14, 1)
+ground_horizon_color = Color(0.5, 0.45, 0.45, 1)
+
+[sub_resource type="Sky" id="Sky_hub"]
+sky_material = SubResource("ProceduralSkyMaterial_hub")
+
+[sub_resource type="Environment" id="Environment_hub"]
+background_mode = 2
+sky = SubResource("Sky_hub")
+ambient_light_source = 3
+ambient_light_color = Color(0.75, 0.72, 0.7, 1)
+ambient_light_energy = 0.5
+tonemap_mode = 3
+glow_enabled = true
+glow_intensity = 0.5
+glow_bloom = 0.04
+glow_hdr_threshold = 1.0
+fog_enabled = true
+fog_light_color = Color(0.45, 0.42, 0.42, 1)
+fog_density = 0.02
+fog_sky_affect = 0.3
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ground"]
+render_priority = 0
+shader = ExtResource("4_ground")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_stone"]
+albedo_color = Color(0.42, 0.4, 0.4, 1)
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_altar"]
+material = SubResource("StandardMaterial3D_stone")
+size = Vector3(8, 0.15, 2.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pedestal"]
+material = SubResource("StandardMaterial3D_stone")
+size = Vector3(0.9, 1.1, 0.9)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pedestal"]
+size = Vector3(0.9, 1.4, 0.9)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_character"]
+height = 2.0
+radius = 0.6
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_book_Plaine"]
+albedo_color = Color(0.5, 0.08, 0.05, 1)
+emission_enabled = true
+emission = Color(0.5, 0.08, 0.05, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_book_Plaine"]
+material = SubResource("StandardMaterial3D_book_Plaine")
+size = Vector3(0.55, 0.14, 0.75)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_book_Desert"]
+albedo_color = Color(0.55, 0.35, 0.08, 1)
+emission_enabled = true
+emission = Color(0.55, 0.35, 0.08, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_book_Desert"]
+material = SubResource("StandardMaterial3D_book_Desert")
+size = Vector3(0.55, 0.14, 0.75)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_book_Marais"]
+albedo_color = Color(0.1, 0.35, 0.25, 1)
+emission_enabled = true
+emission = Color(0.1, 0.35, 0.25, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_book_Marais"]
+material = SubResource("StandardMaterial3D_book_Marais")
+size = Vector3(0.55, 0.14, 0.75)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_book_Village"]
+albedo_color = Color(0.3, 0.15, 0.5, 1)
+emission_enabled = true
+emission = Color(0.3, 0.15, 0.5, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_book_Village"]
+material = SubResource("StandardMaterial3D_book_Village")
+size = Vector3(0.55, 0.14, 0.75)
+
+[node name="Hub" type="Node3D"]
+script = ExtResource("1_hub")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_hub")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866025, -0.25, 0.433013, 0, 0.866025, 0.5, -0.5, -0.433013, 0.75, 0, 40, 0)
+light_color = Color(1, 0.9, 0.78, 1)
+light_energy = 0.55
+shadow_enabled = true
+directional_shadow_max_distance = 70.0
+
+[node name="Terrain" type="StaticBody3D" parent="."]
+script = ExtResource("2_terrain")
+ground_material = SubResource("ShaderMaterial_ground")
+
+[node name="Scatter" type="Node3D" parent="." node_paths=PackedStringArray("terrain")]
+script = ExtResource("3_scatter")
+terrain = NodePath("../Terrain")
+tree_models = Array[PackedScene]([ExtResource("20_tree_default"), ExtResource("21_tree_oak"), ExtResource("22_tree_fat"), ExtResource("23_tree_forest"), ExtResource("24_tree_high")])
+bush_models = Array[PackedScene]([ExtResource("25_bush"), ExtResource("26_bush_large")])
+rock_models = Array[PackedScene]([ExtResource("27_rock"), ExtResource("28_rocks")])
+flower_models = Array[PackedScene]([ExtResource("29_flower_red"), ExtResource("30_flower_yellow"), ExtResource("31_flower_purple")])
+
+[node name="Props" parent="." instance=ExtResource("5_props")]
+
+[node name="Campfire" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+script = ExtResource("11_fire")
+size = 2.0
+light_energy = 3.5
+light_range = 12.0
+crackle_sound = ExtResource("41_crackle")
+crackle_volume_db = -4.0
+
+[node name="Portals" type="Node3D" parent="."]
+
+[node name="Plaine" parent="Portals" instance=ExtResource("6_portal")]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -17, 0, -17)
+closed_prompt = "La Plaine : bientôt accessible"
+open_prompt = "Entrer : La Plaine"
+inner_color = Color(1, 0.8, 0.35, 1)
+outer_color = Color(0.9, 0.2, 0.05, 1)
+
+[node name="Label" type="Label3D" parent="Portals/Plaine"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.4, 0)
+pixel_size = 0.006
+billboard = 1
+modulate = Color(1, 0.95, 0.85, 1)
+text = "La Plaine"
+font_size = 64
+outline_size = 14
+
+[node name="Desert" parent="Portals" instance=ExtResource("6_portal")]
+transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 17, 0, -17)
+closed_prompt = "Le Désert : bientôt accessible"
+open_prompt = "Entrer : Le Désert"
+inner_color = Color(1, 0.95, 0.6, 1)
+outer_color = Color(0.95, 0.62, 0.15, 1)
+
+[node name="Label" type="Label3D" parent="Portals/Desert"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.4, 0)
+pixel_size = 0.006
+billboard = 1
+modulate = Color(1, 0.95, 0.85, 1)
+text = "Le Désert"
+font_size = 64
+outline_size = 14
+
+[node name="Marais" parent="Portals" instance=ExtResource("6_portal")]
+transform = Transform3D(-0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, -0.707107, 17, 0, 17)
+closed_prompt = "Le Marais : bientôt accessible"
+open_prompt = "Entrer : Le Marais"
+inner_color = Color(0.6, 1, 0.7, 1)
+outer_color = Color(0.1, 0.55, 0.3, 1)
+
+[node name="Label" type="Label3D" parent="Portals/Marais"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.4, 0)
+pixel_size = 0.006
+billboard = 1
+modulate = Color(1, 0.95, 0.85, 1)
+text = "Le Marais"
+font_size = 64
+outline_size = 14
+
+[node name="Village" parent="Portals" instance=ExtResource("6_portal")]
+transform = Transform3D(-0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, -17, 0, 17)
+closed_prompt = "Le Village détruit : bientôt accessible"
+open_prompt = "Entrer : Le Village détruit"
+inner_color = Color(0.85, 0.7, 1, 1)
+outer_color = Color(0.45, 0.2, 0.8, 1)
+
+[node name="Label" type="Label3D" parent="Portals/Village"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.4, 0)
+pixel_size = 0.006
+billboard = 1
+modulate = Color(1, 0.95, 0.85, 1)
+text = "Le Village détruit"
+font_size = 64
+outline_size = 14
+
+[node name="Altar" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -7.5)
+
+[node name="Platform" type="MeshInstance3D" parent="Altar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.075, 0)
+mesh = SubResource("BoxMesh_altar")
+
+[node name="Inscription" type="Node3D" parent="Altar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0.6)
+script = ExtResource("10_readable")
+title = "L'autel des livres"
+body = "Quatre places attendent les livres de Codia. Chacun rapporté ici rend un peu de vie aux terres du royaume."
+prompt = "Lire l'autel"
+radius = 1.6
+
+[node name="Plaine" type="Node3D" parent="Altar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.7, 0, 0)
+
+[node name="Pedestal" type="MeshInstance3D" parent="Altar/Plaine"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+mesh = SubResource("BoxMesh_pedestal")
+
+[node name="Label" type="Label3D" parent="Altar/Plaine"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0.46)
+pixel_size = 0.0025
+modulate = Color(0.95, 0.9, 0.8, 1)
+text = "La Plaine"
+font_size = 64
+outline_size = 10
+
+[node name="Body" type="StaticBody3D" parent="Altar/Plaine"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Altar/Plaine/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+shape = SubResource("BoxShape3D_pedestal")
+
+[node name="Book" type="Node3D" parent="Altar/Plaine"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0)
+visible = false
+
+[node name="Mesh" type="MeshInstance3D" parent="Altar/Plaine/Book"]
+mesh = SubResource("BoxMesh_book_Plaine")
+
+[node name="Glow" type="OmniLight3D" parent="Altar/Plaine/Book"]
+light_energy = 1.0
+omni_range = 2.5
+
+[node name="Desert" type="Node3D" parent="Altar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 0, 0)
+
+[node name="Pedestal" type="MeshInstance3D" parent="Altar/Desert"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+mesh = SubResource("BoxMesh_pedestal")
+
+[node name="Label" type="Label3D" parent="Altar/Desert"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0.46)
+pixel_size = 0.0025
+modulate = Color(0.95, 0.9, 0.8, 1)
+text = "Le Désert"
+font_size = 64
+outline_size = 10
+
+[node name="Body" type="StaticBody3D" parent="Altar/Desert"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Altar/Desert/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+shape = SubResource("BoxShape3D_pedestal")
+
+[node name="Book" type="Node3D" parent="Altar/Desert"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0)
+visible = false
+
+[node name="Mesh" type="MeshInstance3D" parent="Altar/Desert/Book"]
+mesh = SubResource("BoxMesh_book_Desert")
+
+[node name="Glow" type="OmniLight3D" parent="Altar/Desert/Book"]
+light_energy = 1.0
+omni_range = 2.5
+
+[node name="Marais" type="Node3D" parent="Altar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 0, 0)
+
+[node name="Pedestal" type="MeshInstance3D" parent="Altar/Marais"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+mesh = SubResource("BoxMesh_pedestal")
+
+[node name="Label" type="Label3D" parent="Altar/Marais"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0.46)
+pixel_size = 0.0025
+modulate = Color(0.95, 0.9, 0.8, 1)
+text = "Le Marais"
+font_size = 64
+outline_size = 10
+
+[node name="Body" type="StaticBody3D" parent="Altar/Marais"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Altar/Marais/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+shape = SubResource("BoxShape3D_pedestal")
+
+[node name="Book" type="Node3D" parent="Altar/Marais"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0)
+visible = false
+
+[node name="Mesh" type="MeshInstance3D" parent="Altar/Marais/Book"]
+mesh = SubResource("BoxMesh_book_Marais")
+
+[node name="Glow" type="OmniLight3D" parent="Altar/Marais/Book"]
+light_energy = 1.0
+omni_range = 2.5
+
+[node name="Village" type="Node3D" parent="Altar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7, 0, 0)
+
+[node name="Pedestal" type="MeshInstance3D" parent="Altar/Village"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+mesh = SubResource("BoxMesh_pedestal")
+
+[node name="Label" type="Label3D" parent="Altar/Village"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0.46)
+pixel_size = 0.0025
+modulate = Color(0.95, 0.9, 0.8, 1)
+text = "Le Village détruit"
+font_size = 64
+outline_size = 10
+
+[node name="Body" type="StaticBody3D" parent="Altar/Village"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Altar/Village/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+shape = SubResource("BoxShape3D_pedestal")
+
+[node name="Book" type="Node3D" parent="Altar/Village"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0)
+visible = false
+
+[node name="Mesh" type="MeshInstance3D" parent="Altar/Village/Book"]
+mesh = SubResource("BoxMesh_book_Village")
+
+[node name="Glow" type="OmniLight3D" parent="Altar/Village/Book"]
+light_energy = 1.0
+omni_range = 2.5
+
+[node name="Characters" type="Node3D" parent="."]
+
+[node name="Merlon" type="Node3D" parent="Characters"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.2, 0, -6.4)
+script = ExtResource("10_readable")
+title = "Merlon"
+body = ""
+prompt = "Parler à Merlon"
+radius = 3.0
+
+[node name="Model" parent="Characters/Merlon" instance=ExtResource("12_merlon")]
+transform = Transform3D(2.29813, 0, -1.92836, 0, 3, 0, 1.92836, 0, 2.29813, 0, 0.6, 0)
+
+[node name="Name" type="Label3D" parent="Characters/Merlon"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
+pixel_size = 0.004
+billboard = 1
+modulate = Color(0.6, 0.4, 1, 1)
+text = "Merlon"
+font_size = 64
+outline_size = 12
+
+[node name="Body" type="StaticBody3D" parent="Characters/Merlon"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Characters/Merlon/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CylinderShape3D_character")
+
+[node name="Mira" type="Node3D" parent="Characters"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.8, 0, 4.8)
+script = ExtResource("10_readable")
+title = "Mira, l'éclaireuse"
+body = "Depuis la guerre, plus rien ne pousse sur ce plateau. Mais on raconte que les livres de Codia gardent la mémoire du monde d'avant. S'ils reviennent, peut-être que la terre se souviendra."
+prompt = "Parler à Mira"
+radius = 3.0
+
+[node name="Model" parent="Characters/Mira" instance=ExtResource("13_archer")]
+transform = Transform3D(-1.54269, 0, 1.83851, 0, 2.4, 0, -1.83851, 0, -1.54269, 0, 0, 0)
+
+[node name="Name" type="Label3D" parent="Characters/Mira"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
+pixel_size = 0.004
+billboard = 1
+modulate = Color(1, 0.8, 0.5, 1)
+text = "Mira"
+font_size = 64
+outline_size = 12
+
+[node name="Body" type="StaticBody3D" parent="Characters/Mira"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Characters/Mira/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CylinderShape3D_character")
+
+[node name="Bran" type="Node3D" parent="Characters"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.6, 0, -2.2)
+script = ExtResource("10_readable")
+title = "Bran, le forgeron"
+body = "Les portails se sont rallumés le jour où Merlon est arrivé. Chacun mène à une terre perdue. Fais attention, Devlyn : ce qui reste là-bas n'a rien d'accueillant."
+prompt = "Parler à Bran"
+radius = 3.0
+
+[node name="Model" parent="Characters/Bran" instance=ExtResource("14_human")]
+transform = Transform3D(-0.820848, 0, -2.25526, 0, 2.4, 0, 2.25526, 0, -0.820848, 0, 0, 0)
+
+[node name="Name" type="Label3D" parent="Characters/Bran"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
+pixel_size = 0.004
+billboard = 1
+modulate = Color(1, 0.8, 0.5, 1)
+text = "Bran"
+font_size = 64
+outline_size = 12
+
+[node name="Body" type="StaticBody3D" parent="Characters/Bran"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Characters/Bran/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CylinderShape3D_character")
+
+[node name="MerlonLight" type="OmniLight3D" parent="Characters/Merlon"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0.6)
+light_color = Color(0.6, 0.45, 1, 1)
+light_energy = 1.2
+omni_range = 4.0
+
+[node name="Bunker" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, -36.8)
+script = ExtResource("9_interactable")
+prompt = "Examiner la grille du bunker"
+radius = 3.0
+
+[node name="BunkerLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.2, -37.2)
+pixel_size = 0.006
+billboard = 1
+modulate = Color(0.9, 0.85, 0.75, 1)
+text = "Le bunker"
+font_size = 64
+outline_size = 14
+
+[node name="DefaultSpawn" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 12)
+
+[node name="Player" parent="." instance=ExtResource("7_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0.3, 12)
+respawn_height = -30.0
+first_person = true
+footstep_sounds = Array[AudioStream]([ExtResource("42_grass1"), ExtResource("43_grass2"), ExtResource("44_grass3")])
+
+[node name="Ambience" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("40_ambience")
+volume_db = -8.0
+autoplay = true
+
+[node name="Hud" parent="." instance=ExtResource("8_hud")]
