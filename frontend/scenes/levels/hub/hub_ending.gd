@@ -49,7 +49,8 @@ func play_eruption() -> void:
 func play_victory() -> void:
 	volcano.set_state(Volcano.State.DORMANT)
 	_begin(Vector3(2, 3.2, 9), Vector3(0, 1.6, 0))
-	await _move(Vector3(0, 52, 86), Vector3(0, 0, -16), 6.5, 70.0)
+	_clear_air()
+	await _move(Vector3(0, 30, 58), Vector3(0, 2, -14), 6.5, 68.0)
 	await get_tree().create_timer(1.0).timeout
 	# Au-dessus du château, pour qu'aucune tour ne cache le volcan.
 	await _move(Vector3(-34, 58, -86), _volcano_top(), 5.5, 44.0)
@@ -114,6 +115,23 @@ func _darken_sky() -> void:
 		tween.tween_property(sky, "ground_bottom_color", Color(0.35, 0.1, 0.05), 4.0)
 	tween.tween_property(environment, "fog_light_color", Color(0.45, 0.16, 0.08), 4.0)
 	tween.tween_property(environment, "fog_density", 0.008, 4.0)
+
+
+## Air limpide d'une belle journée : la brume se lève et la lumière se pose, pour que le village se lise de loin.
+func _clear_air() -> void:
+	var environment: Environment = get_tree().current_scene.get_node("WorldEnvironment").environment
+	environment.fog_density = 0.0012
+	environment.fog_light_color = Color(0.62, 0.74, 0.88)
+	environment.fog_sky_affect = 0.0
+	environment.ambient_light_energy = 0.35
+	environment.glow_intensity = 0.15
+	environment.tonemap_exposure = 0.78
+	environment.adjustment_enabled = true
+	environment.adjustment_saturation = 1.35
+	environment.adjustment_contrast = 1.1
+	var sun: DirectionalLight3D = get_tree().current_scene.get_node("Sun")
+	sun.light_energy = 1.1
+	sun.light_color = Color(1.0, 0.85, 0.66)
 
 
 ## Une nappe de lave monte du sol et recouvre tout le village.
