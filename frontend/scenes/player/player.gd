@@ -17,6 +17,9 @@ extends CharacterBody3D
 ## Hauteur des yeux en vue à la première personne.
 @export var eye_height := 1.65
 @export var mouse_sensitivity := 0.003
+## Vitesse de rotation aux flèches du clavier, en radians par seconde : le regard reste possible
+## quand le navigateur refuse de capturer la souris.
+@export var key_turn_speed := 2.2
 @export_range(-89.0, 0.0) var pitch_min_degrees := -70.0
 @export_range(0.0, 89.0) var pitch_max_degrees := 40.0
 
@@ -81,6 +84,10 @@ func _physics_process(delta: float) -> void:
 		velocity += get_gravity() * delta
 	elif Input.is_action_just_pressed("jump"):
 		velocity.y = jump_velocity
+
+	var look := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	if look != Vector2.ZERO:
+		_rotate_camera(look * key_turn_speed * delta / mouse_sensitivity)
 
 	var input := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
 	var direction := Vector3(input.x, 0.0, input.y).rotated(Vector3.UP, _camera_pivot.rotation.y)
