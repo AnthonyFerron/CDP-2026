@@ -17,7 +17,13 @@ var _prompt := ""
 
 
 func _process(_delta: float) -> void:
-	_current = _find_nearest()
+	var nearest := _find_nearest()
+	if nearest != _current:
+		if is_instance_valid(_current):
+			_current.focused = false
+		if nearest:
+			nearest.focused = true
+		_current = nearest
 	_set_prompt(_current.prompt if _current else "")
 
 
@@ -29,6 +35,8 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_DISABLED:
+		if is_instance_valid(_current):
+			_current.focused = false
 		_current = null
 		_set_prompt("")
 

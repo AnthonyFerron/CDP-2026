@@ -1,15 +1,14 @@
 class_name Desert
 extends Node3D
-## Zone du Désert : les stèles du sanctuaire, puis la cave où trois tablettes s'éveillent dans l'ordre
-## pour libérer le livre des Archives du Soleil. Les sables mouvants ramènent le joueur en lieu sûr.
-## Conception reprise de l'ébauche de niveau 2 : sanctuaire, trappe, cave, trois fonctions et coffre.
+## Zone du Désert : les runes de l'algorithme. Le joueur ramasse des runes dans les ruines et sous
+## le sable, puis reconstitue deux algorithmes sur la table ronde de la cave pour libérer l'Algonicon.
+## Les sables mouvants ramènent le joueur en lieu sûr.
 
 signal book_collected(book_id: StringName)
 signal hub_requested
 
 const ZONE := &"desert"
-const BOOK_ID := &"archives_du_soleil"
-const ORDER: Array[StringName] = [&"initialiser", &"transformer", &"transmettre"]
+const BOOK_ID := &"algonicon"
 const QUICKSAND_SPEED := 0.35
 ## Temps passé dans les sables mouvants avant d'être englouti.
 const SINK_TIME := 1.6
@@ -23,7 +22,8 @@ const SANDSTONE := Color(1.0, 0.8, 0.6)
 @export var chimes: Array[AudioStream]
 @export var reset_sound: AudioStream
 
-var _progress := 0
+## Runes ramassées, dans l'ordre où le joueur les a trouvées.
+var _inventory: Array[StringName] = []
 var _inside := false
 var _busy := false
 var _sinking := 0.0
@@ -45,8 +45,12 @@ var _sandstorm: CPUParticles3D
 @onready var _exit: Interactable = $Interior/Exit
 @onready var _inside_spawn: Marker3D = $Interior/InsideSpawn
 @onready var _outside_spawn: Marker3D = $Exterior/OutsideSpawn
-@onready var _tablets: Node3D = $Interior/Tablets
-@onready var _tablet_sound: AudioStreamPlayer3D = $Interior/Tablets/Sound
+@onready var _puzzle: RunePuzzle = $RunePuzzle
+@onready var _table: Interactable = $Interior/RoundTable/Interactable
+@onready var _table_glow: OmniLight3D = $Interior/RoundTable/Glow
+@onready var _table_sound: AudioStreamPlayer3D = $Interior/RoundTable/Sound
+@onready var _chest: Node3D = $Interior/Chest
+@onready var _chest_sand: Node3D = $Interior/ChestSand
 @onready var _book: Node3D = $Interior/Book
 @onready var _book_pickup: Interactable = $Interior/Book/Interactable
 @onready var _book_target: Marker3D = $Interior/BookTarget
@@ -59,9 +63,13 @@ func _ready() -> void:
 	for clues: Node in [$Exterior/Clues, $Interior/Clues]:
 		for clue: Readable in clues.get_children():
 			clue.interacted.connect(_read.bind(clue))
-	for tablet: Node3D in _tablets.get_children().filter(func(node: Node) -> bool: return node.has_node("Interactable")):
-		var pickup: Interactable = tablet.get_node("Interactable")
-		pickup.interacted.connect(_on_tablet_activated.bind(tablet))
+	for rune: Rune in find_children("*", "Rune", true, false):
+		rune.interacted.connect(_on_rune_taken.bind(rune))
+	for pile: SandPile in find_children("*", "SandPile", true, false):
+		pile.cleared.connect(_on_pile_cleared)
+	_table.interacted.connect(_open_table)
+	_puzzle.validated.connect(_on_puzzle_validated)
+	_puzzle.closed.connect(_close_panel)
 	_trapdoor.interacted.connect(_travel.bind(true))
 	_exit.interacted.connect(_travel.bind(false))
 	_book_pickup.interacted.connect(_on_book_taken)
@@ -70,6 +78,8 @@ func _ready() -> void:
 
 	_book_pickup.enabled = false
 	_book.hide()
+	_chest.hide()
+	_table_glow.visible = false
 	_safe_position = _player.global_position
 	_tint_stone($Exterior/Ruins)
 	_sandstorm = _create_sandstorm()
@@ -107,8 +117,8 @@ func _physics_process(delta: float) -> void:
 		_grounded_frames = 0
 
 
-func tablet_progress() -> int:
-	return _progress
+func inventory() -> Array[StringName]:
+	return _inventory
 
 
 func _quicksand_at(point: Vector3) -> bool:
@@ -181,44 +191,54 @@ func _close_panel() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 
-func _on_tablet_activated(tablet: Node3D) -> void:
-	if _progress >= ORDER.size():
+func _on_rune_taken(rune: Rune) -> void:
+	rune.collect()
+	_inventory.append(rune.rune_id)
+	_table_sound.stream = chimes[0]
+	_table_sound.play()
+	_hud.show_message("Rune ramassée : « %s »" % RunePuzzle.RUNES[rune.rune_id])
+
+
+func _on_pile_cleared(had_rune: bool) -> void:
+	_hud.show_message("Une rune affleure sous le sable." if had_rune else "Rien sous ce tas de sable.")
+
+
+func _open_table() -> void:
+	_player.process_mode = Node.PROCESS_MODE_DISABLED
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	_hud.set_crosshair_visible(false)
+	_puzzle.open(_inventory)
+
+
+func _on_puzzle_validated(correct: bool) -> void:
+	_table_glow.visible = true
+	if not correct:
+		# Les runes rougissent un instant et le volcan se rapproche de l'éruption.
+		GameState.penalize()
+		_table_glow.light_color = Color(1.0, 0.15, 0.1)
+		_table_sound.stream = reset_sound
+		_table_sound.play()
+		var flash := create_tween()
+		flash.tween_interval(1.2)
+		flash.tween_callback(_table_glow.hide)
 		return
-	if StringName(tablet.name.to_lower()) == ORDER[_progress]:
-		_set_tablet_glow(tablet, true)
-		_tablet_sound.stream = chimes[_progress]
-		_tablet_sound.play()
-		_progress += 1
-		tablet.get_node("Interactable").enabled = false
-		if _progress == ORDER.size():
-			_on_sequence_complete()
-		else:
-			_hud.show_message("La tablette s'illumine. Fonctions éveillées : %d / %d" % [_progress, ORDER.size()])
-		return
-	_progress = 0
-	_tablet_sound.stream = reset_sound
-	_tablet_sound.play()
-	for other: Node3D in _tablets.get_children().filter(func(node: Node) -> bool: return node.has_node("Interactable")):
-		_set_tablet_glow(other, false)
-		other.get_node("Interactable").enabled = true
-	_hud.show_message("L'algorithme se dissipe : les tablettes s'éteignent. Relisez les stèles.")
-
-
-func _set_tablet_glow(tablet: Node3D, lit: bool) -> void:
-	var slab: MeshInstance3D = tablet.get_node("Slab")
-	var material := slab.get_active_material(0) as StandardMaterial3D
-	material.emission_energy_multiplier = 2.5 if lit else 0.15
-	tablet.get_node("Glow").visible = lit
-
-
-func _on_sequence_complete() -> void:
-	_hud.show_message("Les trois fonctions s'éveillent : le coffre s'entrouvre…")
+	_close_panel()
+	_table.enabled = false
+	_table_glow.light_color = Color(0.4, 0.7, 1.0)
+	_table_sound.stream = chimes[2]
+	_table_sound.play()
+	_hud.show_message("Les runes s'illuminent de bleu. Un grondement : dans un coin, le sable se disperse…")
+	var tween := create_tween()
+	tween.tween_property(_chest_sand, "scale", Vector3(1.4, 0.02, 1.4), 2.0).set_trans(Tween.TRANS_SINE)
+	await tween.finished
+	_chest_sand.hide()
+	_chest.show()
 	var target := _book_target.global_position
 	_book.global_position = target + Vector3.DOWN * 1.2
 	_book.show()
-	var tween := create_tween()
-	tween.tween_property(_book, "global_position", target, 1.8).set_trans(Tween.TRANS_SINE)
-	await tween.finished
+	var rise := create_tween()
+	rise.tween_property(_book, "global_position", target, 1.8).set_trans(Tween.TRANS_SINE)
+	await rise.finished
 	_book_pickup.enabled = true
 
 
@@ -226,7 +246,7 @@ func _on_book_taken() -> void:
 	_book.hide()
 	_book_pickup.enabled = false
 	_portal.is_open = true
-	_hud.show_message("Le livre des Archives du Soleil est à vous. Le portail du Désert s'est rouvert.")
+	_hud.show_message("L'Algonicon est à vous. Le portail du Désert s'est rouvert.")
 	GameState.collect_book(BOOK_ID)
 	book_collected.emit(BOOK_ID)
 

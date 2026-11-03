@@ -79,8 +79,8 @@ def build_cellar(scene):
         scene.add_box((x, 0.6, z), (1.4, 1.2, 1.4))
     for x in (-6.0, 6.0):
         scene.add("mini_dungeon/banner", (x, 0.6, -11.4), 180.0, 3.0)
-    scene.add("mini_dungeon/chest", (0.0, 0.0, -10.6), 0.0, 3.0)
-    scene.add_box((0.0, 0.5, -10.6), (1.6, 1.0, 2.2))
+    # Porte scellée au fond de la salle, sous l'inscription.
+    scene.add("modular_dungeon_kit/gate-door", (0.0, 0.0, -12.0), 0.0, 1.0)
 
 
 def main():

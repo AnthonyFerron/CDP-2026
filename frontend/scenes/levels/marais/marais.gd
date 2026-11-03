@@ -1,29 +1,32 @@
 class_name Marais
 extends Node3D
-## Zone du Marais : les indices du gardien, puis les braseros qui ouvrent sa crypte et libèrent le livre.
+## Zone du Marais : le tombeau des lettres oubliées. Le joueur descend dans la crypte, déchiffre
+## l'inscription et aligne cinq cercles de lettres pour ouvrir le tombeau du Logiconomicon.
 ## Les eaux peu profondes ralentissent le joueur ; les eaux profondes le ramènent sur la rive.
 
 signal book_collected(book_id: StringName)
 signal hub_requested
 
 const ZONE := &"marais"
-const BOOK_ID := &"binarium"
-## Nombre que les braseros doivent former : les années de veille du gardien, de 5803 à 5814.
-const CRYPT_CODE := 11
+const BOOK_ID := &"logiconomicon"
 ## Hauteur des pieds sous laquelle le joueur patauge, puis s'enlise.
 const WADE_DEPTH := -0.15
 const SINK_DEPTH := -0.9
 const WADE_SPEED := 0.55
 ## Images passées au sol, hors de l'eau, avant de retenir la position comme sûre.
 const SAFE_FRAMES := 15
+const AMBIENCE_DB := -6.0
 
 @export var ground_steps: Array[AudioStream]
 @export var water_steps: Array[AudioStream]
+@export var stone_steps: Array[AudioStream]
 @export var door_sound: AudioStream
+@export var reject_sound: AudioStream
 
-var _has_book := false
 var _busy := false
+var _inside := false
 var _wading := false
+var _door_open := false
 var _safe_position := Vector3.ZERO
 var _grounded_frames := 0
 var _time := 0.0
@@ -32,16 +35,30 @@ var _fireflies: CPUParticles3D
 var _mist: CPUParticles3D
 
 @onready var _player: Player = $Player
+@onready var _player_camera: Camera3D = $Player/CameraPivot/SpringArm3D/Camera3D
 @onready var _hud: Hud = $Hud
 @onready var _portal: Portal = $Portal
 @onready var _clues: Node3D = $Clues
 @onready var _ghost: Node3D = $Ghost
-@onready var _braziers: Array[Brazier] = [$Braziers/Eight, $Braziers/Four, $Braziers/Two, $Braziers/One]
+@onready var _moon: DirectionalLight3D = $Moon
+@onready var _environment: Environment = $WorldEnvironment.environment
+@onready var _ambience: AudioStreamPlayer = $Ambience
+@onready var _crypt_ambience: AudioStreamPlayer = $CryptAmbience
 @onready var _door: Node3D = $CryptDoor
 @onready var _door_sound: AudioStreamPlayer3D = $CryptDoor/Sound
-@onready var _book: Node3D = $Book
-@onready var _book_pickup: Interactable = $Book/Interactable
-@onready var _book_target: Marker3D = $BookTarget
+@onready var _door_interactable: Interactable = $DoorInteractable
+@onready var _outside_spawn: Marker3D = $OutsideSpawn
+@onready var _inside_spawn: Marker3D = $Interior/InsideSpawn
+@onready var _exit: Interactable = $Interior/Exit
+@onready var _inscription: Readable = $Interior/Inscription
+@onready var _mechanism: RingMechanism = $Interior/Mechanism
+@onready var _mechanism_interactable: Interactable = $Interior/MechanismInteractable
+@onready var _mechanism_camera: Camera3D = $Interior/MechanismCamera
+@onready var _puzzle: RingPuzzle = $RingPuzzle
+@onready var _tomb_lid: Node3D = $Interior/Tomb/Lid
+@onready var _tomb_sound: AudioStreamPlayer3D = $Interior/Tomb/Sound
+@onready var _book: Node3D = $Interior/Tomb/Book
+@onready var _book_pickup: Interactable = $Interior/Tomb/Book/Interactable
 
 
 func _ready() -> void:
@@ -50,22 +67,27 @@ func _ready() -> void:
 	_hud.reader_closed.connect(_close_panel)
 	for clue: Readable in _clues.get_children():
 		clue.interacted.connect(_read.bind(clue))
-	for brazier in _braziers:
-		brazier.toggled.connect(_on_brazier_toggled.unbind(1))
+	_inscription.interacted.connect(_read.bind(_inscription))
+	_door_interactable.interacted.connect(_travel.bind(true))
+	_exit.interacted.connect(_travel.bind(false))
+	_mechanism_interactable.interacted.connect(_open_mechanism)
+	_puzzle.validated.connect(_on_mechanism_validated)
+	_puzzle.closed.connect(_close_mechanism)
 	_book_pickup.interacted.connect(_on_book_taken)
 	_portal.refused.connect(_on_portal_refused)
 	_portal.travel_requested.connect(_on_portal_crossed)
 
 	_door_sound.stream = door_sound
+	_tomb_sound.stream = door_sound
 	_book_pickup.enabled = false
 	_book.hide()
 	_ghost_base = _ghost.position.y
 	_safe_position = _player.global_position
-	_player.footstep_sounds = ground_steps
 	_fireflies = _create_fireflies()
 	_mist = _create_mist()
 	add_child(_fireflies)
 	add_child(_mist)
+	_apply_location()
 	_hud.show_message("Le Marais")
 	if GameState.has_book(BOOK_ID):
 		_portal.is_open = true
@@ -83,7 +105,7 @@ func _process(delta: float) -> void:
 
 
 func _physics_process(_delta: float) -> void:
-	if _busy:
+	if _busy or _inside:
 		return
 	var feet := _player.global_position.y
 	if feet < SINK_DEPTH:
@@ -103,12 +125,8 @@ func _physics_process(_delta: float) -> void:
 		_grounded_frames = 0
 
 
-func crypt_value() -> int:
-	var total := 0
-	for brazier in _braziers:
-		if brazier.lit:
-			total += brazier.value
-	return total
+func mechanism() -> RingMechanism:
+	return _mechanism
 
 
 func _sink() -> void:
@@ -124,6 +142,46 @@ func _sink() -> void:
 	_busy = false
 
 
+## Descend dans la crypte ou en remonte. La porte pivote la première fois qu'on la franchit.
+func _travel(inside: bool) -> void:
+	_busy = true
+	_player.process_mode = Node.PROCESS_MODE_DISABLED
+	if inside and not _door_open:
+		_door_open = true
+		_door_sound.play()
+		var tween := create_tween()
+		tween.tween_property(_door, "rotation:y", _door.rotation.y + deg_to_rad(105.0), 1.6).set_trans(Tween.TRANS_SINE)
+		await tween.finished
+	await _hud.fade(true)
+	_inside = inside
+	_apply_location()
+	var spawn := _inside_spawn if inside else _outside_spawn
+	_player.global_position = spawn.global_position
+	_player.velocity = Vector3.ZERO
+	_player.speed_multiplier = 1.0
+	_wading = false
+	if not inside:
+		_safe_position = spawn.global_position
+	await _hud.fade(false)
+	_player.process_mode = Node.PROCESS_MODE_INHERIT
+	_busy = false
+	if inside:
+		_hud.show_message("La crypte du gardien")
+
+
+func _apply_location() -> void:
+	_moon.visible = not _inside
+	_environment.fog_enabled = not _inside
+	_fireflies.emitting = not _inside
+	_mist.emitting = not _inside
+	_player.footstep_sounds = stone_steps if _inside else ground_steps
+	_ambience.volume_db = AMBIENCE_DB - 24.0 if _inside else AMBIENCE_DB
+	if _inside:
+		_crypt_ambience.play()
+	else:
+		_crypt_ambience.stop()
+
+
 func _read(readable: Readable) -> void:
 	_player.process_mode = Node.PROCESS_MODE_DISABLED
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -136,36 +194,53 @@ func _close_panel() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 
-func _on_brazier_toggled() -> void:
-	if crypt_value() != CRYPT_CODE:
+## Vue rapprochée : la caméra se place au-dessus du mécanisme et l'interface des cercles s'ouvre.
+func _open_mechanism() -> void:
+	_player.process_mode = Node.PROCESS_MODE_DISABLED
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	_hud.set_crosshair_visible(false)
+	_hud.set_prompt("")
+	_mechanism_camera.current = true
+	_puzzle.open(_mechanism)
+
+
+func _close_mechanism() -> void:
+	_player_camera.current = true
+	_close_panel()
+
+
+func _on_mechanism_validated(correct: bool) -> void:
+	if not correct:
+		# Les inscriptions rougissent, un bruit sourd résonne et le volcan se rapproche de l'éruption.
+		GameState.penalize()
+		_tomb_sound.stream = reject_sound
+		_tomb_sound.global_position = _mechanism.global_position
+		_tomb_sound.play()
+		_mechanism.set_glow(Color(1.0, 0.15, 0.1), 3.0)
+		var flash := create_tween()
+		flash.tween_interval(1.2)
+		flash.tween_callback(_mechanism.set_glow.bind(Color(0.85, 0.8, 0.7), 0.2))
 		return
-	for brazier in _braziers:
-		brazier.set_locked(true)
-	_hud.show_message("Un déclic sourd sous la pierre : la porte de la crypte pivote…")
-	_door_sound.play()
+	_mechanism.set_glow(Color(0.35, 1.0, 0.5), 3.0)
+	_mechanism_interactable.enabled = false
+	_close_mechanism()
+	_hud.show_message("Les inscriptions s'illuminent de vert. Un grondement : dans la chambre de l'est, un tombeau s'ouvre…")
+	_tomb_sound.stream = door_sound
+	_tomb_sound.position = Vector3.UP
+	_tomb_sound.play()
 	var tween := create_tween()
-	tween.tween_property(_door, "rotation:y", _door.rotation.y + deg_to_rad(105.0), 2.4)
-	tween.set_trans(Tween.TRANS_SINE)
+	tween.tween_property(_tomb_lid, "position", _tomb_lid.position + Vector3(1.7, -0.2, 0.0), 2.4).set_trans(Tween.TRANS_SINE)
+	tween.parallel().tween_property(_tomb_lid, "rotation:z", deg_to_rad(-12.0), 2.4)
 	await tween.finished
-	_reveal_book()
-
-
-func _reveal_book() -> void:
-	var target := _book_target.global_position
-	_book.global_position = target + Vector3(0.0, 0.0, -3.5)
 	_book.show()
-	var tween := create_tween()
-	tween.tween_property(_book, "global_position", target, 2.0).set_trans(Tween.TRANS_SINE)
-	await tween.finished
 	_book_pickup.enabled = true
 
 
 func _on_book_taken() -> void:
-	_has_book = true
 	_book.hide()
 	_book_pickup.enabled = false
 	_portal.is_open = true
-	_hud.show_message("Le Binarium est à vous. Le portail du Marais s'est rouvert.")
+	_hud.show_message("Le Logiconomicon est à vous. Le portail du Marais s'est rouvert.")
 	GameState.collect_book(BOOK_ID)
 	book_collected.emit(BOOK_ID)
 

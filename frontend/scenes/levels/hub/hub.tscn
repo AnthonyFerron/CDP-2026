@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" path="res://assets/models/kenney/mini_forest/character-archer.glb" id="13_archer"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/character-human.glb" id="14_human"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/signpost.glb" id="15_signpost"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_arena/character-soldier.glb" id="16_king"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/tree_default.glb" id="20_tree_default"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/tree_oak.glb" id="21_tree_oak"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/tree_fat.glb" id="22_tree_fat"]
@@ -391,6 +392,32 @@ outline_size = 12
 [node name="Body" type="StaticBody3D" parent="Characters/Merlon"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Characters/Merlon/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CylinderShape3D_character")
+
+[node name="Codeon" type="Node3D" parent="Characters"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6, 0, -6.2)
+script = ExtResource("10_readable")
+title = "Codeon V, roi de Codia"
+body = "Mon royaume n'est plus que ruines, Devlyn, et voilà que le volcan menace d'emporter ce qu'il en reste. Tu as déjà sauvé ces terres des Quatre Dragons du Chaos. Je n'ai pas le droit de te le demander une seconde fois… et pourtant, je le fais."
+prompt = "Parler au roi"
+radius = 3.0
+
+[node name="Model" parent="Characters/Codeon" instance=ExtResource("16_king")]
+transform = Transform3D(1.83851, 0, 1.54269, 0, 2.4, 0, -1.54269, 0, 1.83851, 0, 0, 0)
+
+[node name="Name" type="Label3D" parent="Characters/Codeon"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
+pixel_size = 0.004
+billboard = 1
+modulate = Color(1, 0.85, 0.4, 1)
+text = "Codeon V"
+font_size = 64
+outline_size = 12
+
+[node name="Body" type="StaticBody3D" parent="Characters/Codeon"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Characters/Codeon/Body"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CylinderShape3D_character")
 

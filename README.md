@@ -38,6 +38,19 @@ Le jeu démarre dans le hub, `frontend/scenes/levels/hub/hub.tscn`. Chaque porta
 
 L'autoload `GameState` (`frontend/scripts/game_state.gd`) garde les livres et la dernière zone, et les sauvegarde dans `user://sauvegarde.cfg` à chaque changement. Pour ajouter une zone, renseigner sa scène dans `ZONE_SCENES` et appeler `GameState.collect_book()` quand le livre est pris.
 
+## Chronomètre du volcan
+
+Le volcan entre en éruption au bout de 60 minutes (`GameState.TOTAL_TIME`). Le temps restant s'affiche en haut à droite, passe au rouge sous 5 minutes, et il est sauvegardé avec la partie. Chaque mauvaise validation d'une énigme retire 5 minutes (`GameState.penalize()`). À zéro, le jeu se fige sur l'écran de fin, et « Recommencer » relance une partie depuis le hub. Le temps s'arrête une fois les quatre livres réunis.
+
+## Énigmes
+
+| Zone | Énigme | Livre | Solution |
+| --- | --- | --- | --- |
+| Plaine | La discussion oubliée : six fragments cachés dans les livres de la bibliothèque, à remettre dans l'ordre sur la tablette | Projenomicon | Ordre de la conversation : restauration à organiser, objectifs, inventaire, planning, suivi, vérification et clôture |
+| Désert | Les runes de l'algorithme : runes à ramasser ou à dégager du sable en maintenant E, à poser sur la table ronde de la cave | Algonicon | Jarre : TANT QUE, Puiser, Porter. Porte : SI, Ouvrir, SINON. « POUR » et « Fermer » sont des leurres |
+| Marais | Le tombeau des lettres oubliées : mécanisme à cinq cercles dans la crypte souterraine | Logiconomicon | CODIA décalé de +3, −3, +3, −3, +3 : **FLGFD** |
+| Village | À venir | Codonomicon | — |
+
 ## Organisation du projet
 
 | Dossier | Contenu |

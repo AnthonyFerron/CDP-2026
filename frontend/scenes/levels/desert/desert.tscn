@@ -23,6 +23,10 @@
 [ext_resource type="PackedScene" path="res://assets/models/kenney/mini_arena/bricks.glb" id="26_bricks"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/siege-catapult-demolished.glb" id="27_catapult"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/siege-ram-demolished.glb" id="28_ram"]
+[ext_resource type="Script" path="res://scenes/levels/desert/rune.gd" id="16_rune"]
+[ext_resource type="Script" path="res://scenes/levels/desert/sand_pile.gd" id="17_pile"]
+[ext_resource type="PackedScene" path="res://scenes/levels/desert/rune_puzzle.tscn" id="18_puzzle"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/chest.glb" id="19_chest"]
 [ext_resource type="AudioStream" path="res://assets/audio/desert_wind.wav" id="40_wind"]
 [ext_resource type="AudioStream" path="res://assets/audio/cave_ambience.wav" id="41_cave"]
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_sand_1.wav" id="42_sand1"]
@@ -155,6 +159,28 @@ emission_energy_multiplier = 1.4
 material = SubResource("StandardMaterial3D_book")
 size = Vector3(0.6, 0.14, 0.8)
 
+[sub_resource type="CylinderMesh" id="CylinderMesh_table"]
+material = SubResource("StandardMaterial3D_sandstone")
+top_radius = 1.6
+bottom_radius = 1.4
+height = 1.0
+radial_segments = 20
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_table"]
+height = 1.2
+radius = 1.6
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_chest_sand"]
+albedo_color = Color(0.8, 0.62, 0.38, 1)
+roughness = 1.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_chest_sand"]
+material = SubResource("StandardMaterial3D_chest_sand")
+top_radius = 0.4
+bottom_radius = 1.5
+height = 1.3
+radial_segments = 12
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_shaft"]
 transparency = 1
 shading_mode = 0
@@ -163,24 +189,6 @@ albedo_color = Color(1, 0.88, 0.6, 0.12)
 [sub_resource type="BoxMesh" id="BoxMesh_shaft"]
 material = SubResource("StandardMaterial3D_shaft")
 size = Vector3(1.8, 4.2, 1.8)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_slab_Transmettre"]
-albedo_color = Color(0.3, 0.24, 0.18, 1)
-emission_enabled = true
-emission = Color(1, 0.7, 0.3, 1)
-emission_energy_multiplier = 0.15
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_slab_Initialiser"]
-albedo_color = Color(0.3, 0.24, 0.18, 1)
-emission_enabled = true
-emission = Color(1, 0.7, 0.3, 1)
-emission_energy_multiplier = 0.15
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_slab_Transformer"]
-albedo_color = Color(0.3, 0.24, 0.18, 1)
-emission_enabled = true
-emission = Color(1, 0.7, 0.3, 1)
-emission_energy_multiplier = 0.15
 
 [node name="Desert" type="Node3D"]
 script = ExtResource("1_desert")
@@ -279,7 +287,7 @@ radius = 2.6
 transform = Transform3D(0.5, 0, 0.866025, 0, 1, 0, -0.866025, 0, 0.5, -13, 0, -12)
 script = ExtResource("12_readable")
 title = "Stèle du levant"
-body = "Rien ne naît sans un premier souffle. Avant tout ouvrage, on donne à chaque chose sa valeur de départ."
+body = "Les bâtisseurs répétaient le même geste tant que l'ouvrage n'était pas achevé, puis seulement passaient à la suite."
 prompt = "Lire la stèle"
 radius = 2.8
 
@@ -304,7 +312,7 @@ shape = SubResource("BoxShape3D_stele")
 transform = Transform3D(0.5, 0, -0.866025, 0, 1, 0, 0.866025, 0, 0.5, 13, 0, -12)
 script = ExtResource("12_readable")
 title = "Stèle du zénith"
-body = "Ce que l'on a reçu, l'artisan le façonne et le change. Mais il ne travaille que ce qui existe déjà."
+body = "Avant d'ouvrir une porte, ils posaient une question. Selon la réponse, ils agissaient d'une façon, sinon d'une autre."
 prompt = "Lire la stèle"
 radius = 2.8
 
@@ -329,7 +337,7 @@ shape = SubResource("BoxShape3D_stele")
 transform = Transform3D(-0.939693, 0, 0.34202, 0, 1, 0, -0.34202, 0, -0.939693, -7, 0, 8)
 script = ExtResource("12_readable")
 title = "Stèle du couchant"
-body = "Le messager part toujours en dernier : il ne porte au loin que l'ouvrage achevé."
+body = "Leurs instructions sont gravées sur des runes, dispersées dans les ruines et ensevelies sous le sable."
 prompt = "Lire la stèle"
 radius = 2.8
 
@@ -454,8 +462,8 @@ radius = 2.0
 [node name="Inscription" type="Node3D" parent="Interior/Clues"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, -11.6)
 script = ExtResource("12_readable")
-title = "Les archives du soleil"
-body = "Du premier souffle au dernier mot. Les trois fonctions anciennes ne s'éveillent que dans leur ordre ; une seule erreur, et tout s'éteint."
+title = "L'inscription de la table"
+body = "Les anciens bâtisseurs maîtrisaient l'art des instructions. Retrouve les fragments de leur savoir, rétablis leur ordre et les secrets enfouis te seront révélés."
 prompt = "Lire l'inscription"
 radius = 4.5
 
@@ -463,141 +471,162 @@ radius = 4.5
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0.1)
 pixel_size = 0.006
 modulate = Color(1, 0.8, 0.45, 1)
-text = "DU PREMIER SOUFFLE AU DERNIER MOT"
+text = "RÉTABLIS L'ORDRE DES INSTRUCTIONS"
 font_size = 64
+no_depth_test = true
 outline_size = 12
 
-[node name="Tablets" type="Node3D" parent="Interior"]
-
-[node name="Sound" type="AudioStreamPlayer3D" parent="Interior/Tablets"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -6)
-unit_size = 6.0
-
-[node name="Transmettre" type="Node3D" parent="Interior/Tablets"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -6)
-
-[node name="Pedestal" type="MeshInstance3D" parent="Interior/Tablets/Transmettre"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
-mesh = SubResource("BoxMesh_pedestal")
-
-[node name="Slab" type="MeshInstance3D" parent="Interior/Tablets/Transmettre"]
-transform = Transform3D(1, 0, 0, 0, 0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 1.18, 0)
-mesh = SubResource("BoxMesh_slab")
-surface_material_override/0 = SubResource("StandardMaterial3D_slab_Transmettre")
-
-[node name="Label" type="Label3D" parent="Interior/Tablets/Transmettre"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9, 0)
-pixel_size = 0.0035
-billboard = 1
-modulate = Color(1, 0.85, 0.55, 1)
-text = "TRANSMETTRE"
-font_size = 64
-outline_size = 12
-
-[node name="Glow" type="OmniLight3D" parent="Interior/Tablets/Transmettre"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0.4)
-visible = false
-light_color = Color(1, 0.75, 0.35, 1)
-light_energy = 1.5
-omni_range = 3.5
-
-[node name="Body" type="StaticBody3D" parent="Interior/Tablets/Transmettre"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Interior/Tablets/Transmettre/Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
-shape = SubResource("BoxShape3D_pedestal")
-
-[node name="Interactable" type="Node3D" parent="Interior/Tablets/Transmettre"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-script = ExtResource("11_interactable")
-prompt = "Éveiller la tablette transmettre"
-radius = 2.0
-
-[node name="Initialiser" type="Node3D" parent="Interior/Tablets"]
+[node name="RoundTable" type="Node3D" parent="Interior"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6)
 
-[node name="Pedestal" type="MeshInstance3D" parent="Interior/Tablets/Initialiser"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
-mesh = SubResource("BoxMesh_pedestal")
+[node name="Mesh" type="MeshInstance3D" parent="Interior/RoundTable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("CylinderMesh_table")
 
-[node name="Slab" type="MeshInstance3D" parent="Interior/Tablets/Initialiser"]
-transform = Transform3D(1, 0, 0, 0, 0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 1.18, 0)
-mesh = SubResource("BoxMesh_slab")
-surface_material_override/0 = SubResource("StandardMaterial3D_slab_Initialiser")
+[node name="Body" type="StaticBody3D" parent="Interior/RoundTable"]
 
-[node name="Label" type="Label3D" parent="Interior/Tablets/Initialiser"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9, 0)
-pixel_size = 0.0035
-billboard = 1
-modulate = Color(1, 0.85, 0.55, 1)
-text = "INITIALISER"
-font_size = 64
-outline_size = 12
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interior/RoundTable/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+shape = SubResource("CylinderShape3D_table")
 
-[node name="Glow" type="OmniLight3D" parent="Interior/Tablets/Initialiser"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0.4)
-visible = false
-light_color = Color(1, 0.75, 0.35, 1)
-light_energy = 1.5
-omni_range = 3.5
+[node name="Glow" type="OmniLight3D" parent="Interior/RoundTable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
+light_color = Color(0.4, 0.7, 1, 1)
+light_energy = 2.5
+omni_range = 6.0
 
-[node name="Body" type="StaticBody3D" parent="Interior/Tablets/Initialiser"]
+[node name="Sound" type="AudioStreamPlayer3D" parent="Interior/RoundTable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+unit_size = 6.0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Interior/Tablets/Initialiser/Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
-shape = SubResource("BoxShape3D_pedestal")
-
-[node name="Interactable" type="Node3D" parent="Interior/Tablets/Initialiser"]
+[node name="Interactable" type="Node3D" parent="Interior/RoundTable"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 script = ExtResource("11_interactable")
-prompt = "Éveiller la tablette initialiser"
-radius = 2.0
+prompt = "Examiner la table ronde"
+radius = 2.8
 
-[node name="Transformer" type="Node3D" parent="Interior/Tablets"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, -6)
+[node name="AlgorithmWall" type="Node3D" parent="Interior/Clues"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.6, 1.6, -6)
+script = ExtResource("12_readable")
+title = "Le mur des algorithmes"
+body = "Algorithme 1 — Remplir la jarre sacrée\n1  Prendre une jarre vide\n2  [ ? ]\n3      [ ? ]\n4      Verser l'eau dans la jarre\n5  FIN TANT QUE\n6  [ ? ]\n\nAlgorithme 2 — Garder l'entrée du temple\n1  Demander le mot de passe au voyageur\n2  [ ? ]\n3      [ ? ]\n4  [ ? ]\n5      Sonner l'alarme\n6  FIN SI"
+prompt = "Examiner les algorithmes"
+radius = 3.5
 
-[node name="Pedestal" type="MeshInstance3D" parent="Interior/Tablets/Transformer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
-mesh = SubResource("BoxMesh_pedestal")
-
-[node name="Slab" type="MeshInstance3D" parent="Interior/Tablets/Transformer"]
-transform = Transform3D(1, 0, 0, 0, 0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 1.18, 0)
-mesh = SubResource("BoxMesh_slab")
-surface_material_override/0 = SubResource("StandardMaterial3D_slab_Transformer")
-
-[node name="Label" type="Label3D" parent="Interior/Tablets/Transformer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9, 0)
-pixel_size = 0.0035
-billboard = 1
-modulate = Color(1, 0.85, 0.55, 1)
-text = "TRANSFORMER"
+[node name="Text" type="Label3D" parent="Interior/Clues/AlgorithmWall"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.4, 0.8, 0)
+pixel_size = 0.0028
+modulate = Color(0.65, 0.85, 1, 1)
+text = "Algorithme 1 — Remplir la jarre sacrée\n1  Prendre une jarre vide\n2  [ ? ]\n3      [ ? ]\n4      Verser l'eau dans la jarre\n5  FIN TANT QUE\n6  [ ? ]\n\nAlgorithme 2 — Garder l'entrée du temple\n1  Demander le mot de passe au voyageur\n2  [ ? ]\n3      [ ? ]\n4  [ ? ]\n5      Sonner l'alarme\n6  FIN SI"
 font_size = 64
-outline_size = 12
+outline_size = 10
+horizontal_alignment = 0
 
-[node name="Glow" type="OmniLight3D" parent="Interior/Tablets/Transformer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0.4)
-visible = false
-light_color = Color(1, 0.75, 0.35, 1)
-light_energy = 1.5
-omni_range = 3.5
+[node name="Chest" parent="Interior" instance=ExtResource("19_chest")]
+transform = Transform3D(-3, 0, 3.67394e-16, 0, 3, 0, -3.67394e-16, 0, -3, 6.2, 0, -10.4)
 
-[node name="Body" type="StaticBody3D" parent="Interior/Tablets/Transformer"]
+[node name="ChestSand" type="MeshInstance3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.2, 0.65, -10.4)
+mesh = SubResource("CylinderMesh_chest_sand")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Interior/Tablets/Transformer/Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
-shape = SubResource("BoxShape3D_pedestal")
+[node name="Runes" type="Node3D" parent="."]
 
-[node name="Interactable" type="Node3D" parent="Interior/Tablets/Transformer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-script = ExtResource("11_interactable")
-prompt = "Éveiller la tablette transformer"
-radius = 2.0
+[node name="TantQue" type="Node3D" parent="Runes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.6, 0, -10.4)
+script = ExtResource("16_rune")
+rune_id = &"tant_que"
+hidden_at_start = false
+radius = 2.2
+
+[node name="Porter" type="Node3D" parent="Runes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.4, 0, 7.6)
+script = ExtResource("16_rune")
+rune_id = &"porter"
+hidden_at_start = false
+radius = 2.2
+
+[node name="Pour" type="Node3D" parent="Runes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6, 0, 12)
+script = ExtResource("16_rune")
+rune_id = &"pour"
+hidden_at_start = false
+radius = 2.2
+
+[node name="Puiser" type="Node3D" parent="Runes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, -1)
+script = ExtResource("16_rune")
+rune_id = &"puiser"
+hidden_at_start = true
+radius = 2.2
+
+[node name="Si" type="Node3D" parent="Runes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.5, -39.05, -2)
+script = ExtResource("16_rune")
+rune_id = &"si"
+hidden_at_start = false
+radius = 2.2
+
+[node name="Fermer" type="Node3D" parent="Runes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.6, -38.65, -10.8)
+script = ExtResource("16_rune")
+rune_id = &"fermer"
+hidden_at_start = false
+radius = 2.2
+
+[node name="Ouvrir" type="Node3D" parent="Runes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, -40, -9.2)
+script = ExtResource("16_rune")
+rune_id = &"ouvrir"
+hidden_at_start = true
+radius = 2.2
+
+[node name="Sinon" type="Node3D" parent="Runes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, -40, -3.5)
+script = ExtResource("16_rune")
+rune_id = &"sinon"
+hidden_at_start = true
+radius = 2.2
+
+[node name="SandPiles" type="Node3D" parent="."]
+
+[node name="PileWest" type="Node3D" parent="SandPiles"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, -1)
+script = ExtResource("17_pile")
+radius = 2.2
+rune = NodePath("../../Runes/Puiser")
+
+[node name="PileStatue" type="Node3D" parent="SandPiles"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -15)
+script = ExtResource("17_pile")
+radius = 2.2
+
+[node name="PileGate" type="Node3D" parent="SandPiles"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 8)
+script = ExtResource("17_pile")
+radius = 2.2
+
+[node name="PileCaveWest" type="Node3D" parent="SandPiles"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, -40, -9.2)
+script = ExtResource("17_pile")
+radius = 2.2
+rune = NodePath("../../Runes/Ouvrir")
+
+[node name="PileCaveEast" type="Node3D" parent="SandPiles"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, -40, -3.5)
+script = ExtResource("17_pile")
+radius = 2.2
+rune = NodePath("../../Runes/Sinon")
+
+[node name="PileCaveCorner" type="Node3D" parent="SandPiles"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, -40, -4)
+script = ExtResource("17_pile")
+radius = 2.2
 
 [node name="BookTarget" type="Marker3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9, -9.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.2, 1.9, -10.4)
 
 [node name="Book" type="Node3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9, -9.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.2, 1.9, -10.4)
 
 [node name="Mesh" type="MeshInstance3D" parent="Interior/Book"]
 mesh = SubResource("BoxMesh_book")
@@ -609,8 +638,8 @@ omni_range = 4.0
 
 [node name="Interactable" type="Node3D" parent="Interior/Book"]
 script = ExtResource("11_interactable")
-prompt = "Prendre le livre des Archives du Soleil"
-radius = 2.4
+prompt = "Prendre l'Algonicon"
+radius = 3.0
 
 [node name="Player" parent="." instance=ExtResource("9_player")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0.3, 48)
@@ -627,3 +656,5 @@ stream = ExtResource("41_cave")
 volume_db = -6.0
 
 [node name="Hud" parent="." instance=ExtResource("10_hud")]
+
+[node name="RunePuzzle" parent="." instance=ExtResource("18_puzzle")]

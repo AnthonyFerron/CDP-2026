@@ -97,8 +97,6 @@ def build_crypt(scene, rng):
     scene.add("graveyard_kit/crypt-large", (0.0, GROUND, -41.0), 0.0, 4.0)
     scene.add("graveyard_kit/crypt-large-roof", (0.0, GROUND + 4.0, -41.0), 0.0, 4.0)
     scene.add_box((0.0, 3.0, -41.0), (7.6, 6.0, 9.6))
-    scene.add("graveyard_kit/altar-stone", (0.0, GROUND, -33.6), 0.0, 3.0)
-    scene.add_box((0.0, 0.75 + GROUND, -33.6), (3.1, 1.5, 1.9))
     for x in (-6.0, 6.0):
         scene.add("graveyard_kit/pillar-obelisk", (x, GROUND, -36.5), 0.0, 4.0)
         scene.add_box((x, 2.0 + GROUND, -36.5), (1.4, 4.0, 1.4))
@@ -115,6 +113,60 @@ def build_crypt(scene, rng):
         scene.add_box((x, 2.0, z), (0.9, 4.0, 0.9))
 
 
+CRYPT_OUTPUT = OUTPUT.with_name("marais_crypt.tscn")
+CRYPT_TILE = 4.0
+CRYPT_HEIGHT = 4.15
+# Cases de la crypte souterraine, en indices de case de 4 m : (x, z) du centre = 4 × indice.
+CRYPT_ROOMS = {
+    "entree": [(0, 0), (0, 1)],
+    "salle": [(x, z) for x in range(-2, 3) for z in range(-5, 0)],
+    "couloir_est": [(3, -3), (4, -3)],
+    "chambre_est": [(x, z) for x in range(5, 8) for z in range(-4, -1)],
+    "couloir_ouest": [(-3, -3), (-4, -3)],
+    "chambre_ouest": [(x, z) for x in range(-7, -4) for z in range(-4, -1)],
+}
+NEIGHBOURS = {(0, -1): 180.0, (0, 1): 0.0, (1, 0): 90.0, (-1, 0): -90.0}
+
+
+def build_crypt_underground(scene, rng):
+    """Crypte souterraine : couloir d'entrée, salle du mécanisme et deux chambres funéraires reliées."""
+    tiles = {tile for room in CRYPT_ROOMS.values() for tile in room}
+    for ix, iz in sorted(tiles):
+        x, z = ix * CRYPT_TILE, iz * CRYPT_TILE
+        scene.add("modular_dungeon_kit/template-floor", (x, 0.0, z), 0.0, 1.0)
+        scene.add("modular_dungeon_kit/template-floor", (x, CRYPT_HEIGHT, z), 0.0, 1.0, tilt=180.0)
+        scene.add_box((x, -0.25, z), (CRYPT_TILE, 0.5, CRYPT_TILE))
+        scene.add_box((x, CRYPT_HEIGHT + 0.25, z), (CRYPT_TILE, 0.5, CRYPT_TILE))
+        # Un mur sur chaque bord qui ne donne sur aucune case : son pied regarde l'intérieur de la case.
+        for (dx, dz), degrees in NEIGHBOURS.items():
+            if (ix + dx, iz + dz) in tiles:
+                continue
+            edge = (x + dx * CRYPT_TILE / 2, z + dz * CRYPT_TILE / 2)
+            scene.add("modular_dungeon_kit/template-wall", (edge[0], 0.0, edge[1]), degrees, 1.0)
+            size = (0.6, CRYPT_HEIGHT, CRYPT_TILE) if dx else (CRYPT_TILE, CRYPT_HEIGHT, 0.6)
+            scene.add_box((edge[0] - dx * 0.3, CRYPT_HEIGHT / 2, edge[1] - dz * 0.3), size)
+    # Salle du mécanisme : colonnes aux angles, bannières et cierges autour du mécanisme.
+    for x in (-7.0, 7.0):
+        for z in (-5.0, -19.0):
+            scene.add("mini_dungeon/column", (x, 0.0, z), 0.0, 3.6)
+            scene.add_box((x, 2.0, z), (1.6, 4.0, 1.6))
+    for x in (-5.0, 5.0):
+        scene.add("mini_dungeon/banner", (x, 0.8, -21.2), 0.0, 3.0)
+    for x, z in ((-4.2, -8.0), (4.2, -8.0), (-4.2, -16.0), (4.2, -16.0)):
+        scene.add("graveyard_kit/candle-multiple", (x, 0.0, z), rng.uniform(0, 360), 3.0)
+    # Chambre de l'ouest : cercueils et urnes, pour le décor.
+    for x, z, degrees in ((-24.0, -9.0, 90.0), (-24.0, -15.0, 90.0), (-28.5, -12.0, 0.0)):
+        scene.add("graveyard_kit/coffin-old", (x, 0.0, z), degrees, 3.0)
+        scene.add_box((x, 0.3, z), (2.6, 0.6, 1.8) if degrees else (1.8, 0.6, 2.6))
+    for x, z in ((-20.8, -8.4), (-20.8, -15.6), (-29.0, -8.6)):
+        scene.add("graveyard_kit/urn-round", (x, 0.0, z), 0.0, 3.0)
+    # Chambre de l'est : tombes alignées autour du tombeau du livre, qui est posé dans marais.tscn.
+    for x, z in ((21.0, -8.6), (27.0, -8.6), (21.0, -15.4), (27.0, -15.4)):
+        scene.add("graveyard_kit/grave", (x, 0.0, z), 0.0, 3.0)
+    for x, z in ((29.0, -9.0), (29.0, -15.0)):
+        scene.add("graveyard_kit/lantern-candle", (x, 0.0, z), 0.0, 3.0)
+
+
 def main():
     rng = random.Random(4040)
     scene = Scene("MaraisProps")
@@ -123,6 +175,10 @@ def main():
     build_crypt(scene, rng)
     OUTPUT.write_text(scene.text(), encoding="utf-8", newline="\n")
     print(f"{OUTPUT.name} : {len(scene.visuals)} modèles, {len(scene.colliders)} collisions")
+    crypt = Scene("MaraisCrypt")
+    build_crypt_underground(crypt, rng)
+    CRYPT_OUTPUT.write_text(crypt.text(), encoding="utf-8", newline="\n")
+    print(f"{CRYPT_OUTPUT.name} : {len(crypt.visuals)} modèles, {len(crypt.colliders)} collisions")
 
 
 if __name__ == "__main__":

@@ -7,6 +7,8 @@ signal interacted
 @export var prompt := "Interagir"
 @export var radius := 2.0
 @export var enabled := true
+## Vrai tant que le joueur vise cet objet : l'invite d'interaction est la sienne.
+var focused := false
 
 
 func _ready() -> void:

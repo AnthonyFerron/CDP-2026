@@ -1,6 +1,7 @@
 class_name Plaine
 extends Node3D
-## Zone de la Plaine : la surface et sa bibliothèque, puis l'énigme qui libère le Projenomicon.
+## Zone de la Plaine : la surface et sa bibliothèque, puis l'énigme de la discussion oubliée,
+## qui libère le Projenomicon. Six fragments sont cachés dans les livres ; la tablette les remet en ordre.
 ## Seule la partie où se trouve le joueur reste affichée.
 
 signal book_collected(book_id: StringName)
@@ -11,6 +12,15 @@ const BOOK_ID := &"projenomicon"
 ## Volume du vent dehors, et dans la bibliothèque où il n'arrive qu'étouffé.
 const WIND_OUTSIDE_DB := -10.0
 const WIND_INSIDE_DB := -26.0
+## Conversation entre la bibliothécaire, cheffe de projet, et son employé, dans le bon ordre.
+const FRAGMENTS: Array[String] = [
+	"Bibliothécaire : « Nous devons organiser la restauration des archives avant la prochaine inspection. »",
+	"Employé : « Quels sont les objectifs prioritaires de cette restauration ? »",
+	"Bibliothécaire : « Nous devons d'abord inventorier les ouvrages endommagés et identifier les ressources nécessaires. »",
+	"Employé : « Une fois l'inventaire terminé, nous pourrons établir un planning et répartir les tâches. »",
+	"Bibliothécaire : « Exactement. Nous devrons également suivre l'avancement des travaux et anticiper les éventuels retards. »",
+	"Employé : « Lorsque les travaux seront terminés, nous vérifierons leur conformité avant de clôturer le projet. »",
+]
 
 @export var stone_travel := 3.4
 @export var stone_duration := 2.5
@@ -22,6 +32,8 @@ var _inside := false
 var _busy := false
 var _safe_position := Vector3.ZERO
 var _ash: CPUParticles3D
+## Fragments retrouvés : numéro vers texte.
+var _found := {}
 
 @onready var _player: Player = $Player
 @onready var _hud: Hud = $Hud
@@ -37,8 +49,9 @@ var _ash: CPUParticles3D
 @onready var _exit_door: Interactable = $Interior/ExitDoor
 @onready var _inside_spawn: Marker3D = $Interior/InsideSpawn
 @onready var _outside_spawn: Marker3D = $Exterior/OutsideSpawn
-@onready var _clues: Node3D = $Interior/Clues
+@onready var _books: Node3D = $Interior/Books
 @onready var _tablet: Interactable = $Interior/Tablet/Interactable
+@onready var _tablet_top: MeshInstance3D = $Interior/Tablet/Top
 @onready var _stone: Node3D = $Interior/Stone
 @onready var _book: Node3D = $Interior/Book
 @onready var _book_pickup: Interactable = $Interior/Book/Interactable
@@ -51,12 +64,12 @@ func _ready() -> void:
 
 	_entry_door.interacted.connect(_travel.bind(true))
 	_exit_door.interacted.connect(_travel.bind(false))
-	for clue: Readable in _clues.get_children():
-		clue.interacted.connect(_read.bind(clue))
+	for book: SearchableBook in _books.get_children():
+		book.interacted.connect(_on_book_searched.bind(book))
 
 	_tablet.interacted.connect(_open_tablet)
 	_puzzle.closed.connect(_close_panel)
-	_puzzle.solved.connect(_on_puzzle_solved)
+	_puzzle.validated.connect(_on_puzzle_validated)
 	_book_pickup.interacted.connect(_on_book_taken)
 	_portal.refused.connect(_on_portal_refused)
 	_portal.travel_requested.connect(_on_portal_crossed)
@@ -125,15 +138,27 @@ func _on_lava_touched(body: Node3D) -> void:
 	_busy = false
 
 
-func _read(readable: Readable) -> void:
+## Le joueur ouvre un livre : il le lit, et y trouve parfois un fragment de la conversation.
+func _on_book_searched(book: SearchableBook) -> void:
+	var text := book.body
+	if book.fragment >= 0:
+		text += "\n\nUn morceau de papier glisse d'entre les pages :\n" + FRAGMENTS[book.fragment]
+		if not _found.has(book.fragment):
+			_found[book.fragment] = FRAGMENTS[book.fragment]
+			_hud.show_message("Fragment de conversation trouvé : %d / %d" % [_found.size(), FRAGMENTS.size()])
+	book.mark_searched()
 	_open_panel()
-	_hud.show_text(readable.title, readable.body)
+	_hud.show_text(book.title, text)
+
+
+func found_fragments() -> Dictionary:
+	return _found
 
 
 func _open_tablet() -> void:
 	_open_panel()
 	_hud.set_crosshair_visible(false)
-	_puzzle.open()
+	_puzzle.open(_found)
 
 
 func _open_panel() -> void:
@@ -147,10 +172,29 @@ func _close_panel() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 
+func _on_puzzle_validated(correct: bool) -> void:
+	if correct:
+		_on_puzzle_solved()
+		return
+	# Mauvais ordre : la tablette rougit et le volcan se rapproche de l'éruption.
+	GameState.penalize()
+	_set_tablet_glow(Color(1.0, 0.1, 0.05), 3.0)
+	var tween := create_tween()
+	tween.tween_interval(1.2)
+	tween.tween_callback(_set_tablet_glow.bind(Color(0.95, 0.3, 0.08), 0.8))
+
+
+func _set_tablet_glow(color: Color, energy: float) -> void:
+	var material := _tablet_top.get_active_material(0) as StandardMaterial3D
+	material.emission = color
+	material.emission_energy_multiplier = energy
+
+
 func _on_puzzle_solved() -> void:
 	_close_panel()
+	_set_tablet_glow(Color(1.0, 0.85, 0.4), 3.0)
 	_tablet.enabled = false
-	_hud.show_message("Un grondement sourd : la pierre du fond se déplace…")
+	_hud.show_message("Les inscriptions de la tablette s'illuminent. Une dalle de pierre glisse et révèle un passage…")
 	var tween := create_tween()
 	tween.tween_property(_stone, "position:x", _stone.position.x - stone_travel, stone_duration)
 	tween.set_trans(Tween.TRANS_SINE)

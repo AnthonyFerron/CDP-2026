@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="10_hud"]
 [ext_resource type="Script" path="res://scripts/interactable.gd" id="11_interactable"]
 [ext_resource type="Script" path="res://scripts/readable.gd" id="12_readable"]
+[ext_resource type="Script" path="res://scenes/levels/plaine/searchable_book.gd" id="40_searchable"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/signpost.glb" id="13_signpost"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/grass_large.glb" id="20_grass_large"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/grass_leafsLarge.glb" id="21_grass_leafsLarge"]
@@ -278,40 +279,115 @@ script = ExtResource("11_interactable")
 prompt = "Sortir de la bibliothèque"
 radius = 2.0
 
-[node name="Clues" type="Node3D" parent="Interior"]
+[node name="Books" type="Node3D" parent="Interior"]
 
-[node name="Beginning" type="Node3D" parent="Interior/Clues"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -6)
-script = ExtResource("12_readable")
-title = "Traité des commencements"
-body = "Le premier jour d'un projet, on ne construit rien : on en fixe le but. Toute entreprise s'ouvre par le Cadrage."
-prompt = "Lire le traité"
-radius = 2.4
-
-[node name="Plan" type="Node3D" parent="Interior/Clues"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -18)
-script = ExtResource("12_readable")
-title = "Mémoires d'un bâtisseur"
-body = "J'ai vu des tours s'effondrer pour avoir été élevées sans dessin. Jamais de Réalisation sans Planification préalable."
-prompt = "Lire les mémoires"
-radius = 2.4
-
-[node name="Watch" type="Node3D" parent="Interior/Clues"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 1, -28)
-script = ExtResource("12_readable")
-title = "Le carnet du veilleur"
-body = "Quand l'ouvrage avance, le veilleur se lève. Le Suivi vient toujours juste après la Réalisation."
-prompt = "Lire le carnet"
+[node name="West03" type="Node3D" parent="Interior/Books"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3, 1.5, -3)
+script = ExtResource("40_searchable")
+title = "Registre des emprunts"
+body = "Une longue liste de noms et de dates, interrompue le jour où la guerre a atteint la Plaine."
+fragment = 2
+cover_color = Color(0.45, 0.18, 0.12, 1)
 radius = 2.0
 
-[node name="End" type="Node3D" parent="Interior/Clues"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 1, -28)
-script = ExtResource("12_readable")
-title = "Le dernier registre"
-body = "Rien n'est scellé avant que le Suivi ait rendu son verdict. La Clôture referme le livre, et rien ne vient après elle."
-prompt = "Lire le registre"
+[node name="West09" type="Node3D" parent="Interior/Books"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3, 1.5, -9)
+script = ExtResource("40_searchable")
+title = "Manuel de reliure"
+body = "Comment coudre un cahier, encoller un dos et protéger un livre de l'humidité."
+fragment = 4
+cover_color = Color(0.2, 0.3, 0.45, 1)
 radius = 2.0
 
+[node name="West15" type="Node3D" parent="Interior/Books"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3, 1.5, -15)
+script = ExtResource("40_searchable")
+title = "Chroniques de Codia"
+body = "Le règne de Codeon V, raconté par un scribe trop flatteur pour être honnête."
+fragment = -1
+cover_color = Color(0.35, 0.28, 0.15, 1)
+radius = 2.0
+
+[node name="West21" type="Node3D" parent="Interior/Books"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3, 1.5, -21)
+script = ExtResource("40_searchable")
+title = "Herbier de la Plaine"
+body = "Des fleurs séchées entre les pages. Aucune ne pousse plus aujourd'hui."
+fragment = -1
+cover_color = Color(0.2, 0.35, 0.2, 1)
+radius = 2.0
+
+[node name="West27" type="Node3D" parent="Interior/Books"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3, 1.5, -27)
+script = ExtResource("40_searchable")
+title = "Rapport d'inspection"
+body = "Le dernier rapport des inspecteurs royaux, couvert de remarques sur l'état des archives."
+fragment = 1
+cover_color = Color(0.4, 0.15, 0.25, 1)
+radius = 2.0
+
+[node name="West33" type="Node3D" parent="Interior/Books"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3, 1.5, -33)
+script = ExtResource("40_searchable")
+title = "Contes pour enfants"
+body = "L'histoire d'un héros qui terrassa les Quatre Dragons du Chaos. On dirait le portrait de Devlyn, en plus jeune."
+fragment = -1
+cover_color = Color(0.5, 0.35, 0.1, 1)
+radius = 2.0
+
+[node name="East06" type="Node3D" parent="Interior/Books"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.3, 1.5, -6)
+script = ExtResource("40_searchable")
+title = "Procès-verbaux de clôture"
+body = "Des projets achevés, signés et tamponnés. La bibliothécaire ne laissait rien au hasard."
+fragment = 5
+cover_color = Color(0.3, 0.2, 0.4, 1)
+radius = 2.0
+
+[node name="East09" type="Node3D" parent="Interior/Books"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.3, 1.5, -9)
+script = ExtResource("40_searchable")
+title = "Traité d'astronomie"
+body = "Des cartes du ciel d'avant la guerre, quand la fumée du volcan ne cachait pas encore les étoiles."
+fragment = -1
+cover_color = Color(0.15, 0.2, 0.35, 1)
+radius = 2.0
+
+[node name="East18" type="Node3D" parent="Interior/Books"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.3, 1.5, -18)
+script = ExtResource("40_searchable")
+title = "Carnet de la bibliothécaire"
+body = "Son écriture est nette et pressée. Une page porte seulement : « Prévoir, organiser, suivre, vérifier. »"
+fragment = 0
+cover_color = Color(0.5, 0.2, 0.1, 1)
+radius = 2.0
+
+[node name="East21" type="Node3D" parent="Interior/Books"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.3, 1.5, -21)
+script = ExtResource("40_searchable")
+title = "Recettes du royaume"
+body = "Une soupe aux racines, la seule qui se fasse encore au camp des survivants."
+fragment = -1
+cover_color = Color(0.45, 0.3, 0.2, 1)
+radius = 2.0
+
+[node name="East30" type="Node3D" parent="Interior/Books"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.3, 1.5, -30)
+script = ExtResource("40_searchable")
+title = "Livre de comptes"
+body = "Le budget de la bibliothèque, ligne par ligne, jusqu'à la dernière pièce."
+fragment = -1
+cover_color = Color(0.25, 0.25, 0.25, 1)
+radius = 2.0
+
+[node name="East33" type="Node3D" parent="Interior/Books"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.3, 1.5, -33)
+script = ExtResource("40_searchable")
+title = "Planning des travaux"
+body = "Un calendrier couvert de tâches et de noms, dont certains sont barrés."
+fragment = 3
+cover_color = Color(0.4, 0.25, 0.1, 1)
+radius = 2.0
 [node name="Tablet" type="Node3D" parent="Interior"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -33)
 

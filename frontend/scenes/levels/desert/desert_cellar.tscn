@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/barrel.glb" id="4_model"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/pot.glb" id="5_model"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/banner.glb" id="6_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/chest.glb" id="7_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/modular_dungeon_kit/gate-door.glb" id="7_model"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
 size = Vector3(20, 0.5, 12)
@@ -25,9 +25,6 @@ size = Vector3(2, 1, 2.7)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_6"]
 size = Vector3(1.4, 1.2, 1.4)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_7"]
-size = Vector3(1.6, 1, 2.2)
 
 [node name="DesertCellar" type="Node3D"]
 
@@ -72,8 +69,8 @@ transform = Transform3D(-3, 0, 0, 0, 3, 0, -0, 0, -3, -6, 0.6, -11.4)
 [node name="banner_12" parent="Models" instance=ExtResource("6_model")]
 transform = Transform3D(-3, 0, 0, 0, 3, 0, -0, 0, -3, 6, 0.6, -11.4)
 
-[node name="chest_13" parent="Models" instance=ExtResource("7_model")]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, -10.6)
+[node name="gate_door_13" parent="Models" instance=ExtResource("7_model")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -12)
 
 [node name="Collision" type="StaticBody3D" parent="."]
 
@@ -140,7 +137,3 @@ shape = SubResource("BoxShape3D_6")
 [node name="Box15" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 8.8, 0.6, -8.6)
 shape = SubResource("BoxShape3D_6")
-
-[node name="Box16" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0.5, -10.6)
-shape = SubResource("BoxShape3D_7")

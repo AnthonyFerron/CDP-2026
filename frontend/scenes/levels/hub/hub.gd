@@ -13,9 +13,9 @@ const ZONE_NAMES := {
 ## Livre que garde chaque zone.
 const ZONE_BOOKS := {
 	&"plaine": &"projenomicon",
-	&"desert": &"archives_du_soleil",
-	&"marais": &"binarium",
-	&"village": &"village",
+	&"desert": &"algonicon",
+	&"marais": &"logiconomicon",
+	&"village": &"codonomicon",
 }
 ## Distance à laquelle le joueur réapparaît devant le portail d'où il revient.
 const RETURN_DISTANCE := 3.5
@@ -107,14 +107,14 @@ func _arrival_message() -> String:
 func _merlon_text() -> String:
 	var count := book_count()
 	if count == 0:
-		return "Devlyn, mon vieil ami. Codia se meurt : dix années de guerre ont brûlé ses terres. Quatre livres anciens peuvent encore les restaurer. Chacun repose au-delà d'un de ces portails. Rapporte-les sur l'autel, et le royaume renaîtra."
+		return "Devlyn, mon vieil ami. Le volcan endormi près du royaume se réveille : la guerre a rompu son équilibre. J'ai eu une vision : quatre ouvrages oubliés, l'Algonicon, le Projenomicon, le Logiconomicon et le Codonomicon, peuvent apaiser sa colère et rendre vie à Codia. Chacun repose au-delà d'un de ces portails. Rapporte-les sur l'autel avant l'éruption, et nous accomplirons le rituel."
 	if count >= GameState.BOOK_COUNT:
-		return "Les quatre livres sont réunis. Écoute… Codia respire à nouveau. Le bunker du fort peut enfin s'ouvrir."
+		return "Les quatre livres sont réunis. Écoute… le volcan se tait, et Codia respire à nouveau. Le rituel peut commencer."
 	var missing: Array[String] = []
 	for zone in ZONES:
 		if not GameState.has_book(ZONE_BOOKS[zone]):
 			missing.append(ZONE_NAMES[zone])
-	return "Tu as rapporté %d livre%s sur quatre. Regarde : l'herbe repousse déjà autour du camp. Il te reste %s." % [
+	return "Tu as rapporté %d livre%s sur quatre. Regarde : l'herbe repousse déjà autour du camp. Mais le volcan gronde encore : il te reste %s." % [
 		count, "s" if count > 1 else "", ", ".join(missing)
 	]
 

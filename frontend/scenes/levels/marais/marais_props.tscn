@@ -21,11 +21,10 @@
 [ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/pine-crooked.glb" id="19_model"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/crypt-large.glb" id="20_model"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/crypt-large-roof.glb" id="21_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/altar-stone.glb" id="22_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/pillar-obelisk.glb" id="23_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/stone-wall.glb" id="24_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/stone-wall-damaged.glb" id="25_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/pine.glb" id="26_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/pillar-obelisk.glb" id="22_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/stone-wall.glb" id="23_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/stone-wall-damaged.glb" id="24_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/pine.glb" id="25_model"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
 size = Vector3(2.4, 2.2, 2.4)
@@ -70,15 +69,12 @@ size = Vector3(0.8, 4, 0.8)
 size = Vector3(7.6, 6, 9.6)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_15"]
-size = Vector3(3.1, 1.5, 1.9)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_16"]
 size = Vector3(1.4, 4, 1.4)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_17"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_16"]
 size = Vector3(0.8, 3, 4)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_18"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_17"]
 size = Vector3(0.9, 4, 0.9)
 
 [node name="MaraisProps" type="Node3D"]
@@ -256,34 +252,31 @@ transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0.4, -41)
 [node name="crypt_large_roof_56" parent="Models" instance=ExtResource("21_model")]
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 4.4, -41)
 
-[node name="altar_stone_57" parent="Models" instance=ExtResource("22_model")]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0.4, -33.6)
-
-[node name="pillar_obelisk_58" parent="Models" instance=ExtResource("23_model")]
+[node name="pillar_obelisk_57" parent="Models" instance=ExtResource("22_model")]
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -6, 0.4, -36.5)
 
-[node name="pillar_obelisk_59" parent="Models" instance=ExtResource("23_model")]
+[node name="pillar_obelisk_58" parent="Models" instance=ExtResource("22_model")]
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 6, 0.4, -36.5)
 
-[node name="stone_wall_60" parent="Models" instance=ExtResource("24_model")]
+[node name="stone_wall_59" parent="Models" instance=ExtResource("23_model")]
 transform = Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -8.5, 0.4, -40)
 
-[node name="stone_wall_damaged_61" parent="Models" instance=ExtResource("25_model")]
+[node name="stone_wall_damaged_60" parent="Models" instance=ExtResource("24_model")]
 transform = Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -8.5, 0.4, -44)
 
-[node name="stone_wall_damaged_62" parent="Models" instance=ExtResource("25_model")]
+[node name="stone_wall_damaged_61" parent="Models" instance=ExtResource("24_model")]
 transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 8.5, 0.4, -40)
 
-[node name="stone_wall_63" parent="Models" instance=ExtResource("24_model")]
+[node name="stone_wall_62" parent="Models" instance=ExtResource("23_model")]
 transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 8.5, 0.4, -44)
 
-[node name="pine_64" parent="Models" instance=ExtResource("26_model")]
+[node name="pine_63" parent="Models" instance=ExtResource("25_model")]
 transform = Transform3D(2.79382, 0, 2.86262, 0, 4, 0, -2.86262, 0, 2.79382, -10, 0.4, -46)
 
-[node name="pine_65" parent="Models" instance=ExtResource("26_model")]
+[node name="pine_64" parent="Models" instance=ExtResource("25_model")]
 transform = Transform3D(-3.69339, 0, 1.53587, 0, 4, 0, -1.53587, 0, -3.69339, 9.5, 0.4, -47)
 
-[node name="pine_66" parent="Models" instance=ExtResource("26_model")]
+[node name="pine_65" parent="Models" instance=ExtResource("25_model")]
 transform = Transform3D(2.06647, 0, 3.42486, 0, 4, 0, -3.42486, 0, 2.06647, -4, 0.4, -48.5)
 
 [node name="Collision" type="StaticBody3D" parent="."]
@@ -405,41 +398,37 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 3, -41)
 shape = SubResource("BoxShape3D_14")
 
 [node name="Box29" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 1.15, -33.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -6, 2.4, -36.5)
 shape = SubResource("BoxShape3D_15")
 
 [node name="Box30" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -6, 2.4, -36.5)
-shape = SubResource("BoxShape3D_16")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 6, 2.4, -36.5)
+shape = SubResource("BoxShape3D_15")
 
 [node name="Box31" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 6, 2.4, -36.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -8.5, 1.9, -40)
 shape = SubResource("BoxShape3D_16")
 
 [node name="Box32" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -8.5, 1.9, -40)
-shape = SubResource("BoxShape3D_17")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -8.5, 1.9, -44)
+shape = SubResource("BoxShape3D_16")
 
 [node name="Box33" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -8.5, 1.9, -44)
-shape = SubResource("BoxShape3D_17")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 8.5, 1.9, -40)
+shape = SubResource("BoxShape3D_16")
 
 [node name="Box34" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 8.5, 1.9, -40)
-shape = SubResource("BoxShape3D_17")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 8.5, 1.9, -44)
+shape = SubResource("BoxShape3D_16")
 
 [node name="Box35" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 8.5, 1.9, -44)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -10, 2, -46)
 shape = SubResource("BoxShape3D_17")
 
 [node name="Box36" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -10, 2, -46)
-shape = SubResource("BoxShape3D_18")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 9.5, 2, -47)
+shape = SubResource("BoxShape3D_17")
 
 [node name="Box37" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 9.5, 2, -47)
-shape = SubResource("BoxShape3D_18")
-
-[node name="Box38" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -4, 2, -48.5)
-shape = SubResource("BoxShape3D_18")
+shape = SubResource("BoxShape3D_17")

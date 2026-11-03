@@ -6,7 +6,6 @@
 [ext_resource type="Shader" path="res://scenes/levels/marais/marais_ground.gdshader" id="4_ground"]
 [ext_resource type="Shader" path="res://scenes/levels/marais/swamp_water.gdshader" id="5_water"]
 [ext_resource type="PackedScene" path="res://scenes/levels/marais/marais_props.tscn" id="6_props"]
-[ext_resource type="PackedScene" path="res://scenes/levels/marais/brazier.tscn" id="7_brazier"]
 [ext_resource type="PackedScene" path="res://scenes/props/portal/portal.tscn" id="8_portal"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="9_player"]
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="10_hud"]
@@ -29,6 +28,14 @@
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/log_large.glb" id="29_log"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/path_wood.glb" id="30_plank"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/trunk-long.glb" id="31_post"]
+[ext_resource type="PackedScene" path="res://scenes/levels/marais/marais_crypt.tscn" id="50_crypt"]
+[ext_resource type="Script" path="res://scenes/levels/marais/ring_mechanism.gd" id="51_mechanism"]
+[ext_resource type="PackedScene" path="res://scenes/levels/marais/ring_puzzle.tscn" id="52_puzzle"]
+[ext_resource type="AudioStream" path="res://assets/audio/cave_ambience.wav" id="53_crypt_sound"]
+[ext_resource type="AudioStream" path="res://assets/audio/tablet_reset.wav" id="54_reject"]
+[ext_resource type="AudioStream" path="res://assets/audio/footstep_ash_1.wav" id="55_stone1"]
+[ext_resource type="AudioStream" path="res://assets/audio/footstep_ash_2.wav" id="56_stone2"]
+[ext_resource type="AudioStream" path="res://assets/audio/footstep_ash_3.wav" id="57_stone3"]
 [ext_resource type="AudioStream" path="res://assets/audio/marais_ambience.wav" id="40_ambience"]
 [ext_resource type="AudioStream" path="res://assets/audio/stone_door.wav" id="41_door_sound"]
 [ext_resource type="AudioStream" path="res://assets/audio/fire_crackle.wav" id="42_crackle"]
@@ -94,6 +101,21 @@ emission_enabled = true
 emission = Color(0.3, 1, 0.55, 1)
 emission_energy_multiplier = 1.2
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tomb"]
+albedo_color = Color(0.36, 0.35, 0.34, 1)
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_tomb"]
+material = SubResource("StandardMaterial3D_tomb")
+size = Vector3(1.8, 1.0, 3.0)
+
+[sub_resource type="BoxMesh" id="BoxMesh_lid"]
+material = SubResource("StandardMaterial3D_tomb")
+size = Vector3(2.0, 0.2, 3.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tomb"]
+size = Vector3(2.0, 1.2, 3.2)
+
 [sub_resource type="BoxMesh" id="BoxMesh_book"]
 material = SubResource("StandardMaterial3D_book")
 size = Vector3(0.6, 0.14, 0.8)
@@ -103,6 +125,8 @@ script = ExtResource("1_marais")
 ground_steps = Array[AudioStream]([ExtResource("43_mud1"), ExtResource("44_mud2"), ExtResource("45_mud3")])
 water_steps = Array[AudioStream]([ExtResource("46_splash1"), ExtResource("47_splash2"), ExtResource("48_splash3")])
 door_sound = ExtResource("41_door_sound")
+reject_sound = ExtResource("54_reject")
+stone_steps = Array[AudioStream]([ExtResource("55_stone1"), ExtResource("56_stone2"), ExtResource("57_stone3")])
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_marais")
@@ -193,7 +217,7 @@ flicker = 0.1
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.6, 1.4, 25.6)
 script = ExtResource("12_readable")
 title = "Journal du gardien, an 5803"
-body = "Les quatre feux du caveau comptent à la manière des anciens. Le feu le plus à droite vaut un ; chaque feu vaut le double de son voisin de droite. Allumés, ils s'additionnent ; éteints, ils ne comptent pas. Le caveau ne s'ouvre qu'au bon nombre."
+body = "La crypte garde l'un des livres anciens. Son tombeau ne s'ouvre que si l'on inscrit, sur le mécanisme des cinq cercles, le nom du royaume transformé selon la règle gravée au mur. Je l'ai noté ici pour ne jamais l'oublier… et j'ai arraché la page le lendemain."
 prompt = "Lire le journal"
 radius = 2.2
 
@@ -209,7 +233,7 @@ radius = 3
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 1.2, 7.4)
 script = ExtResource("12_readable")
 title = "Une tombe usée"
-body = "Ici repose Ada, qui savait tout écrire avec des zéros et des uns."
+body = "Ici repose Ada, qui cachait ses lettres en décalant l'alphabet."
 prompt = "Lire l'épitaphe"
 radius = 2
 
@@ -217,7 +241,7 @@ radius = 2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 1.6, 3.6)
 script = ExtResource("12_readable")
 title = "Le fantôme du gardien"
-body = "Je n'ai jamais quitté ce marais, voyageur. Depuis le jour de ma mort, je compte chaque hiver qui passe sur ma tombe. Nous sommes en l'an 5814, n'est-ce pas ? Alors tu sais depuis combien d'années je veille."
+body = "Tu cherches le livre, voyageur ? Il dort dans la crypte, au nord. Le mécanisme réclame le nom de notre royaume, mais jamais tel quel : lis bien ce qui est gravé au mur."
 prompt = "Parler au fantôme"
 radius = 3.6
 
@@ -225,7 +249,7 @@ radius = 3.6
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.2, 1.4, -34.4)
 script = ExtResource("12_readable")
 title = "Plaque de la crypte"
-body = "Caveau du gardien. Que brûlent les feux qui disent ses années de veille, et le marais rendra ce qu'il garde."
+body = "Crypte du gardien. Ceux qui descendent doivent savoir dans quel royaume ils se trouvent."
 prompt = "Lire la plaque"
 radius = 2.8
 
@@ -233,24 +257,6 @@ radius = 2.8
 transform = Transform3D(1.83697e-16, 0, -3, 0, 3, 0, 3, 0, 1.83697e-16, 19, 1.6, 3.6)
 
 [node name="Model" parent="Ghost" instance=ExtResource("16_ghost")]
-
-[node name="Braziers" type="Node3D" parent="."]
-
-[node name="Eight" parent="Braziers" instance=ExtResource("7_brazier")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0.4, -29.5)
-value = 8
-
-[node name="Four" parent="Braziers" instance=ExtResource("7_brazier")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0.4, -29.5)
-value = 4
-
-[node name="Two" parent="Braziers" instance=ExtResource("7_brazier")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.4, -29.5)
-value = 2
-
-[node name="One" parent="Braziers" instance=ExtResource("7_brazier")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.4, -29.5)
-value = 1
 
 [node name="CryptDoor" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.26, 0.4, -37)
@@ -262,28 +268,131 @@ transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 1.26, 0, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.26, 1.5, 0)
 unit_size = 4.0
 
-[node name="BookTarget" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3, -33.6)
+[node name="DoorInteractable" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, -36)
+script = ExtResource("11_interactable")
+prompt = "Descendre dans la crypte"
+radius = 3.0
 
-[node name="Book" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3, -33.6)
+[node name="OutsideSpawn" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, -31.5)
 
-[node name="Mesh" type="MeshInstance3D" parent="Book"]
+[node name="Interior" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -40, 0)
+
+[node name="Crypt" parent="Interior" instance=ExtResource("50_crypt")]
+
+[node name="InsideSpawn" type="Marker3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 3.5)
+
+[node name="Exit" type="Node3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 5.2)
+script = ExtResource("11_interactable")
+prompt = "Remonter à la surface"
+radius = 2.2
+
+[node name="LightEntry" type="OmniLight3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.3, 2)
+script = ExtResource("14_flicker")
+light_color = Color(1, 0.72, 0.45, 1)
+light_energy = 1.2
+omni_range = 13.0
+flicker = 0.15
+
+[node name="LightHall" type="OmniLight3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.3, -12)
+script = ExtResource("14_flicker")
+light_color = Color(1, 0.72, 0.45, 1)
+light_energy = 2.2
+omni_range = 13.0
+flicker = 0.15
+
+[node name="LightEast" type="OmniLight3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 3.3, -12)
+script = ExtResource("14_flicker")
+light_color = Color(1, 0.72, 0.45, 1)
+light_energy = 1.6
+omni_range = 13.0
+flicker = 0.15
+
+[node name="LightWest" type="OmniLight3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 3.3, -12)
+script = ExtResource("14_flicker")
+light_color = Color(1, 0.72, 0.45, 1)
+light_energy = 1.2
+omni_range = 13.0
+flicker = 0.15
+
+[node name="Mechanism" type="Node3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -12)
+script = ExtResource("51_mechanism")
+
+[node name="MechanismInteractable" type="Node3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, -12)
+script = ExtResource("11_interactable")
+prompt = "Examiner le mécanisme"
+radius = 5.6
+
+[node name="MechanismCamera" type="Camera3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 0.422618, 0.906308, 0, -0.906308, 0.422618, 2.2, 3.8, -10.2)
+fov = 80.0
+
+[node name="Inscription" type="Node3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, -21)
+script = ExtResource("12_readable")
+title = "L'inscription du mur"
+body = "Pour ouvrir le tombeau, inscris le nom du royaume dans lequel tu te trouves. Puis, pour chaque lettre, alterne entre trois lettres en avant et trois lettres en arrière dans l'alphabet. Seul le nom ainsi transformé révélera le secret des anciens."
+prompt = "Lire l'inscription"
+radius = 5.0
+
+[node name="Text" type="Label3D" parent="Interior/Inscription"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, -0.3)
+pixel_size = 0.0045
+modulate = Color(0.75, 0.95, 0.8, 1)
+text = "INSCRIS LE NOM DU ROYAUME\n+3  −3  +3  −3  +3"
+font_size = 64
+outline_size = 10
+
+[node name="Tomb" type="Node3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0, -12)
+
+[node name="Base" type="MeshInstance3D" parent="Interior/Tomb"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_tomb")
+
+[node name="Lid" type="MeshInstance3D" parent="Interior/Tomb"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
+mesh = SubResource("BoxMesh_lid")
+
+[node name="Body" type="StaticBody3D" parent="Interior/Tomb"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interior/Tomb/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+shape = SubResource("BoxShape3D_tomb")
+
+[node name="Sound" type="AudioStreamPlayer3D" parent="Interior/Tomb"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+unit_size = 6.0
+
+[node name="Book" type="Node3D" parent="Interior/Tomb"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.12, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Interior/Tomb/Book"]
 mesh = SubResource("BoxMesh_book")
 
-[node name="Glow" type="OmniLight3D" parent="Book"]
+[node name="Glow" type="OmniLight3D" parent="Interior/Tomb/Book"]
 light_color = Color(0.4, 1, 0.6, 1)
 light_energy = 1.5
 omni_range = 4.0
 
-[node name="Interactable" type="Node3D" parent="Book"]
+[node name="Interactable" type="Node3D" parent="Interior/Tomb/Book"]
 script = ExtResource("11_interactable")
-prompt = "Prendre le Binarium"
-radius = 2.4
+prompt = "Prendre le Logiconomicon"
+radius = 2.8
 
 [node name="Player" parent="." instance=ExtResource("9_player")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0.6, 57)
-respawn_height = -40.0
+respawn_height = -80.0
 first_person = true
 
 [node name="Ambience" type="AudioStreamPlayer" parent="."]
@@ -291,4 +400,10 @@ stream = ExtResource("40_ambience")
 volume_db = -6.0
 autoplay = true
 
+[node name="CryptAmbience" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("53_crypt_sound")
+volume_db = -6.0
+
 [node name="Hud" parent="." instance=ExtResource("10_hud")]
+
+[node name="RingPuzzle" parent="." instance=ExtResource("52_puzzle")]
