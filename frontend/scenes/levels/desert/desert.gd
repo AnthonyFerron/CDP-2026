@@ -88,7 +88,7 @@ func _ready() -> void:
 	_hud.show_message("Le Désert")
 	if GameState.has_book(BOOK_ID):
 		_portal.is_open = true
-		_hud.show_message("Vous avez déjà rapporté le livre de cette zone : le portail est ouvert.")
+		_hud.show_message("Vous avez déjà trouvé le livre de cette zone : le portail est ouvert.")
 
 
 func _process(delta: float) -> void:
@@ -246,7 +246,7 @@ func _on_book_taken() -> void:
 	_book.hide()
 	_book_pickup.enabled = false
 	_portal.is_open = true
-	_hud.show_message("L'Algonicon est à vous. Le portail du Désert s'est rouvert.")
+	_hud.show_message("L'Algonicon est à vous. Rapportez-le au château du hub : le portail du Désert s'est rouvert.")
 	GameState.collect_book(BOOK_ID)
 	book_collected.emit(BOOK_ID)
 

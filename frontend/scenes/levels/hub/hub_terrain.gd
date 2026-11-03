@@ -1,21 +1,27 @@
 @tool
 class_name HubTerrain
 extends StaticBody3D
-## Sol du hub : un plateau en légères collines autour du camp, des chemins vers les portails et le fort.
+## Sol du hub : le village de Codia sur un plateau aplani, des collines autour, et des chemins
+## vers les portails, le château au nord et le bunker à l'est.
 
-## Portails : position (x, z) de chaque zone, sur un cercle autour du camp.
+## Portails : position (x, z) de chaque zone, sur un cercle autour du village.
 const PORTALS := {
-	&"plaine": Vector2(-17.0, -17.0),
-	&"desert": Vector2(17.0, -17.0),
-	&"marais": Vector2(17.0, 17.0),
-	&"village": Vector2(-17.0, 17.0),
+	&"plaine": Vector2(-38.0, -38.0),
+	&"desert": Vector2(38.0, -38.0),
+	&"marais": Vector2(38.0, 38.0),
+	&"village": Vector2(-38.0, 38.0),
 }
-const FORT := Vector2(0.0, -40.0)
-const CAMP_RADIUS := 13.0
+## Porte du château, et rectangle de son enceinte (x, z, largeur, profondeur).
+const CASTLE_GATE := Vector2(0.0, -54.0)
+const CASTLE_AREA := Rect2(-25.0, -94.0, 50.0, 40.0)
+const BUNKER := Vector2(78.0, 0.0)
+## Le village occupe ce rayon autour du feu de camp ; une rue en fait le tour entre ses deux rangs de maisons.
+const VILLAGE_RADIUS := 46.0
+const RING_STREET := 31.0
 const PATH_HALF_WIDTH := 1.6
-const SIZE := 150.0
-const CELL_SIZE := 1.25
-const PLAY_RADIUS := 52.0
+const SIZE := 230.0
+const CELL_SIZE := 1.5
+const PLAY_RADIUS := 100.0
 const BORDER_WIDTH := 10.0
 const BORDER_HEIGHT := 9.0
 
@@ -42,12 +48,24 @@ func height_at(x: float, z: float) -> float:
 	return height + BORDER_HEIGHT * smoothstep(PLAY_RADIUS, PLAY_RADIUS + BORDER_WIDTH, distance)
 
 
-## Vaut 1 sur le camp, les chemins, les abords des portails et du fort, où le sol reste plat.
+## Destinations reliées au feu de camp par un chemin.
+static func destinations() -> Array:
+	return PORTALS.values() + [CASTLE_GATE, BUNKER]
+
+
+## Distance d'un point au rectangle de l'enceinte du château, nulle à l'intérieur.
+static func castle_distance(point: Vector2) -> float:
+	var closest := point.clamp(CASTLE_AREA.position, CASTLE_AREA.end)
+	return point.distance_to(closest)
+
+
+## Vaut 1 sur le village, les chemins, les abords des portails, du château et du bunker, où le sol reste plat.
 func flat_mask(x: float, z: float) -> float:
 	var point := Vector2(x, z)
-	var mask := 1.0 - smoothstep(CAMP_RADIUS, CAMP_RADIUS + 6.0, point.length())
-	for target: Vector2 in PORTALS.values() + [FORT]:
-		mask = maxf(mask, 1.0 - smoothstep(4.0, 9.0, point.distance_to(target)))
+	var mask := 1.0 - smoothstep(VILLAGE_RADIUS, VILLAGE_RADIUS + 8.0, point.length())
+	mask = maxf(mask, 1.0 - smoothstep(3.0, 10.0, castle_distance(point)))
+	for target: Vector2 in destinations():
+		mask = maxf(mask, 1.0 - smoothstep(5.0, 11.0, point.distance_to(target)))
 		var along := Geometry2D.get_closest_point_to_segment(point, Vector2.ZERO, target)
 		mask = maxf(mask, 1.0 - smoothstep(PATH_HALF_WIDTH + 1.0, PATH_HALF_WIDTH + 5.0, point.distance_to(along)))
 	return mask
@@ -57,11 +75,15 @@ func flat_mask(x: float, z: float) -> float:
 func path_mask(x: float, z: float) -> float:
 	var point := Vector2(x, z)
 	var mask := 0.0
-	for target: Vector2 in PORTALS.values() + [FORT]:
+	var wobble := _relief.get_noise_2d(x * 4.0, z * 4.0) * 0.5
+	for target: Vector2 in destinations():
 		var along := Geometry2D.get_closest_point_to_segment(point, Vector2.ZERO, target)
-		var wobble := _relief.get_noise_2d(x * 4.0, z * 4.0) * 0.5
 		mask = maxf(mask, 1.0 - smoothstep(PATH_HALF_WIDTH - 0.4, PATH_HALF_WIDTH + 0.4, point.distance_to(along) + wobble))
+	mask = maxf(mask, 1.0 - smoothstep(PATH_HALF_WIDTH - 0.4, PATH_HALF_WIDTH + 0.4, absf(point.length() - RING_STREET) + wobble))
 	mask = maxf(mask, 1.0 - smoothstep(4.5, 5.5, point.length()))
+	# Cour pavée du château.
+	if CASTLE_AREA.has_point(point):
+		mask = maxf(mask, 0.85)
 	return mask
 
 

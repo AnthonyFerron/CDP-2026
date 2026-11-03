@@ -9,12 +9,12 @@ extends Node3D
 @export var bush_models: Array[PackedScene]
 @export var rock_models: Array[PackedScene]
 @export var flower_models: Array[PackedScene]
-@export var tree_count := 90
-@export var border_tree_count := 70
-@export var bush_count := 160
-@export var rock_count := 50
-@export var flower_count := 600
-@export var detail_range := 60.0
+@export var tree_count := 220
+@export var border_tree_count := 130
+@export var bush_count := 380
+@export var rock_count := 110
+@export var flower_count := 1500
+@export var detail_range := 70.0
 
 var _rng := RandomNumberGenerator.new()
 var _flowers: Array[MultiMesh] = []
@@ -42,10 +42,10 @@ func set_life(life: float) -> void:
 func _is_free(spot: Vector2, margin: float) -> bool:
 	if terrain.flat_mask(spot.x, spot.y) > 0.2 or spot.length() > HubTerrain.PLAY_RADIUS:
 		return false
-	if spot.distance_to(HubTerrain.FORT) < 16.0:
+	if HubTerrain.castle_distance(spot) < 6.0 + margin or spot.distance_to(HubTerrain.BUNKER) < 14.0:
 		return false
-	for portal: Vector2 in HubTerrain.PORTALS.values():
-		if spot.distance_to(portal) < 6.0 + margin:
+	for target: Vector2 in HubTerrain.destinations():
+		if spot.distance_to(target) < 6.0 + margin:
 			return false
 	return true
 

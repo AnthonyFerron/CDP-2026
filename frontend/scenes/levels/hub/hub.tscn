@@ -33,6 +33,8 @@
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_grass_1.wav" id="42_grass1"]
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_grass_2.wav" id="43_grass2"]
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_grass_3.wav" id="44_grass3"]
+[ext_resource type="AudioStream" path="res://assets/audio/tablet_chime_3.wav" id="45_chime"]
+[ext_resource type="AudioStream" path="res://assets/audio/stone_door.wav" id="46_rumble"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_hub"]
 sky_top_color = Color(0.3, 0.29, 0.36, 1)
@@ -69,7 +71,7 @@ roughness = 1.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_altar"]
 material = SubResource("StandardMaterial3D_stone")
-size = Vector3(8, 0.15, 2.4)
+size = Vector3(14, 0.15, 2.4)
 
 [sub_resource type="BoxMesh" id="BoxMesh_pedestal"]
 material = SubResource("StandardMaterial3D_stone")
@@ -133,7 +135,7 @@ transform = Transform3D(0.866025, -0.25, 0.433013, 0, 0.866025, 0.5, -0.5, -0.43
 light_color = Color(1, 0.9, 0.78, 1)
 light_energy = 0.55
 shadow_enabled = true
-directional_shadow_max_distance = 70.0
+directional_shadow_max_distance = 90.0
 
 [node name="Terrain" type="StaticBody3D" parent="."]
 script = ExtResource("2_terrain")
@@ -161,7 +163,7 @@ crackle_volume_db = -4.0
 [node name="Portals" type="Node3D" parent="."]
 
 [node name="Plaine" parent="Portals" instance=ExtResource("6_portal")]
-transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -17, 0, -17)
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -38, 0, -38)
 closed_prompt = "La Plaine : bientôt accessible"
 open_prompt = "Entrer : La Plaine"
 inner_color = Color(1, 0.8, 0.35, 1)
@@ -177,7 +179,7 @@ font_size = 64
 outline_size = 14
 
 [node name="Desert" parent="Portals" instance=ExtResource("6_portal")]
-transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 17, 0, -17)
+transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 38, 0, -38)
 closed_prompt = "Le Désert : bientôt accessible"
 open_prompt = "Entrer : Le Désert"
 inner_color = Color(1, 0.95, 0.6, 1)
@@ -193,7 +195,7 @@ font_size = 64
 outline_size = 14
 
 [node name="Marais" parent="Portals" instance=ExtResource("6_portal")]
-transform = Transform3D(-0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, -0.707107, 17, 0, 17)
+transform = Transform3D(-0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, -0.707107, 38, 0, 38)
 closed_prompt = "Le Marais : bientôt accessible"
 open_prompt = "Entrer : Le Marais"
 inner_color = Color(0.6, 1, 0.7, 1)
@@ -209,7 +211,7 @@ font_size = 64
 outline_size = 14
 
 [node name="Village" parent="Portals" instance=ExtResource("6_portal")]
-transform = Transform3D(-0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, -17, 0, 17)
+transform = Transform3D(-0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, -38, 0, 38)
 closed_prompt = "Le Village détruit : bientôt accessible"
 open_prompt = "Entrer : Le Village détruit"
 inner_color = Color(0.85, 0.7, 1, 1)
@@ -224,29 +226,60 @@ text = "Le Village détruit"
 font_size = 64
 outline_size = 14
 
-[node name="Altar" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -7.5)
+[node name="Castle" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -84)
 
-[node name="Platform" type="MeshInstance3D" parent="Altar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.075, 0)
+[node name="Platform" type="MeshInstance3D" parent="Castle"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.075, -3.4)
 mesh = SubResource("BoxMesh_altar")
 
-[node name="Inscription" type="Node3D" parent="Altar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0.6)
+[node name="Inscription" type="Node3D" parent="Castle"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, -5.6)
 script = ExtResource("10_readable")
-title = "L'autel des livres"
-body = "Quatre places attendent les livres de Codia. Chacun rapporté ici rend un peu de vie aux terres du royaume."
-prompt = "Lire l'autel"
-radius = 1.6
+title = "La salle des livres"
+body = "Quatre piédestaux attendent les livres de Codia. Chaque livre posé ici rend un peu de vie au royaume, et le rituel ne pourra commencer qu'une fois les quatre réunis."
+prompt = "Lire l'inscription"
+radius = 2.6
 
-[node name="Plaine" type="Node3D" parent="Altar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.7, 0, 0)
+[node name="Text" type="Label3D" parent="Castle/Inscription"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0.05)
+pixel_size = 0.005
+modulate = Color(1, 0.88, 0.6, 1)
+text = "LES QUATRE LIVRES DE CODIA"
+font_size = 64
+outline_size = 12
 
-[node name="Pedestal" type="MeshInstance3D" parent="Altar/Plaine"]
+[node name="LightW" type="OmniLight3D" parent="Castle"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3.4, -1.5)
+light_color = Color(1, 0.75, 0.45, 1)
+light_energy = 2.2
+omni_range = 11.0
+
+[node name="LightE" type="OmniLight3D" parent="Castle"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 3.4, -1.5)
+light_color = Color(1, 0.75, 0.45, 1)
+light_energy = 2.2
+omni_range = 11.0
+
+[node name="LightDoor" type="OmniLight3D" parent="Castle"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 4)
+light_color = Color(1, 0.75, 0.45, 1)
+light_energy = 2.2
+omni_range = 11.0
+
+[node name="Pedestals" type="Node3D" parent="Castle"]
+
+[node name="Plaine" type="Node3D" parent="Castle/Pedestals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -3.4)
+script = ExtResource("9_interactable")
+prompt = "Piédestal"
+radius = 3.2
+
+[node name="Pedestal" type="MeshInstance3D" parent="Castle/Pedestals/Plaine"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
 mesh = SubResource("BoxMesh_pedestal")
 
-[node name="Label" type="Label3D" parent="Altar/Plaine"]
+[node name="Label" type="Label3D" parent="Castle/Pedestals/Plaine"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0.46)
 pixel_size = 0.0025
 modulate = Color(0.95, 0.9, 0.8, 1)
@@ -254,31 +287,34 @@ text = "La Plaine"
 font_size = 64
 outline_size = 10
 
-[node name="Body" type="StaticBody3D" parent="Altar/Plaine"]
+[node name="Body" type="StaticBody3D" parent="Castle/Pedestals/Plaine"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Altar/Plaine/Body"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Castle/Pedestals/Plaine/Body"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
 shape = SubResource("BoxShape3D_pedestal")
 
-[node name="Book" type="Node3D" parent="Altar/Plaine"]
+[node name="Book" type="Node3D" parent="Castle/Pedestals/Plaine"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0)
 visible = false
 
-[node name="Mesh" type="MeshInstance3D" parent="Altar/Plaine/Book"]
+[node name="Mesh" type="MeshInstance3D" parent="Castle/Pedestals/Plaine/Book"]
 mesh = SubResource("BoxMesh_book_Plaine")
 
-[node name="Glow" type="OmniLight3D" parent="Altar/Plaine/Book"]
+[node name="Glow" type="OmniLight3D" parent="Castle/Pedestals/Plaine/Book"]
 light_energy = 1.0
 omni_range = 2.5
 
-[node name="Desert" type="Node3D" parent="Altar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 0, 0)
+[node name="Desert" type="Node3D" parent="Castle/Pedestals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -3.4)
+script = ExtResource("9_interactable")
+prompt = "Piédestal"
+radius = 3.2
 
-[node name="Pedestal" type="MeshInstance3D" parent="Altar/Desert"]
+[node name="Pedestal" type="MeshInstance3D" parent="Castle/Pedestals/Desert"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
 mesh = SubResource("BoxMesh_pedestal")
 
-[node name="Label" type="Label3D" parent="Altar/Desert"]
+[node name="Label" type="Label3D" parent="Castle/Pedestals/Desert"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0.46)
 pixel_size = 0.0025
 modulate = Color(0.95, 0.9, 0.8, 1)
@@ -286,31 +322,34 @@ text = "Le Désert"
 font_size = 64
 outline_size = 10
 
-[node name="Body" type="StaticBody3D" parent="Altar/Desert"]
+[node name="Body" type="StaticBody3D" parent="Castle/Pedestals/Desert"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Altar/Desert/Body"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Castle/Pedestals/Desert/Body"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
 shape = SubResource("BoxShape3D_pedestal")
 
-[node name="Book" type="Node3D" parent="Altar/Desert"]
+[node name="Book" type="Node3D" parent="Castle/Pedestals/Desert"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0)
 visible = false
 
-[node name="Mesh" type="MeshInstance3D" parent="Altar/Desert/Book"]
+[node name="Mesh" type="MeshInstance3D" parent="Castle/Pedestals/Desert/Book"]
 mesh = SubResource("BoxMesh_book_Desert")
 
-[node name="Glow" type="OmniLight3D" parent="Altar/Desert/Book"]
+[node name="Glow" type="OmniLight3D" parent="Castle/Pedestals/Desert/Book"]
 light_energy = 1.0
 omni_range = 2.5
 
-[node name="Marais" type="Node3D" parent="Altar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 0, 0)
+[node name="Marais" type="Node3D" parent="Castle/Pedestals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -3.4)
+script = ExtResource("9_interactable")
+prompt = "Piédestal"
+radius = 3.2
 
-[node name="Pedestal" type="MeshInstance3D" parent="Altar/Marais"]
+[node name="Pedestal" type="MeshInstance3D" parent="Castle/Pedestals/Marais"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
 mesh = SubResource("BoxMesh_pedestal")
 
-[node name="Label" type="Label3D" parent="Altar/Marais"]
+[node name="Label" type="Label3D" parent="Castle/Pedestals/Marais"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0.46)
 pixel_size = 0.0025
 modulate = Color(0.95, 0.9, 0.8, 1)
@@ -318,31 +357,34 @@ text = "Le Marais"
 font_size = 64
 outline_size = 10
 
-[node name="Body" type="StaticBody3D" parent="Altar/Marais"]
+[node name="Body" type="StaticBody3D" parent="Castle/Pedestals/Marais"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Altar/Marais/Body"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Castle/Pedestals/Marais/Body"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
 shape = SubResource("BoxShape3D_pedestal")
 
-[node name="Book" type="Node3D" parent="Altar/Marais"]
+[node name="Book" type="Node3D" parent="Castle/Pedestals/Marais"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0)
 visible = false
 
-[node name="Mesh" type="MeshInstance3D" parent="Altar/Marais/Book"]
+[node name="Mesh" type="MeshInstance3D" parent="Castle/Pedestals/Marais/Book"]
 mesh = SubResource("BoxMesh_book_Marais")
 
-[node name="Glow" type="OmniLight3D" parent="Altar/Marais/Book"]
+[node name="Glow" type="OmniLight3D" parent="Castle/Pedestals/Marais/Book"]
 light_energy = 1.0
 omni_range = 2.5
 
-[node name="Village" type="Node3D" parent="Altar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7, 0, 0)
+[node name="Village" type="Node3D" parent="Castle/Pedestals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, -3.4)
+script = ExtResource("9_interactable")
+prompt = "Piédestal"
+radius = 3.2
 
-[node name="Pedestal" type="MeshInstance3D" parent="Altar/Village"]
+[node name="Pedestal" type="MeshInstance3D" parent="Castle/Pedestals/Village"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
 mesh = SubResource("BoxMesh_pedestal")
 
-[node name="Label" type="Label3D" parent="Altar/Village"]
+[node name="Label" type="Label3D" parent="Castle/Pedestals/Village"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0.46)
 pixel_size = 0.0025
 modulate = Color(0.95, 0.9, 0.8, 1)
@@ -350,20 +392,20 @@ text = "Le Village détruit"
 font_size = 64
 outline_size = 10
 
-[node name="Body" type="StaticBody3D" parent="Altar/Village"]
+[node name="Body" type="StaticBody3D" parent="Castle/Pedestals/Village"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Altar/Village/Body"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Castle/Pedestals/Village/Body"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
 shape = SubResource("BoxShape3D_pedestal")
 
-[node name="Book" type="Node3D" parent="Altar/Village"]
+[node name="Book" type="Node3D" parent="Castle/Pedestals/Village"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0)
 visible = false
 
-[node name="Mesh" type="MeshInstance3D" parent="Altar/Village/Book"]
+[node name="Mesh" type="MeshInstance3D" parent="Castle/Pedestals/Village/Book"]
 mesh = SubResource("BoxMesh_book_Village")
 
-[node name="Glow" type="OmniLight3D" parent="Altar/Village/Book"]
+[node name="Glow" type="OmniLight3D" parent="Castle/Pedestals/Village/Book"]
 light_energy = 1.0
 omni_range = 2.5
 
@@ -396,7 +438,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CylinderShape3D_character")
 
 [node name="Codeon" type="Node3D" parent="Characters"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6, 0, -6.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -83)
 script = ExtResource("10_readable")
 title = "Codeon V, roi de Codia"
 body = "Mon royaume n'est plus que ruines, Devlyn, et voilà que le volcan menace d'emporter ce qu'il en reste. Tu as déjà sauvé ces terres des Quatre Dragons du Chaos. Je n'ai pas le droit de te le demander une seconde fois… et pourtant, je le fais."
@@ -404,7 +446,7 @@ prompt = "Parler au roi"
 radius = 3.0
 
 [node name="Model" parent="Characters/Codeon" instance=ExtResource("16_king")]
-transform = Transform3D(1.83851, 0, 1.54269, 0, 2.4, 0, -1.54269, 0, 1.83851, 0, 0, 0)
+transform = Transform3D(1.46958e-16, 0, 2.4, 0, 2.4, 0, -2.4, 0, 1.46958e-16, 0, 0, 0)
 
 [node name="Name" type="Label3D" parent="Characters/Codeon"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
@@ -479,20 +521,34 @@ light_color = Color(0.6, 0.45, 1, 1)
 light_energy = 1.2
 omni_range = 4.0
 
+[node name="CastleLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12.5, -53)
+pixel_size = 0.008
+billboard = 1
+modulate = Color(1, 0.9, 0.7, 1)
+text = "Le château de Codeon"
+font_size = 64
+outline_size = 14
+
 [node name="Bunker" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, -36.8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 73.6, 1.2, 0)
 script = ExtResource("9_interactable")
-prompt = "Examiner la grille du bunker"
-radius = 3.0
+prompt = "Examiner la porte du bunker"
+radius = 3.5
 
 [node name="BunkerLabel" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.2, -37.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 75.5, 7, 0)
 pixel_size = 0.006
 billboard = 1
 modulate = Color(0.9, 0.85, 0.75, 1)
 text = "Le bunker"
 font_size = 64
 outline_size = 14
+
+[node name="RepairCamera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.819152, 0.573576, 0, -0.573576, 0.819152, 0, 34, 52)
+fov = 70.0
+far = 400.0
 
 [node name="DefaultSpawn" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 12)
@@ -502,6 +558,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0.3, 12)
 respawn_height = -30.0
 first_person = true
 footstep_sounds = Array[AudioStream]([ExtResource("42_grass1"), ExtResource("43_grass2"), ExtResource("44_grass3")])
+
+[node name="PlaceSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("45_chime")
+volume_db = -2.0
+
+[node name="RepairSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("46_rumble")
+volume_db = -4.0
 
 [node name="Ambience" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("40_ambience")

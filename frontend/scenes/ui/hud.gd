@@ -97,7 +97,7 @@ func fade(to_black: bool) -> void:
 func _refresh_timer() -> void:
 	var remaining := int(ceil(GameState.time_left))
 	_timer.text = "Éruption du volcan : %d:%02d" % [remaining / 60, remaining % 60]
-	_timer.visible = GameState.books.size() < GameState.BOOK_COUNT
+	_timer.visible = GameState.placed_books.size() < GameState.BOOK_COUNT
 	_timer.modulate = Color(1.0, 0.35, 0.25) if GameState.time_left < warning_time else Color.WHITE
 
 

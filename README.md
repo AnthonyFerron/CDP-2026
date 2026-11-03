@@ -34,9 +34,16 @@ En version de debug, `F1` ouvre un menu temporaire qui permet de passer d'un niv
 
 ## Progression
 
-Le jeu démarre dans le hub, `frontend/scenes/levels/hub/hub.tscn`. Chaque portail en arche mène à une zone ; le livre d'une zone, une fois pris, est posé sur l'autel du hub, et le plateau reverdit à chaque livre rapporté. Le joueur revient devant le portail de la zone qu'il quitte.
+Le jeu démarre dans le hub, `frontend/scenes/levels/hub/hub.tscn` : le village de Codia, avec le camp des survivants autour du feu, le château du roi au nord et le bunker à l'est, deux lieux distincts. Le joueur revient devant le portail de la zone qu'il quitte.
 
-L'autoload `GameState` (`frontend/scripts/game_state.gd`) garde les livres et la dernière zone, et les sauvegarde dans `user://sauvegarde.cfg` à chaque changement. Pour ajouter une zone, renseigner sa scène dans `ZONE_SCENES` et appeler `GameState.collect_book()` quand le livre est pris.
+- Les portails s'ouvrent dans l'ordre Plaine, Désert, Marais, Village : chacun attend que le livre de la zone précédente soit trouvé.
+- Un livre trouvé reste sur le joueur. Il faut le rapporter soi-même dans la salle des livres, au fond du château, et le poser sur son piédestal.
+- Chaque livre posé répare une partie du village : quatre maisons par livre, en commençant par les plus proches du camp, puis le marché, la cour du château, la fontaine, les drapeaux et le toit de la salle. Un plan large montre le village qui se relève, et le ciel s'éclaircit.
+- Le bunker reste scellé.
+
+L'autoload `GameState` (`frontend/scripts/game_state.gd`) garde les livres trouvés, les livres posés et la dernière zone, et les sauvegarde dans `user://sauvegarde.cfg` à chaque changement. Pour ajouter une zone, renseigner sa scène dans `ZONE_SCENES`, sa place dans `ZONE_ORDER` et son livre dans `ZONE_BOOKS`, puis appeler `GameState.collect_book()` quand le livre est pris.
+
+Le décor du hub est généré par `frontend/tools/build_hub.py`. Chaque élément réparable y est écrit deux fois, en ruine et reconstruit, sous `Repairs/<nom>`, avec le nombre de livres qui le répare dans sa métadonnée `stage`.
 
 ## Chronomètre du volcan
 
