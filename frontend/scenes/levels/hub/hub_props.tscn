@@ -7473,26 +7473,26 @@ metadata/stage = 3
 [node name="Ruins" type="Node3D" parent="Repairs/Fountain"]
 
 [node name="fountain_round_1173" parent="Repairs/Fountain/Ruins" instance=ExtResource("50_model")]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 30, 0, 0)
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 30, 0, 4.2)
 
 [node name="rocks_small_1174" parent="Repairs/Fountain/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(1.37888, 0, 1.15702, 0, 1.8, 0, -1.15702, 0, 1.37888, 30, 0.4, 0)
+transform = Transform3D(1.37888, 0, 1.15702, 0, 1.8, 0, -1.15702, 0, 1.37888, 30, 0.4, 4.2)
 
 [node name="Collision" type="StaticBody3D" parent="Repairs/Fountain/Ruins"]
 
 [node name="Box603" type="CollisionShape3D" parent="Repairs/Fountain/Ruins/Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 30, 0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 30, 0.5, 4.2)
 shape = SubResource("BoxShape3D_66")
 
 [node name="Rebuilt" type="Node3D" parent="Repairs/Fountain"]
 
 [node name="fountain_round_detail_1175" parent="Repairs/Fountain/Rebuilt" instance=ExtResource("51_model")]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 30, 0, 0)
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 30, 0, 4.2)
 
 [node name="Collision" type="StaticBody3D" parent="Repairs/Fountain/Rebuilt"]
 
 [node name="Box604" type="CollisionShape3D" parent="Repairs/Fountain/Rebuilt/Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 30, 0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 30, 0.5, 4.2)
 shape = SubResource("BoxShape3D_66")
 
 [node name="CastleCourt" type="Node3D" parent="Repairs"]

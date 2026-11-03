@@ -312,7 +312,7 @@ def build_streets(scene, houses):
             side = 1 if index % 2 else -1
             x, z = dx * distance - dz * side * 2.7, dz * distance + dx * side * 2.7
             # Ni dans une maison, ni sur les étals du marché, ni sur la fontaine.
-            if clear_of(houses, x, z, 1.2) and not (-18.0 < x < -11.0 and -7.0 < z < 7.0) and math.hypot(x - 30.0, z) > 3.8:
+            if clear_of(houses, x, z, 1.2) and not (-18.0 < x < -11.0 and -7.0 < z < 7.0) and math.hypot(x - 30.0, z - 4.2) > 3.8:
                 scene.add("fantasy_town_kit/lantern", (x, 0.0, z), 0.0, 2.2)
                 scene.add_box((x, 1.0, z), (0.45, 2.0, 0.45))
 
@@ -346,9 +346,9 @@ def build_village(scene, rng):
         scene.add_box((x, 1.5, z), (3.0, 3.0, 3.0), degrees)
     for model, x, z in (("apple", -14.2, -4.4), ("carrot", -14.4, 4.2), ("bread", 14.6, -10.2)):
         scene.add(f"food_kit/{model}", (x, 1.1, z), rng.uniform(0, 360), 2.5)
-    # Fontaine de la place est, au carrefour de la rue circulaire et du chemin du bunker ; sèche, puis remise en eau au troisième livre.
+    # Fontaine de la place est, au bord du chemin du bunker, à la rue circulaire ; sèche, puis remise en eau au troisième livre.
     scene.repair("Fountain", 3)
-    fountain = (30.0, 0.0, 0.0)
+    fountain = (30.0, 0.0, 4.2)
     scene.add("fantasy_town_kit/fountain-round", fountain, 0.0, 3.0)
     scene.add("castle_kit/rocks-small", (fountain[0], 0.4, fountain[2]), 40.0, 1.8)
     scene.add_box((fountain[0], 0.5, fountain[2]), (5.6, 1.0, 5.6))
