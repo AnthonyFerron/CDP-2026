@@ -145,7 +145,7 @@ transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 2.4, 0, 11)
 transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 6, 0, 11)
 
 [node name="pillar_stone_24" parent="Models" instance=ExtResource("7_model")]
-transform = Transform3D(5.36231, 4.49951, 0, 0, 0, -7, -4.49951, 5.36231, 0, 8.75024, 0.56, 8.31884)
+transform = Transform3D(5.36231, 4.49951, 0, 0, 0, -7, -4.49951, 5.36231, 0, 11.2502, 0.56, 10.8188)
 
 [node name="banner_red_25" parent="Models" instance=ExtResource("8_model")]
 transform = Transform3D(0, 0, -3, 0, 3, 0, 3, 0, 0, -1.8, 2.6, 8.15)
@@ -281,7 +281,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 6, 4, 11)
 shape = SubResource("BoxShape3D_7")
 
 [node name="Box20" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 11, 0.56, 11)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 13.5, 0.56, 13.5)
 shape = SubResource("BoxShape3D_8")
 
 [node name="Box21" type="CollisionShape3D" parent="Collision"]

@@ -82,8 +82,9 @@ def build_house(scene, rng, number, house):
                 scene.add(pillar, (cx + sx * half_w, floor * WALL_HEIGHT, cz + sz * half_d), 0.0, WALL_SCALE)
             scene.add_box((cx + sx * half_w, WALL_HEIGHT * floors / 2, cz + sz * half_d), (0.7, WALL_HEIGHT * floors, 0.7))
     # Poutres calcinées tombées au sol, en travers des maisons sans toit.
+    # Une poutre fait 3 m : son centre reste à 1,8 m des murs pour qu'elle ne les traverse pas.
     for beam in range(rng.randint(1, 3)):
-        point = (cx + rng.uniform(-half_w + 1.5, half_w - 1.5), 0.0, cz + rng.uniform(-half_d + 1.5, half_d - 1.5))
+        point = (cx + rng.uniform(-half_w + 1.8, half_w - 1.8), 0.0, cz + rng.uniform(-half_d + 1.8, half_d - 1.8))
         furniture(scene, "fantasy_town_kit/poles-horizontal", point, rng.uniform(0, 180), 3.0, height=0.3, tilt=90.0)
     # Plancher arraché par endroits, affleurant le sol.
     for column in range(width):
@@ -96,11 +97,10 @@ def build_house(scene, rng, number, house):
             elif roll < 0.85:
                 scene.add("fantasy_town_kit/planks-half", (x - TILE * 0.25, -0.2, z), 0.0, TILE)
     if number in FURNISHED:
-        scene.add("furniture_kit/bedSingle", (cx - half_w + 1.0, 0.0, cz + half_d - 1.0), 180.0, 2.4)
-        scene.add_box((cx - half_w + 2.9, 0.6, cz + half_d - 3.3), (3.9, 1.2, 4.5))
-        scene.add("furniture_kit/tableCloth", (cx + 0.4, 0.0, cz - 0.8), 15.0, 3.0)
-        scene.add_box((cx + 1.6, 0.5, cz - 1.4), (2.6, 1.0, 1.5), 15.0)
-        for x, z, degrees in ((cx + 0.6, cz + 0.8, 0.0), (cx + 2.6, cz - 2.4, 120.0)):
+        # Meubles centrés sur leur emprise, à distance des murs : le lit dans un coin, la table au milieu.
+        furniture(scene, "furniture_kit/bedSingle", (cx - half_w + 1.6, 0.0, cz + half_d - 1.8), 180.0, 1.5, height=0.8)
+        furniture(scene, "furniture_kit/tableCloth", (cx + 1.0, 0.0, cz - 1.0), 15.0, 3.0, height=1.0)
+        for x, z, degrees in ((cx + 1.0, cz + 0.6, 0.0), (cx + 2.4, cz - 2.4, 120.0)):
             furniture(scene, "furniture_kit/chair", (x, 0.0, z), degrees, 3.0, tilt=rng.choice((0.0, 0.0, 90.0)))
 
 
@@ -227,7 +227,7 @@ def build_hall_interior():
         furniture(scene, "furniture_kit/bookcaseClosedDoors", (-7.3, 0.0, z), 90.0, 3.2, height=2.7)
     furniture(scene, "furniture_kit/bookcaseOpen", (-3.0, 0.0, -5.4), 0.0, 3.2, height=2.8)
     furniture(scene, "furniture_kit/bookcaseOpen", (-1.6, 0.0, -5.4), 0.0, 3.2, height=2.8)
-    furniture(scene, "furniture_kit/kitchenCabinetDrawer", (2.0, 0.0, -5.3), 0.0, 2.6, height=1.2)
+    furniture(scene, "furniture_kit/kitchenCabinetDrawer", (2.0, 0.0, -5.1), 0.0, 2.6, height=1.2)
     furniture(scene, "furniture_kit/tableCloth", (-4.6, 0.0, 3.4), 0.0, 3.0, height=1.0)
     for x, z, degrees in ((-5.8, 2.2, 0.0), (-3.4, 4.6, 180.0)):
         furniture(scene, "furniture_kit/chair", (x, 0.0, z), degrees, 3.0)
@@ -247,7 +247,7 @@ def build_hall_interior():
     furniture(scene, "furniture_kit/sideTableDrawers", (1.4, OFFICE_FLOOR, -0.8), 180.0, 2.6, height=1.0)
     furniture(scene, "furniture_kit/bookcaseOpen", (-5.0, OFFICE_FLOOR, 5.4), 180.0, 3.2, height=2.8)
     furniture(scene, "furniture_kit/bookcaseClosedDoors", (1.6, OFFICE_FLOOR, 5.4), 180.0, 3.2, height=2.7)
-    furniture(scene, "furniture_kit/kitchenCabinetDrawer", (-6.6, OFFICE_FLOOR, -5.3), 0.0, 2.6, height=1.2)
+    furniture(scene, "furniture_kit/kitchenCabinetDrawer", (-6.6, OFFICE_FLOOR, -5.1), 0.0, 2.6, height=1.2)
     furniture(scene, "furniture_kit/rugRectangle", (-1.0, OFFICE_FLOOR + 0.02, 1.4), 0.0, 2.6)
     furniture(scene, "furniture_kit/coatRackStanding", (3.6, OFFICE_FLOOR, 5.3), 0.0, 2.6)
     for x in (-4.4, 2.4):

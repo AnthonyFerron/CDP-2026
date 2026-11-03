@@ -295,7 +295,7 @@ def build_ruins():
     for x in (-6.0, -2.4, 2.4, 6.0):
         scene.add("fantasy_town_kit/pillar-stone", (x, 0.0, front + 3.0), 0.0, 8.0)
         scene.add_box((x, 4.0, front + 3.0), (1.3, 8.0, 1.3))
-    furniture(scene, "fantasy_town_kit/pillar-stone", (11.0, 0.0, 11.0), 40.0, 7.0, height=1.2, tilt=90.0)
+    furniture(scene, "fantasy_town_kit/pillar-stone", (13.5, 0.0, 13.5), 40.0, 7.0, height=1.2, tilt=90.0)
 
     # Bannières et lanternes qui encadrent l'entrée.
     scene.add("fantasy_town_kit/banner-red", (-1.8, 2.6, front + 0.15), -90.0, 3.0)

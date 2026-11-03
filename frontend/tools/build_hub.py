@@ -172,7 +172,7 @@ def furnish(scene, house, ruined, rng):
     # Dans les ruines, les meubles sont renversés : couchés sur le flanc, posés au sol.
     tilt = (lambda: rng.choice((90.0, 90.0, 0.0))) if ruined else (lambda: 0.0)
     # Lit contre le mur du fond, à gauche ; cuisine contre le mur du fond, à droite.
-    furniture(scene, "furniture_kit/bedSingle", frame.at(-hu + 1.4, -hv + 1.6), frame.turn(rng.uniform(-20, 20) if ruined else 0.0),
+    furniture(scene, "furniture_kit/bedSingle", frame.at(-hu + 1.6, -hv + 1.8), frame.turn(rng.uniform(-6, 6) if ruined else 0.0),
               1.6, height=0.8)
     for index, model in enumerate(("kitchenCabinet", "kitchenStove", "kitchenSink")):
         if ruined and index == 1:
@@ -199,8 +199,8 @@ def furnish(scene, house, ruined, rng):
         furniture(scene, "furniture_kit/pottedPlant", frame.at(-hu + 0.5, hv - 0.6), frame.turn(0.0), 2.6)
         # Tonneau et caisse dehors, contre la façade, du côté opposé à la porte.
         side = -1.0 if frame.door_u >= 0 else 1.0
-        furniture(scene, "survival_kit/barrel", frame.at(side * (hu - 0.4), hv + 0.9), frame.turn(0.0), 3.2, height=1.1)
-        furniture(scene, "survival_kit/box", frame.at(side * (hu - 1.5), hv + 0.9), frame.turn(20.0), 3.2, height=0.8)
+        furniture(scene, "survival_kit/barrel", frame.at(side * (hu - 0.4), hv + 1.2), frame.turn(0.0), 3.2, height=1.1)
+        furniture(scene, "survival_kit/box", frame.at(side * (hu - 1.5), hv + 1.2), frame.turn(20.0), 3.2, height=0.8)
 
 
 def house_floor(scene, rng, house, ruined):
@@ -246,7 +246,7 @@ def ruined_house(scene, rng, house):
             scene.add(pillar, (cx + sx * half_w, 0.0, cz + sz * half_d), 0.0, WALL_SCALE)
     # Poutres de la charpente tombées au sol, en travers de la pièce.
     for beam in range(rng.randint(1, 2)):
-        point = (cx + rng.uniform(-half_w + 1.5, half_w - 1.5), 0.0, cz + rng.uniform(-half_d + 1.5, half_d - 1.5))
+        point = (cx + rng.uniform(-half_w + 1.8, half_w - 1.8), 0.0, cz + rng.uniform(-half_d + 1.8, half_d - 1.8))
         furniture(scene, "fantasy_town_kit/poles-horizontal", point, rng.uniform(0, 180), 3.0, tilt=90.0)
     house_floor(scene, rng, house, True)
     furnish(scene, house, True, rng)
@@ -311,7 +311,8 @@ def build_streets(scene, houses):
         for index, distance in enumerate(range(10, int(min(length, 50.0)) - 3, 8)):
             side = 1 if index % 2 else -1
             x, z = dx * distance - dz * side * 2.7, dz * distance + dx * side * 2.7
-            if clear_of(houses, x, z, 1.2) and not (-18.0 < x < -11.0 and -7.0 < z < 7.0):
+            # Ni dans une maison, ni sur les étals du marché, ni sur la fontaine.
+            if clear_of(houses, x, z, 1.2) and not (-18.0 < x < -11.0 and -7.0 < z < 7.0) and math.hypot(x - 30.0, z) > 3.8:
                 scene.add("fantasy_town_kit/lantern", (x, 0.0, z), 0.0, 2.2)
                 scene.add_box((x, 1.0, z), (0.45, 2.0, 0.45))
 
@@ -331,8 +332,8 @@ def build_village(scene, rng):
     # Charrettes, foin et tonneaux entre les maisons.
     for model, x, z, degrees, height in (
         ("fantasy_town_kit/cart-high", -30.0, 2.0, 80.0, 2.4), ("graveyard_kit/hay-bale", -27.5, -1.5, 15.0, 1.0),
-        ("graveyard_kit/hay-bale-bundled", -28.0, 4.6, -30.0, 1.1), ("mini_dungeon/barrel", 30.0, 4.0, 0.0, 1.2),
-        ("mini_dungeon/barrel", 31.2, 2.8, 0.0, 1.2), ("fantasy_town_kit/cart-high", 4.5, 30.0, 10.0, 2.4),
+        ("graveyard_kit/hay-bale-bundled", -28.0, 4.6, -30.0, 1.1), ("mini_dungeon/barrel", 36.6, 5.2, 0.0, 1.2),
+        ("mini_dungeon/barrel", 37.7, 4.2, 0.0, 1.2), ("fantasy_town_kit/cart-high", 4.5, 30.0, 10.0, 2.4),
     ):
         furniture(scene, model, (x, 0.0, z), degrees, 2.4 if "cart" in model else 2.6, height=height)
     # Étals du marché, qui reviennent avec le deuxième livre ; charrette renversée tant qu'il manque.
@@ -345,14 +346,15 @@ def build_village(scene, rng):
         scene.add_box((x, 1.5, z), (3.0, 3.0, 3.0), degrees)
     for model, x, z in (("apple", -14.2, -4.4), ("carrot", -14.4, 4.2), ("bread", 14.6, -10.2)):
         scene.add(f"food_kit/{model}", (x, 1.1, z), rng.uniform(0, 360), 2.5)
-    # Fontaine de la place est, sèche puis remise en eau au troisième livre.
+    # Fontaine de la place est, au carrefour de la rue circulaire et du chemin du bunker ; sèche, puis remise en eau au troisième livre.
     scene.repair("Fountain", 3)
-    scene.add("fantasy_town_kit/fountain-round", (17.0, 0.0, 6.0), 0.0, 3.0)
-    scene.add("castle_kit/rocks-small", (17.0, 0.4, 6.0), 40.0, 1.8)
-    scene.add_box((17.0, 0.5, 6.0), (5.6, 1.0, 5.6))
+    fountain = (30.0, 0.0, 0.0)
+    scene.add("fantasy_town_kit/fountain-round", fountain, 0.0, 3.0)
+    scene.add("castle_kit/rocks-small", (fountain[0], 0.4, fountain[2]), 40.0, 1.8)
+    scene.add_box((fountain[0], 0.5, fountain[2]), (5.6, 1.0, 5.6))
     scene.rebuilt("Fountain")
-    scene.add("fantasy_town_kit/fountain-round-detail", (17.0, 0.0, 6.0), 0.0, 3.0)
-    scene.add_box((17.0, 0.5, 6.0), (5.6, 1.0, 5.6))
+    scene.add("fantasy_town_kit/fountain-round-detail", fountain, 0.0, 3.0)
+    scene.add_box((fountain[0], 0.5, fountain[2]), (5.6, 1.0, 5.6))
     scene.group = "Fixed"
 
 
@@ -610,12 +612,12 @@ def build_shelter():
     for z in (-0.8, 1.2, 3.2):
         furniture(scene, "furniture_kit/bookcaseClosed", (-9.4, 0.0, z), 90.0, 3.0, height=2.6)
     # Cuisine et établi à l'est, réserves dans les coins sud.
-    furniture(scene, "furniture_kit/kitchenStove", (9.3, 0.0, 0.2), -90.0, 2.6, height=1.2)
-    furniture(scene, "furniture_kit/kitchenCabinet", (9.3, 0.0, -1.0), -90.0, 2.6, height=1.2)
+    furniture(scene, "furniture_kit/kitchenStove", (9.1, 0.0, 0.2), -90.0, 2.6, height=1.2)
+    furniture(scene, "furniture_kit/kitchenCabinet", (9.1, 0.0, -1.0), -90.0, 2.6, height=1.2)
     furniture(scene, "survival_kit/workbench", (8.0, 0.0, 2.6), -90.0, 5.0, height=1.2)
-    for x, z in ((-9.0, 5.0), (-8.0, 5.2)):
+    for x, z in ((-8.8, 4.9), (-7.6, 4.9)):
         furniture(scene, "mini_dungeon/barrel", (x, 0.0, z), rng.uniform(0, 360), 2.6, height=1.2)
-    for x, z in ((8.8, 5.0), (9.1, 3.9)):
+    for x, z in ((8.8, 4.9), (8.8, 3.7)):
         furniture(scene, "survival_kit/box-large", (x, 0.0, z), 90.0, 3.6, height=0.9)
     furniture(scene, "furniture_kit/rugRectangle", (0.0, 0.05, -0.8), 0.0, 3.2)
     BUNKER_OUTPUT.write_text(scene.text(), encoding="utf-8", newline="\n")

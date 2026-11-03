@@ -2,25 +2,11 @@
 
 [ext_resource type="Script" path="res://scenes/player/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://scripts/interaction_controller.gd" id="2_interaction"]
+[ext_resource type="PackedScene" path="res://scenes/player/devlyn.tscn" id="3_devlyn"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
 radius = 0.4
 height = 1.8
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_body"]
-albedo_color = Color(0.2, 0.55, 0.9, 1)
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_body"]
-material = SubResource("StandardMaterial3D_body")
-radius = 0.4
-height = 1.8
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_front"]
-albedo_color = Color(0.95, 0.75, 0.2, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_front"]
-material = SubResource("StandardMaterial3D_front")
-size = Vector3(0.5, 0.15, 0.2)
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_player")
@@ -31,13 +17,8 @@ shape = SubResource("CapsuleShape3D_body")
 
 [node name="Visual" type="Node3D" parent="."]
 
-[node name="Body" type="MeshInstance3D" parent="Visual"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
-mesh = SubResource("CapsuleMesh_body")
-
-[node name="Front" type="MeshInstance3D" parent="Visual"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, -0.35)
-mesh = SubResource("BoxMesh_front")
+[node name="Devlyn" parent="Visual" instance=ExtResource("3_devlyn")]
+transform = Transform3D(1.1, 0, 0, 0, 1.1, 0, 0, 0, 1.1, 0, 0, 0)
 
 [node name="CameraPivot" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)

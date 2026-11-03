@@ -163,7 +163,7 @@ transform = Transform3D(3.2, 0, 0, 0, 3.2, 0, 0, 0, 3.2, -3.64, 0, -5)
 transform = Transform3D(3.2, 0, 0, 0, 3.2, 0, 0, 0, 3.2, -2.24, 0, -5)
 
 [node name="kitchenCabinetDrawer_26" parent="Models" instance=ExtResource("11_model")]
-transform = Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, 1.441, 0, -4.754)
+transform = Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, 1.441, 0, -4.554)
 
 [node name="tableCloth_27" parent="Models" instance=ExtResource("12_model")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -5.86, 0, 4.075)
@@ -268,7 +268,7 @@ transform = Transform3D(-3.2, 0, 0, 0, 3.2, 0, -0, 0, -3.2, -4.36, 4.5, 5)
 transform = Transform3D(-3.2, 0, 0, 0, 3.2, 0, -0, 0, -3.2, 1.984, 4.5, 5.032)
 
 [node name="kitchenCabinetDrawer_61" parent="Models" instance=ExtResource("11_model")]
-transform = Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, -7.159, 4.5, -4.754)
+transform = Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, -7.159, 4.5, -4.554)
 
 [node name="rugRectangle_62" parent="Models" instance=ExtResource("18_model")]
 transform = Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, -3.041, 4.52, 2.596)
@@ -422,7 +422,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -1.6, 1.4, -5.4)
 shape = SubResource("BoxShape3D_8")
 
 [node name="Box23" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 2, 0.6, -5.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 2, 0.6, -5.1)
 shape = SubResource("BoxShape3D_9")
 
 [node name="Box24" type="CollisionShape3D" parent="Collision"]
@@ -526,7 +526,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 1.6, 5.85, 5.4)
 shape = SubResource("BoxShape3D_16")
 
 [node name="Box49" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -6.6, 5.1, -5.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -6.6, 5.1, -5.1)
 shape = SubResource("BoxShape3D_9")
 
 [node name="Box50" type="CollisionShape3D" parent="Collision"]
