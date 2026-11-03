@@ -50,7 +50,7 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.7, 0.72, 1)
 theme_override_font_sizes/font_size = 21
-text = "Menu temporaire, absent du jeu publié. F1 pour fermer."
+text = "Menu temporaire de test. F1 pour fermer."
 horizontal_alignment = 1
 
 [node name="Levels" type="VBoxContainer" parent="Root/Panel/Content"]
