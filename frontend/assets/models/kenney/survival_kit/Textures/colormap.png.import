@@ -3,20 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bnl6s3mkh186s"
-path.s3tc="res://.godot/imported/colormap.png-7358e61edc0efaee716e36b0de0d8d07.s3tc.ctex"
+path="res://.godot/imported/colormap.png-7358e61edc0efaee716e36b0de0d8d07.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://assets/models/kenney/survival_kit/Textures/colormap.png"
-dest_files=["res://.godot/imported/colormap.png-7358e61edc0efaee716e36b0de0d8d07.s3tc.ctex"]
+dest_files=["res://.godot/imported/colormap.png-7358e61edc0efaee716e36b0de0d8d07.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

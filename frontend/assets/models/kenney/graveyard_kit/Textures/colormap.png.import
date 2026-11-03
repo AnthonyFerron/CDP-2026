@@ -3,20 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bvcdml80fldij"
-path.s3tc="res://.godot/imported/colormap.png-aaa5fbfe868c2405754a62cd94597b8d.s3tc.ctex"
+path="res://.godot/imported/colormap.png-aaa5fbfe868c2405754a62cd94597b8d.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://assets/models/kenney/graveyard_kit/Textures/colormap.png"
-dest_files=["res://.godot/imported/colormap.png-aaa5fbfe868c2405754a62cd94597b8d.s3tc.ctex"]
+dest_files=["res://.godot/imported/colormap.png-aaa5fbfe868c2405754a62cd94597b8d.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

@@ -3,20 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ci1786ek7ag3b"
-path.s3tc="res://.godot/imported/colormap.png-8b0e206aaf56c212e25d98682cc5485e.s3tc.ctex"
+path="res://.godot/imported/colormap.png-8b0e206aaf56c212e25d98682cc5485e.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://assets/models/kenney/food_kit/Textures/colormap.png"
-dest_files=["res://.godot/imported/colormap.png-8b0e206aaf56c212e25d98682cc5485e.s3tc.ctex"]
+dest_files=["res://.godot/imported/colormap.png-8b0e206aaf56c212e25d98682cc5485e.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

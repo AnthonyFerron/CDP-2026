@@ -3,20 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cko2khjm5jwq1"
-path.s3tc="res://.godot/imported/colormap.png-e77731f58be06a6f8007b5c04ae94d8f.s3tc.ctex"
+path="res://.godot/imported/colormap.png-e77731f58be06a6f8007b5c04ae94d8f.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://assets/models/kenney/castle_kit/Textures/colormap.png"
-dest_files=["res://.godot/imported/colormap.png-e77731f58be06a6f8007b5c04ae94d8f.s3tc.ctex"]
+dest_files=["res://.godot/imported/colormap.png-e77731f58be06a6f8007b5c04ae94d8f.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
