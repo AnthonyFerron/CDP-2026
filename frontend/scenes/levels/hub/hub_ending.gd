@@ -38,7 +38,6 @@ func play_eruption() -> void:
 	_play_sound()
 	_shake = 2.2
 	await _flash_screen(Color(1.0, 0.6, 0.3), 0.15, 1.4)
-	_darken_sky()
 	await get_tree().create_timer(2.5).timeout
 	_flood_village()
 	await _move(Vector3(0, 48, 72), Vector3(0, 0, -18), 5.0, 70.0)
@@ -97,24 +96,6 @@ func _flash_screen(color: Color, attack: float, release: float) -> void:
 	tween.tween_property(_flash, "color:a", 0.85, attack)
 	tween.tween_property(_flash, "color:a", 0.0, release)
 	await tween.finished
-
-
-## Ciel et brume virent au rouge sombre de la cendre.
-func _darken_sky() -> void:
-	var environment := get_viewport().world_3d.environment
-	if not environment and get_tree().current_scene.has_node("WorldEnvironment"):
-		environment = get_tree().current_scene.get_node("WorldEnvironment").environment
-	if not environment:
-		return
-	var sky := environment.sky.sky_material as ProceduralSkyMaterial if environment.sky else null
-	var tween := create_tween().set_parallel()
-	if sky:
-		tween.tween_property(sky, "sky_top_color", Color(0.18, 0.06, 0.05), 4.0)
-		tween.tween_property(sky, "sky_horizon_color", Color(0.75, 0.25, 0.08), 4.0)
-		tween.tween_property(sky, "ground_horizon_color", Color(0.75, 0.25, 0.08), 4.0)
-		tween.tween_property(sky, "ground_bottom_color", Color(0.35, 0.1, 0.05), 4.0)
-	tween.tween_property(environment, "fog_light_color", Color(0.45, 0.16, 0.08), 4.0)
-	tween.tween_property(environment, "fog_density", 0.008, 4.0)
 
 
 ## Air limpide d'une belle journée : la brume se lève et la lumière se pose, pour que le village se lise de loin.
