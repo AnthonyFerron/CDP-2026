@@ -31,7 +31,7 @@ Les touches suivent la position physique sur le clavier : ZQSD en AZERTY, WASD e
 
 ## Debug
 
-En version de debug, `F1` ouvre un menu temporaire qui permet de passer d'un niveau à l'autre. Il n'apparaît pas dans le jeu publié. Il liste les scènes de `frontend/scenes/levels/`, et les sous-dossiers qui contiennent une scène du même nom, comme `plaine/plaine.tscn` : nommer ainsi la scène principale de chaque niveau pour qu'elle y apparaisse. Le bouton « Réinitialiser la partie » efface la sauvegarde.
+En version de debug, `F1` ouvre un menu temporaire qui permet de passer d'un niveau à l'autre. Le site est pour l'instant exporté en version de debug (`--export-debug` dans `frontend/Dockerfile`), le menu y est donc disponible ; repasser à `--export-release` pour le retirer. Il liste les scènes de `frontend/scenes/levels/`, et les sous-dossiers qui contiennent une scène du même nom, comme `plaine/plaine.tscn` : nommer ainsi la scène principale de chaque niveau pour qu'elle y apparaisse. Le bouton « Réinitialiser la partie » efface la sauvegarde.
 
 ## Progression
 

@@ -46,7 +46,7 @@ jobs:
           godot="$HOME/godot/Godot_v${GODOT_VERSION}-stable_linux.x86_64"
           mkdir -p frontend/build/web
           "$godot" --headless --path frontend --import
-          "$godot" --headless --path frontend --export-release "Web" build/web/index.html
+          "$godot" --headless --path frontend --export-debug "Web" build/web/index.html
           test -f frontend/build/web/index.html
 
       - name: Joindre les licences au site

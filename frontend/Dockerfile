@@ -33,7 +33,7 @@ COPY LICENCES.md /licences/
 
 RUN mkdir -p /game/build/web \
     && godot --headless --path /game --import \
-    && godot --headless --path /game --export-release "Web" build/web/index.html \
+    && godot --headless --path /game --export-debug "Web" build/web/index.html \
     && test -f /game/build/web/index.html \
     && cp /licences/* /game/build/web/
 
