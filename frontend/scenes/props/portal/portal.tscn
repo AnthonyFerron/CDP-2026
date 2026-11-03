@@ -1,0 +1,8 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/props/portal/portal.gd" id="1_portal"]
+[ext_resource type="Shader" path="res://scenes/props/portal/portal.gdshader" id="2_shader"]
+
+[node name="Portal" type="Node3D"]
+script = ExtResource("1_portal")
+surface_shader = ExtResource("2_shader")

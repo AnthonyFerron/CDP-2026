@@ -10,7 +10,8 @@ Liste de tout ce que le projet utilise et qui n'a pas été créé pour lui. À 
 | --- | --- | --- |
 | Code GDScript, scènes, `icon.svg` | Créés pour le projet | Aucune licence choisie : tous droits réservés par défaut |
 | Modèles 3D et leurs textures | Kits Kenney, listés ci-dessous | CC0 1.0 |
-| Sons, polices | Aucun pour le moment | Sans objet |
+| Sons du jeu (vent, lave, marais, désert, cave, hub, pas, feu, porte, tablettes) | Générés pour le projet par `frontend/tools/generate_sounds.py` | Comme le code du projet |
+| Polices | Aucune pour le moment | Sans objet |
 
 Pour chaque modèle, texture, son ou police venant de l'extérieur, ajouter une ligne ici avec son auteur, sa source et sa licence.
 

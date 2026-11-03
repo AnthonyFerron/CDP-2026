@@ -20,3 +20,6 @@
 
 # macOS
 .DS_Store
+
+# Imports créés quand la racine du dépôt est ouverte dans Godot : le projet est frontend/
+docs/**/*.import
