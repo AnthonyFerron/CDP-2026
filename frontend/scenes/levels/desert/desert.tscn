@@ -1,0 +1,627 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/levels/desert/desert.gd" id="1_desert"]
+[ext_resource type="Script" path="res://scenes/levels/desert/desert_terrain.gd" id="2_terrain"]
+[ext_resource type="Script" path="res://scenes/levels/desert/desert_scatter.gd" id="3_scatter"]
+[ext_resource type="Shader" path="res://scenes/levels/desert/desert_sand.gdshader" id="4_sand"]
+[ext_resource type="Shader" path="res://scenes/levels/desert/quicksand.gdshader" id="5_quicksand"]
+[ext_resource type="PackedScene" path="res://scenes/levels/desert/desert_ruins.tscn" id="6_ruins"]
+[ext_resource type="PackedScene" path="res://scenes/levels/desert/desert_cellar.tscn" id="7_cellar"]
+[ext_resource type="PackedScene" path="res://scenes/props/portal/portal.tscn" id="8_portal"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="9_player"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="10_hud"]
+[ext_resource type="Script" path="res://scripts/interactable.gd" id="11_interactable"]
+[ext_resource type="Script" path="res://scripts/readable.gd" id="12_readable"]
+[ext_resource type="Script" path="res://scripts/fire_effect.gd" id="13_fire"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/signpost.glb" id="14_signpost"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/cactus_tall.glb" id="20_cactus_tall"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/cactus_short.glb" id="21_cactus_short"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/rock-sand-a.glb" id="22_rock_a"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/rock-sand-b.glb" id="23_rock_b"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/rock-sand-c.glb" id="24_rock_c"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_arena/column-damaged.glb" id="25_column"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_arena/bricks.glb" id="26_bricks"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/siege-catapult-demolished.glb" id="27_catapult"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/siege-ram-demolished.glb" id="28_ram"]
+[ext_resource type="AudioStream" path="res://assets/audio/desert_wind.wav" id="40_wind"]
+[ext_resource type="AudioStream" path="res://assets/audio/cave_ambience.wav" id="41_cave"]
+[ext_resource type="AudioStream" path="res://assets/audio/footstep_sand_1.wav" id="42_sand1"]
+[ext_resource type="AudioStream" path="res://assets/audio/footstep_sand_2.wav" id="43_sand2"]
+[ext_resource type="AudioStream" path="res://assets/audio/footstep_sand_3.wav" id="44_sand3"]
+[ext_resource type="AudioStream" path="res://assets/audio/footstep_ash_1.wav" id="45_stone1"]
+[ext_resource type="AudioStream" path="res://assets/audio/footstep_ash_2.wav" id="46_stone2"]
+[ext_resource type="AudioStream" path="res://assets/audio/footstep_ash_3.wav" id="47_stone3"]
+[ext_resource type="AudioStream" path="res://assets/audio/tablet_chime_1.wav" id="48_chime1"]
+[ext_resource type="AudioStream" path="res://assets/audio/tablet_chime_2.wav" id="49_chime2"]
+[ext_resource type="AudioStream" path="res://assets/audio/tablet_chime_3.wav" id="50_chime3"]
+[ext_resource type="AudioStream" path="res://assets/audio/tablet_reset.wav" id="51_reset"]
+[ext_resource type="AudioStream" path="res://assets/audio/fire_crackle.wav" id="52_crackle"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_day"]
+sky_top_color = Color(0.36, 0.55, 0.78, 1)
+sky_horizon_color = Color(0.92, 0.78, 0.58, 1)
+ground_bottom_color = Color(0.5, 0.38, 0.24, 1)
+ground_horizon_color = Color(0.92, 0.78, 0.58, 1)
+sun_angle_max = 20.0
+
+[sub_resource type="Sky" id="Sky_day"]
+sky_material = SubResource("ProceduralSkyMaterial_day")
+
+[sub_resource type="Environment" id="Environment_desert"]
+background_mode = 2
+sky = SubResource("Sky_day")
+ambient_light_source = 3
+ambient_light_color = Color(0.85, 0.72, 0.55, 1)
+ambient_light_energy = 0.45
+tonemap_mode = 3
+tonemap_exposure = 0.95
+glow_enabled = true
+glow_intensity = 0.5
+glow_bloom = 0.04
+glow_hdr_threshold = 1.0
+fog_enabled = true
+fog_light_color = Color(0.86, 0.72, 0.52, 1)
+fog_density = 0.006
+fog_sky_affect = 0.15
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_grain"]
+seed = 21
+frequency = 0.05
+fractal_octaves = 3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_grain"]
+width = 256
+height = 256
+seamless = true
+noise = SubResource("FastNoiseLite_grain")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sand"]
+render_priority = 0
+shader = ExtResource("4_sand")
+shader_parameter/grain_noise = SubResource("NoiseTexture2D_grain")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_quicksand"]
+render_priority = 0
+shader = ExtResource("5_quicksand")
+shader_parameter/swirl_noise = SubResource("NoiseTexture2D_grain")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sandstone"]
+albedo_color = Color(0.78, 0.6, 0.4, 1)
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_stele"]
+material = SubResource("StandardMaterial3D_sandstone")
+size = Vector3(1.4, 2.8, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_stele"]
+size = Vector3(1.4, 2.8, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wood"]
+albedo_color = Color(0.32, 0.18, 0.09, 1)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iron"]
+albedo_color = Color(0.15, 0.15, 0.15, 1)
+metallic = 0.6
+roughness = 0.6
+
+[sub_resource type="BoxMesh" id="BoxMesh_plank"]
+material = SubResource("StandardMaterial3D_wood")
+size = Vector3(0.55, 0.12, 2.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_strap"]
+material = SubResource("StandardMaterial3D_iron")
+size = Vector3(2.5, 0.14, 0.18)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cave_stone"]
+albedo_color = Color(0.36, 0.29, 0.23, 1)
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_ceiling"]
+material = SubResource("StandardMaterial3D_cave_stone")
+size = Vector3(20.5, 0.5, 12.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cave_wall_long"]
+material = SubResource("StandardMaterial3D_cave_stone")
+size = Vector3(20.5, 4.6, 0.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cave_wall_side"]
+material = SubResource("StandardMaterial3D_cave_stone")
+size = Vector3(0.4, 4.6, 12.5)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_torch"]
+material = SubResource("StandardMaterial3D_wood")
+top_radius = 0.09
+bottom_radius = 0.06
+height = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_pedestal"]
+material = SubResource("StandardMaterial3D_sandstone")
+size = Vector3(1.4, 1.1, 0.9)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pedestal"]
+size = Vector3(1.4, 1.4, 0.9)
+
+[sub_resource type="BoxMesh" id="BoxMesh_slab"]
+size = Vector3(1.3, 0.14, 0.85)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_book"]
+albedo_color = Color(0.55, 0.35, 0.08, 1)
+emission_enabled = true
+emission = Color(1, 0.75, 0.3, 1)
+emission_energy_multiplier = 1.4
+
+[sub_resource type="BoxMesh" id="BoxMesh_book"]
+material = SubResource("StandardMaterial3D_book")
+size = Vector3(0.6, 0.14, 0.8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_shaft"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 0.88, 0.6, 0.12)
+
+[sub_resource type="BoxMesh" id="BoxMesh_shaft"]
+material = SubResource("StandardMaterial3D_shaft")
+size = Vector3(1.8, 4.2, 1.8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_slab_Transmettre"]
+albedo_color = Color(0.3, 0.24, 0.18, 1)
+emission_enabled = true
+emission = Color(1, 0.7, 0.3, 1)
+emission_energy_multiplier = 0.15
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_slab_Initialiser"]
+albedo_color = Color(0.3, 0.24, 0.18, 1)
+emission_enabled = true
+emission = Color(1, 0.7, 0.3, 1)
+emission_energy_multiplier = 0.15
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_slab_Transformer"]
+albedo_color = Color(0.3, 0.24, 0.18, 1)
+emission_enabled = true
+emission = Color(1, 0.7, 0.3, 1)
+emission_energy_multiplier = 0.15
+
+[node name="Desert" type="Node3D"]
+script = ExtResource("1_desert")
+sand_steps = Array[AudioStream]([ExtResource("42_sand1"), ExtResource("43_sand2"), ExtResource("44_sand3")])
+stone_steps = Array[AudioStream]([ExtResource("45_stone1"), ExtResource("46_stone2"), ExtResource("47_stone3")])
+chimes = Array[AudioStream]([ExtResource("48_chime1"), ExtResource("49_chime2"), ExtResource("50_chime3")])
+reset_sound = ExtResource("51_reset")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_desert")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.819152, -0.32899, 0.469846, 0, 0.819152, 0.573576, -0.573576, -0.469846, 0.67101, 0, 40, 0)
+light_color = Color(1, 0.88, 0.7, 1)
+light_energy = 1.0
+shadow_enabled = true
+directional_shadow_max_distance = 80.0
+
+[node name="Exterior" type="Node3D" parent="."]
+
+[node name="Terrain" type="StaticBody3D" parent="Exterior"]
+script = ExtResource("2_terrain")
+ground_material = SubResource("ShaderMaterial_sand")
+
+[node name="Scatter" type="Node3D" parent="Exterior" node_paths=PackedStringArray("terrain")]
+script = ExtResource("3_scatter")
+terrain = NodePath("../Terrain")
+cactus_models = Array[PackedScene]([ExtResource("20_cactus_tall"), ExtResource("21_cactus_short")])
+rock_models = Array[PackedScene]([ExtResource("22_rock_a"), ExtResource("23_rock_b"), ExtResource("24_rock_c")])
+ruin_models = Array[PackedScene]([ExtResource("25_column"), ExtResource("26_bricks")])
+wreck_models = Array[PackedScene]([ExtResource("27_catapult"), ExtResource("28_ram")])
+quicksand_material = SubResource("ShaderMaterial_quicksand")
+
+[node name="Ruins" parent="Exterior" instance=ExtResource("6_ruins")]
+
+[node name="Portal" parent="Exterior" instance=ExtResource("8_portal")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0, 54)
+closed_prompt = "Portail éteint"
+open_prompt = "Retourner au hub"
+
+[node name="Sign" parent="Exterior" instance=ExtResource("14_signpost")]
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, -0, 0, 2.5, -5, 0, 44)
+
+[node name="SignText" type="Label3D" parent="Exterior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 3.8, 44)
+pixel_size = 0.007
+billboard = 1
+modulate = Color(1, 0.9, 0.7, 1)
+text = "Le Désert\nLes archives du soleil"
+font_size = 64
+outline_size = 16
+
+[node name="OutsideSpawn" type="Marker3D" parent="Exterior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, -2.5)
+
+[node name="Trapdoor" type="Node3D" parent="Exterior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, -6)
+
+[node name="Hatch" type="Node3D" parent="Exterior/Trapdoor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.2)
+
+[node name="Plank0" type="MeshInstance3D" parent="Exterior/Trapdoor/Hatch"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 0, -1.2)
+mesh = SubResource("BoxMesh_plank")
+
+[node name="Plank1" type="MeshInstance3D" parent="Exterior/Trapdoor/Hatch"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0, -1.2)
+mesh = SubResource("BoxMesh_plank")
+
+[node name="Plank2" type="MeshInstance3D" parent="Exterior/Trapdoor/Hatch"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0, -1.2)
+mesh = SubResource("BoxMesh_plank")
+
+[node name="Plank3" type="MeshInstance3D" parent="Exterior/Trapdoor/Hatch"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 0, -1.2)
+mesh = SubResource("BoxMesh_plank")
+
+[node name="Strap0" type="MeshInstance3D" parent="Exterior/Trapdoor/Hatch"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, -2)
+mesh = SubResource("BoxMesh_strap")
+
+[node name="Strap1" type="MeshInstance3D" parent="Exterior/Trapdoor/Hatch"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, -0.4)
+mesh = SubResource("BoxMesh_strap")
+
+[node name="Interactable" type="Node3D" parent="Exterior/Trapdoor"]
+script = ExtResource("11_interactable")
+prompt = "Soulever la trappe et descendre"
+radius = 2.6
+
+[node name="Clues" type="Node3D" parent="Exterior"]
+
+[node name="Levant" type="Node3D" parent="Exterior/Clues"]
+transform = Transform3D(0.5, 0, 0.866025, 0, 1, 0, -0.866025, 0, 0.5, -13, 0, -12)
+script = ExtResource("12_readable")
+title = "Stèle du levant"
+body = "Rien ne naît sans un premier souffle. Avant tout ouvrage, on donne à chaque chose sa valeur de départ."
+prompt = "Lire la stèle"
+radius = 2.8
+
+[node name="Mesh" type="MeshInstance3D" parent="Exterior/Clues/Levant"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
+mesh = SubResource("BoxMesh_stele")
+
+[node name="Sun" type="Label3D" parent="Exterior/Clues/Levant"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0.26)
+pixel_size = 0.01
+modulate = Color(0.55, 0.3, 0.1, 1)
+text = "☼"
+font_size = 96
+
+[node name="Body" type="StaticBody3D" parent="Exterior/Clues/Levant"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Exterior/Clues/Levant/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
+shape = SubResource("BoxShape3D_stele")
+
+[node name="Zenith" type="Node3D" parent="Exterior/Clues"]
+transform = Transform3D(0.5, 0, -0.866025, 0, 1, 0, 0.866025, 0, 0.5, 13, 0, -12)
+script = ExtResource("12_readable")
+title = "Stèle du zénith"
+body = "Ce que l'on a reçu, l'artisan le façonne et le change. Mais il ne travaille que ce qui existe déjà."
+prompt = "Lire la stèle"
+radius = 2.8
+
+[node name="Mesh" type="MeshInstance3D" parent="Exterior/Clues/Zenith"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
+mesh = SubResource("BoxMesh_stele")
+
+[node name="Sun" type="Label3D" parent="Exterior/Clues/Zenith"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0.26)
+pixel_size = 0.01
+modulate = Color(0.55, 0.3, 0.1, 1)
+text = "☼"
+font_size = 96
+
+[node name="Body" type="StaticBody3D" parent="Exterior/Clues/Zenith"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Exterior/Clues/Zenith/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
+shape = SubResource("BoxShape3D_stele")
+
+[node name="Couchant" type="Node3D" parent="Exterior/Clues"]
+transform = Transform3D(-0.939693, 0, 0.34202, 0, 1, 0, -0.34202, 0, -0.939693, -7, 0, 8)
+script = ExtResource("12_readable")
+title = "Stèle du couchant"
+body = "Le messager part toujours en dernier : il ne porte au loin que l'ouvrage achevé."
+prompt = "Lire la stèle"
+radius = 2.8
+
+[node name="Mesh" type="MeshInstance3D" parent="Exterior/Clues/Couchant"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
+mesh = SubResource("BoxMesh_stele")
+
+[node name="Sun" type="Label3D" parent="Exterior/Clues/Couchant"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0.26)
+pixel_size = 0.01
+modulate = Color(0.55, 0.3, 0.1, 1)
+text = "☼"
+font_size = 96
+
+[node name="Body" type="StaticBody3D" parent="Exterior/Clues/Couchant"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Exterior/Clues/Couchant/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
+shape = SubResource("BoxShape3D_stele")
+
+[node name="Interior" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -40, 0)
+
+[node name="Cellar" parent="Interior" instance=ExtResource("7_cellar")]
+
+[node name="Ceiling" type="MeshInstance3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.45, -6)
+mesh = SubResource("BoxMesh_ceiling")
+
+[node name="WallBack" type="MeshInstance3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, -12.4)
+mesh = SubResource("BoxMesh_cave_wall_long")
+
+[node name="WallFront" type="MeshInstance3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0.4)
+mesh = SubResource("BoxMesh_cave_wall_long")
+
+[node name="WallWest" type="MeshInstance3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.4, 2.2, -6)
+mesh = SubResource("BoxMesh_cave_wall_side")
+
+[node name="WallEast" type="MeshInstance3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.4, 2.2, -6)
+mesh = SubResource("BoxMesh_cave_wall_side")
+
+[node name="LightShaft" type="MeshInstance3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1, -0.9)
+mesh = SubResource("BoxMesh_shaft")
+cast_shadow = 0
+
+[node name="Torch0" type="Node3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.6, 2.2, -3.5)
+
+[node name="Stick" type="MeshInstance3D" parent="Interior/Torch0"]
+mesh = SubResource("CylinderMesh_torch")
+
+[node name="Fire" type="Node3D" parent="Interior/Torch0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+script = ExtResource("13_fire")
+size = 0.7
+light_energy = 2.2
+light_range = 8.0
+crackle_sound = ExtResource("52_crackle")
+crackle_volume_db = -14.0
+
+[node name="Torch1" type="Node3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.6, 2.2, -3.5)
+
+[node name="Stick" type="MeshInstance3D" parent="Interior/Torch1"]
+mesh = SubResource("CylinderMesh_torch")
+
+[node name="Fire" type="Node3D" parent="Interior/Torch1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+script = ExtResource("13_fire")
+size = 0.7
+light_energy = 2.2
+light_range = 8.0
+crackle_sound = ExtResource("52_crackle")
+crackle_volume_db = -14.0
+
+[node name="Torch2" type="Node3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.6, 2.2, -9)
+
+[node name="Stick" type="MeshInstance3D" parent="Interior/Torch2"]
+mesh = SubResource("CylinderMesh_torch")
+
+[node name="Fire" type="Node3D" parent="Interior/Torch2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+script = ExtResource("13_fire")
+size = 0.7
+light_energy = 2.2
+light_range = 8.0
+crackle_sound = ExtResource("52_crackle")
+crackle_volume_db = -14.0
+
+[node name="Torch3" type="Node3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.6, 2.2, -9)
+
+[node name="Stick" type="MeshInstance3D" parent="Interior/Torch3"]
+mesh = SubResource("CylinderMesh_torch")
+
+[node name="Fire" type="Node3D" parent="Interior/Torch3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+script = ExtResource("13_fire")
+size = 0.7
+light_energy = 2.2
+light_range = 8.0
+crackle_sound = ExtResource("52_crackle")
+crackle_volume_db = -14.0
+
+[node name="InsideSpawn" type="Marker3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, -1.8)
+
+[node name="Exit" type="Node3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -0.6)
+script = ExtResource("11_interactable")
+prompt = "Remonter à la surface"
+radius = 2.0
+
+[node name="Clues" type="Node3D" parent="Interior"]
+
+[node name="Inscription" type="Node3D" parent="Interior/Clues"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, -11.6)
+script = ExtResource("12_readable")
+title = "Les archives du soleil"
+body = "Du premier souffle au dernier mot. Les trois fonctions anciennes ne s'éveillent que dans leur ordre ; une seule erreur, et tout s'éteint."
+prompt = "Lire l'inscription"
+radius = 4.5
+
+[node name="Text" type="Label3D" parent="Interior/Clues/Inscription"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0.1)
+pixel_size = 0.006
+modulate = Color(1, 0.8, 0.45, 1)
+text = "DU PREMIER SOUFFLE AU DERNIER MOT"
+font_size = 64
+outline_size = 12
+
+[node name="Tablets" type="Node3D" parent="Interior"]
+
+[node name="Sound" type="AudioStreamPlayer3D" parent="Interior/Tablets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -6)
+unit_size = 6.0
+
+[node name="Transmettre" type="Node3D" parent="Interior/Tablets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -6)
+
+[node name="Pedestal" type="MeshInstance3D" parent="Interior/Tablets/Transmettre"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+mesh = SubResource("BoxMesh_pedestal")
+
+[node name="Slab" type="MeshInstance3D" parent="Interior/Tablets/Transmettre"]
+transform = Transform3D(1, 0, 0, 0, 0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 1.18, 0)
+mesh = SubResource("BoxMesh_slab")
+surface_material_override/0 = SubResource("StandardMaterial3D_slab_Transmettre")
+
+[node name="Label" type="Label3D" parent="Interior/Tablets/Transmettre"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9, 0)
+pixel_size = 0.0035
+billboard = 1
+modulate = Color(1, 0.85, 0.55, 1)
+text = "TRANSMETTRE"
+font_size = 64
+outline_size = 12
+
+[node name="Glow" type="OmniLight3D" parent="Interior/Tablets/Transmettre"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0.4)
+visible = false
+light_color = Color(1, 0.75, 0.35, 1)
+light_energy = 1.5
+omni_range = 3.5
+
+[node name="Body" type="StaticBody3D" parent="Interior/Tablets/Transmettre"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interior/Tablets/Transmettre/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+shape = SubResource("BoxShape3D_pedestal")
+
+[node name="Interactable" type="Node3D" parent="Interior/Tablets/Transmettre"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("11_interactable")
+prompt = "Éveiller la tablette transmettre"
+radius = 2.0
+
+[node name="Initialiser" type="Node3D" parent="Interior/Tablets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6)
+
+[node name="Pedestal" type="MeshInstance3D" parent="Interior/Tablets/Initialiser"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+mesh = SubResource("BoxMesh_pedestal")
+
+[node name="Slab" type="MeshInstance3D" parent="Interior/Tablets/Initialiser"]
+transform = Transform3D(1, 0, 0, 0, 0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 1.18, 0)
+mesh = SubResource("BoxMesh_slab")
+surface_material_override/0 = SubResource("StandardMaterial3D_slab_Initialiser")
+
+[node name="Label" type="Label3D" parent="Interior/Tablets/Initialiser"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9, 0)
+pixel_size = 0.0035
+billboard = 1
+modulate = Color(1, 0.85, 0.55, 1)
+text = "INITIALISER"
+font_size = 64
+outline_size = 12
+
+[node name="Glow" type="OmniLight3D" parent="Interior/Tablets/Initialiser"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0.4)
+visible = false
+light_color = Color(1, 0.75, 0.35, 1)
+light_energy = 1.5
+omni_range = 3.5
+
+[node name="Body" type="StaticBody3D" parent="Interior/Tablets/Initialiser"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interior/Tablets/Initialiser/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+shape = SubResource("BoxShape3D_pedestal")
+
+[node name="Interactable" type="Node3D" parent="Interior/Tablets/Initialiser"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("11_interactable")
+prompt = "Éveiller la tablette initialiser"
+radius = 2.0
+
+[node name="Transformer" type="Node3D" parent="Interior/Tablets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, -6)
+
+[node name="Pedestal" type="MeshInstance3D" parent="Interior/Tablets/Transformer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+mesh = SubResource("BoxMesh_pedestal")
+
+[node name="Slab" type="MeshInstance3D" parent="Interior/Tablets/Transformer"]
+transform = Transform3D(1, 0, 0, 0, 0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 1.18, 0)
+mesh = SubResource("BoxMesh_slab")
+surface_material_override/0 = SubResource("StandardMaterial3D_slab_Transformer")
+
+[node name="Label" type="Label3D" parent="Interior/Tablets/Transformer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9, 0)
+pixel_size = 0.0035
+billboard = 1
+modulate = Color(1, 0.85, 0.55, 1)
+text = "TRANSFORMER"
+font_size = 64
+outline_size = 12
+
+[node name="Glow" type="OmniLight3D" parent="Interior/Tablets/Transformer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0.4)
+visible = false
+light_color = Color(1, 0.75, 0.35, 1)
+light_energy = 1.5
+omni_range = 3.5
+
+[node name="Body" type="StaticBody3D" parent="Interior/Tablets/Transformer"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interior/Tablets/Transformer/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+shape = SubResource("BoxShape3D_pedestal")
+
+[node name="Interactable" type="Node3D" parent="Interior/Tablets/Transformer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("11_interactable")
+prompt = "Éveiller la tablette transformer"
+radius = 2.0
+
+[node name="BookTarget" type="Marker3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9, -9.3)
+
+[node name="Book" type="Node3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9, -9.3)
+
+[node name="Mesh" type="MeshInstance3D" parent="Interior/Book"]
+mesh = SubResource("BoxMesh_book")
+
+[node name="Glow" type="OmniLight3D" parent="Interior/Book"]
+light_color = Color(1, 0.8, 0.4, 1)
+light_energy = 1.5
+omni_range = 4.0
+
+[node name="Interactable" type="Node3D" parent="Interior/Book"]
+script = ExtResource("11_interactable")
+prompt = "Prendre le livre des Archives du Soleil"
+radius = 2.4
+
+[node name="Player" parent="." instance=ExtResource("9_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0.3, 48)
+respawn_height = -80.0
+first_person = true
+
+[node name="Wind" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("40_wind")
+volume_db = -8.0
+autoplay = true
+
+[node name="CaveAmbience" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("41_cave")
+volume_db = -6.0
+
+[node name="Hud" parent="." instance=ExtResource("10_hud")]

@@ -225,6 +225,74 @@ def stone_door():
     return normalize(samples, 0.75)
 
 
+def desert_wind():
+    """Vent du désert qui charrie le sable, en boucle de 12 s."""
+    rng = random.Random(8)
+    length, fade = RATE * 12, RATE
+    total = length + fade
+    body = lowpass(noise(total, rng), 700)
+    hiss = highpass(lowpass(noise(total, rng), 5000), 2000)
+    samples = []
+    for i in range(total):
+        t = i / RATE
+        gust = 0.5 + 0.35 * math.sin(2 * math.pi * t / 4.0) + 0.15 * math.sin(2 * math.pi * t / 3.0 + 2.0)
+        samples.append(body[i] * gust + hiss[i] * gust * gust * 0.9)
+    return normalize(seamless(samples, length, fade), 0.55)
+
+
+def cave():
+    """Cave fraîche : un souffle sourd et des gouttes qui tombent, en boucle de 10 s."""
+    rng = random.Random(9)
+    length, fade = RATE * 10, RATE
+    hum = lowpass(lowpass(noise(length + fade, rng), 120), 160)
+    samples = normalize(seamless(hum, length, fade), 0.3)
+    for _ in range(9):
+        start = rng.randrange(length)
+        pitch = rng.uniform(1400, 2600)
+        drop = [0.35 * math.sin(2 * math.pi * pitch * (1 - i / RATE * 4) * i / RATE) * math.exp(-i / RATE * 45)
+                for i in range(int(RATE * 0.12))]
+        add_event(samples, start, drop)
+    return normalize(samples, 0.5)
+
+
+def sand_step(seed):
+    """Pas dans le sable : un glissement doux et granuleux."""
+    rng = random.Random(seed)
+    count = int(RATE * 0.25)
+    grains = highpass(lowpass(noise(count, rng), rng.uniform(3500, 4500)), 600)
+    samples = []
+    for i in range(count):
+        t = i / RATE
+        envelope = (1 - math.exp(-t * 120)) * math.exp(-t * 14)
+        samples.append(grains[i] * envelope)
+    return normalize(samples, 0.55)
+
+
+def tablet_chime(pitch):
+    """Note claire d'une tablette qui s'active."""
+    count = int(RATE * 1.2)
+    samples = []
+    for i in range(count):
+        t = i / RATE
+        tone = math.sin(2 * math.pi * pitch * t) + 0.4 * math.sin(2 * math.pi * pitch * 2.01 * t)
+        tone += 0.2 * math.sin(2 * math.pi * pitch * 3.02 * t)
+        samples.append(tone * math.exp(-t * 3.5) * (1 - math.exp(-t * 400)))
+    return normalize(samples, 0.6)
+
+
+def tablet_reset():
+    """Son grave et étouffé d'une séquence qui se dissipe."""
+    rng = random.Random(10)
+    count = int(RATE * 0.9)
+    rumble = lowpass(noise(count, rng), 200)
+    samples = []
+    for i in range(count):
+        t = i / RATE
+        tone = math.sin(2 * math.pi * 110 * (1 - t * 0.4) * t)
+        samples.append((tone * 0.6 + rumble[i] * 0.8) * math.exp(-t * 4) * (1 - math.exp(-t * 200)))
+    return normalize(samples, 0.6)
+
+
 def main():
     write_wav("plaine_wind.wav", wind(), loop=True)
     write_wav("plaine_lava.wav", lava(), loop=True)
@@ -237,6 +305,13 @@ def main():
     write_wav("fire_crackle.wav", fire_crackle(), loop=True)
     write_wav("fire_ignite.wav", fire_ignite())
     write_wav("stone_door.wav", stone_door())
+    write_wav("desert_wind.wav", desert_wind(), loop=True)
+    write_wav("cave_ambience.wav", cave(), loop=True)
+    for index in range(3):
+        write_wav(f"footstep_sand_{index + 1}.wav", sand_step(40 + index))
+    for index, pitch in enumerate((523.25, 659.25, 783.99)):
+        write_wav(f"tablet_chime_{index + 1}.wav", tablet_chime(pitch))
+    write_wav("tablet_reset.wav", tablet_reset())
 
 
 if __name__ == "__main__":
