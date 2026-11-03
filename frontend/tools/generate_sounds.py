@@ -293,6 +293,23 @@ def tablet_reset():
     return normalize(samples, 0.6)
 
 
+def eruption():
+    """Explosion du volcan : un coup sourd et brutal, puis un grondement qui roule pendant 6 s."""
+    rng = random.Random(12)
+    count = int(RATE * 6.5)
+    blast = lowpass(noise(count, rng), 900)
+    rumble = lowpass(lowpass(noise(count, rng), 120), 160)
+    samples = []
+    for i in range(count):
+        t = i / RATE
+        attack = 1 - math.exp(-t * 300)
+        boom = math.sin(2 * math.pi * 42 * (1 - t * 0.3) * t) * math.exp(-t * 1.6)
+        crack = blast[i] * math.exp(-t * 5)
+        roll = rumble[i] * (0.9 + 0.3 * math.sin(t * 5.3)) * math.exp(-t * 0.45)
+        samples.append((boom * 0.9 + crack * 0.8 + roll * 1.6) * attack)
+    return normalize(samples, 0.85)
+
+
 def hub():
     """Plateau du hub : une brise douce et quelques oiseaux, en boucle de 14 s."""
     rng = random.Random(11)
@@ -387,6 +404,7 @@ def main():
     for index, pitch in enumerate((523.25, 659.25, 783.99)):
         write_wav(f"tablet_chime_{index + 1}.wav", tablet_chime(pitch))
     write_wav("tablet_reset.wav", tablet_reset())
+    write_wav("volcano_eruption.wav", eruption())
     write_wav("hub_ambience.wav", hub(), loop=True)
     write_wav("village_ambience.wav", village(), loop=True)
     write_wav("stream.wav", stream(), loop=True)

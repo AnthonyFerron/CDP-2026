@@ -30,6 +30,15 @@ func _ready() -> void:
 	_close.pressed.connect(close)
 	_login.pressed.connect(_on_login_pressed)
 	_password.text_submitted.connect(_on_login_pressed.unbind(1))
+	# Boutons des deux fins, pour les voir sans finir une partie.
+	for ending: Array in [["Fin : éruption du volcan", &"eruption"], ["Fin : Codia renaît", &"victory"]]:
+		var button := Button.new()
+		button.text = ending[0]
+		button.custom_minimum_size = Vector2(0, 52)
+		button.add_theme_font_size_override("font_size", 22)
+		button.pressed.connect(_play_ending.bind(ending[1]))
+		_reset.get_parent().add_child(button)
+		_reset.get_parent().move_child(button, _reset.get_index())
 
 
 func _input(event: InputEvent) -> void:
@@ -88,6 +97,11 @@ func _fill_levels() -> void:
 func _go_to(path: String) -> void:
 	close()
 	get_tree().change_scene_to_file(path)
+
+
+func _play_ending(ending: StringName) -> void:
+	GameState.ending = ending
+	_go_to(GameState.HUB_SCENE)
 
 
 ## Le formulaire n'envoie rien : il vérifie seulement que les deux champs sont remplis.

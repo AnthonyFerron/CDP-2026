@@ -36,6 +36,8 @@ const REPAIR_SHOT := 4.0
 @onready var _repairs: Node3D = $Props/Repairs
 @onready var _repair_camera: Camera3D = $RepairCamera
 @onready var _player_camera: Camera3D = $Player/CameraPivot/SpringArm3D/Camera3D
+@onready var _volcano: Volcano = $Volcano
+@onready var _ending: HubEnding = $Ending
 
 var _life := 0.0
 
@@ -61,7 +63,25 @@ func _ready() -> void:
 	_life = float(placed_count()) / GameState.BOOK_COUNT
 	_apply_life(_life)
 	_place_player()
+	_volcano.set_state(Volcano.State.DORMANT if placed_count() >= GameState.BOOK_COUNT else Volcano.State.AWAKE)
+	if GameState.ending != &"":
+		_play_ending(GameState.ending)
+		return
 	_hud.show_message(_arrival_message())
+
+
+## Joue une fin : le joueur et l'interface s'effacent derrière la caméra de la cinématique.
+func _play_ending(ending: StringName) -> void:
+	GameState.ending = &""
+	_player.process_mode = Node.PROCESS_MODE_DISABLED
+	_hud.visible = false
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	if ending == &"victory":
+		_set_repairs(GameState.BOOK_COUNT, false)
+		_apply_life(1.0)
+		_ending.play_victory()
+	else:
+		_ending.play_eruption()
 
 
 func placed_count() -> int:
@@ -116,6 +136,8 @@ func _apply_life(life: float) -> void:
 	sky.sky_top_color = dead_sky.lerp(living_sky, life)
 	sky.sky_horizon_color = dead_horizon.lerp(living_horizon, life)
 	sky.ground_horizon_color = sky.sky_horizon_color
+	# Sous l'horizon, le ciel prolonge la brume au lieu de laisser une bande de sol vide derrière les montagnes.
+	sky.ground_bottom_color = sky.sky_horizon_color.darkened(0.15)
 	_environment.fog_light_color = dead_fog.lerp(living_fog, life)
 	_environment.fog_density = lerpf(0.014, 0.004, life)
 	_environment.ambient_light_energy = lerpf(0.5, 0.7, life)

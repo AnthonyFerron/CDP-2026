@@ -50,6 +50,8 @@ var placed_books: Array[StringName] = []
 var last_zone: StringName = &""
 var time_left := TOTAL_TIME
 var has_erupted := false
+## Fin à jouer au prochain chargement du hub : &"eruption", &"victory", ou rien. Elle n'est pas sauvegardée.
+var ending: StringName = &""
 
 var _since_save := 0.0
 

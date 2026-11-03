@@ -33,6 +33,10 @@
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_grass_2.wav" id="43_grass2"]
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_grass_3.wav" id="44_grass3"]
 [ext_resource type="AudioStream" path="res://assets/audio/tablet_chime_3.wav" id="45_chime"]
+[ext_resource type="Script" path="res://scenes/levels/hub/volcano.gd" id="47_volcano"]
+[ext_resource type="Script" path="res://scenes/levels/hub/hub_ending.gd" id="48_ending"]
+[ext_resource type="Shader" path="res://scenes/levels/plaine/lava.gdshader" id="49_lava"]
+[ext_resource type="AudioStream" path="res://assets/audio/volcano_eruption.wav" id="50_eruption"]
 [ext_resource type="AudioStream" path="res://assets/audio/stone_door.wav" id="46_rumble"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_hub"]
@@ -200,6 +204,23 @@ size = Vector3(0.5, 0.6, 12)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_hall_floor"]
 size = Vector3(20, 0.1, 12)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_flood"]
+seed = 66
+frequency = 0.03
+fractal_octaves = 3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_flood"]
+width = 256
+height = 256
+seamless = true
+noise = SubResource("FastNoiseLite_flood")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_flood"]
+render_priority = 0
+shader = ExtResource("49_lava")
+shader_parameter/flow_noise = SubResource("NoiseTexture2D_flood")
+shader_parameter/emission_strength = 3.0
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_character"]
 height = 2.0
@@ -824,6 +845,16 @@ outline_size = 14
 transform = Transform3D(1, 0, 0, 0, 0.819152, 0.573576, 0, -0.573576, 0.819152, 0, 34, 52)
 fov = 70.0
 far = 400.0
+
+[node name="Volcano" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, -4, -215)
+script = ExtResource("47_volcano")
+
+[node name="Ending" type="Node3D" parent="." node_paths=PackedStringArray("volcano")]
+script = ExtResource("48_ending")
+volcano = NodePath("../Volcano")
+eruption_sound = ExtResource("50_eruption")
+flood_material = SubResource("ShaderMaterial_flood")
 
 [node name="DefaultSpawn" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 12)
