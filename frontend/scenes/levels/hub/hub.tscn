@@ -34,6 +34,7 @@
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_grass_3.wav" id="44_grass3"]
 [ext_resource type="AudioStream" path="res://assets/audio/tablet_chime_3.wav" id="45_chime"]
 [ext_resource type="Script" path="res://scenes/levels/hub/volcano.gd" id="47_volcano"]
+[ext_resource type="PackedScene" path="res://scenes/levels/hub/hub_bunker.tscn" id="51_bunker"]
 [ext_resource type="Script" path="res://scenes/levels/hub/hub_ending.gd" id="48_ending"]
 [ext_resource type="Shader" path="res://scenes/levels/plaine/lava.gdshader" id="49_lava"]
 [ext_resource type="AudioStream" path="res://assets/audio/volcano_eruption.wav" id="50_eruption"]
@@ -115,7 +116,7 @@ radial_segments = 10
 [sub_resource type="CylinderMesh" id="CylinderMesh_hat"]
 material = SubResource("Material_robe")
 top_radius = 0.0
-bottom_radius = 0.5
+bottom_radius = 0.6
 height = 1.15
 radial_segments = 10
 
@@ -128,15 +129,15 @@ radial_segments = 12
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_band"]
 material = SubResource("Material_star")
-top_radius = 0.47
-bottom_radius = 0.5
+top_radius = 0.58
+bottom_radius = 0.61
 height = 0.1
 radial_segments = 10
 
 [sub_resource type="PrismMesh" id="PrismMesh_beard"]
 material = SubResource("Material_beard")
 left_to_right = 0.5
-size = Vector3(0.62, 0.7, 0.22)
+size = Vector3(0.56, 0.5, 0.16)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_staff"]
 material = SubResource("Material_staff")
@@ -221,6 +222,49 @@ render_priority = 0
 shader = ExtResource("49_lava")
 shader_parameter/flow_noise = SubResource("NoiseTexture2D_flood")
 shader_parameter/emission_strength = 3.0
+
+[sub_resource type="StandardMaterial3D" id="Material_ermine"]
+albedo_color = Color(0.95, 0.94, 0.9, 1)
+roughness = 1.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_crown"]
+material = SubResource("Material_gold")
+top_radius = 0.42
+bottom_radius = 0.4
+height = 0.22
+radial_segments = 10
+
+[sub_resource type="PrismMesh" id="PrismMesh_crown_spike"]
+material = SubResource("Material_gold")
+size = Vector3(0.16, 0.22, 0.07)
+
+[sub_resource type="SphereMesh" id="SphereMesh_jewel"]
+material = SubResource("Material_velvet")
+radius = 0.06
+height = 0.12
+
+[sub_resource type="BoxMesh" id="BoxMesh_cape"]
+material = SubResource("Material_velvet")
+size = Vector3(1.5, 0.9, 0.08)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_collar"]
+material = SubResource("Material_ermine")
+top_radius = 0.5
+bottom_radius = 0.58
+height = 0.14
+radial_segments = 12
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_scepter"]
+material = SubResource("Material_gold")
+top_radius = 0.035
+bottom_radius = 0.045
+height = 1.2
+radial_segments = 6
+
+[sub_resource type="SphereMesh" id="SphereMesh_scepter"]
+material = SubResource("Material_gold")
+radius = 0.1
+height = 0.2
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_character"]
 height = 2.0
@@ -615,7 +659,7 @@ omni_range = 2.5
 [node name="Characters" type="Node3D" parent="."]
 
 [node name="Merlon" type="Node3D" parent="Characters"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.2, 0, -6.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 80.4, -40, -3)
 script = ExtResource("10_readable")
 title = "Merlon"
 body = ""
@@ -623,10 +667,10 @@ prompt = "Parler à Merlon"
 radius = 3.0
 
 [node name="Model" parent="Characters/Merlon" instance=ExtResource("14_human")]
-transform = Transform3D(1.91511, 0, -1.60697, 0, 2.5, 0, 1.60697, 0, 1.91511, 0, 0, 0)
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, -0, 0, 2.5, 0, 0, 0)
 
 [node name="Name" type="Label3D" parent="Characters/Merlon"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.45, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
 pixel_size = 0.004
 billboard = 1
 modulate = Color(0.6, 0.4, 1, 1)
@@ -641,18 +685,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CylinderShape3D_character")
 
 [node name="Codeon" type="Node3D" parent="Characters"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.4, 0, -85.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 75.6, -40, -3)
 script = ExtResource("10_readable")
 title = "Codeon V, roi de Codia"
-body = "Mon royaume n'est plus que ruines, Devlyn, et voilà que le volcan menace d'emporter ce qu'il en reste. Tu as déjà sauvé ces terres des Quatre Dragons du Chaos. Je n'ai pas le droit de te le demander une seconde fois… et pourtant, je le fais."
+body = ""
 prompt = "Parler au roi"
 radius = 3.0
 
-[node name="Model" parent="Characters/Codeon" instance=ExtResource("16_king")]
-transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, -0, 0, 2.4, 0, 0.1, 0)
+[node name="Model" parent="Characters/Codeon" instance=ExtResource("14_human")]
+transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, -0, 0, 2.4, 0, 0, 0)
 
 [node name="Name" type="Label3D" parent="Characters/Codeon"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
 pixel_size = 0.004
 billboard = 1
 modulate = Color(1, 0.85, 0.4, 1)
@@ -667,7 +711,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CylinderShape3D_character")
 
 [node name="Mira" type="Node3D" parent="Characters"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.8, 0, 4.8)
+transform = Transform3D(0.34202, 0, 0.939693, 0, 1, 0, -0.939693, 0, 0.34202, 70.6, -40, -1.6)
 script = ExtResource("10_readable")
 title = "Mira, l'éclaireuse"
 body = "Depuis la guerre, plus rien ne pousse sur ce plateau. Mais on raconte que les livres de Codia gardent la mémoire du monde d'avant. S'ils reviennent, peut-être que la terre se souviendra."
@@ -675,7 +719,7 @@ prompt = "Parler à Mira"
 radius = 3.0
 
 [node name="Model" parent="Characters/Mira" instance=ExtResource("13_archer")]
-transform = Transform3D(-1.54269, 0, 1.83851, 0, 2.4, 0, -1.83851, 0, -1.54269, 0, 0, 0)
+transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, -0, 0, 2.4, 0, 0, 0)
 
 [node name="Name" type="Label3D" parent="Characters/Mira"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
@@ -693,7 +737,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CylinderShape3D_character")
 
 [node name="Bran" type="Node3D" parent="Characters"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.6, 0, -2.2)
+transform = Transform3D(6.12323e-17, 0, -1, 0, 1, 0, 1, 0, 6.12323e-17, 85, -40, -0.8)
 script = ExtResource("10_readable")
 title = "Bran, le forgeron"
 body = "Les portails se sont rallumés le jour où Merlon est arrivé. Chacun mène à une terre perdue. Fais attention, Devlyn : ce qui reste là-bas n'a rien d'accueillant."
@@ -701,7 +745,7 @@ prompt = "Parler à Bran"
 radius = 3.0
 
 [node name="Model" parent="Characters/Bran" instance=ExtResource("14_human")]
-transform = Transform3D(-0.820848, 0, -2.25526, 0, 2.4, 0, 2.25526, 0, -0.820848, 0, 0, 0)
+transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, -0, 0, 2.4, 0, 0, 0)
 
 [node name="Name" type="Label3D" parent="Characters/Bran"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
@@ -718,8 +762,60 @@ outline_size = 12
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CylinderShape3D_character")
 
+[node name="Elda" type="Node3D" parent="Characters"]
+transform = Transform3D(0.34202, 0, 0.939693, 0, 1, 0, -0.939693, 0, 0.34202, 75, -40, 3.2)
+script = ExtResource("10_readable")
+title = "Elda, la tisserande"
+body = "Nous vivons ici depuis la guerre, serrés comme des grains dans un sac. Si tu rapportes ces livres, nous pourrons remonter vivre au soleil."
+prompt = "Parler à Elda"
+radius = 3.0
+
+[node name="Model" parent="Characters/Elda" instance=ExtResource("14_human")]
+transform = Transform3D(2.3, 0, 0, 0, 2.3, 0, -0, 0, 2.3, 0, 0, 0)
+
+[node name="Name" type="Label3D" parent="Characters/Elda"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
+pixel_size = 0.004
+billboard = 1
+modulate = Color(1, 0.8, 0.5, 1)
+text = "Elda"
+font_size = 64
+outline_size = 12
+
+[node name="Body" type="StaticBody3D" parent="Characters/Elda"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Characters/Elda/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CylinderShape3D_character")
+
+[node name="Tom" type="Node3D" parent="Characters"]
+transform = Transform3D(-0.34202, 0, -0.939693, 0, 1, 0, 0.939693, 0, -0.34202, 82.2, -40, 3)
+script = ExtResource("10_readable")
+title = "Tom, l'apprenti"
+body = "Le roi dit que tu as vaincu les Quatre Dragons du Chaos. C'est vrai ? Moi, un jour, je partirai aussi par les portails."
+prompt = "Parler à Tom"
+radius = 3.0
+
+[node name="Model" parent="Characters/Tom" instance=ExtResource("13_archer")]
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, -0, 0, 2.2, 0, 0, 0)
+
+[node name="Name" type="Label3D" parent="Characters/Tom"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
+pixel_size = 0.004
+billboard = 1
+modulate = Color(1, 0.8, 0.5, 1)
+text = "Tom"
+font_size = 64
+outline_size = 12
+
+[node name="Body" type="StaticBody3D" parent="Characters/Tom"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Characters/Tom/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CylinderShape3D_character")
+
 [node name="Garde" type="Node3D" parent="Characters"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 0, -45.5)
+transform = Transform3D(0.939693, 0, -0.34202, 0, 1, 0, 0.34202, 0, 0.939693, 4.6, 0, -45.5)
 script = ExtResource("10_readable")
 title = "Aldric, garde du château"
 body = "Halte, Devlyn ! Non, passe, passe… Le roi t'attend dans la salle des livres, au fond du donjon. Quatre piédestaux y ont été dressés pour les ouvrages que Merlon a vus en songe."
@@ -727,7 +823,7 @@ prompt = "Parler au garde"
 radius = 3.0
 
 [node name="Model" parent="Characters/Garde" instance=ExtResource("16_king")]
-transform = Transform3D(2.25526, 0, -0.820848, 0, 2.4, 0, 0.820848, 0, 2.25526, 0, 0, 0)
+transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, -0, 0, 2.4, 0, 0, 0)
 
 [node name="Name" type="Label3D" parent="Characters/Garde"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
@@ -745,26 +841,25 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CylinderShape3D_character")
 
 [node name="Wizard" type="Node3D" parent="Characters/Merlon"]
-transform = Transform3D(0.766044, 0, -0.642788, 0, 1, 0, 0.642788, 0, 0.766044, 0, 0, 0)
 
 [node name="Robe" type="MeshInstance3D" parent="Characters/Merlon/Wizard"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0.02)
 mesh = SubResource("CylinderMesh_robe")
 
 [node name="Brim" type="MeshInstance3D" parent="Characters/Merlon/Wizard"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.98, 0.02)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.58, 0.05)
 mesh = SubResource("CylinderMesh_brim")
 
 [node name="Band" type="MeshInstance3D" parent="Characters/Merlon/Wizard"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.06, 0.02)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.66, 0.05)
 mesh = SubResource("CylinderMesh_band")
 
 [node name="Hat" type="MeshInstance3D" parent="Characters/Merlon/Wizard"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.58, 0.02)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.17, 0.05)
 mesh = SubResource("CylinderMesh_hat")
 
 [node name="Beard" type="MeshInstance3D" parent="Characters/Merlon/Wizard"]
-transform = Transform3D(1, 0, 0, 0, -1, 0, 0, 0, 1, 0, 1, 0.36)
+transform = Transform3D(1, 0, 0, 0, -1, 0, 0, 0, 1, 0, 0.97, 0.5)
 mesh = SubResource("PrismMesh_beard")
 
 [node name="Staff" type="MeshInstance3D" parent="Characters/Merlon/Wizard"]
@@ -780,6 +875,69 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.95, 2.6, 0.15)
 light_color = Color(0.65, 0.45, 1, 1)
 light_energy = 1.4
 omni_range = 4.0
+
+[node name="Royal" type="Node3D" parent="Characters/Codeon"]
+
+[node name="Crown" type="MeshInstance3D" parent="Characters/Codeon/Royal"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.84, 0.05)
+mesh = SubResource("CylinderMesh_crown")
+
+[node name="Collar" type="MeshInstance3D" parent="Characters/Codeon/Royal"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.86, 0)
+mesh = SubResource("CylinderMesh_collar")
+
+[node name="Cape" type="MeshInstance3D" parent="Characters/Codeon/Royal"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.47, -0.44)
+mesh = SubResource("BoxMesh_cape")
+
+[node name="Scepter" type="MeshInstance3D" parent="Characters/Codeon/Royal"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.95, 0.75, 0.12)
+mesh = SubResource("CylinderMesh_scepter")
+
+[node name="ScepterTop" type="MeshInstance3D" parent="Characters/Codeon/Royal"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.95, 1.38, 0.12)
+mesh = SubResource("SphereMesh_scepter")
+
+[node name="Spike0" type="MeshInstance3D" parent="Characters/Codeon/Royal"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 2.2656e-17, 2.04, 0.42)
+mesh = SubResource("PrismMesh_crown_spike")
+
+[node name="Spike1" type="MeshInstance3D" parent="Characters/Codeon/Royal"]
+transform = Transform3D(0.309017, 0, -0.951057, 0, 1, 0, 0.951057, 0, 0.309017, -0.351891, 2.04, 0.164336)
+mesh = SubResource("PrismMesh_crown_spike")
+
+[node name="Spike2" type="MeshInstance3D" parent="Characters/Codeon/Royal"]
+transform = Transform3D(-0.809017, 0, -0.587785, 0, 1, 0, 0.587785, 0, -0.809017, -0.217481, 2.04, -0.249336)
+mesh = SubResource("PrismMesh_crown_spike")
+
+[node name="Spike3" type="MeshInstance3D" parent="Characters/Codeon/Royal"]
+transform = Transform3D(-0.809017, 0, 0.587785, 0, 1, 0, -0.587785, 0, -0.809017, 0.217481, 2.04, -0.249336)
+mesh = SubResource("PrismMesh_crown_spike")
+
+[node name="Spike4" type="MeshInstance3D" parent="Characters/Codeon/Royal"]
+transform = Transform3D(0.309017, 0, 0.951057, 0, 1, 0, -0.951057, 0, 0.309017, 0.351891, 2.04, 0.164336)
+mesh = SubResource("PrismMesh_crown_spike")
+
+[node name="Jewel" type="MeshInstance3D" parent="Characters/Codeon/Royal"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.86, 0.47)
+mesh = SubResource("SphereMesh_jewel")
+
+[node name="Spots" type="Node3D" parent="."]
+
+[node name="MerlonBunker" type="Marker3D" parent="Spots"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 80.4, -40, -3)
+
+[node name="KingBunker" type="Marker3D" parent="Spots"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 75.6, -40, -3)
+
+[node name="MerlonCamp" type="Marker3D" parent="Spots"]
+transform = Transform3D(0.766044, 0, -0.642788, 0, 1, 0, 0.642788, 0, 0.766044, 4.2, 0, -6.4)
+
+[node name="MerlonCastle" type="Marker3D" parent="Spots"]
+transform = Transform3D(-0.34202, 0, -0.939693, 0, 1, 0, 0.939693, 0, -0.34202, 7.5, 0, -79.5)
+
+[node name="KingThrone" type="Marker3D" parent="Spots"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 3.4, 0.1, -85.2)
 
 [node name="MerlonLight" type="OmniLight3D" parent="Characters/Merlon"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0.6)
@@ -829,8 +987,43 @@ light_range = 8.0
 [node name="Bunker" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 73.6, 1.2, 0)
 script = ExtResource("9_interactable")
-prompt = "Examiner la porte du bunker"
+prompt = "Descendre dans le bunker"
 radius = 3.5
+
+[node name="BunkerOutside" type="Marker3D" parent="."]
+transform = Transform3D(6.12323e-17, 0, -1, 0, 1, 0, 1, 0, 6.12323e-17, 70.6, 0.3, 0)
+
+[node name="BunkerInterior" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 78, -40, 0)
+
+[node name="Shelter" parent="BunkerInterior" instance=ExtResource("51_bunker")]
+
+[node name="Spawn" type="Marker3D" parent="BunkerInterior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 4.2)
+
+[node name="Exit" type="Node3D" parent="BunkerInterior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 5.6)
+script = ExtResource("9_interactable")
+prompt = "Remonter à la surface"
+radius = 2.4
+
+[node name="LightNorth" type="OmniLight3D" parent="BunkerInterior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 3.2, -3)
+light_color = Color(1, 0.74, 0.46, 1)
+light_energy = 2.2
+omni_range = 10.0
+
+[node name="LightSouth" type="OmniLight3D" parent="BunkerInterior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 3.2, 2.5)
+light_color = Color(1, 0.74, 0.46, 1)
+light_energy = 2
+omni_range = 10.0
+
+[node name="LightTable" type="OmniLight3D" parent="BunkerInterior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.6, 3.2, 2)
+light_color = Color(1, 0.74, 0.46, 1)
+light_energy = 1.4
+omni_range = 10.0
 
 [node name="BunkerLabel" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 75.5, 7, 0)
@@ -861,7 +1054,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 12)
 
 [node name="Player" parent="." instance=ExtResource("7_player")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0.3, 12)
-respawn_height = -30.0
+respawn_height = -80.0
 first_person = true
 footstep_sounds = Array[AudioStream]([ExtResource("42_grass1"), ExtResource("43_grass2"), ExtResource("44_grass3")])
 

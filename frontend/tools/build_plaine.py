@@ -35,6 +35,11 @@ def rotation_x(degrees):
     return [[1, 0, 0], [0, c, -s], [0, s, c]]
 
 
+def rotation_z(degrees):
+    c, s = math.cos(math.radians(degrees)), math.sin(math.radians(degrees))
+    return [[c, -s, 0], [s, c, 0], [0, 0, 1]]
+
+
 def multiply(a, b):
     return [[sum(a[r][i] * b[i][c] for i in range(3)) for c in range(3)] for r in range(3)]
 
@@ -61,8 +66,8 @@ class Scene:
         key = tuple(round(v, 3) for v in size)
         return self.boxes.setdefault(key, f"BoxShape3D_{len(self.boxes) + 1}")
 
-    def add(self, model, position, degrees=0.0, scale=1.0, tilt=0.0):
-        basis = multiply(rotation_y(degrees), rotation_x(tilt))
+    def add(self, model, position, degrees=0.0, scale=1.0, tilt=0.0, roll=0.0):
+        basis = multiply(multiply(rotation_y(degrees), rotation_x(tilt)), rotation_z(roll))
         basis = [[value * scale for value in row] for row in basis]
         name = model.rsplit("/", 1)[-1].replace("-", "_")
         self.visuals.append((name, f"{KENNEY}/{model}.glb", transform_text(basis, position)))
@@ -187,24 +192,48 @@ MODEL_BOXES = {
     "castle_kit/siege-catapult": ((-1.42, -0.2, -0.47), (2.15, 1.38, 0.94)),
     "castle_kit/tree-large": ((-0.44, 0.0, -0.44), (0.89, 1.85, 0.89)),
     "castle_kit/tree-small": ((-0.37, 0.0, -0.36), (0.74, 1.35, 0.72)),
+    "fantasy_town_kit/pillar-stone": ((-0.08, 0.0, -0.08), (0.16, 1.0, 0.16)),
+    "fantasy_town_kit/cart": ((-0.32, 0.0, -0.64), (0.65, 0.54, 1.34)),
+    "fantasy_town_kit/wheel": ((0.2, 0.0, -0.23), (0.24, 0.48, 0.47)),
+    "fantasy_town_kit/poles-horizontal": ((0.4, 0.0, -0.5), (0.1, 1.0, 1.0)),
+    "fantasy_town_kit/planks": ((-0.5, 0.0, -0.5), (1.0, 0.06, 1.0)),
+    "fantasy_town_kit/planks-half": ((0.0, 0.0, -0.5), (0.5, 0.06, 1.0)),
+    "castle_kit/gate": ((-0.08, 0.0, -0.33), (0.15, 0.91, 0.66)),
+    "mini_arena/column-damaged": ((-0.3, 0.0, -0.3), (0.6, 0.72, 0.6)),
+    "furniture_kit/bedBunk": ((-0.06, -0.13, -1.89), (1.62, 0.98, 1.89)),
+    "furniture_kit/bookcaseClosed": ((0.0, 0.0, -0.25), (0.4, 0.85, 0.25)),
+    "furniture_kit/tableCross": ((0.0, 0.0, -1.07), (2.03, 0.83, 1.07)),
+    "furniture_kit/benchCushionLow": ((-0.01, 0.0, -0.21), (0.42, 0.2, 0.22)),
+    "graveyard_kit/lantern-candle": ((-0.12, 0.0, -0.12), (0.24, 0.39, 0.24)),
+    "survival_kit/bedroll": ((-0.16, 0.0, -0.3), (0.31, 0.13, 0.61)),
+    "survival_kit/workbench": ((-0.15, 0.0, -0.15), (0.3, 0.24, 0.3)),
 }
 
 
-def furniture(scene, model, center, degrees=0.0, scale=2.6, height=None, tilt=0.0):
-    """Pose un modèle centré sur le point donné, posé au sol, avec une collision de sa taille si une hauteur est donnée."""
+def furniture(scene, model, center, degrees=0.0, scale=2.6, height=None, tilt=0.0, roll=0.0):
+    """Pose un modèle centré sur le point donné et posé au sol, même renversé : sa boîte tournée touche le sol
+    par son point le plus bas. Une hauteur donne une collision de la taille de la boîte tournée."""
     (px, py, pz), (sx, sy, sz) = MODEL_BOXES[model]
-    local_x, local_z = (px + sx / 2) * scale, (pz + sz / 2) * scale
-    c, s = math.cos(math.radians(degrees)), math.sin(math.radians(degrees))
-    # Rotation autour de y : x' = c x + s z, z' = -s x + c z.
-    x = center[0] - (c * local_x + s * local_z)
-    z = center[2] - (-s * local_x + c * local_z)
-    scene.add(model, (x, center[1] - py * scale, z), degrees, scale, tilt=tilt)
+    basis = multiply(multiply(rotation_y(degrees), rotation_x(tilt)), rotation_z(roll))
+    corners = []
+    for cx in (px, px + sx):
+        for cy in (py, py + sy):
+            for cz in (pz, pz + sz):
+                local = (cx * scale, cy * scale, cz * scale)
+                corners.append([sum(basis[r][i] * local[i] for i in range(3)) for r in range(3)])
+    low = [min(c[i] for c in corners) for i in range(3)]
+    high = [max(c[i] for c in corners) for i in range(3)]
+    x = center[0] - (low[0] + high[0]) / 2
+    z = center[2] - (low[2] + high[2]) / 2
+    scene.add(model, (x, center[1] - low[1], z), degrees, scale, tilt=tilt, roll=roll)
     if height:
-        if round(degrees) % 90:
+        size = [high[i] - low[i] for i in range(3)]
+        if tilt or roll:
+            height = size[1]
+        if round(degrees) % 90 and not tilt and not roll:
             scene.add_box((center[0], center[1] + height / 2, center[2]), (sx * scale, height, sz * scale), degrees)
         else:
-            width, depth = (sx * scale, sz * scale) if round(degrees) % 180 == 0 else (sz * scale, sx * scale)
-            scene.add_box((center[0], center[1] + height / 2, center[2]), (width, height, depth))
+            scene.add_box((center[0], center[1] + height / 2, center[2]), (size[0], height, size[2]))
 
 
 def against_wall(scene, model, point, inward, along_offset=0.0, scale=3.2, width=0.8, depth=0.25, height=0.8):
@@ -262,7 +291,7 @@ def build_ruins():
     for x in (-6.0, -2.4, 2.4, 6.0):
         scene.add("fantasy_town_kit/pillar-stone", (x, 0.0, front + 3.0), 0.0, 8.0)
         scene.add_box((x, 4.0, front + 3.0), (1.3, 8.0, 1.3))
-    scene.add("fantasy_town_kit/pillar-stone", (11.0, 0.5, 11.0), 40.0, 7.0, tilt=84.0)
+    furniture(scene, "fantasy_town_kit/pillar-stone", (11.0, 0.0, 11.0), 40.0, 7.0, tilt=90.0)
 
     # Bannières et lanternes qui encadrent l'entrée.
     scene.add("fantasy_town_kit/banner-red", (-1.8, 2.6, front + 0.15), -90.0, 3.0)

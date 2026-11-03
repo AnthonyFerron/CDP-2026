@@ -243,6 +243,8 @@ func _on_puzzle_validated(correct: bool) -> void:
 
 
 func _on_book_taken() -> void:
+	# Le livre vole jusqu'à la main du joueur, qui le garde jusqu'au château.
+	_player.receive_book(BOOK_ID, _book.global_position)
 	_book.hide()
 	_book_pickup.enabled = false
 	_portal.is_open = true

@@ -79,18 +79,27 @@ def build_house(scene, rng, number, house):
         for sz in (-1, 1):
             for floor in range(floors):
                 scene.add(pillar, (cx + sx * half_w, floor * WALL_HEIGHT, cz + sz * half_d), 0.0, WALL_SCALE)
-    # Poutres calcinées en travers des maisons sans toit.
+    # Poutres calcinées tombées au sol, en travers des maisons sans toit.
     for beam in range(rng.randint(1, 3)):
-        x = cx + rng.uniform(-half_w + 1, half_w - 1)
-        tilt = rng.uniform(-25.0, 25.0)
-        scene.add("fantasy_town_kit/poles-horizontal", (x, WALL_HEIGHT * floors - 1.5, cz), 0.0, WALL_SCALE, tilt=tilt)
+        point = (cx + rng.uniform(-half_w + 1.5, half_w - 1.5), 0.0, cz + rng.uniform(-half_d + 1.5, half_d - 1.5))
+        furniture(scene, "fantasy_town_kit/poles-horizontal", point, rng.uniform(0, 180), 3.0, tilt=90.0)
+    # Plancher arraché par endroits, affleurant le sol.
+    for column in range(width):
+        for row in range(depth):
+            x = cx - (width - 1) * TILE / 2 + column * TILE
+            z = cz - (depth - 1) * TILE / 2 + row * TILE
+            roll = rng.random()
+            if roll < 0.55:
+                scene.add("fantasy_town_kit/planks", (x, -0.2, z), rng.choice((0.0, 90.0)), TILE)
+            elif roll < 0.85:
+                scene.add("fantasy_town_kit/planks-half", (x - TILE * 0.25, -0.2, z), 0.0, TILE)
     if number in FURNISHED:
         scene.add("furniture_kit/bedSingle", (cx - half_w + 1.0, 0.0, cz + half_d - 1.0), 180.0, 2.4)
         scene.add_box((cx - half_w + 2.9, 0.6, cz + half_d - 3.3), (3.9, 1.2, 4.5))
         scene.add("furniture_kit/tableCloth", (cx + 0.4, 0.0, cz - 0.8), 15.0, 3.0)
         scene.add_box((cx + 1.6, 0.5, cz - 1.4), (2.6, 1.0, 1.5), 15.0)
         for x, z, degrees in ((cx + 0.6, cz + 0.8, 0.0), (cx + 2.6, cz - 2.4, 120.0)):
-            scene.add("furniture_kit/chair", (x, 0.0, z), degrees, 3.0, tilt=rng.choice((0.0, 0.0, 85.0)))
+            furniture(scene, "furniture_kit/chair", (x, 0.0, z), degrees, 3.0, tilt=rng.choice((0.0, 0.0, 90.0)))
 
 
 def build_rampart(scene, rng):
@@ -117,7 +126,7 @@ def build_rampart(scene, rng):
         for model, y in (("tower-square-base", 0.0), ("tower-square-mid", 4.0), ("tower-square-top", 8.0)):
             scene.add(f"castle_kit/{model}", (x, y, south), 0.0, RAMPART)
         scene.add_box((x, 4.6, south), (4.0, 9.2, 4.0))
-    scene.add("castle_kit/gate", (2.5, 0.25, south + 5.0), 70.0, 5.0, tilt=88.0)
+    furniture(scene, "castle_kit/gate", (2.5, 0.0, south + 5.0), 70.0, 5.0, roll=90.0)
     scene.add("castle_kit/siege-tower-demolished", (-16.0, 0.0, 52.0), 30.0, 4.0)
     scene.add_box((-16.0, 2.0, 52.0), (8.0, 4.0, 7.0), 30.0)
     scene.add("castle_kit/siege-ram-demolished", (14.0, 0.0, 50.0), -20.0, 4.0)
@@ -131,9 +140,9 @@ def build_streets(scene, rng):
     for x, z, degrees, model in ((-7.0, -9.0, 20.0, "stall-red"), (7.5, -9.5, -15.0, "stall-green"), (8.5, 4.0, 200.0, "stall")):
         scene.add(f"fantasy_town_kit/{model}", (x, 0.0, z), degrees, 3.0)
         scene.add_box((x, 1.5, z), (3.0, 3.0, 3.0), degrees)
-    scene.add("fantasy_town_kit/cart", (-7.5, 0.6, 4.5), 60.0, 3.0, tilt=80.0)
+    furniture(scene, "fantasy_town_kit/cart", (-7.5, 0.0, 4.5), 60.0, 3.0, roll=90.0)
     scene.add_box((-7.5, 0.8, 4.5), (2.0, 1.6, 4.0), 60.0)
-    scene.add("fantasy_town_kit/wheel", (-5.0, 0.0, 6.5), 30.0, 3.0, tilt=90.0)
+    furniture(scene, "fantasy_town_kit/wheel", (-5.0, 0.0, 6.5), 30.0, 3.0, tilt=90.0)
     for model, x, z in (("apple", -6.0, -7.0), ("apple", -5.4, -6.4), ("carrot", 6.0, -7.4), ("bread", 7.2, 6.0),
                         ("cheese", -4.2, 5.6), ("apple", 5.0, 2.8), ("carrot", -8.0, -10.5)):
         scene.add(f"food_kit/{model}", (x, 0.0, z), rng.uniform(0, 360), 2.5, tilt=rng.choice((0.0, 90.0)))

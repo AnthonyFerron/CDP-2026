@@ -29,8 +29,17 @@ extends CharacterBody3D
 @export var stride_length := 1.9
 @export var footstep_volume_db := -6.0
 
+## Place du livre tenu en main, dans le repère de la caméra : en bas à droite de la vue.
+const HELD_BOOK_POSITION := Vector3(0.36, -0.3, -0.78)
+const HELD_BOOK_ROTATION := Vector3(deg_to_rad(28.0), deg_to_rad(-38.0), deg_to_rad(-12.0))
+const HELD_BOOK_SCALE := 0.28
+## Durée du vol d'un livre entre la main et le monde.
+const BOOK_FLIGHT := 1.1
+
 ## Multiplie la vitesse, par exemple pour ralentir le joueur dans l'eau.
 var speed_multiplier := 1.0
+var _held_book: Node3D
+var _bob := 0.0
 var _spawn_position: Vector3
 var _stride := 0.0
 var _footsteps: AudioStreamPlayer
@@ -50,6 +59,15 @@ func _ready() -> void:
 		_footsteps.volume_db = footstep_volume_db
 		add_child(_footsteps)
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	if first_person:
+		_held_book = Node3D.new()
+		_held_book.position = HELD_BOOK_POSITION
+		_held_book.rotation = HELD_BOOK_ROTATION
+		_held_book.visible = false
+		_spring_arm.get_node("Camera3D").add_child(_held_book)
+		var carried := GameState.carried_books()
+		if not carried.is_empty():
+			_hold(carried.back())
 
 
 func _use_first_person() -> void:
@@ -105,6 +123,122 @@ func _physics_process(delta: float) -> void:
 	elif direction != Vector3.ZERO:
 		var target_yaw := atan2(-direction.x, -direction.z)
 		_visual.rotation.y = lerp_angle(_visual.rotation.y, target_yaw, turn_speed * delta)
+
+
+func _process(delta: float) -> void:
+	if not _held_book or not _held_book.visible:
+		return
+	# Le livre se balance un peu au rythme des pas.
+	var speed := Vector2(velocity.x, velocity.z).length()
+	_bob += delta * (2.0 + speed * 1.6)
+	var swing := minf(speed / walk_speed, 1.0)
+	_held_book.position = HELD_BOOK_POSITION + Vector3(cos(_bob * 0.5) * 0.008 * swing, sin(_bob) * (0.004 + 0.012 * swing), 0.0)
+
+
+## Le livre ramassé vole jusqu'à la main du joueur, en tournant, puis reste visible en bas de la vue.
+func receive_book(book_id: StringName, from: Vector3) -> void:
+	if not _held_book:
+		return
+	_held_book.visible = false
+	var flying := _book_model(book_id, true)
+	flying.top_level = true
+	add_child(flying)
+	flying.global_position = from
+	var tween := create_tween()
+	tween.tween_method(_fly.bind(flying, from, true), 0.0, 1.0, BOOK_FLIGHT)
+	tween.tween_callback(flying.queue_free)
+	tween.tween_callback(_hold.bind(book_id))
+	await tween.finished
+
+
+## Le livre quitte la main et vole jusqu'au point donné, par exemple son piédestal.
+func give_book(book_id: StringName, to: Vector3) -> void:
+	if not _held_book:
+		return
+	var start := _held_book.global_position
+	_held_book.visible = false
+	var flying := _book_model(book_id, true)
+	flying.top_level = true
+	add_child(flying)
+	flying.global_position = start
+	var tween := create_tween()
+	tween.tween_method(_fly_to.bind(flying, start, to), 0.0, 1.0, BOOK_FLIGHT * 0.8)
+	tween.tween_callback(flying.queue_free)
+	await tween.finished
+
+
+func _fly(t: float, flying: Node3D, from: Vector3, _to_hand: bool) -> void:
+	var eased := ease(t, -1.8)
+	var target := _held_book.global_position
+	flying.global_position = from.lerp(target, eased) + Vector3.UP * sin(t * PI) * 0.9
+	flying.rotation = Vector3(t * TAU * 0.5, t * TAU * 1.5, 0.0)
+	flying.scale = Vector3.ONE * lerpf(1.0, HELD_BOOK_SCALE, eased)
+
+
+func _fly_to(t: float, flying: Node3D, from: Vector3, to: Vector3) -> void:
+	var eased := ease(t, -1.8)
+	flying.global_position = from.lerp(to, eased) + Vector3.UP * sin(t * PI) * 0.6
+	flying.rotation = Vector3(0.0, t * TAU, 0.0)
+	flying.scale = Vector3.ONE * lerpf(HELD_BOOK_SCALE, 1.0, eased)
+
+
+## Montre le livre en main, avec un petit rebond à son arrivée.
+func _hold(book_id: StringName) -> void:
+	for child in _held_book.get_children():
+		child.queue_free()
+	_held_book.add_child(_book_model(book_id, false))
+	_held_book.visible = true
+	_held_book.scale = Vector3.ONE * 0.2
+	create_tween().tween_property(_held_book, "scale", Vector3.ONE * HELD_BOOK_SCALE, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+
+## Cache le livre en main : il vient d'être posé.
+func drop_held_book() -> void:
+	if _held_book:
+		_held_book.visible = false
+
+
+## Un livre ancien : couverture à la couleur du livre, tranche de pages claire, et une lueur s'il vole.
+func _book_model(book_id: StringName, glowing: bool) -> Node3D:
+	var color: Color = GameState.BOOK_COLORS.get(book_id, Color(0.4, 0.2, 0.1))
+	var book := Node3D.new()
+	var cover_material := StandardMaterial3D.new()
+	cover_material.albedo_color = color
+	cover_material.emission_enabled = true
+	cover_material.emission = color
+	cover_material.emission_energy_multiplier = 1.5 if glowing else 0.12
+	var cover := MeshInstance3D.new()
+	var cover_mesh := BoxMesh.new()
+	cover_mesh.size = Vector3(0.55, 0.14, 0.75)
+	cover_mesh.material = cover_material
+	cover.mesh = cover_mesh
+	book.add_child(cover)
+	var pages_material := StandardMaterial3D.new()
+	pages_material.albedo_color = Color(0.93, 0.88, 0.74)
+	var pages := MeshInstance3D.new()
+	var pages_mesh := BoxMesh.new()
+	pages_mesh.size = Vector3(0.52, 0.1, 0.7)
+	pages_mesh.material = pages_material
+	pages.mesh = pages_mesh
+	pages.position.x = 0.025
+	book.add_child(pages)
+	var clasp_material := StandardMaterial3D.new()
+	clasp_material.albedo_color = Color(0.9, 0.72, 0.3)
+	clasp_material.metallic = 0.7
+	var clasp := MeshInstance3D.new()
+	var clasp_mesh := BoxMesh.new()
+	clasp_mesh.size = Vector3(0.08, 0.16, 0.2)
+	clasp_mesh.material = clasp_material
+	clasp.mesh = clasp_mesh
+	clasp.position.x = 0.28
+	book.add_child(clasp)
+	if glowing:
+		var light := OmniLight3D.new()
+		light.light_color = color.lightened(0.5)
+		light.light_energy = 2.0
+		light.omni_range = 3.0
+		book.add_child(light)
+	return book
 
 
 func _update_footsteps(delta: float) -> void:

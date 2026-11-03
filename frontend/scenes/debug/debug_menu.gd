@@ -96,6 +96,9 @@ func _fill_levels() -> void:
 
 func _go_to(path: String) -> void:
 	close()
+	# Aller droit dans une zone saute l'introduction du bunker : la mission commence.
+	if path != GameState.HUB_SCENE:
+		GameState.begin_mission()
 	get_tree().change_scene_to_file(path)
 
 

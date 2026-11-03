@@ -8,7 +8,7 @@ pour un changement durable, modifier ce script puis le relancer depuis le dossie
 
 from pathlib import Path
 
-from build_plaine import Scene
+from build_plaine import Scene, furniture
 
 OUTPUT_DIR = Path(__file__).resolve().parent.parent / "scenes" / "levels" / "desert"
 GATE_SCALE = 5.0
@@ -54,7 +54,7 @@ def build_sanctuary(scene):
         scene.add("mini_arena/banner", (x, 0.0, -17.5), 0.0, 3.4)
     scene.add("castle_kit/rocks-small", (12.5, 0.0, -9.0), 30.0, 2.5)
     scene.add("mini_arena/bricks", (-12.0, 0.0, -1.0), 70.0, 3.2)
-    scene.add("mini_arena/column-damaged", (6.5, 0.6, 6.5), 0.0, 3.0, tilt=85.0)
+    furniture(scene, "mini_arena/column-damaged", (6.5, 0.0, 6.5), 0.0, 3.0, tilt=90.0)
     scene.add("survival_kit/floor-hole", (0.0, 0.03, -6.0), 0.0, 5.0)
 
 

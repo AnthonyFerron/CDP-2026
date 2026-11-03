@@ -1,7 +1,9 @@
 class_name Hub
 extends Node3D
-## Hub : le village de Codia, d'où partent les portails des zones. Merlon y donne la mission, les livres
-## se posent sur leurs piédestaux dans la salle du château, et le village se reconstruit à chaque livre posé.
+## Hub : le village de Codia, d'où partent les portails des zones. La partie commence dans le bunker, où les
+## survivants s'abritent : le roi et Merlon y confient la mission. Les livres se posent sur leurs piédestaux,
+## dans la salle du château, et le village se reconstruit à chaque livre posé. Quand les quatre y sont, Merlon
+## accomplit le rituel au château.
 
 const ZONES: Array[StringName] = [&"plaine", &"desert", &"marais", &"village"]
 const ZONE_NAMES := {
@@ -14,6 +16,8 @@ const ZONE_NAMES := {
 const RETURN_DISTANCE := 3.5
 ## Durée du plan large sur le village qui se reconstruit, en secondes.
 const REPAIR_SHOT := 4.0
+## Les deux personnages à écouter avant de sortir du bunker la première fois.
+const INTRO_SPEAKERS: Array[StringName] = [&"Codeon", &"Merlon"]
 
 @export_group("Ciel sans livre")
 @export var dead_sky := Color(0.3, 0.29, 0.36)
@@ -31,7 +35,11 @@ const REPAIR_SHOT := 4.0
 @onready var _terrain: HubTerrain = $Terrain
 @onready var _scatter: HubScatter = $Scatter
 @onready var _merlon: Readable = $Characters/Merlon
+@onready var _king: Readable = $Characters/Codeon
 @onready var _bunker: Interactable = $Bunker
+@onready var _bunker_exit: Interactable = $BunkerInterior/Exit
+@onready var _bunker_spawn: Marker3D = $BunkerInterior/Spawn
+@onready var _bunker_outside: Marker3D = $BunkerOutside
 @onready var _default_spawn: Marker3D = $DefaultSpawn
 @onready var _repairs: Node3D = $Props/Repairs
 @onready var _repair_camera: Camera3D = $RepairCamera
@@ -40,6 +48,10 @@ const REPAIR_SHOT := 4.0
 @onready var _ending: HubEnding = $Ending
 
 var _life := 0.0
+var _inside := false
+var _busy := false
+## Personnages de l'introduction déjà écoutés.
+var _heard: Array[StringName] = []
 
 
 func _ready() -> void:
@@ -49,7 +61,8 @@ func _ready() -> void:
 	for character: Readable in $Characters.get_children():
 		character.interacted.connect(_read.bind(character))
 	$Castle/Inscription.interacted.connect(_read.bind($Castle/Inscription))
-	_bunker.interacted.connect(_on_bunker)
+	_bunker.interacted.connect(_travel.bind(true))
+	_bunker_exit.interacted.connect(_on_bunker_exit)
 	for zone in ZONES:
 		var portal := _portal(zone)
 		portal.closed_prompt = _closed_prompt(zone)
@@ -62,12 +75,16 @@ func _ready() -> void:
 	_set_repairs(placed_count(), false)
 	_life = float(placed_count()) / GameState.BOOK_COUNT
 	_apply_life(_life)
+	_place_characters()
 	_place_player()
 	_volcano.set_state(Volcano.State.DORMANT if placed_count() >= GameState.BOOK_COUNT else Volcano.State.AWAKE)
 	if GameState.ending != &"":
 		_play_ending(GameState.ending)
 		return
-	_hud.show_message(_arrival_message())
+	if not GameState.intro_done:
+		_hud.show_message("Le bunker des survivants. Le roi et Merlon vous attendent.")
+	else:
+		_hud.show_message(_arrival_message())
 
 
 ## Joue une fin : le joueur et l'interface s'effacent derrière la caméra de la cinématique.
@@ -76,6 +93,7 @@ func _play_ending(ending: StringName) -> void:
 	_player.process_mode = Node.PROCESS_MODE_DISABLED
 	_hud.visible = false
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	_set_location(false)
 	if ending == &"victory":
 		_set_repairs(GameState.BOOK_COUNT, false)
 		_apply_life(1.0)
@@ -107,18 +125,39 @@ func _book_name(zone: StringName) -> String:
 func _closed_prompt(zone: StringName) -> String:
 	if not GameState.is_zone_built(zone) or GameState.previous_zone(zone).is_empty():
 		return "%s : bientôt accessible" % ZONE_NAMES[zone].capitalize()
-	return "%s : terminez d'abord %s" % [ZONE_NAMES[zone].capitalize(), ZONE_NAMES[GameState.previous_zone(zone)]]
+	return "%s : posez d'abord %s au château" % [ZONE_NAMES[zone].capitalize(), _book_name(GameState.previous_zone(zone))]
 
 
 func _closed_message(zone: StringName) -> String:
 	if not GameState.is_zone_built(zone):
 		return "Le passage vers %s n'est pas encore ouvert." % ZONE_NAMES[zone]
 	var previous := GameState.previous_zone(zone)
-	return "Le portail vers %s s'ouvrira quand %s aura été retrouvé, dans %s." % [ZONE_NAMES[zone], _book_name(previous), ZONE_NAMES[previous]]
+	var book: StringName = GameState.ZONE_BOOKS[previous]
+	if GameState.has_book(book):
+		return "Le portail vers %s s'ouvrira quand %s sera posé sur son piédestal, au château." % [ZONE_NAMES[zone], _book_name(previous)]
+	return "Le portail vers %s s'ouvrira quand %s, caché dans %s, sera posé au château." % [ZONE_NAMES[zone], _book_name(previous), ZONE_NAMES[previous]]
 
 
-## Fait réapparaître le joueur devant le portail d'où il revient, tourné vers le village.
+## Merlon et le roi : dans le bunker pour l'introduction, puis le roi à son trône et Merlon au camp.
+## Merlon rejoint le château dès que le quatrième livre est trouvé, pour préparer le rituel.
+func _place_characters() -> void:
+	var merlon_spot := "MerlonBunker"
+	var king_spot := "KingBunker"
+	if GameState.intro_done:
+		king_spot = "KingThrone"
+		merlon_spot = "MerlonCastle" if GameState.books.size() >= GameState.BOOK_COUNT else "MerlonCamp"
+	_merlon.global_transform = get_node("Spots/" + merlon_spot).global_transform
+	_king.global_transform = get_node("Spots/" + king_spot).global_transform
+
+
+## Fait apparaître le joueur dans le bunker au début de la partie, ou devant le portail d'où il revient.
 func _place_player() -> void:
+	if not GameState.intro_done:
+		_set_location(true)
+		_player.global_position = _bunker_spawn.global_position
+		_player.get_node("CameraPivot").rotation.y = 0.0
+		return
+	_set_location(false)
 	var position := _default_spawn.global_position
 	if GameState.last_zone in ZONES:
 		var portal := _portal(GameState.last_zone)
@@ -128,6 +167,46 @@ func _place_player() -> void:
 	var look := -Vector3(position.x, 0.0, position.z).normalized() if position.length() > 1.0 else Vector3.FORWARD
 	_player.global_position = position
 	_player.get_node("CameraPivot").rotation.y = atan2(-look.x, -look.z)
+
+
+## Dans l'abri, ni soleil ni brume : seules ses lampes l'éclairent.
+func _set_location(inside: bool) -> void:
+	_inside = inside
+	_sun.visible = not inside
+	_environment.fog_enabled = not inside
+	$Ambience.volume_db = -20.0 if inside else -8.0
+
+
+func _travel(inside: bool) -> void:
+	if _busy:
+		return
+	_busy = true
+	_player.process_mode = Node.PROCESS_MODE_DISABLED
+	await _hud.fade(true)
+	_set_location(inside)
+	var spot: Marker3D = _bunker_spawn if inside else _bunker_outside
+	_player.global_position = spot.global_position
+	_player.velocity = Vector3.ZERO
+	# Dedans, face au fond de l'abri ; dehors, tourné vers le village.
+	var look := Vector3.FORWARD if inside else -Vector3(spot.global_position.x, 0.0, spot.global_position.z).normalized()
+	_player.get_node("CameraPivot").rotation.y = atan2(-look.x, -look.z)
+	await _hud.fade(false)
+	_player.process_mode = Node.PROCESS_MODE_INHERIT
+	_busy = false
+
+
+## La première sortie attend que le roi et Merlon aient confié la mission.
+func _on_bunker_exit() -> void:
+	if not GameState.intro_done:
+		var missing: Array[String] = []
+		for speaker in INTRO_SPEAKERS:
+			if not speaker in _heard:
+				missing.append("au roi" if speaker == &"Codeon" else "à Merlon")
+		_hud.show_message("Avant de partir, parlez %s." % " et ".join(missing))
+		return
+	await _travel(false)
+	if GameState.books.is_empty():
+		_hud.show_message("Le portail de la Plaine vous attend, au nord-ouest du village.")
 
 
 ## Ciel, brume, lumière, herbe et fleurs suivent les livres posés : de 0 à 1.
@@ -181,6 +260,8 @@ func _refresh_pedestals() -> void:
 			pedestal.prompt = "Piédestal de %s" % _book_name(zone)
 
 
+## Le livre quitte la main du joueur et vole jusqu'à son piédestal ; le village se relève, puis, au quatrième,
+## Merlon accomplit le rituel.
 func _on_pedestal(zone: StringName) -> void:
 	var book: StringName = GameState.ZONE_BOOKS[zone]
 	if GameState.has_placed(book):
@@ -189,14 +270,23 @@ func _on_pedestal(zone: StringName) -> void:
 	if not GameState.has_book(book):
 		_hud.show_message("Ce piédestal attend %s, caché dans %s." % [_book_name(zone), ZONE_NAMES[zone]])
 		return
+	if _busy:
+		return
+	_busy = true
 	GameState.place_book(book)
+	_refresh_pedestals()
 	var shown := _pedestal_book(zone)
+	await _player.give_book(book, shown.global_position)
 	shown.visible = true
 	shown.scale = Vector3.ONE * 0.2
 	create_tween().tween_property(shown, "scale", Vector3.ONE, 0.6).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	$PlaceSound.play()
-	_refresh_pedestals()
-	_show_repairs()
+	for next in ZONES:
+		_portal(next).is_open = GameState.is_zone_unlocked(next)
+	await _show_repairs()
+	_busy = false
+	if placed_count() >= GameState.BOOK_COUNT:
+		_ritual()
 
 
 ## Plan large sur le village le temps qu'il se reconstruise, puis retour au joueur.
@@ -206,9 +296,11 @@ func _show_repairs() -> void:
 	create_tween().tween_method(_apply_life, _life, life, REPAIR_SHOT)
 	_life = life
 	if placed_count() >= GameState.BOOK_COUNT:
-		_hud.show_message("Les quatre livres sont réunis. Codia renaît : le rituel peut commencer.")
+		_hud.show_message("Les quatre livres sont réunis.")
 	else:
-		_hud.show_message("Le village reprend vie… %d livre%s sur quatre." % [placed_count(), "s" if placed_count() > 1 else ""])
+		var next := ZONES[placed_count()]
+		_hud.show_message("Le village reprend vie… %d livre%s sur quatre. Le portail vers %s s'est ouvert." % [
+			placed_count(), "s" if placed_count() > 1 else "", ZONE_NAMES[next]])
 	if repaired.is_empty():
 		return
 	$RepairSound.play()
@@ -217,6 +309,16 @@ func _show_repairs() -> void:
 	await get_tree().create_timer(REPAIR_SHOT).timeout
 	_player_camera.current = true
 	_player.process_mode = Node.PROCESS_MODE_INHERIT
+
+
+## Le rituel, dans la salle du château : Merlon lève son bâton, puis la bonne fin se joue.
+func _ritual() -> void:
+	_player.process_mode = Node.PROCESS_MODE_DISABLED
+	_hud.show_message("Merlon lève son bâton au-dessus des quatre livres : le rituel commence…")
+	var orb: OmniLight3D = _merlon.get_node("Wizard/OrbLight")
+	create_tween().tween_property(orb, "light_energy", 12.0, 2.5)
+	await get_tree().create_timer(3.0).timeout
+	_play_ending(&"victory")
 
 
 func _arrival_message() -> String:
@@ -229,14 +331,24 @@ func _arrival_message() -> String:
 	return "Le village de Codia"
 
 
+func _king_text() -> String:
+	if not GameState.intro_done:
+		return "Devlyn, approche. Depuis la guerre, ce qui reste de Codia se terre dans ce bunker. Et voilà que le volcan s'est réveillé : s'il entre en éruption, plus rien ne survivra là-haut. Merlon connaît un moyen de l'apaiser, écoute-le. Tu as déjà sauvé ces terres des Quatre Dragons du Chaos. Je n'ai pas le droit de te le demander une seconde fois… et pourtant, je le fais."
+	if placed_count() >= GameState.BOOK_COUNT:
+		return "Les quatre livres sont réunis. Codia te doit sa seconde vie, Devlyn."
+	return "Pose chaque livre sur son piédestal, devant mon trône. Quand les quatre seront réunis, Merlon accomplira le rituel ici même. Chaque livre posé ouvre le portail suivant."
+
+
 func _merlon_text() -> String:
 	var placed := placed_count()
-	if GameState.books.is_empty():
-		return "Devlyn, mon vieil ami. Le volcan endormi près du royaume se réveille : la guerre a rompu son équilibre. J'ai eu une vision : quatre ouvrages oubliés, l'Algonicon, le Projenomicon, le Logiconomicon et le Codonomicon, peuvent apaiser sa colère et rendre vie à Codia. Chacun repose au-delà d'un de ces portails, et chaque portail ne s'ouvre qu'une fois le livre du précédent retrouvé. Commence par la Plaine. Rapporte chaque livre dans la salle du château, sur son piédestal, avant l'éruption."
+	if not GameState.intro_done or GameState.books.is_empty():
+		return "Devlyn, mon vieil ami. La guerre a rompu l'équilibre du volcan. J'ai eu une vision : quatre ouvrages oubliés, le Projenomicon, l'Algonicon, le Logiconomicon et le Codonomicon, peuvent apaiser sa colère et rendre vie à Codia. Chacun repose au-delà d'un portail du village. Rapporte chaque livre au château du roi et pose-le sur son piédestal : le portail suivant s'ouvrira alors. Quand les quatre seront réunis, j'accomplirai le rituel. Commence par la Plaine, et fais vite : le volcan n'attendra pas."
 	if placed >= GameState.BOOK_COUNT:
-		return "Les quatre livres sont réunis. Écoute… le volcan se tait, et Codia respire à nouveau. Le rituel peut commencer."
+		return "Les quatre livres sont réunis. Écoute… le volcan se tait, et Codia respire à nouveau."
+	if GameState.books.size() >= GameState.BOOK_COUNT:
+		return "Te voilà ! J'ai senti le quatrième livre s'éveiller, et je suis venu au château préparer le rituel. Pose les livres qui te restent sur leurs piédestaux, et nous commencerons."
 	if not GameState.carried_books().is_empty():
-		return "Tu portes un livre, Devlyn. Ne le garde pas : va le poser sur son piédestal, dans la salle du château. Chaque livre posé rend un peu de vie au village."
+		return "Tu portes un livre, Devlyn. Ne le garde pas : va le poser sur son piédestal, dans la salle du château. Le portail suivant ne s'ouvrira qu'à ce moment-là."
 	var next := ""
 	for zone in ZONES:
 		if not GameState.has_book(GameState.ZONE_BOOKS[zone]):
@@ -250,6 +362,10 @@ func _merlon_text() -> String:
 func _read(readable: Readable) -> void:
 	if readable == _merlon:
 		readable.body = _merlon_text()
+	elif readable == _king:
+		readable.body = _king_text()
+	if not GameState.intro_done and StringName(readable.name) in INTRO_SPEAKERS and not StringName(readable.name) in _heard:
+		_heard.append(StringName(readable.name))
 	_player.process_mode = Node.PROCESS_MODE_DISABLED
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	_hud.show_text(readable.title, readable.body)
@@ -259,10 +375,6 @@ func _close_panel() -> void:
 	_player.process_mode = Node.PROCESS_MODE_INHERIT
 	_hud.set_crosshair_visible(true)
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-
-
-func _on_bunker() -> void:
-	if placed_count() >= GameState.BOOK_COUNT:
-		_hud.show_message("La porte du bunker se déverrouille dans un grondement…")
-	else:
-		_hud.show_message("Le bunker est scellé. Sa porte ne cède à rien pour l'instant.")
+	if not GameState.intro_done and _heard.size() == INTRO_SPEAKERS.size():
+		GameState.begin_mission()
+		_hud.show_message("La mission commence : le volcan gronde. Remontez à la surface par la porte du bunker.")

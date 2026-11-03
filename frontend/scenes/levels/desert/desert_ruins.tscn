@@ -174,7 +174,7 @@ transform = Transform3D(2.16506, 0, 1.25, 0, 2.5, 0, -1.25, 0, 2.16506, 12.5, 0,
 transform = Transform3D(1.09446, 0, 3.00702, 0, 3.2, 0, -3.00702, 0, 1.09446, -12, 0, -1)
 
 [node name="column_damaged_47" parent="Models" instance=ExtResource("8_model")]
-transform = Transform3D(3, 0, 0, 0, 0.26147, -2.98858, 0, 2.98858, 0.26147, 6.5, 0.6, 6.5)
+transform = Transform3D(3, 0, 0, 0, 0, -3, 0, 3, 0, 6.5, 0.9, 5.42)
 
 [node name="floor_hole_48" parent="Models" instance=ExtResource("12_model")]
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0.03, -6)

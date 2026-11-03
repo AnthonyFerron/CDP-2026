@@ -35,6 +35,13 @@ const BOOK_NAMES := {
 	&"logiconomicon": "le Logiconomicon",
 	&"codonomicon": "le Codonomicon",
 }
+## Couleur de la couverture de chaque livre, sur les piédestaux et dans la main du joueur.
+const BOOK_COLORS := {
+	&"projenomicon": Color(0.5, 0.08, 0.05),
+	&"algonicon": Color(0.55, 0.35, 0.08),
+	&"logiconomicon": Color(0.1, 0.35, 0.25),
+	&"codonomicon": Color(0.3, 0.15, 0.5),
+}
 const BOOK_COUNT := 4
 ## Temps laissé au joueur avant l'éruption, et coût d'une validation fausse, en secondes.
 const TOTAL_TIME := 60.0 * 60.0
@@ -49,6 +56,8 @@ var placed_books: Array[StringName] = []
 ## Zone d'où revient le joueur, pour le faire réapparaître devant son portail dans le hub.
 var last_zone: StringName = &""
 var time_left := TOTAL_TIME
+## Vrai une fois la mission reçue du roi et de Merlon, dans le bunker : le chronomètre part de là.
+var intro_done := false
 var has_erupted := false
 ## Fin à jouer au prochain chargement du hub : &"eruption", &"victory", ou rien. Elle n'est pas sauvegardée.
 var ending: StringName = &""
@@ -73,7 +82,7 @@ func _process(delta: float) -> void:
 
 ## Le chronomètre tourne pendant la partie, sauf en pause, après l'éruption ou une fois les livres posés.
 func is_timer_running() -> bool:
-	return not has_erupted and not get_tree().paused and placed_books.size() < BOOK_COUNT and get_tree().current_scene != null
+	return intro_done and not has_erupted and not get_tree().paused and placed_books.size() < BOOK_COUNT 		and get_tree().current_scene != null
 
 
 func penalize() -> void:
@@ -120,12 +129,20 @@ func is_zone_built(zone: StringName) -> bool:
 	return not String(ZONE_SCENES.get(zone, "")).is_empty()
 
 
-## Une zone s'ouvre quand elle est construite et que le livre de la zone précédente est trouvé.
+## Une zone s'ouvre quand elle est construite et que le livre de la zone précédente est posé au château.
 func is_zone_unlocked(zone: StringName) -> bool:
 	var index := ZONE_ORDER.find(zone)
 	if not is_zone_built(zone) or index < 0:
 		return false
-	return index == 0 or has_book(ZONE_BOOKS[ZONE_ORDER[index - 1]])
+	return index == 0 or has_placed(ZONE_BOOKS[ZONE_ORDER[index - 1]])
+
+
+## La mission commence : le roi et Merlon l'ont confiée, le chronomètre du volcan se met en marche.
+func begin_mission() -> void:
+	if intro_done:
+		return
+	intro_done = true
+	save_game()
 
 
 ## Zone à terminer avant celle-ci, ou rien pour la première.
@@ -153,6 +170,7 @@ func reset() -> void:
 	books.clear()
 	placed_books.clear()
 	last_zone = &""
+	intro_done = false
 	time_left = TOTAL_TIME
 	has_erupted = false
 	save_game()
@@ -166,6 +184,7 @@ func save_game() -> void:
 	file.set_value("partie", "derniere_zone", String(last_zone))
 	file.set_value("partie", "temps_restant", time_left)
 	file.set_value("partie", "eruption", has_erupted)
+	file.set_value("partie", "introduction", intro_done)
 	file.save(SAVE_PATH)
 
 
@@ -182,6 +201,7 @@ func load_game() -> void:
 	last_zone = StringName(file.get_value("partie", "derniere_zone", ""))
 	time_left = float(file.get_value("partie", "temps_restant", TOTAL_TIME))
 	has_erupted = bool(file.get_value("partie", "eruption", false))
+	intro_done = bool(file.get_value("partie", "introduction", false))
 
 
 func _erupt() -> void:
