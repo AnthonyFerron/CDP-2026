@@ -2,8 +2,8 @@ class_name Hub
 extends Node3D
 ## Hub : le village de Codia, d'où partent les portails des zones. La partie commence dans le bunker, où les
 ## survivants s'abritent : le roi et Merlon y confient la mission. Les livres se posent sur leurs piédestaux,
-## dans la salle du château, et le village se reconstruit à chaque livre posé. Quand les quatre y sont, Merlon
-## accomplit le rituel au château.
+## dans la salle du château, et le village se reconstruit à chaque livre posé. Tous les habitants restent au
+## bunker jusqu'au quatrième livre : ils en sortent alors, et Merlon accomplit le rituel au château.
 
 const ZONES: Array[StringName] = [&"plaine", &"desert", &"marais", &"village"]
 const ZONE_NAMES := {
@@ -77,7 +77,8 @@ func _ready() -> void:
 	_set_repairs(placed_count(), false)
 	_life = float(placed_count()) / GameState.BOOK_COUNT
 	_apply_life(_life)
-	_place_characters()
+	if placed_count() >= GameState.BOOK_COUNT:
+		_release_survivors()
 	_place_player()
 	_volcano.set_state(Volcano.State.DORMANT if placed_count() >= GameState.BOOK_COUNT else Volcano.State.AWAKE)
 	if GameState.ending != &"":
@@ -97,6 +98,7 @@ func _play_ending(ending: StringName) -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	_set_location(false)
 	if ending == &"victory":
+		_release_survivors()
 		_set_repairs(GameState.BOOK_COUNT, false)
 		_apply_life(1.0)
 		_ending.play_victory()
@@ -140,16 +142,10 @@ func _closed_message(zone: StringName) -> String:
 	return "Le portail vers %s s'ouvrira quand %s, caché dans %s, sera posé au château." % [ZONE_NAMES[zone], _book_name(previous), ZONE_NAMES[previous]]
 
 
-## Merlon et le roi : dans le bunker pour l'introduction, puis le roi à son trône et Merlon au camp.
-## Merlon rejoint le château dès que le quatrième livre est trouvé, pour préparer le rituel.
-func _place_characters() -> void:
-	var merlon_spot := "MerlonBunker"
-	var king_spot := "KingBunker"
-	if GameState.intro_done:
-		king_spot = "KingThrone"
-		merlon_spot = "MerlonCastle" if GameState.books.size() >= GameState.BOOK_COUNT else "MerlonCamp"
-	_merlon.global_transform = get_node("Spots/" + merlon_spot).global_transform
-	_king.global_transform = get_node("Spots/" + king_spot).global_transform
+## Les habitants quittent le bunker : chacun rejoint son repère, Merlon et le roi au château, les autres sur la place.
+func _release_survivors() -> void:
+	for character: Node3D in $Characters.get_children():
+		character.global_transform = get_node("Spots/%sOutside" % character.name).global_transform
 
 
 ## Fait apparaître le joueur dans le bunker au début de la partie, ou devant le portail d'où il revient.
@@ -313,10 +309,13 @@ func _show_repairs() -> void:
 	_player.process_mode = Node.PROCESS_MODE_INHERIT
 
 
-## Le rituel, dans la salle du château : Merlon lève son bâton, puis la bonne fin se joue.
+## Le rituel, dans la salle du château : les habitants sortent du bunker, Merlon lève son bâton, puis la bonne fin se joue.
 func _ritual() -> void:
 	_player.process_mode = Node.PROCESS_MODE_DISABLED
-	_hud.show_message("Merlon lève son bâton au-dessus des quatre livres : le rituel commence…")
+	await _hud.fade(true)
+	_release_survivors()
+	await _hud.fade(false)
+	_hud.show_message("Les survivants sortent du bunker. Merlon lève son bâton au-dessus des quatre livres : le rituel commence…")
 	var orb: OmniLight3D = _merlon.get_node("Wizard/OrbLight")
 	create_tween().tween_property(orb, "light_energy", 12.0, 2.5)
 	await get_tree().create_timer(3.0).timeout
@@ -338,7 +337,7 @@ func _king_text() -> String:
 		return "Devlyn, approche. Depuis la guerre, ce qui reste de Codia se terre dans ce bunker. Et voilà que le volcan s'est réveillé : s'il entre en éruption, plus rien ne survivra là-haut. Merlon connaît un moyen de l'apaiser, écoute-le. Tu as déjà sauvé ces terres des Quatre Dragons du Chaos. Je n'ai pas le droit de te le demander une seconde fois… et pourtant, je le fais."
 	if placed_count() >= GameState.BOOK_COUNT:
 		return "Les quatre livres sont réunis. Codia te doit sa seconde vie, Devlyn."
-	return "Pose chaque livre sur son piédestal, devant mon trône. Quand les quatre seront réunis, Merlon accomplira le rituel ici même. Chaque livre posé ouvre le portail suivant."
+	return "Pose chaque livre sur son piédestal, dans la salle du château, devant mon trône. Chaque livre posé ouvre le portail suivant. Quand les quatre seront réunis, nous sortirons tous de ce bunker, et Merlon accomplira le rituel."
 
 
 func _merlon_text() -> String:
@@ -348,7 +347,7 @@ func _merlon_text() -> String:
 	if placed >= GameState.BOOK_COUNT:
 		return "Les quatre livres sont réunis. Écoute… le volcan se tait, et Codia respire à nouveau."
 	if GameState.books.size() >= GameState.BOOK_COUNT:
-		return "Te voilà ! J'ai senti le quatrième livre s'éveiller, et je suis venu au château préparer le rituel. Pose les livres qui te restent sur leurs piédestaux, et nous commencerons."
+		return "Te voilà ! J'ai senti le quatrième livre s'éveiller. Pose les livres qui te restent sur leurs piédestaux : dès que les quatre seront réunis, nous remonterons tous, et j'accomplirai le rituel au château."
 	if not GameState.carried_books().is_empty():
 		return "Tu portes un livre, Devlyn. Ne le garde pas : va le poser sur son piédestal, dans la salle du château. Le portail suivant ne s'ouvrira qu'à ce moment-là."
 	var next := ""

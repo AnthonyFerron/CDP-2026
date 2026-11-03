@@ -41,7 +41,7 @@ Le jeu démarre dans le hub, `frontend/scenes/levels/hub/hub.tscn`, à l'intéri
 - Un livre trouvé vole jusqu'à la main du joueur, qui le tient en bas de l'écran. Il faut le rapporter soi-même dans la salle des livres, au cœur du donjon du château, et le poser sur son piédestal, devant le trône du roi : il quitte alors la main pour s'y poser.
 - Chaque livre posé répare une partie du village : quatre maisons par livre, en commençant par les plus proches du camp, puis le marché, la cour du château, la fontaine, les drapeaux et les toits des tours du donjon. Un plan large montre le village qui se relève, et le ciel s'éclaircit.
 - Autour du cœur du village : la taverne et la forge (premier livre), l'école et la ferme avec ses champs (deuxième), la chapelle et le cimetière des soldats (troisième), et la mine d'argent effondrée au pied des montagnes, au nord-est. Chaque lieu a son panneau à lire, qui raconte un peu de l'histoire de Codia.
-- Dès que le quatrième livre est trouvé, Merlon rejoint la salle du château. Le dernier livre posé, il y accomplit le rituel, puis la bonne fin se joue.
+- Tous les habitants, le roi, Merlon et le garde compris, restent au bunker pendant la partie. Le dernier livre posé, ils en sortent : Merlon et le roi rejoignent la salle du château, où Merlon accomplit le rituel, et les autres se rassemblent autour du feu de la place, puis la bonne fin se joue.
 
 L'autoload `GameState` (`frontend/scripts/game_state.gd`) garde les livres trouvés, les livres posés et la dernière zone, et les sauvegarde dans `user://sauvegarde.cfg` à chaque changement. Pour ajouter une zone, renseigner sa scène dans `ZONE_SCENES`, sa place dans `ZONE_ORDER` et son livre dans `ZONE_BOOKS`, puis appeler `GameState.collect_book()` quand le livre est pris.
 
