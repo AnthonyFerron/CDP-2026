@@ -30,7 +30,13 @@ Les touches suivent la position physique sur le clavier : ZQSD en AZERTY, WASD e
 
 ## Debug
 
-En version de debug, `F1` ouvre un menu temporaire qui permet de passer d'un niveau à l'autre. Il n'apparaît pas dans le jeu publié. Il liste les scènes de `frontend/scenes/levels/`, et les sous-dossiers qui contiennent une scène du même nom, comme `plaine/plaine.tscn` : nommer ainsi la scène principale de chaque niveau pour qu'elle y apparaisse.
+En version de debug, `F1` ouvre un menu temporaire qui permet de passer d'un niveau à l'autre. Il n'apparaît pas dans le jeu publié. Il liste les scènes de `frontend/scenes/levels/`, et les sous-dossiers qui contiennent une scène du même nom, comme `plaine/plaine.tscn` : nommer ainsi la scène principale de chaque niveau pour qu'elle y apparaisse. Le bouton « Réinitialiser la partie » efface la sauvegarde.
+
+## Progression
+
+Le jeu démarre dans le hub, `frontend/scenes/levels/hub/hub.tscn`. Chaque portail en arche mène à une zone ; le livre d'une zone, une fois pris, est posé sur l'autel du hub, et le plateau reverdit à chaque livre rapporté. Le joueur revient devant le portail de la zone qu'il quitte.
+
+L'autoload `GameState` (`frontend/scripts/game_state.gd`) garde les livres et la dernière zone, et les sauvegarde dans `user://sauvegarde.cfg` à chaque changement. Pour ajouter une zone, renseigner sa scène dans `ZONE_SCENES` et appeler `GameState.collect_book()` quand le livre est pris.
 
 ## Organisation du projet
 
@@ -57,7 +63,7 @@ Pour une mise à jour de Godot, changer `GODOT_VERSION` dans `frontend/Dockerfil
 
 ## Sons
 
-Les sons du jeu (vent, lave, marais, désert, cave, pas, feu, porte, tablettes) sont synthétisés par `frontend/tools/generate_sounds.py`, sans dépendance externe. Pour en modifier un, changer sa fonction dans le script puis le relancer depuis `frontend` avec `python tools/generate_sounds.py`.
+Les sons du jeu (vent, lave, marais, désert, cave, hub, pas, feu, porte, tablettes) sont synthétisés par `frontend/tools/generate_sounds.py`, sans dépendance externe. Pour en modifier un, changer sa fonction dans le script puis le relancer depuis `frontend` avec `python tools/generate_sounds.py`.
 
 ## Licences
 

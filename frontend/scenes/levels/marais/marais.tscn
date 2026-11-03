@@ -140,6 +140,8 @@ post_model = ExtResource("31_post")
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0.4, 63)
 closed_prompt = "Portail éteint"
 open_prompt = "Retourner au hub"
+inner_color = Color(0.6, 1, 0.7, 1)
+outer_color = Color(0.1, 0.55, 0.3, 1)
 
 [node name="Sign" parent="." instance=ExtResource("17_signpost")]
 transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, -0, 0, 2.5, -4, 0.4, 56)

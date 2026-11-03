@@ -6,13 +6,12 @@ extends Node3D
 signal book_collected(book_id: StringName)
 signal hub_requested
 
+const ZONE := &"plaine"
 const BOOK_ID := &"projenomicon"
 ## Volume du vent dehors, et dans la bibliothèque où il n'arrive qu'étouffé.
 const WIND_OUTSIDE_DB := -10.0
 const WIND_INSIDE_DB := -26.0
 
-## Scène du hub, chargée quand le joueur repasse le portail une fois le livre récupéré.
-@export_file("*.tscn") var hub_scene := ""
 @export var stone_travel := 3.4
 @export var stone_duration := 2.5
 ## Calque de suie posé sur les ruines.
@@ -71,6 +70,9 @@ func _ready() -> void:
 	_exterior.add_child(_ash)
 	_apply_location()
 	_hud.show_message("La Plaine")
+	if GameState.has_book(BOOK_ID):
+		_portal.is_open = true
+		_hud.show_message("Vous avez déjà rapporté le livre de cette zone : le portail est ouvert.")
 
 
 func _process(_delta: float) -> void:
@@ -162,6 +164,7 @@ func _on_book_taken() -> void:
 	_book_pickup.enabled = false
 	_portal.is_open = true
 	_hud.show_message("Le Projenomicon est à vous. Le portail de la Plaine s'est rouvert.")
+	GameState.collect_book(BOOK_ID)
 	book_collected.emit(BOOK_ID)
 
 
@@ -171,10 +174,7 @@ func _on_portal_refused() -> void:
 
 func _on_portal_crossed() -> void:
 	hub_requested.emit()
-	if hub_scene.is_empty():
-		_hud.show_message("Le hub n'est pas encore relié à ce portail.")
-	else:
-		get_tree().change_scene_to_file(hub_scene)
+	GameState.return_to_hub(ZONE)
 
 
 func _apply_soot(root: Node) -> void:

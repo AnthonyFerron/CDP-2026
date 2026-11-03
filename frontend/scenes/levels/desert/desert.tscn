@@ -220,6 +220,8 @@ quicksand_material = SubResource("ShaderMaterial_quicksand")
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0, 54)
 closed_prompt = "Portail éteint"
 open_prompt = "Retourner au hub"
+inner_color = Color(1, 0.95, 0.6, 1)
+outer_color = Color(0.95, 0.62, 0.15, 1)
 
 [node name="Sign" parent="Exterior" instance=ExtResource("14_signpost")]
 transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, -0, 0, 2.5, -5, 0, 44)

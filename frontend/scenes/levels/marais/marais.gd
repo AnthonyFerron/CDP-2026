@@ -6,6 +6,7 @@ extends Node3D
 signal book_collected(book_id: StringName)
 signal hub_requested
 
+const ZONE := &"marais"
 const BOOK_ID := &"binarium"
 ## Nombre que les braseros doivent former : les années de veille du gardien, de 5803 à 5814.
 const CRYPT_CODE := 11
@@ -16,8 +17,6 @@ const WADE_SPEED := 0.55
 ## Images passées au sol, hors de l'eau, avant de retenir la position comme sûre.
 const SAFE_FRAMES := 15
 
-## Scène du hub, chargée quand le joueur repasse le portail une fois le livre récupéré.
-@export_file("*.tscn") var hub_scene := ""
 @export var ground_steps: Array[AudioStream]
 @export var water_steps: Array[AudioStream]
 @export var door_sound: AudioStream
@@ -68,6 +67,9 @@ func _ready() -> void:
 	add_child(_fireflies)
 	add_child(_mist)
 	_hud.show_message("Le Marais")
+	if GameState.has_book(BOOK_ID):
+		_portal.is_open = true
+		_hud.show_message("Vous avez déjà rapporté le livre de cette zone : le portail est ouvert.")
 
 
 func _process(delta: float) -> void:
@@ -164,6 +166,7 @@ func _on_book_taken() -> void:
 	_book_pickup.enabled = false
 	_portal.is_open = true
 	_hud.show_message("Le Binarium est à vous. Le portail du Marais s'est rouvert.")
+	GameState.collect_book(BOOK_ID)
 	book_collected.emit(BOOK_ID)
 
 
@@ -173,10 +176,7 @@ func _on_portal_refused() -> void:
 
 func _on_portal_crossed() -> void:
 	hub_requested.emit()
-	if hub_scene.is_empty():
-		_hud.show_message("Le hub n'est pas encore relié à ce portail.")
-	else:
-		get_tree().change_scene_to_file(hub_scene)
+	GameState.return_to_hub(ZONE)
 
 
 ## Lucioles autour du joueur : de petites lueurs qui dérivent lentement.

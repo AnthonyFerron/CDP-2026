@@ -67,6 +67,13 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Recharger le niveau"
 
+[node name="Reset" type="Button" parent="Root/Panel/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Réinitialiser la partie"
+
 [node name="Close" type="Button" parent="Root/Panel/Content"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 54)

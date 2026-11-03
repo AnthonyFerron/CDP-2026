@@ -293,6 +293,39 @@ def tablet_reset():
     return normalize(samples, 0.6)
 
 
+def hub():
+    """Plateau du hub : une brise douce et quelques oiseaux, en boucle de 14 s."""
+    rng = random.Random(11)
+    length, fade = RATE * 14, RATE
+    breeze = lowpass(lowpass(noise(length + fade, rng), 350), 500)
+    samples = [b * (0.6 + 0.4 * math.sin(2 * math.pi * i / RATE / 7.0)) for i, b in enumerate(breeze)]
+    samples = normalize(seamless(samples, length, fade), 0.3)
+    for _ in range(10):
+        start = rng.randrange(length)
+        base = rng.uniform(2600, 3800)
+        for note in range(rng.randint(2, 4)):
+            pitch = base * rng.uniform(0.9, 1.25)
+            chirp = []
+            for i in range(int(RATE * 0.09)):
+                t = i / RATE
+                chirp.append(0.16 * math.sin(2 * math.pi * pitch * (1 + t * 4) * t) * math.sin(math.pi * t / 0.09))
+            add_event(samples, start + note * int(RATE * 0.13), chirp)
+    return normalize(samples, 0.5)
+
+
+def grass_step(seed):
+    """Pas dans l'herbe : un froissement court et doux."""
+    rng = random.Random(seed)
+    count = int(RATE * 0.22)
+    rustle = highpass(lowpass(noise(count, rng), rng.uniform(1800, 2600)), 400)
+    samples = []
+    for i in range(count):
+        t = i / RATE
+        envelope = (1 - math.exp(-t * 200)) * math.exp(-t * 20)
+        samples.append(rustle[i] * envelope + math.sin(2 * math.pi * 75 * t) * math.exp(-t * 45) * 0.3)
+    return normalize(samples, 0.5)
+
+
 def main():
     write_wav("plaine_wind.wav", wind(), loop=True)
     write_wav("plaine_lava.wav", lava(), loop=True)
@@ -312,6 +345,9 @@ def main():
     for index, pitch in enumerate((523.25, 659.25, 783.99)):
         write_wav(f"tablet_chime_{index + 1}.wav", tablet_chime(pitch))
     write_wav("tablet_reset.wav", tablet_reset())
+    write_wav("hub_ambience.wav", hub(), loop=True)
+    for index in range(3):
+        write_wav(f"footstep_grass_{index + 1}.wav", grass_step(50 + index))
 
 
 if __name__ == "__main__":

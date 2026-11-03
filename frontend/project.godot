@@ -11,12 +11,13 @@ config_version=5
 [application]
 
 config/name="CDP-2026"
-run/main_scene="uid://bodd6xijjn3ka"
+run/main_scene="res://scenes/levels/hub/hub.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
+GameState="*res://scripts/game_state.gd"
 DebugMenu="*res://scenes/debug/debug_menu.tscn"
 
 [display]

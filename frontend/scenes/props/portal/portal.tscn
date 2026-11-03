@@ -2,74 +2,7 @@
 
 [ext_resource type="Script" path="res://scenes/props/portal/portal.gd" id="1_portal"]
 [ext_resource type="Shader" path="res://scenes/props/portal/portal.gdshader" id="2_shader"]
-[ext_resource type="Script" path="res://scripts/interactable.gd" id="3_interactable"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_stone"]
-albedo_color = Color(0.3, 0.27, 0.29, 1)
-roughness = 1.0
-
-[sub_resource type="TorusMesh" id="TorusMesh_ring"]
-material = SubResource("StandardMaterial3D_stone")
-inner_radius = 2.5
-outer_radius = 3.1
-rings = 24
-ring_segments = 8
-
-[sub_resource type="BoxMesh" id="BoxMesh_base"]
-material = SubResource("StandardMaterial3D_stone")
-size = Vector3(7, 0.5, 2.4)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_surface"]
-render_priority = 0
-shader = ExtResource("2_shader")
-
-[sub_resource type="QuadMesh" id="QuadMesh_surface"]
-material = SubResource("ShaderMaterial_surface")
-size = Vector2(5.2, 5.2)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_base"]
-size = Vector3(7, 0.5, 2.4)
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_ring"]
-height = 6.0
-radius = 0.5
 
 [node name="Portal" type="Node3D"]
 script = ExtResource("1_portal")
-
-[node name="Ring" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 3.1, 0)
-mesh = SubResource("TorusMesh_ring")
-
-[node name="Base" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
-mesh = SubResource("BoxMesh_base")
-
-[node name="Surface" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.1, 0)
-mesh = SubResource("QuadMesh_surface")
-
-[node name="Light" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.1, 0.8)
-light_color = Color(1, 0.35, 0.12, 1)
-light_energy = 3.0
-omni_range = 12.0
-
-[node name="Collision" type="StaticBody3D" parent="."]
-
-[node name="Base" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
-shape = SubResource("BoxShape3D_base")
-
-[node name="Left" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.8, 3, 0)
-shape = SubResource("CylinderShape3D_ring")
-
-[node name="Right" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8, 3, 0)
-shape = SubResource("CylinderShape3D_ring")
-
-[node name="Interactable" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-script = ExtResource("3_interactable")
-radius = 4.0
+surface_shader = ExtResource("2_shader")

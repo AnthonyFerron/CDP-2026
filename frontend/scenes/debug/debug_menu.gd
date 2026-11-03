@@ -10,6 +10,7 @@ var _mouse_was_captured := false
 @onready var _root: Control = %Root
 @onready var _levels: VBoxContainer = %Levels
 @onready var _reload: Button = %Reload
+@onready var _reset: Button = %Reset
 @onready var _close: Button = %Close
 
 
@@ -20,6 +21,7 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_root.hide()
 	_reload.pressed.connect(_on_reload_pressed)
+	_reset.pressed.connect(_on_reset_pressed)
 	_close.pressed.connect(close)
 
 
@@ -84,3 +86,9 @@ func _go_to(path: String) -> void:
 func _on_reload_pressed() -> void:
 	close()
 	get_tree().reload_current_scene()
+
+
+## Efface les livres rapportés et la dernière zone, puis recharge le niveau courant.
+func _on_reset_pressed() -> void:
+	GameState.reset()
+	_on_reload_pressed()

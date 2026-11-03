@@ -7,6 +7,7 @@ extends Node3D
 signal book_collected(book_id: StringName)
 signal hub_requested
 
+const ZONE := &"desert"
 const BOOK_ID := &"archives_du_soleil"
 const ORDER: Array[StringName] = [&"initialiser", &"transformer", &"transmettre"]
 const QUICKSAND_SPEED := 0.35
@@ -17,8 +18,6 @@ const WIND_DB := -8.0
 ## Teinte appliquée à la pierre claire du kit pour en faire du grès.
 const SANDSTONE := Color(1.0, 0.8, 0.6)
 
-## Scène du hub, chargée quand le joueur repasse le portail une fois le livre récupéré.
-@export_file("*.tscn") var hub_scene := ""
 @export var sand_steps: Array[AudioStream]
 @export var stone_steps: Array[AudioStream]
 @export var chimes: Array[AudioStream]
@@ -77,6 +76,9 @@ func _ready() -> void:
 	_exterior.add_child(_sandstorm)
 	_apply_location()
 	_hud.show_message("Le Désert")
+	if GameState.has_book(BOOK_ID):
+		_portal.is_open = true
+		_hud.show_message("Vous avez déjà rapporté le livre de cette zone : le portail est ouvert.")
 
 
 func _process(delta: float) -> void:
@@ -225,6 +227,7 @@ func _on_book_taken() -> void:
 	_book_pickup.enabled = false
 	_portal.is_open = true
 	_hud.show_message("Le livre des Archives du Soleil est à vous. Le portail du Désert s'est rouvert.")
+	GameState.collect_book(BOOK_ID)
 	book_collected.emit(BOOK_ID)
 
 
@@ -234,10 +237,7 @@ func _on_portal_refused() -> void:
 
 func _on_portal_crossed() -> void:
 	hub_requested.emit()
-	if hub_scene.is_empty():
-		_hud.show_message("Le hub n'est pas encore relié à ce portail.")
-	else:
-		get_tree().change_scene_to_file(hub_scene)
+	GameState.return_to_hub(ZONE)
 
 
 ## Teinte les matériaux des modèles en grès, en partageant une copie par matériau d'origine.
