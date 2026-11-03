@@ -21,6 +21,16 @@
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/stone_largeA.glb" id="25_stone_largeA"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/stone_largeC.glb" id="26_stone_largeC"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/stone_tallB.glb" id="27_stone_tallB"]
+[ext_resource type="Script" path="res://scripts/flickering_light.gd" id="30_flicker"]
+[ext_resource type="Shader" path="res://scenes/levels/plaine/lava.gdshader" id="31_lava"]
+[ext_resource type="Shader" path="res://scenes/levels/plaine/soot.gdshader" id="32_soot"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/lantern.glb" id="33_lantern"]
+[ext_resource type="AudioStream" path="res://assets/audio/plaine_wind.wav" id="34_wind"]
+[ext_resource type="AudioStream" path="res://assets/audio/plaine_lava.wav" id="35_lava_sound"]
+[ext_resource type="AudioStream" path="res://assets/audio/footstep_ash_1.wav" id="36_step1"]
+[ext_resource type="AudioStream" path="res://assets/audio/footstep_ash_2.wav" id="37_step2"]
+[ext_resource type="AudioStream" path="res://assets/audio/footstep_ash_3.wav" id="38_step3"]
+[ext_resource type="AudioStream" path="res://assets/audio/footstep_ash_4.wav" id="39_step4"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ash"]
 sky_top_color = Color(0.14, 0.11, 0.16, 1)
@@ -42,10 +52,47 @@ fog_enabled = true
 fog_light_color = Color(0.36, 0.29, 0.32, 1)
 fog_density = 0.018
 fog_sky_affect = 0.55
+glow_enabled = true
+glow_intensity = 0.7
+glow_bloom = 0.08
+glow_hdr_threshold = 0.9
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_cracks"]
+seed = 11
+frequency = 0.012
+fractal_octaves = 3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_cracks"]
+width = 512
+height = 512
+seamless = true
+noise = SubResource("FastNoiseLite_cracks")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_flow"]
+seed = 4
+frequency = 0.02
+fractal_octaves = 3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_flow"]
+width = 256
+height = 256
+seamless = true
+noise = SubResource("FastNoiseLite_flow")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ground"]
 render_priority = 0
 shader = ExtResource("4_ground")
+shader_parameter/crack_noise = SubResource("NoiseTexture2D_cracks")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lava"]
+render_priority = 0
+shader = ExtResource("31_lava")
+shader_parameter/flow_noise = SubResource("NoiseTexture2D_flow")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_soot"]
+render_priority = 1
+shader = ExtResource("32_soot")
+shader_parameter/soot_noise = SubResource("NoiseTexture2D_flow")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_library_floor"]
 albedo_color = Color(0.3, 0.25, 0.22, 1)
@@ -107,6 +154,7 @@ size = Vector3(0.6, 0.14, 0.8)
 
 [node name="Plaine" type="Node3D"]
 script = ExtResource("1_plaine")
+soot_material = SubResource("ShaderMaterial_soot")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_plaine")
@@ -130,16 +178,21 @@ terrain = NodePath("../Terrain")
 grass_models = Array[PackedScene]([ExtResource("20_grass_large"), ExtResource("21_grass_leafsLarge")])
 small_rock_models = Array[PackedScene]([ExtResource("22_stone_smallA"), ExtResource("23_stone_smallD"), ExtResource("24_stone_smallFlatA")])
 large_rock_models = Array[PackedScene]([ExtResource("25_stone_largeA"), ExtResource("26_stone_largeC"), ExtResource("27_stone_tallB")])
+lantern_model = ExtResource("33_lantern")
+lava_material = SubResource("ShaderMaterial_lava")
+lava_sound = ExtResource("35_lava_sound")
 
 [node name="Ruins" parent="Exterior" instance=ExtResource("5_ruins")]
 
 [node name="DoorLightLeft" type="OmniLight3D" parent="Exterior"]
+script = ExtResource("30_flicker")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3, 3.2, 9.5)
 light_color = Color(1, 0.62, 0.3, 1)
 light_energy = 0.9
 omni_range = 8.0
 
 [node name="DoorLightRight" type="OmniLight3D" parent="Exterior"]
+script = ExtResource("30_flicker")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 3.2, 9.5)
 light_color = Color(1, 0.62, 0.3, 1)
 light_energy = 0.9
@@ -164,7 +217,7 @@ transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, -4.5, 0, 46)
 
 [node name="SignText" type="Label3D" parent="Exterior"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 3.4, 46)
-pixel_size = 0.012
+pixel_size = 0.007
 billboard = 1
 modulate = Color(0.96, 0.85, 0.65, 1)
 text = "La Plaine"
@@ -185,24 +238,32 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.25, -20)
 mesh = SubResource("BoxMesh_library_ceiling")
 
 [node name="LightA" type="OmniLight3D" parent="Interior"]
+script = ExtResource("30_flicker")
+flicker = 0.12
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, -6)
 light_color = Color(1, 0.72, 0.45, 1)
 light_energy = 2.5
 omni_range = 13.0
 
 [node name="LightB" type="OmniLight3D" parent="Interior"]
+script = ExtResource("30_flicker")
+flicker = 0.12
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, -18)
 light_color = Color(1, 0.72, 0.45, 1)
 light_energy = 2.5
 omni_range = 13.0
 
 [node name="LightC" type="OmniLight3D" parent="Interior"]
+script = ExtResource("30_flicker")
+flicker = 0.12
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, -30)
 light_color = Color(1, 0.6, 0.35, 1)
 light_energy = 2.5
 omni_range = 13.0
 
 [node name="LightAlcove" type="OmniLight3D" parent="Interior"]
+script = ExtResource("30_flicker")
+flicker = 0.12
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -38.2)
 light_color = Color(1, 0.4, 0.2, 1)
 light_energy = 2.0
@@ -300,6 +361,13 @@ radius = 2.2
 [node name="Player" parent="." instance=ExtResource("9_player")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 50)
 respawn_height = -80.0
+first_person = true
+footstep_sounds = Array[AudioStream]([ExtResource("36_step1"), ExtResource("37_step2"), ExtResource("38_step3"), ExtResource("39_step4")])
+
+[node name="Wind" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("34_wind")
+volume_db = -10.0
+autoplay = true
 
 [node name="Hud" parent="." instance=ExtResource("10_hud")]
 

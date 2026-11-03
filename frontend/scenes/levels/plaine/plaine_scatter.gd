@@ -1,23 +1,39 @@
 @tool
 class_name PlaineScatter
 extends Node3D
-## Habille la Plaine : herbe brûlée, roches, arbres morts, lueurs et fumée des cratères.
+## Habille la Plaine : herbe brûlée, roches, arbres morts, lanternes, et lave dans les cratères.
 ## Les placements sont reproductibles et l'herbe disparaît au loin pour alléger le rendu.
+
+signal lava_touched(body: Node3D)
 
 const SMOKING_CRATERS := 4
 const LIT_CRATERS := 4
+## Lanternes du chemin : position (x, z), et si elles sont renversées.
+const LANTERNS: Array[Vector3] = [
+	Vector3(-3.2, 18.0, 0.0),
+	Vector3(3.2, 25.0, 1.0),
+	Vector3(-3.2, 32.0, 0.0),
+	Vector3(3.4, 39.0, 0.0),
+	Vector3(-3.4, 45.0, 1.0),
+]
 
 @export var terrain: PlaineTerrain
 @export var grass_models: Array[PackedScene]
 @export var small_rock_models: Array[PackedScene]
 @export var large_rock_models: Array[PackedScene]
+@export var lantern_model: PackedScene
+@export var lava_material: Material
+@export var lava_sound: AudioStream
 @export var grass_count := 1500
 @export var small_rock_count := 220
 @export var large_rock_count := 26
 @export var dead_tree_count := 26
+@export var border_rock_count := 46
 ## Distance à laquelle les petits détails disparaissent.
 @export var detail_range := 60.0
 
+## Bassins de lave : centre de la surface et rayon.
+var lava_pools: Array[Dictionary] = []
 var _rng := RandomNumberGenerator.new()
 
 
@@ -30,7 +46,17 @@ func _ready() -> void:
 	_scatter_small_rocks()
 	_scatter_large_rocks()
 	_scatter_dead_trees()
+	_add_border_rocks()
+	_add_lanterns()
 	_add_crater_effects()
+
+
+func is_near_lava(point: Vector3, margin: float) -> bool:
+	for pool in lava_pools:
+		var center: Vector3 = pool.center
+		if Vector2(point.x - center.x, point.z - center.z).length() < pool.radius + margin:
+			return true
+	return false
 
 
 func _scatter_grass() -> void:
@@ -113,20 +139,161 @@ func _scatter_dead_trees() -> void:
 		instance.visibility_range_end = 0.0
 
 
+## Remparts : de hauts rochers sur le pourtour, pour que la zone ne s'arrête pas sur une pente nue.
+func _add_border_rocks() -> void:
+	var material := _flat_material(Color(0.16, 0.14, 0.16))
+	var items: Array[Array] = []
+	items.resize(large_rock_models.size())
+	for list in items:
+		list.assign([])
+	for i in border_rock_count:
+		var angle := TAU * i / border_rock_count + _rng.randf_range(-0.04, 0.04)
+		var distance := PlaineTerrain.PLAY_RADIUS + _rng.randf_range(1.5, 7.0)
+		var spot := Vector2.from_angle(angle) * distance
+		var item := _ground_transform(spot, _rng.randf_range(9.0, 16.0))
+		item.origin.y -= 0.6
+		items[i % items.size()].append(item)
+	for index in large_rock_models.size():
+		var transforms: Array[Transform3D] = []
+		transforms.assign(items[index])
+		var instance := _add_multimesh(_load_mesh(large_rock_models[index]), transforms, material)
+		instance.visibility_range_end = 0.0
+
+
+## Lanternes le long du chemin : certaines tiennent encore debout et brillent, d'autres sont tombées.
+func _add_lanterns() -> void:
+	var glow := StandardMaterial3D.new()
+	glow.albedo_color = Color(1.0, 0.6, 0.25)
+	glow.emission_enabled = true
+	glow.emission = Color(1.0, 0.55, 0.2)
+	glow.emission_energy_multiplier = 3.0
+	var bulb := SphereMesh.new()
+	bulb.radius = 0.13
+	bulb.height = 0.26
+	bulb.material = glow
+	var lanterns := Node3D.new()
+	lanterns.name = "Lanterns"
+	add_child(lanterns)
+	for spot in LANTERNS:
+		var lantern: Node3D = lantern_model.instantiate()
+		var ground := terrain.height_at(spot.x, spot.y)
+		var fallen := spot.z > 0.5
+		lantern.scale = Vector3.ONE * 2.2
+		lantern.rotation.y = 0.0 if spot.x < 0.0 else PI
+		if fallen:
+			lantern.rotation = Vector3(0.0, _rng.randf_range(0.0, TAU), deg_to_rad(84.0))
+			ground += 0.25
+		lantern.position = Vector3(spot.x, ground, spot.y)
+		lanterns.add_child(lantern)
+		if not fallen:
+			var light := MeshInstance3D.new()
+			light.mesh = bulb
+			light.position = Vector3(spot.x, ground + 3.0, spot.y)
+			add_child(light)
+
+
 func _add_crater_effects() -> void:
 	var smoke_texture := _smoke_texture()
+	var ember_material := _ember_material()
 	for index in PlaineTerrain.CRATERS.size():
 		var crater := PlaineTerrain.CRATERS[index]
 		var center := Vector3(crater.x, terrain.height_at(crater.x, crater.y), crater.y)
+		var radius := crater.z * PlaineTerrain.LAVA_RATIO
+		var surface := _lava_level(crater, radius)
+		var pool := Vector3(crater.x, surface, crater.y)
+		lava_pools.append({center = pool, radius = radius})
+		add_child(_lava_surface(pool, radius))
+		add_child(_lava_hazard(pool, radius))
+		add_child(_embers(pool, radius, ember_material))
+		if lava_sound:
+			var rumble := AudioStreamPlayer3D.new()
+			rumble.stream = lava_sound
+			rumble.position = pool
+			rumble.unit_size = radius
+			rumble.max_distance = radius * 4.0
+			rumble.volume_db = -4.0
+			rumble.autoplay = not Engine.is_editor_hint()
+			add_child(rumble)
 		if index < LIT_CRATERS:
-			var light := OmniLight3D.new()
+			var light := FlickeringLight.new()
 			light.light_color = Color(1.0, 0.36, 0.1)
-			light.light_energy = 2.5
-			light.omni_range = crater.z * 1.3
-			light.position = center + Vector3.UP * 2.0
+			light.light_energy = 3.0
+			light.omni_range = crater.z * 1.5
+			light.flicker = 0.18
+			light.speed = 2.0
+			light.position = pool + Vector3.UP * 2.0
 			add_child(light)
 		if index < SMOKING_CRATERS:
 			add_child(_smoke(center, crater.z * 0.3, smoke_texture))
+
+
+## Hauteur de la lave : juste sous le sol au bord du bassin, pour qu'elle ne flotte pas au-dessus.
+func _lava_level(crater: Vector4, radius: float) -> float:
+	var lowest := INF
+	for i in 12:
+		var edge := Vector2.from_angle(TAU * i / 12.0) * radius
+		lowest = minf(lowest, terrain.height_at(crater.x + edge.x, crater.y + edge.y))
+	return lowest - 0.08
+
+
+func _lava_surface(center: Vector3, radius: float) -> MeshInstance3D:
+	var plane := PlaneMesh.new()
+	plane.size = Vector2.ONE * radius * 2.0
+	plane.subdivide_width = 24
+	plane.subdivide_depth = 24
+	plane.material = lava_material
+	var surface := MeshInstance3D.new()
+	surface.mesh = plane
+	surface.position = center
+	surface.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	return surface
+
+
+func _lava_hazard(center: Vector3, radius: float) -> Area3D:
+	var shape := CylinderShape3D.new()
+	shape.radius = radius * 0.92
+	shape.height = 3.4
+	var collision := CollisionShape3D.new()
+	collision.shape = shape
+	var area := Area3D.new()
+	area.position = center + Vector3.DOWN * 1.3
+	area.add_child(collision)
+	area.body_entered.connect(func(body: Node3D) -> void: lava_touched.emit(body))
+	return area
+
+
+func _embers(center: Vector3, radius: float, material: Material) -> CPUParticles3D:
+	var quad := QuadMesh.new()
+	quad.size = Vector2(0.12, 0.12)
+	quad.material = material
+	var gradient := Gradient.new()
+	gradient.set_color(0, Color(1.0, 0.8, 0.3, 1.0))
+	gradient.set_color(1, Color(1.0, 0.2, 0.05, 0.0))
+	var embers := CPUParticles3D.new()
+	embers.mesh = quad
+	embers.position = center + Vector3.UP * 0.2
+	embers.amount = 18
+	embers.lifetime = 3.5
+	embers.preprocess = 3.5
+	embers.emission_shape = CPUParticles3D.EMISSION_SHAPE_SPHERE
+	embers.emission_sphere_radius = radius * 0.8
+	embers.direction = Vector3.UP
+	embers.spread = 25.0
+	embers.gravity = Vector3(0.3, 0.4, 0.0)
+	embers.initial_velocity_min = 0.6
+	embers.initial_velocity_max = 1.8
+	embers.color_ramp = gradient
+	return embers
+
+
+func _ember_material() -> StandardMaterial3D:
+	var material := StandardMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.vertex_color_use_as_albedo = true
+	material.albedo_color = Color(2.5, 1.4, 0.6)
+	return material
 
 
 func _smoke(center: Vector3, radius: float, texture: Texture2D) -> CPUParticles3D:

@@ -15,6 +15,7 @@ var _message_tween: Tween
 @onready var _reader_title: Label = %ReaderTitle
 @onready var _reader_body: Label = %ReaderBody
 @onready var _fade: ColorRect = %Fade
+@onready var _crosshair: ColorRect = %Crosshair
 
 
 func _ready() -> void:
@@ -30,6 +31,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("interact") or event.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
 		_reader.hide()
+		_crosshair.show()
 		reader_closed.emit()
 
 
@@ -54,6 +56,11 @@ func show_text(title: String, body: String) -> void:
 	_reader_title.text = title
 	_reader_body.text = body
 	_reader.show()
+	_crosshair.hide()
+
+
+func set_crosshair_visible(value: bool) -> void:
+	_crosshair.visible = value
 
 
 func fade(to_black: bool) -> void:
