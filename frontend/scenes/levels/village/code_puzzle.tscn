@@ -53,6 +53,7 @@ layout_mode = 2
 theme_override_constants/separation = 14
 
 [node name="Title" type="Label" parent="Root/Panel/Content"]
+theme_type_variation = &"TitleLabel"
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.78, 1, 1)
 theme_override_font_sizes/font_size = 38
@@ -83,6 +84,7 @@ size_flags_horizontal = 3
 theme_override_constants/separation = 12
 
 [node name="Heading" type="Label" parent="Root/Panel/Content/Body/Trial"]
+theme_type_variation = &"TitleLabel"
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.85, 0.5, 1)
@@ -139,6 +141,7 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="NotesTitle" type="Label" parent="Root/Panel/Content/Body/Notes"]
+theme_type_variation = &"TitleLabel"
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.85, 0.5, 1)
 theme_override_font_sizes/font_size = 26

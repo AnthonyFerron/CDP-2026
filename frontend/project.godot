@@ -77,3 +77,8 @@ inventory={
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
+
+[gui]
+
+theme/custom="res://ui/codequest_theme.tres"
+theme/custom_font="res://assets/fonts/Lora.ttf"

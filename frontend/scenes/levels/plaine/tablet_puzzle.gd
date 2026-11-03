@@ -113,6 +113,8 @@ func _button(text: String) -> Button:
 	button.text = text
 	button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	# Les fragments sont des phrases : ils s'écrivent en Lora, comme les textes longs.
+	button.theme_type_variation = &"TextButton"
 	button.custom_minimum_size = Vector2(0, 54)
 	button.add_theme_font_size_override("font_size", 22)
 	return button
