@@ -43,8 +43,8 @@ func _reset() -> void:
 	for phase in shuffled:
 		var button := Button.new()
 		button.text = phase
-		button.custom_minimum_size = Vector2(0, 44)
-		button.add_theme_font_size_override("font_size", 20)
+		button.custom_minimum_size = Vector2(0, 66)
+		button.add_theme_font_size_override("font_size", 30)
 		button.pressed.connect(_on_phase_pressed.bind(button))
 		_buttons.add_child(button)
 

@@ -3,20 +3,20 @@
 [ext_resource type="Script" path="res://scenes/ui/hud.gd" id="1_hud"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_reader"]
-content_margin_left = 32.0
-content_margin_top = 24.0
-content_margin_right = 32.0
-content_margin_bottom = 24.0
+content_margin_left = 48
+content_margin_top = 36
+content_margin_right = 48
+content_margin_bottom = 36
 bg_color = Color(0.11, 0.08, 0.06, 0.95)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
 border_color = Color(0.62, 0.42, 0.2, 1)
-corner_radius_top_left = 6
-corner_radius_top_right = 6
-corner_radius_bottom_right = 6
-corner_radius_bottom_left = 6
+corner_radius_top_left = 9
+corner_radius_top_right = 9
+corner_radius_bottom_right = 9
+corner_radius_bottom_left = 9
 
 [node name="Hud" type="CanvasLayer"]
 script = ExtResource("1_hud")
@@ -28,10 +28,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -2.0
-offset_top = -2.0
-offset_right = 2.0
-offset_bottom = 2.0
+offset_left = -3
+offset_top = -3
+offset_right = 3
+offset_bottom = 3
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -41,12 +41,12 @@ color = Color(1, 0.95, 0.85, 0.75)
 unique_name_in_owner = true
 anchors_preset = 10
 anchor_right = 1.0
-offset_top = 32.0
-offset_bottom = 72.0
+offset_top = 48
+offset_bottom = 108
 grow_horizontal = 2
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 6
-theme_override_font_sizes/font_size = 24
+theme_override_constants/outline_size = 9
+theme_override_font_sizes/font_size = 36
 horizontal_alignment = 1
 
 [node name="Prompt" type="Label" parent="."]
@@ -55,13 +55,13 @@ anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -96.0
-offset_bottom = -56.0
+offset_top = -144
+offset_bottom = -84
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 6
-theme_override_font_sizes/font_size = 22
+theme_override_constants/outline_size = 9
+theme_override_font_sizes/font_size = 33
 horizontal_alignment = 1
 
 [node name="Reader" type="CenterContainer" parent="."]
@@ -73,32 +73,32 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Panel" type="PanelContainer" parent="Reader"]
-custom_minimum_size = Vector2(640, 0)
+custom_minimum_size = Vector2(960, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_reader")
 
 [node name="Content" type="VBoxContainer" parent="Reader/Panel"]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 24
 
 [node name="ReaderTitle" type="Label" parent="Reader/Panel/Content"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.75, 0.4, 1)
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 42
 horizontal_alignment = 1
 
 [node name="ReaderBody" type="Label" parent="Reader/Panel/Content"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(576, 0)
+custom_minimum_size = Vector2(864, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 30
 autowrap_mode = 3
 
 [node name="Hint" type="Label" parent="Reader/Panel/Content"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.65, 0.6, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 24
 text = "[E] Fermer"
 horizontal_alignment = 1
 
