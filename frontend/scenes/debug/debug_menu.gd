@@ -1,6 +1,7 @@
 extends CanvasLayer
 ## Menu de debug temporaire : F1 ouvre la liste des niveaux pour passer de l'un à l'autre.
 ## Il ne s'affiche que dans les versions de debug, jamais dans le jeu publié.
+## Il porte aussi un formulaire de connexion de test, relié à rien pour le moment.
 
 ## Un niveau est un fichier .tscn de ce dossier, ou un sous-dossier qui contient <nom>/<nom>.tscn.
 const LEVELS_DIR := "res://scenes/levels"
@@ -12,6 +13,10 @@ var _mouse_was_captured := false
 @onready var _reload: Button = %Reload
 @onready var _reset: Button = %Reset
 @onready var _close: Button = %Close
+@onready var _username: LineEdit = %Username
+@onready var _password: LineEdit = %Password
+@onready var _login: Button = %Login
+@onready var _login_status: Label = %LoginStatus
 
 
 func _ready() -> void:
@@ -23,6 +28,8 @@ func _ready() -> void:
 	_reload.pressed.connect(_on_reload_pressed)
 	_reset.pressed.connect(_on_reset_pressed)
 	_close.pressed.connect(close)
+	_login.pressed.connect(_on_login_pressed)
+	_password.text_submitted.connect(_on_login_pressed.unbind(1))
 
 
 func _input(event: InputEvent) -> void:
@@ -81,6 +88,15 @@ func _fill_levels() -> void:
 func _go_to(path: String) -> void:
 	close()
 	get_tree().change_scene_to_file(path)
+
+
+## Le formulaire n'envoie rien : il vérifie seulement que les deux champs sont remplis.
+func _on_login_pressed() -> void:
+	if _username.text.strip_edges().is_empty() or _password.text.is_empty():
+		_login_status.text = "Renseignez l'identifiant et le mot de passe."
+		return
+	_login_status.text = "Formulaire de test : la connexion n'est reliée à aucun serveur."
+	_password.clear()
 
 
 func _on_reload_pressed() -> void:

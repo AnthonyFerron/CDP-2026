@@ -57,6 +57,47 @@ horizontal_alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 
+[node name="LoginSeparator" type="HSeparator" parent="Root/Panel/Content"]
+layout_mode = 2
+
+[node name="LoginTitle" type="Label" parent="Root/Panel/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.8, 0.2, 1)
+theme_override_font_sizes/font_size = 27
+text = "Connexion"
+horizontal_alignment = 1
+
+[node name="Username" type="LineEdit" parent="Root/Panel/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+placeholder_text = "Identifiant"
+
+[node name="Password" type="LineEdit" parent="Root/Panel/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+placeholder_text = "Mot de passe"
+secret = true
+
+[node name="Login" type="Button" parent="Root/Panel/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Se connecter"
+
+[node name="LoginStatus" type="Label" parent="Root/Panel/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(564, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.72, 1)
+theme_override_font_sizes/font_size = 21
+horizontal_alignment = 1
+autowrap_mode = 3
+
 [node name="Separator" type="HSeparator" parent="Root/Panel/Content"]
 layout_mode = 2
 
