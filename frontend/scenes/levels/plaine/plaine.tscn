@@ -33,6 +33,7 @@
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_ash_3.wav" id="38_step3"]
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_ash_4.wav" id="39_step4"]
 
+[ext_resource type="Script" path="res://scenes/levels/hub/volcano.gd" id="90_volcano"]
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ash"]
 sky_top_color = Color(0.14, 0.11, 0.16, 1)
 sky_horizon_color = Color(0.42, 0.28, 0.3, 1)
@@ -433,6 +434,10 @@ mesh = SubResource("BoxMesh_book")
 script = ExtResource("11_interactable")
 prompt = "Prendre le Projenomicon"
 radius = 2.2
+
+[node name="Volcano" type="Node3D" parent="Exterior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, -6, -215)
+script = ExtResource("90_volcano")
 
 [node name="Player" parent="." instance=ExtResource("9_player")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 50)

@@ -82,10 +82,26 @@ func _scatter_grass() -> void:
 func _scatter_small_rocks() -> void:
 	var material := _flat_material(Color(0.2, 0.18, 0.2))
 	var count := small_rock_count / small_rock_models.size()
+	var body := StaticBody3D.new()
+	body.name = "SmallRocks"
+	add_child(body)
 	for model in small_rock_models:
+		var mesh := _load_mesh(model)
+		var size := mesh.get_aabb().size
 		var items: Array[Transform3D] = []
 		for i in count:
-			items.append(_ground_transform(_random_spot(0.3), _rng.randf_range(1.5, 4.0)))
+			var item := _ground_transform(_random_spot(0.3), _rng.randf_range(1.5, 4.0))
+			items.append(item)
+			# Les cailloux assez hauts pour gêner le pas ont une collision à leur taille ; les plus plats se franchissent.
+			var real := size * item.basis.get_scale()
+			if real.y < 0.25:
+				continue
+			var shape := BoxShape3D.new()
+			shape.size = real * 0.85
+			var collision := CollisionShape3D.new()
+			collision.shape = shape
+			collision.transform = Transform3D(item.basis.orthonormalized(), item.origin + Vector3.UP * shape.size.y * 0.5)
+			body.add_child(collision)
 		_add_multimesh(_load_mesh(model), items, material)
 
 
@@ -174,6 +190,9 @@ func _add_lanterns() -> void:
 	var lanterns := Node3D.new()
 	lanterns.name = "Lanterns"
 	add_child(lanterns)
+	var body := StaticBody3D.new()
+	body.name = "LanternPosts"
+	add_child(body)
 	for spot in LANTERNS:
 		var lantern: Node3D = lantern_model.instantiate()
 		var ground := terrain.footing_height(spot.x, spot.y)
@@ -185,6 +204,19 @@ func _add_lanterns() -> void:
 			ground += 0.25
 		lantern.position = Vector3(spot.x, ground, spot.y)
 		lanterns.add_child(lantern)
+		# Le poteau du lampadaire, debout ou couché, a sa collision.
+		var shape := BoxShape3D.new()
+		var collision := CollisionShape3D.new()
+		collision.shape = shape
+		if fallen:
+			# Couché par une rotation autour de z : le poteau s'étend vers -x, dans le cap du lampadaire.
+			var heading := Basis(Vector3.UP, lantern.rotation.y)
+			shape.size = Vector3(3.4, 0.5, 0.5)
+			collision.transform = Transform3D(heading, Vector3(spot.x, ground, spot.y) + heading * Vector3(-1.7, 0.0, 0.0))
+		else:
+			shape.size = Vector3(0.5, 3.4, 0.5)
+			collision.position = Vector3(spot.x, ground + 1.7, spot.y)
+		body.add_child(collision)
 		if not fallen:
 			var light := MeshInstance3D.new()
 			light.mesh = bulb

@@ -45,6 +45,7 @@
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_splash_1.wav" id="46_splash1"]
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_splash_2.wav" id="47_splash2"]
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_splash_3.wav" id="48_splash3"]
+[ext_resource type="Script" path="res://scenes/levels/hub/volcano.gd" id="90_volcano"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_night"]
 sky_top_color = Color(0.03, 0.045, 0.07, 1)
@@ -115,6 +116,17 @@ size = Vector3(2.0, 0.2, 3.2)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_tomb"]
 size = Vector3(2.0, 1.2, 3.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_step"]
+material = SubResource("StandardMaterial3D_tomb")
+size = Vector3(3.2, 0.39, 0.36)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_stairs"]
+size = Vector3(3.2, 3.9, 3.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_hatch"]
+material = SubResource("StandardMaterial3D_tomb")
+size = Vector3(2.6, 0.12, 2.0)
 
 [sub_resource type="BoxMesh" id="BoxMesh_book"]
 material = SubResource("StandardMaterial3D_book")
@@ -283,13 +295,63 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -40, 0)
 [node name="Crypt" parent="Interior" instance=ExtResource("50_crypt")]
 
 [node name="InsideSpawn" type="Marker3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 3.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 1.2)
+
+[node name="Stairs" type="StaticBody3D" parent="Interior"]
+
+[node name="Step0" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.195, 2.38)
+mesh = SubResource("BoxMesh_step")
+
+[node name="Step1" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.585, 2.74)
+mesh = SubResource("BoxMesh_step")
+
+[node name="Step2" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.975, 3.1)
+mesh = SubResource("BoxMesh_step")
+
+[node name="Step3" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.365, 3.46)
+mesh = SubResource("BoxMesh_step")
+
+[node name="Step4" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.755, 3.82)
+mesh = SubResource("BoxMesh_step")
+
+[node name="Step5" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.145, 4.18)
+mesh = SubResource("BoxMesh_step")
+
+[node name="Step6" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.535, 4.54)
+mesh = SubResource("BoxMesh_step")
+
+[node name="Step7" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.925, 4.9)
+mesh = SubResource("BoxMesh_step")
+
+[node name="Step8" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.315, 5.26)
+mesh = SubResource("BoxMesh_step")
+
+[node name="Step9" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.705, 5.62)
+mesh = SubResource("BoxMesh_step")
+
+[node name="Shape" type="CollisionShape3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.95, 4.0)
+shape = SubResource("BoxShape3D_stairs")
+
+[node name="Hatch" type="MeshInstance3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.05, 4.9)
+mesh = SubResource("BoxMesh_hatch")
 
 [node name="Exit" type="Node3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 5.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 2.4)
 script = ExtResource("11_interactable")
-prompt = "Remonter à la surface"
-radius = 2.2
+prompt = "Remonter l'escalier"
+radius = 2.4
 
 [node name="LightEntry" type="OmniLight3D" parent="Interior"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.3, 2)
@@ -389,6 +451,113 @@ omni_range = 4.0
 script = ExtResource("11_interactable")
 prompt = "Prendre le Logiconomicon"
 radius = 2.8
+
+[node name="Kings" type="Node3D" parent="Interior"]
+
+[node name="King1" type="StaticBody3D" parent="Interior/Kings"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.5, 0, -7.8)
+
+[node name="Base" type="MeshInstance3D" parent="Interior/Kings/King1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_tomb")
+
+[node name="Lid" type="MeshInstance3D" parent="Interior/Kings/King1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
+mesh = SubResource("BoxMesh_lid")
+
+[node name="Shape" type="CollisionShape3D" parent="Interior/Kings/King1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+shape = SubResource("BoxShape3D_tomb")
+
+[node name="Name" type="Label3D" parent="Interior/Kings/King1"]
+transform = Transform3D(-1, 0, 1.22465e-16, 0, 1, 0, -1.22465e-16, 0, -1, 0, 0.6, -1.52)
+pixel_size = 0.0035
+modulate = Color(0.92, 0.85, 0.62, 1)
+text = "Roi Codeon I"
+font_size = 64
+outline_size = 10
+
+[node name="King2" type="StaticBody3D" parent="Interior/Kings"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.5, 0, -7.8)
+
+[node name="Base" type="MeshInstance3D" parent="Interior/Kings/King2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_tomb")
+
+[node name="Lid" type="MeshInstance3D" parent="Interior/Kings/King2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
+mesh = SubResource("BoxMesh_lid")
+
+[node name="Shape" type="CollisionShape3D" parent="Interior/Kings/King2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+shape = SubResource("BoxShape3D_tomb")
+
+[node name="Name" type="Label3D" parent="Interior/Kings/King2"]
+transform = Transform3D(-1, 0, 1.22465e-16, 0, 1, 0, -1.22465e-16, 0, -1, 0, 0.6, -1.52)
+pixel_size = 0.0035
+modulate = Color(0.92, 0.85, 0.62, 1)
+text = "Roi Codeon II"
+font_size = 64
+outline_size = 10
+
+[node name="King3" type="StaticBody3D" parent="Interior/Kings"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.5, 0, -16.2)
+
+[node name="Base" type="MeshInstance3D" parent="Interior/Kings/King3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_tomb")
+
+[node name="Lid" type="MeshInstance3D" parent="Interior/Kings/King3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
+mesh = SubResource("BoxMesh_lid")
+
+[node name="Shape" type="CollisionShape3D" parent="Interior/Kings/King3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+shape = SubResource("BoxShape3D_tomb")
+
+[node name="Name" type="Label3D" parent="Interior/Kings/King3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0.6, 1.52)
+pixel_size = 0.0035
+modulate = Color(0.92, 0.85, 0.62, 1)
+text = "Roi Codeon III"
+font_size = 64
+outline_size = 10
+
+[node name="King4" type="StaticBody3D" parent="Interior/Kings"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.5, 0, -16.2)
+
+[node name="Base" type="MeshInstance3D" parent="Interior/Kings/King4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_tomb")
+
+[node name="Lid" type="MeshInstance3D" parent="Interior/Kings/King4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
+mesh = SubResource("BoxMesh_lid")
+
+[node name="Shape" type="CollisionShape3D" parent="Interior/Kings/King4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+shape = SubResource("BoxShape3D_tomb")
+
+[node name="Name" type="Label3D" parent="Interior/Kings/King4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0.6, 1.52)
+pixel_size = 0.0035
+modulate = Color(0.92, 0.85, 0.62, 1)
+text = "Roi Codeon IV"
+font_size = 64
+outline_size = 10
+
+[node name="KingsTribute" type="Label3D" parent="Interior"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 29.4, 2.4, -12)
+pixel_size = 0.0042
+modulate = Color(0.92, 0.85, 0.62, 1)
+text = "Nos bons rois et protecteurs\ndu Royaume de Codia !"
+font_size = 64
+outline_size = 12
+horizontal_alignment = 1
+
+[node name="Volcano" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, -6, -215)
+script = ExtResource("90_volcano")
 
 [node name="Player" parent="." instance=ExtResource("9_player")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0.6, 57)

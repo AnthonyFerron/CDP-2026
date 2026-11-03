@@ -7,8 +7,7 @@
 [ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/candle-multiple.glb" id="5_model"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/coffin-old.glb" id="6_model"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/urn-round.glb" id="7_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/grave.glb" id="8_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/lantern-candle.glb" id="9_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/lantern-candle.glb" id="8_model"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
 size = Vector3(4, 0.5, 4)
@@ -530,22 +529,10 @@ transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -20.8, 0, -15.6)
 [node name="urn_round_165" parent="Models" instance=ExtResource("7_model")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -29, 0, -8.6)
 
-[node name="grave_166" parent="Models" instance=ExtResource("8_model")]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 21, 0, -8.6)
-
-[node name="grave_167" parent="Models" instance=ExtResource("8_model")]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 27, 0, -8.6)
-
-[node name="grave_168" parent="Models" instance=ExtResource("8_model")]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 21, 0, -15.4)
-
-[node name="grave_169" parent="Models" instance=ExtResource("8_model")]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 27, 0, -15.4)
-
-[node name="lantern_candle_170" parent="Models" instance=ExtResource("9_model")]
+[node name="lantern_candle_166" parent="Models" instance=ExtResource("8_model")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 29, 0, -9)
 
-[node name="lantern_candle_171" parent="Models" instance=ExtResource("9_model")]
+[node name="lantern_candle_167" parent="Models" instance=ExtResource("8_model")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 29, 0, -15)
 
 [node name="Collision" type="StaticBody3D" parent="."]

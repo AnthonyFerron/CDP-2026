@@ -31,7 +31,12 @@ def build_gate(scene):
         for index, model in enumerate(("wall", "wall", "wall-corner")):
             x = sign * (GATE_SCALE * (index + 1))
             scene.add(f"mini_arena/{model}", (x, 0.0, z), 0.0 if sign > 0 else 180.0, GATE_SCALE)
-            scene.add_box((x, GATE_SCALE / 2, z), (GATE_SCALE, GATE_SCALE, 0.6 * GATE_SCALE))
+            if model == "wall-corner":
+                # L'angle n'occupe que 0,8 tuile, décalé vers l'intérieur du mur : sa collision le suit.
+                scene.add_box((x - sign * 0.1 * GATE_SCALE, GATE_SCALE / 2, z - sign * 0.1 * GATE_SCALE),
+                              (0.8 * GATE_SCALE, GATE_SCALE, 0.8 * GATE_SCALE))
+            else:
+                scene.add_box((x, GATE_SCALE / 2, z), (GATE_SCALE, GATE_SCALE, 0.6 * GATE_SCALE))
         scene.add("castle_kit/flag-banner-long", (sign * 3.0, 0.0, z + 1.8), -90.0, 2.4)
     for x, z_offset, degrees in ((-7.0, 3.0, 20.0), (8.0, 2.5, -40.0)):
         scene.add("mini_arena/bricks", (x, 0.0, z + z_offset), degrees, 3.0)
@@ -67,8 +72,8 @@ def build_cellar(scene):
         scene.add_box((x, 2.25, z), size)
     for z in (0.25, -12.25):
         scene.add_box((0.0, 2.25, z), (20.0, 4.5, 0.5))
-    # Colonnes le long des murs et autour du coffre, pour laisser libre l'accès aux tablettes.
-    for x, z in ((-8.2, -6.0), (8.2, -6.0), (-3.2, -9.8), (3.2, -9.8)):
+    # Colonnes autour du coffre ; les murs est et ouest restent dégagés pour les deux algorithmes.
+    for x, z in ((-3.2, -9.8), (3.2, -9.8)):
         scene.add("mini_dungeon/column", (x, 0.0, z), 0.0, 3.6)
         scene.add_box((x, 2.0, z), (1.6, 4.0, 1.6))
     for x, z, degrees in ((-8.5, -2.0, 90.0), (8.5, -2.0, -90.0)):

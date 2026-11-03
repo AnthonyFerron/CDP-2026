@@ -238,7 +238,7 @@ transform = Transform3D(2.29813, 0, 1.92836, 0, 3, 0, -1.92836, 0, 2.29813, 21.8
 transform = Transform3D(-3, 0, 0, 0, 3, 0, -0, 0, -3, 16.5, 0.4, 4.6)
 
 [node name="pine_crooked_52" parent="Models" instance=ExtResource("19_model")]
-transform = Transform3D(3.3424, 0, -1.03843, 0, 3.5, 0, 1.03843, 0, 3.3424, 9, 0.4, -7.5)
+transform = Transform3D(3.3424, 0, -1.03843, 0, 3.5, 0, 1.03843, 0, 3.3424, 14, 0.4, -9.5)
 
 [node name="pine_crooked_53" parent="Models" instance=ExtResource("19_model")]
 transform = Transform3D(0.3087, 0, -3.48636, 0, 3.5, 0, 3.48636, 0, 0.3087, 24, 0.4, 7.5)
@@ -382,7 +382,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 16.5, 1.15, 4.6)
 shape = SubResource("BoxShape3D_12")
 
 [node name="Box25" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 9, 2, -7.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 14, 2, -9.5)
 shape = SubResource("BoxShape3D_13")
 
 [node name="Box26" type="CollisionShape3D" parent="Collision"]

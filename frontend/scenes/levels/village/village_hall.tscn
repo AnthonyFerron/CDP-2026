@@ -190,7 +190,7 @@ transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 2.4, 0, 5.7)
 transform = Transform3D(3.6, 0, 0, 0, 3.6, 0, 0, 0, 3.6, -6.982, 0, 4.6)
 
 [node name="barrel_35" parent="Models" instance=ExtResource("17_model")]
-transform = Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, -5.6, 0, 5.2)
+transform = Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, -4.9, 0, 5.2)
 
 [node name="rugRectangle_36" parent="Models" instance=ExtResource("18_model")]
 transform = Transform3D(0, 0, 2.6, 0, 2.6, 0, -2.6, 0, 0, -0.804, 0.02, 4.641)
@@ -442,7 +442,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -7, 0.45, 4.6)
 shape = SubResource("BoxShape3D_12")
 
 [node name="Box28" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -5.6, 0.6, 5.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -4.9, 0.6, 5.2)
 shape = SubResource("BoxShape3D_13")
 
 [node name="Box29" type="CollisionShape3D" parent="Collision"]

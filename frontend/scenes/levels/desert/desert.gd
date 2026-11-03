@@ -60,6 +60,7 @@ func _ready() -> void:
 	var interaction: InteractionController = _player.get_node("Interaction")
 	interaction.prompt_changed.connect(_hud.set_prompt)
 	_hud.reader_closed.connect(_close_panel)
+	_raise_gate_grille()
 	for clues: Node in [$Exterior/Clues, $Interior/Clues]:
 		for clue: Readable in clues.get_children():
 			clue.interacted.connect(_read.bind(clue))
@@ -308,3 +309,10 @@ func _create_sandstorm() -> CPUParticles3D:
 	storm.initial_velocity_max = 13.0
 	storm.color_ramp = gradient
 	return storm
+
+
+## La grille de la porte de la muraille est relevée dans son logement : le passage est libre, comme sa collision.
+func _raise_gate_grille() -> void:
+	var grille := $Exterior/Ruins.find_child("gate", true, false) as Node3D
+	if grille:
+		grille.position.y += 0.62

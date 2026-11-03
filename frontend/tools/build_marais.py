@@ -87,7 +87,7 @@ def build_cemetery(scene, rng):
     scene.add("graveyard_kit/candle-multiple", (21.8, GROUND, -0.2), 40.0, 3.0)
     scene.add("graveyard_kit/bench-damaged", (16.5, GROUND, 4.6), 180.0, 3.0)
     scene.add_box((16.5, 0.75 + GROUND, 4.6), (2.7, 1.5, 1.3))
-    for x, z in ((9.0, -7.5), (24.0, 7.5), (24.0, -7.5)):
+    for x, z in ((14.0, -9.5), (24.0, 7.5), (24.0, -7.5)):
         scene.add("graveyard_kit/pine-crooked", (x, GROUND, z), rng.uniform(0, 360), 3.5)
         scene.add_box((x, 2.0, z), (0.8, 4.0, 0.8))
 
@@ -160,9 +160,7 @@ def build_crypt_underground(scene, rng):
         scene.add_box((x, 0.3, z), (2.6, 0.6, 1.8) if degrees else (1.8, 0.6, 2.6))
     for x, z in ((-20.8, -8.4), (-20.8, -15.6), (-29.0, -8.6)):
         scene.add("graveyard_kit/urn-round", (x, 0.0, z), 0.0, 3.0)
-    # Chambre de l'est : tombes alignées autour du tombeau du livre, qui est posé dans marais.tscn.
-    for x, z in ((21.0, -8.6), (27.0, -8.6), (21.0, -15.4), (27.0, -15.4)):
-        scene.add("graveyard_kit/grave", (x, 0.0, z), 0.0, 3.0)
+    # Chambre de l'est : les tombeaux des rois Codeon I à IV entourent celui du livre ; tous sont posés dans marais.tscn.
     for x, z in ((29.0, -9.0), (29.0, -15.0)):
         scene.add("graveyard_kit/lantern-candle", (x, 0.0, z), 0.0, 3.0)
 

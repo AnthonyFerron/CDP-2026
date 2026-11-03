@@ -160,6 +160,7 @@ MODEL_BOXES = {
     "furniture_kit/sideTable": ((-0.01, 0.0, -0.21), (0.53, 0.38, 0.22)),
     "furniture_kit/cabinetBed": ((-0.01, 0.0, -0.21), (0.27, 0.23, 0.22)),
     "furniture_kit/tableCloth": ((0.0, 0.0, -0.45), (0.84, 0.33, 0.45)),
+    "furniture_kit/table": ((0.0, 0.0, -0.45), (0.84, 0.33, 0.45)),
     "furniture_kit/tableRound": ((0.0, -0.27, -0.8), (0.69, 0.37, 0.8)),
     "furniture_kit/chairDesk": ((-0.17, 0.0, -0.28), (0.48, 0.42, 0.44)),
     "furniture_kit/chair": ((0.0, 0.0, -0.2), (0.2, 0.47, 0.2)),
@@ -193,6 +194,9 @@ MODEL_BOXES = {
     "castle_kit/tree-large": ((-0.44, 0.0, -0.44), (0.89, 1.85, 0.89)),
     "castle_kit/tree-small": ((-0.37, 0.0, -0.36), (0.74, 1.35, 0.72)),
     "fantasy_town_kit/pillar-stone": ((-0.08, 0.0, -0.08), (0.16, 1.0, 0.16)),
+    "fantasy_town_kit/stall-red": ((-0.5, 0.0, -0.5), (1.0, 1.24, 1.0)),
+    "fantasy_town_kit/stall-green": ((-0.5, 0.0, -0.5), (1.0, 1.24, 1.0)),
+    "fantasy_town_kit/stall": ((-0.32, 0.0, -0.5), (0.65, 0.37, 1.0)),
     "fantasy_town_kit/cart": ((-0.32, 0.0, -0.64), (0.65, 0.54, 1.34)),
     "fantasy_town_kit/wheel": ((0.2, 0.0, -0.23), (0.24, 0.48, 0.47)),
     "fantasy_town_kit/poles-horizontal": ((0.4, 0.0, -0.5), (0.1, 1.0, 1.0)),
@@ -291,13 +295,14 @@ def build_ruins():
     for x in (-6.0, -2.4, 2.4, 6.0):
         scene.add("fantasy_town_kit/pillar-stone", (x, 0.0, front + 3.0), 0.0, 8.0)
         scene.add_box((x, 4.0, front + 3.0), (1.3, 8.0, 1.3))
-    furniture(scene, "fantasy_town_kit/pillar-stone", (11.0, 0.0, 11.0), 40.0, 7.0, tilt=90.0)
+    furniture(scene, "fantasy_town_kit/pillar-stone", (11.0, 0.0, 11.0), 40.0, 7.0, height=1.2, tilt=90.0)
 
     # Bannières et lanternes qui encadrent l'entrée.
     scene.add("fantasy_town_kit/banner-red", (-1.8, 2.6, front + 0.15), -90.0, 3.0)
     scene.add("fantasy_town_kit/banner-red", (1.8, 2.6, front + 0.15), -90.0, 3.0)
-    scene.add("fantasy_town_kit/lantern", (-2.3, 0.0, front + 1.5), 0.0, 2.2)
-    scene.add("fantasy_town_kit/lantern", (2.3, 0.0, front + 1.5), 0.0, 2.2)
+    for x in (-2.3, 2.3):
+        scene.add("fantasy_town_kit/lantern", (x, 0.0, front + 1.5), 0.0, 2.2)
+        scene.add_box((x, 1.7, front + 1.5), (0.5, 3.4, 0.5))
 
     # Gravats et rayonnages renversés, à l'intérieur comme devant le bâtiment.
     for model, position, degrees, scale in (
@@ -309,16 +314,15 @@ def build_ruins():
     ):
         scene.add(f"fantasy_town_kit/{model}", position, degrees, scale)
         scene.add_box((position[0], 0.9 * scale / 2, position[2]), (1.2 * scale, 0.9 * scale, 1.2 * scale))
+    # Rayonnages renversés au sol et rayonnages encore debout, chacun avec sa collision.
     for position, degrees, tilt in (
-        ((-5.0, 0.4, 2.0), 20.0, 70.0),
-        ((3.0, 0.4, -6.0), -35.0, 80.0),
+        ((-5.0, 0.0, 2.0), 20.0, 90.0),
+        ((3.0, 0.0, -6.0), -35.0, 90.0),
         ((-7.0, 0.0, -7.0), 90.0, 0.0),
         ((7.0, 0.0, -4.0), -90.0, 0.0),
-        ((13.5, 0.4, 7.0), 60.0, 75.0),
+        ((13.5, 0.0, 7.0), 60.0, 90.0),
     ):
-        scene.add("furniture_kit/bookcaseClosedWide", position, degrees, 3.2, tilt=tilt)
-    scene.add_box((-7.0 + 0.4, 1.25, -7.0 - 1.28), (0.8, 2.5, 2.56))
-    scene.add_box((7.0 - 0.4, 1.25, -4.0 + 1.28), (0.8, 2.5, 2.56))
+        furniture(scene, "furniture_kit/bookcaseClosedWide", position, degrees, 3.2, height=2.5, tilt=tilt)
     for position, degrees in (((-3.0, 0.0, 12.5), 30.0), ((4.5, 0.0, 13.5), 200.0), ((-9.0, 0.0, 12.5), 80.0)):
         scene.add("furniture_kit/books", position, degrees, 5.0)
     return scene
@@ -363,32 +367,27 @@ def build_interior():
     scene.add_box(floor_center, floor_size)
     scene.add_box((0.0, WALL_HEIGHT + 0.25, (end - 4.0) / 2), floor_size)
 
-    # Rayonnages : le long des murs de chaque salle, sauf devant les passages.
-    west, east = (-half_width + WALL_THICKNESS / 2, 0), (half_width - WALL_THICKNESS / 2, 0)
+    # Rayonnages : le long des murs de chaque salle, sauf devant les passages. Chacun est centré sur sa
+    # collision, son dos contre la face intérieure du mur.
+    shelf_scale = 3.2
+    depth = 0.25 * shelf_scale
+    inner = half_width - WALL_THICKNESS / 2
     for room in range(rooms):
         start = -room_length * room
         for offset, shelf in ((-3.0, "bookcaseClosedWide"), (-6.0, "bookcaseOpen"), (-9.0, "bookcaseClosedWide")):
-            width = 0.8 if shelf == "bookcaseClosedWide" else 0.4
-            against_wall(scene, shelf, (west[0], start + offset), (1, 0), width=width, height=0.88)
-            against_wall(scene, shelf, (east[0], start + offset), (-1, 0), width=width, height=0.88)
-    against_wall(scene, "bookcaseClosedWide", (3.2, -0.25), (0, -1), height=0.88)
-    against_wall(scene, "bookcaseClosedWide", (-3.2, -0.25), (0, -1), height=0.88)
-    against_wall(scene, "bookcaseClosed", (0.6, -room_length - 0.25), (0, -1), width=0.4, height=0.88)
-    against_wall(scene, "bookcaseClosed", (-0.6, -room_length * 2 - 0.25), (0, -1), width=0.4, height=0.88)
+            model = f"furniture_kit/{shelf}"
+            height = MODEL_BOXES[model][1][1] * shelf_scale
+            furniture(scene, model, (-inner + depth / 2, 0.0, start + offset), -90.0, shelf_scale, height=height)
+            furniture(scene, model, (inner - depth / 2, 0.0, start + offset), 90.0, shelf_scale, height=height)
+    for model, x, z in (("bookcaseClosedWide", 3.2, -0.25), ("bookcaseClosedWide", -3.2, -0.25),
+                        ("bookcaseClosed", 0.6, -room_length - 0.25), ("bookcaseClosed", -0.6, -room_length * 2 - 0.25)):
+        model = f"furniture_kit/{model}"
+        furniture(scene, model, (x, 0.0, z - depth / 2), 180.0, shelf_scale, height=MODEL_BOXES[model][1][1] * shelf_scale)
 
     # Tables de lecture : chacune porte un indice, placé dans plaine.tscn.
     for x, z, degrees in ((0.0, -6.0, 0.0), (0.0, -18.0, 90.0), (-2.5, -28.0, 0.0), (2.5, -28.0, 0.0)):
-        radians = math.radians(degrees)
-        half_x, half_z = 0.84 * 1.5, 0.45 * 1.5
-        origin = (
-            x - half_x * math.cos(radians) - half_z * math.sin(radians),
-            0.0,
-            z + half_x * math.sin(radians) - half_z * math.cos(radians) + 2 * half_z * math.cos(radians),
-        )
-        scene.add("furniture_kit/table", origin, degrees, 3.0)
-        size = (2.5, 1.0, 1.35) if degrees == 0 else (1.35, 1.0, 2.5)
-        scene.add_box((x, 0.5, z), size)
-        scene.add("furniture_kit/books", (x - 0.2, 1.0, z), degrees, 3.0)
+        furniture(scene, "furniture_kit/table", (x, 0.0, z), degrees, 3.0, height=1.0)
+        furniture(scene, "furniture_kit/books", (x - 0.2, 1.0, z), degrees, 3.0)
 
     # Détails au sol et lumières de décor, modestes pour rester légères.
     scene.add("furniture_kit/rugRectangle", (-1.7, 0.01, -2.0), 0.0, 3.0)

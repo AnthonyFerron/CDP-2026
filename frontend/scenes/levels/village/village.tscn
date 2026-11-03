@@ -43,6 +43,7 @@
 [ext_resource type="PackedScene" path="res://scenes/levels/village/code_puzzle.tscn" id="54_code_puzzle"]
 [ext_resource type="PackedScene" path="res://scenes/levels/village/paper_notebook.tscn" id="55_notebook"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/furniture_kit/bookcaseClosedWide.glb" id="56_shelf"]
+[ext_resource type="Script" path="res://scenes/levels/hub/volcano.gd" id="90_volcano"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_dusk"]
 sky_top_color = Color(0.26, 0.28, 0.42, 1)
@@ -723,19 +724,19 @@ flicker = 0.1
 [node name="Fragments" type="Node3D" parent="Interior"]
 
 [node name="Fragment0" type="Node3D" parent="Interior/Fragments"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4, 1.12, -0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4, 1.075, -0.4)
 script = ExtResource("51_fragment")
 radius = 2.2
 fragment = 0
 
 [node name="Fragment2" type="Node3D" parent="Interior/Fragments"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.3, 1.02, 3.1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.3, 1, 3.1)
 script = ExtResource("51_fragment")
 radius = 2.2
 fragment = 2
 
 [node name="Fragment3" type="Node3D" parent="Interior/Fragments"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 1.02, -0.8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 1, -0.8)
 script = ExtResource("51_fragment")
 radius = 2.2
 fragment = 3
@@ -749,38 +750,38 @@ fragment = 4
 hidden_at_start = true
 
 [node name="Fragment7" type="Node3D" parent="Interior/Fragments"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 1.05, -5.15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.18, -5)
 script = ExtResource("51_fragment")
 radius = 2.2
 fragment = 7
 
 [node name="Fragment8" type="Node3D" parent="Interior/Fragments"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, 0.03, 5.55)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.15, 0.03, 5.5)
 script = ExtResource("51_fragment")
 radius = 2.2
 fragment = 8
 
 [node name="Fragment5" type="Node3D" parent="Interior/Fragments"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 5.62, -0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 5.575, -0.4)
 script = ExtResource("51_fragment")
 radius = 2.2
 fragment = 5
 
 [node name="Fragment1" type="Node3D" parent="Interior/Fragments"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 5.52, -0.8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 5.5, -0.8)
 script = ExtResource("51_fragment")
 radius = 2.2
 fragment = 1
 hidden_at_start = true
 
 [node name="Fragment9" type="Node3D" parent="Interior/Fragments"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 5.55, 5.15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.6, 5.68, -5)
 script = ExtResource("51_fragment")
 radius = 2.2
 fragment = 9
 
 [node name="Fragment6" type="Node3D" parent="Interior/Fragments"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 4.53, 4.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 4.53, 4.6)
 script = ExtResource("51_fragment")
 radius = 2.2
 fragment = 6
@@ -966,6 +967,10 @@ omni_range = 3.0
 script = ExtResource("53_interactable")
 prompt = "Prendre le Codonomicon"
 radius = 2.6
+
+[node name="Volcano" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, -6, -215)
+script = ExtResource("90_volcano")
 
 [node name="Player" parent="." instance=ExtResource("8_player")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0.3, 57)
