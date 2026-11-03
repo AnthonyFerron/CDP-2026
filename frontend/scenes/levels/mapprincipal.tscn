@@ -1,23 +1,814 @@
 [gd_scene format=3 uid="uid://bodd6xijjn3ka"]
 
-[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_suq4g"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1_player"]
+[ext_resource type="PackedScene" uid="uid://d27uh4h7by87e" path="res://assets/models/kenney/castle_kit/wall.glb" id="2_wall"]
+[ext_resource type="PackedScene" uid="uid://6mfhs54nifbq" path="res://assets/models/kenney/castle_kit/wall-doorway.glb" id="3_gate"]
+[ext_resource type="PackedScene" uid="uid://btwad7vcw8t5d" path="res://assets/models/kenney/castle_kit/tower-square-base.glb" id="4_tower_base"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/tower-square-mid-windows.glb" id="5_tower_mid"]
+[ext_resource type="PackedScene" uid="uid://iyaq80nomreo" path="res://assets/models/kenney/castle_kit/tower-square-top.glb" id="6_tower_top"]
+[ext_resource type="PackedScene" uid="uid://k0vc8k8c26g6" path="res://assets/models/kenney/castle_kit/stairs-stone.glb" id="7_stairs"]
+[ext_resource type="PackedScene" uid="uid://drtky7fp2ebiw" path="res://assets/models/kenney/nature_kit/tree_default_dark.glb" id="8_tree"]
+[ext_resource type="PackedScene" uid="uid://cqg5snqm6vwtn" path="res://assets/models/kenney/nature_kit/tree_pineDefaultA.glb" id="9_pine"]
+[ext_resource type="PackedScene" uid="uid://daj8dpm1t3rq6" path="res://assets/models/kenney/nature_kit/rock_largeA.glb" id="10_rock_a"]
+[ext_resource type="PackedScene" uid="uid://bsy16qlafkyht" path="res://assets/models/kenney/nature_kit/rock_largeC.glb" id="11_rock_b"]
+[ext_resource type="PackedScene" uid="uid://6ff5ecyrub1n" path="res://assets/models/kenney/survival_kit/tent.glb" id="12_tent"]
+[ext_resource type="PackedScene" uid="uid://7oebfbfywl58" path="res://assets/models/kenney/survival_kit/campfire-pit.glb" id="13_fire"]
+[ext_resource type="PackedScene" uid="uid://i2y6f23hy0x3" path="res://assets/models/kenney/survival_kit/box.glb" id="14_crate"]
+[ext_resource type="PackedScene" uid="uid://5b75kqjot2ei" path="res://assets/models/kenney/survival_kit/barrel.glb" id="15_barrel"]
+[ext_resource type="PackedScene" uid="uid://baq7a35xtm6st" path="res://assets/models/kenney/survival_kit/signpost.glb" id="16_sign"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/wall-pillar.glb" id="17_wall_pillar"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/wall-stud.glb" id="18_wall_stud"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/flag-banner-long.glb" id="19_banner"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/siege-catapult-demolished.glb" id="20_catapult_ruin"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/wall-half.glb" id="21_wall_half"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w1ig2"]
-albedo_color = Color(0.4263228, 0.93234515, 0.48673296, 1)
+[sub_resource type="ProceduralSkyMaterial" id="SkyMaterial"]
+sky_top_color = Color(0.09, 0.105, 0.18, 1)
+sky_horizon_color = Color(0.72, 0.36, 0.29, 1)
+ground_bottom_color = Color(0.035, 0.04, 0.06, 1)
+ground_horizon_color = Color(0.31, 0.25, 0.29, 1)
+sun_angle_max = 18.0
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_x8yxi"]
-top_radius = 12.550781
-bottom_radius = 12.550781
-height = 11.907349
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMaterial")
 
-[node name="Node3D" type="Node3D" unique_id=1882103080]
+[sub_resource type="Environment" id="Environment"]
+background_mode = 2
+sky = SubResource("Sky")
+ambient_light_source = 3
+ambient_light_color = Color(0.48, 0.51, 0.64, 1)
+ambient_light_energy = 0.6
+reflected_light_source = 2
+tonemap_mode = 2
+fog_enabled = true
+fog_light_color = Color(0.45, 0.42, 0.5, 1)
+fog_light_energy = 0.65
+fog_density = 0.003
+fog_height = -2.0
+fog_height_density = 0.12
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=49359281]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.42620564, 0.9620657, -4.834467)
-material_override = SubResource("StandardMaterial3D_w1ig2")
-mesh = SubResource("CylinderMesh_x8yxi")
+[sub_resource type="StandardMaterial3D" id="GroundMaterial"]
+albedo_color = Color(0.16, 0.205, 0.13, 1)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D" unique_id=1729601127]
+[sub_resource type="CylinderMesh" id="GroundMesh"]
+material = SubResource("GroundMaterial")
+top_radius = 72.0
+bottom_radius = 76.0
+height = 3.0
+radial_segments = 16
 
-[node name="Player" parent="." unique_id=1019453717 instance=ExtResource("2_suq4g")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.1921325, 8.803744, -4.1066008)
+[sub_resource type="CylinderShape3D" id="GroundShape"]
+height = 3.0
+radius = 72.0
+
+[sub_resource type="StandardMaterial3D" id="PathMaterial"]
+albedo_color = Color(0.42, 0.39, 0.35, 1)
+roughness = 0.95
+
+[sub_resource type="BoxMesh" id="PavingMesh"]
+material = SubResource("PathMaterial")
+size = Vector3(4.4, 0.14, 2.7)
+
+[sub_resource type="StandardMaterial3D" id="StoneMaterial"]
+albedo_color = Color(0.34, 0.35, 0.37, 1)
+roughness = 0.92
+
+[sub_resource type="BoxMesh" id="StoneBlockMesh"]
+material = SubResource("StoneMaterial")
+
+[sub_resource type="BoxShape3D" id="StoneBlockShape"]
+
+[sub_resource type="StandardMaterial3D" id="DarkMaterial"]
+albedo_color = Color(0.105, 0.12, 0.14, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="RustMaterial"]
+albedo_color = Color(0.34, 0.18, 0.11, 1)
+metallic = 0.55
+roughness = 0.72
+
+[sub_resource type="BoxShape3D" id="PortalAreaShape"]
+size = Vector3(5, 6, 2.5)
+
+[sub_resource type="StandardMaterial3D" id="BluePortal"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.08, 0.55, 1, 0.78)
+
+[sub_resource type="BoxMesh" id="PortalSurfaceBlue"]
+material = SubResource("BluePortal")
+size = Vector3(4.8, 5.5, 0.16)
+
+[sub_resource type="StandardMaterial3D" id="GreenPortal"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.1, 1, 0.35, 0.78)
+
+[sub_resource type="BoxMesh" id="PortalSurfaceGreen"]
+material = SubResource("GreenPortal")
+size = Vector3(4.8, 5.5, 0.16)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_33ub7"]
+
+[sub_resource type="StandardMaterial3D" id="OrangePortal"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 0.24, 0.04, 0.78)
+
+[sub_resource type="BoxMesh" id="PortalSurfaceOrange"]
+material = SubResource("OrangePortal")
+size = Vector3(4.8, 5.5, 0.16)
+
+[sub_resource type="StandardMaterial3D" id="VioletPortal"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.72, 0.1, 1, 0.78)
+
+[sub_resource type="BoxMesh" id="PortalSurfaceViolet"]
+material = SubResource("VioletPortal")
+size = Vector3(4.8, 5.5, 0.16)
+
+[node name="CodiaHub" type="Node3D" unique_id=1231122563]
+
+[node name="Environnement" type="Node3D" parent="." unique_id=785666557]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Environnement" unique_id=1954086283]
+environment = SubResource("Environment")
+
+[node name="SoleilCouchant" type="DirectionalLight3D" parent="Environnement" unique_id=1994307515]
+transform = Transform3D(0.88294756, 0.3488854, -0.3141378, 0, 0.66913056, 0.74314487, 0.46947157, -0.656158, 0.5908072, 0, 0, 0)
+light_color = Color(1, 0.69, 0.5, 1)
+light_energy = 1.25
+shadow_enabled = true
+directional_shadow_max_distance = 140.0
+
+[node name="Ile" type="StaticBody3D" parent="." unique_id=1637832532]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5, 0)
+
+[node name="Modele3D" type="MeshInstance3D" parent="Ile" unique_id=464686397]
+mesh = SubResource("GroundMesh")
+
+[node name="Collision3D" type="CollisionShape3D" parent="Ile" unique_id=345518983]
+shape = SubResource("GroundShape")
+
+[node name="Chemins" type="Node3D" parent="." unique_id=1649570875]
+
+[node name="Place01" type="MeshInstance3D" parent="Chemins" unique_id=162494953]
+transform = Transform3D(-6.119594e-08, 0, 1, 0, 1, 0, -1.4, 0, -4.371139e-08, -5, 0.08, 0)
+mesh = SubResource("PavingMesh")
+
+[node name="Place02" type="MeshInstance3D" parent="Chemins" unique_id=963126785]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, -5)
+mesh = SubResource("PavingMesh")
+
+[node name="Place03" type="MeshInstance3D" parent="Chemins" unique_id=1004497260]
+transform = Transform3D(-6.119594e-08, 0, 1, 0, 1, 0, -1.4, 0, -4.371139e-08, 5, 0.08, 0)
+mesh = SubResource("PavingMesh")
+
+[node name="Place04" type="MeshInstance3D" parent="Chemins" unique_id=1103695921]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 5)
+mesh = SubResource("PavingMesh")
+
+[node name="Place05" type="MeshInstance3D" parent="Chemins" unique_id=858635149]
+transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, -4, 0.08, -4)
+mesh = SubResource("PavingMesh")
+
+[node name="Place06" type="MeshInstance3D" parent="Chemins" unique_id=811368109]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, 4, 0.08, -4)
+mesh = SubResource("PavingMesh")
+
+[node name="Place07" type="MeshInstance3D" parent="Chemins" unique_id=426603626]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -4, 0.08, 4)
+mesh = SubResource("PavingMesh")
+
+[node name="Place08" type="MeshInstance3D" parent="Chemins" unique_id=1539158783]
+transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, 4, 0.08, 4)
+mesh = SubResource("PavingMesh")
+
+[node name="Nord01" type="MeshInstance3D" parent="Chemins" unique_id=982179383]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, -10)
+mesh = SubResource("PavingMesh")
+
+[node name="Nord02" type="MeshInstance3D" parent="Chemins" unique_id=1729816480]
+transform = Transform3D(0.99939084, 0, 0.034899496, 0, 1, 0, -0.034899496, 0, 0.99939084, 0, 0.08, -14)
+mesh = SubResource("PavingMesh")
+
+[node name="Nord03" type="MeshInstance3D" parent="Chemins" unique_id=1098452972]
+transform = Transform3D(0.99939084, 0, -0.034899496, 0, 1, 0, 0.034899496, 0, 0.99939084, 0, 0.08, -18)
+mesh = SubResource("PavingMesh")
+
+[node name="Nord04" type="MeshInstance3D" parent="Chemins" unique_id=325148211]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, -22)
+mesh = SubResource("PavingMesh")
+
+[node name="Nord05" type="MeshInstance3D" parent="Chemins" unique_id=1666791733]
+transform = Transform3D(0.99939084, 0, 0.034899496, 0, 1, 0, -0.034899496, 0, 0.99939084, 0, 0.08, -26)
+mesh = SubResource("PavingMesh")
+
+[node name="Nord06" type="MeshInstance3D" parent="Chemins" unique_id=683871319]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, -30)
+mesh = SubResource("PavingMesh")
+
+[node name="Nord07" type="MeshInstance3D" parent="Chemins" unique_id=1882095775]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, -34)
+mesh = SubResource("PavingMesh")
+
+[node name="Ouest01" type="MeshInstance3D" parent="Chemins" unique_id=33915908]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -11, 0.08, 0)
+mesh = SubResource("PavingMesh")
+
+[node name="Ouest02" type="MeshInstance3D" parent="Chemins" unique_id=1819311530]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -16, 0.08, 0)
+mesh = SubResource("PavingMesh")
+
+[node name="Ouest03" type="MeshInstance3D" parent="Chemins" unique_id=116710530]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -21, 0.08, 0)
+mesh = SubResource("PavingMesh")
+
+[node name="Ouest04" type="MeshInstance3D" parent="Chemins" unique_id=1639965137]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -26, 0.08, 0)
+mesh = SubResource("PavingMesh")
+
+[node name="Ouest05" type="MeshInstance3D" parent="Chemins" unique_id=255590159]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -31, 0.08, 0)
+mesh = SubResource("PavingMesh")
+
+[node name="Ouest06" type="MeshInstance3D" parent="Chemins" unique_id=875259344]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -36, 0.08, 0)
+mesh = SubResource("PavingMesh")
+
+[node name="Est01" type="MeshInstance3D" parent="Chemins" unique_id=39791111]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 11, 0.08, 0)
+mesh = SubResource("PavingMesh")
+
+[node name="Est02" type="MeshInstance3D" parent="Chemins" unique_id=1652257172]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 16, 0.08, 0)
+mesh = SubResource("PavingMesh")
+
+[node name="Est03" type="MeshInstance3D" parent="Chemins" unique_id=1967311735]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 21, 0.08, 0)
+mesh = SubResource("PavingMesh")
+
+[node name="Est04" type="MeshInstance3D" parent="Chemins" unique_id=269507857]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 26, 0.08, 0)
+mesh = SubResource("PavingMesh")
+
+[node name="Est05" type="MeshInstance3D" parent="Chemins" unique_id=1894680236]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 31, 0.08, 0)
+mesh = SubResource("PavingMesh")
+
+[node name="Est06" type="MeshInstance3D" parent="Chemins" unique_id=1705099697]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 36, 0.08, 0)
+mesh = SubResource("PavingMesh")
+
+[node name="BunkerCentral" type="Node3D" parent="." unique_id=887978880]
+
+[node name="Socle" type="StaticBody3D" parent="BunkerCentral" unique_id=213534610]
+transform = Transform3D(10, 0, 0, 0, 0.7, 0, 0, 0, 7, 0, 0.35, 9)
+
+[node name="Modele3D" type="MeshInstance3D" parent="BunkerCentral/Socle" unique_id=786134422]
+mesh = SubResource("StoneBlockMesh")
+
+[node name="Collision3D" type="CollisionShape3D" parent="BunkerCentral/Socle" unique_id=1363322230]
+shape = SubResource("StoneBlockShape")
+
+[node name="OuvertureNoire" type="MeshInstance3D" parent="BunkerCentral" unique_id=611311748]
+transform = Transform3D(7.2, 0, 0, 0, 0.08, 0, 0, 0, 4.5, 0, 0.72, 9)
+material_override = SubResource("DarkMaterial")
+mesh = SubResource("StoneBlockMesh")
+
+[node name="PorteBlindee" type="StaticBody3D" parent="BunkerCentral" unique_id=1330263661]
+transform = Transform3D(7.3, 0, 0, 0, 0.108155936, 4.2797546, 0, -0.3328698, 1.3905764, 0, 2.3, 12.15)
+
+[node name="Modele3D" type="MeshInstance3D" parent="BunkerCentral/PorteBlindee" unique_id=2037110992]
+material_override = SubResource("RustMaterial")
+mesh = SubResource("StoneBlockMesh")
+
+[node name="Collision3D" type="CollisionShape3D" parent="BunkerCentral/PorteBlindee" unique_id=583834718]
+shape = SubResource("StoneBlockShape")
+
+[node name="CadreGauche" type="MeshInstance3D" parent="BunkerCentral" unique_id=1913864875]
+transform = Transform3D(0.5, 0, 0, 0, 2.2, 0, 0, 0, 6, -4, 1.1, 9)
+mesh = SubResource("StoneBlockMesh")
+
+[node name="CadreDroit" type="MeshInstance3D" parent="BunkerCentral" unique_id=538096902]
+transform = Transform3D(0.5, 0, 0, 0, 2.2, 0, 0, 0, 6, 4, 1.1, 9)
+mesh = SubResource("StoneBlockMesh")
+
+[node name="VersBunker" type="Area3D" parent="BunkerCentral" unique_id=1195622560]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 9)
+metadata/destination = "bunker"
+
+[node name="Collision3D" type="CollisionShape3D" parent="BunkerCentral/VersBunker" unique_id=1225609294]
+shape = SubResource("PortalAreaShape")
+
+[node name="CampSurvivants" type="Node3D" parent="." unique_id=1059101250]
+
+[node name="TenteGauche" parent="CampSurvivants" unique_id=1409319536 instance=ExtResource("12_tent")]
+transform = Transform3D(1.228728, 0, 0.8603647, 0, 1.5, 0, -0.8603647, 0, 1.228728, -12, 0, 13)
+
+[node name="TenteDroite" parent="CampSurvivants" unique_id=1164530039 instance=ExtResource("12_tent")]
+transform = Transform3D(1.1468129, 0, -0.803007, 0, 1.4, 0, 0.803007, 0, 1.1468129, 12, 0, 13)
+
+[node name="FeuDeCamp" parent="CampSurvivants" unique_id=1511633420 instance=ExtResource("13_fire")]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, -7, 0.1, 9)
+
+[node name="LueurDuFeu" type="OmniLight3D" parent="CampSurvivants" unique_id=2116383937]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 2.2, 9)
+light_color = Color(1, 0.38, 0.11, 1)
+light_energy = 4.0
+shadow_enabled = true
+omni_range = 12.0
+
+[node name="Caisse01" parent="CampSurvivants" unique_id=730218795 instance=ExtResource("14_crate")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 7, 0, 13)
+
+[node name="Caisse02" parent="CampSurvivants" unique_id=803763252 instance=ExtResource("14_crate")]
+transform = Transform3D(0.9396926, 0, 0.34202012, 0, 1, 0, -0.34202012, 0, 0.9396926, 9, 0, 13.5)
+
+[node name="Tonneau" parent="CampSurvivants" unique_id=1284558902 instance=ExtResource("15_barrel")]
+transform = Transform3D(1.25, 0, 0, 0, 1.25, 0, 0, 0, 1.25, -10, 0, 8)
+
+[node name="Panneau" parent="CampSurvivants" unique_id=835383636 instance=ExtResource("16_sign")]
+transform = Transform3D(1.2688309, 0, -0.59166557, 0, 1.4, 0, 0.59166557, 0, 1.2688309, 5, 0, 5)
+
+[node name="ChateauEnRuine" type="Node3D" parent="." unique_id=1456424680]
+
+[node name="PortePrincipale" parent="ChateauEnRuine" unique_id=688840965 instance=ExtResource("3_gate")]
+position = Vector3(0, 0, -38.8)
+rotation_degrees = Vector3(0, 180, 0)
+scale = Vector3(5, 5, 5)
+
+[node name="PortePrincipaleMiroir" parent="ChateauEnRuine" instance=ExtResource("3_gate")]
+position = Vector3(0, 0, -38.8)
+scale = Vector3(-5, 5, 5)
+
+[node name="MurFacade01" parent="ChateauEnRuine" unique_id=1323789958 instance=ExtResource("2_wall")]
+position = Vector3(-15, 0, -40)
+rotation_degrees = Vector3(0, 178, 0)
+scale = Vector3(3.5, 3.5, 3.5)
+
+[node name="MurFacade02" parent="ChateauEnRuine" unique_id=1130807591 instance=ExtResource("2_wall")]
+position = Vector3(-11.5, 0, -40)
+rotation_degrees = Vector3(0, 180, 0)
+scale = Vector3(3.5, 3.5, 3.5)
+
+[node name="MurFacade03" parent="ChateauEnRuine" unique_id=1157140387 instance=ExtResource("2_wall")]
+position = Vector3(-8, 0, -40)
+rotation_degrees = Vector3(0, 177, 0)
+scale = Vector3(3.5, 3.5, 3.5)
+
+[node name="MurFacade04" parent="ChateauEnRuine" unique_id=112870499 instance=ExtResource("2_wall")]
+position = Vector3(8, 0, -40)
+rotation_degrees = Vector3(0, 183, 0)
+scale = Vector3(3.5, 3.5, 3.5)
+
+[node name="MurFacade05" parent="ChateauEnRuine" unique_id=1729165888 instance=ExtResource("2_wall")]
+position = Vector3(11.5, 0, -40)
+rotation_degrees = Vector3(0, 180, 0)
+scale = Vector3(3.5, 3.5, 3.5)
+
+[node name="MurFacade06" parent="ChateauEnRuine" unique_id=1598340626 instance=ExtResource("2_wall")]
+position = Vector3(15, 0, -40)
+rotation_degrees = Vector3(0, 182, 0)
+scale = Vector3(3.5, 3.5, 3.5)
+
+[node name="TourOuestBase" parent="ChateauEnRuine" unique_id=1779629461 instance=ExtResource("4_tower_base")]
+position = Vector3(-19, 0, -41)
+scale = Vector3(5, 5, 5)
+
+[node name="TourOuestEtage" parent="ChateauEnRuine" unique_id=1772212178 instance=ExtResource("5_tower_mid")]
+position = Vector3(-19, 5, -41)
+scale = Vector3(5, 5, 5)
+
+[node name="TourOuestSommet" parent="ChateauEnRuine" unique_id=1271263779 instance=ExtResource("6_tower_top")]
+position = Vector3(-19, 10, -41)
+scale = Vector3(5, 5, 5)
+
+[node name="TourEstBase" parent="ChateauEnRuine" unique_id=1038618762 instance=ExtResource("4_tower_base")]
+position = Vector3(19, 0, -41)
+rotation_degrees = Vector3(0, 4, 0)
+scale = Vector3(5, 5, 5)
+
+[node name="TourEstEtageBrise" parent="ChateauEnRuine" unique_id=1077128684 instance=ExtResource("5_tower_mid")]
+position = Vector3(19, 5, -41)
+rotation_degrees = Vector3(0, 90, 3)
+scale = Vector3(5, 5, 5)
+
+[node name="TourEstSommetPartiel" parent="ChateauEnRuine" instance=ExtResource("6_tower_top")]
+position = Vector3(19.2, 10, -41)
+rotation_degrees = Vector3(0, -5, 8)
+scale = Vector3(4.8, 4.2, 4.8)
+
+[node name="MurLateralG01" parent="ChateauEnRuine" unique_id=1539072809 instance=ExtResource("2_wall")]
+transform = Transform3D(-1.15835185e-07, 0, 2.65, 0, 2.65, 0, -2.65, 0, -1.15835185e-07, -17, 0, -46)
+
+[node name="MurLateralG02" parent="ChateauEnRuine" unique_id=719766068 instance=ExtResource("2_wall")]
+transform = Transform3D(-1.15835185e-07, 0, 2.65, 0, 2.65, 0, -2.65, 0, -1.15835185e-07, -17, 0, -51)
+
+[node name="MurLateralG03" parent="ChateauEnRuine" unique_id=269921022 instance=ExtResource("2_wall")]
+transform = Transform3D(-1.15835185e-07, 0, 2.65, 0, 2.65, 0, -2.65, 0, -1.15835185e-07, -17, 0, -56)
+
+[node name="MurLateralD01" parent="ChateauEnRuine" unique_id=158881278 instance=ExtResource("2_wall")]
+transform = Transform3D(-1.15835185e-07, 0, 2.65, 0, 2.65, 0, -2.65, 0, -1.15835185e-07, 17, 0, -46)
+
+[node name="MurLateralD02" parent="ChateauEnRuine" unique_id=1983720649 instance=ExtResource("2_wall")]
+transform = Transform3D(-1.15835185e-07, 0, 2.65, 0, 2.65, 0, -2.65, 0, -1.15835185e-07, 17, 0, -51)
+
+[node name="SalleDuTrone" type="Node3D" parent="ChateauEnRuine" unique_id=209852539]
+
+[node name="Estrade" type="StaticBody3D" parent="ChateauEnRuine/SalleDuTrone" unique_id=441838820]
+transform = Transform3D(12, 0, 0, 0, 0.9, 0, 0, 0, 7, 0, 0.45, -59)
+
+[node name="Modele3D" type="MeshInstance3D" parent="ChateauEnRuine/SalleDuTrone/Estrade" unique_id=1473741900]
+mesh = SubResource("StoneBlockMesh")
+
+[node name="Collision3D" type="CollisionShape3D" parent="ChateauEnRuine/SalleDuTrone/Estrade" unique_id=1579835180]
+shape = SubResource("StoneBlockShape")
+
+[node name="Escalier" parent="ChateauEnRuine/SalleDuTrone" unique_id=1996497982 instance=ExtResource("7_stairs")]
+transform = Transform3D(-2.2, 0, -1.923301e-07, 0, 2.2, 0, 1.923301e-07, 0, -2.2, 0, 0, -54.8)
+
+[node name="TroneDossier" type="MeshInstance3D" parent="ChateauEnRuine/SalleDuTrone" unique_id=228432994]
+transform = Transform3D(2.8, 0, 0, 0, 4.383257, 0.061009016, 0, -0.38348526, 0.6973363, 0, 2.5, -61)
+mesh = SubResource("StoneBlockMesh")
+
+[node name="TroneAssise" type="MeshInstance3D" parent="ChateauEnRuine/SalleDuTrone" unique_id=1742208813]
+transform = Transform3D(2.8, 0, 0, 0, 0.7, 0, 0, 0, 2.3, 0, 1.1, -59.8)
+mesh = SubResource("StoneBlockMesh")
+
+[node name="PiedestalLivre01" type="MeshInstance3D" parent="ChateauEnRuine/SalleDuTrone" unique_id=1460410481]
+transform = Transform3D(1.4, 0, 0, 0, 2.3, 0, 0, 0, 1.4, -6.4, 1.15, -51.5)
+mesh = SubResource("StoneBlockMesh")
+
+[node name="PiedestalLivre02" type="MeshInstance3D" parent="ChateauEnRuine/SalleDuTrone" unique_id=297259951]
+transform = Transform3D(1.4, 0, 0, 0, 2.3, 0, 0, 0, 1.4, -3.2, 1.15, -51.5)
+mesh = SubResource("StoneBlockMesh")
+
+[node name="PiedestalLivre03" type="MeshInstance3D" parent="ChateauEnRuine/SalleDuTrone" unique_id=639289139]
+transform = Transform3D(1.4, 0, 0, 0, 2.3, 0, 0, 0, 1.4, 0, 1.15, -51.5)
+mesh = SubResource("StoneBlockMesh")
+
+[node name="PiedestalLivre04" type="MeshInstance3D" parent="ChateauEnRuine/SalleDuTrone" unique_id=1660091357]
+transform = Transform3D(1.4, 0, 0, 0, 2.3, 0, 0, 0, 1.4, 3.2, 1.15, -51.5)
+mesh = SubResource("StoneBlockMesh")
+
+[node name="PiedestalLivre05" type="MeshInstance3D" parent="ChateauEnRuine/SalleDuTrone" unique_id=868513392]
+transform = Transform3D(1.4, 0, 0, 0, 2.3, 0, 0, 0, 1.4, 6.4, 1.15, -51.5)
+mesh = SubResource("StoneBlockMesh")
+
+[node name="DonjonCentral" type="Node3D" parent="ChateauEnRuine"]
+
+[node name="DonjonBase" parent="ChateauEnRuine/DonjonCentral" instance=ExtResource("4_tower_base")]
+position = Vector3(0, 0, -50)
+scale = Vector3(8, 6, 8)
+
+[node name="DonjonEtage01" parent="ChateauEnRuine/DonjonCentral" instance=ExtResource("5_tower_mid")]
+position = Vector3(0, 6, -50)
+rotation_degrees = Vector3(0, 90, 0)
+scale = Vector3(8, 6, 8)
+
+[node name="DonjonEtage02Brise" parent="ChateauEnRuine/DonjonCentral" instance=ExtResource("5_tower_mid")]
+position = Vector3(0, 12, -50)
+rotation_degrees = Vector3(0, 4, -3)
+scale = Vector3(7.7, 5.8, 7.7)
+
+[node name="DonjonSommetEffondre" parent="ChateauEnRuine/DonjonCentral" instance=ExtResource("6_tower_top")]
+position = Vector3(-0.3, 17.85, -50)
+rotation_degrees = Vector3(0, -4, 4)
+scale = Vector3(7.3, 6.2, 7.3)
+
+[node name="TourArriereGaucheBase" parent="ChateauEnRuine" instance=ExtResource("4_tower_base")]
+position = Vector3(-27, 0, -50)
+rotation_degrees = Vector3(0, -8, 0)
+scale = Vector3(5.5, 5.5, 5.5)
+
+[node name="TourArriereGaucheEtage" parent="ChateauEnRuine" instance=ExtResource("5_tower_mid")]
+position = Vector3(-27, 5.5, -50)
+rotation_degrees = Vector3(0, 82, -4)
+scale = Vector3(5.5, 5.5, 5.5)
+
+[node name="TourArriereGaucheSommet" parent="ChateauEnRuine" instance=ExtResource("6_tower_top")]
+position = Vector3(-27.2, 11, -50)
+rotation_degrees = Vector3(0, -5, -4)
+scale = Vector3(5.3, 5, 5.3)
+
+[node name="TourArriereDroiteBase" parent="ChateauEnRuine" instance=ExtResource("4_tower_base")]
+position = Vector3(27, 0, -50)
+rotation_degrees = Vector3(0, 7, 0)
+scale = Vector3(5.5, 5.5, 5.5)
+
+[node name="TourArriereDroiteEtageBrise" parent="ChateauEnRuine" instance=ExtResource("5_tower_mid")]
+position = Vector3(27, 5.5, -50)
+rotation_degrees = Vector3(0, -86, 6)
+scale = Vector3(5.5, 5.2, 5.5)
+
+[node name="MurHautGauche01" parent="ChateauEnRuine" instance=ExtResource("2_wall")]
+position = Vector3(-13, 4.55, -40.3)
+rotation_degrees = Vector3(0, 178, -3)
+scale = Vector3(3.5, 3.5, 3.5)
+
+[node name="MurHautGauche02" parent="ChateauEnRuine" instance=ExtResource("2_wall")]
+position = Vector3(-9.5, 4.55, -40.3)
+rotation_degrees = Vector3(0, 182, 4)
+scale = Vector3(3.5, 3.5, 3.5)
+
+[node name="MurHautDroit01" parent="ChateauEnRuine" instance=ExtResource("2_wall")]
+position = Vector3(9.5, 4.55, -40.3)
+rotation_degrees = Vector3(0, 177, -5)
+scale = Vector3(3.5, 3.5, 3.5)
+
+[node name="MurHautDroit02Brise" parent="ChateauEnRuine" instance=ExtResource("2_wall")]
+position = Vector3(13, 4.55, -40.3)
+rotation_degrees = Vector3(0, 184, 12)
+scale = Vector3(3.5, 3.2, 3.5)
+
+[node name="CorpsDeGarde" type="Node3D" parent="ChateauEnRuine"]
+
+[node name="EtagePorteGauche" parent="ChateauEnRuine/CorpsDeGarde" instance=ExtResource("21_wall_half")]
+position = Vector3(-3.5, 6.45, -39.9)
+rotation_degrees = Vector3(0, 180, 0)
+scale = Vector3(3.5, 3.5, 3.5)
+
+[node name="EtagePorteCentre" parent="ChateauEnRuine/CorpsDeGarde" instance=ExtResource("21_wall_half")]
+position = Vector3(0, 6.45, -39.9)
+rotation_degrees = Vector3(0, 180, 0)
+scale = Vector3(3.5, 3.5, 3.5)
+
+[node name="EtagePorteDroitBrise" parent="ChateauEnRuine/CorpsDeGarde" instance=ExtResource("21_wall_half")]
+position = Vector3(3.5, 6.45, -39.9)
+rotation_degrees = Vector3(0, 183, 5)
+scale = Vector3(3.5, 3.3, 3.5)
+
+[node name="Contreforts" type="Node3D" parent="ChateauEnRuine"]
+
+[node name="Contrefort01" parent="ChateauEnRuine/Contreforts" instance=ExtResource("18_wall_stud")]
+position = Vector3(-16.8, 0, -38.3)
+scale = Vector3(5, 5, 5)
+
+[node name="Contrefort02" parent="ChateauEnRuine/Contreforts" instance=ExtResource("18_wall_stud")]
+position = Vector3(-6.3, 0, -38.3)
+scale = Vector3(5, 5, 5)
+
+[node name="Contrefort03" parent="ChateauEnRuine/Contreforts" instance=ExtResource("18_wall_stud")]
+position = Vector3(6.3, 0, -38.3)
+scale = Vector3(5, 5, 5)
+
+[node name="Contrefort04" parent="ChateauEnRuine/Contreforts" instance=ExtResource("18_wall_stud")]
+position = Vector3(16.8, 0, -38.3)
+scale = Vector3(5, 5, 5)
+
+[node name="PilierAngleGauche" parent="ChateauEnRuine/Contreforts" instance=ExtResource("17_wall_pillar")]
+position = Vector3(-17.2, 0, -40.2)
+rotation_degrees = Vector3(0, 180, 0)
+scale = Vector3(3.8, 3.8, 3.8)
+
+[node name="PilierAngleDroit" parent="ChateauEnRuine/Contreforts" instance=ExtResource("17_wall_pillar")]
+position = Vector3(17.2, 0, -40.2)
+rotation_degrees = Vector3(0, 180, 0)
+scale = Vector3(3.8, 3.8, 3.8)
+
+[node name="BanniereGauche" parent="ChateauEnRuine" instance=ExtResource("19_banner")]
+position = Vector3(-8.2, 4.4, -37.9)
+rotation_degrees = Vector3(0, 90, 0)
+scale = Vector3(2.2, 2.2, 2.2)
+
+[node name="BanniereDroiteDechiree" parent="ChateauEnRuine" instance=ExtResource("19_banner")]
+position = Vector3(8.2, 4.4, -37.9)
+rotation_degrees = Vector3(0, 90, 6)
+scale = Vector3(2.2, 1.8, 2.2)
+
+[node name="VestigeDeSiege" parent="ChateauEnRuine" instance=ExtResource("20_catapult_ruin")]
+position = Vector3(-14, 0, -33.5)
+rotation_degrees = Vector3(0, 28, 0)
+scale = Vector3(2.6, 2.6, 2.6)
+
+[node name="EntreeCondamnee" type="Node3D" parent="ChateauEnRuine"]
+
+[node name="OmbreDerrierePorte" type="MeshInstance3D" parent="ChateauEnRuine/EntreeCondamnee"]
+position = Vector3(0, 4, -39.7)
+scale = Vector3(7.5, 8, 0.5)
+material_override = SubResource("DarkMaterial")
+mesh = SubResource("StoneBlockMesh")
+
+[node name="GravatCentral" type="MeshInstance3D" parent="ChateauEnRuine/EntreeCondamnee"]
+position = Vector3(0, 1.4, -37.4)
+rotation_degrees = Vector3(8, 12, -4)
+scale = Vector3(7.2, 2.8, 4.2)
+mesh = SubResource("StoneBlockMesh")
+
+[node name="GravatGauche" type="MeshInstance3D" parent="ChateauEnRuine/EntreeCondamnee"]
+position = Vector3(-5.2, 1.1, -37)
+rotation_degrees = Vector3(-6, -25, 18)
+scale = Vector3(4, 2.2, 3)
+mesh = SubResource("StoneBlockMesh")
+
+[node name="GravatDroit" type="MeshInstance3D" parent="ChateauEnRuine/EntreeCondamnee"]
+position = Vector3(5, 1.25, -37.2)
+rotation_degrees = Vector3(10, 31, -14)
+scale = Vector3(4.4, 2.5, 3.3)
+mesh = SubResource("StoneBlockMesh")
+
+[node name="BlocEffondre01" parent="ChateauEnRuine/EntreeCondamnee" instance=ExtResource("10_rock_a")]
+position = Vector3(-7, 0, -35.8)
+rotation_degrees = Vector3(0, 35, 0)
+scale = Vector3(2.6, 2.6, 2.6)
+
+[node name="BlocEffondre02" parent="ChateauEnRuine/EntreeCondamnee" instance=ExtResource("11_rock_b")]
+position = Vector3(6.8, 0, -35.5)
+rotation_degrees = Vector3(0, -28, 0)
+scale = Vector3(2.8, 2.8, 2.8)
+
+[node name="BarriereChateau" type="StaticBody3D" parent="ChateauEnRuine"]
+position = Vector3(0, 5, -36.5)
+scale = Vector3(50, 10, 2.5)
+
+[node name="CollisionInfranchissable" type="CollisionShape3D" parent="ChateauEnRuine/BarriereChateau"]
+shape = SubResource("StoneBlockShape")
+
+[node name="BarriereLateraleGauche" type="StaticBody3D" parent="ChateauEnRuine"]
+position = Vector3(-27, 5, -48)
+rotation_degrees = Vector3(0, 90, 0)
+scale = Vector3(27, 10, 2.5)
+
+[node name="CollisionInfranchissable" type="CollisionShape3D" parent="ChateauEnRuine/BarriereLateraleGauche"]
+shape = SubResource("StoneBlockShape")
+
+[node name="BarriereLateraleDroite" type="StaticBody3D" parent="ChateauEnRuine"]
+position = Vector3(27, 5, -48)
+rotation_degrees = Vector3(0, 90, 0)
+scale = Vector3(27, 10, 2.5)
+
+[node name="CollisionInfranchissable" type="CollisionShape3D" parent="ChateauEnRuine/BarriereLateraleDroite"]
+shape = SubResource("StoneBlockShape")
+
+[node name="Portails" type="Node3D" parent="." unique_id=1808138032]
+
+[node name="PortailBleu" type="Node3D" parent="Portails" unique_id=2049562788]
+transform = Transform3D(0.57357645, 0, 0.81915206, 0, 1, 0, -0.81915206, 0, 0.57357645, -42, 0, -25)
+
+[node name="PilierGauche" type="MeshInstance3D" parent="Portails/PortailBleu" unique_id=162041455]
+transform = Transform3D(1.5, 0, 0, 0, 6.6, 0, 0, 0, 1.8, -3.1, 3.3, 0)
+mesh = SubResource("StoneBlockMesh")
+
+[node name="PilierDroit" type="MeshInstance3D" parent="Portails/PortailBleu" unique_id=650591822]
+transform = Transform3D(1.5, 0, 0, 0, 6.6, 0, 0, 0, 1.8, 3.1, 3.3, 0)
+mesh = SubResource("StoneBlockMesh")
+
+[node name="Linteau" type="MeshInstance3D" parent="Portails/PortailBleu" unique_id=91333963]
+transform = Transform3D(7.2, 0, 0, 0, 1.4, 0, 0, 0, 1.8, 0, 6.4, 0)
+mesh = SubResource("StoneBlockMesh")
+
+[node name="Energie" type="MeshInstance3D" parent="Portails/PortailBleu" unique_id=433887367]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, 0.15)
+mesh = SubResource("PortalSurfaceBlue")
+
+[node name="Lueur" type="OmniLight3D" parent="Portails/PortailBleu" unique_id=738612541]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, 1)
+light_color = Color(0.1, 0.55, 1, 1)
+light_energy = 4.0
+omni_range = 13.0
+
+[node name="ZoneDeTransition" type="Area3D" parent="Portails/PortailBleu" unique_id=435241948]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+metadata/destination = "zone_2"
+
+[node name="Collision3D" type="CollisionShape3D" parent="Portails/PortailBleu/ZoneDeTransition" unique_id=2133369579]
+shape = SubResource("PortalAreaShape")
+
+[node name="PortailVert" type="Node3D" parent="Portails" unique_id=526578520]
+transform = Transform3D(0.57357645, 0, -0.81915206, 0, 1, 0, 0.81915206, 0, 0.57357645, 42, 0, -25)
+
+[node name="PilierGauche" type="MeshInstance3D" parent="Portails/PortailVert" unique_id=1904166115]
+transform = Transform3D(1.5, 0, 0, 0, 6.6, 0, 0, 0, 1.8, -3.1, 3.3, 0)
+mesh = SubResource("StoneBlockMesh")
+
+[node name="PilierDroit" type="MeshInstance3D" parent="Portails/PortailVert" unique_id=2126063747]
+transform = Transform3D(1.5, 0, 0, 0, 6.6, 0, 0, 0, 1.8, 3.1, 3.3, 0)
+mesh = SubResource("StoneBlockMesh")
+
+[node name="Linteau" type="MeshInstance3D" parent="Portails/PortailVert" unique_id=1853774362]
+transform = Transform3D(7.2, 0, 0, 0, 1.4, 0, 0, 0, 1.8, 0, 6.4, 0)
+mesh = SubResource("StoneBlockMesh")
+
+[node name="Energie" type="MeshInstance3D" parent="Portails/PortailVert" unique_id=747311144]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, 0.15)
+mesh = SubResource("PortalSurfaceGreen")
+
+[node name="Lueur" type="OmniLight3D" parent="Portails/PortailVert" unique_id=1327936649]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, 1)
+light_color = Color(0.1, 1, 0.35, 1)
+light_energy = 4.0
+omni_range = 13.0
+
+[node name="ZoneDeTransition" type="Area3D" parent="Portails/PortailVert" unique_id=511613054]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+metadata/destination = "zone_3"
+
+[node name="Collision3D" type="CollisionShape3D" parent="Portails/PortailVert/ZoneDeTransition" unique_id=1021059253]
+shape = SubResource("PortalAreaShape")
+
+[node name="PortailOrange" type="Node3D" parent="Portails" unique_id=459770480]
+transform = Transform3D(0.25881907, 0, 0.9659258, 0, 1, 0, -0.9659258, 0, 0.25881907, -52, 0, 12)
+
+[node name="PilierGauche" type="MeshInstance3D" parent="Portails/PortailOrange" unique_id=925680250]
+transform = Transform3D(1.5, 0, 0, 0, 6.6, 0, 0, 0, 1.8, -3.1, 3.3, 0)
+mesh = SubResource("StoneBlockMesh")
+
+[node name="PilierDroit" type="MeshInstance3D" parent="Portails/PortailOrange" unique_id=198281646]
+transform = Transform3D(1.5, 0, 0, 0, 6.6, 0, 0, 0, 1.8, 3.1, 3.3, 0)
+mesh = SubResource("StoneBlockMesh")
+
+[node name="Linteau" type="MeshInstance3D" parent="Portails/PortailOrange" unique_id=881118485]
+transform = Transform3D(7.7413797, 0.0041882843, 1.7979316e-07, 3.3194573e-07, 7.3980235e-09, -4.1891065, -0.037210345, 0.8713445, 3.470279e-08, 0, 7.944471, 0)
+mesh = SubResource("CylinderMesh_33ub7")
+
+[node name="Energie" type="MeshInstance3D" parent="Portails/PortailOrange" unique_id=640000358]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, 0.15)
+mesh = SubResource("PortalSurfaceOrange")
+
+[node name="Lueur" type="OmniLight3D" parent="Portails/PortailOrange" unique_id=1924205815]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, 1)
+light_color = Color(1, 0.22, 0.03, 1)
+light_energy = 4.0
+omni_range = 13.0
+
+[node name="ZoneDeTransition" type="Area3D" parent="Portails/PortailOrange" unique_id=962225209]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+metadata/destination = "zone_4"
+
+[node name="Collision3D" type="CollisionShape3D" parent="Portails/PortailOrange/ZoneDeTransition" unique_id=2109407657]
+shape = SubResource("PortalAreaShape")
+
+[node name="PortailViolet" type="Node3D" parent="Portails" unique_id=1867881999]
+transform = Transform3D(0.25881907, 0, -0.9659258, 0, 1, 0, 0.9659258, 0, 0.25881907, 52, 0, 12)
+
+[node name="PilierGauche" type="MeshInstance3D" parent="Portails/PortailViolet" unique_id=755296818]
+transform = Transform3D(1.5, 0, 0, 0, 6.6, 0, 0, 0, 1.8, -3.1, 3.3, 0)
+mesh = SubResource("StoneBlockMesh")
+
+[node name="PilierDroit" type="MeshInstance3D" parent="Portails/PortailViolet" unique_id=2003268006]
+transform = Transform3D(1.5, 0, 0, 0, 6.6, 0, 0, 0, 1.8, 3.1, 3.3, 0)
+mesh = SubResource("StoneBlockMesh")
+
+[node name="Linteau" type="MeshInstance3D" parent="Portails/PortailViolet" unique_id=1881727968]
+transform = Transform3D(7.2, 0, 0, 0, 1.4, 0, 0, 0, 1.8, 0, 6.4, 0)
+mesh = SubResource("StoneBlockMesh")
+
+[node name="Energie" type="MeshInstance3D" parent="Portails/PortailViolet" unique_id=179395184]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, 0.15)
+mesh = SubResource("PortalSurfaceViolet")
+
+[node name="Lueur" type="OmniLight3D" parent="Portails/PortailViolet" unique_id=653437858]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, 1)
+light_color = Color(0.7, 0.1, 1, 1)
+light_energy = 4.0
+omni_range = 13.0
+
+[node name="ZoneDeTransition" type="Area3D" parent="Portails/PortailViolet" unique_id=732403290]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+metadata/destination = "zone_5"
+
+[node name="Collision3D" type="CollisionShape3D" parent="Portails/PortailViolet/ZoneDeTransition" unique_id=1723627713]
+shape = SubResource("PortalAreaShape")
+
+[node name="Decoration" type="Node3D" parent="." unique_id=67274297]
+
+[node name="Sapin01" parent="Decoration" unique_id=293421471 instance=ExtResource("9_pine")]
+transform = Transform3D(2.8, 0, 0, 0, 2.8, 0, 0, 0, 2.8, -58, 0, -30)
+
+[node name="Sapin02" parent="Decoration" unique_id=1592692510 instance=ExtResource("9_pine")]
+transform = Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, 58, 0, -30)
+
+[node name="Sapin03" parent="Decoration" unique_id=1831956481 instance=ExtResource("9_pine")]
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, -62, 0, 30)
+
+[node name="Sapin04" parent="Decoration" unique_id=2144996723 instance=ExtResource("9_pine")]
+transform = Transform3D(2.8, 0, 0, 0, 2.8, 0, 0, 0, 2.8, 62, 0, 30)
+
+[node name="Arbre01" parent="Decoration" unique_id=662040199 instance=ExtResource("8_tree")]
+transform = Transform3D(1.9052559, 0, 1.1, 0, 2.2, 0, -1.1, 0, 1.9052559, -30, 0, 31)
+
+[node name="Arbre02" parent="Decoration" unique_id=1760156710 instance=ExtResource("8_tree")]
+transform = Transform3D(2.161293, 0, -0.78664625, 0, 2.3, 0, 0.78664625, 0, 2.161293, 30, 0, 32)
+
+[node name="Arbre03" parent="Decoration" unique_id=258360695 instance=ExtResource("8_tree")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -27, 0, -28)
+
+[node name="Arbre04" parent="Decoration" unique_id=1212637196 instance=ExtResource("8_tree")]
+transform = Transform3D(2.1, 0, 0, 0, 2.1, 0, 0, 0, 2.1, 28, 0, -29)
+
+[node name="Rocher01" parent="Decoration" unique_id=675754415 instance=ExtResource("10_rock_a")]
+transform = Transform3D(2.078461, 0, 1.2, 0, 2.4, 0, -1.2, 0, 2.078461, -65, 0, -5)
+
+[node name="Rocher02" parent="Decoration" unique_id=1353367427 instance=ExtResource("11_rock_b")]
+transform = Transform3D(1.9917154, 0, -1.6712476, 0, 2.6, 0, 1.6712476, 0, 1.9917154, 65, 0, -5)
+
+[node name="Rocher03" parent="Decoration" unique_id=13769315 instance=ExtResource("10_rock_a")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -45, 0, 45)
+
+[node name="Rocher04" parent="Decoration" unique_id=346664792 instance=ExtResource("11_rock_b")]
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 45, 0, 46)
+
+[node name="Player" parent="." unique_id=1713960364 instance=ExtResource("1_player")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 1.2, 24)
