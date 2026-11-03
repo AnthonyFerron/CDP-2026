@@ -33,6 +33,7 @@ Les touches suivent la position physique sur le clavier : ZQSD en AZERTY, WASD e
 | --- | --- |
 | `frontend/` | Projet Godot |
 | `frontend/assets/` | Modèles, textures, matériaux, audio et polices |
+| `frontend/assets/models/kenney/` | Kits de modèles Kenney, par kit (voir `docs/assets.md`) |
 | `frontend/scenes/levels/` | Niveaux |
 | `frontend/scenes/player/` | Personnage joueur (scène et script) |
 | `frontend/scenes/ui/` | Interfaces |
