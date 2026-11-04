@@ -69,6 +69,11 @@ const PROPS := [
 	[3, -12.0, 58.0, 20.0, 1.8, 0.0, 0.2, 0.55],
 ]
 
+## Hauteur à l'échelle 1 des restes épars, dans l'ordre de prop_models.
+const PROP_HEIGHTS: Array[float] = [0.6, 0.38, 0.45, 0.43, 0.48, 0.48, 0.48]
+## Hauteur à l'échelle 1 des cactus et des rochers, dans l'ordre de leurs modèles.
+const CACTUS_HEIGHTS: Array[float] = [0.75, 0.53]
+const ROCK_HEIGHTS: Array[float] = [0.39, 0.45, 0.51]
 ## Boîte à l'échelle 1 des ruines couchées, dans l'ordre de ruin_models : colonne abîmée, briques.
 const RUIN_BOXES: Array[Vector3] = [Vector3(0.6, 0.72, 0.6), Vector3(0.77, 0.41, 0.85)]
 
@@ -81,8 +86,8 @@ func _ready() -> void:
 		await terrain.ready
 	_rng.seed = 5814
 	# Rayons de collision à l'échelle 1 : tige des cactus, corps des rochers, colonnes et briques couchées.
-	_scatter(cactus_models, cactus_count, Vector2(3.0, 5.0), true, 0.17)
-	_scatter(rock_models, rock_count, Vector2(2.0, 5.0), true, 0.3)
+	_scatter(cactus_models, cactus_count, Vector2(3.0, 5.0), true, 0.17, false, CACTUS_HEIGHTS)
+	_scatter(rock_models, rock_count, Vector2(2.0, 5.0), true, 0.3, false, ROCK_HEIGHTS)
 	_scatter(ruin_models, ruin_count, Vector2(2.5, 3.5), true, 0.32, true)
 	_add_wrecks()
 	_add_props()
@@ -116,7 +121,7 @@ func is_free(spot: Vector2, margin: float) -> bool:
 	return Vector2(spot).length() < DesertTerrain.LIMIT_RADIUS - 1.5
 
 
-func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, solid: bool, radius: float, tilted := false) -> void:
+func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, solid: bool, radius: float, tilted := false, heights: Array[float] = []) -> void:
 	var body: StaticBody3D
 	if solid:
 		body = StaticBody3D.new()
@@ -124,6 +129,11 @@ func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, soli
 	var groups: Array[Array] = []
 	for model in models:
 		groups.append([])
+	var hulls: Array[PackedVector3Array] = []
+	if not tilted and not heights.is_empty():
+		for model in models:
+			var hull := _load_mesh(model).create_convex_shape(true, true) as ConvexPolygonShape3D
+			hulls.append(hull.points if hull else PackedVector3Array())
 	var placed := 0
 	for attempt in count * 10:
 		if placed >= count:
@@ -151,12 +161,23 @@ func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, soli
 				box.size = RUIN_BOXES[group] * scale_factor
 				collision.shape = box
 				collision.transform = Transform3D(basis, origin + basis * Vector3(0.0, RUIN_BOXES[group].y * 0.5 * scale_factor, 0.0))
+			elif group < hulls.size() and not hulls[group].is_empty():
+				# L'enveloppe du modèle, tournée et mise à l'échelle comme lui : pas de mur invisible autour.
+				var points := PackedVector3Array()
+				var xform := Transform3D(basis.scaled(Vector3.ONE * scale_factor), Vector3.ZERO)
+				for point in hulls[group]:
+					points.append(xform * point)
+				var hull_shape := ConvexPolygonShape3D.new()
+				hull_shape.points = points
+				collision.shape = hull_shape
+				collision.position = origin
 			else:
+				var height := (heights[group] if group < heights.size() else 0.5) * scale_factor + 0.15
 				var shape := CylinderShape3D.new()
 				shape.radius = radius * scale_factor
-				shape.height = 2.5
+				shape.height = height
 				collision.shape = shape
-				collision.position = origin + Vector3.UP * 1.0
+				collision.position = origin + Vector3.UP * height * 0.5
 			body.add_child(collision)
 		placed += 1
 	for index in models.size():
@@ -188,12 +209,17 @@ func _add_wrecks() -> void:
 		var origin := Vector3(spot.x, terrain.footing_height(spot.x, spot.y) - height * 0.45, spot.y)
 		wreck.transform = Transform3D(basis.scaled(Vector3.ONE * scale_factor), origin)
 		add_child(wreck)
-		var shape := BoxShape3D.new()
-		shape.size = Vector3(box[1].x, box[1].y, box[1].z) * scale_factor
+		# L'enveloppe convexe de l'épave, tournée et mise à l'échelle comme elle.
+		var hull := _load_mesh(wreck_models[kind]).create_convex_shape(true, true) as ConvexPolygonShape3D
+		var points := PackedVector3Array()
+		var xform := Transform3D(basis.scaled(Vector3.ONE * scale_factor), Vector3.ZERO)
+		for point in hull.points:
+			points.append(xform * point)
+		var shape := ConvexPolygonShape3D.new()
+		shape.points = points
 		var collision := CollisionShape3D.new()
 		collision.shape = shape
-		var center: Vector3 = (box[0] + box[1] * 0.5) * scale_factor
-		collision.transform = Transform3D(basis, origin + basis * center)
+		collision.position = origin
 		body.add_child(collision)
 		# Le sable s'est amassé contre l'épave, du côté du vent.
 		var mound := MeshInstance3D.new()
@@ -220,12 +246,13 @@ func _add_props() -> void:
 		item.scale = Vector3.ONE * prop[4]
 		add_child(item)
 		if prop[7] > 0.0:
+			var height: float = PROP_HEIGHTS[prop[0]] * prop[4]
 			var shape := CylinderShape3D.new()
 			shape.radius = prop[7]
-			shape.height = 1.6
+			shape.height = height
 			var collision := CollisionShape3D.new()
 			collision.shape = shape
-			collision.position = item.position + Vector3.UP * 0.8
+			collision.position = item.position + Vector3.UP * height * 0.5
 			body.add_child(collision)
 
 

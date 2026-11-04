@@ -27,7 +27,7 @@ size = Vector3(4, 5.4, 0.6)
 size = Vector3(0.6, 5.4, 4)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_6"]
-size = Vector3(1.6, 4, 1.6)
+size = Vector3(1.8, 0.216, 1.8)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7"]
 size = Vector3(2.64, 0.93, 1.95)
@@ -45,7 +45,7 @@ size = Vector3(1.1, 0.62, 1.1)
 size = Vector3(1.76, 0.62, 1.3)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_12"]
-size = Vector3(0.7, 0.96, 0.76)
+size = Vector3(0.7, 0.55, 0.76)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_13"]
 size = Vector3(0.728, 0.78, 0.728)
@@ -183,7 +183,7 @@ rings = 1
 transform_format = 1
 instance_count = 3
 mesh = SubResource("Mesh_10")
-buffer = PackedFloat32Array(1, 0, 0, -8.86, 0, 0, -1, 0.7, 0, 1, 0, -9.6, 1, 0, 0, -8.72, 0, 0, -1, 0.7, 0, 1, 0, -9.6, 1, 0, 0, -8.58, 0, 0, -1, 0.7, 0, 1, 0, -9.6)
+buffer = PackedFloat32Array(1, 0, 0, -8.86, 0, 0, -1, 0.4, 0, 1, 0, -9.6, 1, 0, 0, -8.72, 0, 0, -1, 0.4, 0, 1, 0, -9.6, 1, 0, 0, -8.58, 0, 0, -1, 0.4, 0, 1, 0, -9.6)
 
 [sub_resource type="BoxMesh" id="Mesh_11"]
 material = SubResource("Material_tablet")
@@ -241,6 +241,14 @@ transform_format = 1
 instance_count = 4
 mesh = SubResource("Mesh_16")
 buffer = PackedFloat32Array(1.03926, 0, 0, -8.9, 0, 0.36, 0, -0.18, 0, 0, 0.80831, -0.9, 1.15473, 0, 0, 8.9, 0, 0.36, 0, -0.18, 0, 0, 1.03926, -11, 1.38568, 0, 0, -2.2, 0, 0.36, 0, -0.18, 0, 0, 0.57737, -11.1, 1.38568, 0, 0, 2.3, 0, 0.36, 0, -0.18, 0, 0, 0.57737, -11.1)
+
+[sub_resource type="CylinderShape3D" id="Shape_0"]
+radius = 0.648
+height = 3.96
+
+[sub_resource type="CylinderShape3D" id="Shape_1"]
+radius = 0.648
+height = 3.96
 
 [node name="DesertCellar" type="Node3D"]
 
@@ -581,11 +589,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -1.7, 2.7, 2)
 shape = SubResource("BoxShape3D_5")
 
 [node name="Box50" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -4, 2, -10.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -4, 0.108, -10.2)
 shape = SubResource("BoxShape3D_6")
 
 [node name="Box51" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 4, 2, -10.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 4, 0.108, -10.2)
 shape = SubResource("BoxShape3D_6")
 
 [node name="Box52" type="CollisionShape3D" parent="Collision"]
@@ -617,7 +625,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 3.9, 0.31, -2.65)
 shape = SubResource("BoxShape3D_11")
 
 [node name="Box59" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 3.9, 0.48, -3.75)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 3.9, 0.275, -3.75)
 shape = SubResource("BoxShape3D_12")
 
 [node name="Box60" type="CollisionShape3D" parent="Collision"]
@@ -709,3 +717,11 @@ cast_shadow = 0
 
 [node name="sphere_16_0" type="MultiMeshInstance3D" parent="Shapes"]
 multimesh = SubResource("MultiMesh_16_0")
+
+[node name="Shape0" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1.98, -10.2)
+shape = SubResource("Shape_0")
+
+[node name="Shape1" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1.98, -10.2)
+shape = SubResource("Shape_1")

@@ -99,7 +99,9 @@ func _ready() -> void:
 	_table_glow.visible = false
 	_safe_position = _player.global_position
 	_tint_stone($Exterior/Ruins)
-	_merge_static($Exterior/Ruins)
+	# Les tests d'audit, qui mesurent les maillages triangle par triangle, lancent le niveau sans ce regroupement.
+	if not "sans_regroupement" in OS.get_cmdline_user_args():
+		_merge_static($Exterior/Ruins)
 	_fade_small_props($Exterior/Ruins)
 	_sandstorm = _create_sandstorm()
 	_exterior.add_child(_sandstorm)
@@ -504,6 +506,18 @@ func _create_sand_veil() -> CPUParticles3D:
 	material.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	material.vertex_color_use_as_albedo = true
+	# Une tache douce, plus dense au centre : pas de rectangle aux bords francs qui flotte au-dessus du sable.
+	var soft := Gradient.new()
+	soft.set_color(0, Color(1, 1, 1, 1))
+	soft.set_color(1, Color(1, 1, 1, 0))
+	var texture := GradientTexture2D.new()
+	texture.gradient = soft
+	texture.fill = GradientTexture2D.FILL_RADIAL
+	texture.fill_from = Vector2(0.5, 0.5)
+	texture.fill_to = Vector2(1.0, 0.5)
+	texture.width = 64
+	texture.height = 64
+	material.albedo_texture = texture
 	var quad := QuadMesh.new()
 	quad.size = Vector2(3.2, 0.7)
 	quad.material = material
