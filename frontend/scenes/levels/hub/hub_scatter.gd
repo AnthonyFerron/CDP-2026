@@ -32,7 +32,7 @@ func _ready() -> void:
 	if not terrain.is_node_ready():
 		await terrain.ready
 	_rng.seed = 5800
-	_scatter(tree_models, tree_count, Vector2(3.2, 5.0), tree_radii, 0.45, 0.12)
+	_scatter(tree_models, tree_count, Vector2(4.0, 5.4), tree_radii, 0.45, 0.12)
 	_add_forest()
 	_scatter(bush_models, bush_count, Vector2(3.0, 5.0), [], 0.7, 0.05)
 	_scatter(rock_models, rock_count, Vector2(2.0, 4.0), rock_radii, 0.7, 0.1)

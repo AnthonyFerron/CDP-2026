@@ -233,16 +233,24 @@ def wall_models(style):
 
 
 def roof(scene, cx, cz, width, depth, base):
-    """Toit à deux pans : les tuiles se rejoignent au faîte, au milieu de la largeur."""
+    """Toit à deux pans : les tuiles montent des gouttières jusqu'au faîte, au milieu. Le faîte court dans la longueur
+    paire de la maison (le long de z, sauf si seule la profondeur est paire), pour que les deux pans se rejoignent sur
+    un joint de tuiles. La tuile « roof » est basse du côté de son x négatif, avec le débord de la gouttière : on la
+    tourne pour que ce côté regarde au-dehors."""
+    ridge_along_x = width % 2 == 1 and depth % 2 == 0
     for column in range(width):
         x = cx - (width - 1) * TILE / 2 + column * TILE
-        outward = (1, 0) if x > cx else (-1, 0)
         for row in range(depth):
             z = cz - (depth - 1) * TILE / 2 + row * TILE
-            if abs(x - cx) < 0.1:
-                scene.add("fantasy_town_kit/roof-flat", (x, base + 0.1, z), 0.0, TILE)
+            if ridge_along_x:
+                outward = (0, 1) if z > cz else (0, -1)
             else:
-                scene.add("fantasy_town_kit/roof", (x, base, z), OUTWARD_ANGLES[outward], TILE)
+                outward = (1, 0) if x > cx else (-1, 0)
+            if abs((z - cz) if ridge_along_x else (x - cx)) < 0.1:
+                # Case du milieu d'un côté impair : un toit plat au niveau du faîte.
+                scene.add("fantasy_town_kit/roof-flat", (x, base + 0.5 * TILE, z), 0.0, TILE)
+            else:
+                scene.add("fantasy_town_kit/roof", (x, base, z), OUTWARD_ANGLES[(-outward[0], -outward[1])], TILE)
 
 
 class HouseFrame:
@@ -312,6 +320,19 @@ def house_floor(scene, rng, house, ruined):
     """Plancher de bois sur toutes les cases, enfoncé pour affleurer le sol : il ne gêne pas les pas.
     Dans les ruines, des lattes manquent ou sont arrachées. Les maisons à étage ont aussi le plancher de l'étage."""
     cx, cz, width, depth, _, _, floors = house
+    if not ruined:
+        # Couches croisées d'une seule pièce sous chaque plancher et au-dessus du plafond : entre les lattes et aux
+        # joints des cases, on voit du bois, et non l'herbe du terrain ou le dessous du toit. Tournée d'un quart de
+        # tour, la pièce prend la profondeur de la maison sur son axe x.
+        span = (depth * TILE * 0.98, TILE, width * TILE * 0.98)
+        for level in [-0.215] + [floor * WALL_HEIGHT - 0.215 for floor in range(1, floors)]:
+            scene.add("fantasy_town_kit/planks", (cx, level, cz), 90.0, span)
+        # Au-dessus du plafond, un panneau de bois plein (un mur de planches couché, d'une seule pièce) : par les
+        # fentes des lattes, on voit du bois et non le dessous des tuiles du toit. Couché d'un quart de tour, le mur
+        # prend son épaisseur (x de 0,4 à 0,5) sur la hauteur et sa hauteur sur la largeur de la maison.
+        ceiling = floors * WALL_HEIGHT - 0.2
+        full_width, full_depth = width * TILE * 0.98, depth * TILE * 0.98
+        scene.add("fantasy_town_kit/wall-wood", (cx + full_width / 2, ceiling - 0.03, cz), 0.0, (0.5, full_width, full_depth), roll=90.0)
     for column in range(width):
         for row in range(depth):
             x = cx - (width - 1) * TILE / 2 + column * TILE
@@ -320,6 +341,8 @@ def house_floor(scene, rng, house, ruined):
                 scene.add("fantasy_town_kit/planks", (x, -0.2, z), 0.0, TILE)
                 for floor in range(1, floors):
                     scene.add("fantasy_town_kit/planks", (x, floor * WALL_HEIGHT - 0.2, z), 0.0, TILE)
+                # Plafond sous le toit : vues d'en dessous, les tuiles du toit laisseraient voir le ciel.
+                scene.add("fantasy_town_kit/planks", (x, floors * WALL_HEIGHT - 0.2, z), 0.0, TILE)
                 continue
             roll = rng.random()
             if roll < 0.55:
@@ -731,7 +754,7 @@ def build_bunker(scene, rng):
             scene.add("fantasy_town_kit/roof-flat", (bx - TILE / 2 + column * TILE, WALL_HEIGHT, bz - TILE + row * TILE), 0.0, TILE)
     scene.add("castle_kit/metal-gate", (bx - TILE - 0.1, 0.0, bz), 0.0, 4.2)
     for dz in (-2.6, 2.6):
-        scene.add("survival_kit/metal-panel", (bx - TILE - 0.3, 0.6, bz + dz), 90.0, 3.4)
+        scene.add("survival_kit/metal-panel", (bx - TILE - 0.3, 0.0, bz + dz), 90.0, 3.4)
     # Rochers entassés sur les flancs et le toit : de loin, un tertre.
     for index in range(14):
         angle = math.radians(-80 + index * (160 / 13))
@@ -974,8 +997,10 @@ def furnish_bakery(scene, house, ruined, rng):
     table = frame.at(0.9, -hv + 1.0)
     furniture(scene, "mini_dungeon/table", table, frame.turn(0.0), 3.2, height=1.0, roll=90.0 if ruined else 0.0)
     for index in range(3):
-        furniture(scene, "food_kit/bag", frame.at(hu - 0.6, -hv + 0.8 + index * 1.0), frame.turn(rng.uniform(-20, 20)), 1.6,
-                  height=1.3, tilt=90.0 if ruined and index == 1 else 0.0)
+        # Un sac couché ne remplit pas sa boîte : on l'abaisse d'autant pour qu'il touche le sol.
+        tipped = ruined and index == 1
+        furniture(scene, "food_kit/bag", frame.at(hu - 0.6, -hv + 0.8 + index * 1.0, -0.14 if tipped else 0.0), frame.turn(rng.uniform(-20, 20)), 1.6,
+                  height=1.3, tilt=90.0 if tipped else 0.0)
     furniture(scene, "mini_dungeon/barrel", frame.at(hu - 0.7, 1.4), frame.turn(0.0), 2.6, height=1.2)
     if ruined:
         furniture(scene, "food_kit/bag-flat", frame.at(-0.5, 0.5), frame.turn(rng.uniform(0, 90)), 1.6)
@@ -1001,11 +1026,13 @@ def furnish_mill(scene, house, ruined, rng):
     hu, hv = frame.half_u, frame.half_v
     furniture(scene, "survival_kit/workbench-grind", frame.at(0.8, -0.6), frame.turn(0.0), 6.0, height=1.8, roll=90.0 if ruined else 0.0)
     for index in range(4):
-        furniture(scene, "food_kit/bag", frame.at(-hu + 0.6 + index * 0.9, -hv + 0.6), frame.turn(rng.uniform(-25, 25)), 1.6,
-                  height=1.3, tilt=90.0 if ruined and index % 2 else 0.0)
+        tipped = ruined and index % 2 == 1
+        furniture(scene, "food_kit/bag", frame.at(-hu + 0.6 + index * 0.9, -hv + 0.6, -0.15 if tipped else 0.0), frame.turn(rng.uniform(-25, 25)), 1.6,
+                  height=1.3, tilt=90.0 if tipped else 0.0)
     for index in range(2):
         furniture(scene, "survival_kit/box-large", frame.at(hu - 0.8, -hv + 1.0 + index * 1.6), frame.turn(90.0), 3.4, height=0.9)
-    furniture(scene, "mini_forest/ladder", frame.at(-hu + 0.9 if not ruined else 0.4, 0.8), frame.turn(90.0), 3.8, height=3.6 if not ruined else 0.5,
+    furniture(scene, "mini_forest/ladder", frame.at(-hu + 0.9 if not ruined else 0.4, 0.8, 0.0 if not ruined else -0.05), frame.turn(90.0), 3.8,
+              height=3.6 if not ruined else 0.5,
               tilt=-12.0 if not ruined else 90.0)
     if not ruined:
         furniture(scene, "mini_dungeon/barrel", frame.at(hu - 0.7, 1.8), frame.turn(0.0), 2.6, height=1.2)
@@ -1052,8 +1079,9 @@ def furnish_barracks(scene, house, ruined, rng):
     furniture(scene, "mini_dungeon/table", table, frame.turn(0.0), 3.4, height=1.0, roll=90.0 if ruined else 0.0)
     furniture(scene, "furniture_kit/bench", frame.at(-3.0, 0.3), frame.turn(0.0), 3.0, tilt=90.0 if ruined else 0.0)
     for index, v in enumerate((-0.6, 1.6)):
-        furniture(scene, "mini_arena/weapon-rack", frame.at(hu - 0.7, v), frame.turn(-90.0), 3.0, height=1.4,
-                  tilt=90.0 if ruined and index == 0 else 0.0)
+        tipped = ruined and index == 0
+        furniture(scene, "mini_arena/weapon-rack", frame.at(hu - 0.7, v, -0.45 if tipped else 0.0), frame.turn(-90.0), 3.0, height=1.4,
+                  tilt=90.0 if tipped else 0.0)
     if not ruined:
         for u in (-4.2, -1.3, 1.6):
             furniture(scene, "mini_dungeon/shield-rectangle", frame.at(u, -hv + 0.25, 2.4), frame.turn(0.0), 3.0)
@@ -1188,7 +1216,7 @@ def build_lavoir(scene, rng):
         scene.add_box((cx + 5.6, 1.2, z), (0.3, 2.4, 0.3))
     for index, z in enumerate((cz - 1.4, cz + 0.2, cz + 1.6)):
         scene.add("fantasy_town_kit/banner-green" if index % 2 else "fantasy_town_kit/banner-red", (cx + 5.6 - 1.5, 1.0, z), 0.0, (1.2, 1.4, 1.2))
-    for index, (x, z) in enumerate(((cx - 2.6, cz - 3.0), (cx + 2.6, cz - 3.0))):
+    for index, (x, z) in enumerate(((cx - 2.6, cz - 3.0), (cx + 2.0, cz - 3.0))):
         furniture(scene, "survival_kit/barrel-open", (x, 0.0, z), 0.0, 3.0, height=1.0)
     furniture(scene, "survival_kit/bucket", (cx - 1.0, 0.0, cz - 3.0), 0.0, 3.4)
     scene.group = "Fixed"
@@ -1272,7 +1300,7 @@ def build_orchard(scene, rng):
     scene.rebuilt("Orchard")
     for index, (x, z) in enumerate(spots):
         model = ("nature_kit/tree_default", "nature_kit/tree_fat", "nature_kit/tree_oak")[index % 3]
-        furniture(scene, model, (x, 0.0, z), rng.uniform(0, 360), 2.4, height=3.0)
+        furniture(scene, model, (x, 0.0, z), rng.uniform(0, 360), 3.6, height=3.0)
         for offset in range(2):
             scene.add("food_kit/apple", (x + rng.uniform(-1.2, 1.2), 0.0, z + rng.uniform(1.0, 1.8)), rng.uniform(0, 360), 1.5)
     furniture(scene, "mini_forest/ladder", (cx - 8.0 + 0.9, 0.0, cz - 6.0 + 0.4), 30.0, 3.4, tilt=-14.0)
@@ -1313,8 +1341,8 @@ def build_park(scene, rng):
     hedge_line(scene, (cx - 2.4, z1), (x0 + 5.0, z1))
     # Arbres plantés le long des haies.
     for index, z in enumerate((-61.0, -56.0)):
-        furniture(scene, "nature_kit/tree_oak" if index % 2 else "nature_kit/tree_default", (x1 - 2.2, 0.0, z), rng.uniform(0, 360), 3.2, height=4.0)
-    furniture(scene, "nature_kit/tree_default", (35.0, 0.0, -75.6), rng.uniform(0, 360), 3.0, height=4.0)
+        furniture(scene, "nature_kit/tree_oak" if index % 2 else "nature_kit/tree_default", (x1 - 2.2, 0.0, z), rng.uniform(0, 360), 4.4, height=4.0)
+    furniture(scene, "nature_kit/tree_default", (35.0, 0.0, -75.6), rng.uniform(0, 360), 4.2, height=4.0)
     # Lanternes au bord des allées.
     for x, z in ((40.4, -55.0), (43.6, -64.0), (40.4, -77.0), (40.4, -87.0), (32.6, -60.0), (32.6, -79.0), (49.0, -67.8)):
         scene.add("fantasy_town_kit/lantern", (x, 0.0, z), 0.0, 2.2)
@@ -1338,10 +1366,11 @@ def build_park(scene, rng):
     scene.group = "Fixed"
 
     # Bancs le long des allées : brisés jusqu'au premier livre.
-    benches = [(39.8, -60.0, 90.0), (44.2, -60.0, -90.0), (39.8, -82.0, 90.0), (44.4, -79.4, -90.0), (33.2, -67.6, 90.0), (50.4, -72.6, 180.0)]
+    benches = [(39.8, -60.0, 90.0), (44.2, -60.0, -90.0), (39.8, -82.0, 90.0), (43.6, -78.4, -90.0), (33.2, -67.6, 90.0), (50.4, -72.6, 180.0)]
     scene.repair("ParkBenches", 1)
     for x, z, degrees in benches:
-        furniture(scene, "graveyard_kit/bench-damaged", (x, 0.0, z), degrees + rng.uniform(-15, 15), 2.2, height=0.9, roll=90.0 if x > 44 else 0.0)
+        furniture(scene, "graveyard_kit/bench-damaged", (x, -0.12 if x > 44 else 0.0, z), degrees + rng.uniform(-15, 15), 2.2, height=0.9,
+                  roll=90.0 if x > 44 else 0.0)
     scene.rebuilt("ParkBenches")
     for x, z, degrees in benches:
         furniture(scene, "graveyard_kit/bench", (x, 0.0, z), degrees, 2.2, height=1.0)
@@ -1398,7 +1427,7 @@ def build_park(scene, rng):
         px, pz = kx + math.cos(angle) * 2.3, kz + math.sin(angle) * 2.0
         if index == 1:
             continue
-        furniture(scene, "nature_kit/statue_column", (px, 0.26, pz), 0.0, (2.2, 3.4, 2.2), height=3.4)
+        furniture(scene, "nature_kit/statue_column", (px, 0.17, pz), 0.0, (2.2, 3.4, 2.2), height=3.4)
     scene.add("castle_kit/tower-hexagon-roof", (kx, 3.66, kz), 0.0, (5.6, 2.6, 5.6))
     scene.group = "Fixed"
 
@@ -1438,8 +1467,9 @@ def build_bridges(scene, rng):
     # Avant le premier livre : un pont de fortune, des planches jetées sur les piles du pont effondré.
     scene.repair("GreatBridge", 1)
     scene.add("nature_kit/bridge_wood", (x, DECK_TOP - 0.15 * 6.0, z), degrees, (length / 1.04, 6.0, width / 1.04))
-    for dx, dz in ((-4.5, 2.6), (3.0, -2.7), (5.5, 2.4)):
-        scene.add("castle_kit/rocks-small", (x + dx, -1.3, z + dz * 1.4), rng.uniform(0, 360), 1.6)
+    # Blocs du pont effondré, tombés dans le lit de la rivière : ils affleurent de l'eau, de part et d'autre du tablier.
+    for dx, dz, y in ((-1.6, 3.6, -1.95), (1.4, -3.8, -2.05), (0.2, 4.2, -2.3)):
+        scene.add("castle_kit/rocks-small", (x + dx, y, z + dz), rng.uniform(0, 360), 1.6)
     scene.rebuilt("GreatBridge")
     scene.add("nature_kit/bridge_stoneRound", (x, DECK_TOP - 0.15 * 6.0, z), degrees, (length / 1.04, 6.0, width / 1.04))
     for end in (-1, 1):
