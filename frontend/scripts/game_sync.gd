@@ -10,7 +10,8 @@ extends Node
 ##   son livre, gagner) : pas de requêtes concurrentes contradictoires ;
 ## - une coupure réseau est retentée avec un délai croissant, sans perdre l'ordre ; le joueur est prévenu ;
 ## - les sauvegardes de position en attente sont fusionnées : seule la plus récente part ;
-## - le temps officiel est celui du serveur : chaque réponse recale le chronomètre affiché ;
+## - le temps affiché est celui du serveur, calculé à partir de sa dernière réponse : il ne s'arrête que lorsque
+##   la pause est enregistrée par le serveur, et repart avec sa reprise ;
 ## - un conflit (409) est tranché en relisant l'état du serveur, pas en interprétant son message.
 
 ## Message court à afficher pendant le jeu (connexion perdue, rétablie, refus du serveur).
@@ -20,7 +21,8 @@ signal synced
 
 ## Secondes entre deux sauvegardes de la position, qui servent aussi à recaler le chronomètre.
 const SAVE_INTERVAL := 30.0
-## Le jeu figé plus longtemps que cela (pause, indices, chargement, menu) met le chronomètre du serveur en pause.
+## Dans un niveau, le jeu figé plus longtemps que cela (pause, indices, transition) met le chronomètre du serveur
+## en pause ; dans un menu, la pause part aussitôt.
 const PAUSE_DELAY := 1.0
 ## Délais entre deux essais d'une requête restée sans réponse.
 const BACKOFF: Array[float] = [1.0, 2.0, 4.0, 8.0, 15.0]
@@ -50,6 +52,11 @@ var _frozen_for := 0.0
 var _pause_requested := false
 var _checking_time := false
 var _offline := false
+## Dernier temps restant donné par le serveur, et l'instant de sa réception (Time.get_ticks_msec()).
+var _official_remaining := -1.0
+var _official_at := 0
+## Déconnexion en cours : le chronomètre du serveur reste en pause, même si le joueur est encore dans un niveau.
+var _logging_out := false
 
 
 class Action:
@@ -127,8 +134,38 @@ func on_fragment_collected(index: int) -> void:
 
 
 func on_penalty() -> void:
-	if is_tracking():
-		_enqueue("penalty", _run_simple.bind("penalties"))
+	if not is_tracking():
+		return
+	# Le temps affiché baisse tout de suite ; la réponse du serveur le confirmera.
+	var current := official_remaining()
+	if current >= 0.0:
+		_official_remaining = maxf(0.0, current - GameState.PENALTY)
+		_official_at = Time.get_ticks_msec()
+	_enqueue("penalty", _run_simple.bind("penalties"))
+
+
+## Temps restant officiel à cet instant, d'après la dernière réponse du serveur : il décompte tant que le
+## chronomètre du serveur tourne, et reste figé quand le serveur a enregistré la pause. -1 s'il est inconnu.
+func official_remaining() -> float:
+	if not is_tracking() or game_id == 0 or status != "in_progress" or _official_remaining < 0.0:
+		return -1.0
+	if server_paused:
+		return _official_remaining
+	return maxf(0.0, _official_remaining - (Time.get_ticks_msec() - _official_at) / 1000.0)
+
+
+## Avant la déconnexion : la pause du chronomètre est envoyée et attendue tant que le jeton est valide, pour
+## que le temps ne coure pas sur le serveur pendant que le joueur n'est plus en jeu.
+func pause_before_logout() -> void:
+	if not is_tracking() or game_id == 0 or status != "in_progress":
+		return
+	_logging_out = true
+	if not _pause_requested:
+		_pause_requested = true
+		_enqueue("pause", _run_simple.bind("pauses"))
+	var deadline := Time.get_ticks_msec() + 5000
+	while not is_idle() and Time.get_ticks_msec() < deadline:
+		await get_tree().process_frame
 
 
 ## Victoire : le serveur vérifie les quatre dépôts et le temps restant.
@@ -186,6 +223,8 @@ func forget_game() -> void:
 	status = ""
 	server_paused = false
 	_pause_requested = false
+	_official_remaining = -1.0
+	_logging_out = false
 	progress_ids.clear()
 
 
@@ -527,7 +566,9 @@ func _apply_game(game: Dictionary) -> void:
 	status = str(game.get("status", status))
 	server_paused = bool(game.get("is_paused", server_paused))
 	if status == "in_progress" and game.has("remaining_seconds"):
-		GameState.set_server_time(float(game.remaining_seconds))
+		_official_remaining = float(game.remaining_seconds)
+		_official_at = Time.get_ticks_msec()
+		GameState.set_server_time(_official_remaining)
 	elif status == "game_over":
 		GameState.erupt()
 
@@ -596,17 +637,19 @@ func _import_payload(save: Dictionary) -> Dictionary:
 
 # --- Chronomètre et pause ---------------------------------------------------------------------------------
 
-## Le chronomètre du serveur suit celui du jeu : il s'arrête quand le jeu est figé (pause, indices, menu,
-## chargement) depuis plus de PAUSE_DELAY, et repart dès que le joueur reprend la main.
+## Le chronomètre du serveur s'arrête dès l'arrivée dans un menu, ou quand le jeu reste figé dans un niveau plus
+## de PAUSE_DELAY (pause, indices, transition), et repart dès que le joueur reprend la main. Le temps affiché
+## suit le serveur (official_remaining) : il ne s'arrête qu'une fois la pause enregistrée.
 func _process(delta: float) -> void:
-	if not is_tracking() or game_id == 0 or status != "in_progress":
+	if not is_tracking() or game_id == 0 or status != "in_progress" or _logging_out:
 		return
-	var frozen := get_tree().paused or not GameState.is_in_level()
+	var in_level := GameState.is_in_level()
+	var frozen := get_tree().paused or not in_level
 	if frozen != _frozen:
 		_frozen = frozen
 		_frozen_for = 0.0
 	_frozen_for += delta
-	if frozen != _pause_requested and (not frozen or _frozen_for >= PAUSE_DELAY):
+	if frozen != _pause_requested and (not frozen or not in_level or _frozen_for >= PAUSE_DELAY):
 		_pause_requested = frozen
 		_enqueue("pause", _run_simple.bind("pauses" if frozen else "resumptions"))
 	if not frozen:

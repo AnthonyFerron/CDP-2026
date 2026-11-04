@@ -71,7 +71,7 @@ Le décor du hub est généré par `frontend/tools/build_hub.py`. Chaque éléme
 
 Le Mont Sam Altan entre en éruption au bout de 60 minutes (`GameState.TOTAL_TIME`) : le scénario en annonce quarante, l'équipe a choisi une heure. Le temps restant s'affiche en haut à droite, passe au rouge sous 5 minutes, et il est sauvegardé avec la partie. Chaque mauvaise validation d'une énigme retire 5 minutes (`GameState.penalize()`). À zéro, le jeu se fige sur l'écran de fin, et « Recommencer » relance une partie depuis le hub. Le temps s'arrête une fois les quatre livres réunis.
 
-Il ne court que dans un niveau, hors pause : il s'arrête dans les menus, la pause, les indices et les chargements. Pour un joueur connecté, le serveur fait foi : le temps affiché est recalé sur le sien, son chronomètre s'arrête quand le jeu reste figé plus d'une seconde, et c'est lui qui déclare l'éruption.
+Il ne court que dans un niveau, hors pause : il s'arrête dans les menus, la pause, les indices et les chargements. Pour un joueur connecté, le serveur fait foi : le temps affiché est le sien, calculé à partir de sa dernière réponse. Son chronomètre s'arrête dès l'arrivée dans un menu, ou quand le jeu reste figé plus d'une seconde dans un niveau, et c'est lui qui déclare l'éruption.
 
 ## Énigmes
 

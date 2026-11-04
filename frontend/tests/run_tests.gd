@@ -381,7 +381,7 @@ func _functional_tests() -> void:
 	await _idle()
 	var game := await _server_game()
 	_check(float(game.get("elapsed_seconds", 0.0)) >= GameState.PENALTY, "pénalité de 5 minutes appliquée par le serveur")
-	_check(absf(GameState.time_left - float(game.get("remaining_seconds", 0.0))) < 3.0, "temps affiché = temps du serveur")
+	_check(absf(GameState.time_left - float(game.get("remaining_seconds", 0.0))) < 0.5, "temps affiché = temps du serveur")
 
 	_enter_menu()
 	await get_tree().create_timer(GameSync.PAUSE_DELAY + 0.6).timeout
@@ -394,6 +394,8 @@ func _functional_tests() -> void:
 	await _idle()
 	game = await _server_game()
 	_check(not game.get("is_paused", true), "retour dans le niveau : chronomètre du serveur relancé")
+
+	await _timer_transitions()
 
 	# Reprise sur un autre appareil : nouvelle session, sauvegarde locale vide, état relu sur le serveur.
 	_enter_menu()
@@ -544,6 +546,82 @@ func _functional_tests() -> void:
 	home.queue_free()
 	get_tree().current_scene = self
 	GameState.use_profile("")
+
+
+## Chronomètre affiché et chronomètre du serveur, aux passages entre menus, hub et zones (partie connectée).
+func _timer_transitions() -> void:
+	_section("Fonctionnel : chronomètre aux transitions entre menus, hub et zones")
+	_enter_level()
+	await _until(func() -> bool: return not GameSync.server_paused, 5.0)
+	await _idle()
+	await get_tree().create_timer(0.5).timeout
+	var game := await _server_game()
+	_check(not game.get("is_paused", true) and _aligned(game), "niveau : chronomètre en marche, temps affiché = temps du serveur")
+
+	# Menu : la pause part aussitôt, et le temps affiché reste figé sur celui du serveur.
+	var left := Time.get_ticks_msec()
+	_enter_menu()
+	await _until(func() -> bool: return GameSync.server_paused, 5.0)
+	var delay := (Time.get_ticks_msec() - left) / 1000.0
+	_check(GameSync.server_paused and delay < GameSync.PAUSE_DELAY, "menu : pause du serveur aussitôt (%.2f s)" % delay)
+	var shown := GameState.time_left
+	await get_tree().create_timer(1.5).timeout
+	game = await _server_game()
+	_check(game.get("is_paused", false) and is_equal_approx(GameState.time_left, shown) and _aligned(game, 0.05),
+		"menu : temps affiché figé, égal au temps du serveur en pause")
+
+	# Menu → niveau : reprise, puis décompte aligné.
+	_enter_level()
+	await _until(func() -> bool: return not GameSync.server_paused, 5.0)
+	await get_tree().create_timer(1.0).timeout
+	game = await _server_game()
+	_check(not game.get("is_paused", true) and GameState.time_left < shown and _aligned(game), "menu → niveau : reprise du serveur, décompte aligné")
+
+	# Jeu figé dans un niveau (menu pause, indices, transition) : les requêtes partent malgré la pause du jeu.
+	get_tree().paused = true
+	await get_tree().create_timer(GameSync.PAUSE_DELAY + 0.8).timeout
+	await _idle(5.0)
+	var during := await _server_game()
+	_check(during.get("is_paused", false), "jeu figé plus d'une seconde (pause, transition) : serveur en pause pendant le gel")
+	get_tree().paused = false
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await _idle()
+	game = await _server_game()
+	_check(not game.get("is_paused", true) and _aligned(game), "fin du gel : reprise du serveur, temps affiché aligné")
+
+	# Gel court (moins d'une seconde) : aucune pause envoyée, le temps continue sur le serveur comme à l'écran.
+	get_tree().paused = true
+	await get_tree().create_timer(0.4).timeout
+	get_tree().paused = false
+	await get_tree().process_frame
+	await _idle()
+	game = await _server_game()
+	_check(not game.get("is_paused", true) and _aligned(game), "gel court : pas de pause, temps affiché aligné")
+
+	# Pénalité : l'affichage baisse tout de suite de 5 minutes, puis le serveur confirme.
+	await get_tree().process_frame
+	shown = GameState.time_left
+	GameState.penalize()
+	await get_tree().process_frame
+	_check(absf(shown - GameState.time_left - GameState.PENALTY) < 0.5, "pénalité : temps affiché baissé aussitôt de 5 minutes")
+	await _idle()
+	game = await _server_game()
+	_check(_aligned(game), "pénalité : temps affiché confirmé par le serveur")
+
+	# Déconnexion juste après un retour au menu : la pause est enregistrée avant la révocation du jeton.
+	await GameSync.pause_before_logout()
+	game = await _server_game()
+	_check(game.get("is_paused", false), "déconnexion : chronomètre du serveur en pause avant la révocation du jeton")
+	GameSync._logging_out = false
+	_enter_level()
+	await _until(func() -> bool: return not GameSync.server_paused, 5.0)
+	await _idle()
+
+
+## Temps affiché égal au temps restant du serveur, à la précision d'une requête près.
+func _aligned(game: Dictionary, tolerance := 0.5) -> bool:
+	return game.has("remaining_seconds") and absf(GameState.time_left - float(game.remaining_seconds)) < tolerance
 
 
 func _login(address: String) -> void:

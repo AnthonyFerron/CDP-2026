@@ -26,6 +26,9 @@ var token := ""
 
 
 func _ready() -> void:
+	# Les requêtes (HTTPRequest, enfants de ce nœud) doivent avancer même quand le jeu est figé : menu pause,
+	# indices, transitions, écran de fin. Sinon la pause du chronomètre n'atteindrait le serveur qu'à la reprise.
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	base_url = _resolve_base_url()
 	print("[API] serveur : %s" % base_url)
 

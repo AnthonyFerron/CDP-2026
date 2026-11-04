@@ -100,6 +100,17 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	var official := GameSync.official_remaining()
+	if official >= 0.0:
+		# Partie connectée : le temps affiché est celui du serveur, figé seulement quand sa pause est enregistrée.
+		if intro_done and not has_erupted and placed_books.size() < BOOK_COUNT:
+			time_left = official
+			_since_save += delta
+			if time_left <= 0.0:
+				_on_time_out()
+			elif _since_save >= SAVE_INTERVAL:
+				save_game()
+		return
 	if not is_timer_running():
 		return
 	time_left = maxf(time_left - delta, 0.0)
@@ -110,8 +121,8 @@ func _process(delta: float) -> void:
 		save_game()
 
 
-## Le chronomètre tourne pendant la partie, dans un niveau, sauf en pause, après l'éruption ou une fois les
-## livres posés. Il est arrêté dans les menus, comme celui du serveur.
+## Chronomètre local (invité, ou partie connectée avant la première réponse du serveur) : il tourne dans un
+## niveau, sauf en pause, après l'éruption ou une fois les livres posés. Il est arrêté dans les menus.
 func is_timer_running() -> bool:
 	return intro_done and not has_erupted and not get_tree().paused and placed_books.size() < BOOK_COUNT \
 		and is_in_level()

@@ -262,6 +262,12 @@ func _on_load_game() -> void:
 
 
 func _on_logout() -> void:
+	if _busy:
+		return
+	# La pause du chronomètre du serveur part avant la révocation du jeton.
+	_busy = true
+	await GameSync.pause_before_logout()
+	_busy = false
 	Account.logout()
 	GameState.use_profile(Account.profile_id())
 	_home_notice = ""

@@ -68,8 +68,10 @@ Les actions partent dans **une seule file**, une requête à la fois, dans l'ord
 ### Chronomètre
 
 - Le temps local ne court que dans un niveau, hors pause. Il s'arrête dans les menus, la pause, les indices et les chargements.
-- Chaque réponse du serveur recale `GameState.time_left` sur `remaining_seconds` : le temps officiel est celui du serveur.
-- `GameSync` met le chronomètre du serveur en pause quand le jeu reste figé plus d'une seconde, et le relance dès que le joueur reprend la main. Les chargements courts ne déclenchent ainsi aucune requête.
+- Pour une partie connectée, le temps affiché est celui du serveur (`GameSync.official_remaining()`) : son dernier `remaining_seconds`, décompté avec l'horloge tant que le serveur ne l'a pas mis en pause. L'affichage ne s'arrête donc qu'une fois la pause enregistrée par le serveur.
+- `GameSync` met le chronomètre du serveur en pause dès l'arrivée dans un menu, ou quand le jeu reste figé plus d'une seconde dans un niveau (pause, indices, transition), et le relance dès que le joueur reprend la main. Un gel plus court ne déclenche aucune requête, et le temps continue alors à l'écran comme sur le serveur.
+- Les requêtes avancent même jeu figé (`Api` tourne en `PROCESS_MODE_ALWAYS`) : la pause atteint le serveur pendant le menu pause ou une transition.
+- Une pénalité est déduite tout de suite de l'affichage. La déconnexion attend que la pause soit enregistrée, avant la révocation du jeton.
 - Fermer le navigateur n'est pas une pause : le temps continue de courir sur le serveur, comme prévu par le contrat.
 - À zéro, le jeu demande l'état de la partie au serveur et n'affiche l'éruption que s'il la confirme. Hors connexion, l'éruption a lieu tout de suite.
 - Une pénalité retire 5 minutes localement et sur le serveur, qui déclare la défaite si elle épuise le temps.

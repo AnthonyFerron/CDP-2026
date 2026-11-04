@@ -127,7 +127,7 @@ func _refresh() -> void:
 	elif Account.simulated:
 		_account_state.text = "Connecté : %s (compte de test simulé, aucun serveur)" % Account.pseudo
 	else:
-		_account_state.text = "Connecté : %s (serveur %s) ; les réglages de ce menu ne changent que la partie locale" % [Account.pseudo, Api.base_url]
+		_account_state.text = "Connecté : %s (serveur %s) ; livres et fins ne changent que la partie locale, et le chronomètre suit celui du serveur" % [Account.pseudo, Api.base_url]
 
 
 func _fill_levels() -> void:
@@ -350,6 +350,7 @@ func _quick_login() -> void:
 
 
 func _logout() -> void:
+	await GameSync.pause_before_logout()
 	Account.logout()
 	GameState.use_profile(Account.profile_id())
 	_login_status.text = "Déconnecté : la partie de l'invité est rechargée."
