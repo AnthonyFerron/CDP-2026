@@ -205,15 +205,11 @@ Toutes les variables sont décrites dans `backend/.env.example` (développement)
 | `e3a91d5c7f20` | `puzzle_progress.placed_at`, nullable, et la contrainte `ck_puzzle_progress_placed_after_solved` | Aucune ligne modifiée : aucun livre n'est considéré comme posé |
 | `5d8c2b6e4a17` | Table `paper_fragments` | Nouvelle table, rien d'autre n'est touché |
 
-Les trois dernières sont additives et n'ont été appliquées qu'à des bases de test. Le seed des énigmes renseigne `hint_count = 0` : aucun indice n'est suivi en base.
+Les trois dernières sont additives. Elles ont été appliquées en production le 4 novembre 2026, à la main, après une sauvegarde : la base y est à `5d8c2b6e4a17`. Le seed des énigmes renseigne `hint_count = 0` : aucun indice n'est suivi en base.
 
 ## Déploiement
 
-Le déploiement automatique (`cdp-deploy`) reconstruit les images mais **n'exécute pas les migrations**. Or ce code lit `puzzle_progress.placed_at` et la table `paper_fragments` : déployé sans elles, les routes de parties et d'énigmes répondraient 500, alors que `/health/database` resterait vert. Ordre à respecter :
-
-1. Ajouter `SECRET_KEY` et la configuration SMTP dans `/opt/cdp-2026/.env` sur le serveur.
-2. **Appliquer les migrations avant de déployer** ce code, avec un conteneur temporaire construit depuis cette version et branché sur le réseau `cdp2026_default`, qui lance `alembic upgrade head`. L'API actuellement en production reste compatible avec le nouveau schéma, puisque les changements sont additifs.
-3. Déployer.
+La procédure, les sauvegardes et les règles d'écriture des migrations sont dans [deploiement.md](deploiement.md). En résumé : avant de mettre l'API à jour, le déploiement sauvegarde la base et applique `alembic upgrade head`, et il s'arrête sans toucher à l'API en service si l'une de ces étapes échoue. Une migration doit donc rester compatible avec la version précédente de l'API.
 
 Les routes `/api/v1/health` et `/api/v1/health/database` gardent leur comportement : les healthchecks Docker ne changent pas.
 
