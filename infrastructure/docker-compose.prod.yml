@@ -25,6 +25,15 @@ services:
 
     environment:
       DATABASE_URL: postgresql+psycopg://escape_user:${POSTGRES_PASSWORD:?}@db:5432/escape_game
+      # Facultatifs : sans eux l'API démarre, mais la connexion 2FA ne peut pas envoyer de code
+      SECRET_KEY: ${SECRET_KEY:-}
+      EMAIL_BACKEND: ${EMAIL_BACKEND:-smtp}
+      EMAIL_FROM: ${EMAIL_FROM:-CodeQuest <no-reply@localhost>}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USERNAME: ${SMTP_USERNAME:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_SECURITY: ${SMTP_SECURITY:-starttls}
 
     depends_on:
       db:
