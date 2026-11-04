@@ -57,6 +57,10 @@
 [ext_resource type="Shader" path="res://scenes/levels/marais/swamp_fog.gdshader" id="37_fog"]
 [ext_resource type="AudioStream" path="res://assets/audio/stream.wav" id="38_lapping"]
 [ext_resource type="AudioStream" path="res://assets/audio/plaine_wind.wav" id="39_wind"]
+[ext_resource type="Shader" path="res://scenes/levels/marais/reeds_sway.gdshader" id="58_reeds"]
+[ext_resource type="Script" path="res://scenes/levels/marais/marais_life.gd" id="59_life"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/fish-large.glb" id="60_fish"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/lantern-candle.glb" id="61_hanging_lantern"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_night"]
 sky_top_color = Color(0.03, 0.045, 0.07, 1)
@@ -239,6 +243,10 @@ albedo_texture = SubResource("GradientTexture2D_moon")
 material = SubResource("StandardMaterial3D_moon")
 size = Vector2(38, 38)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_reeds"]
+render_priority = 0
+shader = ExtResource("58_reeds")
+
 [sub_resource type="BoxMesh" id="BoxMesh_n1"]
 material = SubResource("StandardMaterial3D_niche_back")
 size = Vector3(2.3, 2.6, 0.04)
@@ -415,6 +423,7 @@ script = ExtResource("3_scatter")
 terrain = NodePath("../Terrain")
 tree_models = Array[PackedScene]([ExtResource("20_pine_crooked"), ExtResource("21_pine"), ExtResource("22_tree_thin"), ExtResource("23_tree_default")])
 reed_model = ExtResource("24_reed")
+reed_material = SubResource("ShaderMaterial_reeds")
 lily_models = Array[PackedScene]([ExtResource("25_lily_large"), ExtResource("26_lily_small")])
 flower_models = Array[PackedScene]([ExtResource("33_flower_purple"), ExtResource("34_flower_red"), ExtResource("35_flower_yellow")])
 bush_model = ExtResource("27_bush")
@@ -1251,6 +1260,18 @@ material_overlay = SubResource("ShaderMaterial_dust")
 [node name="Shape5" type="CollisionShape3D" parent="Interior/Niches"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 1.35, 5.1)
 shape = SubResource("BoxShape3D_n2")
+
+[node name="Life" type="Node3D" parent="." node_paths=PackedStringArray("terrain", "player")]
+script = ExtResource("59_life")
+terrain = NodePath("../Terrain")
+player = NodePath("../Player")
+fish_model = ExtResource("60_fish")
+lantern_model = ExtResource("61_hanging_lantern")
+frog_islands = Array[Vector3]([Vector3(0, 56, 8.5), Vector3(-20, 22, 5.8), Vector3(16, 0, 12.3), Vector3(0, -36, 10.4)])
+crow_perches = Array[Vector3]([Vector3(-27.42, 0, -43.20), Vector3(-31.35, 0, -41.66), Vector3(-29.80, 0, -46.69), Vector3(33, 0, -27.2), Vector3(11.5, 0, -9.0), Vector3(22.2, 0, -5.3)])
+shy_crows = PackedInt32Array(4, 5)
+bat_roosts = Array[Vector3]([Vector3(-18.5, -36.15, 3), Vector3(-17, -36.15, 1.5), Vector3(18.5, -36.15, 3), Vector3(3.5, -36.15, -3.8), Vector3(-3.5, -36.15, -18.5), Vector3(-24, -36.15, -12), Vector3(21.5, -36.15, -15)])
+gallows = Array[Vector4]([Vector4(7.2, 52.2, 0, 90), Vector4(-16, 25.6, 0, 90), Vector4(4.4, -31.2, 0, -90)])
 
 [node name="Volcano" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, -6, -215)
