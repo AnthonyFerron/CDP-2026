@@ -148,7 +148,7 @@ func _hub_hint() -> String:
 		return "Parlez au roi Codeon V et à Merlon, dans le bunker : ils vous confieront la mission avant que vous ne remontiez à la surface."
 	var carried := GameState.carried_books()
 	if not carried.is_empty():
-		return "Vous portez %s. Posez-le sur son piédestal, dans la salle des livres, au fond du donjon du château, au nord du village." % GameState.BOOK_NAMES[carried.back()]
+		return "Vous portez %s. Posez-le sur son piédestal, autour du cercle magique de la salle du trône, au fond du donjon du château, au nord du village." % GameState.BOOK_NAMES[carried.back()]
 	if GameState.placed_books.size() >= GameState.BOOK_COUNT:
 		return "Les quatre livres sont réunis et Codia renaît. Explorez le royaume à votre guise : tous les portails sont ouverts."
 	for zone in GameState.ZONE_ORDER:
