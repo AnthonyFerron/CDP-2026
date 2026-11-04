@@ -3071,7 +3071,7 @@ metadata/stage = 1
 transform = Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -11.2, 0, -24.4)
 
 [node name="rocks_small_18" parent="Repairs/House00/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(1.56248, 0, -0.34447, 0, 1.6, 0, 0.34447, 0, 1.56248, -7.2, 0, -26.2)
+transform = Transform3D(1.56248, 0, -0.34447, 0, 1.6, 0, 0.34447, 0, 1.56248, -7.2, -0.08, -26.2)
 
 [node name="wall_wood_broken_19" parent="Repairs/House00/Ruins" instance=ExtResource("12_model")]
 transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -11.2, 0, -20)
@@ -3516,13 +3516,13 @@ metadata/stage = 1
 [node name="Ruins" type="Node3D" parent="Repairs/House01"]
 
 [node name="rocks_small_100" parent="Repairs/House01/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(0.91946, 0, -1.30942, 0, 1.6, 0, 1.30942, 0, 0.91946, 7.2, 0, -26.2)
+transform = Transform3D(0.91946, 0, -1.30942, 0, 1.6, 0, 1.30942, 0, 0.91946, 7.2, -0.08, -26.2)
 
 [node name="wall_window_stone_101" parent="Repairs/House01/Ruins" instance=ExtResource("33_model")]
 transform = Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 11.2, 0, -24.4)
 
 [node name="rocks_small_102" parent="Repairs/House01/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(0.11012, 0, -1.59621, 0, 1.6, 0, 1.59621, 0, 0.11012, 7.2, 0, -18.2)
+transform = Transform3D(0.11012, 0, -1.59621, 0, 1.6, 0, 1.59621, 0, 0.11012, 7.2, -0.08, -18.2)
 
 [node name="wall_doorway_round_103" parent="Repairs/House01/Ruins" instance=ExtResource("13_model")]
 transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 11.2, 0, -20)
@@ -3913,10 +3913,10 @@ metadata/stage = 1
 transform = Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 20.2, 0, -11.4)
 
 [node name="rocks_small_166" parent="Repairs/House02/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(-1.02805, 0, 1.22602, 0, 1.6, 0, -1.22602, 0, -1.02805, 24.2, 0, -13.2)
+transform = Transform3D(-1.02805, 0, 1.22602, 0, 1.6, 0, -1.22602, 0, -1.02805, 24.2, -0.08, -13.2)
 
 [node name="rocks_small_167" parent="Repairs/House02/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(0.57928, 0, -1.49145, 0, 1.6, 0, 1.49145, 0, 0.57928, 20.2, 0, -5.2)
+transform = Transform3D(0.57928, 0, -1.49145, 0, 1.6, 0, 1.49145, 0, 0.57928, 20.2, -0.08, -5.2)
 
 [node name="wall_wood_window_shutters_168" parent="Repairs/House02/Ruins" instance=ExtResource("10_model")]
 transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 24.2, 0, -7)
@@ -3925,7 +3925,7 @@ transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 24.2, 0, -7)
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 24.4, 0, -11.2)
 
 [node name="rocks_small_170" parent="Repairs/House02/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(-0.66989, 0, -1.45301, 0, 1.6, 0, 1.45301, 0, -0.66989, 26.2, 0, -7.2)
+transform = Transform3D(-0.66989, 0, -1.45301, 0, 1.6, 0, 1.45301, 0, -0.66989, 26.2, -0.08, -7.2)
 
 [node name="wall_wood_window_small_171" parent="Repairs/House02/Ruins" instance=ExtResource("27_model")]
 transform = Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 20, 0, -11.2)
@@ -4316,7 +4316,7 @@ transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 24.2, 0, 11.4)
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 24.4, 0, 7.2)
 
 [node name="rocks_small_234" parent="Repairs/House03/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(0.83573, 0, -1.36439, 0, 1.6, 0, 1.36439, 0, 0.83573, 26.2, 0, 11.2)
+transform = Transform3D(0.83573, 0, -1.36439, 0, 1.6, 0, 1.36439, 0, 0.83573, 26.2, -0.08, 11.2)
 
 [node name="wall_broken_235" parent="Repairs/House03/Ruins" instance=ExtResource("34_model")]
 transform = Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 20, 0, 7.2)
@@ -4752,10 +4752,10 @@ transform = Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 6.2, 0, 20.4)
 transform = Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 10.2, 0, 20.4)
 
 [node name="rocks_small_313" parent="Repairs/House04/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(-1.27074, 0, 0.97222, 0, 1.6, 0, -0.97222, 0, -1.27074, 6.2, 0, 26.6)
+transform = Transform3D(-1.27074, 0, 0.97222, 0, 1.6, 0, -0.97222, 0, -1.27074, 6.2, -0.08, 26.6)
 
 [node name="rocks_small_314" parent="Repairs/House04/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(1.46229, 0, 0.64939, 0, 1.6, 0, -0.64939, 0, 1.46229, 10.2, 0, 26.6)
+transform = Transform3D(1.46229, 0, 0.64939, 0, 1.6, 0, -0.64939, 0, 1.46229, 10.2, -0.08, 26.6)
 
 [node name="wall_wood_broken_315" parent="Repairs/House04/Ruins" instance=ExtResource("12_model")]
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 10.4, 0, 20.6)
@@ -5161,13 +5161,13 @@ transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -6.2, 0, 24.8)
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -6, 0, 20.6)
 
 [node name="rocks_small_383" parent="Repairs/House05/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(-1.56282, 0, 0.34292, 0, 1.6, 0, -0.34292, 0, -1.56282, -4.2, 0, 24.6)
+transform = Transform3D(-1.56282, 0, 0.34292, 0, 1.6, 0, -0.34292, 0, -1.56282, -4.2, -0.08, 24.6)
 
 [node name="wall_window_shutters_384" parent="Repairs/House05/Ruins" instance=ExtResource("36_model")]
 transform = Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -10.4, 0, 20.6)
 
 [node name="rocks_small_385" parent="Repairs/House05/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(0.88388, 0, 1.3337, 0, 1.6, 0, -1.3337, 0, 0.88388, -12.2, 0, 24.6)
+transform = Transform3D(0.88388, 0, 1.3337, 0, 1.6, 0, -1.3337, 0, 0.88388, -12.2, -0.08, 24.6)
 
 [node name="pillar_stone_386" parent="Repairs/House05/Ruins" instance=ExtResource("35_model")]
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -12.2, 0, 18.6)
@@ -5555,7 +5555,7 @@ transform = Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -20.6, 0, 6)
 transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -24.6, 0, 10.4)
 
 [node name="rocks_small_448" parent="Repairs/House06/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(-0.83327, 0, -1.36589, 0, 1.6, 0, 1.36589, 0, -0.83327, -20.6, 0, 12.2)
+transform = Transform3D(-0.83327, 0, -1.36589, 0, 1.6, 0, 1.36589, 0, -0.83327, -20.6, -0.08, 12.2)
 
 [node name="wall_wood_broken_449" parent="Repairs/House06/Ruins" instance=ExtResource("12_model")]
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -20.4, 0, 6.2)
@@ -5997,25 +5997,25 @@ metadata/stage = 2
 transform = Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -24.6, 0, -10.4)
 
 [node name="rocks_small_529" parent="Repairs/House07/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(-0.93284, 0, -1.29993, 0, 1.6, 0, 1.29993, 0, -0.93284, -20.6, 0, -12.2)
+transform = Transform3D(-0.93284, 0, -1.29993, 0, 1.6, 0, 1.29993, 0, -0.93284, -20.6, -0.08, -12.2)
 
 [node name="rocks_small_530" parent="Repairs/House07/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(-1.55951, 0, -0.35768, 0, 1.6, 0, 0.35768, 0, -1.55951, -24.6, 0, -4.2)
+transform = Transform3D(-1.55951, 0, -0.35768, 0, 1.6, 0, 0.35768, 0, -1.55951, -24.6, -0.08, -4.2)
 
 [node name="wall_broken_531" parent="Repairs/House07/Ruins" instance=ExtResource("34_model")]
 transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -20.6, 0, -6)
 
 [node name="rocks_small_532" parent="Repairs/House07/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(-1.59825, 0, -0.07472, 0, 1.6, 0, 0.07472, 0, -1.59825, -18.6, 0, -10.2)
+transform = Transform3D(-1.59825, 0, -0.07472, 0, 1.6, 0, 0.07472, 0, -1.59825, -18.6, -0.08, -10.2)
 
 [node name="wall_doorway_round_533" parent="Repairs/House07/Ruins" instance=ExtResource("13_model")]
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -20.4, 0, -6.2)
 
 [node name="rocks_small_534" parent="Repairs/House07/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(-1.46295, 0, 0.64791, 0, 1.6, 0, -0.64791, 0, -1.46295, -26.6, 0, -10.2)
+transform = Transform3D(-1.46295, 0, 0.64791, 0, 1.6, 0, -0.64791, 0, -1.46295, -26.6, -0.08, -10.2)
 
 [node name="rocks_small_535" parent="Repairs/House07/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(1.34707, 0, 0.86337, 0, 1.6, 0, -0.86337, 0, 1.34707, -26.6, 0, -6.2)
+transform = Transform3D(1.34707, 0, 0.86337, 0, 1.6, 0, -0.86337, 0, 1.34707, -26.6, -0.08, -6.2)
 
 [node name="pillar_stone_536" parent="Repairs/House07/Ruins" instance=ExtResource("35_model")]
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -26.6, 0, -12.2)
@@ -6400,10 +6400,10 @@ transform = Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -18.5, 0, -37.3)
 transform = Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -14.5, 0, -37.3)
 
 [node name="rocks_small_597" parent="Repairs/House08/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(1.53985, 0, 0.43458, 0, 1.6, 0, -0.43458, 0, 1.53985, -10.5, 0, -39.1)
+transform = Transform3D(1.53985, 0, 0.43458, 0, 1.6, 0, -0.43458, 0, 1.53985, -10.5, -0.08, -39.1)
 
 [node name="rocks_small_598" parent="Repairs/House08/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(0.6008, 0, -1.48292, 0, 1.6, 0, 1.48292, 0, 0.6008, -18.5, 0, -31.1)
+transform = Transform3D(0.6008, 0, -1.48292, 0, 1.6, 0, 1.48292, 0, 0.6008, -18.5, -0.08, -31.1)
 
 [node name="wall_doorway_round_599" parent="Repairs/House08/Ruins" instance=ExtResource("13_model")]
 transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -14.5, 0, -32.9)
@@ -6415,7 +6415,7 @@ transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -10.5, 0, -32.9)
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -10.3, 0, -37.1)
 
 [node name="rocks_small_602" parent="Repairs/House08/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(-1.59499, 0, 0.12652, 0, 1.6, 0, -0.12652, 0, -1.59499, -8.5, 0, -33.1)
+transform = Transform3D(-1.59499, 0, 0.12652, 0, 1.6, 0, -0.12652, 0, -1.59499, -8.5, -0.08, -33.1)
 
 [node name="wall_wood_broken_603" parent="Repairs/House08/Ruins" instance=ExtResource("12_model")]
 transform = Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -18.7, 0, -37.1)
@@ -6846,10 +6846,10 @@ transform = Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 10.5, 0, -37.3)
 transform = Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 14.5, 0, -37.3)
 
 [node name="rocks_small_674" parent="Repairs/House09/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(1.06983, 0, -1.18974, 0, 1.6, 0, 1.18974, 0, 1.06983, 18.5, 0, -39.1)
+transform = Transform3D(1.06983, 0, -1.18974, 0, 1.6, 0, 1.18974, 0, 1.06983, 18.5, -0.08, -39.1)
 
 [node name="rocks_small_675" parent="Repairs/House09/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(-1.59976, 0, -0.02797, 0, 1.6, 0, 0.02797, 0, -1.59976, 10.5, 0, -31.1)
+transform = Transform3D(-1.59976, 0, -0.02797, 0, 1.6, 0, 0.02797, 0, -1.59976, 10.5, -0.08, -31.1)
 
 [node name="wall_doorway_round_676" parent="Repairs/House09/Ruins" instance=ExtResource("13_model")]
 transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 14.5, 0, -32.9)
@@ -6864,7 +6864,7 @@ transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 18.7, 0, -37.1)
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 18.7, 0, -33.1)
 
 [node name="rocks_small_680" parent="Repairs/House09/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(-1.15958, 0, 1.10244, 0, 1.6, 0, -1.10244, 0, -1.15958, 8.5, 0, -37.1)
+transform = Transform3D(-1.15958, 0, 1.10244, 0, 1.6, 0, -1.10244, 0, -1.15958, 8.5, -0.08, -37.1)
 
 [node name="wall_window_stone_681" parent="Repairs/House09/Ruins" instance=ExtResource("33_model")]
 transform = Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 10.3, 0, -33.1)
@@ -7358,7 +7358,7 @@ transform = Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 33.1, 0, -16.7)
 transform = Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 37.1, 0, -16.7)
 
 [node name="rocks_small_773" parent="Repairs/House10/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(-1.55598, 0, 0.37273, 0, 1.6, 0, -0.37273, 0, -1.55598, 33.1, 0, -10.5)
+transform = Transform3D(-1.55598, 0, 0.37273, 0, 1.6, 0, -0.37273, 0, -1.55598, 33.1, -0.08, -10.5)
 
 [node name="wall_wood_broken_774" parent="Repairs/House10/Ruins" instance=ExtResource("12_model")]
 transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 37.1, 0, -12.3)
@@ -7764,16 +7764,16 @@ transform = Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 39.1, 0, 12.3)
 transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 31.1, 0, 16.7)
 
 [node name="rocks_small_842" parent="Repairs/House11/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(-1.59552, 0, -0.11961, 0, 1.6, 0, 0.11961, 0, -1.59552, 35.1, 0, 18.5)
+transform = Transform3D(-1.59552, 0, -0.11961, 0, 1.6, 0, 0.11961, 0, -1.59552, 35.1, -0.08, 18.5)
 
 [node name="wall_843" parent="Repairs/House11/Ruins" instance=ExtResource("37_model")]
 transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 39.1, 0, 16.7)
 
 [node name="rocks_small_844" parent="Repairs/House11/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(-0.52683, 0, 1.51078, 0, 1.6, 0, -1.51078, 0, -0.52683, 41.1, 0, 12.5)
+transform = Transform3D(-0.52683, 0, 1.51078, 0, 1.6, 0, -1.51078, 0, -0.52683, 41.1, -0.08, 12.5)
 
 [node name="rocks_small_845" parent="Repairs/House11/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(0.58568, 0, -1.48895, 0, 1.6, 0, 1.48895, 0, 0.58568, 41.1, 0, 16.5)
+transform = Transform3D(0.58568, 0, -1.48895, 0, 1.6, 0, 1.48895, 0, 0.58568, 41.1, -0.08, 16.5)
 
 [node name="wall_846" parent="Repairs/House11/Ruins" instance=ExtResource("37_model")]
 transform = Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 30.9, 0, 12.5)
@@ -8664,13 +8664,13 @@ transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -9.7, 0, 40.3)
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -9.5, 0, 32.1)
 
 [node name="rocks_small_1004" parent="Repairs/House13/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(0.24868, 0, 1.58056, 0, 1.6, 0, -1.58056, 0, 0.24868, -7.7, 0, 36.1)
+transform = Transform3D(0.24868, 0, 1.58056, 0, 1.6, 0, -1.58056, 0, 0.24868, -7.7, -0.08, 36.1)
 
 [node name="wall_1005" parent="Repairs/House13/Ruins" instance=ExtResource("37_model")]
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -9.5, 0, 40.1)
 
 [node name="rocks_small_1006" parent="Repairs/House13/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(0.9059, 0, -1.31885, 0, 1.6, 0, 1.31885, 0, 0.9059, -15.7, 0, 32.1)
+transform = Transform3D(0.9059, 0, -1.31885, 0, 1.6, 0, 1.31885, 0, 0.9059, -15.7, -0.08, 32.1)
 
 [node name="wall_1007" parent="Repairs/House13/Ruins" instance=ExtResource("37_model")]
 transform = Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -13.9, 0, 36.1)
@@ -9092,7 +9092,7 @@ metadata/stage = 4
 [node name="Ruins" type="Node3D" parent="Repairs/House14"]
 
 [node name="rocks_small_1075" parent="Repairs/House14/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(-0.46964, 0, -1.52952, 0, 1.6, 0, 1.52952, 0, -0.46964, -38.1, 0, 7.7)
+transform = Transform3D(-0.46964, 0, -1.52952, 0, 1.6, 0, 1.52952, 0, -0.46964, -38.1, -0.08, 7.7)
 
 [node name="wall_wood_1076" parent="Repairs/House14/Ruins" instance=ExtResource("14_model")]
 transform = Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -34.1, 0, 9.5)
@@ -9498,25 +9498,25 @@ transform = Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -38.1, 0, -15.9)
 transform = Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -34.1, 0, -15.9)
 
 [node name="rocks_small_1144" parent="Repairs/House15/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(1.36692, 0, -0.83159, 0, 1.6, 0, 0.83159, 0, 1.36692, -38.1, 0, -5.7)
+transform = Transform3D(1.36692, 0, -0.83159, 0, 1.6, 0, 0.83159, 0, 1.36692, -38.1, -0.08, -5.7)
 
 [node name="wall_broken_1145" parent="Repairs/House15/Ruins" instance=ExtResource("34_model")]
 transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -34.1, 0, -7.5)
 
 [node name="rocks_small_1146" parent="Repairs/House15/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(0.54079, 0, -1.50584, 0, 1.6, 0, 1.50584, 0, 0.54079, -32.1, 0, -15.7)
+transform = Transform3D(0.54079, 0, -1.50584, 0, 1.6, 0, 1.50584, 0, 0.54079, -32.1, -0.08, -15.7)
 
 [node name="wall_doorway_round_1147" parent="Repairs/House15/Ruins" instance=ExtResource("13_model")]
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -33.9, 0, -11.7)
 
 [node name="rocks_small_1148" parent="Repairs/House15/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(-0.54409, 0, -1.50465, 0, 1.6, 0, 1.50465, 0, -0.54409, -32.1, 0, -7.7)
+transform = Transform3D(-0.54409, 0, -1.50465, 0, 1.6, 0, 1.50465, 0, -0.54409, -32.1, -0.08, -7.7)
 
 [node name="wall_broken_1149" parent="Repairs/House15/Ruins" instance=ExtResource("34_model")]
 transform = Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -38.3, 0, -15.7)
 
 [node name="rocks_small_1150" parent="Repairs/House15/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(-1.56433, 0, 0.33597, 0, 1.6, 0, -0.33597, 0, -1.56433, -40.1, 0, -11.7)
+transform = Transform3D(-1.56433, 0, 0.33597, 0, 1.6, 0, -0.33597, 0, -1.56433, -40.1, -0.08, -11.7)
 
 [node name="wall_broken_1151" parent="Repairs/House15/Ruins" instance=ExtResource("34_model")]
 transform = Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -38.3, 0, -7.7)
@@ -12046,7 +12046,7 @@ metadata/stage = 3
 transform = Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -58, 0, -34.2)
 
 [node name="rocks_small_1824" parent="Repairs/Chapel/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(0.35751, 0, 1.55955, 0, 1.6, 0, -1.55955, 0, 0.35751, -54, 0, -36)
+transform = Transform3D(0.35751, 0, 1.55955, 0, 1.6, 0, -1.55955, 0, 0.35751, -54, -0.08, -36)
 
 [node name="wall_window_stone_1825" parent="Repairs/Chapel/Ruins" instance=ExtResource("33_model")]
 transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -58, 0, -25.8)
@@ -12055,16 +12055,16 @@ transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -58, 0, -25.8)
 transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -54, 0, -25.8)
 
 [node name="rocks_small_1827" parent="Repairs/Chapel/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(-0.95767, 0, -1.28174, 0, 1.6, 0, 1.28174, 0, -0.95767, -52, 0, -34)
+transform = Transform3D(-0.95767, 0, -1.28174, 0, 1.6, 0, 1.28174, 0, -0.95767, -52, -0.08, -34)
 
 [node name="wall_doorway_round_1828" parent="Repairs/Chapel/Ruins" instance=ExtResource("13_model")]
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -53.8, 0, -30)
 
 [node name="rocks_small_1829" parent="Repairs/Chapel/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(1.49734, 0, 0.56388, 0, 1.6, 0, -0.56388, 0, 1.49734, -52, 0, -26)
+transform = Transform3D(1.49734, 0, 0.56388, 0, 1.6, 0, -0.56388, 0, 1.49734, -52, -0.08, -26)
 
 [node name="rocks_small_1830" parent="Repairs/Chapel/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(1.5979, 0, -0.08194, 0, 1.6, 0, 0.08194, 0, 1.5979, -60, 0, -34)
+transform = Transform3D(1.5979, 0, -0.08194, 0, 1.6, 0, 0.08194, 0, 1.5979, -60, -0.08, -34)
 
 [node name="wall_broken_1831" parent="Repairs/Chapel/Ruins" instance=ExtResource("34_model")]
 transform = Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -58.2, 0, -30)
@@ -12481,22 +12481,22 @@ metadata/stage = 1
 [node name="Ruins" type="Node3D" parent="Repairs/Forge"]
 
 [node name="rocks_small_1900" parent="Repairs/Forge/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(1.23233, 0, 1.02047, 0, 1.6, 0, -1.02047, 0, 1.23233, 53, 0, 14)
+transform = Transform3D(1.23233, 0, 1.02047, 0, 1.6, 0, -1.02047, 0, 1.23233, 53, -0.08, 14)
 
 [node name="wall_window_shutters_1901" parent="Repairs/Forge/Ruins" instance=ExtResource("36_model")]
 transform = Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 57, 0, 15.8)
 
 [node name="rocks_small_1902" parent="Repairs/Forge/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(1.35515, 0, -0.85063, 0, 1.6, 0, 0.85063, 0, 1.35515, 53, 0, 22)
+transform = Transform3D(1.35515, 0, -0.85063, 0, 1.6, 0, 0.85063, 0, 1.35515, 53, -0.08, 22)
 
 [node name="wall_broken_1903" parent="Repairs/Forge/Ruins" instance=ExtResource("34_model")]
 transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 57, 0, 20.2)
 
 [node name="rocks_small_1904" parent="Repairs/Forge/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(-0.96609, 0, 1.27541, 0, 1.6, 0, -1.27541, 0, -0.96609, 59, 0, 16)
+transform = Transform3D(-0.96609, 0, 1.27541, 0, 1.6, 0, -1.27541, 0, -0.96609, 59, -0.08, 16)
 
 [node name="rocks_small_1905" parent="Repairs/Forge/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(0.06165, 0, 1.59881, 0, 1.6, 0, -1.59881, 0, 0.06165, 59, 0, 20)
+transform = Transform3D(0.06165, 0, 1.59881, 0, 1.6, 0, -1.59881, 0, 0.06165, 59, -0.08, 20)
 
 [node name="wall_broken_1906" parent="Repairs/Forge/Ruins" instance=ExtResource("34_model")]
 transform = Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 52.8, 0, 16)
@@ -12836,7 +12836,7 @@ transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 42, 0, 66.2)
 transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 46, 0, 66.2)
 
 [node name="rocks_small_1960" parent="Repairs/Farm/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(-1.55755, 0, 0.36609, 0, 1.6, 0, -0.36609, 0, -1.55755, 48, 0, 62)
+transform = Transform3D(-1.55755, 0, 0.36609, 0, 1.6, 0, -0.36609, 0, -1.55755, 48, -0.08, 62)
 
 [node name="wall_wood_window_small_1961" parent="Repairs/Farm/Ruins" instance=ExtResource("27_model")]
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 46.2, 0, 66)
@@ -13559,7 +13559,7 @@ metadata/stage = 1
 transform = Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 50, 0, 31.8)
 
 [node name="rocks_small_2152" parent="Repairs/Bakery/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(-1.39056, 0, 0.79142, 0, 1.6, 0, -0.79142, 0, -1.39056, 54, 0, 30)
+transform = Transform3D(-1.39056, 0, 0.79142, 0, 1.6, 0, -0.79142, 0, -1.39056, 54, -0.08, 30)
 
 [node name="wall_broken_2153" parent="Repairs/Bakery/Ruins" instance=ExtResource("34_model")]
 transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 50, 0, 36.2)
@@ -13574,7 +13574,7 @@ transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 54.2, 0, 32)
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 54.2, 0, 36)
 
 [node name="rocks_small_2157" parent="Repairs/Bakery/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(1.39501, 0, 0.78355, 0, 1.6, 0, -0.78355, 0, 1.39501, 48, 0, 32)
+transform = Transform3D(1.39501, 0, 0.78355, 0, 1.6, 0, -0.78355, 0, 1.39501, 48, -0.08, 32)
 
 [node name="wall_doorway_round_2158" parent="Repairs/Bakery/Ruins" instance=ExtResource("13_model")]
 transform = Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 49.8, 0, 36)
@@ -13953,7 +13953,7 @@ metadata/stage = 2
 [node name="Ruins" type="Node3D" parent="Repairs/Mill"]
 
 [node name="rocks_small_2221" parent="Repairs/Mill/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(0.22237, 0, 1.58447, 0, 1.6, 0, -1.58447, 0, 0.22237, 59, 0, 44)
+transform = Transform3D(0.22237, 0, 1.58447, 0, 1.6, 0, -1.58447, 0, 0.22237, 59, -0.08, 44)
 
 [node name="wall_wood_window_small_2222" parent="Repairs/Mill/Ruins" instance=ExtResource("27_model")]
 transform = Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 63, 0, 45.8)
@@ -14936,10 +14936,10 @@ transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -44, 0, -63.8)
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -43.8, 0, -68)
 
 [node name="rocks_small_2396" parent="Repairs/Barracks/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(0.94455, 0, 1.29145, 0, 1.6, 0, -1.29145, 0, 0.94455, -42, 0, -64)
+transform = Transform3D(0.94455, 0, 1.29145, 0, 1.6, 0, -1.29145, 0, 0.94455, -42, -0.08, -64)
 
 [node name="rocks_small_2397" parent="Repairs/Barracks/Ruins" instance=ExtResource("11_model")]
-transform = Transform3D(-1.15563, 0, 1.10658, 0, 1.6, 0, -1.10658, 0, -1.15563, -54, 0, -68)
+transform = Transform3D(-1.15563, 0, 1.10658, 0, 1.6, 0, -1.10658, 0, -1.15563, -54, -0.08, -68)
 
 [node name="wall_window_shutters_2398" parent="Repairs/Barracks/Ruins" instance=ExtResource("36_model")]
 transform = Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -52.2, 0, -64)

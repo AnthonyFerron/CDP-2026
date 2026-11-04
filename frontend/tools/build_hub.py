@@ -360,7 +360,7 @@ def ruined_house(scene, rng, house, furnisher=None):
             continue
         roll = rng.random()
         if roll < 0.2:
-            scene.add("castle_kit/rocks-small", (center[0], 0.0, center[1]), rng.uniform(0, 360), 1.6)
+            scene.add("castle_kit/rocks-small", (center[0], -0.08, center[1]), rng.uniform(0, 360), 1.6)
             scene.add_box((center[0], 0.4, center[1]), (1.6, 0.8, 1.6))
             continue
         if roll < 0.55:
@@ -790,13 +790,10 @@ def build_shelter():
     scene.add_box((cx, -0.2, cz), (width * TILE, 0.48, depth * TILE))
     # Plafond plein, de mur à mur et au-delà : même en sautant depuis un lit superposé, on ne sort pas de l'abri.
     scene.add_box((cx, WALL_HEIGHT + 0.5, cz), (width * TILE + 2.0, 1.0, depth * TILE + 2.0))
-    # Dalle de terre au-dessus du plafond : l'abri est enterré, aucun jour ne passe entre les planches.
-    scene.add("fantasy_town_kit/roof-flat", (cx, WALL_HEIGHT + 0.3, cz), 0.0, 1.0)
-    for column in range(width):
-        for row in range(depth):
-            x = cx - (width - 1) * TILE / 2 + column * TILE
-            z = cz - (depth - 1) * TILE / 2 + row * TILE
-            scene.add("fantasy_town_kit/roof-flat", (x, WALL_HEIGHT + 0.3, z), 0.0, TILE)
+    # Panneau de bois plein au-dessus du plafond (un mur de planches couché, d'une seule pièce) : l'abri est enterré,
+    # et entre les planches on voit du bois, non le vert des tuiles d'un toit.
+    full_width, full_depth = width * TILE * 0.99, depth * TILE * 0.99
+    scene.add("fantasy_town_kit/wall-wood", (cx + full_width / 2, WALL_HEIGHT + 0.05, cz), 0.0, (0.5, full_width, full_depth), roll=90.0)
     # Dortoir au nord : lits superposés à l'ouest, couchages à même le sol à l'est.
     for x in (-8.2, -5.4):
         furniture(scene, "furniture_kit/bedBunk", (x, 0.0, -3.9), 0.0, 2.0, height=2.0)
