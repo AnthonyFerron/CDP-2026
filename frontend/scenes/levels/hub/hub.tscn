@@ -1830,7 +1830,7 @@ board_height = 1.25
 line_height = 0.16
 
 [node name="BakerySign" type="Node3D" parent="Lore"]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 47.7, 0, 37.9)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 47.74, 0, 36)
 script = ExtResource("10_readable")
 title = "La boulangerie"
 body = "Chaque matin, l'odeur du pain chaud montait jusqu'au château. La farine venait du moulin voisin, le blé de la ferme du roi. Pendant la guerre, le boulanger cuisait encore pour les soldats, jusqu'à la dernière poignée de farine."
@@ -1844,11 +1844,11 @@ text = "Boulangerie"
 style = 0
 mount = 1
 board_size = Vector2(1.3, 0.5)
-board_height = 2.5
+board_height = 3.42
 line_height = 0.16
 
 [node name="MillSign" type="Node3D" parent="Lore"]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 56.7, 0, 52)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 56.74, 0, 50)
 script = ExtResource("10_readable")
 title = "Le moulin de la rivière"
 body = "La roue tournait jour et nuit dans le courant, et la meule réduisait le blé en farine pour tout Codia. Le meunier l'a arrêtée la veille du départ pour le bunker : elle ne repartira que si la rivière retrouve sa force."
@@ -1862,11 +1862,11 @@ text = "Moulin"
 style = 0
 mount = 1
 board_size = Vector2(1.1, 0.5)
-board_height = 2.5
+board_height = 3.42
 line_height = 0.16
 
 [node name="StablesSign" type="Node3D" parent="Lore"]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -61.7, 0, -46.1)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -61.74, 0, -44)
 script = ExtResource("10_readable")
 title = "Les écuries royales"
 body = "Les chevaux de la garde y attendaient leurs cavaliers. Ils sont tous partis avec l'armée de Devlyn en 5804, contre Vibelandia ; aucun n'est revenu. Les stalles attendent des jours meilleurs."
@@ -1880,11 +1880,11 @@ text = "Écuries royales"
 style = 0
 mount = 1
 board_size = Vector2(1.5, 0.5)
-board_height = 2.5
+board_height = 3.42
 line_height = 0.16
 
 [node name="BarracksSign" type="Node3D" parent="Lore"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -50.3, 0, -61.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -48, 0, -61.74)
 script = ExtResource("10_readable")
 title = "La caserne de la garde"
 body = "Aldric y a fait ses classes, comme tous les gardes du roi. Sur le mur, la liste des volontaires partis défendre Codia contre Vibelandia couvre trois planches entières ; beaucoup de noms sont barrés."
@@ -1898,11 +1898,11 @@ text = "Caserne de la garde"
 style = 1
 mount = 1
 board_size = Vector2(1.7, 0.5)
-board_height = 2.5
+board_height = 3.42
 line_height = 0.13
 
 [node name="ApothecarySign" type="Node3D" parent="Lore"]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -55.7, 0, 30)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -55.74, 0, 32)
 script = ExtResource("10_readable")
 title = "L'herboristerie"
 body = "Onguents, tisanes et remèdes : l'herboriste soignait ici les blessés que l'on ramenait du front. Au jardin des simples, devant la porte, quelques pieds de sauge ont survécu à la guerre."
@@ -1916,11 +1916,11 @@ text = "Herboristerie"
 style = 0
 mount = 1
 board_size = Vector2(1.4, 0.5)
-board_height = 2.5
+board_height = 3.42
 line_height = 0.16
 
 [node name="ScriptoriumSign" type="Node3D" parent="Lore"]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -69.7, 0, -16.1)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -69.74, 0, -14)
 script = ExtResource("10_readable")
 title = "Le scriptorium"
 body = "Les copistes de Codia y recopiaient, ligne après ligne, ce qui restait des écrits des anciens bâtisseurs. Les quatre livres originaux, disait-on, étaient perdus depuis des siècles ; on n'en gardait ici que des fragments, et des légendes."
@@ -1934,7 +1934,7 @@ text = "Scriptorium"
 style = 1
 mount = 1
 board_size = Vector2(1.3, 0.5)
-board_height = 2.5
+board_height = 3.42
 line_height = 0.16
 
 [node name="ObservatorySign" type="Node3D" parent="Lore"]
@@ -2036,12 +2036,12 @@ prompt = "Lire : La statue de Devlyn"
 radius = 2.6
 
 [node name="Text" type="Label3D" parent="Lore/Statue"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, -1.418)
-pixel_size = 0.0032
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, -1.418)
+pixel_size = 0.0021
 shaded = true
 double_sided = false
 alpha_cut = 1
-modulate = Color(0.55, 0.43, 0.2, 1)
+modulate = Color(0.5, 0.38, 0.16, 1)
 text = "DEVLYN
 VAINQUEUR DES QUATRE
 DRAGONS DU CHAOS
@@ -2058,8 +2058,8 @@ prompt = "Lire : Le mémorial des soldats"
 radius = 2.6
 
 [node name="Text" type="Label3D" parent="Lore/Memorial"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, -0.462)
-pixel_size = 0.0021
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -0.462)
+pixel_size = 0.0014
 shaded = true
 double_sided = false
 alpha_cut = 1
