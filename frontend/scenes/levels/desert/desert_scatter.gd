@@ -209,18 +209,22 @@ func _add_wrecks() -> void:
 		var origin := Vector3(spot.x, terrain.footing_height(spot.x, spot.y) - height * 0.45, spot.y)
 		wreck.transform = Transform3D(basis.scaled(Vector3.ONE * scale_factor), origin)
 		add_child(wreck)
-		# L'enveloppe convexe de l'épave, tournée et mise à l'échelle comme elle.
-		var hull := _load_mesh(wreck_models[kind]).create_convex_shape(true, true) as ConvexPolygonShape3D
-		var points := PackedVector3Array()
-		var xform := Transform3D(basis.scaled(Vector3.ONE * scale_factor), Vector3.ZERO)
-		for point in hull.points:
-			points.append(xform * point)
-		var shape := ConvexPolygonShape3D.new()
-		shape.points = points
-		var collision := CollisionShape3D.new()
-		collision.shape = shape
-		collision.position = origin
-		body.add_child(collision)
+		# Les triangles de l'épave, tous ses maillages, tournés et mis à l'échelle comme elle : une enveloppe
+		# convexe comblerait les vides entre ses bras et ses roues, des murs invisibles.
+		var inverse := body.global_transform.affine_inverse()
+		for part: MeshInstance3D in wreck.find_children("*", "MeshInstance3D", true, false):
+			if not part.mesh:
+				continue
+			var faces := part.mesh.get_faces()
+			var xform := inverse * part.global_transform
+			for corner in faces.size():
+				faces[corner] = xform * faces[corner]
+			var shape := ConcavePolygonShape3D.new()
+			shape.set_faces(faces)
+			shape.backface_collision = true
+			var collision := CollisionShape3D.new()
+			collision.shape = shape
+			body.add_child(collision)
 		# Le sable s'est amassé contre l'épave, du côté du vent.
 		var mound := MeshInstance3D.new()
 		mound.mesh = drift

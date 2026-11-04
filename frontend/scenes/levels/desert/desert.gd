@@ -16,6 +16,12 @@ const SAFE_FRAMES := 15
 const WIND_DB := -8.0
 ## Teinte appliquée à la pierre claire du kit pour en faire du grès.
 const SANDSTONE := Color(1.0, 0.8, 0.6)
+## Pierres des cairns (modèle stones du kit) : une teinte unie, l'une de leurs pierres est gris foncé dans l'atlas
+## et virait au noir sous la teinte du grès.
+const CAIRN_STONE := Color(0.7, 0.58, 0.46)
+## Modèles des ruines dont une boîte laisserait des murs invisibles (étals ouverts sous leur auvent, charrette
+## renversée, bannières sur pied) : leur collision suit leurs triangles.
+const EXACT_MODELS: Array[String] = ["cart_", "stall_", "banner_"]
 ## Lumière ambiante dehors et dans la cave, sombre et poussiéreuse.
 const AMBIENT_OUTSIDE := 0.3
 const AMBIENT_INSIDE := 0.22
@@ -99,9 +105,13 @@ func _ready() -> void:
 	_table_glow.visible = false
 	_safe_position = _player.global_position
 	_tint_stone($Exterior/Ruins)
+	_exact_colliders($Exterior/Ruins)
 	# Les tests d'audit, qui mesurent les maillages triangle par triangle, lancent le niveau sans ce regroupement.
 	if not "sans_regroupement" in OS.get_cmdline_user_args():
 		_merge_static($Exterior/Ruins)
+		# Chaque stèle (socle, fût, corniche, cadres, soleils des deux faces) en quelques maillages par matériau.
+		for stele: Node3D in [$Exterior/Clues/Levant, $Exterior/Clues/Zenith, $Exterior/Clues/Couchant]:
+			_merge_static(stele)
 	_fade_small_props($Exterior/Ruins)
 	_sandstorm = _create_sandstorm()
 	_exterior.add_child(_sandstorm)
@@ -327,15 +337,49 @@ func _tint_stone(root: Node) -> void:
 	for mesh: MeshInstance3D in root.find_children("*", "MeshInstance3D", true, false):
 		if mesh.get_parent().name == &"Shapes" or _model_of(mesh).name.begins_with("character_skeleton"):
 			continue
+		var cairn := _model_of(mesh).name.begins_with("stones_")
 		for surface in mesh.get_surface_override_material_count():
 			var original := mesh.get_active_material(surface) as BaseMaterial3D
 			if not original:
 				continue
-			if not tinted.has(original):
+			var key := [original, cairn]
+			if not tinted.has(key):
 				var copy: BaseMaterial3D = original.duplicate()
-				copy.albedo_color *= SANDSTONE
-				tinted[original] = copy
-			mesh.set_surface_override_material(surface, tinted[original])
+				if cairn:
+					copy.albedo_texture = null
+					copy.albedo_color = CAIRN_STONE
+				else:
+					copy.albedo_color *= SANDSTONE
+				tinted[key] = copy
+			mesh.set_surface_override_material(surface, tinted[key])
+
+
+## Collision des modèles EXACT_MODELS : leurs triangles, dans un corps à part, avant le regroupement des maillages.
+func _exact_colliders(root: Node3D) -> void:
+	var body := StaticBody3D.new()
+	body.name = "ExactCollision"
+	root.add_child(body)
+	var inverse := body.global_transform.affine_inverse()
+	for model: Node in root.get_node("Models").get_children():
+		var exact := false
+		for prefix in EXACT_MODELS:
+			exact = exact or String(model.name).begins_with(prefix)
+		if not exact:
+			continue
+		for mesh: MeshInstance3D in model.find_children("*", "MeshInstance3D", true, false):
+			if not mesh.mesh:
+				continue
+			var xform := inverse * mesh.global_transform
+			var faces := mesh.mesh.get_faces()
+			for index in faces.size():
+				faces[index] = xform * faces[index]
+			var shape := ConcavePolygonShape3D.new()
+			shape.set_faces(faces)
+			# La toile d'une bannière n'a qu'une face : elle arrête aussi le joueur qui vient de derrière.
+			shape.backface_collision = true
+			var holder := CollisionShape3D.new()
+			holder.shape = shape
+			body.add_child(holder)
 
 
 ## Modèle du kit auquel appartient un maillage : l'enfant du nœud Models qui le contient.
