@@ -107,7 +107,8 @@ func _static_tests() -> void:
 	for path in scripts:
 		if path.begins_with("res://tests/"):
 			continue
-		var text := FileAccess.get_file_as_string(path)
+		# Le chemin du script des indices du jeu n'est pas la route abandonnée « /hints » de l'API.
+		var text := FileAccess.get_file_as_string(path).replace("res://scripts/hints.gd", "")
 		for reference in OLD_REFERENCES:
 			if reference in text:
 				stale.append("%s (%s)" % [path, reference])
