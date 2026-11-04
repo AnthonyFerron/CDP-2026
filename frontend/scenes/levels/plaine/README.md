@@ -15,6 +15,8 @@ Jadis des prairies, les plaines ne sont plus qu'un champ de bataille de la guerr
 
 Solution : la bibliothécaire ouvre la discussion (organiser la restauration), puis objectifs, inventaire, planning, suivi, vérification et clôture.
 
+Des feux couvent encore sur le trébuchet, la charrette de livres de la barricade et le camp ; une fumée monte des ruines, le vent siffle dans la tour et la brèche. Dans les archives, la lumière du ciel baisse, la poussière flotte et les bougies crépitent.
+
 La lave des cratères et de la coulée renvoie le joueur à son dernier point sûr. Un mur invisible au pied des remparts (`LIMIT_RADIUS`, dans `plaine_terrain.gd`) empêche de sortir de la carte.
 
 ## Fichiers
@@ -27,7 +29,8 @@ La lave des cratères et de la coulée renvoie le joueur à son dernier point s�
 | `plaine_ruins.tscn`, `plaine_battlefield.tscn`, `library_interior.tscn` | Ruines, champ de bataille et archives, générés par `tools/build_plaine.py` |
 | `model_multimesh.gd` | Répète un modèle (livres des rayonnages, feuillets) en un seul MultiMesh |
 | `searchable_book.gd` | Livre à fouiller, et sa mise en valeur |
-| `tablet_puzzle.tscn`, `tablet_puzzle.gd` | Écran de la tablette et vérification de l'ordre |
+| `tablet_puzzle.tscn`, `tablet_puzzle.gd` | Écran de la tablette, dans le style des menus (`Ornate`) : cases de pierre gravées, fragments de parchemin, rouge à l'erreur, vert à la réussite ; vérification de l'ordre |
+| `plaine_life.gd` | Corbeaux qui tournent au-dessus des engins de siège ou guettent sur la tour, les croix et la stèle (ils s'envolent à l'approche), bannières qui ondulent |
 | `lava.gdshader`, `plaine_ground.gdshader`, `soot.gdshader`, `library_floor.gdshader` | Lave, sol brûlé, suie, dallage des archives |
 
 Pour changer le décor fixe, modifier `tools/build_plaine.py` puis le relancer depuis `frontend` : `python tools/build_plaine.py`. Il imprime la place des livres à fouiller, à reporter dans `plaine.tscn` (nœuds `Interior/Books`). Les replats du champ de bataille sont décrits deux fois, dans `SITES` du script et de `plaine_terrain.gd`, et doivent rester identiques.

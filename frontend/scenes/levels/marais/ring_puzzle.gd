@@ -56,7 +56,8 @@ func validate() -> void:
 	if correct:
 		_root.hide()
 	else:
-		_feedback.text = "Les inscriptions s'illuminent de rouge et un bruit sourd résonne : le mécanisme rejette cette combinaison."
+		# Le temps perdu est annoncé par le bandeau « Mauvaise réponse » du HUD : ici, seulement ce que l'on voit.
+		_feedback.text = "Les inscriptions rougissent et un grondement roule dans la crypte."
 		_flash_wrong()
 	validated.emit(correct)
 

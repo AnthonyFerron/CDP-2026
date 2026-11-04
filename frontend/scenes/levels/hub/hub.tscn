@@ -11,9 +11,9 @@
 [ext_resource type="Script" path="res://scripts/interactable.gd" id="9_interactable"]
 [ext_resource type="Script" path="res://scripts/readable.gd" id="10_readable"]
 [ext_resource type="Script" path="res://scripts/fire_effect.gd" id="11_fire"]
+[ext_resource type="Script" path="res://scripts/sign_board.gd" id="12_sign"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/mini_forest/character-archer.glb" id="13_archer"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/character-human.glb" id="14_human"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/signpost.glb" id="15_signpost"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/mini_arena/character-soldier.glb" id="16_king"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/tree_default.glb" id="20_tree_default"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/tree_oak.glb" id="21_tree_oak"]
@@ -27,18 +27,28 @@
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/flower_redA.glb" id="29_flower_red"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/flower_yellowA.glb" id="30_flower_yellow"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/flower_purpleA.glb" id="31_flower_purple"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/crops_bambooStageA.glb" id="32_reed_a"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/crops_bambooStageB.glb" id="33_reed_b"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/grass_large.glb" id="34_grass"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/rock_smallA.glb" id="35_stone_a"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/rock_smallC.glb" id="36_stone_c"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/rock_smallFlatA.glb" id="37_stone_flat"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/lily_large.glb" id="38_lily_large"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/lily_small.glb" id="39_lily_small"]
 [ext_resource type="AudioStream" path="res://assets/audio/hub_ambience.wav" id="40_ambience"]
 [ext_resource type="AudioStream" path="res://assets/audio/fire_crackle.wav" id="41_crackle"]
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_grass_1.wav" id="42_grass1"]
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_grass_2.wav" id="43_grass2"]
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_grass_3.wav" id="44_grass3"]
 [ext_resource type="AudioStream" path="res://assets/audio/tablet_chime_3.wav" id="45_chime"]
+[ext_resource type="AudioStream" path="res://assets/audio/stone_door.wav" id="46_rumble"]
 [ext_resource type="Script" path="res://scenes/levels/hub/volcano.gd" id="47_volcano"]
-[ext_resource type="PackedScene" path="res://scenes/levels/hub/hub_bunker.tscn" id="51_bunker"]
 [ext_resource type="Script" path="res://scenes/levels/hub/hub_ending.gd" id="48_ending"]
 [ext_resource type="Shader" path="res://scenes/levels/plaine/lava.gdshader" id="49_lava"]
 [ext_resource type="AudioStream" path="res://assets/audio/volcano_eruption.wav" id="50_eruption"]
-[ext_resource type="AudioStream" path="res://assets/audio/stone_door.wav" id="46_rumble"]
+[ext_resource type="PackedScene" path="res://scenes/levels/hub/hub_bunker.tscn" id="51_bunker"]
+[ext_resource type="Script" path="res://scenes/levels/hub/hub_river.gd" id="52_river"]
+[ext_resource type="Shader" path="res://scenes/levels/hub/hub_water.gdshader" id="53_water"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_hub"]
 sky_top_color = Color(0.3, 0.29, 0.36, 1)
@@ -69,20 +79,54 @@ fog_sky_affect = 0.3
 render_priority = 0
 shader = ExtResource("4_ground")
 
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ripples"]
+seed = 5831
+frequency = 0.05
+fractal_octaves = 3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ripples"]
+width = 256
+height = 256
+seamless = true
+noise = SubResource("FastNoiseLite_ripples")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_river"]
+render_priority = 0
+shader = ExtResource("53_water")
+shader_parameter/ripple_noise = SubResource("NoiseTexture2D_ripples")
+shader_parameter/flow_speed = 0.8
+shader_parameter/across = 10.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pond"]
+render_priority = 0
+shader = ExtResource("53_water")
+shader_parameter/ripple_noise = SubResource("NoiseTexture2D_ripples")
+shader_parameter/flow_speed = 0.05
+shader_parameter/across = 1.0
+shader_parameter/clear_color = Color(0.08, 0.22, 0.2, 1)
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_stone"]
 albedo_color = Color(0.42, 0.4, 0.4, 1)
 roughness = 1.0
 
-[sub_resource type="BoxMesh" id="BoxMesh_altar"]
-material = SubResource("StandardMaterial3D_stone")
-size = Vector3(14, 0.15, 2.4)
+[sub_resource type="StandardMaterial3D" id="Material_pedestal_dark"]
+albedo_color = Color(0.32, 0.3, 0.31, 1)
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_pedestal_base"]
+material = SubResource("Material_pedestal_dark")
+size = Vector3(0.95, 0.22, 0.95)
 
 [sub_resource type="BoxMesh" id="BoxMesh_pedestal"]
 material = SubResource("StandardMaterial3D_stone")
-size = Vector3(0.9, 1.1, 0.9)
+size = Vector3(0.62, 0.86, 0.62)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pedestal_top"]
+material = SubResource("Material_pedestal_dark")
+size = Vector3(0.82, 0.12, 0.82)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_pedestal"]
-size = Vector3(0.9, 1.4, 0.9)
+size = Vector3(0.66, 1.3, 0.66)
 
 [sub_resource type="StandardMaterial3D" id="Material_robe"]
 albedo_color = Color(0.3, 0.18, 0.55, 1)
@@ -94,7 +138,7 @@ emission_enabled = true
 emission = Color(1, 0.85, 0.35, 1)
 
 [sub_resource type="StandardMaterial3D" id="Material_beard"]
-albedo_color = Color(0.92, 0.92, 0.9, 1)
+albedo_color = Color(0.9, 0.9, 0.88, 1)
 roughness = 1.0
 
 [sub_resource type="StandardMaterial3D" id="Material_staff"]
@@ -134,10 +178,27 @@ bottom_radius = 0.61
 height = 0.1
 radial_segments = 10
 
-[sub_resource type="PrismMesh" id="PrismMesh_beard"]
+[sub_resource type="SphereMesh" id="SphereMesh_beard"]
 material = SubResource("Material_beard")
-left_to_right = 0.5
-size = Vector3(0.56, 0.5, 0.16)
+radius = 0.5
+height = 1.0
+radial_segments = 12
+rings = 6
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_beard"]
+material = SubResource("Material_beard")
+top_radius = 0.34
+bottom_radius = 0.05
+height = 0.5
+radial_segments = 10
+rings = 2
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_mustache"]
+material = SubResource("Material_beard")
+radius = 0.055
+height = 0.36
+radial_segments = 8
+rings = 2
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_staff"]
 material = SubResource("Material_staff")
@@ -156,6 +217,12 @@ albedo_color = Color(0.85, 0.65, 0.25, 1)
 metallic = 0.6
 roughness = 0.4
 
+[sub_resource type="StandardMaterial3D" id="Material_crown"]
+cull_mode = 2
+albedo_color = Color(0.9, 0.7, 0.25, 1)
+metallic = 0.6
+roughness = 0.35
+
 [sub_resource type="StandardMaterial3D" id="Material_velvet"]
 albedo_color = Color(0.55, 0.08, 0.1, 1)
 roughness = 0.9
@@ -167,6 +234,38 @@ roughness = 1.0
 [sub_resource type="StandardMaterial3D" id="Material_hall_ceiling"]
 albedo_color = Color(0.3, 0.2, 0.13, 1)
 roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="Material_circle"]
+albedo_color = Color(0.2, 0.19, 0.2, 1)
+roughness = 0.7
+emission_enabled = true
+emission = Color(0.35, 0.6, 1, 1)
+emission_energy_multiplier = 0.0
+
+[sub_resource type="TorusMesh" id="TorusMesh_circle_outer"]
+material = SubResource("Material_circle")
+inner_radius = 5.38
+outer_radius = 5.62
+rings = 48
+ring_segments = 4
+
+[sub_resource type="TorusMesh" id="TorusMesh_circle_inner"]
+material = SubResource("Material_circle")
+inner_radius = 3.92
+outer_radius = 4.08
+rings = 40
+ring_segments = 4
+
+[sub_resource type="TorusMesh" id="TorusMesh_circle_heart"]
+material = SubResource("Material_circle")
+inner_radius = 2.72
+outer_radius = 2.86
+rings = 32
+ring_segments = 4
+
+[sub_resource type="BoxMesh" id="BoxMesh_circle_spoke"]
+material = SubResource("Material_circle")
+size = Vector3(0.12, 0.02, 1.5)
 
 [sub_resource type="BoxMesh" id="BoxMesh_dais"]
 material = SubResource("Material_hall_floor")
@@ -228,14 +327,16 @@ albedo_color = Color(0.95, 0.94, 0.9, 1)
 roughness = 1.0
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_crown"]
-material = SubResource("Material_gold")
-top_radius = 0.42
-bottom_radius = 0.4
-height = 0.22
+material = SubResource("Material_crown")
+top_radius = 0.44
+bottom_radius = 0.42
+height = 0.24
 radial_segments = 10
+cap_top = false
+cap_bottom = false
 
 [sub_resource type="PrismMesh" id="PrismMesh_crown_spike"]
-material = SubResource("Material_gold")
+material = SubResource("Material_crown")
 size = Vector3(0.16, 0.22, 0.07)
 
 [sub_resource type="SphereMesh" id="SphereMesh_jewel"]
@@ -335,6 +436,15 @@ bush_models = Array[PackedScene]([ExtResource("25_bush"), ExtResource("26_bush_l
 rock_models = Array[PackedScene]([ExtResource("27_rock"), ExtResource("28_rocks")])
 flower_models = Array[PackedScene]([ExtResource("29_flower_red"), ExtResource("30_flower_yellow"), ExtResource("31_flower_purple")])
 
+[node name="River" type="Node3D" parent="." node_paths=PackedStringArray("terrain")]
+script = ExtResource("52_river")
+terrain = NodePath("../Terrain")
+water_material = SubResource("ShaderMaterial_river")
+pond_material = SubResource("ShaderMaterial_pond")
+reed_models = Array[PackedScene]([ExtResource("32_reed_a"), ExtResource("33_reed_b"), ExtResource("34_grass")])
+rock_models = Array[PackedScene]([ExtResource("35_stone_a"), ExtResource("36_stone_c"), ExtResource("37_stone_flat")])
+lily_models = Array[PackedScene]([ExtResource("38_lily_large"), ExtResource("39_lily_small")])
+
 [node name="Props" parent="." instance=ExtResource("5_props")]
 
 [node name="Campfire" type="Node3D" parent="."]
@@ -349,68 +459,74 @@ crackle_volume_db = -4.0
 [node name="Portals" type="Node3D" parent="."]
 
 [node name="Plaine" parent="Portals" instance=ExtResource("6_portal")]
-transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -38, 0, -38)
-closed_prompt = "La Plaine : bientôt accessible"
-open_prompt = "Entrer : La Plaine"
+transform = Transform3D(0.70711, 0, 0.70711, 0, 1, 0, -0.70711, 0, 0.70711, -38, 0, -38)
+closed_prompt = "Les plaines d'Hexcole : bientôt accessible"
+open_prompt = "Entrer : Les plaines d'Hexcole"
 inner_color = Color(1, 0.8, 0.35, 1)
 outer_color = Color(0.9, 0.2, 0.05, 1)
 
-[node name="Label" type="Label3D" parent="Portals/Plaine"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.4, 0)
-pixel_size = 0.006
-billboard = 1
-modulate = Color(1, 0.95, 0.85, 1)
-text = "La Plaine"
-font_size = 64
-outline_size = 14
-
 [node name="Desert" parent="Portals" instance=ExtResource("6_portal")]
-transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 38, 0, -38)
-closed_prompt = "Le Désert : bientôt accessible"
-open_prompt = "Entrer : Le Désert"
+transform = Transform3D(0.70711, 0, -0.70711, 0, 1, 0, 0.70711, 0, 0.70711, 38, 0, -38)
+closed_prompt = "Le désert de Pythania : bientôt accessible"
+open_prompt = "Entrer : Le désert de Pythania"
 inner_color = Color(1, 0.95, 0.6, 1)
 outer_color = Color(0.95, 0.62, 0.15, 1)
 
-[node name="Label" type="Label3D" parent="Portals/Desert"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.4, 0)
-pixel_size = 0.006
-billboard = 1
-modulate = Color(1, 0.95, 0.85, 1)
-text = "Le Désert"
-font_size = 64
-outline_size = 14
-
 [node name="Marais" parent="Portals" instance=ExtResource("6_portal")]
-transform = Transform3D(-0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, -0.707107, 38, 0, 38)
-closed_prompt = "Le Marais : bientôt accessible"
-open_prompt = "Entrer : Le Marais"
+transform = Transform3D(-0.70711, 0, -0.70711, 0, 1, 0, 0.70711, 0, -0.70711, 38, 0, 38)
+closed_prompt = "Les marais de Kernel Swamp : bientôt accessible"
+open_prompt = "Entrer : Les marais de Kernel Swamp"
 inner_color = Color(0.6, 1, 0.7, 1)
 outer_color = Color(0.1, 0.55, 0.3, 1)
 
-[node name="Label" type="Label3D" parent="Portals/Marais"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.4, 0)
-pixel_size = 0.006
-billboard = 1
-modulate = Color(1, 0.95, 0.85, 1)
-text = "Le Marais"
-font_size = 64
-outline_size = 14
-
 [node name="Village" parent="Portals" instance=ExtResource("6_portal")]
-transform = Transform3D(-0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, -38, 0, 38)
-closed_prompt = "Le Village détruit : bientôt accessible"
-open_prompt = "Entrer : Le Village détruit"
+transform = Transform3D(-0.70711, 0, 0.70711, 0, 1, 0, -0.70711, 0, -0.70711, -38, 0, 38)
+closed_prompt = "Le village détruit : bientôt accessible"
+open_prompt = "Entrer : Le village détruit"
 inner_color = Color(0.85, 0.7, 1, 1)
 outer_color = Color(0.45, 0.2, 0.8, 1)
 
-[node name="Label" type="Label3D" parent="Portals/Village"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.4, 0)
-pixel_size = 0.006
-billboard = 1
-modulate = Color(1, 0.95, 0.85, 1)
-text = "Le Village détruit"
-font_size = 64
-outline_size = 14
+[node name="PortalSigns" type="Node3D" parent="."]
+
+[node name="Plaine" type="Node3D" parent="PortalSigns"]
+transform = Transform3D(0.70711, 0, 0.70711, 0, 1, 0, -0.70711, 0, 0.70711, -36.7272, 0, -32.9088)
+script = ExtResource("12_sign")
+text = "Les plaines d'Hexcole"
+style = 1
+mount = 0
+board_size = Vector2(1.7, 0.55)
+board_height = 1.25
+line_height = 0.14
+
+[node name="Desert" type="Node3D" parent="PortalSigns"]
+transform = Transform3D(0.70711, 0, -0.70711, 0, 1, 0, 0.70711, 0, 0.70711, 32.9088, 0, -36.7272)
+script = ExtResource("12_sign")
+text = "Le désert de Pythania"
+style = 1
+mount = 0
+board_size = Vector2(1.7, 0.55)
+board_height = 1.25
+line_height = 0.14
+
+[node name="Marais" type="Node3D" parent="PortalSigns"]
+transform = Transform3D(-0.70711, 0, -0.70711, 0, 1, 0, 0.70711, 0, -0.70711, 36.7272, 0, 32.9088)
+script = ExtResource("12_sign")
+text = "Les marais de Kernel Swamp"
+style = 1
+mount = 0
+board_size = Vector2(1.7, 0.55)
+board_height = 1.25
+line_height = 0.14
+
+[node name="Village" type="Node3D" parent="PortalSigns"]
+transform = Transform3D(-0.70711, 0, 0.70711, 0, 1, 0, -0.70711, 0, -0.70711, -32.9088, 0, 36.7272)
+script = ExtResource("12_sign")
+text = "Le village détruit"
+style = 1
+mount = 0
+board_size = Vector2(1.7, 0.55)
+board_height = 1.25
+line_height = 0.14
 
 [node name="Castle" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -81)
@@ -476,25 +592,589 @@ mesh = SubResource("BoxMesh_throne_crest")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
 shape = SubResource("BoxShape3D_throne")
 
-[node name="Platform" type="MeshInstance3D" parent="Castle"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.175, -1.5)
-mesh = SubResource("BoxMesh_altar")
+[node name="Circle" type="Node3D" parent="Castle"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.105, -0.2)
+
+[node name="Outer" type="MeshInstance3D" parent="Castle/Circle"]
+transform = Transform3D(1, 0, 0, 0, 0.08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("TorusMesh_circle_outer")
+
+[node name="Inner" type="MeshInstance3D" parent="Castle/Circle"]
+transform = Transform3D(1, 0, 0, 0, 0.08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("TorusMesh_circle_inner")
+
+[node name="Heart" type="MeshInstance3D" parent="Castle/Circle"]
+transform = Transform3D(1, 0, 0, 0, 0.08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("TorusMesh_circle_heart")
+
+[node name="SpokePlaine" type="MeshInstance3D" parent="Castle/Circle"]
+transform = Transform3D(0.70711, 0, -0.70711, 0, 1, 0, 0.70711, 0, 0.70711, -3.34462, 0, 3.34462)
+mesh = SubResource("BoxMesh_circle_spoke")
+
+[node name="SpokeDesert" type="MeshInstance3D" parent="Castle/Circle"]
+transform = Transform3D(-0.70711, 0, -0.70711, 0, 1, 0, 0.70711, 0, -0.70711, -3.34462, 0, -3.34462)
+mesh = SubResource("BoxMesh_circle_spoke")
+
+[node name="SpokeMarais" type="MeshInstance3D" parent="Castle/Circle"]
+transform = Transform3D(-0.70711, 0, 0.70711, 0, 1, 0, -0.70711, 0, -0.70711, 3.34462, 0, -3.34462)
+mesh = SubResource("BoxMesh_circle_spoke")
+
+[node name="SpokeVillage" type="MeshInstance3D" parent="Castle/Circle"]
+transform = Transform3D(0.70711, 0, 0.70711, 0, 1, 0, -0.70711, 0, 0.70711, 3.34462, 0, 3.34462)
+mesh = SubResource("BoxMesh_circle_spoke")
+
+[node name="Plaine" type="Node3D" parent="Castle/Circle"]
+
+[node name="Letter0" type="Label3D" parent="Castle/Circle/Plaine"]
+transform = Transform3D(0.22353, 0.9747, -0, 0, 0, 1, 0.9747, -0.22353, 0, -3.31397, 0.012, 0.76001)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "P"
+font_size = 64
+outline_size = 0
+
+[node name="Letter1" type="Label3D" parent="Castle/Circle/Plaine"]
+transform = Transform3D(0.32144, 0.94693, -0, 0, 0, 1, 0.94693, -0.32144, 0, -3.21956, 0.012, 1.09289)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "R"
+font_size = 64
+outline_size = 0
+
+[node name="Letter2" type="Label3D" parent="Castle/Circle/Plaine"]
+transform = Transform3D(0.41602, 0.90936, -0, 0, 0, 1, 0.90936, -0.41602, 0, -3.09181, 0.012, 1.41446)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "O"
+font_size = 64
+outline_size = 0
+
+[node name="Letter3" type="Label3D" parent="Castle/Circle/Plaine"]
+transform = Transform3D(0.50628, 0.86237, -0, 0, 0, 1, 0.86237, -0.50628, 0, -2.93205, 0.012, 1.72137)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "J"
+font_size = 64
+outline_size = 0
+
+[node name="Letter4" type="Label3D" parent="Castle/Circle/Plaine"]
+transform = Transform3D(0.59131, 0.80644, -0, 0, 0, 1, 0.80644, -0.59131, 0, -2.74191, 0.012, 2.01045)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "E"
+font_size = 64
+outline_size = 0
+
+[node name="Letter5" type="Label3D" parent="Castle/Circle/Plaine"]
+transform = Transform3D(0.67021, 0.74217, -0, 0, 0, 1, 0.74217, -0.67021, 0, -2.52338, 0.012, 2.27872)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "N"
+font_size = 64
+outline_size = 0
+
+[node name="Letter6" type="Label3D" parent="Castle/Circle/Plaine"]
+transform = Transform3D(0.74217, 0.67021, -0, 0, 0, 1, 0.67021, -0.74217, 0, -2.27872, 0.012, 2.52338)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "O"
+font_size = 64
+outline_size = 0
+
+[node name="Letter7" type="Label3D" parent="Castle/Circle/Plaine"]
+transform = Transform3D(0.80644, 0.59131, -0, 0, 0, 1, 0.59131, -0.80644, 0, -2.01045, 0.012, 2.74191)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "M"
+font_size = 64
+outline_size = 0
+
+[node name="Letter8" type="Label3D" parent="Castle/Circle/Plaine"]
+transform = Transform3D(0.86237, 0.50628, -0, 0, 0, 1, 0.50628, -0.86237, 0, -1.72137, 0.012, 2.93205)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "I"
+font_size = 64
+outline_size = 0
+
+[node name="Letter9" type="Label3D" parent="Castle/Circle/Plaine"]
+transform = Transform3D(0.90936, 0.41602, -0, 0, 0, 1, 0.41602, -0.90936, 0, -1.41446, 0.012, 3.09181)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "C"
+font_size = 64
+outline_size = 0
+
+[node name="Letter10" type="Label3D" parent="Castle/Circle/Plaine"]
+transform = Transform3D(0.94693, 0.32144, -0, 0, 0, 1, 0.32144, -0.94693, 0, -1.09289, 0.012, 3.21956)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "O"
+font_size = 64
+outline_size = 0
+
+[node name="Letter11" type="Label3D" parent="Castle/Circle/Plaine"]
+transform = Transform3D(0.9747, 0.22353, -0, 0, 0, 1, 0.22353, -0.9747, 0, -0.76001, 0.012, 3.31397)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "N"
+font_size = 64
+outline_size = 0
+
+[node name="Glow" type="OmniLight3D" parent="Castle/Circle/Plaine"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.54558, 0.5, 2.54558)
+visible = false
+light_color = Color(0.45, 0.7, 1, 1)
+light_energy = 1.2
+omni_range = 3.5
+
+[node name="Desert" type="Node3D" parent="Castle/Circle"]
+
+[node name="Letter0" type="Label3D" parent="Castle/Circle/Desert"]
+transform = Transform3D(-0.97076, 0.24004, -0, 0, 0, 1, 0.24004, 0.97076, -0, -0.81614, 0.012, -3.30059)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "A"
+font_size = 64
+outline_size = 0
+
+[node name="Letter1" type="Label3D" parent="Castle/Circle/Desert"]
+transform = Transform3D(-0.92935, 0.36921, -0, 0, 0, 1, 0.36921, 0.92935, -0, -1.2553, 0.012, -3.15978)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "L"
+font_size = 64
+outline_size = 0
+
+[node name="Letter2" type="Label3D" parent="Castle/Circle/Desert"]
+transform = Transform3D(-0.87083, 0.49158, -0, 0, 0, 1, 0.49158, 0.87083, -0, -1.67137, 0.012, -2.96083)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "G"
+font_size = 64
+outline_size = 0
+
+[node name="Letter3" type="Label3D" parent="Castle/Circle/Desert"]
+transform = Transform3D(-0.7963, 0.60491, -0, 0, 0, 1, 0.60491, 0.7963, -0, -2.05669, 0.012, -2.7074)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "O"
+font_size = 64
+outline_size = 0
+
+[node name="Letter4" type="Label3D" parent="Castle/Circle/Desert"]
+transform = Transform3D(-0.70711, 0.70711, -0, 0, 0, 1, 0.70711, 0.70711, -0, -2.40416, 0.012, -2.40416)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "N"
+font_size = 64
+outline_size = 0
+
+[node name="Letter5" type="Label3D" parent="Castle/Circle/Desert"]
+transform = Transform3D(-0.60491, 0.7963, -0, 0, 0, 1, 0.7963, 0.60491, -0, -2.7074, 0.012, -2.05669)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "I"
+font_size = 64
+outline_size = 0
+
+[node name="Letter6" type="Label3D" parent="Castle/Circle/Desert"]
+transform = Transform3D(-0.49158, 0.87083, -0, 0, 0, 1, 0.87083, 0.49158, -0, -2.96083, 0.012, -1.67137)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "C"
+font_size = 64
+outline_size = 0
+
+[node name="Letter7" type="Label3D" parent="Castle/Circle/Desert"]
+transform = Transform3D(-0.36921, 0.92935, -0, 0, 0, 1, 0.92935, 0.36921, -0, -3.15978, 0.012, -1.2553)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "O"
+font_size = 64
+outline_size = 0
+
+[node name="Letter8" type="Label3D" parent="Castle/Circle/Desert"]
+transform = Transform3D(-0.24004, 0.97076, -0, 0, 0, 1, 0.97076, 0.24004, -0, -3.30059, 0.012, -0.81614)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "N"
+font_size = 64
+outline_size = 0
+
+[node name="Glow" type="OmniLight3D" parent="Castle/Circle/Desert"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.54558, 0.5, -2.54558)
+visible = false
+light_color = Color(0.45, 0.7, 1, 1)
+light_energy = 1.2
+omni_range = 3.5
+
+[node name="Marais" type="Node3D" parent="Castle/Circle"]
+
+[node name="Letter0" type="Label3D" parent="Castle/Circle/Marais"]
+transform = Transform3D(-0.21972, -0.97556, 0, 0, 0, 1, -0.97556, 0.21972, -0, 3.31692, 0.012, -0.74703)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "L"
+font_size = 64
+outline_size = 0
+
+[node name="Letter1" type="Label3D" parent="Castle/Circle/Marais"]
+transform = Transform3D(-0.31029, -0.95064, 0, 0, 0, 1, -0.95064, 0.31029, -0, 3.23218, 0.012, -1.055)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "O"
+font_size = 64
+outline_size = 0
+
+[node name="Letter2" type="Label3D" parent="Castle/Circle/Marais"]
+transform = Transform3D(-0.39813, -0.91733, 0, 0, 0, 1, -0.91733, 0.39813, -0, 3.11891, 0.012, -1.35365)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "G"
+font_size = 64
+outline_size = 0
+
+[node name="Letter3" type="Label3D" parent="Castle/Circle/Marais"]
+transform = Transform3D(-0.48246, -0.87592, 0, 0, 0, 1, -0.87592, 0.48246, -0, 2.97812, 0.012, -1.64036)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "I"
+font_size = 64
+outline_size = 0
+
+[node name="Letter4" type="Label3D" parent="Castle/Circle/Marais"]
+transform = Transform3D(-0.56253, -0.82678, 0, 0, 0, 1, -0.82678, 0.56253, -0, 2.81105, 0.012, -1.91259)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "C"
+font_size = 64
+outline_size = 0
+
+[node name="Letter5" type="Label3D" parent="Castle/Circle/Marais"]
+transform = Transform3D(-0.63763, -0.77034, 0, 0, 0, 1, -0.77034, 0.63763, -0, 2.61916, 0.012, -2.16794)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "O"
+font_size = 64
+outline_size = 0
+
+[node name="Letter6" type="Label3D" parent="Castle/Circle/Marais"]
+transform = Transform3D(-0.70711, -0.70711, 0, 0, 0, 1, -0.70711, 0.70711, -0, 2.40416, 0.012, -2.40416)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "N"
+font_size = 64
+outline_size = 0
+
+[node name="Letter7" type="Label3D" parent="Castle/Circle/Marais"]
+transform = Transform3D(-0.77034, -0.63763, 0, 0, 0, 1, -0.63763, 0.77034, -0, 2.16794, 0.012, -2.61916)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "O"
+font_size = 64
+outline_size = 0
+
+[node name="Letter8" type="Label3D" parent="Castle/Circle/Marais"]
+transform = Transform3D(-0.82678, -0.56253, 0, 0, 0, 1, -0.56253, 0.82678, -0, 1.91259, 0.012, -2.81105)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "M"
+font_size = 64
+outline_size = 0
+
+[node name="Letter9" type="Label3D" parent="Castle/Circle/Marais"]
+transform = Transform3D(-0.87592, -0.48246, 0, 0, 0, 1, -0.48246, 0.87592, -0, 1.64036, 0.012, -2.97812)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "I"
+font_size = 64
+outline_size = 0
+
+[node name="Letter10" type="Label3D" parent="Castle/Circle/Marais"]
+transform = Transform3D(-0.91733, -0.39813, 0, 0, 0, 1, -0.39813, 0.91733, -0, 1.35365, 0.012, -3.11891)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "C"
+font_size = 64
+outline_size = 0
+
+[node name="Letter11" type="Label3D" parent="Castle/Circle/Marais"]
+transform = Transform3D(-0.95064, -0.31029, 0, 0, 0, 1, -0.31029, 0.95064, -0, 1.055, 0.012, -3.23218)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "O"
+font_size = 64
+outline_size = 0
+
+[node name="Letter12" type="Label3D" parent="Castle/Circle/Marais"]
+transform = Transform3D(-0.97556, -0.21972, 0, 0, 0, 1, -0.21972, 0.97556, -0, 0.74703, 0.012, -3.31692)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "N"
+font_size = 64
+outline_size = 0
+
+[node name="Glow" type="OmniLight3D" parent="Castle/Circle/Marais"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.54558, 0.5, -2.54558)
+visible = false
+light_color = Color(0.45, 0.7, 1, 1)
+light_energy = 1.2
+omni_range = 3.5
+
+[node name="Village" type="Node3D" parent="Castle/Circle"]
+
+[node name="Letter0" type="Label3D" parent="Castle/Circle/Village"]
+transform = Transform3D(0.97365, -0.22804, 0, 0, 0, 1, -0.22804, -0.97365, 0, 0.77534, 0.012, 3.31041)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "C"
+font_size = 64
+outline_size = 0
+
+[node name="Letter1" type="Label3D" parent="Castle/Circle/Village"]
+transform = Transform3D(0.94238, -0.33455, 0, 0, 0, 1, -0.33455, -0.94238, 0, 1.13749, 0.012, 3.20408)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "O"
+font_size = 64
+outline_size = 0
+
+[node name="Letter2" type="Label3D" parent="Castle/Circle/Village"]
+transform = Transform3D(0.89949, -0.43694, 0, 0, 0, 1, -0.43694, -0.89949, 0, 1.48561, 0.012, 3.05826)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "D"
+font_size = 64
+outline_size = 0
+
+[node name="Letter3" type="Label3D" parent="Castle/Circle/Village"]
+transform = Transform3D(0.84552, -0.53395, 0, 0, 0, 1, -0.53395, -0.84552, 0, 1.81543, 0.012, 2.87475)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "O"
+font_size = 64
+outline_size = 0
+
+[node name="Letter4" type="Label3D" parent="Castle/Circle/Village"]
+transform = Transform3D(0.78112, -0.62438, 0, 0, 0, 1, -0.62438, -0.78112, 0, 2.12288, 0.012, 2.65582)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "N"
+font_size = 64
+outline_size = 0
+
+[node name="Letter5" type="Label3D" parent="Castle/Circle/Village"]
+transform = Transform3D(0.70711, -0.70711, 0, 0, 0, 1, -0.70711, -0.70711, 0, 2.40416, 0.012, 2.40416)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "O"
+font_size = 64
+outline_size = 0
+
+[node name="Letter6" type="Label3D" parent="Castle/Circle/Village"]
+transform = Transform3D(0.62438, -0.78112, 0, 0, 0, 1, -0.78112, -0.62438, 0, 2.65582, 0.012, 2.12288)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "M"
+font_size = 64
+outline_size = 0
+
+[node name="Letter7" type="Label3D" parent="Castle/Circle/Village"]
+transform = Transform3D(0.53395, -0.84552, 0, 0, 0, 1, -0.84552, -0.53395, 0, 2.87475, 0.012, 1.81543)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "I"
+font_size = 64
+outline_size = 0
+
+[node name="Letter8" type="Label3D" parent="Castle/Circle/Village"]
+transform = Transform3D(0.43694, -0.89949, 0, 0, 0, 1, -0.89949, -0.43694, 0, 3.05826, 0.012, 1.48561)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "C"
+font_size = 64
+outline_size = 0
+
+[node name="Letter9" type="Label3D" parent="Castle/Circle/Village"]
+transform = Transform3D(0.33455, -0.94238, 0, 0, 0, 1, -0.94238, -0.33455, 0, 3.20408, 0.012, 1.13749)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "O"
+font_size = 64
+outline_size = 0
+
+[node name="Letter10" type="Label3D" parent="Castle/Circle/Village"]
+transform = Transform3D(0.22804, -0.97365, 0, 0, 0, 1, -0.97365, -0.22804, 0, 3.31041, 0.012, 0.77534)
+pixel_size = 0.0065
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.22, 0.2, 0.19, 1)
+text = "N"
+font_size = 64
+outline_size = 0
+
+[node name="Glow" type="OmniLight3D" parent="Castle/Circle/Village"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.54558, 0.5, 2.54558)
+visible = false
+light_color = Color(0.45, 0.7, 1, 1)
+light_energy = 1.2
+omni_range = 3.5
+
+[node name="RitualView" type="Marker3D" parent="Castle"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.4, 6.6, 1.6)
 
 [node name="Inscription" type="Node3D" parent="Castle"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.4, -5.85)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 0, -3.1)
 script = ExtResource("10_readable")
-title = "La salle des livres"
-body = "Quatre piédestaux attendent les livres de Codia. Chaque livre posé ici rend un peu de vie au royaume, et le rituel ne pourra commencer qu'une fois les quatre réunis."
+title = "Le cercle des anciens bâtisseurs"
+body = "Gravé dans le mur, au-dessus du trône : « Quatre livres, quatre savoirs. Posés autour du cercle, ils rendront la vie à Codia. » Les piédestaux attendent le Projenomicon, l'Algonicon, le Logiconomicon et le Codonomicon ; chacun posé illumine son nom dans le cercle, et le rituel ne pourra commencer qu'une fois les quatre réunis."
 prompt = "Lire l'inscription"
-radius = 5.0
+radius = 3.0
 
 [node name="Text" type="Label3D" parent="Castle/Inscription"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0.05)
-pixel_size = 0.005
-modulate = Color(1, 0.88, 0.6, 1)
-text = "LES QUATRE LIVRES DE CODIA"
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4, 4.4, -2.888)
+pixel_size = 0.0055
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.55, 0.42, 0.18, 1)
+text = "QUATRE LIVRES, QUATRE SAVOIRS"
 font_size = 64
-outline_size = 12
+outline_size = 0
 
 [node name="LightWest" type="OmniLight3D" parent="Castle"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 5.0, -3)
@@ -517,31 +1197,42 @@ omni_range = 13.0
 [node name="Pedestals" type="Node3D" parent="Castle"]
 
 [node name="Plaine" type="Node3D" parent="Castle/Pedestals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0.1, -1.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.53553, 0.1, 3.33553)
 script = ExtResource("9_interactable")
 prompt = "Piédestal"
-radius = 3.2
+radius = 4.0
+
+[node name="Base" type="MeshInstance3D" parent="Castle/Pedestals/Plaine"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.11, 0)
+mesh = SubResource("BoxMesh_pedestal_base")
 
 [node name="Pedestal" type="MeshInstance3D" parent="Castle/Pedestals/Plaine"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
 mesh = SubResource("BoxMesh_pedestal")
 
+[node name="Top" type="MeshInstance3D" parent="Castle/Pedestals/Plaine"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.14, 0)
+mesh = SubResource("BoxMesh_pedestal_top")
+
 [node name="Label" type="Label3D" parent="Castle/Pedestals/Plaine"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0.46)
-pixel_size = 0.0025
-modulate = Color(0.95, 0.9, 0.8, 1)
-text = "La Plaine"
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.78, 0.322)
+pixel_size = 0.0012
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.6, 0.47, 0.22, 1)
+text = "Projenomicon"
 font_size = 64
-outline_size = 10
+outline_size = 0
 
 [node name="Body" type="StaticBody3D" parent="Castle/Pedestals/Plaine"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Castle/Pedestals/Plaine/Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
 shape = SubResource("BoxShape3D_pedestal")
 
 [node name="Book" type="Node3D" parent="Castle/Pedestals/Plaine"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.28, 0)
 visible = false
 
 [node name="Mesh" type="MeshInstance3D" parent="Castle/Pedestals/Plaine/Book"]
@@ -552,31 +1243,42 @@ light_energy = 1.0
 omni_range = 2.5
 
 [node name="Desert" type="Node3D" parent="Castle/Pedestals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.1, -1.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.53553, 0.1, -3.73553)
 script = ExtResource("9_interactable")
 prompt = "Piédestal"
-radius = 3.2
+radius = 4.0
+
+[node name="Base" type="MeshInstance3D" parent="Castle/Pedestals/Desert"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.11, 0)
+mesh = SubResource("BoxMesh_pedestal_base")
 
 [node name="Pedestal" type="MeshInstance3D" parent="Castle/Pedestals/Desert"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
 mesh = SubResource("BoxMesh_pedestal")
 
+[node name="Top" type="MeshInstance3D" parent="Castle/Pedestals/Desert"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.14, 0)
+mesh = SubResource("BoxMesh_pedestal_top")
+
 [node name="Label" type="Label3D" parent="Castle/Pedestals/Desert"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0.46)
-pixel_size = 0.0025
-modulate = Color(0.95, 0.9, 0.8, 1)
-text = "Le Désert"
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.78, 0.322)
+pixel_size = 0.0012
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.6, 0.47, 0.22, 1)
+text = "Algonicon"
 font_size = 64
-outline_size = 10
+outline_size = 0
 
 [node name="Body" type="StaticBody3D" parent="Castle/Pedestals/Desert"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Castle/Pedestals/Desert/Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
 shape = SubResource("BoxShape3D_pedestal")
 
 [node name="Book" type="Node3D" parent="Castle/Pedestals/Desert"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.28, 0)
 visible = false
 
 [node name="Mesh" type="MeshInstance3D" parent="Castle/Pedestals/Desert/Book"]
@@ -587,31 +1289,42 @@ light_energy = 1.0
 omni_range = 2.5
 
 [node name="Marais" type="Node3D" parent="Castle/Pedestals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.1, -1.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.53553, 0.1, -3.73553)
 script = ExtResource("9_interactable")
 prompt = "Piédestal"
-radius = 3.2
+radius = 4.0
+
+[node name="Base" type="MeshInstance3D" parent="Castle/Pedestals/Marais"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.11, 0)
+mesh = SubResource("BoxMesh_pedestal_base")
 
 [node name="Pedestal" type="MeshInstance3D" parent="Castle/Pedestals/Marais"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
 mesh = SubResource("BoxMesh_pedestal")
 
+[node name="Top" type="MeshInstance3D" parent="Castle/Pedestals/Marais"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.14, 0)
+mesh = SubResource("BoxMesh_pedestal_top")
+
 [node name="Label" type="Label3D" parent="Castle/Pedestals/Marais"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0.46)
-pixel_size = 0.0025
-modulate = Color(0.95, 0.9, 0.8, 1)
-text = "Le Marais"
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.78, 0.322)
+pixel_size = 0.0012
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.6, 0.47, 0.22, 1)
+text = "Logiconomicon"
 font_size = 64
-outline_size = 10
+outline_size = 0
 
 [node name="Body" type="StaticBody3D" parent="Castle/Pedestals/Marais"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Castle/Pedestals/Marais/Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
 shape = SubResource("BoxShape3D_pedestal")
 
 [node name="Book" type="Node3D" parent="Castle/Pedestals/Marais"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.28, 0)
 visible = false
 
 [node name="Mesh" type="MeshInstance3D" parent="Castle/Pedestals/Marais/Book"]
@@ -622,31 +1335,42 @@ light_energy = 1.0
 omni_range = 2.5
 
 [node name="Village" type="Node3D" parent="Castle/Pedestals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.1, -1.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.53553, 0.1, 3.33553)
 script = ExtResource("9_interactable")
 prompt = "Piédestal"
-radius = 3.2
+radius = 4.0
+
+[node name="Base" type="MeshInstance3D" parent="Castle/Pedestals/Village"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.11, 0)
+mesh = SubResource("BoxMesh_pedestal_base")
 
 [node name="Pedestal" type="MeshInstance3D" parent="Castle/Pedestals/Village"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
 mesh = SubResource("BoxMesh_pedestal")
 
+[node name="Top" type="MeshInstance3D" parent="Castle/Pedestals/Village"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.14, 0)
+mesh = SubResource("BoxMesh_pedestal_top")
+
 [node name="Label" type="Label3D" parent="Castle/Pedestals/Village"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0.46)
-pixel_size = 0.0025
-modulate = Color(0.95, 0.9, 0.8, 1)
-text = "Le Village détruit"
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.78, 0.322)
+pixel_size = 0.0012
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.6, 0.47, 0.22, 1)
+text = "Codonomicon"
 font_size = 64
-outline_size = 10
+outline_size = 0
 
 [node name="Body" type="StaticBody3D" parent="Castle/Pedestals/Village"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Castle/Pedestals/Village/Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
 shape = SubResource("BoxShape3D_pedestal")
 
 [node name="Book" type="Node3D" parent="Castle/Pedestals/Village"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.28, 0)
 visible = false
 
 [node name="Mesh" type="MeshInstance3D" parent="Castle/Pedestals/Village/Book"]
@@ -661,22 +1385,14 @@ omni_range = 2.5
 [node name="Merlon" type="Node3D" parent="Characters"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 80.4, -40, -3)
 script = ExtResource("10_readable")
-title = "Merlon"
+title = "Merlon, le mage"
 body = ""
 prompt = "Parler à Merlon"
 radius = 3.0
+metadata/pose = "holding-left"
 
 [node name="Model" parent="Characters/Merlon" instance=ExtResource("14_human")]
 transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, -0, 0, 2.5, 0, 0, 0)
-
-[node name="Name" type="Label3D" parent="Characters/Merlon"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
-pixel_size = 0.004
-billboard = 1
-modulate = Color(0.6, 0.4, 1, 1)
-text = "Merlon"
-font_size = 64
-outline_size = 12
 
 [node name="Body" type="StaticBody3D" parent="Characters/Merlon"]
 
@@ -691,18 +1407,10 @@ title = "Codeon V, roi de Codia"
 body = ""
 prompt = "Parler au roi"
 radius = 3.0
+metadata/pose = "holding-left"
 
 [node name="Model" parent="Characters/Codeon" instance=ExtResource("14_human")]
 transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, -0, 0, 2.4, 0, 0, 0)
-
-[node name="Name" type="Label3D" parent="Characters/Codeon"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
-pixel_size = 0.004
-billboard = 1
-modulate = Color(1, 0.85, 0.4, 1)
-text = "Codeon V"
-font_size = 64
-outline_size = 12
 
 [node name="Body" type="StaticBody3D" parent="Characters/Codeon"]
 
@@ -711,24 +1419,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CylinderShape3D_character")
 
 [node name="Mira" type="Node3D" parent="Characters"]
-transform = Transform3D(0.34202, 0, 0.939693, 0, 1, 0, -0.939693, 0, 0.34202, 70.6, -40, -1.6)
+transform = Transform3D(0.34202, 0, 0.93969, 0, 1, 0, -0.93969, 0, 0.34202, 70.6, -40, -1.6)
 script = ExtResource("10_readable")
 title = "Mira, l'éclaireuse"
-body = "Depuis la guerre, plus rien ne pousse sur ce plateau. Mais on raconte que les livres de Codia gardent la mémoire du monde d'avant. S'ils reviennent, peut-être que la terre se souviendra."
+body = "Deux ans que nous vivons sous terre, au bruit des combats lointains. Puis le silence… La guerre contre Vibelandia est finie, mais personne n'ose remonter. On raconte que les livres des anciens bâtisseurs gardent la mémoire du monde d'avant. S'ils reviennent, peut-être que la terre se souviendra."
 prompt = "Parler à Mira"
 radius = 3.0
+metadata/pose = "idle"
 
 [node name="Model" parent="Characters/Mira" instance=ExtResource("13_archer")]
 transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, -0, 0, 2.4, 0, 0, 0)
-
-[node name="Name" type="Label3D" parent="Characters/Mira"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
-pixel_size = 0.004
-billboard = 1
-modulate = Color(1, 0.8, 0.5, 1)
-text = "Mira"
-font_size = 64
-outline_size = 12
 
 [node name="Body" type="StaticBody3D" parent="Characters/Mira"]
 
@@ -737,24 +1437,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CylinderShape3D_character")
 
 [node name="Bran" type="Node3D" parent="Characters"]
-transform = Transform3D(6.12323e-17, 0, -1, 0, 1, 0, 1, 0, 6.12323e-17, 85, -40, -0.8)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 85, -40, -0.8)
 script = ExtResource("10_readable")
 title = "Bran, le forgeron"
-body = "Les portails se sont rallumés le jour où Merlon est arrivé. Chacun mène à une terre perdue. Fais attention, Devlyn : ce qui reste là-bas n'a rien d'accueillant."
+body = "Pendant huit ans, j'ai forgé les épées de tes soldats, Devlyn. Ma forge est restée là-haut, au bord de la rivière. Les portails que Merlon a ouverts mènent à des terres perdues : fais attention, ce qui reste là-bas n'a rien d'accueillant."
 prompt = "Parler à Bran"
 radius = 3.0
+metadata/pose = "idle"
 
 [node name="Model" parent="Characters/Bran" instance=ExtResource("14_human")]
 transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, -0, 0, 2.4, 0, 0, 0)
-
-[node name="Name" type="Label3D" parent="Characters/Bran"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
-pixel_size = 0.004
-billboard = 1
-modulate = Color(1, 0.8, 0.5, 1)
-text = "Bran"
-font_size = 64
-outline_size = 12
 
 [node name="Body" type="StaticBody3D" parent="Characters/Bran"]
 
@@ -763,24 +1455,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CylinderShape3D_character")
 
 [node name="Elda" type="Node3D" parent="Characters"]
-transform = Transform3D(0.34202, 0, 0.939693, 0, 1, 0, -0.939693, 0, 0.34202, 75, -40, 3.2)
+transform = Transform3D(0.34202, 0, 0.93969, 0, 1, 0, -0.93969, 0, 0.34202, 75, -40, 3.2)
 script = ExtResource("10_readable")
 title = "Elda, la tisserande"
-body = "Nous vivons ici depuis la guerre, serrés comme des grains dans un sac. Si tu rapportes ces livres, nous pourrons remonter vivre au soleil."
+body = "Quand le roi a fait sonner les cloches, nous avons couru jusqu'ici avec ce que nous pouvions porter. Tant d'autres ne sont jamais arrivés… Si tu rapportes ces livres, nous pourrons enfin remonter vivre au soleil."
 prompt = "Parler à Elda"
 radius = 3.0
+metadata/pose = "idle"
 
 [node name="Model" parent="Characters/Elda" instance=ExtResource("14_human")]
 transform = Transform3D(2.3, 0, 0, 0, 2.3, 0, -0, 0, 2.3, 0, 0, 0)
-
-[node name="Name" type="Label3D" parent="Characters/Elda"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
-pixel_size = 0.004
-billboard = 1
-modulate = Color(1, 0.8, 0.5, 1)
-text = "Elda"
-font_size = 64
-outline_size = 12
 
 [node name="Body" type="StaticBody3D" parent="Characters/Elda"]
 
@@ -789,24 +1473,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CylinderShape3D_character")
 
 [node name="Tom" type="Node3D" parent="Characters"]
-transform = Transform3D(-0.34202, 0, -0.939693, 0, 1, 0, 0.939693, 0, -0.34202, 82.2, -40, 3)
+transform = Transform3D(-0.34202, 0, -0.93969, 0, 1, 0, 0.93969, 0, -0.34202, 82.2, -40, 3)
 script = ExtResource("10_readable")
 title = "Tom, l'apprenti"
-body = "Le roi dit que tu as vaincu les Quatre Dragons du Chaos. C'est vrai ? Moi, un jour, je partirai aussi par les portails."
+body = "C'est vrai que tu as vaincu les Quatre Dragons du Chaos, il y a des années ? Et que tu as commandé l'armée contre Vibelandia ? Moi, un jour, je partirai aussi par les portails."
 prompt = "Parler à Tom"
 radius = 3.0
+metadata/pose = "idle"
 
 [node name="Model" parent="Characters/Tom" instance=ExtResource("13_archer")]
 transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, -0, 0, 2.2, 0, 0, 0)
-
-[node name="Name" type="Label3D" parent="Characters/Tom"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
-pixel_size = 0.004
-billboard = 1
-modulate = Color(1, 0.8, 0.5, 1)
-text = "Tom"
-font_size = 64
-outline_size = 12
 
 [node name="Body" type="StaticBody3D" parent="Characters/Tom"]
 
@@ -815,24 +1491,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CylinderShape3D_character")
 
 [node name="Garde" type="Node3D" parent="Characters"]
-transform = Transform3D(-0.939693, 0, -0.34202, 0, 1, 0, 0.34202, 0, -0.939693, 80.2, -40, 4.6)
+transform = Transform3D(-0.93969, 0, -0.34202, 0, 1, 0, 0.34202, 0, -0.93969, 80.2, -40, 4.6)
 script = ExtResource("10_readable")
-title = "Aldric, garde du château"
-body = "Je garde la porte du bunker, Devlyn. Personne ne remontera tant que le volcan gronde. Le château est désert, mais ses quatre piédestaux t'attendent dans la salle des livres, au fond du donjon."
+title = "Aldric, garde royal"
+body = "Devlyn ! Le roi te fait demander : il t'attend au fond de l'abri, avec un vieil homme que personne ici ne connaissait. Je garde la porte du bunker. Quand tu remonteras, prends le chemin du château : ce qu'il en reste se dresse au nord du village."
 prompt = "Parler au garde"
 radius = 3.0
+metadata/pose = "idle"
 
 [node name="Model" parent="Characters/Garde" instance=ExtResource("16_king")]
 transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, -0, 0, 2.4, 0, 0, 0)
-
-[node name="Name" type="Label3D" parent="Characters/Garde"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
-pixel_size = 0.004
-billboard = 1
-modulate = Color(0.8, 0.85, 1, 1)
-text = "Aldric"
-font_size = 64
-outline_size = 12
 
 [node name="Body" type="StaticBody3D" parent="Characters/Garde"]
 
@@ -846,311 +1514,561 @@ shape = SubResource("CylinderShape3D_character")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0.02)
 mesh = SubResource("CylinderMesh_robe")
 
-[node name="Brim" type="MeshInstance3D" parent="Characters/Merlon/Wizard"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.58, 0.05)
+[node name="Head" type="BoneAttachment3D" parent="Characters/Merlon/Model/character-human/Skeleton3D"]
+bone_name = "head"
+bone_idx = 6
+
+[node name="Gear" type="Node3D" parent="Characters/Merlon/Model/character-human/Skeleton3D/Head"]
+transform = Transform3D(0.4, 0, -0, 0, 0.4, 0, 0, 0, 0.4, -0, -0.343, -0.003)
+
+[node name="Brim" type="MeshInstance3D" parent="Characters/Merlon/Model/character-human/Skeleton3D/Head/Gear"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.545, 0.05)
 mesh = SubResource("CylinderMesh_brim")
 
-[node name="Band" type="MeshInstance3D" parent="Characters/Merlon/Wizard"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.66, 0.05)
+[node name="Band" type="MeshInstance3D" parent="Characters/Merlon/Model/character-human/Skeleton3D/Head/Gear"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.625, 0.05)
 mesh = SubResource("CylinderMesh_band")
 
-[node name="Hat" type="MeshInstance3D" parent="Characters/Merlon/Wizard"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.17, 0.05)
+[node name="Hat" type="MeshInstance3D" parent="Characters/Merlon/Model/character-human/Skeleton3D/Head/Gear"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.155, 0.05)
 mesh = SubResource("CylinderMesh_hat")
 
-[node name="Beard" type="MeshInstance3D" parent="Characters/Merlon/Wizard"]
-transform = Transform3D(1, 0, 0, 0, -1, 0, 0, 0, 1, 0, 0.97, 0.5)
-mesh = SubResource("PrismMesh_beard")
+[node name="BeardChin" type="MeshInstance3D" parent="Characters/Merlon/Model/character-human/Skeleton3D/Head/Gear"]
+transform = Transform3D(0.84, 0, 0, 0, 0.32, 0, 0, 0, 0.26, 0, 0.88, 0.5)
+mesh = SubResource("SphereMesh_beard")
 
-[node name="Staff" type="MeshInstance3D" parent="Characters/Merlon/Wizard"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.95, 1.25, 0.15)
+[node name="BeardTail" type="MeshInstance3D" parent="Characters/Merlon/Model/character-human/Skeleton3D/Head/Gear"]
+transform = Transform3D(1, 0, 0, 0, 0.98163, 0.08014, 0, -0.19081, 0.41228, 0, 0.62, 0.53)
+mesh = SubResource("CylinderMesh_beard")
+
+[node name="MustacheRight" type="MeshInstance3D" parent="Characters/Merlon/Model/character-human/Skeleton3D/Head/Gear"]
+transform = Transform3D(-0.25113, -0.93723, -0.24192, 0.96593, -0.25882, 0, -0.06261, -0.23368, 0.9703, -0.15, 1.03, 0.56)
+mesh = SubResource("CapsuleMesh_mustache")
+
+[node name="MustacheLeft" type="MeshInstance3D" parent="Characters/Merlon/Model/character-human/Skeleton3D/Head/Gear"]
+transform = Transform3D(-0.25113, 0.93723, 0.24192, -0.96593, -0.25882, 0, 0.06261, -0.23368, 0.9703, 0.15, 1.03, 0.56)
+mesh = SubResource("CapsuleMesh_mustache")
+
+[node name="Hand" type="BoneAttachment3D" parent="Characters/Merlon/Model/character-human/Skeleton3D"]
+bone_name = "arm-left"
+bone_idx = 4
+
+[node name="Gear" type="Node3D" parent="Characters/Merlon/Model/character-human/Skeleton3D/Hand"]
+transform = Transform3D(0.2, 0, 0.34641, 0, 0.4, 0, -0.34641, 0, 0.2, -0.03961, -0.288, 0.0926)
+
+[node name="Staff" type="MeshInstance3D" parent="Characters/Merlon/Model/character-human/Skeleton3D/Hand/Gear"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.47, 1.25, 0.47)
 mesh = SubResource("CylinderMesh_staff")
 
-[node name="Orb" type="MeshInstance3D" parent="Characters/Merlon/Wizard"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.95, 2.6, 0.15)
+[node name="Orb" type="MeshInstance3D" parent="Characters/Merlon/Model/character-human/Skeleton3D/Hand/Gear"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.47, 2.6, 0.47)
 mesh = SubResource("SphereMesh_orb")
 
-[node name="OrbLight" type="OmniLight3D" parent="Characters/Merlon/Wizard"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.95, 2.6, 0.15)
+[node name="OrbLight" type="OmniLight3D" parent="Characters/Merlon/Model/character-human/Skeleton3D/Hand/Gear"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.47, 2.6, 0.47)
 light_color = Color(0.65, 0.45, 1, 1)
 light_energy = 1.4
 omni_range = 4.0
 
-[node name="Royal" type="Node3D" parent="Characters/Codeon"]
+[node name="MerlonLight" type="OmniLight3D" parent="Characters/Merlon"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0.9)
+light_color = Color(0.6, 0.45, 1, 1)
+light_energy = 1.0
+omni_range = 4.0
 
-[node name="Crown" type="MeshInstance3D" parent="Characters/Codeon/Royal"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.84, 0.05)
+[node name="Head" type="BoneAttachment3D" parent="Characters/Codeon/Model/character-human/Skeleton3D"]
+bone_name = "head"
+bone_idx = 6
+
+[node name="Gear" type="Node3D" parent="Characters/Codeon/Model/character-human/Skeleton3D/Head"]
+transform = Transform3D(0.41667, 0, -0, 0, 0.41667, 0, 0, 0, 0.41667, -0, -0.343, -0.003)
+
+[node name="Crown" type="MeshInstance3D" parent="Characters/Codeon/Model/character-human/Skeleton3D/Head/Gear"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.584, 0.05)
 mesh = SubResource("CylinderMesh_crown")
 
-[node name="Collar" type="MeshInstance3D" parent="Characters/Codeon/Royal"]
+[node name="Spike0" type="MeshInstance3D" parent="Characters/Codeon/Model/character-human/Skeleton3D/Head/Gear"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 1.81, 0.47)
+mesh = SubResource("PrismMesh_crown_spike")
+
+[node name="Spike1" type="MeshInstance3D" parent="Characters/Codeon/Model/character-human/Skeleton3D/Head/Gear"]
+transform = Transform3D(0.30902, 0, -0.95106, 0, 1, 0, 0.95106, 0, 0.30902, -0.39944, 1.81, 0.17979)
+mesh = SubResource("PrismMesh_crown_spike")
+
+[node name="Spike2" type="MeshInstance3D" parent="Characters/Codeon/Model/character-human/Skeleton3D/Head/Gear"]
+transform = Transform3D(-0.80902, 0, -0.58779, 0, 1, 0, 0.58779, 0, -0.80902, -0.24687, 1.81, -0.28979)
+mesh = SubResource("PrismMesh_crown_spike")
+
+[node name="Spike3" type="MeshInstance3D" parent="Characters/Codeon/Model/character-human/Skeleton3D/Head/Gear"]
+transform = Transform3D(-0.80902, 0, 0.58779, 0, 1, 0, -0.58779, 0, -0.80902, 0.24687, 1.81, -0.28979)
+mesh = SubResource("PrismMesh_crown_spike")
+
+[node name="Spike4" type="MeshInstance3D" parent="Characters/Codeon/Model/character-human/Skeleton3D/Head/Gear"]
+transform = Transform3D(0.30902, 0, 0.95106, 0, 1, 0, -0.95106, 0, 0.30902, 0.39944, 1.81, 0.17979)
+mesh = SubResource("PrismMesh_crown_spike")
+
+[node name="Jewel" type="MeshInstance3D" parent="Characters/Codeon/Model/character-human/Skeleton3D/Head/Gear"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0.51)
+mesh = SubResource("SphereMesh_jewel")
+
+[node name="Torso" type="BoneAttachment3D" parent="Characters/Codeon/Model/character-human/Skeleton3D"]
+bone_name = "torso"
+bone_idx = 3
+
+[node name="Gear" type="Node3D" parent="Characters/Codeon/Model/character-human/Skeleton3D/Torso"]
+transform = Transform3D(0.41667, 0, -0, 0, 0.41667, 0, 0, 0, 0.41667, -0, -0.176, 0.024)
+
+[node name="Collar" type="MeshInstance3D" parent="Characters/Codeon/Model/character-human/Skeleton3D/Torso/Gear"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.86, 0)
 mesh = SubResource("CylinderMesh_collar")
 
-[node name="Cape" type="MeshInstance3D" parent="Characters/Codeon/Royal"]
+[node name="Cape" type="MeshInstance3D" parent="Characters/Codeon/Model/character-human/Skeleton3D/Torso/Gear"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.47, -0.44)
 mesh = SubResource("BoxMesh_cape")
 
-[node name="Scepter" type="MeshInstance3D" parent="Characters/Codeon/Royal"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.95, 0.75, 0.12)
+[node name="Hand" type="BoneAttachment3D" parent="Characters/Codeon/Model/character-human/Skeleton3D"]
+bone_name = "arm-left"
+bone_idx = 4
+
+[node name="Gear" type="Node3D" parent="Characters/Codeon/Model/character-human/Skeleton3D/Hand"]
+transform = Transform3D(0.20833, 0, 0.36084, 0, 0.41667, 0, -0.36084, 0, 0.20833, -0.03961, -0.288, 0.0926)
+
+[node name="Scepter" type="MeshInstance3D" parent="Characters/Codeon/Model/character-human/Skeleton3D/Hand/Gear"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.45, 0.95, 0.45)
 mesh = SubResource("CylinderMesh_scepter")
 
-[node name="ScepterTop" type="MeshInstance3D" parent="Characters/Codeon/Royal"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.95, 1.38, 0.12)
+[node name="ScepterTop" type="MeshInstance3D" parent="Characters/Codeon/Model/character-human/Skeleton3D/Hand/Gear"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.45, 1.6, 0.45)
 mesh = SubResource("SphereMesh_scepter")
-
-[node name="Spike0" type="MeshInstance3D" parent="Characters/Codeon/Royal"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 2.2656e-17, 2.04, 0.42)
-mesh = SubResource("PrismMesh_crown_spike")
-
-[node name="Spike1" type="MeshInstance3D" parent="Characters/Codeon/Royal"]
-transform = Transform3D(0.309017, 0, -0.951057, 0, 1, 0, 0.951057, 0, 0.309017, -0.351891, 2.04, 0.164336)
-mesh = SubResource("PrismMesh_crown_spike")
-
-[node name="Spike2" type="MeshInstance3D" parent="Characters/Codeon/Royal"]
-transform = Transform3D(-0.809017, 0, -0.587785, 0, 1, 0, 0.587785, 0, -0.809017, -0.217481, 2.04, -0.249336)
-mesh = SubResource("PrismMesh_crown_spike")
-
-[node name="Spike3" type="MeshInstance3D" parent="Characters/Codeon/Royal"]
-transform = Transform3D(-0.809017, 0, 0.587785, 0, 1, 0, -0.587785, 0, -0.809017, 0.217481, 2.04, -0.249336)
-mesh = SubResource("PrismMesh_crown_spike")
-
-[node name="Spike4" type="MeshInstance3D" parent="Characters/Codeon/Royal"]
-transform = Transform3D(0.309017, 0, 0.951057, 0, 1, 0, -0.951057, 0, 0.309017, 0.351891, 2.04, 0.164336)
-mesh = SubResource("PrismMesh_crown_spike")
-
-[node name="Jewel" type="MeshInstance3D" parent="Characters/Codeon/Royal"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.86, 0.47)
-mesh = SubResource("SphereMesh_jewel")
 
 [node name="Spots" type="Node3D" parent="."]
 
 [node name="MerlonOutside" type="Marker3D" parent="Spots"]
-transform = Transform3D(-0.34202, 0, -0.939693, 0, 1, 0, 0.939693, 0, -0.34202, 7.5, 0, -79.5)
+transform = Transform3D(-0.9632, 0, -0.2688, 0, 1, 0, 0.2688, 0, -0.9632, 1.2, 0.1, -76.9)
 
 [node name="CodeonOutside" type="Marker3D" parent="Spots"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 3.4, 0.1, -85.2)
+transform = Transform3D(0.93969, 0, 0.34202, 0, 1, 0, -0.34202, 0, 0.93969, -1.3, 0.1, -83.6)
 
 [node name="MiraOutside" type="Marker3D" parent="Spots"]
-transform = Transform3D(6.12323e-17, 0, 1, 0, 1, 0, -1, 0, 6.12323e-17, -4.8, 0, 0)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -4.8, 0, 0)
 
 [node name="BranOutside" type="Marker3D" parent="Spots"]
-transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, -3.394, 0, -3.394)
+transform = Transform3D(0.70711, 0, 0.70711, 0, 1, 0, -0.70711, 0, 0.70711, -3.394, 0, -3.394)
 
 [node name="EldaOutside" type="Marker3D" parent="Spots"]
 transform = Transform3D(1, 0, -0, 0, 1, 0, 0, 0, 1, 0, 0, -4.8)
 
 [node name="TomOutside" type="Marker3D" parent="Spots"]
-transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 3.394, 0, -3.394)
+transform = Transform3D(0.70711, 0, -0.70711, 0, 1, 0, 0.70711, 0, 0.70711, 3.394, 0, -3.394)
 
 [node name="GardeOutside" type="Marker3D" parent="Spots"]
-transform = Transform3D(6.12323e-17, 0, -1, 0, 1, 0, 1, 0, 6.12323e-17, 4.8, 0, 0)
-
-[node name="MerlonLight" type="OmniLight3D" parent="Characters/Merlon"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0.6)
-light_color = Color(0.6, 0.45, 1, 1)
-light_energy = 1.2
-omni_range = 4.0
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 4.8, 0, 0)
 
 [node name="Lore" type="Node3D" parent="."]
 
 [node name="SchoolSign" type="Node3D" parent="Lore"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -2.6, 0, 54.6)
+transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, -2.8, 0, 54.6)
 script = ExtResource("10_readable")
 title = "L'école de Codia"
-body = "Avant la guerre, Merlon y apprenait aux enfants l'art des instructions : découper un problème, mettre les étapes dans l'ordre, vérifier chaque résultat. Sur le tableau, quelqu'un a écrit à la craie : « Un bon programme, comme un bon royaume, tient sur quatre livres. »"
+body = "Avant la guerre, on y apprenait aux enfants l'art des instructions : découper un problème, mettre les étapes dans l'ordre, vérifier chaque résultat. Sur le tableau, quelqu'un a écrit à la craie : « Les anciens bâtisseurs ont tout consigné dans quatre livres. »"
 prompt = "Lire : L'école de Codia"
 radius = 2.6
 
-[node name="Post" parent="Lore/SchoolSign" instance=ExtResource("15_signpost")]
-transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, -0, 0, 2.4, 0, 0, 0)
-
-[node name="Body" type="StaticBody3D" parent="Lore/SchoolSign"]
-
-[node name="Shape" type="CollisionShape3D" parent="Lore/SchoolSign/Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-shape = SubResource("CylinderShape3D_character")
-
-[node name="SchoolSignName" type="Label3D" parent="Lore"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9.6, 55.4)
-pixel_size = 0.007
-billboard = 1
-modulate = Color(1, 0.9, 0.7, 1)
+[node name="Sign" type="Node3D" parent="Lore/SchoolSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
 text = "École de Codia"
-font_size = 64
-outline_size = 14
+style = 0
+mount = 0
+board_size = Vector2(1.3, 0.6)
+board_height = 1.25
+line_height = 0.16
 
 [node name="TavernSign" type="Node3D" parent="Lore"]
-transform = Transform3D(6.12323e-17, 0, 1, 0, 1, 0, -1, 0, 6.12323e-17, -52.6, 0, 4.6)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -52.6, 0, 4.6)
 script = ExtResource("10_readable")
 title = "La Chope du Dragon"
-body = "On raconte ici que Devlyn a vaincu les Quatre Dragons du Chaos avec une seule boucle bien écrite. Le tavernier jure que la dernière bière tirée avant la guerre attend encore au fond d'un tonneau, pour le jour où Codia renaîtra."
+body = "La tavernière aime raconter l'an 5802 : Devlyn et ses compagnons y fêtaient leur victoire sur les Quatre Dragons du Chaos. Elle jure que la dernière bière tirée avant la guerre contre Vibelandia attend encore au fond d'un tonneau, pour le jour où Codia renaîtra."
 prompt = "Lire : La Chope du Dragon"
 radius = 2.6
 
-[node name="Post" parent="Lore/TavernSign" instance=ExtResource("15_signpost")]
-transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, -0, 0, 2.4, 0, 0, 0)
-
-[node name="Body" type="StaticBody3D" parent="Lore/TavernSign"]
-
-[node name="Shape" type="CollisionShape3D" parent="Lore/TavernSign/Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-shape = SubResource("CylinderShape3D_character")
-
-[node name="TavernSignName" type="Label3D" parent="Lore"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -53.4, 9.6, 0)
-pixel_size = 0.007
-billboard = 1
-modulate = Color(1, 0.9, 0.7, 1)
+[node name="Sign" type="Node3D" parent="Lore/TavernSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
 text = "La Chope du Dragon"
-font_size = 64
-outline_size = 14
+style = 0
+mount = 2
+board_size = Vector2(1.4, 0.6)
+board_height = 2.2
+line_height = 0.16
 
 [node name="ChapelSign" type="Node3D" parent="Lore"]
-transform = Transform3D(6.12323e-17, 0, 1, 0, 1, 0, -1, 0, 6.12323e-17, -50.8, 0, -26.4)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -50.8, 0, -26)
 script = ExtResource("10_readable")
 title = "La chapelle des Quatre Livres"
 body = "Les anciens priaient ici devant quatre lutrins vides. Une prière est gravée au-dessus de l'autel : « Que l'ordre du Projenomicon, la rigueur de l'Algonicon, la logique du Logiconomicon et la clarté du Codonomicon veillent sur Codia. »"
 prompt = "Lire : La chapelle des Quatre Livres"
 radius = 2.6
 
-[node name="Post" parent="Lore/ChapelSign" instance=ExtResource("15_signpost")]
-transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, -0, 0, 2.4, 0, 0, 0)
-
-[node name="Body" type="StaticBody3D" parent="Lore/ChapelSign"]
-
-[node name="Shape" type="CollisionShape3D" parent="Lore/ChapelSign/Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-shape = SubResource("CylinderShape3D_character")
-
-[node name="ChapelSignName" type="Label3D" parent="Lore"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -51.4, 6, -30)
-pixel_size = 0.007
-billboard = 1
-modulate = Color(1, 0.9, 0.7, 1)
-text = "Chapelle"
-font_size = 64
-outline_size = 14
-
-[node name="Memorial" type="Node3D" parent="Lore"]
-transform = Transform3D(6.12323e-17, 0, 1, 0, 1, 0, -1, 0, 6.12323e-17, -44, 0, -36)
-script = ExtResource("10_readable")
-title = "Le mémorial des soldats"
-body = "Aux soldats de Codia, tombés face aux Quatre Dragons du Chaos. Leurs noms se sont effacés de la pierre ; leur courage, lui, ne s'efface pas."
-prompt = "Lire : Le mémorial des soldats"
-radius = 2.6
-
-[node name="Post" parent="Lore/Memorial" instance=ExtResource("15_signpost")]
-transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, -0, 0, 2.4, 0, 0, 0)
-
-[node name="Body" type="StaticBody3D" parent="Lore/Memorial"]
-
-[node name="Shape" type="CollisionShape3D" parent="Lore/Memorial/Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-shape = SubResource("CylinderShape3D_character")
+[node name="Sign" type="Node3D" parent="Lore/ChapelSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
+text = "Chapelle des Quatre Livres"
+style = 1
+mount = 0
+board_size = Vector2(1.4, 0.6)
+board_height = 1.25
+line_height = 0.13
 
 [node name="ForgeSign" type="Node3D" parent="Lore"]
-transform = Transform3D(6.12323e-17, 0, -1, 0, 1, 0, 1, 0, 6.12323e-17, 49.8, 0, 22.6)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 49.8, 0, 22.6)
 script = ExtResource("10_readable")
 title = "La forge de Bran"
-body = "Bran y forgeait les gonds des grands portails, du temps où ils menaient à des terres prospères. Sur l'enclume, une marque : la couronne de l'atelier royal, et le nom de son maître, Bran le Jeune."
+body = "Pendant huit ans de guerre contre Vibelandia, Bran y a forgé les épées et les boucliers de l'armée de Codia, nuit et jour, au bord de la rivière. Sur l'enclume, une marque : la couronne de l'atelier royal."
 prompt = "Lire : La forge de Bran"
 radius = 2.6
 
-[node name="Post" parent="Lore/ForgeSign" instance=ExtResource("15_signpost")]
-transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, -0, 0, 2.4, 0, 0, 0)
-
-[node name="Body" type="StaticBody3D" parent="Lore/ForgeSign"]
-
-[node name="Shape" type="CollisionShape3D" parent="Lore/ForgeSign/Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-shape = SubResource("CylinderShape3D_character")
-
-[node name="ForgeSignName" type="Label3D" parent="Lore"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50.4, 6, 18)
-pixel_size = 0.007
-billboard = 1
-modulate = Color(1, 0.9, 0.7, 1)
+[node name="Sign" type="Node3D" parent="Lore/ForgeSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
 text = "Forge"
-font_size = 64
-outline_size = 14
+style = 3
+mount = 2
+board_size = Vector2(1.1, 0.5)
+board_height = 2.2
+line_height = 0.16
 
 [node name="FarmSign" type="Node3D" parent="Lore"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 48.6, 0, 58.6)
+transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, 48.8, 0, 58.4)
 script = ExtResource("10_readable")
 title = "La ferme du roi"
-body = "Elle nourrissait tout le village. Depuis la guerre, la terre ne donne plus rien. Mira dit que les champs repousseront quand les livres seront revenus au château."
+body = "Elle nourrissait tout le village, jusqu'à ce que les armées de Vibelandia brûlent ses récoltes. Mira dit que les champs repousseront quand les livres seront revenus au château."
 prompt = "Lire : La ferme du roi"
 radius = 2.6
 
-[node name="Post" parent="Lore/FarmSign" instance=ExtResource("15_signpost")]
-transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, -0, 0, 2.4, 0, 0, 0)
-
-[node name="Body" type="StaticBody3D" parent="Lore/FarmSign"]
-
-[node name="Shape" type="CollisionShape3D" parent="Lore/FarmSign/Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-shape = SubResource("CylinderShape3D_character")
-
-[node name="FarmSignName" type="Label3D" parent="Lore"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44, 6, 59.4)
-pixel_size = 0.007
-billboard = 1
-modulate = Color(1, 0.9, 0.7, 1)
-text = "Ferme"
-font_size = 64
-outline_size = 14
+[node name="Sign" type="Node3D" parent="Lore/FarmSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
+text = "Ferme du roi"
+style = 0
+mount = 0
+board_size = Vector2(1.2, 0.55)
+board_height = 1.25
+line_height = 0.16
 
 [node name="MineSign" type="Node3D" parent="Lore"]
-transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 77.6, 0, -34.6)
+transform = Transform3D(0.96593, 0, -0.25882, 0, 1, 0, 0.25882, 0, 0.96593, 76.2, 0, -29.4)
 script = ExtResource("10_readable")
 title = "La mine d'argent"
-body = "La galerie s'est effondrée pendant la guerre. Un écriteau est cloué au boisage : « Fermée par ordre du roi Codeon IV. Les mineurs ont rejoint le bunker. »"
+body = "La galerie s'est effondrée pendant la guerre. Un écriteau est cloué au boisage : « Fermée par ordre du roi Codeon V. Les mineurs ont rejoint le bunker. »"
 prompt = "Lire : La mine d'argent"
 radius = 2.6
 
-[node name="Post" parent="Lore/MineSign" instance=ExtResource("15_signpost")]
-transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, -0, 0, 2.4, 0, 0, 0)
-
-[node name="Body" type="StaticBody3D" parent="Lore/MineSign"]
-
-[node name="Shape" type="CollisionShape3D" parent="Lore/MineSign/Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-shape = SubResource("CylinderShape3D_character")
-
-[node name="MineSignName" type="Label3D" parent="Lore"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 82, 10.5, -38)
-pixel_size = 0.007
-billboard = 1
-modulate = Color(1, 0.9, 0.7, 1)
+[node name="Sign" type="Node3D" parent="Lore/MineSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
 text = "Mine d'argent"
-font_size = 64
-outline_size = 14
+style = 0
+mount = 0
+board_size = Vector2(1.2, 0.55)
+board_height = 1.25
+line_height = 0.16
 
 [node name="NoticeBoard" type="Node3D" parent="Lore"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -2.6, 0, -9.6)
 script = ExtResource("10_readable")
-title = "Avis aux habitants"
-body = "Par ordre du roi Codeon V : le couvre-feu tombe au coucher du soleil. Les volontaires pour la reconstruction se présentent à Bran. Quiconque rapportera l'un des livres de la vision de Merlon sera reçu au château."
-prompt = "Lire : Avis aux habitants"
+title = "Avis à la population"
+body = "Par ordre du roi Codeon V : les armées de Vibelandia approchent. Que chacun rejoigne sans attendre l'ancien bunker, à l'est du village, au-delà de la rivière. N'emportez que l'essentiel, et aidez les plus faibles. Codia, an 5812."
+prompt = "Lire : Avis à la population"
 radius = 2.6
 
-[node name="Post" parent="Lore/NoticeBoard" instance=ExtResource("15_signpost")]
-transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, -0, 0, 2.4, 0, 0, 0)
+[node name="Sign" type="Node3D" parent="Lore/NoticeBoard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
+text = "Avis à la population"
+style = 2
+mount = 0
+board_size = Vector2(1.2, 0.8)
+board_height = 1.25
+line_height = 0.13
+roof = true
 
-[node name="Body" type="StaticBody3D" parent="Lore/NoticeBoard"]
+[node name="CastleSign" type="Node3D" parent="Lore"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 3.6, 0, -43.6)
+script = ExtResource("10_readable")
+title = "Les ruines du château"
+body = "Le château du roi Codeon V. Ses murailles ont tenu huit ans face aux armées de Vibelandia, puis la guerre les a éventrées. Au cœur du donjon, la salle du trône garde un cercle magique plus ancien que le royaume, et quatre piédestaux qui attendent les livres des anciens bâtisseurs."
+prompt = "Lire : Les ruines du château"
+radius = 2.6
 
-[node name="Shape" type="CollisionShape3D" parent="Lore/NoticeBoard/Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-shape = SubResource("CylinderShape3D_character")
+[node name="Sign" type="Node3D" parent="Lore/CastleSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
+text = "Château de Codeon V"
+style = 1
+mount = 0
+board_size = Vector2(1.6, 0.6)
+board_height = 1.25
+line_height = 0.13
 
-[node name="CastleLabel" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 19, -46)
-pixel_size = 0.008
-billboard = 1
-modulate = Color(1, 0.9, 0.7, 1)
-text = "Le château de Codeon"
+[node name="LavoirSign" type="Node3D" parent="Lore"]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, 48, 0, 3.4)
+script = ExtResource("10_readable")
+title = "Le lavoir de la rivière"
+body = "Ici, on lavait le linge dans l'eau claire qui descend des montagnes. Le jour où le roi fit sonner les cloches, en 5812, les draps sont restés sur la corde ; deux ans plus tard, le vent les avait emportés jusqu'au pont."
+prompt = "Lire : Le lavoir de la rivière"
+radius = 2.6
+
+[node name="Sign" type="Node3D" parent="Lore/LavoirSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
+text = "Lavoir"
+style = 0
+mount = 0
+board_size = Vector2(1.1, 0.5)
+board_height = 1.25
+line_height = 0.16
+
+[node name="BakerySign" type="Node3D" parent="Lore"]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 47.74, 0, 36)
+script = ExtResource("10_readable")
+title = "La boulangerie"
+body = "Chaque matin, l'odeur du pain chaud montait jusqu'au château. La farine venait du moulin voisin, le blé de la ferme du roi. Pendant la guerre, le boulanger cuisait encore pour les soldats, jusqu'à la dernière poignée de farine."
+prompt = "Lire : La boulangerie"
+radius = 2.6
+
+[node name="Sign" type="Node3D" parent="Lore/BakerySign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
+text = "Boulangerie"
+style = 0
+mount = 1
+board_size = Vector2(1.3, 0.5)
+board_height = 3.42
+line_height = 0.16
+
+[node name="MillSign" type="Node3D" parent="Lore"]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 56.74, 0, 50)
+script = ExtResource("10_readable")
+title = "Le moulin de la rivière"
+body = "La roue tournait jour et nuit dans le courant, et la meule réduisait le blé en farine pour tout Codia. Le meunier l'a arrêtée la veille du départ pour le bunker : elle ne repartira que si la rivière retrouve sa force."
+prompt = "Lire : Le moulin de la rivière"
+radius = 2.6
+
+[node name="Sign" type="Node3D" parent="Lore/MillSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
+text = "Moulin"
+style = 0
+mount = 1
+board_size = Vector2(1.1, 0.5)
+board_height = 3.42
+line_height = 0.16
+
+[node name="StablesSign" type="Node3D" parent="Lore"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -61.74, 0, -44)
+script = ExtResource("10_readable")
+title = "Les écuries royales"
+body = "Les chevaux de la garde y attendaient leurs cavaliers. Ils sont tous partis avec l'armée de Devlyn en 5804, contre Vibelandia ; aucun n'est revenu. Les stalles attendent des jours meilleurs."
+prompt = "Lire : Les écuries royales"
+radius = 2.6
+
+[node name="Sign" type="Node3D" parent="Lore/StablesSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
+text = "Écuries royales"
+style = 0
+mount = 1
+board_size = Vector2(1.5, 0.5)
+board_height = 3.42
+line_height = 0.16
+
+[node name="BarracksSign" type="Node3D" parent="Lore"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -48, 0, -61.74)
+script = ExtResource("10_readable")
+title = "La caserne de la garde"
+body = "Aldric y a fait ses classes, comme tous les gardes du roi. Sur le mur, la liste des volontaires partis défendre Codia contre Vibelandia couvre trois planches entières ; beaucoup de noms sont barrés."
+prompt = "Lire : La caserne de la garde"
+radius = 2.6
+
+[node name="Sign" type="Node3D" parent="Lore/BarracksSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
+text = "Caserne de la garde"
+style = 1
+mount = 1
+board_size = Vector2(1.7, 0.5)
+board_height = 3.42
+line_height = 0.13
+
+[node name="ApothecarySign" type="Node3D" parent="Lore"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -55.74, 0, 32)
+script = ExtResource("10_readable")
+title = "L'herboristerie"
+body = "Onguents, tisanes et remèdes : l'herboriste soignait ici les blessés que l'on ramenait du front. Au jardin des simples, devant la porte, quelques pieds de sauge ont survécu à la guerre."
+prompt = "Lire : L'herboristerie"
+radius = 2.6
+
+[node name="Sign" type="Node3D" parent="Lore/ApothecarySign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
+text = "Herboristerie"
+style = 0
+mount = 1
+board_size = Vector2(1.4, 0.5)
+board_height = 3.42
+line_height = 0.16
+
+[node name="ScriptoriumSign" type="Node3D" parent="Lore"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -69.74, 0, -14)
+script = ExtResource("10_readable")
+title = "Le scriptorium"
+body = "Les copistes de Codia y recopiaient, ligne après ligne, ce qui restait des écrits des anciens bâtisseurs. Les quatre livres originaux, disait-on, étaient perdus depuis des siècles ; on n'en gardait ici que des fragments, et des légendes."
+prompt = "Lire : Le scriptorium"
+radius = 2.6
+
+[node name="Sign" type="Node3D" parent="Lore/ScriptoriumSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
+text = "Scriptorium"
+style = 1
+mount = 1
+board_size = Vector2(1.3, 0.5)
+board_height = 3.42
+line_height = 0.16
+
+[node name="ObservatorySign" type="Node3D" parent="Lore"]
+transform = Transform3D(-0.71934, 0, -0.69466, 0, 1, 0, 0.69466, 0, -0.71934, -64.1, 0, 53.1)
+script = ExtResource("10_readable")
+title = "L'observatoire du Mont Sam Altan"
+body = "Du haut de cette tour, les veilleurs du roi guettaient le volcan, endormi depuis des siècles. Leur registre s'arrête en 5812, la veille du départ pour le bunker : « Fumée légère au sommet. Rien à signaler. »"
+prompt = "Lire : L'observatoire du Mont Sam Altan"
+radius = 2.6
+
+[node name="Sign" type="Node3D" parent="Lore/ObservatorySign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
+text = "Observatoire"
+style = 1
+mount = 0
+board_size = Vector2(1.3, 0.5)
+board_height = 1.25
+line_height = 0.16
+
+[node name="MarketHallSign" type="Node3D" parent="Lore"]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, -21, 0, 60.4)
+script = ExtResource("10_readable")
+title = "La halle du marché"
+body = "Les jours de marché, les paysans des plaines d'Hexcole et les marchands venus du désert de Pythania s'y retrouvaient à l'abri. Son toit s'est effondré pendant les combats ; les étals sont restés dessous."
+prompt = "Lire : La halle du marché"
+radius = 2.6
+
+[node name="Sign" type="Node3D" parent="Lore/MarketHallSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
+text = "Halle du marché"
+style = 0
+mount = 0
+board_size = Vector2(1.4, 0.5)
+board_height = 1.25
+line_height = 0.16
+
+[node name="OrchardSign" type="Node3D" parent="Lore"]
+transform = Transform3D(-0.98481, 0, -0.17365, 0, 1, 0, 0.17365, 0, -0.98481, 9.6, 0, 71.6)
+script = ExtResource("10_readable")
+title = "Le verger du roi"
+body = "Pommiers et poiriers en rangs serrés : le roi Codeon III les avait plantés pour les enfants du village, qui venaient y cueillir les fruits à l'automne. La guerre n'a laissé que des souches."
+prompt = "Lire : Le verger du roi"
+radius = 2.6
+
+[node name="Sign" type="Node3D" parent="Lore/OrchardSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
+text = "Verger du roi"
+style = 0
+mount = 0
+board_size = Vector2(1.3, 0.5)
+board_height = 1.25
+line_height = 0.16
+
+[node name="ParkSign" type="Node3D" parent="Lore"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 33.4, 0, -50.4)
+script = ExtResource("10_readable")
+title = "Le jardin du roi"
+body = "Allées de gravier, parterres et kiosque à musique : les habitants s'y promenaient le soir, au bord de la rivière. Au centre, la statue de Devlyn rappelle la victoire de l'an 5802 sur les Quatre Dragons du Chaos."
+prompt = "Lire : Le jardin du roi"
+radius = 2.6
+
+[node name="Sign" type="Node3D" parent="Lore/ParkSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
+text = "Jardin du roi"
+style = 1
+mount = 0
+board_size = Vector2(1.4, 0.5)
+board_height = 1.25
+line_height = 0.16
+
+[node name="KingsSign" type="Node3D" parent="Lore"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 39.4, 0, -53.4)
+script = ExtResource("10_readable")
+title = "L'allée des rois"
+body = "Codeon I, le bâtisseur ; Codeon II, le sage ; Codeon III, le jardinier ; Codeon IV, le prudent. Les statues des anciens rois bordent l'allée qui mène à celle de Devlyn. Renversées pendant la guerre, elles attendent qu'on les relève."
+prompt = "Lire : L'allée des rois"
+radius = 2.6
+
+[node name="Sign" type="Node3D" parent="Lore/KingsSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
+text = "Allée des rois"
+style = 1
+mount = 0
+board_size = Vector2(1.3, 0.45)
+board_height = 1.25
+line_height = 0.16
+
+[node name="Statue" type="Node3D" parent="Lore"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 42, 0, -67.4)
+script = ExtResource("10_readable")
+title = "La statue de Devlyn"
+body = "« À Devlyn, vainqueur des Quatre Dragons du Chaos, an 5802. » Le royaume la fit dresser après la bataille, quand chacun croyait la paix revenue pour toujours. Deux ans plus tard, Vibelandia déclarait la guerre."
+prompt = "Lire : La statue de Devlyn"
+radius = 2.6
+
+[node name="Text" type="Label3D" parent="Lore/Statue"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, -1.418)
+pixel_size = 0.0021
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.5, 0.38, 0.16, 1)
+text = "DEVLYN
+VAINQUEUR DES QUATRE
+DRAGONS DU CHAOS
+5802"
 font_size = 64
-outline_size = 14
+outline_size = 0
+
+[node name="Memorial" type="Node3D" parent="Lore"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -44, 0, -36)
+script = ExtResource("10_readable")
+title = "Le mémorial des soldats"
+body = "Aux soldats de Codia, tombés face aux armées de Vibelandia, de 5804 à 5812. Leurs noms se sont effacés de la pierre ; leur courage, lui, ne s'efface pas."
+prompt = "Lire : Le mémorial des soldats"
+radius = 2.6
+
+[node name="Text" type="Label3D" parent="Lore/Memorial"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -0.462)
+pixel_size = 0.0014
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.14, 0.13, 0.12, 1)
+text = "AUX SOLDATS
+DE CODIA
+5804 - 5812"
+font_size = 64
+outline_size = 0
 
 [node name="Braziers" type="Node3D" parent="."]
 
@@ -1188,8 +2106,18 @@ script = ExtResource("9_interactable")
 prompt = "Descendre dans le bunker"
 radius = 3.5
 
+[node name="BunkerSign" type="Node3D" parent="."]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 73.74, 0, 0)
+script = ExtResource("12_sign")
+text = "Bunker des survivants"
+style = 3
+mount = 1
+board_size = Vector2(1.9, 0.5)
+board_height = 3.45
+line_height = 0.16
+
 [node name="BunkerOutside" type="Marker3D" parent="."]
-transform = Transform3D(6.12323e-17, 0, -1, 0, 1, 0, 1, 0, 6.12323e-17, 70.6, 0.3, 0)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 70.6, 0.3, 0)
 
 [node name="BunkerInterior" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 78, -40, 0)
@@ -1223,19 +2151,10 @@ light_color = Color(1, 0.74, 0.46, 1)
 light_energy = 1.4
 omni_range = 10.0
 
-[node name="BunkerLabel" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 75.5, 7, 0)
-pixel_size = 0.006
-billboard = 1
-modulate = Color(0.9, 0.85, 0.75, 1)
-text = "Le bunker"
-font_size = 64
-outline_size = 14
-
 [node name="RepairCamera" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.819152, 0.573576, 0, -0.573576, 0.819152, 0, 34, 52)
-fov = 70.0
-far = 400.0
+transform = Transform3D(1, 0, 0, 0, 0.819152, 0.573576, 0, -0.573576, 0.819152, 6, 38, 56)
+fov = 72.0
+far = 450.0
 
 [node name="Volcano" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, -4, -215)
@@ -1263,6 +2182,11 @@ volume_db = -2.0
 [node name="RepairSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("46_rumble")
 volume_db = -4.0
+
+[node name="TremorSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("46_rumble")
+volume_db = -9.0
+pitch_scale = 0.6
 
 [node name="Ambience" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("40_ambience")

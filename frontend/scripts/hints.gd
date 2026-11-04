@@ -12,11 +12,11 @@ const ZONE_HINTS := {
 	],
 	&"desert": [
 		"Des runes sont posées dans les salles du monument, parmi les débris au-dehors et dans la cave. D'autres sont enfouies : maintenez E devant un tas de sable pour le dégager. Certains tas sont vides.",
-		"Dans la cave, chaque mur porte un algorithme incomplet. L'un répète une action tant que la jarre n'est pas pleine ; l'autre pose une question avant d'ouvrir la porte.",
+		"Dans la cave, chaque mur porte un algorithme incomplet. L'un répète une action tant que la jarre n'est pas pleine ; l'autre pose une question avant d'ouvrir la porte. Les écrits laissés au monument, à l'oasis, aux tombes et sur le pupitre de la cave aident à les compléter.",
 		"Deux runes ne servent à aucun des deux algorithmes : ce sont des leurres. Une boucle s'ouvre par « TANT QUE », une condition par « SI » et se poursuit par « SINON ».",
 	],
 	&"marais": [
-		"Descendez dans la crypte, au nord. Lisez l'inscription du mur, derrière le mécanisme, puis les épitaphes des rois, dans la chambre ouest.",
+		"Suivez les pontons et leurs lanternes jusqu'à la crypte, au nord. En bas du long escalier, lisez l'inscription gravée sur le mur face au mécanisme, puis les épitaphes des rois, dans la chambre funéraire de l'ouest.",
 		"Le mot à inscrire part du nom du royaume. Chaque lettre se décale dans l'alphabet : trois en avant, puis trois en arrière, et ainsi de suite.",
 		"Le royaume s'appelle Codia. Sa première lettre, C, avance de trois ; la deuxième, O, recule de trois. Réglez les cercles du centre vers l'extérieur.",
 	],
@@ -148,7 +148,7 @@ func _hub_hint() -> String:
 		return "Parlez au roi Codeon V et à Merlon, dans le bunker : ils vous confieront la mission avant que vous ne remontiez à la surface."
 	var carried := GameState.carried_books()
 	if not carried.is_empty():
-		return "Vous portez %s. Posez-le sur son piédestal, dans la salle des livres, au fond du donjon du château, au nord du village." % GameState.BOOK_NAMES[carried.back()]
+		return "Vous portez %s. Posez-le sur son piédestal, autour du cercle magique de la salle du trône, au fond du donjon du château, au nord du village." % GameState.BOOK_NAMES[carried.back()]
 	if GameState.placed_books.size() >= GameState.BOOK_COUNT:
 		return "Les quatre livres sont réunis et Codia renaît. Explorez le royaume à votre guise : tous les portails sont ouverts."
 	for zone in GameState.ZONE_ORDER:

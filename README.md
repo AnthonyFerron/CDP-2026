@@ -58,10 +58,18 @@ En version de debug, `F1` ouvre un menu de test sur toute la page : aller dans c
 Le jeu démarre dans le hub, `frontend/scenes/levels/hub/hub.tscn`, à l'intérieur du bunker où vivent les survivants, à l'est du village de Codia. Le roi Codeon V et Merlon y confient la mission : la porte ne s'ouvre qu'une fois les deux écoutés, et le chronomètre du volcan part de là. Dehors, le château du roi est au nord. Le joueur revient devant le portail de la zone qu'il quitte.
 
 - Les portails s'ouvrent dans l'ordre Plaine, Désert, Marais, Village : chacun attend que le livre de la zone précédente soit posé au château.
-- Un livre trouvé vole jusqu'à la main du joueur, qui le tient en bas de l'écran. Il faut le rapporter soi-même dans la salle des livres, au cœur du donjon du château, et le poser sur son piédestal, devant le trône du roi : il quitte alors la main pour s'y poser.
-- Chaque livre posé répare une partie du village : quatre maisons par livre, en commençant par les plus proches du camp, puis le marché, la cour du château, la fontaine, les drapeaux et les toits des tours du donjon. Un plan large montre le village qui se relève, et le ciel s'éclaircit.
-- Autour du cœur du village : la taverne et la forge (premier livre), l'école et la ferme avec ses champs (deuxième), la chapelle et le cimetière des soldats (troisième), et la mine d'argent effondrée au pied des montagnes, au nord-est. Chaque lieu a son panneau à lire, qui raconte un peu de l'histoire de Codia.
-- Tous les habitants, le roi, Merlon et le garde compris, restent au bunker pendant la partie. Le dernier livre posé, ils en sortent : Merlon et le roi rejoignent la salle du château, où Merlon accomplit le rituel, et les autres se rassemblent autour du feu de la place, puis la bonne fin se joue. Après la cinématique, le joueur reprend la main devant le château : tous les portails restent ouverts pour revisiter les zones.
+- Un livre trouvé vole jusqu'à la main du joueur, qui le tient en bas de l'écran. Il faut le rapporter soi-même dans la salle du trône, au cœur du donjon du château, et le poser sur son piédestal, autour du cercle magique : il quitte alors la main pour s'y poser, et un quart des lettres du cercle s'illumine.
+- Chaque livre posé répare une partie du village : quatre maisons par livre, en commençant par les plus proches du camp, puis le marché, la fontaine et les nouveaux lieux. Le château, en ruine au départ, se relève avec eux : la porterie au premier livre, l'enceinte et la cour au deuxième, les tours d'angle et les drapeaux au troisième, les toits du donjon au quatrième. Un plan large montre le village qui se relève, le ciel s'éclaircit et l'eau de la rivière avec lui.
+- Une rivière descend d'une gorge au nord-est jusqu'au sud-est de la vallée. On la traverse sur le grand pont de pierre, sur le chemin du bunker (un pont de fortune en bois avant le premier livre), ou sur la passerelle du jardin vers la mine ; ses berges sont fermées partout ailleurs.
+- Autour du cœur du village, chaque lieu se relève avec son livre :
+  - premier livre : la taverne, la forge, la boulangerie et le lavoir ;
+  - deuxième : l'école, la ferme et ses champs, le moulin à eau dont la roue tourne dans le courant, les écuries royales, la halle du marché et le verger ;
+  - troisième : la chapelle et le cimetière des soldats, la caserne et sa cour d'entraînement, l'herboristerie et son jardin des simples ;
+  - quatrième : le scriptorium et l'observatoire du Mont Sam Altan.
+
+  La mine d'argent effondrée est au pied des montagnes, au nord-est. Chaque lieu a son enseigne au-dessus de la porte et son panneau à lire, qui raconte un peu de l'histoire de Codia.
+- Le jardin du roi, à l'est du château, garde ses haies, ses parterres et ses bancs (premier livre), l'allée des rois Codeon I à IV (deuxième), un kiosque (troisième) et la statue de Devlyn vainqueur des Dragons (quatrième), autour d'un étang.
+- Tous les habitants, le roi, Merlon et le garde compris, restent au bunker pendant la partie. Le dernier livre posé, ils en sortent : Merlon et le roi rejoignent la salle du trône, et les autres se rassemblent autour du feu de la place. Merlon accomplit le rituel : des faisceaux partent des quatre livres vers le centre du cercle, une vague d'énergie dissipe le ciel de cendres, puis Merlon tombe à genoux et la bonne fin se joue. Après la cinématique, le joueur reprend la main devant le château : tous les portails restent ouverts pour revisiter les zones.
 
 L'autoload `GameState` (`frontend/scripts/game_state.gd`) garde les livres trouvés, les livres posés et la dernière zone, et les sauvegarde dans `user://sauvegarde.cfg` à chaque changement. Pour ajouter une zone, renseigner sa scène dans `ZONE_SCENES`, sa place dans `ZONE_ORDER` et son livre dans `ZONE_BOOKS`, puis appeler `GameState.collect_book()` quand le livre est pris.
 
@@ -75,10 +83,10 @@ Le Mont Sam Altan entre en éruption au bout de 60 minutes (`GameState.TOTAL_TIM
 
 | Zone | Énigme | Livre | Solution |
 | --- | --- | --- | --- |
-| Plaine | La discussion oubliée : six fragments cachés dans les livres de la bibliothèque, à remettre dans l'ordre sur la tablette | Projenomicon | Ordre de la conversation : restauration à organiser, objectifs, inventaire, planning, suivi, vérification et clôture |
-| Désert | Les runes de l'algorithme : runes à ramasser ou à dégager du sable en maintenant E, à poser sur la table ronde de la cave | Algonicon | Jarre : TANT QUE, Puiser, Porter. Porte : SI, Ouvrir, SINON. « POUR » et « Fermer » sont des leurres |
-| Marais | Le tombeau des lettres oubliées : mécanisme à cinq cercles dans la crypte souterraine ; les épitaphes des rois Codeon I à IV, dans la chambre ouest, à l'opposé du tombeau du livre, redonnent la règle | Logiconomicon | CODIA décalé de +3, −3, +3, −3, +3 : **FLGFD** |
-| Village | Les cinq codes oubliés : dix fragments de papier cachés dans la mairie (touche I pour les relire), cinq extraits de code à résoudre dans l'ordre sur le dispositif du bureau du maire | Codonomicon | HTML : **3**. CSS : **green**. Python : **10**. PHP : **2**. TypeScript : **12** |
+| Plaines d'Hexcole | Les fragments du passé : six fragments cachés dans les livres de la bibliothèque, à remettre dans l'ordre sur la tablette | Projenomicon | Ordre de la conversation : restauration à organiser, objectifs, inventaire, planning, suivi, vérification et clôture |
+| Désert de Pythania | Les algorithmes oubliés : runes à ramasser ou à dégager du sable en maintenant E, à poser sur la table ronde de la cave | Algonicon | Jarre : TANT QUE, Puiser, Porter. Porte : SI, Ouvrir, SINON. « POUR » et « Fermer » sont des leurres |
+| Marais de Kernel Swamp | Le tombeau du chiffrement : mécanisme à cinq cercles dans la crypte souterraine ; les épitaphes des rois Codeon I à IV, dans la chambre ouest, à l'opposé du tombeau du livre, redonnent la règle | Logiconomicon | CODIA décalé de +3, −3, +3, −3, +3 : **FLGFD** |
+| Village détruit | Les cinq langages oubliés : dix fragments de papier cachés dans la mairie (touche I pour les relire), cinq extraits de code à résoudre dans l'ordre sur le dispositif du bureau du maire | Codonomicon | HTML : **3**. CSS : **green**. Python : **10**. PHP : **2**. TypeScript : **12** |
 
 ## Organisation du projet
 

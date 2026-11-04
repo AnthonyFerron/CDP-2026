@@ -502,12 +502,14 @@ def lying_skeleton(scene, x, z, degrees, buried=True, y=0.0):
 
 
 def stake_with_skull(scene, x, z, rng):
-    """Pieu planté dans le sable, coiffé d'un crâne de vautour : la marque des pilleurs."""
+    """Pieu planté dans le sable, coiffé d'un crâne de vautour : la marque des pilleurs. Le chiffon noué au pieu,
+    qui claque au vent, est posé par desert_life.gd (STAKES)."""
     scene.shape("cyl", {"top": 0.04, "bottom": 0.06, "height": 1.7, "segments": 5}, "wood_dark", (x, 0.85, z), rng.uniform(0, 90),
                 tilt=rng.uniform(-6, 6))
     vulture_skull(scene, x, z + 0.02, rng.uniform(0, 360), 1.6, y=1.62)
-    scene.shape("box", {"size": (0.06, 0.5, 0.02)}, rng.choice(["cloth_red", "cloth_ochre"]), (x + 0.05, 1.3, z), rng.uniform(0, 360),
-                roll=rng.uniform(-10, 10))
+    rng.choice(["cloth_red", "cloth_ochre"])
+    rng.uniform(0, 360)
+    rng.uniform(-10, 10)
     scene.add_box((x, 0.9, z), (0.25, 1.8, 0.25))
 
 
@@ -646,7 +648,7 @@ def build_monument(scene, rng):
     mound(scene, -11.0, -18.2, 1.8, 0.5, 1.4)
     mound(scene, 11.2, 3.4, 1.5, 0.4, 1.6)
     mound(scene, 7.6, -18.4, 2.0, 0.45, 1.2)
-    jars(scene, -7.6, -17.6, random.Random(31), 3, 1.0)
+    jars(scene, -10.6, -16.9, random.Random(31), 3, 0.8)
     jars(scene, 6.8, 2.8, random.Random(32), 3, 0.8)
 
     # Trappe de pierre au centre de la salle (desert.tscn) : son cadre de pierre et le sable qui la recouvre en partie.
@@ -717,7 +719,7 @@ def build_sanctum(scene, rng):
     angle = math.degrees(math.atan2(5.0, 4.9))
     scene.shape("box", {"size": (7.1, 0.9, 2.6)}, "stone", (7.15, 2.8, pz), roll=-angle)
     scene.box_collider((7.15, 2.8, pz), (7.1, 0.9, 2.6), roll=-angle)
-    for x, z2, degrees in ((10.0, -25.7, 25.0), (5.6, -21.5, 60.0), (12.1, -24.0, 80.0)):
+    for x, z2, degrees in ((10.0, -25.7, 25.0), (5.2, -25.9, 60.0), (12.1, -24.0, 80.0)):
         put(scene, "mini_arena/block", (x, 0.0, z2), degrees, 1.5, height=0.75)
     vulture_skull(scene, 9.4, -21.2, 200.0, 1.7)
 

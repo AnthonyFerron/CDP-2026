@@ -3,16 +3,18 @@ class_name MaraisTerrain
 extends StaticBody3D
 ## Sol du Marais : un fond de vase sous l'eau, des îlots plats et des berges qui ferment la zone.
 
-## Position (x, z), rayon et hauteur de chaque îlot. Les quatre premiers portent le parcours.
+## Position (x, z), rayon et hauteur de chaque îlot. Les quatre premiers portent le parcours : l'arrivée,
+## le campement du gardien, le cimetière et la crypte. Les autres se voient depuis les pontons : la chapelle
+## en ruine, le bosquet mort, les pierres levées, la dernière maison de Brumeval et le débarcadère.
 const ISLANDS: Array[Vector4] = [
 	Vector4(0.0, 56.0, 13.0, 0.4),
 	Vector4(-20.0, 22.0, 9.0, 0.4),
-	Vector4(16.0, 0.0, 17.0, 0.4),
-	Vector4(0.0, -36.0, 13.0, 0.4),
-	Vector4(-36.0, -4.0, 6.0, 0.3),
+	Vector4(16.0, 0.0, 19.0, 0.4),
+	Vector4(0.0, -36.0, 16.0, 0.4),
+	Vector4(-36.0, -4.0, 9.5, 0.3),
 	Vector4(34.0, -30.0, 6.0, 0.3),
-	Vector4(-30.0, -44.0, 5.0, 0.3),
-	Vector4(36.0, 32.0, 5.0, 0.3),
+	Vector4(-30.0, -44.0, 6.5, 0.3),
+	Vector4(36.0, 32.0, 6.0, 0.3),
 	Vector4(-40.0, 40.0, 6.0, 0.3),
 ]
 ## Pontons entre les îlots du parcours : début (x, z) et fin (x, z).
@@ -32,6 +34,8 @@ const CELL_SIZE := 1.5
 const PLAY_RADIUS := 66.0
 const BANK_WIDTH := 10.0
 const BANK_HEIGHT := 7.0
+## Limite invisible au pied de la berge : on ne quitte pas le Marais, même en sautant depuis un objet.
+const LIMIT_RADIUS := 68.5
 
 const COLOR_MUD := Color(0.13, 0.11, 0.08)
 const COLOR_SILT := Color(0.2, 0.19, 0.13)
@@ -60,7 +64,8 @@ func height_at(x: float, z: float) -> float:
 	for island in ISLANDS:
 		var ratio := Vector2(x - island.x, z - island.y).length() / island.z
 		var rise := 1.0 - smoothstep(FLAT_RATIO, 1.25, ratio)
-		var top := island.w + (_relief.get_noise_2d(z, x) * 0.35 if ratio > FLAT_RATIO else 0.0)
+		# Le relief des berges naît doucement au bord du replat, sans marche sous ce qui y est posé.
+		var top := island.w + _relief.get_noise_2d(z, x) * 0.35 * smoothstep(FLAT_RATIO, FLAT_RATIO + 0.2, ratio)
 		height = maxf(height, lerpf(BED_HEIGHT, top, rise))
 	var distance := Vector2(x, z).length()
 	return height + BANK_HEIGHT * smoothstep(PLAY_RADIUS, PLAY_RADIUS + BANK_WIDTH, distance)
@@ -151,3 +156,20 @@ func _build() -> void:
 	var collision := CollisionShape3D.new()
 	collision.shape = shape
 	add_child(collision)
+	_build_limit()
+
+
+## Mur invisible en cercle, de la vase jusqu'à 35 m de haut : les pas comme les sauts s'y arrêtent.
+func _build_limit() -> void:
+	var segments := 72
+	var length := TAU * LIMIT_RADIUS / segments + 0.5
+	for index in segments:
+		var angle := TAU * index / segments
+		var shape := BoxShape3D.new()
+		shape.size = Vector3(length, 40.0, 1.0)
+		var limit := CollisionShape3D.new()
+		limit.name = "Limit%d" % index
+		limit.shape = shape
+		limit.position = Vector3(cos(angle) * (LIMIT_RADIUS + 0.5), 15.0, sin(angle) * (LIMIT_RADIUS + 0.5))
+		limit.rotation.y = -angle + PI * 0.5
+		add_child(limit)

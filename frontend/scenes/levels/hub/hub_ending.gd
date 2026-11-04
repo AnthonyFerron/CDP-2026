@@ -1,8 +1,8 @@
 class_name HubEnding
 extends Node3D
 ## Les deux fins du jeu, jouées dans le hub par une caméra qui se déplace seule.
-## Éruption : la caméra s'approche du volcan, il explose, puis elle recule sur le village englouti par la lave.
-## Bonne fin : la caméra s'élève au-dessus du village reconstruit, puis s'approche du volcan endormi.
+## Éruption : la caméra s'approche du Mont Sam Altan, il explose, puis elle recule sur le village englouti par la lave.
+## Bonne fin : la caméra s'élève au-dessus du village reconstruit, puis s'approche du volcan rendormi.
 
 signal finished
 
@@ -42,7 +42,7 @@ func play_eruption() -> void:
 	await get_tree().create_timer(2.5).timeout
 	_flood_village()
 	await _move(Vector3(0, 48, 72), Vector3(0, 0, -18), 5.0, 70.0)
-	await _show_title("Le volcan s'est réveillé", "Les livres n'ont pas été réunis à temps. Codia a disparu sous la lave.", Color(1.0, 0.45, 0.25))
+	await _show_title("Le Mont Sam Altan s'est réveillé", "Les quatre livres n'ont pas été réunis à temps. Codia a disparu sous la lave.", Color(1.0, 0.45, 0.25))
 	finished.emit()
 
 
@@ -54,7 +54,7 @@ func play_victory() -> void:
 	await get_tree().create_timer(1.0).timeout
 	# Au-dessus du château, pour qu'aucune tour ne cache le volcan.
 	await _move(Vector3(-34, 58, -86), _volcano_top(), 5.5, 44.0)
-	await _show_title("Le volcan s'est endormi", "Les quatre livres sont réunis. Le rituel a apaisé le volcan, et Codia renaît.", Color(0.95, 0.85, 0.45))
+	await _show_title("Le Mont Sam Altan s'est rendormi", "Les quatre livres sont réunis : les cendres se dissipent, les arbres reprennent vie et Codia renaît. Mais qui sait… peut-être que les secrets de Codia sont encore loin d'avoir tous été découverts.", Color(0.95, 0.85, 0.45))
 	finished.emit()
 
 

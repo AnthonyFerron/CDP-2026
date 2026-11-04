@@ -48,14 +48,17 @@
 [ext_resource type="AudioStream" path="res://assets/audio/tablet_reset.wav" id="51_reset"]
 [ext_resource type="AudioStream" path="res://assets/audio/fire_crackle.wav" id="52_crackle"]
 [ext_resource type="AudioStream" path="res://assets/audio/stone_door.wav" id="53_rumble"]
+[ext_resource type="AudioStream" path="res://assets/audio/plaine_wind.wav" id="54_ruin_wind"]
+[ext_resource type="Script" path="res://scenes/levels/desert/desert_life.gd" id="37_life"]
 [ext_resource type="Script" path="res://scenes/levels/hub/volcano.gd" id="90_volcano"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_day"]
-sky_top_color = Color(0.36, 0.55, 0.78, 1)
-sky_horizon_color = Color(0.92, 0.78, 0.58, 1)
+sky_top_color = Color(0.3, 0.5, 0.76, 1)
+sky_horizon_color = Color(0.96, 0.76, 0.5, 1)
 ground_bottom_color = Color(0.5, 0.38, 0.24, 1)
-ground_horizon_color = Color(0.92, 0.78, 0.58, 1)
-sun_angle_max = 20.0
+ground_horizon_color = Color(0.96, 0.76, 0.5, 1)
+sun_angle_max = 14.0
+sun_curve = 0.1
 
 [sub_resource type="Sky" id="Sky_day"]
 sky_material = SubResource("ProceduralSkyMaterial_day")
@@ -65,17 +68,19 @@ background_mode = 2
 sky = SubResource("Sky_day")
 ambient_light_source = 3
 ambient_light_color = Color(0.85, 0.72, 0.55, 1)
-ambient_light_energy = 0.45
+ambient_light_energy = 0.3
 tonemap_mode = 3
-tonemap_exposure = 0.95
+tonemap_exposure = 0.86
 glow_enabled = true
 glow_intensity = 0.5
 glow_bloom = 0.04
 glow_hdr_threshold = 1.0
 fog_enabled = true
-fog_light_color = Color(0.86, 0.72, 0.52, 1)
-fog_density = 0.006
-fog_sky_affect = 0.15
+fog_light_color = Color(0.9, 0.73, 0.5, 1)
+fog_density = 0.007
+fog_sky_affect = 0.2
+fog_height = 1.2
+fog_height_density = 0.035
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_grain"]
 seed = 21
@@ -340,10 +345,11 @@ environment = SubResource("Environment_desert")
 
 [node name="Sun" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.819152, -0.32899, 0.469846, 0, 0.819152, 0.573576, -0.573576, -0.469846, 0.67101, 0, 40, 0)
-light_color = Color(1, 0.88, 0.7, 1)
-light_energy = 1.0
+light_color = Color(1, 0.84, 0.6, 1)
+light_energy = 1.35
 shadow_enabled = true
-directional_shadow_max_distance = 80.0
+directional_shadow_mode = 1
+directional_shadow_max_distance = 55.0
 
 [node name="Exterior" type="Node3D" parent="."]
 
@@ -363,6 +369,10 @@ cactus_count = 34
 quicksand_material = SubResource("ShaderMaterial_quicksand")
 
 [node name="Ruins" parent="Exterior" instance=ExtResource("6_ruins")]
+
+[node name="Life" type="Node3D" parent="Exterior" node_paths=PackedStringArray("terrain")]
+script = ExtResource("37_life")
+terrain = NodePath("../Terrain")
 
 [node name="Portal" parent="Exterior" instance=ExtResource("8_portal")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0, 54)
@@ -797,6 +807,82 @@ board_height = 1.95
 line_height = 0.11
 serif = false
 
+[node name="MonumentPlaque" type="Node3D" parent="Exterior/Clues"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -10.5, 0, 6)
+script = ExtResource("12_readable")
+title = "Plaque du monument"
+body = "Monument des anciens bâtisseurs de Codia. Ici, les maîtres enseignaient l'art des instructions : décomposer un ouvrage en gestes simples, les écrire dans l'ordre où ils s'accomplissent, répéter un geste tant que l'ouvrage l'exige, et choisir un geste selon la réponse à une question. Leurs leçons furent gravées sur des runes et gardées dans les archives, sous la salle des colonnes."
+prompt = "Lire la plaque"
+radius = 2.6
+
+[node name="Board" type="Node3D" parent="Exterior/Clues/MonumentPlaque"]
+script = ExtResource("14_sign")
+text = "MONUMENT DES ANCIENS BÂTISSEURS
+Ici l'on enseignait l'art des instructions"
+style = 1
+mount = 1
+board_size = Vector2(1.8, 0.95)
+board_height = 1.45
+
+[node name="EliasJournal" type="Node3D" parent="Exterior/Clues"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 34.2, 0.555, 4.75)
+script = ExtResource("12_readable")
+title = "Le journal d'Elias"
+body = "Journal d'Elias, marchand d'étoffes. Nous avons quitté Vibelandia à la nuit tombée : ses soldats prenaient les chariots pour la guerre contre Codia, et nous ne voulions que vendre notre drap. Trois jours de piste dans le désert de Pythania. À l'oasis, le puits donne encore un peu d'eau, seau après seau. Le vieux puisatier nous a montré la jarre sacrée : on recommence le même geste aussi longtemps qu'elle n'est pas pleine, et l'on ne porte au temple qu'une jarre pleine. Nous repartons demain vers le monument."
+prompt = "Lire le journal"
+radius = 2.4
+
+[node name="Board" type="Node3D" parent="Exterior/Clues/EliasJournal"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0)
+script = ExtResource("14_sign")
+text = "Journal d'Elias"
+style = 2
+mount = 1
+board_size = Vector2(0.8, 0.5)
+board_height = 0
+serif = false
+
+[node name="JoranLetter" type="Node3D" parent="Exterior/Clues"]
+transform = Transform3D(6.12323e-17, 0, 1, 0, 1, 0, -1, 0, 6.12323e-17, -20, 0, 46.5)
+script = ExtResource("12_readable")
+title = "La lettre de Joran"
+body = "Lettre glissée sous la planche. « Ma petite Lise, si cette lettre te parvient, sache que nous avons fui Vibelandia avant que la guerre ne nous prenne tout. La tempête nous a surpris près du monument ; trois des nôtres reposent ici. Le guide a ramassé les runes qui brillaient dans le sable, mais il en a mis deux de côté : elles ne répondaient à aucun des murs de la cave, disait-il, et les anciens ne gravaient rien d'inutile. Garde courage. Ton père, Joran. »"
+prompt = "Lire la lettre"
+radius = 2.4
+
+[node name="Board" type="Node3D" parent="Exterior/Clues/JoranLetter"]
+script = ExtResource("14_sign")
+text = "Caravane de Joran
+Qu'ils reposent en paix"
+style = 0
+mount = 0
+board_size = Vector2(1.3, 0.75)
+board_height = 1.1
+
+[node name="ApprenticeTablet" type="Node3D" parent="Exterior/Clues"]
+transform = Transform3D(6.12323e-17, 0, -1, 0, 1, 0, 1, 0, 6.12323e-17, 14.6, 0, -13.6)
+script = ExtResource("12_readable")
+title = "La tablette de l'apprenti"
+body = "Tablette d'argile d'un apprenti bâtisseur. L'élève avait gravé : « Pour chaque grain de sable, compter un. Fermer la porte à clé. » Le maître a rayé les deux lignes et gravé dessous : « Compter les grains ne remplit aucune jarre, et une porte que l'on ferme ne répond à personne. Ne grave que ce que l'ouvrage demande. »"
+prompt = "Lire la tablette"
+radius = 2.2
+
+[node name="Board" type="Node3D" parent="Exterior/Clues/ApprenticeTablet"]
+script = ExtResource("14_sign")
+text = "Tablette d'un apprenti"
+style = 1
+mount = 0
+board_size = Vector2(0.95, 0.62)
+board_height = 0.85
+
+[node name="ArchivistScroll" type="Node3D" parent="Interior/Clues"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 3.75, 0.64, -2.65)
+script = ExtResource("12_readable")
+title = "Le rouleau de l'archiviste"
+body = "Rouleau resté ouvert sur le pupitre. « Avant d'ouvrir la porte du temple, le gardien pose une question au voyageur. Si la réponse est la bonne, il agit d'une façon ; sinon, il agit d'une autre, et la cité entière l'entend. Une condition commence par sa question et s'achève quand ses deux chemins se rejoignent. » En marge, d'une autre main : « Les runes rangées ici ont été mêlées à celles du dehors. Remettez-les dans l'ordre des murs. »"
+prompt = "Lire le rouleau"
+radius = 2
+
 [node name="RoundTable" type="Node3D" parent="Interior"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6)
 
@@ -1075,6 +1161,62 @@ omni_range = 4.0
 script = ExtResource("11_interactable")
 prompt = "Prendre l'Algonicon"
 radius = 3.0
+
+[node name="Sounds" type="Node3D" parent="Exterior"]
+
+[node name="WindSanctum" type="AudioStreamPlayer3D" parent="Exterior/Sounds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -24)
+stream = ExtResource("54_ruin_wind")
+pitch_scale = 0.85
+volume_db = -3
+unit_size = 7.0
+max_distance = 30.0
+autoplay = true
+
+[node name="WindArch" type="AudioStreamPlayer3D" parent="Exterior/Sounds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 16)
+stream = ExtResource("40_wind")
+pitch_scale = 1.25
+volume_db = -6
+unit_size = 7.0
+max_distance = 30.0
+autoplay = true
+
+[node name="WindGate" type="AudioStreamPlayer3D" parent="Exterior/Sounds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 2, -44)
+stream = ExtResource("40_wind")
+pitch_scale = 1.4
+volume_db = -2
+unit_size = 7.0
+max_distance = 30.0
+autoplay = true
+
+[node name="WindColonnade" type="AudioStreamPlayer3D" parent="Exterior/Sounds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22, 2.5, -48)
+stream = ExtResource("54_ruin_wind")
+pitch_scale = 1.1
+volume_db = -3
+unit_size = 7.0
+max_distance = 30.0
+autoplay = true
+
+[node name="WindBeast" type="AudioStreamPlayer3D" parent="Exterior/Sounds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 2, 50)
+stream = ExtResource("54_ruin_wind")
+pitch_scale = 0.7
+volume_db = -4
+unit_size = 7.0
+max_distance = 30.0
+autoplay = true
+
+[node name="WindHead" type="AudioStreamPlayer3D" parent="Exterior/Sounds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34, 4, 30)
+stream = ExtResource("40_wind")
+pitch_scale = 0.9
+volume_db = -5
+unit_size = 7.0
+max_distance = 30.0
+autoplay = true
 
 [node name="Volcano" type="Node3D" parent="Exterior"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, -6, -215)
