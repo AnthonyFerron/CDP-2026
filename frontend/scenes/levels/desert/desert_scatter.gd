@@ -267,7 +267,7 @@ func _add_bones() -> void:
 			var basis := Basis(Vector3.UP, _rng.randf() * TAU) * Basis(Vector3.RIGHT, _rng.randf_range(-0.2, 0.2))
 			var origin := Vector3(spot.x, terrain.footing_height(spot.x, spot.y) - 0.03, spot.y)
 			transforms.append(Transform3D(basis.scaled(Vector3.ONE * _rng.randf_range(item[2], item[3])), origin))
-		_add_multimesh(item[0], transforms, 55.0)
+		_add_multimesh(item[0], transforms, 55.0, false)
 
 
 func _cone(top: float, bottom: float, height: float, segments: int) -> CylinderMesh:
@@ -327,11 +327,11 @@ func _add_quicksands() -> void:
 
 ## Pose des instances en MultiMesh : sans distance de visibilité (rochers des crêtes), un seul pour toute la carte ;
 ## sinon un par case de CHUNK mètres, chacune avec sa distance mesurée jusqu'à elle et son fondu.
-func _add_multimesh(mesh: Mesh, transforms: Array[Transform3D], range_end := -1.0) -> void:
+func _add_multimesh(mesh: Mesh, transforms: Array[Transform3D], range_end := -1.0, shadow := true) -> void:
 	if range_end < 0.0:
 		range_end = detail_range
 	if range_end == 0.0:
-		_add_multimesh_part(mesh, transforms, 0.0)
+		_add_multimesh_part(mesh, transforms, 0.0, shadow)
 		return
 	var cells := {}
 	for item in transforms:
@@ -342,10 +342,10 @@ func _add_multimesh(mesh: Mesh, transforms: Array[Transform3D], range_end := -1.
 	for key: Vector2i in cells:
 		var part: Array[Transform3D] = []
 		part.assign(cells[key])
-		_add_multimesh_part(mesh, part, range_end)
+		_add_multimesh_part(mesh, part, range_end, shadow)
 
 
-func _add_multimesh_part(mesh: Mesh, transforms: Array[Transform3D], range_end: float) -> MultiMeshInstance3D:
+func _add_multimesh_part(mesh: Mesh, transforms: Array[Transform3D], range_end: float, shadow := true) -> MultiMeshInstance3D:
 	var multimesh := MultiMesh.new()
 	multimesh.transform_format = MultiMesh.TRANSFORM_3D
 	multimesh.mesh = mesh
@@ -355,6 +355,8 @@ func _add_multimesh_part(mesh: Mesh, transforms: Array[Transform3D], range_end: 
 	var instance := MultiMeshInstance3D.new()
 	instance.multimesh = multimesh
 	instance.visibility_range_end = range_end
+	if not shadow:
+		instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	if range_end > 0.0:
 		instance.visibility_range_end_margin = 10.0
 		instance.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
