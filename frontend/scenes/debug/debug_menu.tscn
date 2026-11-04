@@ -4,10 +4,10 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 content_margin_left = 36
-content_margin_top = 30
+content_margin_top = 26
 content_margin_right = 36
-content_margin_bottom = 30
-bg_color = Color(0.08, 0.08, 0.1, 0.95)
+content_margin_bottom = 26
+bg_color = Color(0.08, 0.08, 0.1, 0.97)
 border_width_left = 3
 border_width_top = 3
 border_width_right = 3
@@ -18,107 +18,229 @@ corner_radius_top_right = 9
 corner_radius_bottom_right = 9
 corner_radius_bottom_left = 9
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_column"]
+content_margin_left = 20
+content_margin_top = 16
+content_margin_right = 20
+content_margin_bottom = 16
+bg_color = Color(0.13, 0.13, 0.16, 1)
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+
 [node name="DebugMenu" type="CanvasLayer"]
 layer = 100
 script = ExtResource("1_menu")
 
-[node name="Root" type="CenterContainer" parent="."]
+[node name="Root" type="Control" parent="."]
 unique_name_in_owner = true
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel" type="PanelContainer" parent="Root"]
-custom_minimum_size = Vector2(630, 0)
+[node name="Shade" type="ColorRect" parent="Root"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.55)
+
+[node name="Margin" type="MarginContainer" parent="Root"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 36
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 36
+
+[node name="Panel" type="PanelContainer" parent="Root/Margin"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="Content" type="VBoxContainer" parent="Root/Panel"]
+[node name="Content" type="VBoxContainer" parent="Root/Margin/Panel"]
 layout_mode = 2
-theme_override_constants/separation = 15
+theme_override_constants/separation = 18
 
-[node name="Title" type="Label" parent="Root/Panel/Content"]
+[node name="Header" type="HBoxContainer" parent="Root/Margin/Panel/Content"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Title" type="Label" parent="Root/Margin/Panel/Content/Header"]
 theme_type_variation = &"TitleLabel"
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.8, 0.2, 1)
-theme_override_font_sizes/font_size = 36
-text = "Debug : niveaux"
-horizontal_alignment = 1
+theme_override_font_sizes/font_size = 38
+text = "Debug"
 
-[node name="Hint" type="Label" parent="Root/Panel/Content"]
+[node name="Hint" type="Label" parent="Root/Margin/Panel/Content/Header"]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.7, 0.7, 0.72, 1)
 theme_override_font_sizes/font_size = 21
-text = "Menu temporaire de test. F1 pour fermer."
-horizontal_alignment = 1
+text = "Menu de test, seulement dans les versions de debug. F1 pour fermer."
+vertical_alignment = 1
 
-[node name="Levels" type="VBoxContainer" parent="Root/Panel/Content"]
+[node name="State" type="Label" parent="Root/Margin/Panel/Content/Header"]
 unique_name_in_owner = true
 layout_mode = 2
-
-[node name="LoginSeparator" type="HSeparator" parent="Root/Panel/Content"]
-layout_mode = 2
-
-[node name="LoginTitle" type="Label" parent="Root/Panel/Content"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.8, 0.2, 1)
-theme_override_font_sizes/font_size = 27
-text = "Connexion"
-horizontal_alignment = 1
-
-[node name="Username" type="LineEdit" parent="Root/Panel/Content"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 54)
-layout_mode = 2
-theme_override_font_sizes/font_size = 24
-placeholder_text = "Identifiant"
-
-[node name="Password" type="LineEdit" parent="Root/Panel/Content"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 54)
-layout_mode = 2
-theme_override_font_sizes/font_size = 24
-placeholder_text = "Mot de passe"
-secret = true
-
-[node name="Login" type="Button" parent="Root/Panel/Content"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 54)
-layout_mode = 2
-theme_override_font_sizes/font_size = 24
-text = "Se connecter"
-
-[node name="LoginStatus" type="Label" parent="Root/Panel/Content"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(564, 0)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.7, 0.7, 0.72, 1)
+theme_override_colors/font_color = Color(0.85, 0.85, 0.88, 1)
 theme_override_font_sizes/font_size = 21
-horizontal_alignment = 1
-autowrap_mode = 3
+horizontal_alignment = 2
+vertical_alignment = 1
 
-[node name="Separator" type="HSeparator" parent="Root/Panel/Content"]
-layout_mode = 2
-
-[node name="Reload" type="Button" parent="Root/Panel/Content"]
+[node name="Close" type="Button" parent="Root/Margin/Panel/Content/Header"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 54)
-layout_mode = 2
-theme_override_font_sizes/font_size = 24
-text = "Recharger le niveau"
-
-[node name="Reset" type="Button" parent="Root/Panel/Content"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 54)
-layout_mode = 2
-theme_override_font_sizes/font_size = 24
-text = "Réinitialiser la partie"
-
-[node name="Close" type="Button" parent="Root/Panel/Content"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 54)
+custom_minimum_size = Vector2(170, 52)
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Fermer"
+
+[node name="Columns" type="HBoxContainer" parent="Root/Margin/Panel/Content"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="LevelsColumn" type="PanelContainer" parent="Root/Margin/Panel/Content/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_column")
+
+[node name="Box" type="VBoxContainer" parent="Root/Margin/Panel/Content/Columns/LevelsColumn"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="Root/Margin/Panel/Content/Columns/LevelsColumn/Box"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.8, 0.2, 1)
+theme_override_font_sizes/font_size = 27
+text = "Niveaux"
+
+[node name="Levels" type="VBoxContainer" parent="Root/Margin/Panel/Content/Columns/LevelsColumn/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="BooksColumn" type="PanelContainer" parent="Root/Margin/Panel/Content/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.6
+theme_override_styles/panel = SubResource("StyleBoxFlat_column")
+
+[node name="Box" type="VBoxContainer" parent="Root/Margin/Panel/Content/Columns/BooksColumn"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="Root/Margin/Panel/Content/Columns/BooksColumn/Box"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.8, 0.2, 1)
+theme_override_font_sizes/font_size = 27
+text = "Livres et piédestaux"
+
+[node name="BooksHint" type="Label" parent="Root/Margin/Panel/Content/Columns/BooksColumn/Box"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.72, 1)
+theme_override_font_sizes/font_size = 19
+text = "« Poser » amène au château et joue toute la pose : vol du livre, reconstruction du village, et le rituel au quatrième livre."
+autowrap_mode = 3
+
+[node name="Books" type="VBoxContainer" parent="Root/Margin/Panel/Content/Columns/BooksColumn/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="BookActions" type="VBoxContainer" parent="Root/Margin/Panel/Content/Columns/BooksColumn/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="GameColumn" type="PanelContainer" parent="Root/Margin/Panel/Content/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_column")
+
+[node name="GameBox" type="VBoxContainer" parent="Root/Margin/Panel/Content/Columns/GameColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="Root/Margin/Panel/Content/Columns/GameColumn/GameBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.8, 0.2, 1)
+theme_override_font_sizes/font_size = 27
+text = "Partie"
+
+[node name="Reload" type="Button" parent="Root/Margin/Panel/Content/Columns/GameColumn/GameBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Recharger le niveau"
+
+[node name="Reset" type="Button" parent="Root/Margin/Panel/Content/Columns/GameColumn/GameBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Réinitialiser la partie"
+
+[node name="AccountColumn" type="PanelContainer" parent="Root/Margin/Panel/Content/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_column")
+
+[node name="AccountBox" type="VBoxContainer" parent="Root/Margin/Panel/Content/Columns/AccountColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="Root/Margin/Panel/Content/Columns/AccountColumn/AccountBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.8, 0.2, 1)
+theme_override_font_sizes/font_size = 27
+text = "Compte"
+
+[node name="AccountState" type="Label" parent="Root/Margin/Panel/Content/Columns/AccountColumn/AccountBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.85, 0.88, 1)
+theme_override_font_sizes/font_size = 21
+autowrap_mode = 3
+
+[node name="Username" type="LineEdit" parent="Root/Margin/Panel/Content/Columns/AccountColumn/AccountBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+placeholder_text = "Identifiant"
+
+[node name="Password" type="LineEdit" parent="Root/Margin/Panel/Content/Columns/AccountColumn/AccountBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+placeholder_text = "Mot de passe"
+secret = true
+
+[node name="Login" type="Button" parent="Root/Margin/Panel/Content/Columns/AccountColumn/AccountBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Se connecter"
+
+[node name="LoginStatus" type="Label" parent="Root/Margin/Panel/Content/Columns/AccountColumn/AccountBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.72, 1)
+theme_override_font_sizes/font_size = 19
+autowrap_mode = 3
