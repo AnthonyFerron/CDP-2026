@@ -441,7 +441,7 @@ func _ritual() -> void:
 	add_child(camera)
 	var center := _circle.global_position + Vector3.UP * 2.8
 	camera.global_position = $Castle/RitualView.global_position
-	camera.look_at(center + Vector3(1.0, -1.4, 1.0))
+	camera.look_at(center + Vector3(0.8, -1.8, 1.2))
 	camera.current = true
 	await _hud.fade(false)
 	_hud.show_message("Les survivants sortent du bunker. Merlon lève les mains au-dessus du cercle et prononce une ancienne incantation…")
@@ -523,7 +523,7 @@ func _energy_wave(center: Vector3) -> void:
 	material.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	material.disable_fog = true
-	material.albedo_color = Color(0.65, 0.88, 1.0, 0.7)
+	material.albedo_color = Color(0.5, 0.78, 1.0, 0.4)
 	var wave := MeshInstance3D.new()
 	var sphere := SphereMesh.new()
 	sphere.radius = 1.0
@@ -576,7 +576,7 @@ func _arrival_message() -> String:
 		var names: Array[String] = []
 		for book in carried:
 			names.append(GameState.BOOK_NAMES[book])
-		return "Vous portez %s. Posez-le sur son piédestal, dans la salle du trône, au cœur des ruines du château, au nord." % " et ".join(names)
+		return "Vous portez %s : posez-le dans la salle du trône du château, au nord." % " et ".join(names)
 	return ""
 
 
