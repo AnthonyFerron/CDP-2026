@@ -19,28 +19,14 @@ permissions:
   contents: read
 
 jobs:
+  # Mêmes tests que sur les pull requests : un échec bloque le déploiement
   test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v7
-
-      - uses: actions/setup-python@v7
-        with:
-          python-version: "3.14"
-          cache: pip
-          cache-dependency-path: backend/requirements*.txt
-
-      - name: Installer les dépendances
-        working-directory: backend
-        run: pip install -r requirements.txt -r requirements-dev.txt
-
-      - name: Lancer les tests
-        working-directory: backend
-        run: python -m pytest
+    uses: ./.github/workflows/tests.yml
 
   deploy:
     needs: test
+    # Jamais depuis une autre branche, même lancé à la main : seul main est déployé
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     steps:
@@ -54,7 +40,8 @@ jobs:
           printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
           chmod 600 ~/.ssh/id_ed25519
 
-      # La clé est limitée côté serveur à l'exécution de cdp-deploy
+      # La clé est limitée côté serveur à l'exécution de cdp-deploy, qui sauvegarde la base et applique
+      # les migrations avant de mettre l'API à jour (infrastructure/deploy.sh)
       - name: Déployer
         env:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}

@@ -43,13 +43,15 @@ Le jeu s'ouvre sur l'accueil, `frontend/scenes/ui/menus/main_menu.tscn`, dessin�
 - **Indice** (H) : trois indices par zone, du plus vague au plus précis, un de plus à chaque ouverture ; au hub, l'indice dit où aller.
 - **Classement** : les meilleurs temps, les trois premiers en or, argent et bronze. Le temps est envoyé quand le rituel commence.
 
+Chaque changement de lieu passe par l'autoload `Transition` (`frontend/scripts/transition.gd`) : l'écran passe au noir, puis le chapitre, le nom du lieu et son énigme (d'après le scénario, `GameState.ZONE_TITLES` et `GameState.hub_title()`) apparaissent ligne par ligne pendant que la scène suivante se charge ; elle ne se dévoile qu'une fois construite, et le chronomètre est arrêté pendant ce temps. Utiliser `Transition.change_scene(chemin, lignes)` plutôt que `change_scene_to_file`.
+
 Chaque compte a sa propre sauvegarde (`user://sauvegarde_compte_<pseudo>.cfg`), l'invité garde `user://sauvegarde.cfg`.
 
 Toutes les demandes au serveur passent par l'autoload `Account` (`frontend/scripts/account.gd`) : `login`, `register`, `verify_code`, `resend_code`, `request_password_reset`, `logout`, `fetch_leaderboard` et `submit_run`. Leurs réponses sont **simulées** en attendant l'API (tout code de six chiffres est accepté, le classement est vide). Pour la brancher, remplacer le corps de ces méthodes par les appels HTTP en gardant leurs signatures et la forme de leurs résultats (`ok`, `error`, `needs_code`, `entries`) : les menus n'ont rien à changer.
 
 ## Debug
 
-En version de debug, `F1` ouvre un menu temporaire qui permet de passer d'un niveau à l'autre. Le site est pour l'instant exporté en version de debug (`--export-debug` dans `frontend/Dockerfile`), le menu y est donc disponible ; repasser à `--export-release` pour le retirer. Il liste les scènes de `frontend/scenes/levels/`, et les sous-dossiers qui contiennent une scène du même nom, comme `plaine/plaine.tscn` : nommer ainsi la scène principale de chaque niveau pour qu'elle y apparaisse. Le bouton « Réinitialiser la partie » efface la sauvegarde.
+En version de debug, `F1` ouvre un menu de test sur toute la page : aller dans chaque niveau ou au menu principal ; trouver ou **poser chaque livre** (« Poser » amène au château, met le livre en main et joue la vraie pose, avec le plan large sur la reconstruction et le rituel au quatrième livre ; « Tout poser d'un coup » saute les animations) ; régler le chronomètre, passer l'introduction du bunker, lancer les deux fins ; se connecter avec un compte de test simulé. Le site est pour l'instant exporté en version de debug (`--export-debug` dans `frontend/Dockerfile`), le menu y est donc disponible ; repasser à `--export-release` pour le retirer. Il liste les scènes de `frontend/scenes/levels/`, et les sous-dossiers qui contiennent une scène du même nom, comme `plaine/plaine.tscn` : nommer ainsi la scène principale de chaque niveau pour qu'elle y apparaisse. Le bouton « Réinitialiser la partie » efface la sauvegarde.
 
 ## Progression
 
@@ -67,7 +69,7 @@ Le décor du hub est généré par `frontend/tools/build_hub.py`. Chaque éléme
 
 ## Chronomètre du volcan
 
-Le volcan entre en éruption au bout de 60 minutes (`GameState.TOTAL_TIME`). Le temps restant s'affiche en haut à droite, passe au rouge sous 5 minutes, et il est sauvegardé avec la partie. Chaque mauvaise validation d'une énigme retire 5 minutes (`GameState.penalize()`). À zéro, le jeu se fige sur l'écran de fin, et « Recommencer » relance une partie depuis le hub. Le temps s'arrête une fois les quatre livres réunis.
+Le Mont Sam Altan entre en éruption au bout de 60 minutes (`GameState.TOTAL_TIME`) : le scénario en annonce quarante, l'équipe a choisi une heure. Le temps restant s'affiche en haut à droite, passe au rouge sous 5 minutes, et il est sauvegardé avec la partie. Chaque mauvaise validation d'une énigme retire 5 minutes (`GameState.penalize()`). À zéro, le jeu se fige sur l'écran de fin, et « Recommencer » relance une partie depuis le hub. Le temps s'arrête une fois les quatre livres réunis.
 
 ## Énigmes
 
@@ -95,6 +97,12 @@ Le volcan entre en éruption au bout de 60 minutes (`GameState.TOTAL_TIME`). Le 
 
 Un script propre à une scène se range à côté de celle-ci. Les fichiers et dossiers sont nommés en `snake_case`.
 
+## API
+
+L'API FastAPI de `backend/` gère les comptes avec double authentification par e-mail, les parties et leur chronomètre, les énigmes et les classements. Sa documentation interactive est servie sur `/api/docs`. Les routes et les règles sont dans `docs/api-contract.md`, et le branchement côté Godot dans `docs/api-godot.md`.
+
+Les tests de l'API demandent une base PostgreSQL dédiée, indiquée par `TEST_DATABASE_URL` (voir la section Tests de `docs/api-contract.md`). Ils tournent sur chaque pull request vers `dev` ou `main`. Une migration Alembic doit rester compatible avec la version précédente de l'API : voir `docs/deploiement.md`.
+
 ## Hébergement
 
 Le jeu est publié sur <https://codequest.anthonyferron.com>, avec l'API sous `/api/` sur le même domaine. Le serveur exporte le préréglage `Web` de `frontend/export_presets.cfg`, à versionner sans jamais y laisser de mot de passe ou de chemin local.
@@ -117,9 +125,11 @@ En vue à la première personne, le corps de Devlyn ne se voit pas mais projette
 
 ## Déploiement
 
-Chaque push sur `main` qui modifie `backend/`, `frontend/` ou `infrastructure/` lance les tests de l'API, puis déploie le jeu et l'API sur le serveur de production avec Docker Compose (voir `.github/workflows/deploy.yml`). Si les tests échouent, rien n'est déployé.
+Chaque push sur `main` qui modifie `backend/`, `frontend/` ou `infrastructure/` lance les tests de l'API, puis déploie le jeu et l'API sur le serveur de production (voir `.github/workflows/deploy.yml`). Si les tests échouent, rien n'est déployé. Une pull request ne déploie jamais rien : elle lance seulement les tests (`.github/workflows/tests.yml`).
 
-Le serveur se prépare une seule fois avec `sudo bash infrastructure/setup-server.sh`, qui affiche les secrets à créer dans GitHub. Les secrets de production se trouvent dans `/opt/cdp-2026/.env` et ne sont jamais versionnés. Après avoir modifié ce fichier, relancer `cdp-deploy` en tant qu'utilisateur `deploy`.
+Sur le serveur, `cdp-deploy` récupère `main` et lance `infrastructure/deploy.sh`, qui sauvegarde la base dans `/opt/cdp-2026/backups`, applique les migrations Alembic, puis met les conteneurs à jour. Si la sauvegarde ou une migration échoue, le déploiement s'arrête et l'API en service n'est pas touchée. Le détail, la restauration d'une sauvegarde et les règles d'écriture des migrations sont dans `docs/deploiement.md`.
+
+Le serveur se prépare une seule fois avec `sudo bash infrastructure/setup-server.sh`, qui installe `cdp-deploy` et affiche les secrets à créer dans GitHub. Le relancer met `cdp-deploy` à jour sans changer la clé de déploiement. Les secrets de production se trouvent dans `/opt/cdp-2026/.env` et ne sont jamais versionnés. Après avoir modifié ce fichier, relancer `cdp-deploy` en tant qu'utilisateur `deploy`.
 
 Le domaine est défini par `SITE_ADDRESS` dans ce fichier. Il pointe vers le serveur avec un enregistrement DNS sans proxy Cloudflare, et Caddy obtient le certificat HTTPS tout seul.
 

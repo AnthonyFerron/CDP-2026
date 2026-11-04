@@ -238,12 +238,33 @@ MODEL_BOXES = {
     "graveyard_kit/lantern-candle": ((-0.12, 0.0, -0.12), (0.24, 0.39, 0.24)),
     "survival_kit/bedroll": ((-0.16, 0.0, -0.3), (0.31, 0.13, 0.61)),
     "survival_kit/workbench": ((-0.15, 0.0, -0.15), (0.3, 0.24, 0.3)),
+    "fantasy_town_kit/stall-stool": ((-0.13, 0.0, -0.13), (0.26, 0.23, 0.26)),
+    "survival_kit/barrel-open": ((-0.12, 0.0, -0.12), (0.24, 0.34, 0.24)),
+}
+
+
+# Meubles modernes du kit Furniture, sans place dans Codia : où qu'ils soient demandés, ils sont remplacés par
+# leur équivalent médiéval (brasero de cuisine, tonneaux, coffres, tabouret de marché, chaise de bois).
+MEDIEVAL = {
+    "furniture_kit/kitchenStove": "graveyard_kit/fire-basket",
+    "furniture_kit/kitchenSink": "survival_kit/barrel-open",
+    "furniture_kit/kitchenCabinet": "survival_kit/chest",
+    "furniture_kit/kitchenCabinetDrawer": "survival_kit/chest",
+    "furniture_kit/kitchenBar": "survival_kit/barrel",
+    "furniture_kit/stoolBar": "fantasy_town_kit/stall-stool",
+    "furniture_kit/chairDesk": "furniture_kit/chair",
 }
 
 
 def furniture(scene, model, center, degrees=0.0, scale=2.6, height=None, tilt=0.0, roll=0.0):
     """Pose un modèle centré sur le point donné et posé au sol, même renversé : sa boîte tournée touche le sol
     par son point le plus bas. Une hauteur donne une collision de la taille de la boîte tournée."""
+    replaced = MEDIEVAL.get(model)
+    if replaced:
+        model = replaced
+        # La collision suit la taille du remplaçant, plus petit que le meuble moderne.
+        if height:
+            height = min(height, MODEL_BOXES[model][1][1] * scale)
     (px, py, pz), (sx, sy, sz) = MODEL_BOXES[model]
     basis = multiply(multiply(rotation_y(degrees), rotation_x(tilt)), rotation_z(roll))
     corners = []

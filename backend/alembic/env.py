@@ -2,6 +2,7 @@ from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
+from sqlalchemy import text
 
 from alembic import context
 
@@ -14,6 +15,7 @@ from app.models.auth_session import AuthSession
 from app.models.game_session import GameSession
 from app.models.puzzle import Puzzle
 from app.models.puzzle_progress import PuzzleProgress
+from app.models.paper_fragment import PaperFragment
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -61,6 +63,9 @@ def run_migrations_offline() -> None:
         context.run_migrations()
 
 
+MIGRATION_LOCK = "cdp2026_alembic"
+
+
 def run_migrations_online() -> None:
     """Run migrations in 'online' mode.
 
@@ -75,6 +80,12 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
+        # Une seule migration à la fois, d'où qu'elle soit lancée (déploiement, terminal, tests) :
+        # les suivantes attendent, puis constatent que la base est déjà à jour. Le verrou est libéré
+        # à la fermeture de la connexion, même en cas d'erreur.
+        connection.execute(text(f"SELECT pg_advisory_lock(hashtext('{MIGRATION_LOCK}'))"))
+        connection.commit()
+
         context.configure(
             connection=connection, target_metadata=target_metadata
         )
