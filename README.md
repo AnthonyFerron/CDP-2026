@@ -43,13 +43,15 @@ Le jeu s'ouvre sur l'accueil, `frontend/scenes/ui/menus/main_menu.tscn`, dessin�
 - **Indice** (H) : trois indices par zone, du plus vague au plus précis, un de plus à chaque ouverture ; au hub, l'indice dit où aller.
 - **Classement** : les meilleurs temps, les trois premiers en or, argent et bronze. Le temps est envoyé quand le rituel commence.
 
+Chaque changement de lieu passe par l'autoload `Transition` (`frontend/scripts/transition.gd`) : l'écran passe au noir, puis le chapitre, le nom du lieu et son énigme (d'après le scénario, `GameState.ZONE_TITLES` et `GameState.hub_title()`) apparaissent ligne par ligne pendant que la scène suivante se charge ; elle ne se dévoile qu'une fois construite, et le chronomètre est arrêté pendant ce temps. Utiliser `Transition.change_scene(chemin, lignes)` plutôt que `change_scene_to_file`.
+
 Chaque compte a sa propre sauvegarde (`user://sauvegarde_compte_<pseudo>.cfg`), l'invité garde `user://sauvegarde.cfg`.
 
 Toutes les demandes au serveur passent par l'autoload `Account` (`frontend/scripts/account.gd`) : `login`, `register`, `verify_code`, `resend_code`, `request_password_reset`, `logout`, `fetch_leaderboard` et `submit_run`. Leurs réponses sont **simulées** en attendant l'API (tout code de six chiffres est accepté, le classement est vide). Pour la brancher, remplacer le corps de ces méthodes par les appels HTTP en gardant leurs signatures et la forme de leurs résultats (`ok`, `error`, `needs_code`, `entries`) : les menus n'ont rien à changer.
 
 ## Debug
 
-En version de debug, `F1` ouvre un menu temporaire qui permet de passer d'un niveau à l'autre. Le site est pour l'instant exporté en version de debug (`--export-debug` dans `frontend/Dockerfile`), le menu y est donc disponible ; repasser à `--export-release` pour le retirer. Il liste les scènes de `frontend/scenes/levels/`, et les sous-dossiers qui contiennent une scène du même nom, comme `plaine/plaine.tscn` : nommer ainsi la scène principale de chaque niveau pour qu'elle y apparaisse. Le bouton « Réinitialiser la partie » efface la sauvegarde.
+En version de debug, `F1` ouvre un menu de test sur toute la page : aller dans chaque niveau ou au menu principal ; trouver ou **poser chaque livre** (« Poser » amène au château, met le livre en main et joue la vraie pose, avec le plan large sur la reconstruction et le rituel au quatrième livre ; « Tout poser d'un coup » saute les animations) ; régler le chronomètre, passer l'introduction du bunker, lancer les deux fins ; se connecter avec un compte de test simulé. Le site est pour l'instant exporté en version de debug (`--export-debug` dans `frontend/Dockerfile`), le menu y est donc disponible ; repasser à `--export-release` pour le retirer. Il liste les scènes de `frontend/scenes/levels/`, et les sous-dossiers qui contiennent une scène du même nom, comme `plaine/plaine.tscn` : nommer ainsi la scène principale de chaque niveau pour qu'elle y apparaisse. Le bouton « Réinitialiser la partie » efface la sauvegarde.
 
 ## Progression
 
@@ -67,7 +69,7 @@ Le décor du hub est généré par `frontend/tools/build_hub.py`. Chaque éléme
 
 ## Chronomètre du volcan
 
-Le volcan entre en éruption au bout de 60 minutes (`GameState.TOTAL_TIME`). Le temps restant s'affiche en haut à droite, passe au rouge sous 5 minutes, et il est sauvegardé avec la partie. Chaque mauvaise validation d'une énigme retire 5 minutes (`GameState.penalize()`). À zéro, le jeu se fige sur l'écran de fin, et « Recommencer » relance une partie depuis le hub. Le temps s'arrête une fois les quatre livres réunis.
+Le Mont Sam Altan entre en éruption au bout de 60 minutes (`GameState.TOTAL_TIME`) : le scénario en annonce quarante, l'équipe a choisi une heure. Le temps restant s'affiche en haut à droite, passe au rouge sous 5 minutes, et il est sauvegardé avec la partie. Chaque mauvaise validation d'une énigme retire 5 minutes (`GameState.penalize()`). À zéro, le jeu se fige sur l'écran de fin, et « Recommencer » relance une partie depuis le hub. Le temps s'arrête une fois les quatre livres réunis.
 
 ## Énigmes
 
@@ -94,6 +96,12 @@ Le volcan entre en éruption au bout de 60 minutes (`GameState.TOTAL_TIME`). Le 
 | `infrastructure/` | Base de données locale et production avec Docker |
 
 Un script propre à une scène se range à côté de celle-ci. Les fichiers et dossiers sont nommés en `snake_case`.
+
+## API
+
+L'API FastAPI de `backend/` gère les comptes avec double authentification par e-mail, les parties et leur chronomètre, les énigmes et les classements. Sa documentation interactive est servie sur `/api/docs`. Les routes et les règles sont dans `docs/api-contract.md`, et le branchement côté Godot dans `docs/api-godot.md`.
+
+Les tests de l'API demandent une base PostgreSQL dédiée, indiquée par `TEST_DATABASE_URL` (voir la section Tests de `docs/api-contract.md`). Le déploiement n'applique pas les migrations Alembic : après en avoir ajouté une, lancer `alembic upgrade head` dans le conteneur `api` du serveur.
 
 ## Hébergement
 

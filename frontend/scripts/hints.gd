@@ -28,7 +28,7 @@ const ZONE_HINTS := {
 }
 ## Sens de chaque portail depuis la place du village.
 const PORTAL_DIRECTIONS := {&"plaine": "nord-ouest", &"desert": "nord-est", &"marais": "sud-est", &"village": "sud-ouest"}
-const ZONE_NAMES := {&"plaine": "la Plaine", &"desert": "le Désert", &"marais": "le Marais", &"village": "le Village détruit"}
+const ZONE_NAMES := {&"plaine": "les plaines d'Hexcole", &"desert": "le désert de Pythania", &"marais": "les marais de Kernel Swamp", &"village": "le village détruit"}
 
 ## Indices déjà révélés dans chaque zone, pour la partie en cours.
 var revealed := {}
