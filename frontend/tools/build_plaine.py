@@ -975,8 +975,8 @@ def arrows(scene, rng, x, z, count, spread=1.5):
     for _ in range(count):
         px, pz = x + rng.uniform(-spread, spread), z + rng.uniform(-spread, spread)
         yaw = rng.uniform(0, 360)
-        scene.add_many("mini_forest/weapon-arrow", (px, 0.3, pz), yaw, 2.4, tilt=rng.uniform(-70, -50))
-        scene.add_box((px, 0.3, pz), (0.2, 0.6, 0.2))
+        scene.add_many("mini_forest/weapon-arrow", (px, 0.2, pz), yaw, 1.7, tilt=rng.uniform(-62, -40))
+        scene.add_box((px, 0.25, pz), (0.2, 0.5, 0.2))
 
 
 def banner_pole(scene, rng, x, z, model="castle_kit/flag-banner-long", scale=1.8, lean=10.0, degrees=None):
@@ -1053,7 +1053,7 @@ def siege_works(scene, rng):
                   scale * 2.0, height=0.55 * scale)
     for position, degrees in (((sx - 5.6, sz - 3.0), 30.0), ((sx + 5.2, sz + 3.4), 120.0)):
         furniture(scene, "fantasy_town_kit/wheel", (position[0], 0.0, position[1]), degrees, 3.0, height=0.3, roll=90.0)
-    furniture(scene, "castle_kit/tree-log", (sx + 3.0, 0.0, sz + 5.4), 75.0, 3.4, height=0.8)
+    furniture(scene, "nature_kit/log_large", (sx + 3.0, 0.0, sz + 5.4), 165.0, 2.4, height=1.0)
     for position, degrees in (((sx - 0.2, sz - 2.2), 40.0), ((sx + 2.4, sz + 2.2), 100.0)):
         furniture(scene, "survival_kit/resource-planks", (position[0], 0.0, position[1]), degrees, 3.0, height=0.3)
     banner_pole(scene, rng, sx + 0.6, sz + 3.6, model="castle_kit/flag-wide", scale=3.4, lean=-16.0)
