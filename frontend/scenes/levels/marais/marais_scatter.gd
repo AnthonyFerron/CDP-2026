@@ -131,6 +131,13 @@ func _build_boardwalks() -> void:
 					post.position.y = MaraisTerrain.BED_HEIGHT - 0.2
 					post.scale = Vector3(0.45, 2.1, 0.45)
 					body.add_child(post)
+					var pillar := CylinderShape3D.new()
+					pillar.radius = 0.12
+					pillar.height = 2.1
+					var support := CollisionShape3D.new()
+					support.shape = pillar
+					support.position = post.position + Vector3.UP * 1.05
+					body.add_child(support)
 		var shape := BoxShape3D.new()
 		shape.size = Vector3(PLANK_WIDTH, 0.3, length + PLANK_STEP)
 		var collision := CollisionShape3D.new()

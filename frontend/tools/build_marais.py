@@ -304,8 +304,10 @@ def dead_tree(ground, rng, x, z, height=4.5, lean=8.0, roots=5, branches=3, girt
         start = rng.uniform(0.45, 0.8)
         item.raw("graveyard_kit/trunk-long", (0.0, start, 0.0), yaw, (girth * 0.3, start / 0.42 + 0.2, girth * 0.3),
                  tilt=rng.uniform(112, 122), coat="moss")
+    # Collision du tronc, penchée avec lui, un peu plus haute pour envelopper le départ des branches.
     width = 0.54 * girth
-    item.box((0.0, height / 2, 0.0), (width, height, width), heading)
+    reach = height + 1.2
+    item.box((axis[0] * reach / 2, axis[1] * reach / 2, axis[2] * reach / 2), (width, reach, width), heading, lean)
     return item
 
 
@@ -465,6 +467,7 @@ def build_arrival(scene, ground, rng):
         for side in (-1.05, 1.05):
             x, z = at(t, side)
             scene.add("graveyard_kit/trunk-long", (x, -1.9, z), rng.uniform(0, 360), (0.45, 2.15, 0.45))
+            scene.add_box((x, -0.85, z), (0.24, 2.1, 0.24))
     x, z = at(6.7, 1.2)
     scene.add("graveyard_kit/trunk-long", (x, -1.9, z), 0.0, (0.6, 3.0, 0.6))
     scene.add_box((x, -0.4, z), (0.35, 3.0, 0.35))
@@ -513,6 +516,7 @@ def build_village(scene, rng):
         for side in (-1.0, 1.0):
             top = 0.85 - index * 0.12 + rng.uniform(-0.15, 0.1)
             scene.add("graveyard_kit/trunk-long", (x, -2.0, 31.0 + side), rng.uniform(0, 360), (0.5, top + 2.0, 0.5), tilt=rng.uniform(-6, 6))
+            scene.add_box((x, (top - 2.0) / 2, 31.0 + side), (0.27, top + 2.0, 0.27))
         if index in (1, 2):
             scene.place("nature_kit/path_wood", (x, 0.55, 31.0), 90.0 + rng.uniform(-8, 8), 2.2, roll=rng.uniform(-4, 4))
     # Épaves qui flottent : tonneaux, caisses et planches.
@@ -555,7 +559,9 @@ def build_landing(scene, ground, rng):
     for index, (x, z) in enumerate(((-35.6, 45.0), (-34.4, 46.2), (-33.2, 47.4))):
         for side in (-1.0, 1.0):
             px, pz = x - side * 0.75, z + side * 0.75
-            scene.add("graveyard_kit/trunk-long", (px, -2.0, pz), rng.uniform(0, 360), (0.5, 2.5 - index * 0.25, 0.5), tilt=rng.uniform(-5, 5))
+            height = 2.5 - index * 0.25
+            scene.add("graveyard_kit/trunk-long", (px, -2.0, pz), rng.uniform(0, 360), (0.5, height, 0.5), tilt=rng.uniform(-5, 5))
+            scene.add_box((px, -2.0 + height / 2, pz), (0.27, height, 0.27))
     scene.place("nature_kit/path_wood", (-35.0, 0.46, 45.6), 45.0 + 90.0, 2.2, roll=6.0)
     dead_tree(ground, rng, -42.6, 43.2, height=4.4, lean=10.0)
 
