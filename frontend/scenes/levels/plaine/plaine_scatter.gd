@@ -1,33 +1,48 @@
 @tool
 class_name PlaineScatter
 extends Node3D
-## Habille la Plaine : herbe brûlée, roches, arbres morts, lanternes, et lave dans les cratères.
+## Habille la Plaine : herbe brûlée, roches, arbres morts, lanternes, lave dans les cratères et dans la coulée.
 ## Les placements sont reproductibles et l'herbe disparaît au loin pour alléger le rendu.
 
 signal lava_touched(body: Node3D)
 
 const SMOKING_CRATERS := 4
 const LIT_CRATERS := 4
-## Lanternes du chemin : position (x, z), et si elles sont renversées.
+const SMOKING_IMPACTS := 4
+## Hauteur des poteaux des lanternes.
+const POST_HEIGHT := 2.7
+## Côté des cases des petits détails (herbes, cailloux), et longueur de leur fondu au loin.
+const CHUNK_SIZE := 32.0
+const CHUNK_FADE := 8.0
+## Lanternes du chemin : position (x, z), et si elles sont renversées. Deux gardent les têtes du pont.
 const LANTERNS: Array[Vector3] = [
-	Vector3(-3.2, 18.0, 0.0),
-	Vector3(3.2, 25.0, 1.0),
-	Vector3(-3.2, 32.0, 0.0),
-	Vector3(3.4, 39.0, 0.0),
-	Vector3(-3.4, 45.0, 1.0),
+	Vector3(-3.2, 16.5, 0.0),
+	Vector3(3.0, 22.0, 0.0),
+	Vector3(-3.0, 37.0, 0.0),
+	Vector3(3.4, 37.6, 1.0),
+	Vector3(3.4, 44.0, 0.0),
+	Vector3(-3.4, 48.0, 1.0),
+]
+## Points à garder nus (x, z, rayon) : panneaux, stèles et abords du pont, où rien ne doit pousser.
+const CLEARINGS: Array[Vector3] = [
+	Vector3(-8.6, 15.5, 2.6),
+	Vector3(-4.6, 46.0, 2.2),
+	Vector3(0.0, 29.5, 8.0),
 ]
 
 @export var terrain: PlaineTerrain
 @export var grass_models: Array[PackedScene]
 @export var small_rock_models: Array[PackedScene]
 @export var large_rock_models: Array[PackedScene]
+## Poteau de bois et lanterne à bougie des lanternes du chemin.
+@export var post_model: PackedScene
 @export var lantern_model: PackedScene
 @export var lava_material: Material
 @export var lava_sound: AudioStream
 @export var grass_count := 1500
 @export var small_rock_count := 220
 @export var large_rock_count := 26
-@export var dead_tree_count := 26
+@export var dead_tree_count := 38
 @export var border_rock_count := 46
 ## Distance à laquelle les petits détails disparaissent.
 @export var detail_range := 60.0
@@ -49,6 +64,7 @@ func _ready() -> void:
 	_add_border_rocks()
 	_add_lanterns()
 	_add_crater_effects()
+	_add_lava_flow()
 
 
 func is_near_lava(point: Vector3, margin: float) -> bool:
@@ -56,7 +72,7 @@ func is_near_lava(point: Vector3, margin: float) -> bool:
 		var center: Vector3 = pool.center
 		if Vector2(point.x - center.x, point.z - center.z).length() < pool.radius + margin:
 			return true
-	return false
+	return PlaineTerrain.flow_distance(point.x, point.z) < PlaineTerrain.flow_lava_half_width() + margin
 
 
 func _scatter_grass() -> void:
@@ -75,8 +91,8 @@ func _scatter_grass() -> void:
 				glowing.append(item)
 			else:
 				burnt.append(item)
-		_add_multimesh(mesh, burnt, soot)
-		_add_multimesh(mesh, glowing, rust)
+		_add_chunked_multimesh(mesh, burnt, soot)
+		_add_chunked_multimesh(mesh, glowing, rust)
 
 
 func _scatter_small_rocks() -> void:
@@ -102,7 +118,7 @@ func _scatter_small_rocks() -> void:
 			collision.shape = shape
 			collision.transform = Transform3D(item.basis.orthonormalized(), item.origin + Vector3.UP * shape.size.y * 0.5)
 			body.add_child(collision)
-		_add_multimesh(_load_mesh(model), items, material)
+		_add_chunked_multimesh(_load_mesh(model), items, material)
 
 
 func _scatter_large_rocks() -> void:
@@ -176,17 +192,23 @@ func _add_border_rocks() -> void:
 		instance.visibility_range_end = 0.0
 
 
-## Lanternes le long du chemin : certaines tiennent encore debout et brillent, d'autres sont tombées.
+## Lanternes du chemin : un poteau de bois, une potence et une lanterne à bougie qui pend vers le chemin.
+## Certaines tiennent encore debout et brillent, d'autres sont tombées, leur lanterne renversée dans la cendre.
 func _add_lanterns() -> void:
-	var glow := StandardMaterial3D.new()
-	glow.albedo_color = Color(1.0, 0.6, 0.25)
-	glow.emission_enabled = true
-	glow.emission = Color(1.0, 0.55, 0.2)
-	glow.emission_energy_multiplier = 3.0
-	var bulb := SphereMesh.new()
-	bulb.radius = 0.13
-	bulb.height = 0.26
-	bulb.material = glow
+	var flame := StandardMaterial3D.new()
+	flame.albedo_color = Color(1.0, 0.62, 0.25)
+	flame.emission_enabled = true
+	flame.emission = Color(1.0, 0.55, 0.2)
+	flame.emission_energy_multiplier = 4.0
+	var wick := SphereMesh.new()
+	wick.radius = 0.06
+	wick.height = 0.12
+	wick.material = flame
+	var wood := StandardMaterial3D.new()
+	wood.albedo_color = Color(0.22, 0.14, 0.08)
+	var beam := BoxMesh.new()
+	beam.size = Vector3(0.75, 0.1, 0.1)
+	beam.material = wood
 	var lanterns := Node3D.new()
 	lanterns.name = "Lanterns"
 	add_child(lanterns)
@@ -194,34 +216,45 @@ func _add_lanterns() -> void:
 	body.name = "LanternPosts"
 	add_child(body)
 	for spot in LANTERNS:
-		var lantern: Node3D = lantern_model.instantiate()
 		var ground := terrain.footing_height(spot.x, spot.y)
 		var fallen := spot.z > 0.5
-		lantern.scale = Vector3.ONE * 2.2
-		lantern.rotation.y = 0.0 if spot.x < 0.0 else PI
-		if fallen:
-			lantern.rotation = Vector3(0.0, _rng.randf_range(0.0, TAU), deg_to_rad(84.0))
-			ground += 0.25
-		lantern.position = Vector3(spot.x, ground, spot.y)
-		lanterns.add_child(lantern)
-		# Le poteau du lampadaire, debout ou couché, a sa collision.
+		# La potence se tourne vers le chemin ; un poteau tombé tombe du côté opposé, pour ne jamais le barrer.
+		var toward := 1.0 if spot.x < 0.0 else -1.0
+		var post: Node3D = post_model.instantiate()
+		post.scale = Vector3(2.0, POST_HEIGHT, 2.0)
+		var lantern: Node3D = lantern_model.instantiate()
+		lantern.scale = Vector3.ONE * 1.6
 		var shape := BoxShape3D.new()
 		var collision := CollisionShape3D.new()
 		collision.shape = shape
+		var base := Vector3(spot.x, ground, spot.y)
 		if fallen:
-			# Couché par une rotation autour de z : le poteau s'étend vers -x, dans le cap du lampadaire.
-			var heading := Basis(Vector3.UP, lantern.rotation.y)
-			shape.size = Vector3(3.4, 0.5, 0.5)
-			collision.transform = Transform3D(heading, Vector3(spot.x, ground, spot.y) + heading * Vector3(-1.7, 0.0, 0.0))
+			var heading := Basis(Vector3.UP, (0.0 if spot.x < 0.0 else PI) + _rng.randf_range(-0.45, 0.45))
+			# Couché par une rotation autour de z : le poteau s'étend vers -x, dans son cap.
+			post.basis = heading * Basis(Vector3.BACK, deg_to_rad(90.0)) * Basis.from_scale(post.scale)
+			post.position = base + Vector3.UP * 0.16
+			var tip := base + heading * Vector3(-POST_HEIGHT - 0.5, 0.0, 0.0)
+			lantern.basis = heading * Basis(Vector3.BACK, deg_to_rad(80.0)) * Basis.from_scale(lantern.scale)
+			lantern.position = tip + Vector3.UP * 0.2
+			shape.size = Vector3(POST_HEIGHT + 0.9, 0.5, 0.55)
+			collision.transform = Transform3D(heading, base + heading * Vector3(-(POST_HEIGHT + 0.9) * 0.5, 0.25, 0.0))
 		else:
-			shape.size = Vector3(0.5, 3.4, 0.5)
-			collision.position = Vector3(spot.x, ground + 1.7, spot.y)
-		body.add_child(collision)
-		if not fallen:
+			post.position = base
+			var arm := MeshInstance3D.new()
+			arm.mesh = beam
+			arm.position = base + Vector3(toward * 0.3, POST_HEIGHT - 0.12, 0.0)
+			lanterns.add_child(arm)
+			# La lanterne pend sous le bout de la potence, au-dessus de la tête du joueur.
+			lantern.position = base + Vector3(toward * 0.58, POST_HEIGHT - 0.17 - 0.39 * 1.6, 0.0)
 			var light := MeshInstance3D.new()
-			light.mesh = bulb
-			light.position = Vector3(spot.x, ground + 3.0, spot.y)
+			light.mesh = wick
+			light.position = lantern.position + Vector3.UP * 0.3
 			add_child(light)
+			shape.size = Vector3(0.5, POST_HEIGHT + 0.3, 0.5)
+			collision.position = base + Vector3.UP * (POST_HEIGHT + 0.3) * 0.5
+		lanterns.add_child(post)
+		lanterns.add_child(lantern)
+		body.add_child(collision)
 
 
 func _add_crater_effects() -> void:
@@ -257,6 +290,13 @@ func _add_crater_effects() -> void:
 			add_child(light)
 		if index < SMOKING_CRATERS:
 			add_child(_smoke(center, crater.z * 0.3, smoke_texture))
+	# Quelques trous d'obus fument encore.
+	for index in SMOKING_IMPACTS:
+		var impact := PlaineTerrain.IMPACTS[index * 3 % PlaineTerrain.IMPACTS.size()]
+		var smoke := _smoke(Vector3(impact.x, terrain.height_at(impact.x, impact.y), impact.y), 0.8, smoke_texture)
+		smoke.amount = 6
+		smoke.scale_amount_max = 1.4
+		add_child(smoke)
 
 
 ## Hauteur de la lave : juste sous le sol au bord du bassin, pour qu'elle ne flotte pas au-dessus.
@@ -264,8 +304,98 @@ func _lava_level(crater: Vector4, radius: float) -> float:
 	var lowest := INF
 	for i in 12:
 		var edge := Vector2.from_angle(TAU * i / 12.0) * radius
-		lowest = minf(lowest, terrain.height_at(crater.x + edge.x, crater.y + edge.y))
+		lowest = minf(lowest, terrain.base_height_at(crater.x + edge.x, crater.y + edge.y))
 	return lowest - 0.08
+
+
+## Coulée de lave : un ruban incandescent au fond du lit, qui suit sa pente d'un cratère à l'autre,
+## avec sa zone qui brûle, ses braises, sa lueur et son grondement.
+func _add_lava_flow() -> void:
+	var points: Array[Vector2] = []
+	var flow := PlaineTerrain.LAVA_FLOW
+	for index in flow.size() - 1:
+		var steps := ceili(flow[index].distance_to(flow[index + 1]) / 1.0)
+		for step in steps:
+			points.append(flow[index].lerp(flow[index + 1], float(step) / steps))
+	points.append(flow[flow.size() - 1])
+	var heights: Array[float] = []
+	for point in points:
+		heights.append(terrain.height_at(point.x, point.y) + PlaineTerrain.FLOW_LAVA_RISE)
+
+	# Ruban un peu plus large que la lave visible : ses bords passent sous les berges.
+	var half := PlaineTerrain.flow_lava_half_width() + 0.5
+	var tool := SurfaceTool.new()
+	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var along := 0.0
+	for index in points.size() - 1:
+		var quad: Array[Vector3] = []
+		for corner in 2:
+			var i := index + corner
+			var tangent := (points[mini(i + 1, points.size() - 1)] - points[maxi(i - 1, 0)]).normalized()
+			var side := Vector2(-tangent.y, tangent.x) * half
+			quad.append(Vector3(points[i].x + side.x, heights[i], points[i].y + side.y))
+			quad.append(Vector3(points[i].x - side.x, heights[i], points[i].y - side.y))
+		var length := points[index].distance_to(points[index + 1])
+		var uvs: Array[Vector2] = [
+			Vector2(along, 0.0), Vector2(along, 1.0), Vector2(along + length, 0.0), Vector2(along + length, 1.0)
+		]
+		along += length
+		for corner: int in [0, 2, 1, 1, 2, 3]:
+			tool.set_uv(uvs[corner])
+			tool.set_normal(Vector3.UP)
+			tool.add_vertex(quad[corner])
+	var material := lava_material.duplicate() as ShaderMaterial
+	material.set_shader_parameter("ribbon", true)
+	var surface := MeshInstance3D.new()
+	surface.name = "LavaFlow"
+	surface.mesh = tool.commit()
+	surface.material_override = material
+	surface.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(surface)
+
+	# Zone qui brûle : des boîtes courtes qui suivent la pente, sous le tablier du pont.
+	var area := Area3D.new()
+	area.name = "LavaFlowHazard"
+	add_child(area)
+	for index in range(0, points.size() - 1, 2):
+		var last := mini(index + 2, points.size() - 1)
+		var a := Vector3(points[index].x, heights[index], points[index].y)
+		var b := Vector3(points[last].x, heights[last], points[last].y)
+		var shape := BoxShape3D.new()
+		shape.size = Vector3(PlaineTerrain.flow_lava_half_width() * 1.8, 1.6, a.distance_to(b) + 0.4)
+		var collision := CollisionShape3D.new()
+		collision.shape = shape
+		var middle := (a + b) * 0.5
+		collision.transform = Transform3D(Basis.looking_at(Vector3(b.x - a.x, 0.0, b.z - a.z)), middle + Vector3.DOWN * 0.5)
+		area.add_child(collision)
+	area.body_entered.connect(func(body: Node3D) -> void: lava_touched.emit(body))
+
+	# Braises, lueurs et grondement le long du lit.
+	var ember_material := _ember_material()
+	for fraction in [0.12, 0.38, 0.62, 0.88]:
+		var i := int(fraction * (points.size() - 1))
+		var spot := Vector3(points[i].x, heights[i], points[i].y)
+		add_child(_embers(spot, 2.6, ember_material))
+		# Deux lueurs suffisent : chaque lumière coûte cher au rendu web.
+		if fraction < 0.3 or fraction > 0.7:
+			continue
+		var light := FlickeringLight.new()
+		light.light_color = Color(1.0, 0.4, 0.12)
+		light.light_energy = 2.2
+		light.omni_range = 9.0
+		light.flicker = 0.2
+		light.speed = 1.6
+		light.position = spot + Vector3.UP * 1.6
+		add_child(light)
+		if lava_sound and fraction > 0.3 and fraction < 0.7:
+			var rumble := AudioStreamPlayer3D.new()
+			rumble.stream = lava_sound
+			rumble.position = spot
+			rumble.unit_size = 3.0
+			rumble.max_distance = 18.0
+			rumble.volume_db = -6.0
+			rumble.autoplay = not Engine.is_editor_hint()
+			add_child(rumble)
 
 
 func _lava_surface(center: Vector3, radius: float) -> MeshInstance3D:
@@ -375,7 +505,7 @@ func _smoke_texture() -> GradientTexture2D:
 	return texture
 
 
-## Tire un point libre : ni sur les ruines, ni sur le chemin, ni au fond d'un cratère.
+## Tire un point libre : ni sur les ruines, ni sur le chemin, ni sur un replat, ni dans un cratère ou dans la coulée.
 func _random_spot(crater_margin: float) -> Vector2:
 	var spot := Vector2.ZERO
 	for attempt in 40:
@@ -386,11 +516,20 @@ func _random_spot(crater_margin: float) -> Vector2:
 
 
 func _is_free(spot: Vector2, crater_margin: float) -> bool:
-	if absf(spot.x) < 15.0 and absf(spot.y) < 15.0:
+	# Les abords des ruines gardent leur propre décor, posé par tools/build_plaine.py.
+	if spot.length() < 23.5:
 		return false
 	if absf(spot.x) < 4.5 and spot.y > 0.0:
 		return false
-	if spot.distance_to(Vector2(PlaineTerrain.CAMP.x, PlaineTerrain.CAMP.y)) < PlaineTerrain.CAMP.z + 2.0:
+	for site in PlaineTerrain.SITES:
+		if spot.distance_to(Vector2(site.x, site.y)) < site.z + 2.0:
+			return false
+	for clearing in CLEARINGS:
+		if spot.distance_to(Vector2(clearing.x, clearing.y)) < clearing.z:
+			return false
+	if PlaineTerrain.flow_distance(spot.x, spot.y) < PlaineTerrain.FLOW_HALF_WIDTH + crater_margin * 1.5:
+		return false
+	if PlaineTerrain.impact_ratio(spot.x, spot.y) < 0.7 + crater_margin * 0.4:
 		return false
 	for crater in PlaineTerrain.CRATERS:
 		if Vector2(spot.x - crater.x, spot.y - crater.y).length() < crater.z * crater_margin:
@@ -419,6 +558,24 @@ func _add_multimesh(
 	instance.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 	add_child(instance)
 	return instance
+
+
+## Petits détails qui s'effacent au loin : un MultiMesh par case de CHUNK_SIZE mètres. Godot mesure la distance
+## d'effacement jusqu'au centre de la boîte de chaque MultiMesh : avec une seule boîte pour toute la carte, tout
+## s'effaçait d'un coup, même sous les pieds du joueur, dès qu'il s'éloignait du centre.
+func _add_chunked_multimesh(mesh: Mesh, transforms: Array[Transform3D], material: Material) -> void:
+	var cells := {}
+	for item in transforms:
+		var cell := Vector2i(floori(item.origin.x / CHUNK_SIZE), floori(item.origin.z / CHUNK_SIZE))
+		if not cells.has(cell):
+			cells[cell] = []
+		(cells[cell] as Array).append(item)
+	for cell: Vector2i in cells:
+		var items: Array[Transform3D] = []
+		items.assign(cells[cell])
+		var instance := _add_multimesh(mesh, items, material)
+		instance.name = "Detail%d_%d_%d" % [get_child_count(), cell.x, cell.y]
+		instance.visibility_range_end_margin = CHUNK_FADE
 
 
 func _flat_material(color: Color) -> StandardMaterial3D:

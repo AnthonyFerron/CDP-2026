@@ -12,9 +12,13 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="10_hud"]
 [ext_resource type="Script" path="res://scripts/interactable.gd" id="11_interactable"]
 [ext_resource type="Script" path="res://scripts/readable.gd" id="12_readable"]
+[ext_resource type="Script" path="res://scripts/sign_board.gd" id="13_sign"]
+[ext_resource type="PackedScene" path="res://scenes/levels/plaine/plaine_battlefield.tscn" id="14_battlefield"]
+[ext_resource type="Shader" path="res://scenes/levels/plaine/library_floor.gdshader" id="15_floor"]
+[ext_resource type="FontFile" path="res://assets/fonts/Lora.ttf" id="16_lora"]
+[ext_resource type="AudioStream" path="res://assets/audio/stone_door.wav" id="17_stone"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/statue_obelisk.glb" id="92_obelisk"]
 [ext_resource type="Script" path="res://scenes/levels/plaine/searchable_book.gd" id="40_searchable"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/signpost.glb" id="13_signpost"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/grass_large.glb" id="20_grass_large"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/grass_leafsLarge.glb" id="21_grass_leafsLarge"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/stone_smallA.glb" id="22_stone_smallA"]
@@ -26,16 +30,17 @@
 [ext_resource type="Script" path="res://scripts/flickering_light.gd" id="30_flicker"]
 [ext_resource type="Shader" path="res://scenes/levels/plaine/lava.gdshader" id="31_lava"]
 [ext_resource type="Shader" path="res://scenes/levels/plaine/soot.gdshader" id="32_soot"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/lantern.glb" id="33_lantern"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/lantern-candle.glb" id="33_lantern"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/pillar-wood.glb" id="41_post"]
 [ext_resource type="AudioStream" path="res://assets/audio/plaine_wind.wav" id="34_wind"]
 [ext_resource type="AudioStream" path="res://assets/audio/plaine_lava.wav" id="35_lava_sound"]
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_ash_1.wav" id="36_step1"]
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_ash_2.wav" id="37_step2"]
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_ash_3.wav" id="38_step3"]
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_ash_4.wav" id="39_step4"]
-
 [ext_resource type="Script" path="res://scenes/levels/hub/volcano.gd" id="90_volcano"]
-[sub_resource type="BoxShape3D" id="BoxShape3D_plaque"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_obelisk"]
 size = Vector3(1.1, 3.0, 1.1)
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ash"]
@@ -100,17 +105,25 @@ render_priority = 1
 shader = ExtResource("32_soot")
 shader_parameter/soot_noise = SubResource("NoiseTexture2D_flow")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_library_floor"]
-albedo_color = Color(0.3, 0.25, 0.22, 1)
-roughness = 1.0
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_interior_soot"]
+render_priority = 1
+shader = ExtResource("32_soot")
+shader_parameter/soot_noise = SubResource("NoiseTexture2D_flow")
+shader_parameter/soot_color = Color(0.6, 0.53, 0.5, 1)
+shader_parameter/base_height = 2.2
+shader_parameter/floor_height = -40.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_library_floor"]
+render_priority = 0
+shader = ExtResource("15_floor")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_library_ceiling"]
-albedo_color = Color(0.14, 0.12, 0.12, 1)
+albedo_color = Color(0.13, 0.1, 0.09, 1)
 roughness = 1.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_library_floor"]
-material = SubResource("StandardMaterial3D_library_floor")
-size = Vector3(13, 0.5, 45)
+material = SubResource("ShaderMaterial_library_floor")
+size = Vector3(13, 0.5, 39.2)
 
 [sub_resource type="BoxMesh" id="BoxMesh_library_ceiling"]
 material = SubResource("StandardMaterial3D_library_ceiling")
@@ -119,6 +132,21 @@ size = Vector3(13, 0.5, 45)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_stone"]
 albedo_color = Color(0.32, 0.3, 0.32, 1)
 roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_slab"]
+albedo_color = Color(0.36, 0.33, 0.33, 1)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_inscription"]
+albedo_color = Color(0.5, 0.47, 0.44, 1)
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_stele"]
+material = SubResource("StandardMaterial3D_stone")
+size = Vector3(1.3, 1.5, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_stele"]
+size = Vector3(1.3, 1.5, 0.4)
 
 [sub_resource type="BoxMesh" id="BoxMesh_tablet_base"]
 material = SubResource("StandardMaterial3D_stone")
@@ -134,19 +162,29 @@ emission_energy_multiplier = 0.8
 material = SubResource("StandardMaterial3D_tablet")
 size = Vector3(1.5, 0.12, 1.0)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_slots"]
+albedo_color = Color(0.08, 0.07, 0.07, 1)
+emission_enabled = true
+emission = Color(0.95, 0.4, 0.12, 1)
+emission_energy_multiplier = 0.3
+
+[sub_resource type="BoxMesh" id="BoxMesh_tablet_slot"]
+material = SubResource("StandardMaterial3D_slots")
+size = Vector3(0.38, 0.02, 0.3)
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_tablet"]
 size = Vector3(1.5, 1.2, 1.0)
 
 [sub_resource type="BoxMesh" id="BoxMesh_stone"]
-material = SubResource("StandardMaterial3D_stone")
+material = SubResource("StandardMaterial3D_slab")
 size = Vector3(3.2, 3.2, 0.9)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_stone"]
 size = Vector3(3.2, 3.2, 0.9)
 
-[sub_resource type="BoxMesh" id="BoxMesh_pedestal"]
-material = SubResource("StandardMaterial3D_stone")
-size = Vector3(0.9, 1.0, 0.9)
+[sub_resource type="BoxMesh" id="BoxMesh_inscription"]
+material = SubResource("StandardMaterial3D_inscription")
+size = Vector3(3.2, 1.35, 0.08)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_book"]
 albedo_color = Color(0.5, 0.08, 0.05, 1)
@@ -156,11 +194,65 @@ emission_energy_multiplier = 0.6
 
 [sub_resource type="BoxMesh" id="BoxMesh_book"]
 material = SubResource("StandardMaterial3D_book")
-size = Vector3(0.6, 0.14, 0.8)
+size = Vector3(0.52, 0.13, 0.66)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_book_pages"]
+albedo_color = Color(0.93, 0.86, 0.66, 1)
+emission_enabled = true
+emission = Color(1, 0.85, 0.5, 1)
+emission_energy_multiplier = 0.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_book_pages"]
+material = SubResource("StandardMaterial3D_book_pages")
+size = Vector3(0.5, 0.1, 0.6)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_book_clasp"]
+albedo_color = Color(0.85, 0.65, 0.25, 1)
+metallic = 0.7
+roughness = 0.35
+emission_enabled = true
+emission = Color(1, 0.75, 0.3, 1)
+emission_energy_multiplier = 1.2
+
+[sub_resource type="BoxMesh" id="BoxMesh_book_clasp"]
+material = SubResource("StandardMaterial3D_book_clasp")
+size = Vector3(0.08, 0.14, 0.24)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_motes"]
+shading_mode = 0
+billboard_mode = 3
+transparency = 1
+vertex_color_use_as_albedo = true
+albedo_color = Color(2.2, 1.6, 0.7, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_mote"]
+material = SubResource("StandardMaterial3D_motes")
+size = Vector2(0.045, 0.045)
+
+[sub_resource type="Gradient" id="Gradient_motes"]
+colors = PackedColorArray(1, 0.85, 0.45, 0, 1, 0.8, 0.4, 1, 1, 0.6, 0.25, 0)
+offsets = PackedFloat32Array(0, 0.3, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_journal_cover"]
+albedo_color = Color(0.28, 0.17, 0.1, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_journal_pages"]
+albedo_color = Color(0.86, 0.79, 0.62, 1)
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_journal_cover"]
+material = SubResource("StandardMaterial3D_journal_cover")
+size = Vector3(0.5, 0.025, 0.34)
+
+[sub_resource type="BoxMesh" id="BoxMesh_journal_page"]
+material = SubResource("StandardMaterial3D_journal_pages")
+size = Vector3(0.23, 0.02, 0.32)
 
 [node name="Plaine" type="Node3D"]
 script = ExtResource("1_plaine")
 soot_material = SubResource("ShaderMaterial_soot")
+interior_soot_material = SubResource("ShaderMaterial_interior_soot")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_plaine")
@@ -184,28 +276,31 @@ terrain = NodePath("../Terrain")
 grass_models = Array[PackedScene]([ExtResource("20_grass_large"), ExtResource("21_grass_leafsLarge")])
 small_rock_models = Array[PackedScene]([ExtResource("22_stone_smallA"), ExtResource("23_stone_smallD"), ExtResource("24_stone_smallFlatA")])
 large_rock_models = Array[PackedScene]([ExtResource("25_stone_largeA"), ExtResource("26_stone_largeC"), ExtResource("27_stone_tallB")])
+post_model = ExtResource("41_post")
 lantern_model = ExtResource("33_lantern")
 lava_material = SubResource("ShaderMaterial_lava")
 lava_sound = ExtResource("35_lava_sound")
 
 [node name="Ruins" parent="Exterior" instance=ExtResource("5_ruins")]
 
+[node name="Battlefield" parent="Exterior" instance=ExtResource("14_battlefield")]
+
 [node name="DoorLightLeft" type="OmniLight3D" parent="Exterior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.72, 2.3, 9.5)
 script = ExtResource("30_flicker")
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3, 3.2, 9.5)
 light_color = Color(1, 0.62, 0.3, 1)
 light_energy = 0.9
 omni_range = 8.0
 
 [node name="DoorLightRight" type="OmniLight3D" parent="Exterior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.72, 2.3, 9.5)
 script = ExtResource("30_flicker")
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 3.2, 9.5)
 light_color = Color(1, 0.62, 0.3, 1)
 light_energy = 0.9
 omni_range = 8.0
 
 [node name="EntryDoor" type="Node3D" parent="Exterior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 8.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 8.6)
 script = ExtResource("11_interactable")
 prompt = "Entrer dans la bibliothèque"
 radius = 2.6
@@ -218,17 +313,125 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 56)
 closed_prompt = "Portail éteint"
 open_prompt = "Retourner au hub"
 
-[node name="Sign" parent="Exterior" instance=ExtResource("13_signpost")]
-transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, -4.5, 0, 46)
+[node name="EntrySign" type="Node3D" parent="Exterior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6, 0, 46)
+script = ExtResource("13_sign")
+text = "Les plaines d'Hexcole"
+board_size = Vector2(1.8, 0.62)
+board_height = 1.75
+line_height = 0.2
 
-[node name="SignText" type="Label3D" parent="Exterior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 3.4, 46)
-pixel_size = 0.007
-billboard = 1
-modulate = Color(0.96, 0.85, 0.65, 1)
-text = "La Plaine"
-font_size = 64
-outline_size = 16
+[node name="Obelisk" type="Node3D" parent="Exterior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.6, 0, 15.5)
+
+[node name="Model" parent="Exterior/Obelisk" instance=ExtResource("92_obelisk")]
+transform = Transform3D(3.4, 0, 0, 0, 3.4, 0, 0, 0, 3.4, 0, -0.05, 0)
+
+[node name="Body" type="StaticBody3D" parent="Exterior/Obelisk"]
+
+[node name="Shape" type="CollisionShape3D" parent="Exterior/Obelisk/Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("BoxShape3D_obelisk")
+
+[node name="Lore" type="Node3D" parent="Exterior"]
+
+[node name="Plaque" type="Node3D" parent="Exterior/Lore"]
+transform = Transform3D(0.76604, 0, 0.64279, 0, 1, 0, -0.64279, 0, 0.76604, -7.28, 1, 17.07)
+script = ExtResource("12_readable")
+title = "La stèle de la bibliothèque"
+body = "Bibliothèque d'Hexcole. Fondée au temps des anciens bâtisseurs pour garder le savoir de Codia, au milieu des prairies qui couvraient alors les plaines. Sous la date, une devise : « Un projet bien mené commence par un but, et s'achève par un bilan. »"
+prompt = "Lire la stèle"
+radius = 2.6
+
+[node name="Stele" type="MeshInstance3D" parent="Exterior/Lore/Plaque"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, -0.62)
+mesh = SubResource("BoxMesh_stele")
+
+[node name="Body" type="StaticBody3D" parent="Exterior/Lore/Plaque"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, -0.62)
+
+[node name="Shape" type="CollisionShape3D" parent="Exterior/Lore/Plaque/Body"]
+shape = SubResource("BoxShape3D_stele")
+
+[node name="Sign" type="Node3D" parent="Exterior/Lore/Plaque"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, -0.42)
+script = ExtResource("13_sign")
+text = "Bibliothèque d'Hexcole"
+style = 1
+mount = 1
+board_size = Vector2(1.1, 0.62)
+board_height = 1.0
+line_height = 0.16
+
+[node name="Journal" type="Node3D" parent="Exterior/Lore"]
+transform = Transform3D(0.98481, 0, -0.17365, 0, 1, 0, 0.17365, 0, 0.98481, 15.65, 0.86, 44.35)
+script = ExtResource("12_readable")
+title = "Le journal d'un soldat"
+body = "Jour douze. Les troupes de Vibelandia ont mis le feu à la bibliothèque à l'aube. Le capitaine Aubrac nous a ordonné de charger les livres sur les charrettes, mais le Projenomicon était déjà descendu sous la terre, avec la bibliothécaire et son registre. Si quelqu'un lit ces lignes : les archives sont sous les ruines, et leurs pages ont gardé l'ordre de la discussion."
+prompt = "Lire le journal"
+radius = 2.4
+
+[node name="Cover" type="MeshInstance3D" parent="Exterior/Lore/Journal"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.13, 0)
+mesh = SubResource("BoxMesh_journal_cover")
+
+[node name="PageLeft" type="MeshInstance3D" parent="Exterior/Lore/Journal"]
+transform = Transform3D(0.99863, -0.05234, 0, 0.05234, 0.99863, 0, 0, 0, 1, -0.12, -0.108, 0)
+mesh = SubResource("BoxMesh_journal_page")
+
+[node name="PageRight" type="MeshInstance3D" parent="Exterior/Lore/Journal"]
+transform = Transform3D(0.99863, 0.05234, 0, -0.05234, 0.99863, 0, 0, 0, 1, 0.12, -0.108, 0)
+mesh = SubResource("BoxMesh_journal_page")
+
+[node name="Graves" type="Node3D" parent="Exterior/Lore"]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 16.98, 1, 50.5)
+script = ExtResource("12_readable")
+title = "La stèle des défenseurs"
+body = "Aux gardes de la bibliothèque d'Hexcole, tombés pour que les livres de Codia ne brûlent pas. Ils ont tenu la barricade trois jours contre les troupes de Vibelandia, jusqu'à ce que leurs catapultes mettent le feu au toit. Leurs noms sont gravés au dos de la pierre : Aldric, Brune, Corentin, Doria, Edmond et Faye."
+prompt = "Lire la stèle"
+radius = 2.6
+
+[node name="Stele" type="MeshInstance3D" parent="Exterior/Lore/Graves"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, -0.62)
+mesh = SubResource("BoxMesh_stele")
+
+[node name="Body" type="StaticBody3D" parent="Exterior/Lore/Graves"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, -0.62)
+
+[node name="Shape" type="CollisionShape3D" parent="Exterior/Lore/Graves/Body"]
+shape = SubResource("BoxShape3D_stele")
+
+[node name="Sign" type="Node3D" parent="Exterior/Lore/Graves"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, -0.42)
+script = ExtResource("13_sign")
+text = "Aux défenseurs de la bibliothèque"
+style = 1
+mount = 1
+board_size = Vector2(1.1, 0.62)
+board_height = 1.0
+line_height = 0.13
+
+[node name="Evacuation" type="Node3D" parent="Exterior/Lore"]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 7.7, 1.45, 44.5)
+script = ExtResource("12_readable")
+title = "L'ordre d'évacuation"
+body = "Par ordre du capitaine Aubrac : chaque charrette part pleine vers le château. Les registres et les chroniques d'abord, les contes ensuite. Personne ne retourne dans les flammes. Les archives du sous-sol restent fermées : la bibliothécaire en garde le secret."
+prompt = "Lire l'affiche"
+radius = 2.4
+
+[node name="Sign" type="Node3D" parent="Exterior/Lore/Evacuation"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.45, -0.3)
+script = ExtResource("13_sign")
+text = "Ordre d'évacuation"
+style = 2
+board_size = Vector2(1.1, 0.8)
+board_height = 1.45
+line_height = 0.14
+roof = true
+
+[node name="Volcano" type="Node3D" parent="Exterior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, -6, -215)
+script = ExtResource("90_volcano")
 
 [node name="Interior" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -40, 0)
@@ -236,7 +439,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -40, 0)
 [node name="Library" parent="Interior" instance=ExtResource("6_interior")]
 
 [node name="Floor" type="MeshInstance3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, -20)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, -17.1)
 mesh = SubResource("BoxMesh_library_floor")
 
 [node name="Ceiling" type="MeshInstance3D" parent="Interior"]
@@ -244,42 +447,42 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.25, -20)
 mesh = SubResource("BoxMesh_library_ceiling")
 
 [node name="LightA" type="OmniLight3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8, 2.9, -6.2)
 script = ExtResource("30_flicker")
 flicker = 0.12
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, -6)
 light_color = Color(1, 0.72, 0.45, 1)
 light_energy = 2.5
 omni_range = 13.0
 
 [node name="LightB" type="OmniLight3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, -18)
 script = ExtResource("30_flicker")
 flicker = 0.12
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, -18)
 light_color = Color(1, 0.72, 0.45, 1)
 light_energy = 2.5
 omni_range = 13.0
 
 [node name="LightC" type="OmniLight3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 3, -31.5)
 script = ExtResource("30_flicker")
 flicker = 0.12
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2, -30)
 light_color = Color(1, 0.6, 0.35, 1)
 light_energy = 2.5
 omni_range = 13.0
 
-[node name="LightAlcove" type="OmniLight3D" parent="Interior"]
+[node name="LightCrypt" type="OmniLight3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, -41.5)
 script = ExtResource("30_flicker")
 flicker = 0.12
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -38.2)
-light_color = Color(1, 0.4, 0.2, 1)
-light_energy = 2.0
+light_color = Color(1, 0.55, 0.3, 1)
+light_energy = 1.4
 omni_range = 6.0
 
 [node name="InsideSpawn" type="Marker3D" parent="Interior"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -2)
 
 [node name="ExitDoor" type="Node3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, -0.8)
 script = ExtResource("11_interactable")
 prompt = "Sortir de la bibliothèque"
 radius = 2.0
@@ -287,16 +490,16 @@ radius = 2.0
 [node name="Books" type="Node3D" parent="Interior"]
 
 [node name="West03" type="Node3D" parent="Interior/Books"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3, 1.5, -3)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -4.92, 1.177, -2.8)
 script = ExtResource("40_searchable")
 title = "Registre des emprunts"
-body = "Une longue liste de noms et de dates, interrompue le jour où la guerre a atteint la Plaine."
+body = "Une longue liste de noms et de dates, interrompue le jour où la guerre contre Vibelandia a atteint les plaines."
 fragment = 2
 cover_color = Color(0.45, 0.18, 0.12, 1)
 radius = 2.0
 
 [node name="West09" type="Node3D" parent="Interior/Books"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3, 1.5, -9)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -4.92, 1.945, -9.2)
 script = ExtResource("40_searchable")
 title = "Manuel de reliure"
 body = "Comment coudre un cahier, encoller un dos et protéger un livre de l'humidité."
@@ -305,7 +508,7 @@ cover_color = Color(0.2, 0.3, 0.45, 1)
 radius = 2.0
 
 [node name="West15" type="Node3D" parent="Interior/Books"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3, 1.5, -15)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -4.92, 1.177, -14.85)
 script = ExtResource("40_searchable")
 title = "Chroniques de Codia"
 body = "Le règne de Codeon V, raconté par un scribe trop flatteur pour être honnête."
@@ -314,16 +517,16 @@ cover_color = Color(0.35, 0.28, 0.15, 1)
 radius = 2.0
 
 [node name="West21" type="Node3D" parent="Interior/Books"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3, 1.5, -21)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -4.92, 1.945, -21.75)
 script = ExtResource("40_searchable")
-title = "Herbier de la Plaine"
-body = "Des fleurs séchées entre les pages. Aucune ne pousse plus aujourd'hui."
+title = "Herbier d'Hexcole"
+body = "Des fleurs séchées entre les pages, cueillies quand les plaines étaient encore des prairies. Aucune ne pousse plus aujourd'hui."
 fragment = -1
 cover_color = Color(0.2, 0.35, 0.2, 1)
 radius = 2.0
 
 [node name="West27" type="Node3D" parent="Interior/Books"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3, 1.5, -27)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -4.92, 1.945, -26.15)
 script = ExtResource("40_searchable")
 title = "Rapport d'inspection"
 body = "Le dernier rapport des inspecteurs royaux, couvert de remarques sur l'état des archives."
@@ -332,16 +535,16 @@ cover_color = Color(0.4, 0.15, 0.25, 1)
 radius = 2.0
 
 [node name="West33" type="Node3D" parent="Interior/Books"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3, 1.5, -33)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -4.92, 1.177, -33.7)
 script = ExtResource("40_searchable")
 title = "Contes pour enfants"
-body = "L'histoire d'un héros qui terrassa les Quatre Dragons du Chaos. On dirait le portrait de Devlyn, en plus jeune."
+body = "L'histoire d'un héros qui terrassa les Quatre Dragons du Chaos, en l'an 5802. On dirait le portrait de Devlyn, en plus jeune."
 fragment = -1
 cover_color = Color(0.5, 0.35, 0.1, 1)
 radius = 2.0
 
 [node name="East06" type="Node3D" parent="Interior/Books"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.3, 1.5, -6)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 4.92, 1.177, -5.7)
 script = ExtResource("40_searchable")
 title = "Procès-verbaux de clôture"
 body = "Des projets achevés, signés et tamponnés. La bibliothécaire ne laissait rien au hasard."
@@ -350,16 +553,16 @@ cover_color = Color(0.3, 0.2, 0.4, 1)
 radius = 2.0
 
 [node name="East09" type="Node3D" parent="Interior/Books"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.3, 1.5, -9)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 4.92, 1.945, -9.7)
 script = ExtResource("40_searchable")
 title = "Traité d'astronomie"
-body = "Des cartes du ciel d'avant la guerre, quand la fumée du volcan ne cachait pas encore les étoiles."
+body = "Des cartes du ciel d'avant la guerre, quand les cendres ne cachaient pas encore les étoiles au-dessus du Mont Sam Altan."
 fragment = -1
 cover_color = Color(0.15, 0.2, 0.35, 1)
 radius = 2.0
 
 [node name="East18" type="Node3D" parent="Interior/Books"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.3, 1.5, -18)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 4.92, 1.177, -18.3)
 script = ExtResource("40_searchable")
 title = "Carnet de la bibliothécaire"
 body = "Son écriture est nette et pressée. Une page porte seulement : « Prévoir, organiser, suivre, vérifier. »"
@@ -368,16 +571,16 @@ cover_color = Color(0.5, 0.2, 0.1, 1)
 radius = 2.0
 
 [node name="East21" type="Node3D" parent="Interior/Books"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.3, 1.5, -21)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 4.92, 1.945, -21.2)
 script = ExtResource("40_searchable")
 title = "Recettes du royaume"
-body = "Une soupe aux racines, la seule qui se fasse encore au camp des survivants."
+body = "Une soupe aux racines, la seule qui se fasse encore au bunker des survivants."
 fragment = -1
 cover_color = Color(0.45, 0.3, 0.2, 1)
 radius = 2.0
 
 [node name="East30" type="Node3D" parent="Interior/Books"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.3, 1.5, -30)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 4.92, 1.945, -30.3)
 script = ExtResource("40_searchable")
 title = "Livre de comptes"
 body = "Le budget de la bibliothèque, ligne par ligne, jusqu'à la dernière pièce."
@@ -386,13 +589,14 @@ cover_color = Color(0.25, 0.25, 0.25, 1)
 radius = 2.0
 
 [node name="East33" type="Node3D" parent="Interior/Books"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.3, 1.5, -33)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 4.92, 1.177, -33.25)
 script = ExtResource("40_searchable")
 title = "Planning des travaux"
 body = "Un calendrier couvert de tâches et de noms, dont certains sont barrés."
 fragment = 3
 cover_color = Color(0.4, 0.25, 0.1, 1)
 radius = 2.0
+
 [node name="Tablet" type="Node3D" parent="Interior"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -33)
 
@@ -404,6 +608,30 @@ mesh = SubResource("BoxMesh_tablet_base")
 transform = Transform3D(1, 0, 0, 0, 0.9396926, -0.34202015, 0, 0.34202015, 0.9396926, 0, 1.1, 0)
 mesh = SubResource("BoxMesh_tablet_top")
 
+[node name="Slot1" type="MeshInstance3D" parent="Interior/Tablet/Top"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.46, 0.065, -0.21)
+mesh = SubResource("BoxMesh_tablet_slot")
+
+[node name="Slot2" type="MeshInstance3D" parent="Interior/Tablet/Top"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.065, -0.21)
+mesh = SubResource("BoxMesh_tablet_slot")
+
+[node name="Slot3" type="MeshInstance3D" parent="Interior/Tablet/Top"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.46, 0.065, -0.21)
+mesh = SubResource("BoxMesh_tablet_slot")
+
+[node name="Slot4" type="MeshInstance3D" parent="Interior/Tablet/Top"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.46, 0.065, 0.21)
+mesh = SubResource("BoxMesh_tablet_slot")
+
+[node name="Slot5" type="MeshInstance3D" parent="Interior/Tablet/Top"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.065, 0.21)
+mesh = SubResource("BoxMesh_tablet_slot")
+
+[node name="Slot6" type="MeshInstance3D" parent="Interior/Tablet/Top"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.46, 0.065, 0.21)
+mesh = SubResource("BoxMesh_tablet_slot")
+
 [node name="Body" type="StaticBody3D" parent="Interior/Tablet"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Interior/Tablet/Body"]
@@ -411,9 +639,31 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
 shape = SubResource("BoxShape3D_tablet")
 
 [node name="Interactable" type="Node3D" parent="Interior/Tablet"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0.3)
 script = ExtResource("11_interactable")
 prompt = "Examiner la tablette"
 radius = 2.4
+
+[node name="Inscription" type="Node3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9, 0, -35.75)
+
+[node name="Panel" type="MeshInstance3D" parent="Interior/Inscription"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.05, 0.04)
+mesh = SubResource("BoxMesh_inscription")
+
+[node name="Text" type="Label3D" parent="Interior/Inscription"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.05, 0.095)
+pixel_size = 0.0034
+shaded = true
+double_sided = false
+modulate = Color(0.13, 0.1, 0.09, 1)
+text = "Les mots du passé ouvriront le chemin de l'avenir. Mais seul celui qui saura rétablir leur ordre découvrira ce qui se cache derrière cette pierre."
+font = ExtResource("16_lora")
+font_size = 48
+outline_size = 0
+alpha_cut = 1
+autowrap_mode = 3
+width = 860.0
 
 [node name="Stone" type="StaticBody3D" parent="Interior"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, -36.1)
@@ -424,51 +674,53 @@ mesh = SubResource("BoxMesh_stone")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Interior/Stone"]
 shape = SubResource("BoxShape3D_stone")
 
-[node name="Pedestal" type="MeshInstance3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -38.6)
-mesh = SubResource("BoxMesh_pedestal")
-
 [node name="Book" type="Node3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, -38.6)
+transform = Transform3D(1, 0, 0, 0, 0.96593, -0.25882, 0, 0.25882, 0.96593, 0, 0.17, -39.8)
 
 [node name="Mesh" type="MeshInstance3D" parent="Interior/Book"]
 mesh = SubResource("BoxMesh_book")
 
+[node name="Pages" type="MeshInstance3D" parent="Interior/Book"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.025, 0, 0)
+mesh = SubResource("BoxMesh_book_pages")
+
+[node name="Clasp" type="MeshInstance3D" parent="Interior/Book"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0, 0)
+mesh = SubResource("BoxMesh_book_clasp")
+
+[node name="Glow" type="OmniLight3D" parent="Interior/Book"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0.1)
+light_color = Color(1, 0.86, 0.55, 1)
+light_energy = 2.2
+omni_range = 4.0
+
+[node name="Motes" type="CPUParticles3D" parent="Interior/Book"]
+amount = 18
+lifetime = 2.6
+preprocess = 2.6
+mesh = SubResource("QuadMesh_mote")
+emission_shape = 1
+emission_sphere_radius = 0.35
+direction = Vector3(0, 1, 0)
+spread = 25.0
+gravity = Vector3(0, 0.12, 0)
+initial_velocity_min = 0.05
+initial_velocity_max = 0.2
+color_ramp = SubResource("Gradient_motes")
+
 [node name="Interactable" type="Node3D" parent="Interior/Book"]
 script = ExtResource("11_interactable")
 prompt = "Prendre le Projenomicon"
-radius = 2.2
+radius = 3.0
 
-[node name="Lore" type="Node3D" parent="Exterior"]
+[node name="SlabSound" type="AudioStreamPlayer" parent="Interior"]
+stream = ExtResource("17_stone")
+volume_db = -4.0
 
-[node name="Plaque" type="Node3D" parent="Exterior/Lore"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.6, 0, 15.5)
-script = ExtResource("12_readable")
-title = "La plaque de la bibliothèque"
-body = "Bibliothèque royale de Codia, fondée sous le règne de Codeon II pour garder le savoir du royaume. Sous la date, une devise : « Un projet bien mené commence par un but, et s'achève par un bilan. »"
-prompt = "Lire la plaque"
-radius = 2.6
-
-[node name="Model" parent="Exterior/Lore/Plaque" instance=ExtResource("92_obelisk")]
-transform = Transform3D(3.4, 0, 0, 0, 3.4, 0, 0, 0, 3.4, 0, -0.05, 0)
-
-[node name="Body" type="StaticBody3D" parent="Exterior/Lore/Plaque"]
-
-[node name="Shape" type="CollisionShape3D" parent="Exterior/Lore/Plaque/Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
-shape = SubResource("BoxShape3D_plaque")
-
-[node name="Journal" type="Node3D" parent="Exterior/Lore"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.65, 0.8, 44.35)
-script = ExtResource("12_readable")
-title = "Le journal d'un soldat"
-body = "Jour douze. Les flammes ont pris la bibliothèque royale à l'aube. Le capitaine nous a ordonné de sauver les livres, mais le Projenomicon était déjà descendu sous la terre, avec la bibliothécaire et son registre. Si quelqu'un lit ces lignes : les archives sont sous les ruines, et leurs pages ont gardé l'ordre de la discussion."
-prompt = "Lire le journal"
-radius = 2.4
-
-[node name="Volcano" type="Node3D" parent="Exterior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, -6, -215)
-script = ExtResource("90_volcano")
+[node name="Rumble" type="AudioStreamPlayer" parent="Interior"]
+stream = ExtResource("17_stone")
+volume_db = -2.0
+pitch_scale = 0.55
 
 [node name="Player" parent="." instance=ExtResource("9_player")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 50)

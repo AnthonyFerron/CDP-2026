@@ -1,7 +1,8 @@
 @tool
 class_name PlaineTerrain
 extends StaticBody3D
-## Sol de la Plaine : relief brûlé, cratères de lave, chemin et remparts naturels qui ferment la zone.
+## Sol de la Plaine : relief brûlé, cratères de lave, coulée sous le pont, chemin, replats du champ de bataille
+## et remparts naturels qui ferment la zone.
 
 ## Position (x, z), rayon et profondeur de chaque cratère.
 const CRATERS: Array[Vector4] = [
@@ -13,6 +14,15 @@ const CRATERS: Array[Vector4] = [
 	Vector4(22.0, -42.0, 9.0, 2.6),
 	Vector4(-50.0, 28.0, 7.0, 2.0),
 ]
+## Trous d'obus de la guerre contre Vibelandia, sans lave : position (x, z), rayon et profondeur.
+## Ils creusent aussi les replats, mais restent à l'écart du chemin, des ruines et du décor posé.
+const IMPACTS: Array[Vector4] = [
+	Vector4(-36.0, 40.0, 4.0, 1.2), Vector4(-40.0, 2.0, 3.5, 1.0), Vector4(-38.0, -32.0, 4.0, 1.3),
+	Vector4(-6.0, -52.0, 4.0, 1.2), Vector4(6.0, -38.0, 3.5, 1.0), Vector4(36.0, -28.0, 4.0, 1.2),
+	Vector4(48.0, 16.0, 4.5, 1.4), Vector4(38.0, 44.0, 3.5, 1.0), Vector4(-22.0, 2.0, 3.0, 0.9),
+	Vector4(24.0, 8.0, 3.5, 1.1), Vector4(-52.0, 6.0, 3.5, 1.0), Vector4(54.0, -18.0, 3.5, 1.1),
+	Vector4(-12.0, 56.0, 3.0, 0.9), Vector4(10.0, 58.0, 3.0, 0.9),
+]
 ## Part du rayon d'un cratère recouverte par la lave.
 const LAVA_RATIO := 0.6
 const SIZE := 170.0
@@ -21,12 +31,26 @@ const CELL_SIZE := 1.25
 const PLAY_RADIUS := 68.0
 const BORDER_WIDTH := 9.0
 const BORDER_HEIGHT := 16.0
+## Mur invisible au pied des remparts : rien ne se joue au-delà, et la pente ne doit pas mener hors du monde.
+const LIMIT_RADIUS := 66.5
+const LIMIT_HEIGHT := 70.0
 const RUINS_RADIUS := 24.0
 const PATH_HALF_WIDTH := 5.0
 ## Chemin de cendre tassée entre le portail et la porte de la bibliothèque.
 const TRAIL_START := 9.0
 const TRAIL_END := 54.0
 const TRAIL_HALF_WIDTH := 1.9
+
+## Coulée de lave qui relie deux cratères et coupe le chemin sous le pont de pierre : points (x, z) de son lit,
+## comme dans tools/build_plaine.py. Le lit traverse le chemin en ligne droite, d'ouest en est, sous le pont.
+const LAVA_FLOW: Array[Vector2] = [
+	Vector2(21.0, 26.8), Vector2(14.0, 29.2), Vector2(6.5, 29.5), Vector2(-6.5, 29.5),
+	Vector2(-13.5, 27.2), Vector2(-22.0, 21.0),
+]
+const FLOW_HALF_WIDTH := 3.2
+const FLOW_DEPTH := 1.6
+## Hauteur de la lave au-dessus du fond du lit : elle en occupe le milieu.
+const FLOW_LAVA_RISE := 0.7
 
 const COLOR_ASH := Color(0.2, 0.18, 0.2)
 const COLOR_SOOT := Color(0.11, 0.095, 0.11)
@@ -48,15 +72,61 @@ func _ready() -> void:
 	_relief.seed = 2026
 	_relief.frequency = 0.035
 	_build()
+	_build_limit()
 
 
 func height_at(x: float, z: float) -> float:
+	var height := base_height_at(x, z) + _flow_profile(x, z)
+	for impact in IMPACTS:
+		height += _crater_profile(x, z, impact)
+	return height
+
+
+## Part du rayon d'un trou d'obus où rien ne doit être posé : son fond et ses pentes.
+static func impact_ratio(x: float, z: float) -> float:
+	var best := INF
+	for impact in IMPACTS:
+		best = minf(best, Vector2(x - impact.x, z - impact.y).length() / impact.z)
+	return best
+
+
+## Hauteur du sol sans le lit de la coulée : sert à caler la lave des cratères sur leur bord.
+func base_height_at(x: float, z: float) -> float:
 	var height := _relief.get_noise_2d(x, z) * 0.8
 	for crater in CRATERS:
 		height += _crater_profile(x, z, crater)
 	height *= 1.0 - _flat_mask(x, z)
 	var distance := Vector2(x, z).length()
 	return height + BORDER_HEIGHT * smoothstep(PLAY_RADIUS, PLAY_RADIUS + BORDER_WIDTH, distance)
+
+
+## Distance horizontale au milieu du lit de la coulée.
+static func flow_distance(x: float, z: float) -> float:
+	var point := Vector2(x, z)
+	var best := INF
+	for index in LAVA_FLOW.size() - 1:
+		var a := LAVA_FLOW[index]
+		var b := LAVA_FLOW[index + 1]
+		var t := clampf((point - a).dot(b - a) / (b - a).length_squared(), 0.0, 1.0)
+		best = minf(best, point.distance_to(a.lerp(b, t)))
+	return best
+
+
+## Demi-largeur de la lave dans le lit, là où elle affleure les berges.
+static func flow_lava_half_width() -> float:
+	return FLOW_HALF_WIDTH * sqrt(FLOW_LAVA_RISE / FLOW_DEPTH)
+
+
+## Lit en creux de la coulée, qui s'efface au fond des cratères où elle se jette.
+func _flow_profile(x: float, z: float) -> float:
+	var ratio := flow_distance(x, z) / FLOW_HALF_WIDTH
+	if ratio >= 1.0:
+		return 0.0
+	var fade := 1.0
+	for crater in CRATERS:
+		var inside := Vector2(x - crater.x, z - crater.y).length() / crater.z
+		fade = minf(fade, smoothstep(0.45, 0.85, inside))
+	return -FLOW_DEPTH * (1.0 - ratio * ratio) * fade
 
 
 ## Hauteur du sol tel qu'il est maillé, à l'interpolation de ses triangles : c'est sur elle que le décor se pose.
@@ -80,14 +150,23 @@ func _crater_profile(x: float, z: float, crater: Vector4) -> float:
 	return bowl + rim
 
 
-## Vaut 1 sous les ruines et sur le chemin du portail, où le sol doit rester plat.
 ## Replat du campement des soldats, au bord du chemin : (x, z, rayon), comme dans tools/build_plaine.py.
 const CAMP := Vector3(14.0, 42.0, 7.0)
+## Replats du champ de bataille, où le décor est posé à plat : (x, z, rayon), comme SITES dans tools/build_plaine.py.
+const SITES: Array[Vector3] = [
+	CAMP,
+	Vector3(22.5, 50.5, 4.5),  # Tombes des défenseurs, derrière le camp.
+	Vector3(-14.0, 39.0, 6.5),  # Engins de siège brisés.
+	Vector3(-23.0, 52.0, 7.5),  # Tour de guet effondrée.
+	Vector3(17.0, -22.0, 5.0),  # Batterie de balistes, derrière la bibliothèque.
+]
 
 
+## Vaut 1 sous les ruines, sur le chemin du portail et sur les replats, où le sol doit rester plat.
 func _flat_mask(x: float, z: float) -> float:
 	var ruins := 1.0 - smoothstep(RUINS_RADIUS, RUINS_RADIUS + 8.0, Vector2(x, z).length())
-	ruins = maxf(ruins, 1.0 - smoothstep(CAMP.z, CAMP.z + 5.0, Vector2(x - CAMP.x, z - CAMP.y).length()))
+	for site in SITES:
+		ruins = maxf(ruins, 1.0 - smoothstep(site.z, site.z + 5.0, Vector2(x - site.x, z - site.y).length()))
 	var path := 1.0 - smoothstep(PATH_HALF_WIDTH, PATH_HALF_WIDTH + 4.0, absf(x))
 	return maxf(ruins, path if z > 0.0 else 0.0)
 
@@ -99,6 +178,13 @@ func _face_color(x: float, z: float) -> Color:
 		var ratio := Vector2(x - crater.x, z - crater.y).length() / crater.z
 		if ratio < 1.15:
 			color = color.lerp(COLOR_CRATER, smoothstep(1.15, 0.75, ratio))
+	var bed := flow_distance(x, z) / FLOW_HALF_WIDTH
+	if bed < 1.3:
+		color = color.lerp(COLOR_CRATER, smoothstep(1.3, 0.8, bed))
+	# Les trous d'obus sont noircis, plus sombres au fond.
+	var impact := impact_ratio(x, z)
+	if impact < 1.3:
+		color = color.lerp(COLOR_SOOT * 0.6, smoothstep(1.3, 0.3, impact))
 	var wander := absf(x + sin(z * 0.15) * 0.8)
 	var trail := (1.0 - smoothstep(TRAIL_HALF_WIDTH, TRAIL_HALF_WIDTH + 1.0, wander))
 	trail *= smoothstep(TRAIL_START, TRAIL_START + 2.0, z) * smoothstep(TRAIL_END, TRAIL_END - 3.0, z)
@@ -116,6 +202,12 @@ func _vertex_glow(x: float, z: float) -> Vector2:
 		var ratio := Vector2(x - crater.x, z - crater.y).length() / crater.z
 		glow = maxf(glow, smoothstep(LAVA_RATIO + 0.3, LAVA_RATIO - 0.05, ratio))
 		cracks *= smoothstep(LAVA_RATIO * 0.9, LAVA_RATIO + 0.15, ratio)
+	# La coulée chauffe ses berges et y fait courir des veines de braise.
+	var lava_edge := flow_lava_half_width() / FLOW_HALF_WIDTH
+	var bed := flow_distance(x, z) / FLOW_HALF_WIDTH
+	glow = maxf(glow, smoothstep(lava_edge + 0.45, lava_edge - 0.05, bed))
+	var heat := 0.8 * (1.0 - smoothstep(1.0, 2.2, bed))
+	cracks = maxf(cracks, heat) * smoothstep(lava_edge, lava_edge + 0.2, bed)
 	return Vector2(cracks, glow)
 
 
@@ -187,3 +279,20 @@ func _build() -> void:
 	var collision := CollisionShape3D.new()
 	collision.shape = shape
 	add_child(collision)
+
+
+## Mur invisible en cercle au pied des remparts, comme celui du hub : des panneaux qui se chevauchent, assez hauts
+## pour qu'aucun saut, même depuis un toit ou un rocher, ne passe par-dessus.
+func _build_limit() -> void:
+	var segments := 72
+	var length := TAU * LIMIT_RADIUS / segments + 0.6
+	for index in segments:
+		var angle := TAU * index / segments
+		var shape := BoxShape3D.new()
+		shape.size = Vector3(length, LIMIT_HEIGHT, 1.0)
+		var collision := CollisionShape3D.new()
+		collision.name = "Limit%d" % index
+		collision.shape = shape
+		collision.position = Vector3(cos(angle) * LIMIT_RADIUS, LIMIT_HEIGHT * 0.5 - 15.0, sin(angle) * LIMIT_RADIUS)
+		collision.rotation.y = -angle + PI * 0.5
+		add_child(collision)

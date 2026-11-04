@@ -6,7 +6,7 @@ extends CanvasLayer
 ## Indices de chaque zone, du plus vague au plus précis.
 const ZONE_HINTS := {
 	&"plaine": [
-		"Six fragments de la conversation oubliée sont cachés dans les livres de la bibliothèque. Entrez dans les ruines et fouillez les étagères.",
+		"Six fragments de la conversation sont cachés dans des livres de la bibliothèque, sous les ruines. Sur les étagères, cherchez les livres qui dépassent de leur rangée, un signet pendu sous eux.",
 		"La conversation suit les étapes d'un projet : on définit d'abord ce qu'il faut faire et pourquoi, puis on prépare, on organise et on suit le travail.",
 		"La bibliothécaire ouvre la discussion en parlant d'organiser la restauration. L'employé la conclut : vérifier le travail, puis clôturer le projet.",
 	],
