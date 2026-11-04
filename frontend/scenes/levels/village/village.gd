@@ -1,9 +1,9 @@
 class_name Village
 extends Node3D
-## Zone du Village détruit : l'enceinte forcée, la place du marché, la mairie et les deux moulins.
-## L'énigme des cinq codes oubliés se joue dans la mairie : dix fragments de papier y sont cachés, et le
-## dispositif du bureau du maire, une fois ses cinq codes résolus, fait glisser la bibliothèque devant la
-## salle secrète du Codonomicon.
+## Zone du Village détruit par les attaques de Vibelandia : l'enceinte forcée, la place du marché, la mairie (le
+## dernier bâtiment intact) et les deux moulins. L'énigme des cinq langages oubliés se joue dans la mairie : dix
+## fragments de papier y sont cachés, et le dispositif du bureau du maire, une fois ses cinq codes résolus, fait
+## glisser la bibliothèque devant la salle secrète du Codonomicon.
 
 signal book_collected(book_id: StringName)
 
@@ -27,6 +27,11 @@ const FRAGMENTS: Array[String] = [
 ]
 ## Distance parcourue par la bibliothèque qui glisse devant le passage secret.
 const SHELF_TRAVEL := 3.3
+## Vibration des murs à une mauvaise réponse : amplitude en mètres et durée en secondes.
+const SHAKE_AMPLITUDE := 0.035
+const SHAKE_TIME := 0.6
+## Lumière bleutée du dispositif quand les cinq codes sont résolus.
+const DEVICE_GLOW := 6.0
 
 @export var shelf_duration := 3.0
 
@@ -53,6 +58,8 @@ var _found := {}
 @onready var _sections: Node3D = $Interior/Device/Sections
 @onready var _shelf: Node3D = $Interior/SecretShelf
 @onready var _secret_light: OmniLight3D = $Interior/SecretLight
+@onready var _device_light: OmniLight3D = $Interior/Device/DeviceLight
+@onready var _hall: Node3D = $Interior/Hall
 @onready var _book: Node3D = $Interior/Book
 @onready var _book_pickup: Interactable = $Interior/Book/Interactable
 @onready var _puzzle: CodePuzzle = $CodePuzzle
@@ -86,7 +93,7 @@ func _ready() -> void:
 		_set_section(index, Color(0.4, 0.45, 0.7), 0.6)
 	_portal.is_open = GameState.has_book(BOOK_ID)
 	_apply_location()
-	_hud.show_message("Le Village détruit")
+	# Le nom du lieu est déjà annoncé par la transition du portail.
 	if GameState.has_book(BOOK_ID):
 		_hud.show_message("Vous avez déjà trouvé le livre de cette zone : le portail est ouvert.")
 
@@ -183,21 +190,44 @@ func _on_code_answered(index: int, correct: bool) -> void:
 		_set_section(index, Color(0.3, 1.0, 0.4), 2.5)
 		$ChimeSound.play()
 		return
-	# Mauvaise réponse : la section rougit un instant et le volcan se rapproche de l'éruption.
+	# Mauvaise réponse : la section rougit, les murs vibrent, et le volcan se rapproche de l'éruption.
 	GameState.penalize()
 	$RejectSound.play()
 	_set_section(index, Color(1.0, 0.1, 0.05), 3.0)
+	_shake_walls()
 	var tween := create_tween()
 	tween.tween_interval(1.2)
 	tween.tween_callback(_set_section.bind(index, Color(0.4, 0.45, 0.7), 0.6))
 
 
-## Les cinq codes résolus : lumière bleutée, grondement, et la bibliothèque glisse devant la salle secrète.
+## Les murs et les meubles de la mairie tremblent un instant, la vue du joueur avec eux.
+func _shake_walls() -> void:
+	var camera := get_viewport().get_camera_3d()
+	var tween := create_tween()
+	var steps := 10
+	for step in steps:
+		var fade := 1.0 - float(step) / steps
+		var offset := Vector3(randf_range(-1.0, 1.0), 0.0, randf_range(-1.0, 1.0)) * SHAKE_AMPLITUDE * fade
+		tween.tween_property(_hall, "position", offset, SHAKE_TIME / steps)
+		if camera:
+			tween.parallel().tween_property(camera, "h_offset", offset.x * 1.5, SHAKE_TIME / steps)
+			tween.parallel().tween_property(camera, "v_offset", offset.z * 1.5, SHAKE_TIME / steps)
+	tween.tween_property(_hall, "position", Vector3.ZERO, 0.05)
+	if camera:
+		tween.parallel().tween_property(camera, "h_offset", 0.0, 0.05)
+		tween.parallel().tween_property(camera, "v_offset", 0.0, 0.05)
+
+
+## Les cinq codes résolus : intense lumière bleutée, bruit mécanique, et la bibliothèque glisse devant la salle
+## secrète.
 func _on_codes_solved() -> void:
 	_close_panel()
 	_device.enabled = false
 	for index in _sections.get_child_count():
 		_set_section(index, Color(0.35, 0.6, 1.0), 3.0)
+	var glow := create_tween()
+	glow.tween_property(_device_light, "light_energy", DEVICE_GLOW, 0.4)
+	glow.tween_property(_device_light, "light_energy", DEVICE_GLOW * 0.35, 2.5)
 	$RumbleSound.play()
 	_hud.show_message("Le dispositif s'illumine d'une lumière bleutée. Un grondement résonne : la bibliothèque glisse et révèle un passage…")
 	var tween := create_tween()
