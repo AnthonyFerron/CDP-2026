@@ -23,6 +23,12 @@ services:
     build: ../backend
     restart: unless-stopped
 
+    labels:
+      # Défini par infrastructure/deploy.sh, qui sauvegarde la base et applique les migrations avant de
+      # mettre l'API à jour. Sans lui, un cdp-deploy trop ancien échoue ici, avant de toucher aux
+      # conteneurs. Pour une commande manuelle : CDP_DEPLOY=manuel docker compose ...
+      fr.cdp2026.deploy: "${CDP_DEPLOY:?lancer le deploiement avec infrastructure/deploy.sh, qui applique les migrations}"
+
     environment:
       DATABASE_URL: postgresql+psycopg://escape_user:${POSTGRES_PASSWORD:?}@db:5432/escape_game
       # Facultatifs : sans eux l'API démarre, mais la connexion 2FA ne peut pas envoyer de code

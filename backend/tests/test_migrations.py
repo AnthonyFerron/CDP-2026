@@ -1,13 +1,16 @@
 """Migrations Alembic : rejouables, cohérentes avec les modèles, sans perte de données existantes."""
 
+import threading
+
 import pytest
 from alembic import command
-from sqlalchemy import text
+from sqlalchemy import create_engine, text
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.pool import NullPool
 
 from app.db.session import engine
 
-from conftest import DATA_TABLES, alembic_config
+from conftest import DATA_TABLES, TEST_DATABASE_URL, alembic_config
 
 SEED = "7b2f4c9e1a35"  # énigmes ; la production est à la révision précédente, 28803cd8c266
 
@@ -79,3 +82,33 @@ def test_new_migrations_keep_existing_data(database):
     with pytest.raises(IntegrityError):
         with engine.begin() as connection:
             connection.execute(text("UPDATE puzzle_progress SET placed_at = now() WHERE solved_at IS NULL"))
+
+
+def test_concurrent_migrations_wait_for_each_other(database):
+    lock = "SELECT {}(hashtext('cdp2026_alembic'))"
+    errors = []
+
+    def migrate():
+        try:
+            command.upgrade(alembic_config(), "head")
+        except Exception as exc:  # remonté dans le test principal
+            errors.append(exc)
+
+    holder_engine = create_engine(TEST_DATABASE_URL, poolclass=NullPool)
+    with holder_engine.connect() as holder:
+        # Une première migration (simulée) détient le verrou
+        holder.execute(text(lock.format("pg_advisory_lock")))
+        holder.commit()
+        other = threading.Thread(target=migrate)
+        other.start()
+        try:
+            other.join(timeout=3)
+            assert other.is_alive(), "la seconde migration aurait dû attendre le verrou"
+        finally:
+            holder.execute(text(lock.format("pg_advisory_unlock")))
+            holder.commit()
+    holder_engine.dispose()
+
+    other.join(timeout=60)
+    assert not other.is_alive()
+    assert errors == []
