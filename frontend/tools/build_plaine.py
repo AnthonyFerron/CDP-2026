@@ -399,7 +399,7 @@ SITES = {
     "camp": (14.0, 42.0, 7.0),
     "graves": (22.5, 50.5, 5.0),
     "siege": (-14.0, 39.0, 7.5),
-    "tower": (-23.0, 52.0, 6.0),
+    "tower": (-23.0, 52.0, 7.5),
     "battery": (17.0, -22.0, 6.5),
 }
 # Le chemin franchit la coulée de lave sur un pont de pierre, centré sur x = 0.
@@ -817,6 +817,20 @@ def wall_banner(scene, x, z, inward, y=1.0, color="red"):
               degrees, scale)
 
 
+LANTERN_POST = 2.7
+
+
+def lantern_post(scene, x, z, toward):
+    """Poteau de bois et sa potence, d'où pend une lanterne à bougie : toward (+1 ou -1) oriente la potence sur x.
+    Comme les lanternes du chemin (plaine_scatter.gd) ; la lanterne pend au-dessus de la tête du joueur."""
+    scene.add("fantasy_town_kit/pillar-wood", (x, 0.0, z), 0.0, (2.0, LANTERN_POST, 2.0))
+    scene.add("fantasy_town_kit/pillar-wood", (x, LANTERN_POST - 0.17, z), 0.0, (1.2, 0.75, 1.2), roll=-90.0 * toward)
+    hang = LANTERN_POST - 0.17 - 0.39 * 1.6
+    scene.add("graveyard_kit/lantern-candle", (x + toward * 0.58, hang, z), 0.0, 1.6)
+    scene.add_shape("sphere", (0.06,), FLAME, (x + toward * 0.58, hang + 0.3, z), emission=4.0)
+    scene.add_box((x, (LANTERN_POST + 0.3) / 2, z), (0.5, LANTERN_POST + 0.3, 0.5))
+
+
 def soldiers_camp(scene, rng, cx, cz, heading):
     """Campement des soldats, comme camp() mais espacé pour que rien ne se traverse : feu éteint, deux tentes, bois,
     coffre (le journal du soldat y est posé, dans plaine.tscn), tonneaux, caisse et charrette couchée."""
@@ -831,7 +845,7 @@ def soldiers_camp(scene, rng, cx, cz, heading):
     for u, v in ((-1.6, 2.6), (1.2, 3.4)):
         furniture(scene, "nature_kit/log_stack", at(u, v), heading + rng.uniform(60, 120), 2.6, height=0.9)
     furniture(scene, "survival_kit/chest", at(2.6, 1.2), heading + 20.0, 3.4, height=0.8)
-    for u, v in ((-4.0, 0.9), (-5.0, 2.4)):
+    for u, v in ((-4.0, 0.9), (-5.5, 2.7)):
         furniture(scene, "mini_dungeon/barrel", at(u, v), rng.uniform(0, 360), 2.6, height=1.2)
     furniture(scene, "survival_kit/box-large", at(5.6, 1.4), heading + 70.0, 3.6, height=0.9)
     furniture(scene, "fantasy_town_kit/cart", at(-1.0, -6.4), heading + 100.0, 2.8, height=1.5, roll=90.0)
@@ -839,7 +853,7 @@ def soldiers_camp(scene, rng, cx, cz, heading):
 
 def build_ruins():
     """Ruines de la bibliothèque, à la surface : la façade regarde le portail, vers +Z."""
-    scene = Scene("PlaineRuins")
+    scene = PlaineScene("PlaineRuins")
     front, back, side = 8.0, -12.0, 10.0
 
     # Façade : porte au centre, fenêtres, puis murs qui s'effondrent vers les côtés.
@@ -867,18 +881,18 @@ def build_ruins():
         scene.add_box((x, 4.0, front + 3.0), (1.3, 8.0, 1.3))
     furniture(scene, "fantasy_town_kit/pillar-stone", (13.5, 0.0, 13.5), 40.0, 7.0, height=1.2, tilt=90.0)
 
-    # Bannières et lanternes qui encadrent l'entrée.
+    # Bannières qui encadrent l'entrée, et deux poteaux de bois dont la potence tend une lanterne à bougie vers la
+    # porte (leur lumière est dans plaine.tscn).
     scene.add("fantasy_town_kit/banner-red", (-1.8, 2.6, front + 0.15), -90.0, 3.0)
     scene.add("fantasy_town_kit/banner-red", (1.8, 2.6, front + 0.15), -90.0, 3.0)
     for x in (-2.3, 2.3):
-        scene.add("fantasy_town_kit/lantern", (x, 0.0, front + 1.5), 0.0, 2.2)
-        scene.add_box((x, 1.7, front + 1.5), (0.5, 3.4, 0.5))
+        lantern_post(scene, x, front + 1.5, -1.0 if x > 0 else 1.0)
 
     # Gravats, à l'intérieur comme devant le bâtiment : la collision suit la boîte du modèle.
     for model, position, degrees, scale in (
         ("rock-large", (-12.6, 0.0, 3.6), 30.0, 2.2),
         ("rock-wide", (12.0, 0.0, 2.0), 110.0, 2.4),
-        ("rock-large", (6.5, 0.0, -9.4), 200.0, 1.8),
+        ("rock-large", (7.0, 0.0, -9.8), 200.0, 1.8),
         ("rock-wide", (-3.0, 0.0, -2.0), 70.0, 1.6),
         ("rock-large", (5.0, 0.0, 3.0), 160.0, 1.4),
     ):
@@ -996,64 +1010,65 @@ def graves(scene, rng):
     for row, z in enumerate((gz - 1.8, gz + 2.2)):
         for column, x in enumerate((gx - 2.6, gx, gx + 2.6)):
             furniture(scene, "graveyard_kit/grave", (x, 0.0, z), rng.uniform(-4, 4), 2.2)
-            head = z - 1.55
+            head = z - 1.9
             if (row + column) % 2:
                 furniture(scene, "graveyard_kit/cross-wood", (x, 0.0, head), rng.uniform(-6, 6), 2.0, height=2.1,
                           tilt=rng.uniform(-5, 5))
-                furniture(scene, "mini_dungeon/shield-round", (x + 0.55, 0.0, head + 0.45), rng.uniform(0, 40), 2.6,
-                          height=0.5, tilt=-70.0)
+                # Le bouclier du mort, posé à plat sur son tertre.
+                furniture(scene, "mini_dungeon/shield-round", (x, 0.11 * 2.2, z + 0.2), rng.uniform(0, 360), 2.4,
+                          height=0.3, tilt=-90.0)
             else:
                 planted_sword(scene, rng, x, head)
     sheets(scene, rng, gx, gz + 0.2, 3, 2.0)
 
 
 def watchtower(scene, rng):
-    """Tour de guet de la bibliothèque, effondrée : la base tient, l'étage s'est fendu, le toit de bois gît à côté."""
+    """Tour de guet de la bibliothèque, effondrée : la base tient, l'étage s'est fendu, le crénelage et la guérite de
+    bois gisent autour, dans les gravats."""
     tx, tz, _ = SITES["tower"]
     scale = 3.4
     bx, bz = tx - 0.6, tz + 1.2
     scene.add("castle_kit/tower-square-base", (bx, 0.0, bz), 8.0, scale)
     scene.add("castle_kit/tower-square-mid-open", (bx, 1.01 * scale, bz), 8.0, scale, tilt=4.0)
     scene.add_box((bx, 1.01 * scale, bz), (3.3, 2.02 * scale, 3.3), 8.0)
-    # Le crénelage du sommet gît à plat du côté du chemin, la guérite de bois un peu plus loin, de travers.
-    furniture(scene, "castle_kit/tower-square-top", (tx + 3.6, 0.0, tz - 1.6), 30.0, 3.0, height=1.0, roll=6.0)
-    furniture(scene, "castle_kit/tower-hexagon-top-wood", (tx - 3.0, 0.0, tz - 2.8), 140.0, 3.0, height=1.4,
+    furniture(scene, "castle_kit/tower-square-top", (tx + 4.0, 0.0, tz - 0.6), 30.0, 3.0, height=1.0, roll=6.0)
+    furniture(scene, "castle_kit/tower-hexagon-top-wood", (tx - 4.6, 0.0, tz - 2.4), 140.0, 3.0, height=1.4,
               roll=14.0)
-    for position, model, degrees, scale_rock in (((tx + 2.4, tz + 1.6), "rocks-large", 20.0, 2.4),
-                                                 ((tx - 2.8, tz + 2.6), "rocks-small", 70.0, 2.2),
-                                                 ((tx + 0.8, tz - 2.8), "rocks-small", 150.0, 1.8)):
+    for position, model, degrees, scale_rock in (((tx + 0.0, tz + 5.4), "rocks-large", 20.0, 2.4),
+                                                 ((tx - 4.0, tz + 2.8), "rocks-small", 70.0, 2.2),
+                                                 ((tx + 1.0, tz - 4.6), "rocks-small", 150.0, 1.8)):
         furniture(scene, f"castle_kit/{model}", (position[0], 0.0, position[1]), degrees, scale_rock, height=0.9)
-    for position, degrees in (((tx + 3.0, tz + 3.4), 15.0), ((tx - 1.0, tz - 4.0), 75.0), ((tx + 4.4, tz + 0.2), 120.0)):
-        furniture(scene, "survival_kit/resource-planks", (position[0], 0.0, position[1]), degrees, 3.0)
-    banner_pole(scene, rng, tx - 3.6, tz + 1.0, lean=28.0)
+    for position, degrees in (((tx + 4.2, tz + 3.4), 15.0), ((tx - 1.6, tz - 4.4), 75.0), ((tx + 5.6, tz - 4.0), 120.0)):
+        furniture(scene, "survival_kit/resource-planks", (position[0], 0.0, position[1]), degrees, 3.0, height=0.3)
+    banner_pole(scene, rng, tx - 3.4, tz + 5.4, lean=28.0)
 
 
 def siege_works(scene, rng):
     """Engins de siège de Vibelandia, brisés par les défenseurs : trébuchet, catapulte, boulets et roues."""
     sx, sz, _ = SITES["siege"]
-    furniture(scene, "castle_kit/siege-trebuchet-demolished", (sx - 2.5, 0.0, sz + 1.5), 25.0, 3.0, height=0.9)
-    furniture(scene, "castle_kit/siege-catapult-demolished", (sx + 3.5, 0.0, sz - 2.0), -40.0, 2.6, height=0.8)
-    for position, scale in (((sx + 0.6, sz - 4.6), 1.6), ((sx + 1.6, sz - 4.2), 1.4), ((sx + 1.0, sz - 3.7), 1.2)):
+    furniture(scene, "castle_kit/siege-trebuchet-demolished", (sx - 3.0, 0.0, sz + 2.5), 25.0, 2.4, height=0.8)
+    furniture(scene, "castle_kit/siege-catapult-demolished", (sx + 3.8, 0.0, sz - 2.4), -40.0, 2.2, height=0.7)
+    for position, scale in (((sx - 2.2, sz - 4.0), 1.6), ((sx - 0.8, sz - 4.6), 1.4), ((sx - 1.8, sz - 5.9), 1.2)):
         furniture(scene, "survival_kit/resource-stone-large", (position[0], 0.0, position[1]), rng.uniform(0, 360),
                   scale * 2.0, height=0.55 * scale)
-    for position, degrees in (((sx - 5.2, sz - 2.8), 30.0), ((sx + 5.0, sz + 2.6), 120.0)):
+    for position, degrees in (((sx - 5.6, sz - 3.0), 30.0), ((sx + 5.2, sz + 3.4), 120.0)):
         furniture(scene, "fantasy_town_kit/wheel", (position[0], 0.0, position[1]), degrees, 3.0, height=0.3, roll=90.0)
-    furniture(scene, "castle_kit/tree-log", (sx + 1.0, 0.0, sz + 4.6), 75.0, 3.4, height=0.8)
-    for position, degrees in (((sx - 0.8, sz - 1.6), 40.0), ((sx + 3.2, sz + 3.6), 100.0)):
-        furniture(scene, "survival_kit/resource-planks", (position[0], 0.0, position[1]), degrees, 3.0)
-    banner_pole(scene, rng, sx + 1.2, sz + 1.2, model="castle_kit/flag-wide", scale=3.4, lean=-16.0)
-    arrows(scene, rng, sx + 4.5, sz - 5.0, 9, 1.4)
+    furniture(scene, "castle_kit/tree-log", (sx + 3.0, 0.0, sz + 5.4), 75.0, 3.4, height=0.8)
+    for position, degrees in (((sx - 0.2, sz - 2.2), 40.0), ((sx + 2.4, sz + 2.2), 100.0)):
+        furniture(scene, "survival_kit/resource-planks", (position[0], 0.0, position[1]), degrees, 3.0, height=0.3)
+    banner_pole(scene, rng, sx + 0.6, sz + 3.6, model="castle_kit/flag-wide", scale=3.4, lean=-16.0)
+    arrows(scene, rng, sx + 4.5, sz - 6.0, 9, 1.2)
 
 
 def battery(scene, rng):
     """Batterie de balistes de l'ennemi, derrière la bibliothèque : brisées, leurs carreaux plantés dans la cendre."""
     bx, bz, _ = SITES["battery"]
-    furniture(scene, "castle_kit/siege-ballista-demolished", (bx - 2.0, 0.0, bz + 1.8), 210.0, 2.6, height=0.9)
-    furniture(scene, "castle_kit/siege-ballista-demolished", (bx + 2.6, 0.0, bz - 2.4), 160.0, 2.6, height=0.9)
-    for position in ((bx - 4.0, bz - 2.0), (bx - 3.2, bz - 2.8), (bx + 0.2, bz - 4.4)):
+    furniture(scene, "castle_kit/siege-ballista-demolished", (bx - 2.4, 0.0, bz + 2.0), 210.0, 2.2, height=0.8)
+    furniture(scene, "castle_kit/siege-ballista-demolished", (bx + 2.6, 0.0, bz - 2.2), 160.0, 2.2, height=0.8)
+    for position in ((bx - 4.0, bz - 2.0), (bx - 3.2, bz - 2.8), (bx - 1.0, bz - 5.0)):
         planted_spear(scene, rng, position[0], position[1], lean=35.0)
-    furniture(scene, "mini_dungeon/barrel", (bx + 3.4, 0.0, bz + 2.0), 30.0, 2.6, height=1.2)
-    furniture(scene, "survival_kit/box-large-open", (bx + 2.2, 0.0, bz + 3.4), 80.0, 3.4, height=1.0)
+    furniture(scene, "mini_dungeon/barrel", (bx + 3.6, 0.0, bz + 2.4), 30.0, 2.6, height=1.2)
+    furniture(scene, "survival_kit/box-large-open", (bx + 1.8, 0.0, bz + 3.6), 80.0, 3.4, height=1.0)
     # Carreaux tirés sur la bibliothèque, fichés dans le sol devant son mur du fond.
     for x in (-6.5, -2.8, 1.5, 5.8):
         planted_spear(scene, rng, x, -15.0 + rng.uniform(-1.0, 1.0), lean=-38.0)
@@ -1066,7 +1081,7 @@ def library_front(scene, rng):
     stake_line(scene, rng, (-4.2, 20.2), (-12.8, 18.9), broken=(2,), fallen=(4,))
     stake_line(scene, rng, (8.2, 19.0), (14.6, 15.4), fallen=(1,))
     book_cart(scene, rng, 6.0, 19.8, 80.0, tipped=True)
-    for position in ((3.9, 18.2), (4.3, 17.2)):
+    for position in ((3.2, 18.8), (3.9, 17.4)):
         furniture(scene, "mini_dungeon/barrel", (position[0], 0.0, position[1]), rng.uniform(0, 360), 2.2, height=1.0)
     # Le bélier, abandonné devant l'entrée, pointé vers la porte.
     furniture(scene, "castle_kit/siege-ram-demolished", (7.2, 0.0, 13.4), 35.0, 2.4, height=1.0)
@@ -1077,7 +1092,7 @@ def library_front(scene, rng):
     # Armes et boucliers des défenseurs, au pied de la barricade.
     for position in ((-6.0, 17.0), (-10.4, 15.3), (10.4, 16.0)):
         planted_sword(scene, rng, position[0], position[1])
-    for position, degrees in (((-7.6, 18.6), 20.0), ((11.8, 18.0), 200.0)):
+    for position, degrees in (((-7.6, 18.0), 20.0), ((11.6, 20.8), 200.0)):
         furniture(scene, "mini_dungeon/shield-round", (position[0], 0.0, position[1]), degrees, 2.6, height=0.3,
                   tilt=-90.0)
     furniture(scene, "mini_dungeon/shield-rectangle", (-12.0, 0.0, 14.2), 60.0, 3.0, height=0.4, tilt=-90.0)
@@ -1110,7 +1125,7 @@ def camp_extras(scene, rng):
     top = 0.31 * 2.2
     scene.add_shape("box", (1.0, 0.006, 0.7), PARCHMENT_DARK, (cx + 5.0, top + 0.004, cz + 3.6), -24.0)
     furniture(scene, "graveyard_kit/candle", (cx + 4.6, top, cz + 3.4), 0.0, 1.6)
-    furniture(scene, "mini_dungeon/chair", (cx + 4.3, 0.0, cz + 4.6), 150.0, 2.4, height=1.1)
+    furniture(scene, "mini_dungeon/chair", (cx + 3.2, 0.0, cz + 5.5), 150.0, 2.4, height=1.1)
 
 
 def build_battlefield():
@@ -1250,6 +1265,9 @@ def build_interior():
             for place, offset in enumerate(slots):
                 z = -room_length * room + offset
                 # Des rayonnages ont basculé en avant : ils gisent au sol, leurs livres répandus devant eux.
+                # Le rayonnage tombé du scriptorium (mur de travers) occupe la place du premier rayonnage est.
+                if (side, room, place) == ("east", 1, 0):
+                    continue
                 if (side, room, place) in (("west", 2, 1), ("east", 0, 0)):
                     sign = inward[0]
                     furniture(scene, wide, (x + sign * 1.35, 0.0, z), facing(inward), SHELF_SCALE, height=0.8,
@@ -1292,7 +1310,7 @@ def build_interior():
     floor_books(scene, rng, -1.2, -9.5, 4, 0.6)
     floor_books(scene, rng, 0.2, -3.6, 3, 0.8)
     sheets(scene, rng, 0.0, -4.0, 10, 2.4, scrolls=3)
-    furniture(scene, "graveyard_kit/debris", (0.4, 0.0, -10.7), 30.0, 2.6, height=0.4)
+    furniture(scene, "graveyard_kit/debris", (-0.6, 0.0, -9.0), 30.0, 2.6, height=0.4)
 
     # Scriptorium : pupitres de scribes, l'un renversé, la carte du royaume au mur.
     writing_desk(scene, rng, 1.9, -15.6, 180.0)

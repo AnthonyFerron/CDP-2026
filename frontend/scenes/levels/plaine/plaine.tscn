@@ -30,7 +30,8 @@
 [ext_resource type="Script" path="res://scripts/flickering_light.gd" id="30_flicker"]
 [ext_resource type="Shader" path="res://scenes/levels/plaine/lava.gdshader" id="31_lava"]
 [ext_resource type="Shader" path="res://scenes/levels/plaine/soot.gdshader" id="32_soot"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/lantern.glb" id="33_lantern"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/lantern-candle.glb" id="33_lantern"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/pillar-wood.glb" id="41_post"]
 [ext_resource type="AudioStream" path="res://assets/audio/plaine_wind.wav" id="34_wind"]
 [ext_resource type="AudioStream" path="res://assets/audio/plaine_lava.wav" id="35_lava_sound"]
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_ash_1.wav" id="36_step1"]
@@ -275,6 +276,7 @@ terrain = NodePath("../Terrain")
 grass_models = Array[PackedScene]([ExtResource("20_grass_large"), ExtResource("21_grass_leafsLarge")])
 small_rock_models = Array[PackedScene]([ExtResource("22_stone_smallA"), ExtResource("23_stone_smallD"), ExtResource("24_stone_smallFlatA")])
 large_rock_models = Array[PackedScene]([ExtResource("25_stone_largeA"), ExtResource("26_stone_largeC"), ExtResource("27_stone_tallB")])
+post_model = ExtResource("41_post")
 lantern_model = ExtResource("33_lantern")
 lava_material = SubResource("ShaderMaterial_lava")
 lava_sound = ExtResource("35_lava_sound")
@@ -284,14 +286,14 @@ lava_sound = ExtResource("35_lava_sound")
 [node name="Battlefield" parent="Exterior" instance=ExtResource("14_battlefield")]
 
 [node name="DoorLightLeft" type="OmniLight3D" parent="Exterior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3, 3.2, 9.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.72, 2.3, 9.5)
 script = ExtResource("30_flicker")
 light_color = Color(1, 0.62, 0.3, 1)
 light_energy = 0.9
 omni_range = 8.0
 
 [node name="DoorLightRight" type="OmniLight3D" parent="Exterior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 3.2, 9.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.72, 2.3, 9.5)
 script = ExtResource("30_flicker")
 light_color = Color(1, 0.62, 0.3, 1)
 light_energy = 0.9

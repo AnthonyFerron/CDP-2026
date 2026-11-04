@@ -9,6 +9,8 @@ signal lava_touched(body: Node3D)
 const SMOKING_CRATERS := 4
 const LIT_CRATERS := 4
 const SMOKING_IMPACTS := 4
+## Hauteur des poteaux des lanternes.
+const POST_HEIGHT := 2.7
 ## Lanternes du chemin : position (x, z), et si elles sont renversées. Deux gardent les têtes du pont.
 const LANTERNS: Array[Vector3] = [
 	Vector3(-3.2, 16.5, 0.0),
@@ -29,6 +31,8 @@ const CLEARINGS: Array[Vector3] = [
 @export var grass_models: Array[PackedScene]
 @export var small_rock_models: Array[PackedScene]
 @export var large_rock_models: Array[PackedScene]
+## Poteau de bois et lanterne à bougie des lanternes du chemin.
+@export var post_model: PackedScene
 @export var lantern_model: PackedScene
 @export var lava_material: Material
 @export var lava_sound: AudioStream
@@ -185,17 +189,23 @@ func _add_border_rocks() -> void:
 		instance.visibility_range_end = 0.0
 
 
-## Lanternes le long du chemin : certaines tiennent encore debout et brillent, d'autres sont tombées.
+## Lanternes du chemin : un poteau de bois, une potence et une lanterne à bougie qui pend vers le chemin.
+## Certaines tiennent encore debout et brillent, d'autres sont tombées, leur lanterne renversée dans la cendre.
 func _add_lanterns() -> void:
-	var glow := StandardMaterial3D.new()
-	glow.albedo_color = Color(1.0, 0.6, 0.25)
-	glow.emission_enabled = true
-	glow.emission = Color(1.0, 0.55, 0.2)
-	glow.emission_energy_multiplier = 3.0
-	var bulb := SphereMesh.new()
-	bulb.radius = 0.13
-	bulb.height = 0.26
-	bulb.material = glow
+	var flame := StandardMaterial3D.new()
+	flame.albedo_color = Color(1.0, 0.62, 0.25)
+	flame.emission_enabled = true
+	flame.emission = Color(1.0, 0.55, 0.2)
+	flame.emission_energy_multiplier = 4.0
+	var wick := SphereMesh.new()
+	wick.radius = 0.06
+	wick.height = 0.12
+	wick.material = flame
+	var wood := StandardMaterial3D.new()
+	wood.albedo_color = Color(0.22, 0.14, 0.08)
+	var beam := BoxMesh.new()
+	beam.size = Vector3(0.75, 0.1, 0.1)
+	beam.material = wood
 	var lanterns := Node3D.new()
 	lanterns.name = "Lanterns"
 	add_child(lanterns)
@@ -203,39 +213,45 @@ func _add_lanterns() -> void:
 	body.name = "LanternPosts"
 	add_child(body)
 	for spot in LANTERNS:
-		var lantern: Node3D = lantern_model.instantiate()
 		var ground := terrain.footing_height(spot.x, spot.y)
 		var fallen := spot.z > 0.5
-		lantern.scale = Vector3.ONE * 2.2
-		lantern.rotation.y = 0.0 if spot.x < 0.0 else PI
-		if fallen:
-			# Le poteau tombe du côté opposé au chemin, pour ne jamais le barrer.
-			var away := 0.0 if spot.x < 0.0 else PI
-			lantern.rotation = Vector3(0.0, away + _rng.randf_range(-0.45, 0.45), deg_to_rad(84.0))
-			ground += 0.25
-		lantern.position = Vector3(spot.x, ground, spot.y)
-		lanterns.add_child(lantern)
-		# Le poteau du lampadaire, debout ou couché, a sa collision.
+		# La potence se tourne vers le chemin ; un poteau tombé tombe du côté opposé, pour ne jamais le barrer.
+		var toward := 1.0 if spot.x < 0.0 else -1.0
+		var post: Node3D = post_model.instantiate()
+		post.scale = Vector3(2.0, POST_HEIGHT, 2.0)
+		var lantern: Node3D = lantern_model.instantiate()
+		lantern.scale = Vector3.ONE * 1.6
 		var shape := BoxShape3D.new()
 		var collision := CollisionShape3D.new()
 		collision.shape = shape
+		var base := Vector3(spot.x, ground, spot.y)
 		if fallen:
-			# Couché par une rotation autour de z : le poteau s'étend vers -x, dans le cap du lampadaire,
-			# à hauteur de sa lanterne posée au sol.
-			var heading := Basis(Vector3.UP, lantern.rotation.y)
-			shape.size = Vector3(3.5, 0.7, 0.6)
-			collision.transform = Transform3D(
-				heading, Vector3(spot.x, ground + 0.1, spot.y) + heading * Vector3(-1.65, 0.0, 0.0)
-			)
+			var heading := Basis(Vector3.UP, (0.0 if spot.x < 0.0 else PI) + _rng.randf_range(-0.45, 0.45))
+			# Couché par une rotation autour de z : le poteau s'étend vers -x, dans son cap.
+			post.basis = heading * Basis(Vector3.BACK, deg_to_rad(90.0)) * Basis.from_scale(post.scale)
+			post.position = base + Vector3.UP * 0.16
+			var tip := base + heading * Vector3(-POST_HEIGHT - 0.5, 0.0, 0.0)
+			lantern.basis = heading * Basis(Vector3.BACK, deg_to_rad(80.0)) * Basis.from_scale(lantern.scale)
+			lantern.position = tip + Vector3.UP * 0.2
+			shape.size = Vector3(POST_HEIGHT + 0.9, 0.5, 0.55)
+			collision.transform = Transform3D(heading, base + heading * Vector3(-(POST_HEIGHT + 0.9) * 0.5, 0.25, 0.0))
 		else:
-			shape.size = Vector3(0.5, 3.4, 0.5)
-			collision.position = Vector3(spot.x, ground + 1.7, spot.y)
-		body.add_child(collision)
-		if not fallen:
+			post.position = base
+			var arm := MeshInstance3D.new()
+			arm.mesh = beam
+			arm.position = base + Vector3(toward * 0.3, POST_HEIGHT - 0.12, 0.0)
+			lanterns.add_child(arm)
+			# La lanterne pend sous le bout de la potence, au-dessus de la tête du joueur.
+			lantern.position = base + Vector3(toward * 0.58, POST_HEIGHT - 0.17 - 0.39 * 1.6, 0.0)
 			var light := MeshInstance3D.new()
-			light.mesh = bulb
-			light.position = Vector3(spot.x, ground + 3.0, spot.y)
+			light.mesh = wick
+			light.position = lantern.position + Vector3.UP * 0.3
 			add_child(light)
+			shape.size = Vector3(0.5, POST_HEIGHT + 0.3, 0.5)
+			collision.position = base + Vector3.UP * (POST_HEIGHT + 0.3) * 0.5
+		lanterns.add_child(post)
+		lanterns.add_child(lantern)
+		body.add_child(collision)
 
 
 func _add_crater_effects() -> void:

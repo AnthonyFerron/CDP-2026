@@ -157,7 +157,7 @@ const SITES: Array[Vector3] = [
 	CAMP,
 	Vector3(22.5, 50.5, 4.5),  # Tombes des défenseurs, derrière le camp.
 	Vector3(-14.0, 39.0, 6.5),  # Engins de siège brisés.
-	Vector3(-23.0, 52.0, 6.0),  # Tour de guet effondrée.
+	Vector3(-23.0, 52.0, 7.5),  # Tour de guet effondrée.
 	Vector3(17.0, -22.0, 5.0),  # Batterie de balistes, derrière la bibliothèque.
 ]
 
