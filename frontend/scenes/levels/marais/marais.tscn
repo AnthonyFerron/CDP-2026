@@ -899,7 +899,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
 shape = SubResource("BoxShape3D_king")
 
 [node name="Sword" parent="Interior/Kings/King1" instance=ExtResource("36_sword")]
-transform = Transform3D(3, 0, 0, 0, 0, -3, 0, 3, 0, 0.05, 1.38, -0.275)
+transform = Transform3D(-3, 0, 0, 0, 0, -3, -0, -3, -0, 0.05, 1.38, 0.6)
 
 [node name="Cushion" type="MeshInstance3D" parent="Interior/Kings/King1"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.235, 1.2)
@@ -972,7 +972,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
 shape = SubResource("BoxShape3D_king")
 
 [node name="Sword" parent="Interior/Kings/King2" instance=ExtResource("36_sword")]
-transform = Transform3D(3, 0, 0, 0, 0, -3, 0, 3, 0, 0.05, 1.38, -0.275)
+transform = Transform3D(-3, 0, 0, 0, 0, -3, -0, -3, -0, 0.05, 1.38, 0.6)
 
 [node name="Cushion" type="MeshInstance3D" parent="Interior/Kings/King2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.235, 1.2)
@@ -1045,7 +1045,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
 shape = SubResource("BoxShape3D_king")
 
 [node name="Sword" parent="Interior/Kings/King3" instance=ExtResource("36_sword")]
-transform = Transform3D(-3, 0, 0, 0, 0, -3, -0, -3, -0, 0.05, 1.38, 0.275)
+transform = Transform3D(3, 0, 0, 0, 0, -3, 0, 3, 0, 0.05, 1.38, -0.6)
 
 [node name="Cushion" type="MeshInstance3D" parent="Interior/Kings/King3"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.235, -1.2)
@@ -1118,7 +1118,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
 shape = SubResource("BoxShape3D_king")
 
 [node name="Sword" parent="Interior/Kings/King4" instance=ExtResource("36_sword")]
-transform = Transform3D(-3, 0, 0, 0, 0, -3, -0, -3, -0, 0.05, 1.38, 0.275)
+transform = Transform3D(3, 0, 0, 0, 0, -3, 0, 3, 0, 0.05, 1.38, -0.6)
 
 [node name="Cushion" type="MeshInstance3D" parent="Interior/Kings/King4"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.235, -1.2)
