@@ -124,6 +124,12 @@ class StagedScene(Scene):
         # Nœuds de groupe portant une position et un script : chemin -> (transformée, script, propriétés).
         self.pivots = {}
         self.scripts = {}
+        self.root_script = None
+
+    def batched(self, script):
+        """Script de la racine qui regroupe les modèles de chaque groupe en MultiMesh au chargement."""
+        self.scripts.setdefault(script, f"{len(self.scripts) + 1}_script")
+        self.root_script = script
 
     def pivot(self, path, position, script, properties):
         """Ouvre un groupe posé en un point, avec un script : les ajouts suivants s'y placent dans son repère."""
@@ -148,7 +154,10 @@ class StagedScene(Scene):
         lines.append("")
         for size, identifier in self.boxes.items():
             lines += [f'[sub_resource type="BoxShape3D" id="{identifier}"]', f"size = Vector3({size[0]:g}, {size[1]:g}, {size[2]:g})", ""]
-        lines += [f'[node name="{self.root_name}" type="Node3D"]', ""]
+        lines += [f'[node name="{self.root_name}" type="Node3D"]']
+        if self.root_script:
+            lines.append(f'script = ExtResource("{self.scripts[self.root_script]}")')
+        lines.append("")
         groups = list(dict.fromkeys([v[3] for v in self.visuals] + [c[2] for c in self.colliders]))
         created = set()
         for group in groups:
@@ -1438,6 +1447,7 @@ def main():
     build_shelter()
     rng = random.Random(5814)
     scene = StagedScene("HubProps")
+    scene.batched("res://scenes/levels/hub/hub_batch.gd")
     build_camp(scene)
     build_village(scene, rng)
     build_castle(scene, rng)

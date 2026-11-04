@@ -77,12 +77,12 @@ const BORDER_WIDTH := 30.0
 const BORDER_HEIGHT := 30.0
 
 ## Rivière : points de son tracé (x, z, demi-largeur de l'eau), de sa source dans les montagnes du nord-est à
-## sa sortie au sud-est. Mêmes valeurs dans tools/build_hub.py.
+## sa sortie au sud-est. La roue du moulin (MILL_WHEEL de tools/build_hub.py) tourne dans son courant, à z = 48.
 const RIVER: Array[Vector3] = [
 	Vector3(51.0, -127.0, 2.6), Vector3(53.0, -115.0, 3.0), Vector3(55.0, -104.0, 3.6), Vector3(58.0, -92.0, 4.2),
 	Vector3(62.0, -78.0, 4.6), Vector3(63.0, -66.0, 4.0), Vector3(61.0, -52.0, 4.6), Vector3(60.0, -38.0, 4.8),
 	Vector3(61.0, -24.0, 4.5), Vector3(62.0, -12.0, 4.0), Vector3(63.4, 0.0, 3.6), Vector3(65.0, 10.0, 3.8),
-	Vector3(68.0, 20.0, 4.2), Vector3(71.0, 32.0, 4.6), Vector3(74.0, 42.0, 4.6), Vector3(74.5, 48.0, 4.8),
+	Vector3(68.0, 20.0, 4.2), Vector3(71.0, 32.0, 4.6), Vector3(74.0, 42.0, 4.8), Vector3(73.6, 48.0, 5.4),
 	Vector3(77.0, 56.0, 4.6), Vector3(85.0, 70.0, 5.0), Vector3(95.0, 84.0, 5.0), Vector3(108.0, 96.0, 4.8),
 	Vector3(122.0, 104.0, 4.4), Vector3(136.0, 106.0, 4.0),
 ]

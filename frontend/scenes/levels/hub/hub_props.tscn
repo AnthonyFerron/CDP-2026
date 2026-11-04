@@ -158,7 +158,8 @@
 [ext_resource type="PackedScene" path="res://assets/models/kenney/mini_arena/trophy.glb" id="156_model"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/statue_column.glb" id="157_model"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/canoe.glb" id="158_model"]
-[ext_resource type="Script" path="res://scenes/levels/hub/hub_spinner.gd" id="1_script"]
+[ext_resource type="Script" path="res://scenes/levels/hub/hub_batch.gd" id="1_script"]
+[ext_resource type="Script" path="res://scenes/levels/hub/hub_spinner.gd" id="2_script"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
 size = Vector3(1.8, 0.6, 1.8)
@@ -905,6 +906,7 @@ size = Vector3(2.8, 1.8, 2.8)
 size = Vector3(0.638, 3.4, 0.638)
 
 [node name="HubProps" type="Node3D"]
+script = ExtResource("1_script")
 
 [node name="Fixed" type="Node3D" parent="."]
 
@@ -14268,7 +14270,7 @@ transform = Transform3D(0, -4.3, 0, 2.7, 0, 0, 0, 0, 2.7, 69.3, 1.25, 48)
 
 [node name="Wheel" type="Node3D" parent="Repairs/MillWheel/Rebuilt"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 70.5, 1.25, 48)
-script = ExtResource("1_script")
+script = ExtResource("2_script")
 speed = 0.6
 
 [node name="watermill_2478" parent="Repairs/MillWheel/Rebuilt/Wheel" instance=ExtResource("132_model")]
