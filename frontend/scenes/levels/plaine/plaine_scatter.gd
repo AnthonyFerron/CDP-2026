@@ -55,7 +55,7 @@ const CLEARINGS: Array[Vector3] = [
 var lava_pools: Array[Dictionary] = []
 ## Sommet du tronc de chaque modèle d'arbre mort, pour pencher sa collision comme lui.
 var _tree_tops: Array[Vector3] = []
-## Dessous de chaque modèle de gros rocher, en 16 points de son emprise (repère du modèle).
+## Dessous de chaque modèle de gros rocher, en 25 points de son emprise (repère du modèle).
 var _undersides := {}
 var _rng := RandomNumberGenerator.new()
 
@@ -193,7 +193,7 @@ func _rock_collision(mesh: Mesh, item: Transform3D, exact: bool) -> CollisionSha
 	return collision
 
 
-## Abaisse un gros rocher pour qu'aucun de ses bords ne flotte : en 16 points de son emprise, le dessous de son
+## Abaisse un gros rocher pour qu'aucun de ses bords ne flotte : en 25 points de son emprise, jusqu'à ses bords, le dessous de son
 ## maillage (lu sur ses triangles, une fois par modèle) doit passer sous le sol. Sur la pente des remparts, un rocher
 ## posé à la hauteur de son centre débordait de plusieurs mètres dans le vide du côté de la descente.
 func _sink_rock(mesh: Mesh, item: Transform3D) -> Transform3D:
@@ -201,10 +201,10 @@ func _sink_rock(mesh: Mesh, item: Transform3D) -> Transform3D:
 		var faces := mesh.get_faces()
 		var box := mesh.get_aabb()
 		var points: Array[Vector3] = []
-		for i in 4:
-			for j in 4:
-				var local := Vector3(box.position.x + box.size.x * (0.125 + 0.25 * i), box.position.y - 1.0,
-					box.position.z + box.size.z * (0.125 + 0.25 * j))
+		var ratios: Array[float] = [0.03, 0.25, 0.5, 0.75, 0.97]
+		for u in ratios:
+			for v in ratios:
+				var local := Vector3(box.position.x + box.size.x * u, box.position.y - 1.0, box.position.z + box.size.z * v)
 				var underside := INF
 				for t in range(0, faces.size(), 3):
 					var hit: Variant = Geometry3D.ray_intersects_triangle(local, Vector3.UP, faces[t], faces[t + 1], faces[t + 2])
