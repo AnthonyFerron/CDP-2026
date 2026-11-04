@@ -109,4 +109,6 @@ func close() -> void:
 func _on_main_menu() -> void:
 	_root.hide()
 	GameState.save_game()
+	# Partie connectée : la position part au serveur, dont le chronomètre s'arrête dans le menu.
+	GameSync.save_position()
 	Transition.change_scene(MainMenu.SCENE)

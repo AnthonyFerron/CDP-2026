@@ -36,7 +36,10 @@ func _ready() -> void:
 		enabled = false
 
 
+## Le meuble qui le cache est ouvert. Un fragment déjà ramassé (session précédente) ne réapparaît pas.
 func reveal() -> void:
+	if collected:
+		return
 	visible = true
 	enabled = true
 
