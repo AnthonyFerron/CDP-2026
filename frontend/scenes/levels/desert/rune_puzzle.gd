@@ -39,6 +39,7 @@ const FRAME_RECT := Rect2(130, 100, 1660, 920)
 const COLUMN_X: Array[float] = [50.0, 860.0]
 const COLUMN_WIDTH := 750.0
 const LINE_TOP := 168.0
+const INSTRUCTION := "Choisissez une rune, puis la case où la graver : les deux algorithmes doivent s'exécuter."
 const LINE_STEP := 58.0
 const INDENT := 48.0
 
@@ -117,7 +118,8 @@ func validate() -> void:
 	if correct:
 		_root.hide()
 	else:
-		_set_feedback("Les runes s'illuminent d'une lueur rouge : les algorithmes ne s'exécutent pas. Le volcan gronde…", Ornate.ERROR)
+		# Le temps perdu s'affiche dans le bandeau « Mauvaise réponse » du HUD : ici, seulement ce que font les runes.
+		_set_feedback("Les runes s'illuminent d'une lueur rouge : les algorithmes ne s'exécutent pas.", Ornate.ERROR)
 		_flash_wrong()
 	validated.emit(correct)
 
@@ -141,9 +143,6 @@ func _build() -> void:
 	_frame.bottom_diamond = false
 	_frame.dividers = [540.0]
 	_glow = Ornate.place(_frame, Glow.new(), Vector2.ZERO, FRAME_RECT.size) as Glow
-	var instruction := Ornate.label("Choisissez une rune, puis la case où la graver : les deux algorithmes doivent s'exécuter.", 23, Ornate.MUTED)
-	instruction.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	Ornate.place(_frame, instruction, Vector2(60, 56), Vector2(FRAME_RECT.size.x - 120, 36))
 	var column_rule := ColumnRule.new()
 	Ornate.place(_frame, column_rule, Vector2(820, 100), Vector2(20, 420))
 	_algorithms = Ornate.place(_frame, Control.new(), Vector2.ZERO, FRAME_RECT.size)
@@ -157,11 +156,14 @@ func _build() -> void:
 	_pool.name = "Pool"
 	_pool.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_own(_pool)
-	_feedback = Ornate.label("", 24, Ornate.MUTED)
+	# La ligne du haut donne la consigne, ou ce qui vient de se passer : le bas du panneau reste libre pour le
+	# bandeau « Mauvaise réponse » du HUD.
+	_feedback = Ornate.label("", 23, Ornate.MUTED)
 	_feedback.name = "Feedback"
 	_feedback.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_feedback.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_feedback.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	Ornate.place(_frame, _feedback, Vector2(60, 790), Vector2(FRAME_RECT.size.x - 120, 56))
+	Ornate.place(_frame, _feedback, Vector2(60, 50), Vector2(FRAME_RECT.size.x - 120, 48))
 	_own(_feedback)
 	_validate = Ornate.HexButton.new()
 	_validate.name = "Validate"
@@ -251,7 +253,7 @@ func _on_slot_pressed(slot: int) -> void:
 
 
 func _set_feedback(text: String, color: Color) -> void:
-	_feedback.text = text
+	_feedback.text = text if text != "" else INSTRUCTION
 	_feedback.add_theme_color_override("font_color", color)
 
 
@@ -270,13 +272,14 @@ func _flash_wrong() -> void:
 	# Une violente secousse ébranle le panneau, comme la cave.
 	_flash.tween_method(_shake_step, 0.0, 1.0, 0.6)
 	_flash.tween_callback(_shake_step.bind(1.0))
-	_flash.tween_interval(0.6)
+	_flash.tween_interval(2.4)
 	_flash.tween_callback(_end_flash)
 
 
 func _end_flash() -> void:
 	_wrong = false
 	_set_border(COLOR_IDLE)
+	_set_feedback("", Ornate.MUTED)
 	_rebuild()
 
 
