@@ -1540,7 +1540,8 @@ def build_mills(scene, rng):
     bridge_y = -0.84
     deck = bridge_y + 0.98
     scene.add("nature_kit/bridge_wood", (-38.0, bridge_y, 6.0), 0.0, 6.5)
-    block(scene, (-38.0, deck - 0.1, 6.0), (5.4, 0.2, 5.2), label="tablier du pont", structure=True)
+    # Le tablier va d'un flanc à l'autre ; les flancs pleins (z de ±2,28 à ±3,38 du centre) descendent dans l'eau.
+    block(scene, (-38.0, deck - 0.1, 6.0), (5.4, 0.2, 4.56), label="tablier du pont", structure=True)
     street = -0.11
     for side in (-1, 1):
         # Rampe du bord du tablier (x0, en haut) à la rue (x1, en bas) : elle descend en s'éloignant du pont.
@@ -1552,7 +1553,15 @@ def build_mills(scene, rng):
         center = (top[0] + math.sin(r) * 0.1, top[1] - math.cos(r) * 0.1, 6.0)
         add_tilted_box(scene, center, (math.hypot(run, rise) + 0.1, 0.2, 5.2), roll)
     for side in (-1, 1):
-        block(scene, (-38.0, deck + 0.33, 6.0 + side * 2.9), (6.6, 0.66, 0.4), label="garde-corps du pont", structure=True)
+        # Flancs du pont, du lit du ruisseau au haut du garde-corps : ni on n'y entre depuis l'eau, ni on ne s'y
+        # enfonce depuis le tablier.
+        bottom, top = -1.4, deck + 0.66
+        block(scene, (-38.0, (bottom + top) / 2, 6.0 + side * 2.83), (6.76, top - bottom, 1.1), label="flanc du pont",
+              structure=True)
+        # Ses quatre piles d'angle montent plus haut que le garde-corps (1,44 m) : à l'ouest, elles sortent de la berge.
+        for end in (-1, 1):
+            block(scene, (-38.0 + end * 2.925, (bottom + 1.44) / 2, 6.0 + side * 2.83), (0.91, 1.44 - bottom, 1.1),
+                  label="pile du pont", structure=True)
     # La roue du moulin à eau tourne : elle est posée dans village.tscn, contre la maison du meunier (centre
     # (-36.5, 1.0, -14), rayon 2,7 m, épaisse de 2,6 m). Sa collision, ici : on la longe dans le lit du ruisseau
     # sans passer au travers. À hauteur de poitrine, la roue est presque aussi large que son diamètre.
@@ -1562,7 +1571,10 @@ def build_mills(scene, rng):
     scene.add("castle_kit/tower-square-roof", (30.0, 4.0 + 9.9, -30.0), 0.0, 3.0)
     scene.add_box((30.0, 4.0 + 5.0, -30.0), (3.0, 10.0, 3.0))
     # Porte du moulin, sacs de grain et meule de rechange au pied de la tour.
-    scene.add("castle_kit/door", (28.48, 4.0, -30.0), -90.0, 3.0)
+    # La porte est dans le mur ouest de la tour (son modèle est mince selon x) : tournée d'un quart de tour, elle en
+    # sortait de travers comme une planche.
+    scene.add("castle_kit/door", (28.48, 4.0, -30.0), 0.0, 3.0)
+    block(scene, (28.38, 4.0 + 0.92, -30.0), (0.3, 1.84, 1.1), label="porte du moulin", structure=True)
     for x, z, degrees in ((27.8, -28.4, 20.0), (27.6, -27.6, 80.0), (28.4, -27.4, 140.0)):
         place(scene, "food_kit/bag", (x, 4.0, z), degrees, 1.05, height=0.88, label="sac de grain")
     cylinder(scene, "stone", (31.0, 4.2, -26.9), 0.8, 0.35, sides=14)

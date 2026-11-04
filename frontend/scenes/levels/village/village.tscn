@@ -276,6 +276,9 @@ size = Vector3(3, 4.2, 0.6)
 material = SubResource("Material_wood")
 size = Vector3(3, 4.5, 0.6)
 
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_stairs"]
+points = PackedVector3Array(4.55, 0, 5, 4.55, 0, -4, 4.55, 4.5, -4, 7.55, 0, 5, 7.55, 0, -4, 7.55, 4.5, -4)
+
 [sub_resource type="BoxMesh" id="BoxMesh_rail0"]
 material = SubResource("Material_wood_dark")
 size = Vector3(0.12, 0.12, 6.2)
@@ -888,6 +891,9 @@ shape = SubResource("BoxShape3D_SecretCeiling")
 [node name="RampShape" type="CollisionShape3D" parent="Interior/Slabs"]
 transform = Transform3D(1, 0, 0, 0, 0.894427, -0.447214, 0, 0.447214, 0.894427, 6.05, 2.1158, 0.4329)
 shape = SubResource("BoxShape3D_ramp")
+
+[node name="StairsShape" type="CollisionShape3D" parent="Interior/Slabs"]
+shape = SubResource("ConvexPolygonShape3D_stairs")
 
 [node name="Stairs" type="Node3D" parent="Interior"]
 
