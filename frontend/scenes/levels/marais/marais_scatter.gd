@@ -44,6 +44,8 @@ const LANTERN_SCALE := 2.3
 @export var terrain: MaraisTerrain
 @export var tree_models: Array[PackedScene]
 @export var reed_model: PackedScene
+## Matière des roseaux : ils ondulent (reeds_sway.gdshader) ; à défaut, un vert uni.
+@export var reed_material: Material
 @export var lily_models: Array[PackedScene]
 @export var flower_models: Array[PackedScene]
 @export var bush_model: PackedScene
@@ -83,7 +85,8 @@ func _ready() -> void:
 	_build_boardwalks()
 	_build_lanterns()
 	_scatter_trees()
-	_scatter_by_height(reed_model, reed_count, -0.9, 0.05, Vector2(2.0, 3.2), 0.0, _flat_material(Color(0.2, 0.26, 0.1)))
+	var reeds: Material = reed_material if reed_material else _flat_material(Color(0.2, 0.26, 0.1))
+	_scatter_by_height(reed_model, reed_count, -0.9, 0.05, Vector2(2.0, 3.2), 0.0, reeds)
 	_scatter_lilies()
 	_scatter_by_height(bush_model, bush_count, 0.25, 1.0, Vector2(3.0, 5.0), 0.0)
 	_scatter_by_height(mushroom_model, mushroom_count, 0.25, 1.0, Vector2(2.5, 4.0), 0.0)

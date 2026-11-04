@@ -20,6 +20,8 @@ const AMBIENCE_DB := -6.0
 ## Teinte des dalles de la crypte, et le shader qui la leur donne.
 const CRYPT_STONE := Color(0.6, 0.63, 0.64)
 const STONE_SHADER := preload("res://scenes/levels/marais/crypt_stone.gdshader")
+## Direction d'où vient la lumière de la lune (axe +Z du nœud Moon).
+const MOON_DIRECTION := Vector3(-0.5, 0.7071, 0.5)
 
 @export var ground_steps: Array[AudioStream]
 @export var water_steps: Array[AudioStream]
@@ -37,7 +39,8 @@ var _time := 0.0
 var _ghost_base := 0.0
 var _fireflies: CPUParticles3D
 var _mist: CPUParticles3D
-## Nappes de brume fixes, au-dessus du village englouti, de la chapelle et des eaux de la crypte.
+## Particules fixes du dehors : nappes de brume (village englouti, chapelle, eaux de la crypte) et essaims de
+## lucioles au-dessus des roseaux. Elles s'arrêtent dans la crypte.
 var _mist_banks: Array[CPUParticles3D] = []
 var _rumble: AudioStreamPlayer3D
 
@@ -59,6 +62,7 @@ var _rumble: AudioStreamPlayer3D
 @onready var _exit: Interactable = $Interior/Exit
 @onready var _exit_top: Interactable = $Interior/ExitTop
 @onready var _wisps: Node3D = $Wisps
+@onready var _moon_disc: Node3D = $MoonDisc
 @onready var _inscription: Readable = $Interior/Inscription
 @onready var _mechanism: RingMechanism = $Interior/Mechanism
 @onready var _mechanism_interactable: Interactable = $Interior/MechanismInteractable
@@ -111,6 +115,13 @@ func _ready() -> void:
 		mist.position = Vector3(bank.x, 0.3, bank.y)
 		_mist_banks.append(mist)
 		add_child(mist)
+	# Essaims de lucioles au-dessus des roseaux : la berge du campement, le cimetière, l'arrivée, la crypte.
+	for swarm: Vector3 in [Vector3(-14.5, 0.9, 29.0), Vector3(5.5, 1.0, -4.0), Vector3(-8.5, 0.9, 50.0), Vector3(-7.0, 1.0, -31.0),
+			Vector3(28.0, 0.9, 6.0)]:
+		var flies := _create_fireflies(Vector3(3.5, 0.8, 3.5), 16)
+		flies.position = swarm
+		_mist_banks.append(flies)
+		add_child(flies)
 	_tint_crypt()
 	_apply_location()
 	# Le nom du lieu s'affiche déjà pendant la transition du portail.
@@ -123,6 +134,10 @@ func _process(delta: float) -> void:
 	_time += delta
 	_fireflies.global_position = _player.global_position + Vector3.UP * 1.5
 	_mist.global_position = Vector3(_player.global_position.x, 0.25, _player.global_position.z)
+	# La lune suit le regard à distance fixe, dans la direction d'où vient sa lumière.
+	var camera := get_viewport().get_camera_3d()
+	if camera:
+		_moon_disc.global_position = camera.global_position + MOON_DIRECTION * 420.0
 	_ghost.position.y = _ghost_base + sin(_time * 1.3) * 0.18
 	_ghost.rotation.y = sin(_time * 0.4) * 0.35 - PI * 0.5
 	if _book.visible:
@@ -202,6 +217,8 @@ func _apply_location() -> void:
 	for bank in _mist_banks:
 		bank.emitting = not _inside
 	_wisps.visible = not _inside
+	$GroundFog.visible = not _inside
+	_moon_disc.visible = not _inside
 	_player.footstep_sounds = stone_steps if _inside else ground_steps
 	_ambience.volume_db = AMBIENCE_DB - 24.0 if _inside else AMBIENCE_DB
 	if _inside:
@@ -320,7 +337,7 @@ func _on_portal_crossed() -> void:
 
 
 ## Lucioles autour du joueur : de petites lueurs qui dérivent lentement.
-func _create_fireflies() -> CPUParticles3D:
+func _create_fireflies(extents := Vector3(18.0, 1.5, 18.0), amount := 70) -> CPUParticles3D:
 	var material := StandardMaterial3D.new()
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
@@ -338,12 +355,12 @@ func _create_fireflies() -> CPUParticles3D:
 
 	var fireflies := CPUParticles3D.new()
 	fireflies.mesh = quad
-	fireflies.amount = 70
+	fireflies.amount = amount
 	fireflies.lifetime = 6.0
 	fireflies.preprocess = 6.0
 	fireflies.local_coords = false
 	fireflies.emission_shape = CPUParticles3D.EMISSION_SHAPE_BOX
-	fireflies.emission_box_extents = Vector3(18.0, 1.5, 18.0)
+	fireflies.emission_box_extents = extents
 	fireflies.spread = 180.0
 	fireflies.gravity = Vector3.ZERO
 	fireflies.initial_velocity_min = 0.1
