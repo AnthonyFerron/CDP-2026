@@ -869,7 +869,7 @@ fragment = 4
 hidden_at_start = true
 
 [node name="Fragment7" type="Node3D" parent="Interior/Fragments"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.18, -5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7, 1.18, -5)
 script = ExtResource("51_fragment")
 radius = 2.2
 fragment = 7
@@ -899,6 +899,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.6, 5.68, -5)
 script = ExtResource("51_fragment")
 radius = 2.2
 fragment = 9
+hidden_at_start = true
 
 [node name="Fragment6" type="Node3D" parent="Interior/Fragments"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 4.53, 4.45)
@@ -942,14 +943,8 @@ radius = 2.2
 furniture_name = "le tiroir de l'archiviste"
 fragment = NodePath("../../Fragments/Fragment8")
 
-[node name="ComplaintsDesk" type="Node3D" parent="Interior/Storages"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.12, -2.45)
-script = ExtResource("52_storage")
-radius = 2.2
-furniture_name = "le tiroir du bureau des doléances"
-
 [node name="Dresser" type="Node3D" parent="Interior/Storages"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.7, -4.35)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.66, 0.7, -5.05)
 script = ExtResource("52_storage")
 radius = 2.2
 furniture_name = "le meuble à tiroirs"
@@ -973,6 +968,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.6, 5.2, -4.35)
 script = ExtResource("52_storage")
 radius = 2.2
 furniture_name = "la commode"
+fragment = NodePath("../../Fragments/Fragment9")
 
 [node name="Device" type="Node3D" parent="Interior"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 4.5, -5.4)

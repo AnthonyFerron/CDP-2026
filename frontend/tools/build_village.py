@@ -12,6 +12,7 @@ objet posé sur un passage à garder libre (grande rue, portes, chemins de l'én
 
 import math
 import random
+import re
 from pathlib import Path
 
 from build_plaine import (MODEL_BOXES, WALL_HEIGHT, WALL_SCALE, WALL_THICKNESS, Scene, doorway, furniture, multiply,
@@ -204,7 +205,7 @@ class VillageScene(Scene):
     def mesh(self, kind, **params):
         key = kind + "_" + "_".join(f"{name}{fmt(value) if isinstance(value, float) else value}"
                                     for name, value in sorted(params.items()))
-        key = key.replace(".", "p").replace("-", "m")
+        key = re.sub(r"[^A-Za-z0-9_]+", "_", key.replace(".", "p").replace("-", "m")).strip("_")
         self.meshes.setdefault(key, (kind, params))
         return key
 
@@ -506,8 +507,8 @@ def vdoorway(scene, center, outward, group=None, keep=2.2):
 # --- Formes simples -------------------------------------------------------------------------------------------------
 
 def materials(scene):
-    scene.material("soot", (0.06, 0.05, 0.045), 1.0)
-    scene.material("ash", (0.2, 0.19, 0.18), 1.0)
+    scene.material("soot", (0.15, 0.125, 0.105), 1.0)
+    scene.material("ash", (0.27, 0.24, 0.21), 1.0)
     scene.material("char", (0.1, 0.075, 0.06), 1.0)
     scene.material("ember", (0.35, 0.08, 0.02), 0.8, emission=(1.0, 0.32, 0.06), energy=2.2)
     scene.material("stone", (0.42, 0.4, 0.38), 1.0)
@@ -588,9 +589,15 @@ def add_single(scene, model, position, degrees=0.0, scale=1.0):
 
 
 def scorch(scene, x, z, radius, y=0.012, degrees=0.0):
-    """Trace de brûlure au sol : une tache de suie et un halo de cendre, sans collision."""
-    cylinder(scene, "ash", (x, y, z), radius * 1.25, 0.01, degrees=degrees, sides=10)
-    cylinder(scene, "soot", (x, y + 0.006, z), radius, 0.01, degrees=degrees + 17.0, sides=9)
+    """Trace de brûlure au sol, sans collision : des taches de suie qui se chevauchent sur un halo de cendre, pour
+    un contour irrégulier plutôt qu'un disque."""
+    seed = random.Random(round(x * 73.0 + z * 31.0))
+    cylinder(scene, "ash", (x, y, z), radius * 1.2, 0.01, degrees=degrees, sides=14)
+    for index in range(3):
+        angle = math.radians(index * 120.0 + seed.uniform(-30, 30))
+        offset = radius * seed.uniform(0.15, 0.35)
+        cylinder(scene, "soot", (x + math.cos(angle) * offset, y + 0.004 + index * 0.002, z + math.sin(angle) * offset),
+                 radius * seed.uniform(0.55, 0.75), 0.01, degrees=seed.uniform(0, 360), sides=11)
 
 
 def charred_beam(scene, center, length, degrees, tilt=0.0, roll=0.0, solid=True, group=None):
@@ -891,6 +898,8 @@ def build_house(scene, rng, number, house):
     if number == 11:
         # La maison du meunier repose côté ruisseau sur un soubassement de pierre, planté dans la berge.
         box(scene, "stone_dark", (cx - half_w + 0.05, -0.7, cz), (0.7, 1.5, depth * TILE + 0.9))
+        block(scene, (cx - half_w + 0.05, -0.7, cz), (0.7, 1.5, depth * TILE + 0.9), group=group, label="soubassement",
+              structure=True)
     # Les poutres tombées sont posées avec le mobilier, là où il reste de la place ; les tirages d'origine sont
     # gardés pour que les murs des maisons suivantes ne changent pas.
     for beam in range(rng.randint(1, 3)):
@@ -1045,13 +1054,16 @@ def forge(scene, rng, frame):
     box(scene, "stone_dark", (hearth[0], 0.45, hearth[2]), (2.2, 0.9, 1.6), frame.yaw())
     lay(scene, "graveyard_kit/fire-basket", (hearth[0], 0.9, hearth[2]), frame.yaw(), 2.4)
     box(scene, "ember", (hearth[0], 1.13, hearth[2]), (0.7, 0.05, 0.7), frame.yaw(20.0))
-    hood = frame.p(far * 1.4, b0 - 0.35)
-    box(scene, "stone_dark", (hood[0], 2.25, hood[2]), (1.8, 0.7, 0.9), frame.yaw(), tilt=-12.0)
-    box(scene, "stone_dark", (hood[0], 3.15, hood[2]), (0.8, 1.6, 0.6), frame.yaw())
+    # La hotte et le conduit sont scellés au mur du fond, au-dessus du foyer.
+    hood = frame.p(far * 1.4, -frame.depth + 0.25 + 0.7)
+    box(scene, "stone_dark", (hood[0], 2.25, hood[2]), (1.8, 0.7, 1.4), frame.yaw())
+    flue = frame.p(far * 1.4, -frame.depth + 0.25 + 0.3)
+    box(scene, "stone_dark", (flue[0], 3.3, flue[2]), (0.8, 1.4, 0.6), frame.yaw())
     fp(scene, frame, "survival_kit/workbench-anvil", far * 0.3, -0.2, 20.0, 2.8, height=0.85, label="enclume")
     fl(scene, frame, "survival_kit/tool-hammer", far * 0.3, -0.2, 70.0, 2.2, y=top_of("survival_kit/workbench-anvil", 2.8),
        tilt=90.0)
-    fp(scene, frame, "survival_kit/workbench-grind", -far * 1.0, -2.7, 0.0, 2.8, height=0.9, label="meule")
+    # Comme les lits, la meule a une pièce mesurée sous son origine : sans correction, elle flotte.
+    fp(scene, frame, "survival_kit/workbench-grind", -far * 1.0, -2.7, 0.0, 2.8, height=0.9, y=-0.09 * 2.8, label="meule")
     fp(scene, frame, "survival_kit/barrel-open", far * 2.8, -0.1, 0.0, 2.6, height=0.9, label="baquet de trempe")
     cylinder(scene, "water", frame.p(far * 2.8, -0.1, 0.8), 0.27, 0.02, sides=10)
     deep = 0.45 * 2.4
@@ -1486,8 +1498,8 @@ def build_town_hall(scene):
         scene.add("fantasy_town_kit/lantern", (x, 0.0, cz + 6.7), 0.0, 1.7)
         block(scene, (x, 1.3, cz + 6.7), (0.4, 2.6, 0.4), label="lanterne de la mairie")
     LAYOUT.keep_clear("porte de la mairie", -1.5, 1.5, cz + 6.3, cz + 10.0)
-    sign(scene, "Enseigne_mairie", (cx, 2.85, cz + 6.26), 0.0, text="Mairie de Codia", style=1, mount=1,
-               board_size=(2.4, 0.5), board_height=0.0, line_height=0.24, collision=False)
+    sign(scene, "Enseigne_mairie", (cx, 3.45, cz + 6.26), 0.0, text="Mairie de Codia", style=1, mount=1,
+         board_size=(3.0, 0.62), board_height=0.0, line_height=0.32, collision=False)
 
 
 def build_mills(scene, rng):
@@ -1608,14 +1620,11 @@ def build_hall_interior():
     # Les armoires des archives, contre le mur ouest.
     for z in (-3.5, -1.0, 1.5):
         hp(scene, "furniture_kit/bookcaseClosedDoors", (-7.3, 0.0, z), 90.0, 3.2, label="armoire des archives")
-    # Le bureau de l'archiviste, face aux armoires, et celui des doléances, près de l'escalier.
+    # Le bureau de l'archiviste, face aux armoires. Les passages entre les meubles gardent au moins un mètre.
     hp(scene, "furniture_kit/desk", (-4.4, 0.0, -3.6), 90.0, 2.8, label="bureau de l'archiviste")
     hp(scene, "furniture_kit/chairDesk", (-3.0, 0.0, -3.6), 90.0, 2.6, label="fauteuil de l'archiviste")
     lay(scene, "furniture_kit/books", (-4.2, top_of("furniture_kit/desk", 2.8), -4.2), 80.0, 2.6)
-    hp(scene, "furniture_kit/desk", (2.8, 0.0, -1.8), 180.0, 2.8, label="bureau des doléances")
-    hp(scene, "furniture_kit/chairDesk", (2.8, 0.0, -3.2), 180.0, 2.6, label="fauteuil des doléances")
-    lay(scene, "graveyard_kit/candle", (3.5, top_of("furniture_kit/desk", 2.8), -1.4), 0.0, 0.8)
-    lay(scene, "furniture_kit/books", (2.3, top_of("furniture_kit/desk", 2.8), -1.6), 100.0, 2.6)
+    lay(scene, "graveyard_kit/candle", (-4.9, top_of("furniture_kit/desk", 2.8), -2.9), 0.0, 0.8)
     for x in (-3.0, -1.6):
         hp(scene, "furniture_kit/bookcaseOpen", (x, 0.0, -5.28), 0.0, 3.2, label="étagère")
         shelf_books(scene, rng, (x, 0.0, -5.28), 0.0, (0.06, 0.98, 1.9), 1.1)
