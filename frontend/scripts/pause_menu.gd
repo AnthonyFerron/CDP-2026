@@ -109,5 +109,4 @@ func close() -> void:
 func _on_main_menu() -> void:
 	_root.hide()
 	GameState.save_game()
-	get_tree().paused = false
-	get_tree().change_scene_to_file(MainMenu.SCENE)
+	Transition.change_scene(MainMenu.SCENE)

@@ -129,11 +129,9 @@ func _on_erupted() -> void:
 
 func _on_main_menu_pressed() -> void:
 	GameState.reset()
-	get_tree().paused = false
-	get_tree().change_scene_to_file(MainMenu.SCENE)
+	Transition.change_scene(MainMenu.SCENE)
 
 
 func _on_restart_pressed() -> void:
 	GameState.reset()
-	get_tree().paused = false
-	get_tree().change_scene_to_file(GameState.HUB_SCENE)
+	Transition.change_scene(GameState.HUB_SCENE, GameState.hub_title())
