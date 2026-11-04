@@ -6,17 +6,17 @@ extends CanvasLayer
 ## Indices de chaque zone, du plus vague au plus précis.
 const ZONE_HINTS := {
 	&"plaine": [
-		"Six fragments de la conversation oubliée sont cachés dans les livres de la bibliothèque. Entrez dans les ruines et fouillez les étagères.",
+		"Six fragments de la conversation sont cachés dans des livres de la bibliothèque, sous les ruines. Sur les étagères, cherchez les livres qui dépassent de leur rangée, un signet pendu sous eux.",
 		"La conversation suit les étapes d'un projet : on définit d'abord ce qu'il faut faire et pourquoi, puis on prépare, on organise et on suit le travail.",
 		"La bibliothécaire ouvre la discussion en parlant d'organiser la restauration. L'employé la conclut : vérifier le travail, puis clôturer le projet.",
 	],
 	&"desert": [
-		"Des runes sont posées à la surface et dans la cave. D'autres sont enfouies : maintenez E devant un tas de sable pour le dégager. Certains tas sont vides.",
+		"Des runes sont posées dans les salles du monument, parmi les débris au-dehors et dans la cave. D'autres sont enfouies : maintenez E devant un tas de sable pour le dégager. Certains tas sont vides.",
 		"Dans la cave, chaque mur porte un algorithme incomplet. L'un répète une action tant que la jarre n'est pas pleine ; l'autre pose une question avant d'ouvrir la porte.",
 		"Deux runes ne servent à aucun des deux algorithmes : ce sont des leurres. Une boucle s'ouvre par « TANT QUE », une condition par « SI » et se poursuit par « SINON ».",
 	],
 	&"marais": [
-		"Descendez dans la crypte, au nord. Lisez l'inscription du mur, derrière le mécanisme, puis les épitaphes des rois, dans la chambre ouest.",
+		"Suivez les pontons et leurs lanternes jusqu'à la crypte, au nord. En bas du long escalier, lisez l'inscription gravée sur le mur face au mécanisme, puis les épitaphes des rois, dans la chambre funéraire de l'ouest.",
 		"Le mot à inscrire part du nom du royaume. Chaque lettre se décale dans l'alphabet : trois en avant, puis trois en arrière, et ainsi de suite.",
 		"Le royaume s'appelle Codia. Sa première lettre, C, avance de trois ; la deuxième, O, recule de trois. Réglez les cercles du centre vers l'extérieur.",
 	],

@@ -9,6 +9,8 @@ uniform vec3 hot_color : source_color = vec3(1.0, 0.38, 0.06);
 uniform vec3 crust_color : source_color = vec3(0.09, 0.055, 0.05);
 uniform float emission_strength = 3.5;
 uniform float flow_speed = 1.0;
+// Ruban de la coulée : le bord se mesure en travers (UV.y), sans découpe ronde.
+uniform bool ribbon = false;
 
 varying vec3 world_pos;
 
@@ -19,7 +21,7 @@ void vertex() {
 }
 
 void fragment() {
-	float edge = length(UV - 0.5) * 2.0;
+	float edge = ribbon ? abs(UV.y - 0.5) * 2.0 : length(UV - 0.5) * 2.0;
 	if (edge > 1.0) {
 		discard;
 	}

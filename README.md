@@ -77,10 +77,10 @@ Il ne court que dans un niveau, hors pause : il s'arrête dans les menus, la pau
 
 | Zone | Énigme | Livre | Solution |
 | --- | --- | --- | --- |
-| Plaine | La discussion oubliée : six fragments cachés dans les livres de la bibliothèque, à remettre dans l'ordre sur la tablette | Projenomicon | Ordre de la conversation : restauration à organiser, objectifs, inventaire, planning, suivi, vérification et clôture |
-| Désert | Les runes de l'algorithme : runes à ramasser ou à dégager du sable en maintenant E, à poser sur la table ronde de la cave | Algonicon | Jarre : TANT QUE, Puiser, Porter. Porte : SI, Ouvrir, SINON. « POUR » et « Fermer » sont des leurres |
-| Marais | Le tombeau des lettres oubliées : mécanisme à cinq cercles dans la crypte souterraine ; les épitaphes des rois Codeon I à IV, dans la chambre ouest, à l'opposé du tombeau du livre, redonnent la règle | Logiconomicon | CODIA décalé de +3, −3, +3, −3, +3 : **FLGFD** |
-| Village | Les cinq codes oubliés : dix fragments de papier cachés dans la mairie (touche I pour les relire), cinq extraits de code à résoudre dans l'ordre sur le dispositif du bureau du maire | Codonomicon | HTML : **3**. CSS : **green**. Python : **10**. PHP : **2**. TypeScript : **12** |
+| Plaines d'Hexcole | Les fragments du passé : six fragments cachés dans les livres de la bibliothèque, à remettre dans l'ordre sur la tablette | Projenomicon | Ordre de la conversation : restauration à organiser, objectifs, inventaire, planning, suivi, vérification et clôture |
+| Désert de Pythania | Les algorithmes oubliés : runes à ramasser ou à dégager du sable en maintenant E, à poser sur la table ronde de la cave | Algonicon | Jarre : TANT QUE, Puiser, Porter. Porte : SI, Ouvrir, SINON. « POUR » et « Fermer » sont des leurres |
+| Marais de Kernel Swamp | Le tombeau du chiffrement : mécanisme à cinq cercles dans la crypte souterraine ; les épitaphes des rois Codeon I à IV, dans la chambre ouest, à l'opposé du tombeau du livre, redonnent la règle | Logiconomicon | CODIA décalé de +3, −3, +3, −3, +3 : **FLGFD** |
+| Village détruit | Les cinq langages oubliés : dix fragments de papier cachés dans la mairie (touche I pour les relire), cinq extraits de code à résoudre dans l'ordre sur le dispositif du bureau du maire | Codonomicon | HTML : **3**. CSS : **green**. Python : **10**. PHP : **2**. TypeScript : **12** |
 
 ## Tests du jeu
 
@@ -113,7 +113,7 @@ Un script propre à une scène se range à côté de celle-ci. Les fichiers et d
 
 L'API FastAPI de `backend/` gère les comptes avec double authentification par e-mail, les parties et leur chronomètre, les énigmes et les classements. Sa documentation interactive est servie sur `/api/docs`. Les routes et les règles sont dans `docs/api-contract.md`, et le branchement côté Godot dans `docs/api-godot.md`.
 
-Les tests de l'API demandent une base PostgreSQL dédiée, indiquée par `TEST_DATABASE_URL` (voir la section Tests de `docs/api-contract.md`). Le déploiement n'applique pas les migrations Alembic : après en avoir ajouté une, lancer `alembic upgrade head` dans le conteneur `api` du serveur.
+Les tests de l'API demandent une base PostgreSQL dédiée, indiquée par `TEST_DATABASE_URL` (voir la section Tests de `docs/api-contract.md`). Ils tournent sur chaque pull request vers `dev` ou `main`. Une migration Alembic doit rester compatible avec la version précédente de l'API : voir `docs/deploiement.md`.
 
 ## Hébergement
 
@@ -137,9 +137,11 @@ En vue à la première personne, le corps de Devlyn ne se voit pas mais projette
 
 ## Déploiement
 
-Chaque push sur `main` qui modifie `backend/`, `frontend/` ou `infrastructure/` lance les tests de l'API, puis déploie le jeu et l'API sur le serveur de production avec Docker Compose (voir `.github/workflows/deploy.yml`). Si les tests échouent, rien n'est déployé.
+Chaque push sur `main` qui modifie `backend/`, `frontend/` ou `infrastructure/` lance les tests de l'API, puis déploie le jeu et l'API sur le serveur de production (voir `.github/workflows/deploy.yml`). Si les tests échouent, rien n'est déployé. Une pull request ne déploie jamais rien : elle lance seulement les tests (`.github/workflows/tests.yml`).
 
-Le serveur se prépare une seule fois avec `sudo bash infrastructure/setup-server.sh`, qui affiche les secrets à créer dans GitHub. Les secrets de production se trouvent dans `/opt/cdp-2026/.env` et ne sont jamais versionnés. Après avoir modifié ce fichier, relancer `cdp-deploy` en tant qu'utilisateur `deploy`.
+Sur le serveur, `cdp-deploy` récupère `main` et lance `infrastructure/deploy.sh`, qui sauvegarde la base dans `/opt/cdp-2026/backups`, applique les migrations Alembic, puis met les conteneurs à jour. Si la sauvegarde ou une migration échoue, le déploiement s'arrête et l'API en service n'est pas touchée. Le détail, la restauration d'une sauvegarde et les règles d'écriture des migrations sont dans `docs/deploiement.md`.
+
+Le serveur se prépare une seule fois avec `sudo bash infrastructure/setup-server.sh`, qui installe `cdp-deploy` et affiche les secrets à créer dans GitHub. Le relancer met `cdp-deploy` à jour sans changer la clé de déploiement. Les secrets de production se trouvent dans `/opt/cdp-2026/.env` et ne sont jamais versionnés. Après avoir modifié ce fichier, relancer `cdp-deploy` en tant qu'utilisateur `deploy`.
 
 Le domaine est défini par `SITE_ADDRESS` dans ce fichier. Il pointe vers le serveur avec un enregistrement DNS sans proxy Cloudflare, et Caddy obtient le certificat HTTPS tout seul.
 

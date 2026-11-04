@@ -2,80 +2,282 @@
 
 [ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/tent-canvas.glb" id="1_model"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/campfire-pit.glb" id="2_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/barrel.glb" id="3_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/bucket.glb" id="4_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/box.glb" id="5_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/fence.glb" id="6_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/iron-fence.glb" id="7_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/iron-fence-damaged.glb" id="8_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/lightpost-single.glb" id="9_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/gravestone-round.glb" id="10_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/gravestone-bevel.glb" id="11_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/grave.glb" id="12_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/gravestone-broken.glb" id="13_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/gravestone-decorative.glb" id="14_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/gravestone-cross.glb" id="15_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/gravestone-wide.glb" id="16_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/candle-multiple.glb" id="17_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/bench-damaged.glb" id="18_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/pine-crooked.glb" id="19_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/crypt-large.glb" id="20_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/crypt-large-roof.glb" id="21_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/pillar-obelisk.glb" id="22_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/stone-wall.glb" id="23_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/stone-wall-damaged.glb" id="24_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/pine.glb" id="25_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/campfire-fishing-stand.glb" id="3_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/barrel.glb" id="4_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/bucket.glb" id="5_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/table.glb" id="6_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/chest.glb" id="7_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/bedroll.glb" id="8_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/log_stack.glb" id="9_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/lantern-candle.glb" id="10_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/shovel.glb" id="11_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/resource-wood.glb" id="12_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/lightpost-single.glb" id="13_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/gravestone-round.glb" id="14_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/grave.glb" id="15_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/gravestone-bevel.glb" id="16_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/gravestone-broken.glb" id="17_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/gravestone-decorative.glb" id="18_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/gravestone-cross.glb" id="19_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/gravestone-wide.glb" id="20_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/candle.glb" id="21_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/flower_redA.glb" id="22_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/flower_purpleA.glb" id="23_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/flower_yellowA.glb" id="24_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/shovel-dirt.glb" id="25_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/grave-border.glb" id="26_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/candle-multiple.glb" id="27_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/bench-damaged.glb" id="28_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/path_stone.glb" id="29_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/crypt-small.glb" id="30_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/pine-crooked.glb" id="31_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/crypt-large.glb" id="32_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/crypt-large-roof.glb" id="33_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/pillar-obelisk.glb" id="34_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/pillar-small.glb" id="35_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/hanging_moss.glb" id="36_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/plant_bushLarge.glb" id="37_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/plant_bushDetailed.glb" id="38_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/grass_large.glb" id="39_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/plant_flatTall.glb" id="40_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/trunk-long.glb" id="41_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/gravestone-cross-large.glb" id="42_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/cross-column.glb" id="43_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/gravestone-roof.glb" id="44_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/path_wood.glb" id="45_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/canoe.glb" id="46_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/canoe_paddle.glb" id="47_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/lantern.glb" id="48_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-wood.glb" id="49_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-wood-window-shutters.glb" id="50_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-wood-broken.glb" id="51_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/roof-gable.glb" id="52_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/roof-high-gable.glb" id="53_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/chimney.glb" id="54_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/roof-point.glb" id="55_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/watermill.glb" id="56_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/chest.glb" id="57_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/fence-broken.glb" id="58_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-wood-door.glb" id="59_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-door.glb" id="60_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-window-round.glb" id="61_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-broken.glb" id="62_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-half.glb" id="63_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-window-stone.glb" id="64_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/altar-stone.glb" id="65_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/debris.glb" id="66_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/rock-large.glb" id="67_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/pillar-stone.glb" id="68_model"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
 size = Vector3(2.4, 2.2, 2.4)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_2"]
-size = Vector3(1, 1.4, 1)
+size = Vector3(1.326, 0.952, 0.85)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_3"]
-size = Vector3(1, 1, 1)
+size = Vector3(1.04, 0.96, 1.04)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4"]
-size = Vector3(0.8, 0.8, 0.8)
+size = Vector3(0.56, 0.76, 0.56)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5"]
-size = Vector3(0.3, 2.6, 3)
+size = Vector3(1.936, 0.682, 1.43)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_6"]
-size = Vector3(0.3, 2.6, 18)
+size = Vector3(0.9, 0.54, 1.26)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7"]
-size = Vector3(15, 2.6, 0.3)
+size = Vector3(1.092, 0.91, 1.846)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_8"]
-size = Vector3(18, 2.6, 0.3)
+size = Vector3(0.832, 0.768, 0.832)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_9"]
-size = Vector3(1.6, 1.8, 0.8)
+size = Vector3(0.816, 1.854, 0.8)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_10"]
-size = Vector3(1.4, 1.8, 0.8)
+size = Vector3(1.38, 3.8, 0.63)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_11"]
-size = Vector3(1, 3.4, 1.8)
+size = Vector3(1.17, 1.508, 0.65)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_12"]
-size = Vector3(2.7, 1.5, 1.3)
+size = Vector3(1.175, 1.378, 0.66)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_13"]
-size = Vector3(0.8, 4, 0.8)
+size = Vector3(1.17, 1.378, 0.65)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_14"]
-size = Vector3(7.6, 6, 9.6)
+size = Vector3(1.326, 0.884, 1.014)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_15"]
-size = Vector3(1.4, 4, 1.4)
+size = Vector3(1.326, 1.534, 0.65)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_16"]
-size = Vector3(0.8, 3, 4)
+size = Vector3(1.17, 2.366, 0.858)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_17"]
-size = Vector3(0.9, 4, 0.9)
+size = Vector3(2.21, 1.482, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_18"]
+size = Vector3(1.17, 1.508, 0.651)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_19"]
+size = Vector3(1.488, 1.584, 1.248)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_20"]
+size = Vector3(1.26, 1.624, 0.7)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_21"]
+size = Vector3(1, 3.4, 1.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_22"]
+size = Vector3(2.73, 1.5, 1.38)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_23"]
+size = Vector3(2.97, 2.2, 3.08)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_24"]
+size = Vector3(0.8, 4, 0.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_25"]
+size = Vector3(7.6, 6, 9.6)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_26"]
+size = Vector3(1.4, 4.04, 1.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_27"]
+size = Vector3(0.36, 1.52, 0.36)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_28"]
+size = Vector3(0.8, 1.4, 0.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_29"]
+size = Vector3(1.17, 2.444, 0.858)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_30"]
+size = Vector3(1.17, 3.77, 1.17)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_31"]
+size = Vector3(1.274, 1.586, 0.65)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_32"]
+size = Vector3(2, 0.3, 7.496)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_33"]
+size = Vector3(0.24, 2.1, 0.24)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_34"]
+size = Vector3(0.35, 3, 0.35)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_35"]
+size = Vector3(0.33, 2.34, 0.33)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_36"]
+size = Vector3(3.2, 2.45, 3.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_37"]
+size = Vector3(3.2, 1.277, 3.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_38"]
+size = Vector3(3, 2.3, 3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_39"]
+size = Vector3(3, 2.436, 3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_40"]
+size = Vector3(2.8, 2.55, 2.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_41"]
+size = Vector3(2.8, 0.98, 2.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_42"]
+size = Vector3(3, 2.05, 3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_43"]
+size = Vector3(3.4, 2.8, 3.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_44"]
+size = Vector3(3.4, 2.761, 3.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_45"]
+size = Vector3(0.27, 2.938, 0.27)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_46"]
+size = Vector3(0.27, 2.918, 0.27)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_47"]
+size = Vector3(0.27, 2.619, 0.27)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_48"]
+size = Vector3(0.27, 2.7, 0.27)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_49"]
+size = Vector3(0.27, 2.461, 0.27)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_50"]
+size = Vector3(0.27, 2.644, 0.27)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_51"]
+size = Vector3(0.27, 2.588, 0.27)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_52"]
+size = Vector3(0.27, 2.56, 0.27)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_53"]
+size = Vector3(0.27, 2.305, 0.27)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_54"]
+size = Vector3(0.27, 2.263, 0.27)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_55"]
+size = Vector3(3, 2.6, 3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_56"]
+size = Vector3(0.27, 2.5, 0.27)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_57"]
+size = Vector3(0.27, 2.25, 0.27)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_58"]
+size = Vector3(0.27, 2, 0.27)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_59"]
+size = Vector3(0.5, 4, 1.05)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_60"]
+size = Vector3(0.5, 1.1, 1.9)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_61"]
+size = Vector3(0.5, 4, 4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_62"]
+size = Vector3(4, 3, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_63"]
+size = Vector3(4, 2, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_64"]
+size = Vector3(4, 4, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_65"]
+size = Vector3(1.3, 0.98, 2.08)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_66"]
+size = Vector3(1.104, 1.2, 2.184)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_67"]
+size = Vector3(1.421, 1.304, 2.184)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_68"]
+size = Vector3(1.169, 0.812, 1.085)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_69"]
+size = Vector3(4, 0.64, 0.64)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_70"]
+size = Vector3(0.7, 4, 0.7)
 
 [node name="MaraisProps" type="Node3D"]
 
@@ -87,197 +289,596 @@ transform = Transform3D(3.89711, 0, 2.25, 0, 4.5, 0, -2.25, 0, 3.89711, -22.5, 0
 [node name="campfire_pit_1" parent="Models" instance=ExtResource("2_model")]
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, -18, 0.4, 21)
 
-[node name="barrel_2" parent="Models" instance=ExtResource("3_model")]
-transform = Transform3D(3.8637, 0, 1.03528, 0, 4, 0, -1.03528, 0, 3.8637, -24.2, 0.4, 20.6)
+[node name="campfire_fishing_stand_2" parent="Models" instance=ExtResource("3_model")]
+transform = Transform3D(1.16287, 0, 3.19495, 0, 3.4, 0, -3.19495, 0, 1.16287, -17.9782, 0.4, 20.9898)
 
-[node name="bucket_3" parent="Models" instance=ExtResource("4_model")]
+[node name="barrel_3" parent="Models" instance=ExtResource("4_model")]
+transform = Transform3D(1.93185, 0, 0.51764, 0, 2, 0, -0.51764, 0, 1.93185, -24.2, 0.4, 20.6)
+
+[node name="bucket_4" parent="Models" instance=ExtResource("5_model")]
 transform = Transform3D(3.8637, 0, 1.03528, 0, 4, 0, -1.03528, 0, 3.8637, -23.2, 0.4, 19.6)
 
-[node name="box_4" parent="Models" instance=ExtResource("5_model")]
-transform = Transform3D(3.8637, 0, 1.03528, 0, 4, 0, -1.03528, 0, 3.8637, -19.6, 0.4, 25.6)
+[node name="table_5" parent="Models" instance=ExtResource("6_model")]
+transform = Transform3D(1.99388, 0, 0.92976, 0, 2.2, 0, -0.92976, 0, 1.99388, -19.8046, 0.4, 25.89)
 
-[node name="box_5" parent="Models" instance=ExtResource("5_model")]
-transform = Transform3D(3.09096, 0, 0.82822, 0, 3.2, 0, -0.82822, 0, 3.09096, -25, 0.4, 22.8)
+[node name="chest_6" parent="Models" instance=ExtResource("7_model")]
+transform = Transform3D(1.73867, 0, 0.46587, 0, 1.8, 0, -0.46587, 0, 1.73867, -25.0466, 0.49, 22.6261)
 
-[node name="fence_6" parent="Models" instance=ExtResource("6_model")]
-transform = Transform3D(1.36808, 0, 3.75877, 0, 4, 0, -3.75877, 0, 1.36808, -26, 0.4, 19)
+[node name="bedroll_7" parent="Models" instance=ExtResource("8_model")]
+transform = Transform3D(3.03109, 0, 1.75, 0, 3.5, 0, -1.75, 0, 3.03109, -21.1936, 0.4, 22.1761)
 
-[node name="fence_7" parent="Models" instance=ExtResource("6_model")]
-transform = Transform3D(3.75877, 0, 1.36808, 0, 4, 0, -1.36808, 0, 3.75877, -25, 0.4, 26.5)
+[node name="log_stack_8" parent="Models" instance=ExtResource("9_model")]
+transform = Transform3D(-0.45149, 0, 2.5605, 0, 2.6, 0, -2.5605, 0, -0.45149, -21.2173, 0.4, 18.3767)
 
-[node name="fence_8" parent="Models" instance=ExtResource("6_model")]
-transform = Transform3D(3.4641, 0, -2, 0, 4, 0, 2, 0, 3.4641, -17, 0.4, 26.8)
+[node name="barrel_9" parent="Models" instance=ExtResource("4_model")]
+transform = Transform3D(1.22567, 0, 1.02846, 0, 1.6, 0, -1.02846, 0, 1.22567, -24.9, 0.4, 24.8)
 
-[node name="iron_fence_9" parent="Models" instance=ExtResource("7_model")]
-transform = Transform3D(0, 0, 3, 0, 3, 0, -3, 0, 0, 7, 0.4, -7.5)
+[node name="lantern_candle_10" parent="Models" instance=ExtResource("10_model")]
+transform = Transform3D(1.87939, 0, 0.68404, 0, 2, 0, -0.68404, 0, 1.87939, -25, 0.94, 22.8)
 
-[node name="iron_fence_10" parent="Models" instance=ExtResource("7_model")]
-transform = Transform3D(0, 0, -3, 0, 3, 0, 3, 0, 0, 25, 0.4, -7.5)
+[node name="shovel_11" parent="Models" instance=ExtResource("11_model")]
+transform = Transform3D(1.5, 0.45115, 2.55861, 0, 2.95442, -0.52094, -2.59808, 0.26047, 1.47721, -24.1301, 0.42605, 26.3076)
 
-[node name="iron_fence_11" parent="Models" instance=ExtResource("7_model")]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 8.5, 0.4, 9)
+[node name="resource_wood_12" parent="Models" instance=ExtResource("12_model")]
+transform = Transform3D(3.27661, 0, 2.29431, 0, 4, 0, -2.29431, 0, 3.27661, -19.8279, 0.4, 19.7951)
 
-[node name="iron_fence_damaged_12" parent="Models" instance=ExtResource("8_model")]
-transform = Transform3D(0, 0, 3, 0, 3, 0, -3, 0, 0, 7, 0.4, -4.5)
+[node name="lightpost_single_13" parent="Models" instance=ExtResource("13_model")]
+transform = Transform3D(0, 0, 3, 0, 3, 0, -3, 0, 0, 6.61, 0.4, -0.285)
 
-[node name="iron_fence_damaged_13" parent="Models" instance=ExtResource("8_model")]
-transform = Transform3D(0, 0, -3, 0, 3, 0, 3, 0, 0, 25, 0.4, -4.5)
+[node name="lightpost_single_14" parent="Models" instance=ExtResource("13_model")]
+transform = Transform3D(0, 0, 3, 0, 3, 0, -3, 0, 0, 6.61, 0.4, 6.315)
 
-[node name="iron_fence_14" parent="Models" instance=ExtResource("7_model")]
-transform = Transform3D(-3, 0, 0, 0, 3, 0, -0, 0, -3, 11.5, 0.4, -9)
+[node name="gravestone_round_15" parent="Models" instance=ExtResource("14_model")]
+transform = Transform3D(2.59841, 0, -0.09081, 0, 2.6, 0, 0.09081, 0, 2.59841, 10.4865, 0.4, -6.48746)
 
-[node name="iron_fence_15" parent="Models" instance=ExtResource("7_model")]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 11.5, 0.4, 9)
+[node name="grave_16" parent="Models" instance=ExtResource("15_model")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 10.54, 0.4, -4.88)
 
-[node name="iron_fence_16" parent="Models" instance=ExtResource("7_model")]
-transform = Transform3D(0, 0, 3, 0, 3, 0, -3, 0, 0, 7, 0.4, -1.5)
+[node name="gravestone_bevel_17" parent="Models" instance=ExtResource("16_model")]
+transform = Transform3D(2.59991, 0, 0.02212, 0, 2.6, 0, -0.02212, 0, 2.59991, 13.4871, 0.4, -6.48689)
 
-[node name="iron_fence_17" parent="Models" instance=ExtResource("7_model")]
-transform = Transform3D(0, 0, -3, 0, 3, 0, 3, 0, 0, 25, 0.4, -1.5)
+[node name="grave_18" parent="Models" instance=ExtResource("15_model")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 13.54, 0.4, -4.88)
 
-[node name="iron_fence_18" parent="Models" instance=ExtResource("7_model")]
-transform = Transform3D(-3, 0, 0, 0, 3, 0, -0, 0, -3, 14.5, 0.4, -9)
+[node name="gravestone_bevel_19" parent="Models" instance=ExtResource("16_model")]
+transform = Transform3D(2.59874, 0, -0.08093, 0, 2.6, 0, 0.08093, 0, 2.59874, 16.4866, 0.4, -6.48741)
 
-[node name="iron_fence_19" parent="Models" instance=ExtResource("7_model")]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 14.5, 0.4, 9)
+[node name="grave_20" parent="Models" instance=ExtResource("15_model")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 16.54, 0.4, -4.88)
 
-[node name="iron_fence_20" parent="Models" instance=ExtResource("7_model")]
-transform = Transform3D(0, 0, -3, 0, 3, 0, 3, 0, 0, 25, 0.4, 1.5)
+[node name="moss_gravestone_broken_21" parent="Models" instance=ExtResource("17_model")]
+transform = Transform3D(2.58638, 0, -0.26576, 0, 2.6, 0, 0.26576, 0, 2.58638, 19.4267, 0.4, -6.67742)
 
-[node name="iron_fence_21" parent="Models" instance=ExtResource("7_model")]
-transform = Transform3D(-3, 0, 0, 0, 3, 0, -0, 0, -3, 17.5, 0.4, -9)
+[node name="grave_22" parent="Models" instance=ExtResource("15_model")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 19.54, 0.4, -4.88)
 
-[node name="iron_fence_22" parent="Models" instance=ExtResource("7_model")]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 17.5, 0.4, 9)
+[node name="gravestone_decorative_23" parent="Models" instance=ExtResource("18_model")]
+transform = Transform3D(2.59218, 0, -0.20149, 0, 2.6, 0, 0.20149, 0, 2.59218, 10.512, 0.4, -2.98603)
 
-[node name="iron_fence_damaged_23" parent="Models" instance=ExtResource("8_model")]
-transform = Transform3D(0, 0, -3, 0, 3, 0, 3, 0, 0, 25, 0.4, 4.5)
+[node name="grave_24" parent="Models" instance=ExtResource("15_model")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 10.54, 0.4, -1.38)
 
-[node name="iron_fence_24" parent="Models" instance=ExtResource("7_model")]
-transform = Transform3D(-3, 0, 0, 0, 3, 0, -0, 0, -3, 20.5, 0.4, -9)
+[node name="gravestone_decorative_25" parent="Models" instance=ExtResource("18_model")]
+transform = Transform3D(2.59859, 0, 0.08571, 0, 2.6, 0, -0.08571, 0, 2.59859, 13.5134, 0.4, -2.98744)
 
-[node name="iron_fence_25" parent="Models" instance=ExtResource("7_model")]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 20.5, 0.4, 9)
+[node name="grave_26" parent="Models" instance=ExtResource("15_model")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 13.54, 0.4, -1.38)
 
-[node name="iron_fence_26" parent="Models" instance=ExtResource("7_model")]
-transform = Transform3D(0, 0, 3, 0, 3, 0, -3, 0, 0, 7, 0.4, 7.5)
+[node name="gravestone_cross_27" parent="Models" instance=ExtResource("19_model")]
+transform = Transform3D(2.58851, 0, -0.24417, 0, 2.6, 0, 0.24417, 0, 2.58851, 16.4883, 0.4, -3.01416)
 
-[node name="iron_fence_27" parent="Models" instance=ExtResource("7_model")]
-transform = Transform3D(0, 0, -3, 0, 3, 0, 3, 0, 0, 25, 0.4, 7.5)
+[node name="grave_28" parent="Models" instance=ExtResource("15_model")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 16.54, 0.4, -1.38)
 
-[node name="iron_fence_28" parent="Models" instance=ExtResource("7_model")]
-transform = Transform3D(-3, 0, 0, 0, 3, 0, -0, 0, -3, 23.5, 0.4, -9)
+[node name="moss_gravestone_cross_29" parent="Models" instance=ExtResource("19_model")]
+transform = Transform3D(2.59903, 0, 0.07118, 0, 2.6, 0, -0.07118, 0, 2.59903, 19.4867, 0.4, -3.01264)
 
-[node name="iron_fence_29" parent="Models" instance=ExtResource("7_model")]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 23.5, 0.4, 9)
+[node name="grave_30" parent="Models" instance=ExtResource("15_model")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 19.54, 0.4, -1.38)
 
-[node name="lightpost_single_30" parent="Models" instance=ExtResource("9_model")]
-transform = Transform3D(0, 0, 3, 0, 3, 0, -3, 0, 0, 7, 0.4, -0.3)
+[node name="gravestone_wide_31" parent="Models" instance=ExtResource("20_model")]
+transform = Transform3D(-2.59942, 0, -0.05485, 0, 2.6, 0, 0.05485, 0, -2.59942, 13.487, 0.4, 6.50027)
 
-[node name="lightpost_single_31" parent="Models" instance=ExtResource("9_model")]
-transform = Transform3D(0, 0, 3, 0, 3, 0, -3, 0, 0, 7, 0.4, 6.3)
+[node name="grave_32" parent="Models" instance=ExtResource("15_model")]
+transform = Transform3D(-2, 0, 0, 0, 2, 0, -0, 0, -2, 13.46, 0.4, 4.88)
 
-[node name="gravestone_round_32" parent="Models" instance=ExtResource("10_model")]
-transform = Transform3D(-2.59718, 0, 0.12107, 0, 2.6, 0, -0.12107, 0, -2.59718, 10.5, 0.4, -6.5)
+[node name="gravestone_bevel_33" parent="Models" instance=ExtResource("16_model")]
+transform = Transform3D(-2.59845, 0, -0.08965, 0, 2.6, 0, 0.08965, 0, -2.59845, 16.5125, 0.4, 6.48656)
 
-[node name="gravestone_bevel_33" parent="Models" instance=ExtResource("11_model")]
-transform = Transform3D(-2.59983, 0, -0.02949, 0, 2.6, 0, 0.02949, 0, -2.59983, 13.5, 0.4, -6.5)
+[node name="grave_34" parent="Models" instance=ExtResource("15_model")]
+transform = Transform3D(-2, 0, 0, 0, 2, 0, -0, 0, -2, 16.46, 0.4, 4.88)
 
-[node name="gravestone_bevel_34" parent="Models" instance=ExtResource("11_model")]
-transform = Transform3D(-2.59776, 0, 0.1079, 0, 2.6, 0, -0.1079, 0, -2.59776, 16.5, 0.4, -6.5)
+[node name="gravestone_round_35" parent="Models" instance=ExtResource("14_model")]
+transform = Transform3D(-2.6, 0, -0.00195, 0, 2.6, 0, 0.00195, 0, -2.6, 19.513, 0.4, 6.48699)
 
-[node name="grave_35" parent="Models" instance=ExtResource("12_model")]
-transform = Transform3D(-2.6, 0, 0, 0, 2.6, 0, -0, 0, -2.6, 16.5, 0.4, -4.9)
+[node name="candle_36" parent="Models" instance=ExtResource("21_model")]
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 11, 0.4, -5.95)
 
-[node name="gravestone_broken_36" parent="Models" instance=ExtResource("13_model")]
-transform = Transform3D(-2.57581, 0, 0.35386, 0, 2.6, 0, -0.35386, 0, -2.57581, 19.5, 0.4, -6.5)
+[node name="candle_37" parent="Models" instance=ExtResource("21_model")]
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 20, 0.4, -5.95)
 
-[node name="grave_37" parent="Models" instance=ExtResource("12_model")]
-transform = Transform3D(-2.6, 0, 0, 0, 2.6, 0, -0, 0, -2.6, 19.5, 0.4, -4.9)
+[node name="candle_38" parent="Models" instance=ExtResource("21_model")]
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 17, 0.4, -2.45)
 
-[node name="gravestone_decorative_38" parent="Models" instance=ExtResource("14_model")]
-transform = Transform3D(-2.58611, 0, 0.26844, 0, 2.6, 0, -0.26844, 0, -2.58611, 10.5, 0.4, -3)
+[node name="candle_39" parent="Models" instance=ExtResource("21_model")]
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 17, 0.4, 5.95)
 
-[node name="gravestone_decorative_39" parent="Models" instance=ExtResource("14_model")]
-transform = Transform3D(-2.59749, 0, -0.11426, 0, 2.6, 0, 0.11426, 0, -2.59749, 13.5, 0.4, -3)
+[node name="flower_redA_40" parent="Models" instance=ExtResource("22_model")]
+transform = Transform3D(2.48293, 0, -0.7714, 0, 2.6, 0, 0.7714, 0, 2.48293, 13.3497, 0.5, -4.58457)
 
-[node name="gravestone_cross_40" parent="Models" instance=ExtResource("15_model")]
-transform = Transform3D(-2.57958, 0, 0.32519, 0, 2.6, 0, -0.32519, 0, -2.57958, 16.5, 0.4, -3)
+[node name="flower_purpleA_41" parent="Models" instance=ExtResource("23_model")]
+transform = Transform3D(0.22932, 0, -2.58987, 0, 2.6, 0, 2.58987, 0, 0.22932, 10.3046, 0.5, -1.0482)
 
-[node name="gravestone_cross_41" parent="Models" instance=ExtResource("15_model")]
-transform = Transform3D(-2.59827, 0, -0.0949, 0, 2.6, 0, 0.0949, 0, -2.59827, 19.5, 0.4, -3)
+[node name="flower_yellowA_42" parent="Models" instance=ExtResource("24_model")]
+transform = Transform3D(0.71328, 0, -2.50025, 0, 2.6, 0, 2.50025, 0, 0.71328, 19.3143, 0.5, -1.05)
 
-[node name="grave_42" parent="Models" instance=ExtResource("12_model")]
-transform = Transform3D(-2.6, 0, 0, 0, 2.6, 0, -0, 0, -2.6, 19.5, 0.4, -1.4)
+[node name="flower_redA_43" parent="Models" instance=ExtResource("22_model")]
+transform = Transform3D(1.81598, 0, 1.8607, 0, 2.6, 0, -1.8607, 0, 1.81598, 19.3363, 0.5, 4.56279)
 
-[node name="gravestone_wide_43" parent="Models" instance=ExtResource("16_model")]
-transform = Transform3D(2.59897, 0, 0.07312, 0, 2.6, 0, -0.07312, 0, 2.59897, 13.5, 0.4, 6.5)
+[node name="shovel_dirt_44" parent="Models" instance=ExtResource("25_model")]
+transform = Transform3D(-2.25526, 0, 0.82085, 0, 2.4, 0, -0.82085, 0, -2.25526, 19.6226, 0.4, 4.70821)
 
-[node name="gravestone_bevel_44" parent="Models" instance=ExtResource("11_model")]
-transform = Transform3D(2.59725, 0, 0.11952, 0, 2.6, 0, -0.11952, 0, 2.59725, 16.5, 0.4, 6.5)
+[node name="moss_gravestone_round_45" parent="Models" instance=ExtResource("14_model")]
+transform = Transform3D(-2.8, 0, 0, 0, 2.8, 0, -0, 0, -2.8, 10.514, 0.4, 6.486)
 
-[node name="gravestone_round_45" parent="Models" instance=ExtResource("10_model")]
-transform = Transform3D(2.6, 0, 0.0026, 0, 2.6, 0, -0.0026, 0, 2.6, 19.5, 0.4, 6.5)
+[node name="grave_46" parent="Models" instance=ExtResource("15_model")]
+transform = Transform3D(-2, 0, 0, 0, 2, 0, -0, 0, -2, 10.46, 0.4, 4.88)
 
-[node name="gravestone_round_46" parent="Models" instance=ExtResource("10_model")]
-transform = Transform3D(2.8, 0, 0, 0, 2.8, 0, 0, 0, 2.8, 10.5, 0.4, 6.5)
-
-[node name="gravestone_cross_47" parent="Models" instance=ExtResource("15_model")]
+[node name="gravestone_cross_47" parent="Models" instance=ExtResource("19_model")]
 transform = Transform3D(0, 0, -3.6, 0, 3.6, 0, 3.6, 0, 0, 23, 0.4, 1.5)
 
-[node name="grave_48" parent="Models" instance=ExtResource("12_model")]
-transform = Transform3D(0, 0, -3.2, 0, 3.2, 0, 3.2, 0, 0, 21, 0.4, 1.5)
+[node name="grave_border_48" parent="Models" instance=ExtResource("26_model")]
+transform = Transform3D(0, 0, -2.6, 0, 2.6, 0, 2.6, 0, 0, 20.609, 0.4, 1.552)
 
-[node name="candle_multiple_49" parent="Models" instance=ExtResource("17_model")]
+[node name="grave_49" parent="Models" instance=ExtResource("15_model")]
+transform = Transform3D(0, 0, -2.4, 0, 2.4, 0, 2.4, 0, 0, 20.724, 0.4, 1.548)
+
+[node name="candle_multiple_50" parent="Models" instance=ExtResource("27_model")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 21.8, 0.4, 3.2)
 
-[node name="candle_multiple_50" parent="Models" instance=ExtResource("17_model")]
+[node name="candle_multiple_51" parent="Models" instance=ExtResource("27_model")]
 transform = Transform3D(2.29813, 0, 1.92836, 0, 3, 0, -1.92836, 0, 2.29813, 21.8, 0.4, -0.2)
 
-[node name="bench_damaged_51" parent="Models" instance=ExtResource("18_model")]
-transform = Transform3D(-3, 0, 0, 0, 3, 0, -0, 0, -3, 16.5, 0.4, 4.6)
+[node name="bench_damaged_52" parent="Models" instance=ExtResource("28_model")]
+transform = Transform3D(-3, 0, 0, 0, 3, 0, -0, 0, -3, 14.925, 0.4, 2.85)
 
-[node name="pine_crooked_52" parent="Models" instance=ExtResource("19_model")]
-transform = Transform3D(3.3424, 0, -1.03843, 0, 3.5, 0, 1.03843, 0, 3.3424, 14, 0.4, -9.5)
+[node name="path_stone_53" parent="Models" instance=ExtResource("29_model")]
+transform = Transform3D(0.1291, 0, 2.19621, 0, 2.2, 0, -2.19621, 0, 0.1291, 8.82196, 0.4, 1.58875)
 
-[node name="pine_crooked_53" parent="Models" instance=ExtResource("19_model")]
-transform = Transform3D(0.3087, 0, -3.48636, 0, 3.5, 0, 3.48636, 0, 0.3087, 24, 0.4, 7.5)
+[node name="path_stone_54" parent="Models" instance=ExtResource("29_model")]
+transform = Transform3D(0.0889, 0, 2.1982, 0, 2.2, 0, -2.1982, 0, 0.0889, 10.272, 0.4, 1.56528)
 
-[node name="pine_crooked_54" parent="Models" instance=ExtResource("19_model")]
-transform = Transform3D(0.96018, 0, -3.36572, 0, 3.5, 0, 3.36572, 0, 0.96018, 24, 0.4, -7.5)
+[node name="path_stone_55" parent="Models" instance=ExtResource("29_model")]
+transform = Transform3D(-0.03088, 0, 2.19978, 0, 2.2, 0, -2.19978, 0, -0.03088, 11.722, 0.4, 1.58451)
 
-[node name="crypt_large_55" parent="Models" instance=ExtResource("20_model")]
+[node name="path_stone_56" parent="Models" instance=ExtResource("29_model")]
+transform = Transform3D(0.10502, 0, 2.19749, 0, 2.2, 0, -2.19749, 0, 0.10502, 13.172, 0.4, 1.68047)
+
+[node name="path_stone_57" parent="Models" instance=ExtResource("29_model")]
+transform = Transform3D(0.13637, 0, 2.19577, 0, 2.2, 0, -2.19577, 0, 0.13637, 14.622, 0.4, 1.69672)
+
+[node name="path_stone_58" parent="Models" instance=ExtResource("29_model")]
+transform = Transform3D(-0.10134, 0, 2.19766, 0, 2.2, 0, -2.19766, 0, -0.10134, 16.072, 0.4, 1.62141)
+
+[node name="path_stone_59" parent="Models" instance=ExtResource("29_model")]
+transform = Transform3D(0.11749, 0, 2.19686, 0, 2.2, 0, -2.19686, 0, 0.11749, 17.522, 0.4, 1.63746)
+
+[node name="path_stone_60" parent="Models" instance=ExtResource("29_model")]
+transform = Transform3D(0.14762, 0, 2.19504, 0, 2.2, 0, -2.19504, 0, 0.14762, 18.9719, 0.4, 1.53319)
+
+[node name="path_stone_61" parent="Models" instance=ExtResource("29_model")]
+transform = Transform3D(-0.12269, 0, 2.19658, 0, 2.2, 0, -2.19658, 0, -0.12269, 20.422, 0.4, 1.64267)
+
+[node name="moss_crypt_small_62" parent="Models" instance=ExtResource("30_model")]
+transform = Transform3D(-2.2, 0, 0, 0, 2.2, 0, -0, 0, -2.2, 22.189, 0.4, -5.3)
+
+[node name="pine_crooked_63" parent="Models" instance=ExtResource("31_model")]
+transform = Transform3D(-3.46754, 0, -0.47555, 0, 3.5, 0, 0.47555, 0, -3.46754, 14, 0.4, -9.8)
+
+[node name="pine_crooked_64" parent="Models" instance=ExtResource("31_model")]
+transform = Transform3D(1.18491, 0, -3.29332, 0, 3.5, 0, 3.29332, 0, 1.18491, 24, 0.4, 7.5)
+
+[node name="pine_crooked_65" parent="Models" instance=ExtResource("31_model")]
+transform = Transform3D(-1.53001, 0, -3.14787, 0, 3.5, 0, 3.14787, 0, -1.53001, 24, 0.4, -7.8)
+
+[node name="moss_crypt_large_66" parent="Models" instance=ExtResource("32_model")]
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0.4, -41)
 
-[node name="crypt_large_roof_56" parent="Models" instance=ExtResource("21_model")]
+[node name="moss_crypt_large_roof_67" parent="Models" instance=ExtResource("33_model")]
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 4.4, -41)
 
-[node name="pillar_obelisk_57" parent="Models" instance=ExtResource("22_model")]
-transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -6, 0.4, -36.5)
+[node name="moss_pillar_obelisk_68" parent="Models" instance=ExtResource("34_model")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -6.02, 0.4, -36.52)
 
-[node name="pillar_obelisk_58" parent="Models" instance=ExtResource("22_model")]
-transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 6, 0.4, -36.5)
+[node name="moss_pillar_obelisk_69" parent="Models" instance=ExtResource("34_model")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 5.98, 0.4, -36.52)
 
-[node name="stone_wall_59" parent="Models" instance=ExtResource("23_model")]
-transform = Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -8.5, 0.4, -40)
+[node name="pillar_small_70" parent="Models" instance=ExtResource("35_model")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -2.3, 0.4, -35.55)
 
-[node name="stone_wall_damaged_60" parent="Models" instance=ExtResource("24_model")]
-transform = Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -8.5, 0.4, -44)
+[node name="lantern_candle_71" parent="Models" instance=ExtResource("10_model")]
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, -2.3, 1.92, -35.55)
 
-[node name="stone_wall_damaged_61" parent="Models" instance=ExtResource("24_model")]
-transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 8.5, 0.4, -40)
+[node name="candle_multiple_72" parent="Models" instance=ExtResource("27_model")]
+transform = Transform3D(-1.02676, 0, 2.16928, 0, 2.4, 0, -2.16928, 0, -1.02676, -1.42658, 0.4, -35.7232)
 
-[node name="stone_wall_62" parent="Models" instance=ExtResource("23_model")]
-transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 8.5, 0.4, -44)
+[node name="pillar_small_73" parent="Models" instance=ExtResource("35_model")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 2.3, 0.4, -35.55)
 
-[node name="pine_63" parent="Models" instance=ExtResource("25_model")]
-transform = Transform3D(2.79382, 0, 2.86262, 0, 4, 0, -2.86262, 0, 2.79382, -10, 0.4, -46)
+[node name="lantern_candle_74" parent="Models" instance=ExtResource("10_model")]
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 2.3, 1.92, -35.55)
 
-[node name="pine_64" parent="Models" instance=ExtResource("25_model")]
-transform = Transform3D(-3.69339, 0, 1.53587, 0, 4, 0, -1.53587, 0, -3.69339, 9.5, 0.4, -47)
+[node name="candle_multiple_75" parent="Models" instance=ExtResource("27_model")]
+transform = Transform3D(-2.33446, 0, -0.55705, 0, 2.4, 0, 0.55705, 0, -2.33446, 1.45213, 0.4, -35.7439)
 
-[node name="pine_65" parent="Models" instance=ExtResource("25_model")]
-transform = Transform3D(2.06647, 0, 3.42486, 0, 4, 0, -3.42486, 0, 2.06647, -4, 0.4, -48.5)
+[node name="hanging_moss_76" parent="Models" instance=ExtResource("36_model")]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, -3.4, 1.7, -38.65)
+
+[node name="hanging_moss_77" parent="Models" instance=ExtResource("36_model")]
+transform = Transform3D(3.6, 0, 0, 0, 3.6, 0, 0, 0, 3.6, -2.75, 2.4, -37.95)
+
+[node name="hanging_moss_78" parent="Models" instance=ExtResource("36_model")]
+transform = Transform3D(4.4, 0, 0, 0, 4.4, 0, 0, 0, 4.4, 2.8, 2, -38.35)
+
+[node name="hanging_moss_79" parent="Models" instance=ExtResource("36_model")]
+transform = Transform3D(5.4, 0, 0, 0, 5.4, 0, 0, 0, 5.4, 3.45, 1.5, -38.85)
+
+[node name="hanging_moss_80" parent="Models" instance=ExtResource("36_model")]
+transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, 0, 0, 2.4, -1.6, 3.4, -37.35)
+
+[node name="hanging_moss_81" parent="Models" instance=ExtResource("36_model")]
+transform = Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, 1.5, 3.2, -37.45)
+
+[node name="plant_bushLarge_82" parent="Models" instance=ExtResource("37_model")]
+transform = Transform3D(-0.33252, 0, -4.18682, 0, 4.2, 0, 4.18682, 0, -0.33252, -5.00166, 0.4, -36.5791)
+
+[node name="plant_bushDetailed_83" parent="Models" instance=ExtResource("38_model")]
+transform = Transform3D(-3.20051, 0, -1.1475, 0, 3.4, 0, 1.1475, 0, -3.20051, 4.6, 0.4, -36.5)
+
+[node name="grass_large_84" parent="Models" instance=ExtResource("39_model")]
+transform = Transform3D(-2.78992, 0, -2.86642, 0, 4, 0, 2.86642, 0, -2.78992, -3.60038, 0.4, -36.6283)
+
+[node name="plant_flatTall_85" parent="Models" instance=ExtResource("40_model")]
+transform = Transform3D(-4.33229, 0, -1.21706, 0, 4.5, 0, 1.21706, 0, -4.33229, 3.37225, 0.4, -36.6156)
+
+[node name="plant_bushLarge_86" parent="Models" instance=ExtResource("37_model")]
+transform = Transform3D(-2.59172, 0, -2.4986, 0, 3.6, 0, 2.4986, 0, -2.59172, -7.61296, 0.4, -37.4875)
+
+[node name="plant_bushDetailed_87" parent="Models" instance=ExtResource("38_model")]
+transform = Transform3D(2.7213, 0, -1.26274, 0, 3, 0, 1.26274, 0, 2.7213, 7.4, 0.4, -37.8)
+
+[node name="grass_large_88" parent="Models" instance=ExtResource("39_model")]
+transform = Transform3D(2.81686, 0, -1.03213, 0, 3, 0, 1.03213, 0, 2.81686, -1.91924, 0.4, -36.4911)
+
+[node name="grass_large_89" parent="Models" instance=ExtResource("39_model")]
+transform = Transform3D(-1.95028, 0, 2.537, 0, 3.2, 0, -2.537, 0, -1.95028, 1.92244, 0.4, -36.4971)
+
+[node name="moss_trunk_long_90" parent="Models" instance=ExtResource("41_model")]
+transform = Transform3D(-0.69274, 2.5228, 0.83773, 0, 3.50308, -0.84256, -1.10005, -1.58869, -0.52755, -6, 0.2, -34.8)
+
+[node name="hanging_moss_91" parent="Models" instance=ExtResource("36_model")]
+transform = Transform3D(2.59808, 0, 1.5, 0, 3, 0, -1.5, 0, 2.59808, -4.9, 2, -37.04)
+
+[node name="hanging_moss_92" parent="Models" instance=ExtResource("36_model")]
+transform = Transform3D(2.59808, 0, 1.5, 0, 3, 0, -1.5, 0, 2.59808, -4.2, 2.8, -37.34)
+
+[node name="plant_bushLarge_93" parent="Models" instance=ExtResource("37_model")]
+transform = Transform3D(2.75776, 0, 2.31404, 0, 3.6, 0, -2.31404, 0, 2.75776, -3.38621, 0.4, -35.3116)
+
+[node name="plant_bushDetailed_94" parent="Models" instance=ExtResource("38_model")]
+transform = Transform3D(2.95442, 0, 0.52094, 0, 3, 0, -0.52094, 0, 2.95442, 3.6, 0.4, -35.2)
+
+[node name="path_stone_95" parent="Models" instance=ExtResource("29_model")]
+transform = Transform3D(1.9893, 0, 0.93951, 0, 2.2, 0, -0.93951, 0, 1.9893, 2.6094, 0.4, -29.3801)
+
+[node name="path_stone_96" parent="Models" instance=ExtResource("29_model")]
+transform = Transform3D(2.00304, 0, 0.90984, 0, 2.2, 0, -0.90984, 0, 2.00304, 2.1291, 0.4, -30.46)
+
+[node name="path_stone_97" parent="Models" instance=ExtResource("29_model")]
+transform = Transform3D(2.12715, 0, 0.56147, 0, 2.2, 0, -0.56147, 0, 2.12715, 1.64561, 0.4, -31.5387)
+
+[node name="path_stone_98" parent="Models" instance=ExtResource("29_model")]
+transform = Transform3D(2.10734, 0, 0.63174, 0, 2.2, 0, -0.63174, 0, 2.10734, 1.16632, 0.4, -32.6189)
+
+[node name="path_stone_99" parent="Models" instance=ExtResource("29_model")]
+transform = Transform3D(2.0897, 0, 0.68787, 0, 2.2, 0, -0.68787, 0, 2.0897, 0.68688, 0.4, -33.6991)
+
+[node name="path_stone_100" parent="Models" instance=ExtResource("29_model")]
+transform = Transform3D(2.00025, 0, 0.91597, 0, 2.2, 0, -0.91597, 0, 2.00025, 0.20916, 0.4, -34.78)
+
+[node name="moss_gravestone_cross_large_101" parent="Models" instance=ExtResource("42_model")]
+transform = Transform3D(-2.51141, 0, -0.67293, 0, 2.6, 0, 0.67293, 0, -2.51141, -6.75716, 0.4, -31.2904)
+
+[node name="moss_cross_column_102" parent="Models" instance=ExtResource("43_model")]
+transform = Transform3D(-2.6, 0, 0, 0, 2.6, 0, -0, 0, -2.6, -7.987, 0.4, -34.587)
+
+[node name="moss_gravestone_roof_103" parent="Models" instance=ExtResource("44_model")]
+transform = Transform3D(-2.51141, 0, 0.67293, 0, 2.6, 0, -0.67293, 0, -2.51141, 6.91592, 0.4, -30.8092)
+
+[node name="moss_gravestone_broken_104" parent="Models" instance=ExtResource("17_model")]
+transform = Transform3D(-1.99172, 0, 1.67125, 0, 2.6, 0, -1.67125, 0, -1.99172, 7.76108, 0.4, -33.412)
+
+[node name="path_wood_105" parent="Models" instance=ExtResource("45_model")]
+transform = Transform3D(-1.93058, 0, -0.52236, 0, 2, 0, 0.52236, 0, -1.93058, 7.9802, 0.23082, 53.0743)
+
+[node name="path_wood_106" parent="Models" instance=ExtResource("45_model")]
+transform = Transform3D(-1.91506, 0, -0.57667, 0, 2, 0, 0.57667, 0, -1.91506, 8.93695, 0.25117, 52.7844)
+
+[node name="path_wood_107" parent="Models" instance=ExtResource("45_model")]
+transform = Transform3D(-1.91529, 0, -0.57591, 0, 2, 0, 0.57591, 0, -1.91529, 9.89398, 0.26265, 52.4944)
+
+[node name="path_wood_108" parent="Models" instance=ExtResource("45_model")]
+transform = Transform3D(-1.9207, 0, -0.5576, 0, 2, 0, 0.5576, 0, -1.9207, 10.8511, 0.23562, 52.2044)
+
+[node name="path_wood_109" parent="Models" instance=ExtResource("45_model")]
+transform = Transform3D(-1.91998, 0, -0.56008, 0, 2, 0, 0.56008, 0, -1.91998, 11.8081, 0.23073, 51.9144)
+
+[node name="path_wood_110" parent="Models" instance=ExtResource("45_model")]
+transform = Transform3D(-1.8981, 0, -0.63025, 0, 2, 0, 0.63025, 0, -1.8981, 12.7648, 0.2526, 51.6245)
+
+[node name="path_wood_111" parent="Models" instance=ExtResource("45_model")]
+transform = Transform3D(-1.9118, 0, -0.58737, 0, 2, 0, 0.58737, 0, -1.9118, 13.722, 0.2376, 51.3344)
+
+[node name="trunk_long_112" parent="Models" instance=ExtResource("41_model")]
+transform = Transform3D(-0.18252, 0, 0.41132, 0, 2.15, 0, -0.41132, 0, -0.18252, 9.34004, -1.9, 53.7699)
+
+[node name="trunk_long_113" parent="Models" instance=ExtResource("41_model")]
+transform = Transform3D(0.33654, 0, -0.29874, 0, 2.15, 0, 0.29874, 0, 0.33654, 8.73103, -1.9, 51.7601)
+
+[node name="trunk_long_114" parent="Models" instance=ExtResource("41_model")]
+transform = Transform3D(0.05426, 0, 0.44672, 0, 2.15, 0, -0.44672, 0, 0.05426, 11.2541, -1.9, 53.1898)
+
+[node name="trunk_long_115" parent="Models" instance=ExtResource("41_model")]
+transform = Transform3D(-0.38701, 0, 0.22962, 0, 2.15, 0, -0.22962, 0, -0.38701, 10.6451, -1.9, 51.1801)
+
+[node name="trunk_long_116" parent="Models" instance=ExtResource("41_model")]
+transform = Transform3D(-0.34225, 0, 0.29217, 0, 2.15, 0, -0.29217, 0, -0.34225, 13.1681, -1.9, 52.6098)
+
+[node name="trunk_long_117" parent="Models" instance=ExtResource("41_model")]
+transform = Transform3D(-0.4117, 0, -0.18167, 0, 2.15, 0, 0.18167, 0, -0.4117, 12.5591, -1.9, 50.6001)
+
+[node name="trunk_long_118" parent="Models" instance=ExtResource("41_model")]
+transform = Transform3D(0.6, 0, 0, 0, 3, 0, 0, 0, 0.6, 13.664, -1.9, 50.1085)
+
+[node name="moss_canoe_119" parent="Models" instance=ExtResource("46_model")]
+transform = Transform3D(-1.35628, 0.09484, 3.22514, 0.24415, 3.49147, 0, -3.21728, 0.22497, -1.35959, 12.9695, -0.18338, 53.7463)
+
+[node name="canoe_paddle_120" parent="Models" instance=ExtResource("47_model")]
+transform = Transform3D(-2.99549, 0, 0.16441, 0, 3, 0, -0.16441, 0, -2.99549, 9.59521, 0.37, 52.0743)
+
+[node name="lantern_121" parent="Models" instance=ExtResource("48_model")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -5.65, 0.4, 53.6)
+
+[node name="moss_wall_wood_122" parent="Models" instance=ExtResource("49_model")]
+transform = Transform3D(3.15138, 0, 0.55567, 0, 2.45, 0, -0.55567, 0, 3.15138, 18, -2.2, 30)
+
+[node name="moss_wall_wood_window_shutters_123" parent="Models" instance=ExtResource("50_model")]
+transform = Transform3D(-0.55567, 0, 3.15138, 0, 2.45, 0, -3.15138, 0, -0.55567, 18, -2.2, 30)
+
+[node name="moss_wall_wood_124" parent="Models" instance=ExtResource("49_model")]
+transform = Transform3D(-3.15138, 0, -0.55567, 0, 2.45, 0, 0.55567, 0, -3.15138, 18, -2.2, 30)
+
+[node name="moss_wall_wood_broken_125" parent="Models" instance=ExtResource("51_model")]
+transform = Transform3D(0.55567, 0, -3.15138, 0, 2.45, 0, 3.15138, 0, 0.55567, 18, -2.2, 30)
+
+[node name="moss_roof_gable_126" parent="Models" instance=ExtResource("52_model")]
+transform = Transform3D(3.15138, 0, 0.55567, 0, 3.2, 0, -0.55567, 0, 3.15138, 18, 0.25, 30)
+
+[node name="moss_wall_wood_window_shutters_127" parent="Models" instance=ExtResource("50_model")]
+transform = Transform3D(2.89778, 0, -0.77646, 0, 2.3, 0, 0.77646, 0, 2.89778, 25, -2.2, 22)
+
+[node name="moss_wall_wood_128" parent="Models" instance=ExtResource("49_model")]
+transform = Transform3D(0.77646, 0, 2.89778, 0, 2.3, 0, -2.89778, 0, 0.77646, 25, -2.2, 22)
+
+[node name="moss_wall_wood_broken_129" parent="Models" instance=ExtResource("51_model")]
+transform = Transform3D(-2.89778, 0, 0.77646, 0, 2.3, 0, -0.77646, 0, -2.89778, 25, -2.2, 22)
+
+[node name="moss_wall_wood_130" parent="Models" instance=ExtResource("49_model")]
+transform = Transform3D(-0.77646, 0, -2.89778, 0, 2.3, 0, 2.89778, 0, -0.77646, 25, -2.2, 22)
+
+[node name="moss_roof_high_gable_131" parent="Models" instance=ExtResource("53_model")]
+transform = Transform3D(2.89778, 0, -0.77646, 0, 3, 0, 0.77646, 0, 2.89778, 25, 0.1, 22)
+
+[node name="chimney_132" parent="Models" instance=ExtResource("54_model")]
+transform = Transform3D(-2.89778, 0, 0.77646, 0, 3, 0, -0.77646, 0, -2.89778, 25, 0.1, 22)
+
+[node name="moss_wall_wood_133" parent="Models" instance=ExtResource("49_model")]
+transform = Transform3D(2.42487, 0, 1.4, 0, 2.55, 0, -1.4, 0, 2.42487, 29, -2.2, 38)
+
+[node name="moss_wall_wood_134" parent="Models" instance=ExtResource("49_model")]
+transform = Transform3D(-1.4, 0, 2.42487, 0, 2.55, 0, -2.42487, 0, -1.4, 29, -2.2, 38)
+
+[node name="moss_wall_wood_window_shutters_135" parent="Models" instance=ExtResource("50_model")]
+transform = Transform3D(-2.42487, 0, -1.4, 0, 2.55, 0, 1.4, 0, -2.42487, 29, -2.2, 38)
+
+[node name="moss_wall_wood_136" parent="Models" instance=ExtResource("49_model")]
+transform = Transform3D(1.4, 0, -2.42487, 0, 2.55, 0, 2.42487, 0, 1.4, 29, -2.2, 38)
+
+[node name="moss_roof_point_137" parent="Models" instance=ExtResource("55_model")]
+transform = Transform3D(2.42487, 0, 1.4, 0, 2.8, 0, -1.4, 0, 2.42487, 29, 0.35, 38)
+
+[node name="moss_wall_wood_broken_138" parent="Models" instance=ExtResource("51_model")]
+transform = Transform3D(1.84698, 0, 2.36403, 0, 2.05, 0, -2.36403, 0, 1.84698, 21.5, -2.2, 40.5)
+
+[node name="moss_wall_wood_139" parent="Models" instance=ExtResource("49_model")]
+transform = Transform3D(-2.36403, 0, 1.84698, 0, 2.05, 0, -1.84698, 0, -2.36403, 21.5, -2.2, 40.5)
+
+[node name="moss_wall_wood_broken_140" parent="Models" instance=ExtResource("51_model")]
+transform = Transform3D(-1.84698, 0, -2.36403, 0, 2.05, 0, 2.36403, 0, -1.84698, 21.5, -2.2, 40.5)
+
+[node name="moss_wall_wood_141" parent="Models" instance=ExtResource("49_model")]
+transform = Transform3D(2.36403, 0, -1.84698, 0, 2.05, 0, 1.84698, 0, 2.36403, 21.5, -2.2, 40.5)
+
+[node name="chimney_142" parent="Models" instance=ExtResource("54_model")]
+transform = Transform3D(-1.84698, 0, -2.36403, 0, 3, 0, 2.36403, 0, -1.84698, 21.5, -0.15, 40.5)
+
+[node name="moss_roof_gable_143" parent="Models" instance=ExtResource("52_model")]
+transform = Transform3D(0.93735, -0.41734, 2.81908, 1.22021, 2.74064, 0, -2.57536, 1.14662, 1.02606, 23.733, -0.22888, 41.9783)
+
+[node name="moss_wall_wood_144" parent="Models" instance=ExtResource("49_model")]
+transform = Transform3D(3.19495, 0, -1.16287, 0, 2.8, 0, 1.16287, 0, 3.19495, 11, -2.2, 25)
+
+[node name="moss_wall_wood_window_shutters_145" parent="Models" instance=ExtResource("50_model")]
+transform = Transform3D(1.16287, 0, 3.19495, 0, 2.8, 0, -3.19495, 0, 1.16287, 11, -2.2, 25)
+
+[node name="moss_wall_wood_146" parent="Models" instance=ExtResource("49_model")]
+transform = Transform3D(-3.19495, 0, 1.16287, 0, 2.8, 0, -1.16287, 0, -3.19495, 11, -2.2, 25)
+
+[node name="moss_wall_wood_147" parent="Models" instance=ExtResource("49_model")]
+transform = Transform3D(-1.16287, 0, -3.19495, 0, 2.8, 0, 3.19495, 0, -1.16287, 11, -2.2, 25)
+
+[node name="moss_roof_high_gable_148" parent="Models" instance=ExtResource("53_model")]
+transform = Transform3D(3.19495, 0, -1.16287, 0, 3.4, 0, 1.16287, 0, 3.19495, 11, 0.6, 25)
+
+[node name="moss_watermill_149" parent="Models" instance=ExtResource("56_model")]
+transform = Transform3D(2.79806, -0.34356, -1.02606, 0.36561, 2.97764, 0, 1.01841, -0.12505, 2.81908, 13.9506, -0.4, 26.0739)
+
+[node name="trunk_long_150" parent="Models" instance=ExtResource("41_model")]
+transform = Transform3D(0.42191, 0.091, 0.26787, 0, 2.93325, -0.02886, -0.26831, 0.1431, 0.42121, 30, -2, 30)
+
+[node name="trunk_long_151" parent="Models" instance=ExtResource("41_model")]
+transform = Transform3D(-0.37098, 0.18845, -0.33366, 0, 2.90395, 0.04817, 0.33522, 0.20855, -0.36925, 30, -2, 32)
+
+[node name="trunk_long_152" parent="Models" instance=ExtResource("41_model")]
+transform = Transform3D(-0.48454, -0.04533, -0.12306, 0, 2.61286, -0.03507, 0.12337, -0.17805, -0.48335, 28.5, -2, 30)
+
+[node name="trunk_long_153" parent="Models" instance=ExtResource("41_model")]
+transform = Transform3D(0.47796, -0.04953, -0.14653, 0, 2.69432, -0.03124, 0.14682, 0.16125, 0.47702, 28.5, -2, 32)
+
+[node name="path_wood_154" parent="Models" instance=ExtResource("45_model")]
+transform = Transform3D(0.14367, 0.00503, 2.1953, -0.07702, 2.19865, 0, -2.19395, -0.07685, 0.14376, 28.5109, 0.58851, 31.0026)
+
+[node name="trunk_long_155" parent="Models" instance=ExtResource("41_model")]
+transform = Transform3D(-0.00415, 0.0103, -0.49998, 0, 2.4611, 0.00209, 0.49998, 9e-05, -0.00415, 27, -2, 30)
+
+[node name="trunk_long_156" parent="Models" instance=ExtResource("41_model")]
+transform = Transform3D(-0.12999, 0.09722, 0.48246, 0, 2.64242, -0.01904, -0.48281, -0.02618, -0.1299, 27, -2, 32)
+
+[node name="path_wood_157" parent="Models" instance=ExtResource("45_model")]
+transform = Transform3D(0.16306, -0.0022, 2.19395, 0.02963, 2.1998, 0, -2.19375, 0.02955, 0.16308, 27.011, 0.56481, 31.0001)
+
+[node name="trunk_long_158" parent="Models" instance=ExtResource("41_model")]
+transform = Transform3D(0.16879, 0.08573, -0.47036, 0, 2.58642, 0.0176, 0.47065, -0.03075, 0.16868, 25.5, -2, 30)
+
+[node name="trunk_long_159" parent="Models" instance=ExtResource("41_model")]
+transform = Transform3D(0.08275, -0.19412, 0.49164, 0, 2.552, 0.03845, -0.4931, -0.03258, 0.0825, 25.5, -2, 32)
+
+[node name="trunk_long_160" parent="Models" instance=ExtResource("41_model")]
+transform = Transform3D(0.38525, 0.05731, -0.31847, 0, 2.30355, 0.0195, 0.31872, -0.06927, 0.38496, 24, -2, 30)
+
+[node name="trunk_long_161" parent="Models" instance=ExtResource("41_model")]
+transform = Transform3D(-0.4872, -0.04434, 0.11199, 0, 2.25425, 0.04358, -0.11242, 0.19218, -0.48534, 24, -2, 32)
+
+[node name="moss_barrel_162" parent="Models" instance=ExtResource("4_model")]
+transform = Transform3D(0, -1.64545, 0.95, 1.9, 0, 0, -0, 0.95, 1.64545, 20.9949, -0.006, 27.172)
+
+[node name="moss_chest_163" parent="Models" instance=ExtResource("7_model")]
+transform = Transform3D(1.68589, -0.54778, 0.31257, 0.55623, 1.7119, 0, -0.29727, 0.09659, 1.77265, 27.6235, -0.17535, 25.6131)
+
+[node name="moss_path_wood_164" parent="Models" instance=ExtResource("45_model")]
+transform = Transform3D(1.68119, -0.11756, 1.41413, 0.15346, 2.19464, 0, -1.41069, 0.09864, 1.6853, 15.21, 0.04673, 33.606)
+
+[node name="moss_barrel_165" parent="Models" instance=ExtResource("4_model")]
+transform = Transform3D(0, -0.49176, 1.83526, 1.9, 0, 0, -0, 1.83526, 0.49176, 31.618, -0.006, 34.5595)
+
+[node name="moss_path_wood_166" parent="Models" instance=ExtResource("45_model")]
+transform = Transform3D(-0.6831, -0.0358, 1.87939, -0.10467, 1.99726, 0, -1.87681, -0.09836, -0.68404, 23.0103, 0.02234, 35.199)
+
+[node name="moss_chest_167" parent="Models" instance=ExtResource("57_model")]
+transform = Transform3D(2.13772, -0.45439, 2.60455, 0.7069, 3.3257, 0, -2.54764, 0.54152, 2.18548, 14.6863, -0.22507, 21.4446)
+
+[node name="fence_broken_168" parent="Models" instance=ExtResource("58_model")]
+transform = Transform3D(2.1298, 0.20755, 1.47679, 0, 2.5747, -0.36185, -1.4913, 0.29641, 2.10907, 15.5619, -0.71907, 27.7029)
+
+[node name="fence_broken_169" parent="Models" instance=ExtResource("58_model")]
+transform = Transform3D(1.64586, -0.29021, -1.99172, 0.45149, 2.5605, 0, 1.96146, -0.34586, 1.67125, 26.2379, -1.01287, 18.9302)
+
+[node name="moss_wall_wood_door_170" parent="Models" instance=ExtResource("59_model")]
+transform = Transform3D(-2.9708, 0, -0.41752, 0, 2.6, 0, 0.41752, 0, -2.9708, 36, 0.3, 32)
+
+[node name="moss_wall_wood_171" parent="Models" instance=ExtResource("49_model")]
+transform = Transform3D(0.41752, 0, -2.9708, 0, 2.6, 0, 2.9708, 0, 0.41752, 36, 0.3, 32)
+
+[node name="moss_wall_wood_window_shutters_172" parent="Models" instance=ExtResource("50_model")]
+transform = Transform3D(2.9708, 0, 0.41752, 0, 2.6, 0, -0.41752, 0, 2.9708, 36, 0.3, 32)
+
+[node name="moss_wall_wood_173" parent="Models" instance=ExtResource("49_model")]
+transform = Transform3D(-0.41752, 0, 2.9708, 0, 2.6, 0, -2.9708, 0, -0.41752, 36, 0.3, 32)
+
+[node name="moss_roof_gable_174" parent="Models" instance=ExtResource("52_model")]
+transform = Transform3D(-3.16886, 0, -0.44535, 0, 3.2, 0, 0.44535, 0, -3.16886, 36, 2.9, 32)
+
+[node name="chimney_175" parent="Models" instance=ExtResource("54_model")]
+transform = Transform3D(2.9708, 0, 0.41752, 0, 3, 0, -0.41752, 0, 2.9708, 36, 2.9, 32)
+
+[node name="trunk_long_176" parent="Models" instance=ExtResource("41_model")]
+transform = Transform3D(-0.43347, -0.02488, -0.24916, 0, 2.4995, -0.00998, 0.24921, -0.04327, -0.43338, -34.85, -2, 44.25)
+
+[node name="trunk_long_177" parent="Models" instance=ExtResource("41_model")]
+transform = Transform3D(-0.43082, -0.10436, 0.25291, 0, 2.49153, 0.04112, -0.25377, 0.17716, -0.42936, -36.35, -2, 45.75)
+
+[node name="trunk_long_178" parent="Models" instance=ExtResource("41_model")]
+transform = Transform3D(0.49265, 0.03158, 0.08514, 0, 2.2424, -0.04107, -0.08543, 0.1821, 0.49098, -33.65, -2, 45.45)
+
+[node name="trunk_long_179" parent="Models" instance=ExtResource("41_model")]
+transform = Transform3D(-0.0944, 0.03571, 0.49094, 0, 2.24971, -0.00808, -0.49101, -0.00687, -0.09438, -35.15, -2, 46.95)
+
+[node name="trunk_long_180" parent="Models" instance=ExtResource("41_model")]
+transform = Transform3D(-0.49541, 0.01671, -0.06746, 0, 1.99618, 0.0309, 0.06758, 0.12246, -0.49446, -32.45, -2, 46.65)
+
+[node name="trunk_long_181" parent="Models" instance=ExtResource("41_model")]
+transform = Transform3D(-0.44352, 0.07209, -0.23015, 0, 1.9939, 0.03903, 0.23085, 0.1385, -0.44216, -33.95, -2, 48.15)
+
+[node name="path_wood_182" parent="Models" instance=ExtResource("45_model")]
+transform = Transform3D(-1.54711, 0.16261, 1.55563, 0.22996, 2.18795, 0, -1.54711, 0.16261, -1.55563, -34.9963, 0.57498, 45.5882)
+
+[node name="moss_wall_door_183" parent="Models" instance=ExtResource("60_model")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -33.8, 0.3, -4)
+
+[node name="moss_wall_window_round_184" parent="Models" instance=ExtResource("61_model")]
+transform = Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -38.2, 0.3, -4)
+
+[node name="moss_wall_broken_185" parent="Models" instance=ExtResource("62_model")]
+transform = Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -38, 0.3, -4.2)
+
+[node name="moss_wall_half_186" parent="Models" instance=ExtResource("63_model")]
+transform = Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -34, 0.3, -4.2)
+
+[node name="moss_wall_window_stone_187" parent="Models" instance=ExtResource("64_model")]
+transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -38, 0.3, -3.8)
+
+[node name="moss_wall_broken_188" parent="Models" instance=ExtResource("62_model")]
+transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -34, 0.3, -3.8)
+
+[node name="moss_wall_broken_189" parent="Models" instance=ExtResource("62_model")]
+transform = Transform3D(4, 0, 0, 0, 2.2, 0, 0, 0, 4, -33.8, 4.3, -4)
+
+[node name="moss_altar_stone_190" parent="Models" instance=ExtResource("65_model")]
+transform = Transform3D(0, 0, 2, 0, 2, 0, -2, 0, 0, -38.69, 0.3, -4)
+
+[node name="candle_multiple_191" parent="Models" instance=ExtResource("27_model")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -38.72, 1.28, -4.51)
+
+[node name="candle_192" parent="Models" instance=ExtResource("21_model")]
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, -38.6, 1.28, -3.4)
+
+[node name="bench_damaged_193" parent="Models" instance=ExtResource("28_model")]
+transform = Transform3D(0, 0, -2.4, 0, 2.4, 0, 2.4, 0, 0, -36.4, 0.3, -3.94)
+
+[node name="bench_damaged_194" parent="Models" instance=ExtResource("28_model")]
+transform = Transform3D(0, 2.36354, -0.41676, 0, 0.41676, 2.36354, 2.4, -0, 0, -35.0145, 0.84361, -3.94)
+
+[node name="debris_195" parent="Models" instance=ExtResource("66_model")]
+transform = Transform3D(2.59808, 0, 1.5, 0, 3, 0, -1.5, 0, 2.59808, -34.0955, 0.3, -6.93907)
+
+[node name="moss_rock_large_196" parent="Models" instance=ExtResource("67_model")]
+transform = Transform3D(0.53623, 0, 0.44995, 0, 0.7, 0, -0.44995, 0, 0.53623, -39.606, 0.3, -6.94524)
+
+[node name="moss_pillar_stone_197" parent="Models" instance=ExtResource("68_model")]
+transform = Transform3D(0, -4, 0, 4, 0, 0, 0, 0, 4, -34.5, 0.62, -8)
+
+[node name="pine_crooked_198" parent="Models" instance=ExtResource("31_model")]
+transform = Transform3D(2.59808, 0, 1.5, 0, 3, 0, -1.5, 0, 2.59808, -34.6445, 0.6, -0.55701)
 
 [node name="Collision" type="StaticBody3D" parent="."]
 
@@ -286,149 +887,353 @@ transform = Transform3D(0.86603, 0, 0.5, 0, 1, 0, -0.5, 0, 0.86603, -22.5, 1.1, 
 shape = SubResource("BoxShape3D_1")
 
 [node name="Box1" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.96593, 0, 0.25882, 0, 1, 0, -0.25882, 0, 0.96593, -24.2, 1.1, 20.6)
+transform = Transform3D(0.34202, 0, 0.93969, 0, 1, 0, -0.93969, 0, 0.34202, -18, 0.876, 21)
 shape = SubResource("BoxShape3D_2")
 
 [node name="Box2" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.96593, 0, 0.25882, 0, 1, 0, -0.25882, 0, 0.96593, -19.6, 0.9, 25.6)
+transform = Transform3D(0.96593, 0, 0.25882, 0, 1, 0, -0.25882, 0, 0.96593, -24.2, 0.88, 20.6)
 shape = SubResource("BoxShape3D_3")
 
 [node name="Box3" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.96593, 0, 0.25882, 0, 1, 0, -0.25882, 0, 0.96593, -25, 0.8, 22.8)
+transform = Transform3D(0.96593, 0, 0.25882, 0, 1, 0, -0.25882, 0, 0.96593, -23.2, 0.78, 19.6)
 shape = SubResource("BoxShape3D_4")
 
 [node name="Box4" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 7, 1.3, -7.5)
+transform = Transform3D(0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, 0.90631, -19.8, 0.741, 25.9)
 shape = SubResource("BoxShape3D_5")
 
 [node name="Box5" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 7, 1.3, -4.5)
-shape = SubResource("BoxShape3D_5")
-
-[node name="Box6" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 7, 1.3, -1.5)
-shape = SubResource("BoxShape3D_5")
-
-[node name="Box7" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 7, 1.3, 7.5)
-shape = SubResource("BoxShape3D_5")
-
-[node name="Box8" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 25, 1.3, 0)
+transform = Transform3D(0.96593, 0, 0.25882, 0, 1, 0, -0.25882, 0, 0.96593, -25, 0.67, 22.8)
 shape = SubResource("BoxShape3D_6")
 
-[node name="Box9" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 17.5, 1.3, -9)
+[node name="Box6" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(-0.17365, 0, 0.98481, 0, 1, 0, -0.98481, 0, -0.17365, -21.2, 0.855, 18.4)
 shape = SubResource("BoxShape3D_7")
 
-[node name="Box10" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 16, 1.3, 9)
+[node name="Box7" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.76604, 0, 0.64279, 0, 1, 0, -0.64279, 0, 0.76604, -24.9, 0.784, 24.8)
 shape = SubResource("BoxShape3D_8")
 
-[node name="Box11" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 10.5, 1.3, -6.5)
+[node name="Box8" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 1.32715, 26.4)
 shape = SubResource("BoxShape3D_9")
 
-[node name="Box12" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 13.5, 1.3, -6.5)
-shape = SubResource("BoxShape3D_9")
-
-[node name="Box13" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 16.5, 1.3, -6.5)
-shape = SubResource("BoxShape3D_9")
-
-[node name="Box14" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 19.5, 1.3, -6.5)
-shape = SubResource("BoxShape3D_9")
-
-[node name="Box15" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 10.5, 1.3, -3)
-shape = SubResource("BoxShape3D_9")
-
-[node name="Box16" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 13.5, 1.3, -3)
-shape = SubResource("BoxShape3D_9")
-
-[node name="Box17" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 16.5, 1.3, -3)
-shape = SubResource("BoxShape3D_9")
-
-[node name="Box18" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 19.5, 1.3, -3)
-shape = SubResource("BoxShape3D_9")
-
-[node name="Box19" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 13.5, 1.3, 6.5)
-shape = SubResource("BoxShape3D_9")
-
-[node name="Box20" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 16.5, 1.3, 6.5)
-shape = SubResource("BoxShape3D_9")
-
-[node name="Box21" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 19.5, 1.3, 6.5)
-shape = SubResource("BoxShape3D_9")
-
-[node name="Box22" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 10.5, 1.3, 6.5)
+[node name="Box9" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 2.3, -0.3)
 shape = SubResource("BoxShape3D_10")
 
-[node name="Box23" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 23, 2.1, 1.5)
+[node name="Box10" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 2.3, 6.3)
+shape = SubResource("BoxShape3D_10")
+
+[node name="Box11" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.99939, 0, -0.03493, 0, 1, 0, 0.03493, 0, 0.99939, 10.5, 1.154, -6.5)
 shape = SubResource("BoxShape3D_11")
 
-[node name="Box24" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 16.5, 1.15, 4.6)
+[node name="Box12" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 1.089, -6.5)
 shape = SubResource("BoxShape3D_12")
 
-[node name="Box25" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 14, 2, -9.5)
+[node name="Box13" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.99952, 0, -0.03113, 0, 1, 0, 0.03113, 0, 0.99952, 16.5, 1.089, -6.5)
 shape = SubResource("BoxShape3D_13")
 
-[node name="Box26" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 24, 2, 7.5)
-shape = SubResource("BoxShape3D_13")
-
-[node name="Box27" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 24, 2, -7.5)
-shape = SubResource("BoxShape3D_13")
-
-[node name="Box28" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 3, -41)
+[node name="Box14" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.99476, 0, -0.10222, 0, 1, 0, 0.10222, 0, 0.99476, 19.5, 0.842, -6.5)
 shape = SubResource("BoxShape3D_14")
 
-[node name="Box29" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -6, 2.4, -36.5)
+[node name="Box15" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.99699, 0, -0.0775, 0, 1, 0, 0.0775, 0, 0.99699, 10.5, 1.167, -3)
 shape = SubResource("BoxShape3D_15")
+
+[node name="Box16" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.99946, 0, 0.03296, 0, 1, 0, -0.03296, 0, 0.99946, 13.5, 1.167, -3)
+shape = SubResource("BoxShape3D_15")
+
+[node name="Box17" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.99558, 0, -0.09391, 0, 1, 0, 0.09391, 0, 0.99558, 16.5, 1.583, -3)
+shape = SubResource("BoxShape3D_16")
+
+[node name="Box18" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.99963, 0, 0.02738, 0, 1, 0, -0.02738, 0, 0.99963, 19.5, 1.583, -3)
+shape = SubResource("BoxShape3D_16")
+
+[node name="Box19" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(-0.99978, 0, -0.02109, 0, 1, 0, 0.02109, 0, -0.99978, 13.5, 1.141, 6.5)
+shape = SubResource("BoxShape3D_17")
+
+[node name="Box20" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(-0.99941, 0, -0.03448, 0, 1, 0, 0.03448, 0, -0.99941, 16.5, 1.089, 6.5)
+shape = SubResource("BoxShape3D_13")
+
+[node name="Box21" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.5, 1.154, 6.5)
+shape = SubResource("BoxShape3D_18")
+
+[node name="Box22" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(-0.93969, 0, 0.34202, 0, 1, 0, -0.34202, 0, -0.93969, 19.6, 1.192, 4.7)
+shape = SubResource("BoxShape3D_19")
+
+[node name="Box23" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 1.212, 6.5)
+shape = SubResource("BoxShape3D_20")
+
+[node name="Box24" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23, 2.1, 1.5)
+shape = SubResource("BoxShape3D_21")
+
+[node name="Box25" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 1.15, 2.85)
+shape = SubResource("BoxShape3D_22")
+
+[node name="Box26" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.2, 1.5, -5.3)
+shape = SubResource("BoxShape3D_23")
+
+[node name="Box27" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 2, -9.8)
+shape = SubResource("BoxShape3D_24")
+
+[node name="Box28" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 2, 7.5)
+shape = SubResource("BoxShape3D_24")
+
+[node name="Box29" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 2, -7.8)
+shape = SubResource("BoxShape3D_24")
 
 [node name="Box30" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 6, 2.4, -36.5)
-shape = SubResource("BoxShape3D_15")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -41)
+shape = SubResource("BoxShape3D_25")
 
 [node name="Box31" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -8.5, 1.9, -40)
-shape = SubResource("BoxShape3D_16")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.42, -36.5)
+shape = SubResource("BoxShape3D_26")
 
 [node name="Box32" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -8.5, 1.9, -44)
-shape = SubResource("BoxShape3D_16")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.42, -36.5)
+shape = SubResource("BoxShape3D_26")
 
 [node name="Box33" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 8.5, 1.9, -40)
-shape = SubResource("BoxShape3D_16")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3, 1.16, -35.55)
+shape = SubResource("BoxShape3D_27")
 
 [node name="Box34" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 8.5, 1.9, -44)
-shape = SubResource("BoxShape3D_16")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 1.16, -35.55)
+shape = SubResource("BoxShape3D_27")
 
 [node name="Box35" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -10, 2, -46)
-shape = SubResource("BoxShape3D_17")
+transform = Transform3D(-0.53288, 0, 0.84619, 0, 1, 0, -0.84619, 0, -0.53288, -5.55, 1, -35.05)
+shape = SubResource("BoxShape3D_28")
 
 [node name="Box36" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 9.5, 2, -47)
-shape = SubResource("BoxShape3D_17")
+transform = Transform3D(-0.96593, 0, -0.25882, 0, 1, 0, 0.25882, 0, -0.96593, -6.8, 1.622, -31.4)
+shape = SubResource("BoxShape3D_29")
 
 [node name="Box37" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -4, 2, -48.5)
-shape = SubResource("BoxShape3D_17")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 2.285, -34.6)
+shape = SubResource("BoxShape3D_30")
+
+[node name="Box38" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(-0.96593, 0, 0.25882, 0, 1, 0, -0.25882, 0, -0.96593, 6.9, 1.193, -30.8)
+shape = SubResource("BoxShape3D_31")
+
+[node name="Box39" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(-0.76604, 0, 0.64279, 0, 1, 0, -0.64279, 0, -0.76604, 7.8, 0.842, -33.6)
+shape = SubResource("BoxShape3D_14")
+
+[node name="Box40" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(-0.29001, 0, 0.95702, 0, 1, 0, -0.95702, 0, -0.29001, 10.9, 0.2, 52.2)
+shape = SubResource("BoxShape3D_32")
+
+[node name="Box41" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.34004, -0.85, 53.7699)
+shape = SubResource("BoxShape3D_33")
+
+[node name="Box42" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.73103, -0.85, 51.7601)
+shape = SubResource("BoxShape3D_33")
+
+[node name="Box43" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.2541, -0.85, 53.1898)
+shape = SubResource("BoxShape3D_33")
+
+[node name="Box44" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.6451, -0.85, 51.1801)
+shape = SubResource("BoxShape3D_33")
+
+[node name="Box45" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.1681, -0.85, 52.6098)
+shape = SubResource("BoxShape3D_33")
+
+[node name="Box46" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5591, -0.85, 50.6001)
+shape = SubResource("BoxShape3D_33")
+
+[node name="Box47" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.664, -0.4, 50.1085)
+shape = SubResource("BoxShape3D_34")
+
+[node name="Box48" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.65, 1.57, 53.6)
+shape = SubResource("BoxShape3D_35")
+
+[node name="Box49" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.98481, 0, 0.17365, 0, 1, 0, -0.17365, 0, 0.98481, 18, -0.975, 30)
+shape = SubResource("BoxShape3D_36")
+
+[node name="Box50" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.98481, 0, 0.17365, 0, 1, 0, -0.17365, 0, 0.98481, 18, 0.8884, 30)
+shape = SubResource("BoxShape3D_37")
+
+[node name="Box51" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.96593, 0, -0.25882, 0, 1, 0, 0.25882, 0, 0.96593, 25, -1.05, 22)
+shape = SubResource("BoxShape3D_38")
+
+[node name="Box52" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.96593, 0, -0.25882, 0, 1, 0, 0.25882, 0, 0.96593, 25, 1.318, 22)
+shape = SubResource("BoxShape3D_39")
+
+[node name="Box53" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.86603, 0, 0.5, 0, 1, 0, -0.5, 0, 0.86603, 29, -0.925, 38)
+shape = SubResource("BoxShape3D_40")
+
+[node name="Box54" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.86603, 0, 0.5, 0, 1, 0, -0.5, 0, 0.86603, 29, 0.84, 38)
+shape = SubResource("BoxShape3D_41")
+
+[node name="Box55" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.61566, 0, 0.78801, 0, 1, 0, -0.78801, 0, 0.61566, 21.5, -1.175, 40.5)
+shape = SubResource("BoxShape3D_42")
+
+[node name="Box56" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.93969, 0, -0.34202, 0, 1, 0, 0.34202, 0, 0.93969, 11, -0.8, 25)
+shape = SubResource("BoxShape3D_43")
+
+[node name="Box57" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.93969, 0, -0.34202, 0, 1, 0, 0.34202, 0, 0.93969, 11, 1.9804, 25)
+shape = SubResource("BoxShape3D_44")
+
+[node name="Box58" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, -0.53093, 30)
+shape = SubResource("BoxShape3D_45")
+
+[node name="Box59" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, -0.54124, 32)
+shape = SubResource("BoxShape3D_46")
+
+[node name="Box60" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.5, -0.69034, 30)
+shape = SubResource("BoxShape3D_47")
+
+[node name="Box61" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.5, -0.6502, 32)
+shape = SubResource("BoxShape3D_48")
+
+[node name="Box62" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27, -0.76944, 30)
+shape = SubResource("BoxShape3D_49")
+
+[node name="Box63" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27, -0.67783, 32)
+shape = SubResource("BoxShape3D_50")
+
+[node name="Box64" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.5, -0.70599, 30)
+shape = SubResource("BoxShape3D_51")
+
+[node name="Box65" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.5, -0.72021, 32)
+shape = SubResource("BoxShape3D_52")
+
+[node name="Box66" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, -0.84735, 30)
+shape = SubResource("BoxShape3D_53")
+
+[node name="Box67" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, -0.86857, 32)
+shape = SubResource("BoxShape3D_54")
+
+[node name="Box68" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(-0.99027, 0, -0.13917, 0, 1, 0, 0.13917, 0, -0.99027, 36, 1.6, 32)
+shape = SubResource("BoxShape3D_55")
+
+[node name="Box69" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.85, -0.75, 44.25)
+shape = SubResource("BoxShape3D_56")
+
+[node name="Box70" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36.35, -0.75, 45.75)
+shape = SubResource("BoxShape3D_56")
+
+[node name="Box71" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33.65, -0.875, 45.45)
+shape = SubResource("BoxShape3D_57")
+
+[node name="Box72" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35.15, -0.875, 46.95)
+shape = SubResource("BoxShape3D_57")
+
+[node name="Box73" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.45, -1, 46.65)
+shape = SubResource("BoxShape3D_58")
+
+[node name="Box74" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33.95, -1, 48.15)
+shape = SubResource("BoxShape3D_58")
+
+[node name="Box75" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, 2.3, -5.48)
+shape = SubResource("BoxShape3D_59")
+
+[node name="Box76" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, 2.3, -2.52)
+shape = SubResource("BoxShape3D_59")
+
+[node name="Box77" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32, 3.75, -4)
+shape = SubResource("BoxShape3D_60")
+
+[node name="Box78" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 2.3, -4)
+shape = SubResource("BoxShape3D_61")
+
+[node name="Box79" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -38, 1.8, -6)
+shape = SubResource("BoxShape3D_62")
+
+[node name="Box80" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34, 1.3, -6)
+shape = SubResource("BoxShape3D_63")
+
+[node name="Box81" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -38, 2.3, -2)
+shape = SubResource("BoxShape3D_64")
+
+[node name="Box82" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34, 1.8, -2)
+shape = SubResource("BoxShape3D_62")
+
+[node name="Box83" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -38.7, 0.79, -4)
+shape = SubResource("BoxShape3D_65")
+
+[node name="Box84" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36.4, 0.9, -4)
+shape = SubResource("BoxShape3D_66")
+
+[node name="Box85" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.4, 0.95197, -4)
+shape = SubResource("BoxShape3D_67")
+
+[node name="Box86" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.76604, 0, 0.64279, 0, 1, 0, -0.64279, 0, 0.76604, -39.6, 0.706, -6.9)
+shape = SubResource("BoxShape3D_68")
+
+[node name="Box87" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36.5, 0.62, -8)
+shape = SubResource("BoxShape3D_69")
+
+[node name="Box88" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.6, 2.3, -0.6)
+shape = SubResource("BoxShape3D_70")

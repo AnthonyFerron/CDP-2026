@@ -13,7 +13,7 @@
 [ext_resource type="Script" path="res://scripts/interactable.gd" id="11_interactable"]
 [ext_resource type="Script" path="res://scripts/readable.gd" id="12_readable"]
 [ext_resource type="Script" path="res://scripts/fire_effect.gd" id="13_fire"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/signpost.glb" id="14_signpost"]
+[ext_resource type="Script" path="res://scripts/sign_board.gd" id="14_sign"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/cactus_tall.glb" id="20_cactus_tall"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/cactus_short.glb" id="21_cactus_short"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/rock-sand-a.glb" id="22_rock_a"]
@@ -22,11 +22,18 @@
 [ext_resource type="PackedScene" path="res://assets/models/kenney/mini_arena/column-damaged.glb" id="25_column"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/mini_arena/bricks.glb" id="26_bricks"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/siege-catapult-demolished.glb" id="27_catapult"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/siege-ram-demolished.glb" id="28_ram"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/siege-ballista-demolished.glb" id="28_ballista"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/siege-trebuchet-demolished.glb" id="36_trebuchet"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/weapon-spear.glb" id="29_spear"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/shield-round.glb" id="30_shield"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/weapon-sword.glb" id="31_sword"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/pot.glb" id="32_pot"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wheel.glb" id="33_wheel"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/barrel.glb" id="34_barrel"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/character-skeleton.glb" id="35_skeleton"]
 [ext_resource type="Script" path="res://scenes/levels/desert/rune.gd" id="16_rune"]
 [ext_resource type="Script" path="res://scenes/levels/desert/sand_pile.gd" id="17_pile"]
 [ext_resource type="PackedScene" path="res://scenes/levels/desert/rune_puzzle.tscn" id="18_puzzle"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/chest.glb" id="19_chest"]
 [ext_resource type="AudioStream" path="res://assets/audio/desert_wind.wav" id="40_wind"]
 [ext_resource type="AudioStream" path="res://assets/audio/cave_ambience.wav" id="41_cave"]
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_sand_1.wav" id="42_sand1"]
@@ -40,14 +47,18 @@
 [ext_resource type="AudioStream" path="res://assets/audio/tablet_chime_3.wav" id="50_chime3"]
 [ext_resource type="AudioStream" path="res://assets/audio/tablet_reset.wav" id="51_reset"]
 [ext_resource type="AudioStream" path="res://assets/audio/fire_crackle.wav" id="52_crackle"]
+[ext_resource type="AudioStream" path="res://assets/audio/stone_door.wav" id="53_rumble"]
+[ext_resource type="AudioStream" path="res://assets/audio/plaine_wind.wav" id="54_ruin_wind"]
+[ext_resource type="Script" path="res://scenes/levels/desert/desert_life.gd" id="37_life"]
 [ext_resource type="Script" path="res://scenes/levels/hub/volcano.gd" id="90_volcano"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_day"]
-sky_top_color = Color(0.36, 0.55, 0.78, 1)
-sky_horizon_color = Color(0.92, 0.78, 0.58, 1)
+sky_top_color = Color(0.3, 0.5, 0.76, 1)
+sky_horizon_color = Color(0.96, 0.76, 0.5, 1)
 ground_bottom_color = Color(0.5, 0.38, 0.24, 1)
-ground_horizon_color = Color(0.92, 0.78, 0.58, 1)
-sun_angle_max = 20.0
+ground_horizon_color = Color(0.96, 0.76, 0.5, 1)
+sun_angle_max = 14.0
+sun_curve = 0.1
 
 [sub_resource type="Sky" id="Sky_day"]
 sky_material = SubResource("ProceduralSkyMaterial_day")
@@ -57,17 +68,19 @@ background_mode = 2
 sky = SubResource("Sky_day")
 ambient_light_source = 3
 ambient_light_color = Color(0.85, 0.72, 0.55, 1)
-ambient_light_energy = 0.45
+ambient_light_energy = 0.3
 tonemap_mode = 3
-tonemap_exposure = 0.95
+tonemap_exposure = 0.86
 glow_enabled = true
 glow_intensity = 0.5
 glow_bloom = 0.04
 glow_hdr_threshold = 1.0
 fog_enabled = true
-fog_light_color = Color(0.86, 0.72, 0.52, 1)
-fog_density = 0.006
-fog_sky_affect = 0.15
+fog_light_color = Color(0.9, 0.73, 0.5, 1)
+fog_density = 0.007
+fog_sky_affect = 0.2
+fog_height = 1.2
+fog_height_density = 0.035
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_grain"]
 seed = 21
@@ -110,17 +123,140 @@ albedo_color = Color(0.15, 0.15, 0.15, 1)
 metallic = 0.6
 roughness = 0.6
 
-[sub_resource type="BoxMesh" id="BoxMesh_plank"]
-material = SubResource("StandardMaterial3D_wood")
-size = Vector3(0.55, 0.12, 2.4)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hatch_stone"]
+albedo_color = Color(0.7, 0.55, 0.4, 1)
+roughness = 1.0
 
-[sub_resource type="BoxMesh" id="BoxMesh_strap"]
-material = SubResource("StandardMaterial3D_iron")
-size = Vector3(2.5, 0.14, 0.18)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_groove"]
+albedo_color = Color(0.36, 0.26, 0.17, 1)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bronze"]
+albedo_color = Color(0.4, 0.27, 0.13, 1)
+metallic = 0.6
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_drift"]
+albedo_color = Color(0.84, 0.64, 0.4, 1)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_void"]
+albedo_color = Color(0.02, 0.015, 0.01, 1)
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_hatch_slab"]
+material = SubResource("StandardMaterial3D_hatch_stone")
+size = Vector3(1.17, 0.16, 2.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_hatch_groove"]
+material = SubResource("StandardMaterial3D_groove")
+size = Vector3(0.05, 0.02, 2.2)
+
+[sub_resource type="TorusMesh" id="TorusMesh_ring"]
+material = SubResource("StandardMaterial3D_bronze")
+inner_radius = 0.11
+outer_radius = 0.16
+rings = 12
+ring_segments = 4
+
+[sub_resource type="SphereMesh" id="SphereMesh_drift"]
+material = SubResource("StandardMaterial3D_drift")
+radial_segments = 12
+rings = 6
+
+[sub_resource type="BoxMesh" id="BoxMesh_hole"]
+material = SubResource("StandardMaterial3D_void")
+size = Vector3(2.3, 0.02, 2.3)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_leather"]
+albedo_color = Color(0.32, 0.18, 0.09, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_paper"]
+albedo_color = Color(0.88, 0.8, 0.6, 1)
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_notebook"]
+material = SubResource("StandardMaterial3D_leather")
+size = Vector3(0.34, 0.06, 0.46)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pages"]
+material = SubResource("StandardMaterial3D_paper")
+size = Vector3(0.31, 0.045, 0.43)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cord"]
+material = SubResource("StandardMaterial3D_groove")
+size = Vector3(0.36, 0.065, 0.025)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cave_stone"]
 albedo_color = Color(0.36, 0.29, 0.23, 1)
 roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rock"]
+albedo_color = Color(0.5, 0.46, 0.41, 1)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rock_dark"]
+albedo_color = Color(0.3, 0.27, 0.24, 1)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_slot"]
+albedo_color = Color(0.12, 0.11, 0.1, 1)
+roughness = 0.8
+emission_enabled = true
+emission = Color(0.3, 0.6, 1, 1)
+emission_energy_multiplier = 0.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_table_base"]
+material = SubResource("StandardMaterial3D_rock")
+top_radius = 1.2
+bottom_radius = 1.4
+height = 0.8
+radial_segments = 10
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_table_top"]
+material = SubResource("StandardMaterial3D_rock")
+top_radius = 1.6
+bottom_radius = 1.65
+height = 0.22
+radial_segments = 20
+
+[sub_resource type="TorusMesh" id="TorusMesh_table_rim"]
+material = SubResource("StandardMaterial3D_rock_dark")
+inner_radius = 1.52
+outer_radius = 1.68
+rings = 20
+ring_segments = 4
+
+[sub_resource type="BoxMesh" id="BoxMesh_slot"]
+material = SubResource("StandardMaterial3D_slot")
+size = Vector3(0.5, 0.02, 0.36)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_table_sun"]
+material = SubResource("StandardMaterial3D_rock_dark")
+top_radius = 0.32
+bottom_radius = 0.32
+height = 0.02
+radial_segments = 16
+
+[sub_resource type="BoxMesh" id="BoxMesh_chest_body"]
+material = SubResource("StandardMaterial3D_rock")
+size = Vector3(1.5, 0.75, 0.95)
+
+[sub_resource type="BoxMesh" id="BoxMesh_chest_lid"]
+material = SubResource("StandardMaterial3D_rock")
+size = Vector3(1.6, 0.24, 1.04)
+
+[sub_resource type="BoxMesh" id="BoxMesh_chest_band"]
+material = SubResource("StandardMaterial3D_bronze")
+size = Vector3(1.62, 0.08, 1.06)
+
+[sub_resource type="BoxMesh" id="BoxMesh_chest_lock"]
+material = SubResource("StandardMaterial3D_bronze")
+size = Vector3(0.22, 0.26, 0.06)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_chest"]
+size = Vector3(1.7, 1.0, 1.7)
 
 [sub_resource type="BoxMesh" id="BoxMesh_ceiling"]
 material = SubResource("StandardMaterial3D_cave_stone")
@@ -165,7 +301,7 @@ size = Vector3(1.4, 1.4, 0.9)
 size = Vector3(1.3, 0.14, 0.85)
 
 [sub_resource type="BoxMesh" id="BoxMesh_algo_slab"]
-material = SubResource("StandardMaterial3D_cave_stone")
+material = SubResource("StandardMaterial3D_rock")
 size = Vector3(0.35, 2.6, 3.8)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_algo_slab"]
@@ -180,13 +316,6 @@ emission_energy_multiplier = 1.4
 [sub_resource type="BoxMesh" id="BoxMesh_book"]
 material = SubResource("StandardMaterial3D_book")
 size = Vector3(0.6, 0.14, 0.8)
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_table"]
-material = SubResource("StandardMaterial3D_sandstone")
-top_radius = 1.6
-bottom_radius = 1.4
-height = 1.0
-radial_segments = 20
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_table"]
 height = 1.2
@@ -216,8 +345,8 @@ environment = SubResource("Environment_desert")
 
 [node name="Sun" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.819152, -0.32899, 0.469846, 0, 0.819152, 0.573576, -0.573576, -0.469846, 0.67101, 0, 40, 0)
-light_color = Color(1, 0.88, 0.7, 1)
-light_energy = 1.0
+light_color = Color(1, 0.84, 0.6, 1)
+light_energy = 1.35
 shadow_enabled = true
 directional_shadow_max_distance = 80.0
 
@@ -233,10 +362,16 @@ terrain = NodePath("../Terrain")
 cactus_models = Array[PackedScene]([ExtResource("20_cactus_tall"), ExtResource("21_cactus_short")])
 rock_models = Array[PackedScene]([ExtResource("22_rock_a"), ExtResource("23_rock_b"), ExtResource("24_rock_c")])
 ruin_models = Array[PackedScene]([ExtResource("25_column"), ExtResource("26_bricks")])
-wreck_models = Array[PackedScene]([ExtResource("27_catapult"), ExtResource("28_ram")])
+wreck_models = Array[PackedScene]([ExtResource("27_catapult"), ExtResource("28_ballista"), ExtResource("36_trebuchet")])
+prop_models = Array[PackedScene]([ExtResource("29_spear"), ExtResource("30_shield"), ExtResource("31_sword"), ExtResource("32_pot"), ExtResource("33_wheel"), ExtResource("34_barrel"), ExtResource("35_skeleton")])
+cactus_count = 34
 quicksand_material = SubResource("ShaderMaterial_quicksand")
 
 [node name="Ruins" parent="Exterior" instance=ExtResource("6_ruins")]
+
+[node name="Life" type="Node3D" parent="Exterior" node_paths=PackedStringArray("terrain")]
+script = ExtResource("37_life")
+terrain = NodePath("../Terrain")
 
 [node name="Portal" parent="Exterior" instance=ExtResource("8_portal")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0, 54)
@@ -245,17 +380,13 @@ open_prompt = "Retourner au hub"
 inner_color = Color(1, 0.95, 0.6, 1)
 outer_color = Color(0.95, 0.62, 0.15, 1)
 
-[node name="Sign" parent="Exterior" instance=ExtResource("14_signpost")]
-transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, -0, 0, 2.5, -5, 0, 44)
-
-[node name="SignText" type="Label3D" parent="Exterior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 3.8, 44)
-pixel_size = 0.007
-billboard = 1
-modulate = Color(1, 0.9, 0.7, 1)
-text = "Le Désert\nLes archives du soleil"
-font_size = 64
-outline_size = 16
+[node name="Sign" type="Node3D" parent="Exterior"]
+transform = Transform3D(0.965926, 0, 0.258819, 0, 1, 0, -0.258819, 0, 0.965926, -4.4, 0, 45.5)
+script = ExtResource("14_sign")
+text = "Désert de Pythania\nMonument des anciens bâtisseurs"
+board_size = Vector2(1.9, 0.9)
+board_height = 1.6
+line_height = 0.16
 
 [node name="OutsideSpawn" type="Marker3D" parent="Exterior"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, -2.5)
@@ -263,45 +394,49 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, -2.5)
 [node name="Trapdoor" type="Node3D" parent="Exterior"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, -6)
 
+[node name="Hole" type="MeshInstance3D" parent="Exterior/Trapdoor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+mesh = SubResource("BoxMesh_hole")
+
 [node name="Hatch" type="Node3D" parent="Exterior/Trapdoor"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.2)
 
-[node name="Plank0" type="MeshInstance3D" parent="Exterior/Trapdoor/Hatch"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 0, -1.2)
-mesh = SubResource("BoxMesh_plank")
+[node name="Slab0" type="MeshInstance3D" parent="Exterior/Trapdoor/Hatch"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0, -1.2)
+mesh = SubResource("BoxMesh_hatch_slab")
 
-[node name="Plank1" type="MeshInstance3D" parent="Exterior/Trapdoor/Hatch"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0, -1.2)
-mesh = SubResource("BoxMesh_plank")
+[node name="Groove0" type="MeshInstance3D" parent="Exterior/Trapdoor/Hatch"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0.081, -1.2)
+mesh = SubResource("BoxMesh_hatch_groove")
 
-[node name="Plank2" type="MeshInstance3D" parent="Exterior/Trapdoor/Hatch"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0, -1.2)
-mesh = SubResource("BoxMesh_plank")
+[node name="Slab1" type="MeshInstance3D" parent="Exterior/Trapdoor/Hatch"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 0, -1.2)
+mesh = SubResource("BoxMesh_hatch_slab")
 
-[node name="Plank3" type="MeshInstance3D" parent="Exterior/Trapdoor/Hatch"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 0, -1.2)
-mesh = SubResource("BoxMesh_plank")
+[node name="Groove1" type="MeshInstance3D" parent="Exterior/Trapdoor/Hatch"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.081, -1.2)
+mesh = SubResource("BoxMesh_hatch_groove")
 
-[node name="Strap0" type="MeshInstance3D" parent="Exterior/Trapdoor/Hatch"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, -2)
-mesh = SubResource("BoxMesh_strap")
+[node name="Ring" type="MeshInstance3D" parent="Exterior/Trapdoor/Hatch"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0.09, -0.35)
+mesh = SubResource("TorusMesh_ring")
 
-[node name="Strap1" type="MeshInstance3D" parent="Exterior/Trapdoor/Hatch"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, -0.4)
-mesh = SubResource("BoxMesh_strap")
+[node name="Drift" type="MeshInstance3D" parent="Exterior/Trapdoor/Hatch"]
+transform = Transform3D(0.75, 0, 0, 0, 0.12, 0, 0, 0, 1.25, 0.75, 0.06, -1.5)
+mesh = SubResource("SphereMesh_drift")
 
 [node name="Interactable" type="Node3D" parent="Exterior/Trapdoor"]
 script = ExtResource("11_interactable")
-prompt = "Soulever la trappe et descendre"
+prompt = "Soulever la trappe de pierre et descendre"
 radius = 2.6
 
 [node name="Clues" type="Node3D" parent="Exterior"]
 
 [node name="Levant" type="Node3D" parent="Exterior/Clues"]
-transform = Transform3D(0.5, 0, 0.866025, 0, 1, 0, -0.866025, 0, 0.5, -13, 0, -12)
+transform = Transform3D(6.12323e-17, 0, 1, 0, 1, 0, -1, 0, 6.12323e-17, -17.6, 0, -12)
 script = ExtResource("12_readable")
 title = "Stèle du levant"
-body = "Les bâtisseurs répétaient le même geste tant que l'ouvrage n'était pas achevé, puis seulement passaient à la suite."
+body = "Les anciens bâtisseurs répétaient le même geste tant que l'ouvrage n'était pas achevé, puis seulement passaient à la suite. Ainsi la jarre se remplit, seau après seau."
 prompt = "Lire la stèle"
 radius = 2.8
 
@@ -348,6 +483,17 @@ mesh = SubResource("BoxMesh_sun_ray")
 transform = Transform3D(0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0, 1, 0.2333, 0.2333, 0)
 mesh = SubResource("BoxMesh_sun_ray")
 
+[node name="Engraving" type="Label3D" parent="Exterior/Clues/Levant"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0.262)
+pixel_size = 0.0035
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.3, 0.17, 0.08, 1)
+text = "LEVANT"
+font_size = 64
+outline_size = 0
+
 [node name="Body" type="StaticBody3D" parent="Exterior/Clues/Levant"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Exterior/Clues/Levant/Body"]
@@ -355,10 +501,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
 shape = SubResource("BoxShape3D_stele")
 
 [node name="Zenith" type="Node3D" parent="Exterior/Clues"]
-transform = Transform3D(0.5, 0, -0.866025, 0, 1, 0, 0.866025, 0, 0.5, 13, 0, -12)
+transform = Transform3D(6.12323e-17, 0, -1, 0, 1, 0, 1, 0, 6.12323e-17, 17.6, 0, -12)
 script = ExtResource("12_readable")
 title = "Stèle du zénith"
-body = "Avant d'ouvrir une porte, ils posaient une question. Selon la réponse, ils agissaient d'une façon, sinon d'une autre."
+body = "Avant d'ouvrir une porte, les bâtisseurs posaient une question. Selon la réponse, ils agissaient d'une façon, sinon d'une autre."
 prompt = "Lire la stèle"
 radius = 2.8
 
@@ -405,6 +551,17 @@ mesh = SubResource("BoxMesh_sun_ray")
 transform = Transform3D(0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0, 1, 0.2333, 0.2333, 0)
 mesh = SubResource("BoxMesh_sun_ray")
 
+[node name="Engraving" type="Label3D" parent="Exterior/Clues/Zenith"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0.262)
+pixel_size = 0.0035
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.3, 0.17, 0.08, 1)
+text = "ZÉNITH"
+font_size = 64
+outline_size = 0
+
 [node name="Body" type="StaticBody3D" parent="Exterior/Clues/Zenith"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Exterior/Clues/Zenith/Body"]
@@ -415,7 +572,7 @@ shape = SubResource("BoxShape3D_stele")
 transform = Transform3D(-0.939693, 0, 0.34202, 0, 1, 0, -0.34202, 0, -0.939693, -7, 0, 8)
 script = ExtResource("12_readable")
 title = "Stèle du couchant"
-body = "Leurs instructions sont gravées sur des runes, dispersées dans les ruines et ensevelies sous le sable."
+body = "Leurs instructions sont gravées sur des runes. Quand le sable a recouvert le monument, elles se sont dispersées dans ses salles, parmi les débris, et sous les dunes."
 prompt = "Lire la stèle"
 radius = 2.8
 
@@ -461,6 +618,17 @@ mesh = SubResource("BoxMesh_sun_ray")
 [node name="Ray7" type="MeshInstance3D" parent="Exterior/Clues/Couchant/Sun"]
 transform = Transform3D(0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0, 1, 0.2333, 0.2333, 0)
 mesh = SubResource("BoxMesh_sun_ray")
+
+[node name="Engraving" type="Label3D" parent="Exterior/Clues/Couchant"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0.262)
+pixel_size = 0.0035
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.3, 0.17, 0.08, 1)
+text = "COUCHANT"
+font_size = 64
+outline_size = 0
 
 [node name="Body" type="StaticBody3D" parent="Exterior/Clues/Couchant"]
 
@@ -526,7 +694,7 @@ shape = SubResource("BoxShape3D_cellar_stairs")
 [node name="LightStairs" type="OmniLight3D" parent="Interior"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 2.6)
 light_color = Color(1, 0.88, 0.62, 1)
-light_energy = 1.4
+light_energy = 1.0
 omni_range = 6.0
 
 [node name="Torch0" type="Node3D" parent="Interior"]
@@ -539,8 +707,8 @@ mesh = SubResource("CylinderMesh_torch")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
 script = ExtResource("13_fire")
 size = 0.7
-light_energy = 2.2
-light_range = 8.0
+light_energy = 1.5
+light_range = 7.0
 crackle_sound = ExtResource("52_crackle")
 crackle_volume_db = -14.0
 
@@ -554,8 +722,8 @@ mesh = SubResource("CylinderMesh_torch")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
 script = ExtResource("13_fire")
 size = 0.7
-light_energy = 2.2
-light_range = 8.0
+light_energy = 1.5
+light_range = 7.0
 crackle_sound = ExtResource("52_crackle")
 crackle_volume_db = -14.0
 
@@ -569,8 +737,8 @@ mesh = SubResource("CylinderMesh_torch")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
 script = ExtResource("13_fire")
 size = 0.7
-light_energy = 2.2
-light_range = 8.0
+light_energy = 1.5
+light_range = 7.0
 crackle_sound = ExtResource("52_crackle")
 crackle_volume_db = -14.0
 
@@ -584,8 +752,8 @@ mesh = SubResource("CylinderMesh_torch")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
 script = ExtResource("13_fire")
 size = 0.7
-light_energy = 2.2
-light_range = 8.0
+light_energy = 1.5
+light_range = 7.0
 crackle_sound = ExtResource("52_crackle")
 crackle_volume_db = -14.0
 
@@ -593,7 +761,7 @@ crackle_volume_db = -14.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, -1.0)
 
 [node name="Exit" type="Node3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0.05)
 script = ExtResource("11_interactable")
 prompt = "Remonter à la surface"
 radius = 2.2
@@ -601,36 +769,87 @@ radius = 2.2
 [node name="Clues" type="Node3D" parent="Interior"]
 
 [node name="Caravan" type="Node3D" parent="Exterior/Clues"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33.25, 0.8, -30.75)
+transform = Transform3D(0.34202, 0, 0.939693, 0, 1, 0, -0.939693, 0, 0.34202, -32.85, 0.9, -30.29)
 script = ExtResource("12_readable")
 title = "Le carnet du caravanier"
-body = "Carnet d'un caravanier. Trois jours que la tempête nous tient. Le vieux guide dit que les bâtisseurs du sanctuaire écrivaient leurs ordres sur des runes, et qu'il suffit de les remettre dans l'ordre pour que le sable rende ce qu'il garde. Nous en avons vu briller sous les dunes, autour de l'esplanade. Certains tas ne cachent rien : il faut creuser quand même."
+body = "Carnet d'un caravanier. Nous menions nos épices et nos étoffes vers Codia quand Vibelandia a déclaré la guerre : les routes du nord sont tombées, il ne restait que la piste du désert de Pythania. Trois jours que la tempête nous tient, et le vent brûle comme une forge. Le vieux guide dit que les anciens bâtisseurs gravaient leurs instructions sur des runes, et qu'il suffit de les remettre dans l'ordre pour que le sable rende ce qu'il garde. Nous en avons vu briller dans les salles du monument, parmi les débris, et sous des tas de sable. Certains tas ne cachent rien : il faut creuser quand même. L'eau manque. Les vautours tournent au-dessus des bêtes."
 prompt = "Lire le carnet"
 radius = 2.4
 
+[node name="Cover" type="MeshInstance3D" parent="Exterior/Clues/Caravan"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
+mesh = SubResource("BoxMesh_notebook")
+
+[node name="Pages" type="MeshInstance3D" parent="Exterior/Clues/Caravan"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.025, 0.03, 0)
+mesh = SubResource("BoxMesh_pages")
+
+[node name="Cord" type="MeshInstance3D" parent="Exterior/Clues/Caravan"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0.08)
+mesh = SubResource("BoxMesh_cord")
+
 [node name="Inscription" type="Node3D" parent="Interior/Clues"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, -11.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -11.32)
 script = ExtResource("12_readable")
-title = "L'inscription de la table"
+title = "L'inscription de la porte scellée"
 body = "Les anciens bâtisseurs maîtrisaient l'art des instructions. Retrouve les fragments de leur savoir, rétablis leur ordre et les secrets enfouis te seront révélés."
 prompt = "Lire l'inscription"
-radius = 4.5
+radius = 3.2
 
-[node name="Text" type="Label3D" parent="Interior/Clues/Inscription"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0.1)
-pixel_size = 0.006
-modulate = Color(1, 0.8, 0.45, 1)
-text = "RÉTABLIS L'ORDRE DES INSTRUCTIONS"
-font_size = 64
-no_depth_test = true
-outline_size = 12
+[node name="Plaque" type="Node3D" parent="Interior/Clues/Inscription"]
+script = ExtResource("14_sign")
+text = "Les anciens bâtisseurs maîtrisaient l'art des instructions. Retrouve les fragments de leur savoir, rétablis leur ordre et les secrets enfouis te seront révélés."
+style = 1
+mount = 1
+board_size = Vector2(2.1, 1.1)
+board_height = 1.95
+line_height = 0.11
+serif = false
 
 [node name="RoundTable" type="Node3D" parent="Interior"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6)
 
-[node name="Mesh" type="MeshInstance3D" parent="Interior/RoundTable"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-mesh = SubResource("CylinderMesh_table")
+[node name="Base" type="MeshInstance3D" parent="Interior/RoundTable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+mesh = SubResource("CylinderMesh_table_base")
+
+[node name="Top" type="MeshInstance3D" parent="Interior/RoundTable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.91, 0)
+mesh = SubResource("CylinderMesh_table_top")
+
+[node name="Rim" type="MeshInstance3D" parent="Interior/RoundTable"]
+transform = Transform3D(1, 0, 0, 0, 0.5, 0, 0, 0, 1, 0, 1.0, 0)
+mesh = SubResource("TorusMesh_table_rim")
+
+[node name="Sun" type="MeshInstance3D" parent="Interior/RoundTable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.025, 0)
+mesh = SubResource("CylinderMesh_table_sun")
+
+[node name="Slots" type="Node3D" parent="Interior/RoundTable"]
+
+[node name="Slot0" type="MeshInstance3D" parent="Interior/RoundTable/Slots"]
+transform = Transform3D(0.86603, 0, 0.5, 0, 1, 0, -0.5, 0, 0.86603, 0.525, 1.03, 0.9093)
+mesh = SubResource("BoxMesh_slot")
+
+[node name="Slot1" type="MeshInstance3D" parent="Interior/RoundTable/Slots"]
+transform = Transform3D(6.1232e-17, 0, 1, 0, 1, 0, -1, 0, 6.1232e-17, 1.05, 1.03, 6.429e-17)
+mesh = SubResource("BoxMesh_slot")
+
+[node name="Slot2" type="MeshInstance3D" parent="Interior/RoundTable/Slots"]
+transform = Transform3D(-0.86603, 0, 0.5, 0, 1, 0, -0.5, 0, -0.86603, 0.525, 1.03, -0.9093)
+mesh = SubResource("BoxMesh_slot")
+
+[node name="Slot3" type="MeshInstance3D" parent="Interior/RoundTable/Slots"]
+transform = Transform3D(-0.86603, 0, -0.5, 0, 1, 0, 0.5, 0, -0.86603, -0.525, 1.03, -0.9093)
+mesh = SubResource("BoxMesh_slot")
+
+[node name="Slot4" type="MeshInstance3D" parent="Interior/RoundTable/Slots"]
+transform = Transform3D(-1.837e-16, 0, -1, 0, 1, 0, 1, 0, -1.837e-16, -1.05, 1.03, -1.929e-16)
+mesh = SubResource("BoxMesh_slot")
+
+[node name="Slot5" type="MeshInstance3D" parent="Interior/RoundTable/Slots"]
+transform = Transform3D(0.86603, 0, -0.5, 0, 1, 0, 0.5, 0, 0.86603, -0.525, 1.03, 0.9093)
+mesh = SubResource("BoxMesh_slot")
 
 [node name="Body" type="StaticBody3D" parent="Interior/RoundTable"]
 
@@ -647,6 +866,12 @@ omni_range = 6.0
 [node name="Sound" type="AudioStreamPlayer3D" parent="Interior/RoundTable"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
 unit_size = 6.0
+
+[node name="Rumble" type="AudioStreamPlayer3D" parent="Interior/RoundTable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+stream = ExtResource("53_rumble")
+unit_size = 10.0
+volume_db = 2.0
 
 [node name="Interactable" type="Node3D" parent="Interior/RoundTable"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -672,12 +897,15 @@ mesh = SubResource("BoxMesh_algo_slab")
 shape = SubResource("BoxShape3D_algo_slab")
 
 [node name="Text" type="Label3D" parent="Interior/Clues/AlgorithmWall"]
-transform = Transform3D(6.12323e-17, 0, 1, 0, 1, 0, -1, 0, 6.12323e-17, 0, 0, 1.7)
+transform = Transform3D(6.12323e-17, 0, 1, 0, 1, 0, -1, 0, 6.12323e-17, -0.012, 0, 1.7)
 pixel_size = 0.0024
-modulate = Color(0.65, 0.85, 1, 1)
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.86, 0.66, 0.3, 1)
 text = "Algorithme 1 — Remplir la jarre sacrée\n1  Prendre une jarre vide\n2  [ ? ]\n3      [ ? ]\n4      Verser l'eau dans la jarre\n5  FIN TANT QUE\n6  [ ? ]"
 font_size = 64
-outline_size = 10
+outline_size = 0
 horizontal_alignment = 0
 
 [node name="AlgorithmWallEast" type="Node3D" parent="Interior/Clues"]
@@ -698,25 +926,57 @@ mesh = SubResource("BoxMesh_algo_slab")
 shape = SubResource("BoxShape3D_algo_slab")
 
 [node name="Text" type="Label3D" parent="Interior/Clues/AlgorithmWallEast"]
-transform = Transform3D(6.12323e-17, 0, -1, 0, 1, 0, 1, 0, 6.12323e-17, -0, 0, -1.7)
+transform = Transform3D(6.12323e-17, 0, -1, 0, 1, 0, 1, 0, 6.12323e-17, 0.012, 0, -1.7)
 pixel_size = 0.0024
-modulate = Color(0.65, 0.85, 1, 1)
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.86, 0.66, 0.3, 1)
 text = "Algorithme 2 — Garder l'entrée du temple\n1  Demander le mot de passe au voyageur\n2  [ ? ]\n3      [ ? ]\n4  [ ? ]\n5      Sonner l'alarme\n6  FIN SI"
 font_size = 64
-outline_size = 10
+outline_size = 0
 horizontal_alignment = 0
 
-[node name="Chest" parent="Interior" instance=ExtResource("19_chest")]
-transform = Transform3D(-3, 0, 3.67394e-16, 0, 3, 0, -3.67394e-16, 0, -3, 0, 0, -10)
+[node name="Chest" type="Node3D" parent="Interior"]
+transform = Transform3D(0.45399, 0, -0.891007, 0, 1, 0, 0.891007, 0, 0.45399, 7.6, 0, -9.8)
+
+[node name="Body" type="MeshInstance3D" parent="Interior/Chest"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.375, 0)
+mesh = SubResource("BoxMesh_chest_body")
+
+[node name="Band" type="MeshInstance3D" parent="Interior/Chest"]
+transform = Transform3D(0.94, 0, 0, 0, 1, 0, 0, 0, 0.92, 0, 0.12, 0)
+mesh = SubResource("BoxMesh_chest_band")
+
+[node name="Lid" type="Node3D" parent="Interior/Chest"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -0.5)
+
+[node name="Mesh" type="MeshInstance3D" parent="Interior/Chest/Lid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, 0.5)
+mesh = SubResource("BoxMesh_chest_lid")
+
+[node name="Band" type="MeshInstance3D" parent="Interior/Chest/Lid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, 0.5)
+mesh = SubResource("BoxMesh_chest_band")
+
+[node name="Lock" type="MeshInstance3D" parent="Interior/Chest/Lid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0, 1.03)
+mesh = SubResource("BoxMesh_chest_lock")
 
 [node name="ChestSand" type="MeshInstance3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, -10.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.6, 0.65, -9.8)
 mesh = SubResource("CylinderMesh_chest_sand")
+
+[node name="ChestBody" type="StaticBody3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.6, 0.5, -9.8)
+
+[node name="Shape" type="CollisionShape3D" parent="Interior/ChestBody"]
+shape = SubResource("BoxShape3D_chest")
 
 [node name="Runes" type="Node3D" parent="."]
 
 [node name="TantQue" type="Node3D" parent="Runes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.6, 0, -10.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.4, 0, -14.4)
 script = ExtResource("16_rune")
 rune_id = &"tant_que"
 hidden_at_start = false
@@ -779,8 +1039,8 @@ script = ExtResource("17_pile")
 radius = 2.2
 rune = NodePath("../../Runes/Puiser")
 
-[node name="PileStatue" type="Node3D" parent="SandPiles"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -15)
+[node name="PileEastRoom" type="Node3D" parent="SandPiles"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.6, 0, -9.4)
 script = ExtResource("17_pile")
 radius = 2.2
 
@@ -801,16 +1061,16 @@ script = ExtResource("17_pile")
 radius = 2.2
 rune = NodePath("../../Runes/Sinon")
 
-[node name="PileCaveCorner" type="Node3D" parent="SandPiles"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, -40, -8.8)
+[node name="PileCaveNorth" type="Node3D" parent="SandPiles"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.6, -40, -8.2)
 script = ExtResource("17_pile")
 radius = 2.2
 
 [node name="BookTarget" type="Marker3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9, -10.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.6, 1.9, -9.8)
 
 [node name="Book" type="Node3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9, -10.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.6, 1.9, -9.8)
 
 [node name="Mesh" type="MeshInstance3D" parent="Interior/Book"]
 mesh = SubResource("BoxMesh_book")
@@ -824,6 +1084,62 @@ omni_range = 4.0
 script = ExtResource("11_interactable")
 prompt = "Prendre l'Algonicon"
 radius = 3.0
+
+[node name="Sounds" type="Node3D" parent="Exterior"]
+
+[node name="WindSanctum" type="AudioStreamPlayer3D" parent="Exterior/Sounds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -24)
+stream = ExtResource("54_ruin_wind")
+pitch_scale = 0.85
+volume_db = -3
+unit_size = 7.0
+max_distance = 30.0
+autoplay = true
+
+[node name="WindArch" type="AudioStreamPlayer3D" parent="Exterior/Sounds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 16)
+stream = ExtResource("40_wind")
+pitch_scale = 1.25
+volume_db = -6
+unit_size = 7.0
+max_distance = 30.0
+autoplay = true
+
+[node name="WindGate" type="AudioStreamPlayer3D" parent="Exterior/Sounds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 2, -44)
+stream = ExtResource("40_wind")
+pitch_scale = 1.4
+volume_db = -2
+unit_size = 7.0
+max_distance = 30.0
+autoplay = true
+
+[node name="WindColonnade" type="AudioStreamPlayer3D" parent="Exterior/Sounds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22, 2.5, -48)
+stream = ExtResource("54_ruin_wind")
+pitch_scale = 1.1
+volume_db = -3
+unit_size = 7.0
+max_distance = 30.0
+autoplay = true
+
+[node name="WindBeast" type="AudioStreamPlayer3D" parent="Exterior/Sounds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 2, 50)
+stream = ExtResource("54_ruin_wind")
+pitch_scale = 0.7
+volume_db = -4
+unit_size = 7.0
+max_distance = 30.0
+autoplay = true
+
+[node name="WindHead" type="AudioStreamPlayer3D" parent="Exterior/Sounds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34, 4, 30)
+stream = ExtResource("40_wind")
+pitch_scale = 0.9
+volume_db = -5
+unit_size = 7.0
+max_distance = 30.0
+autoplay = true
 
 [node name="Volcano" type="Node3D" parent="Exterior"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, -6, -215)

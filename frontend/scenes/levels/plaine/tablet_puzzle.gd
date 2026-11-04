@@ -83,7 +83,7 @@ func validate() -> void:
 	if correct:
 		_root.hide()
 	else:
-		_feedback.text = "La tablette s'empourpre d'une lueur rouge : la conversation n'a pas de sens dans cet ordre. Le volcan gronde…"
+		_feedback.text = "Les inscriptions virent au rouge et le sol tremble : la conversation n'a pas de sens dans cet ordre. Le Mont Sam Altan gronde…"
 		_flash_wrong()
 	validated.emit(correct)
 

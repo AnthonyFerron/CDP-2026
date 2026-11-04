@@ -1,0 +1,30 @@
+#!/bin/bash
+# Point d'entrée du déploiement, installé dans /usr/local/bin/cdp-deploy par setup-server.sh.
+# La clé SSH de GitHub Actions ne peut lancer que ce script. Il récupère main, puis confie la suite
+# (sauvegarde, migrations, conteneurs) à infrastructure/deploy.sh, versionné avec le code.
+set -euo pipefail
+
+BASE=/opt/cdp-2026
+
+exec 9>"$BASE/.deploy.lock"
+flock 9
+
+if [ ! -d "$BASE/app/.git" ]; then
+  git clone --depth 1 --branch main https://github.com/AnthonyFerron/CDP-2026.git "$BASE/app"
+fi
+
+cd "$BASE/app"
+git fetch --depth 1 origin main
+git reset --hard FETCH_HEAD
+git lfs install --local >/dev/null
+git lfs pull
+echo "Déploiement de $(git rev-parse --short HEAD)"
+
+if [ -f infrastructure/deploy.sh ]; then
+  CDP_BASE="$BASE" bash infrastructure/deploy.sh
+else
+  # Version du dépôt antérieure à deploy.sh : déploiement d'origine, sans migrations
+  docker compose -f infrastructure/docker-compose.prod.yml --env-file "$BASE/.env" \
+    up --detach --build --wait --wait-timeout 120 --remove-orphans
+fi
+docker image prune --force
