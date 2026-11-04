@@ -241,6 +241,8 @@ godot --headless --path frontend res://tests/run_tests.tscn
 
 Avec une API de test et un faux serveur SMTP, il joue aussi de vrais parcours : inscription et code par e-mail, partie complète, reprise sur un autre appareil, défaite, classements, import invité, coupure réseau (voir `docs/api-godot.md`). Jamais contre la production : le script refuse. Le dossier `tests/` n'est pas exporté.
 
+`frontend/tests/scenes/` joue les niveaux eux-mêmes : progression du hub, marche dans le village, chaque énigme, chronomètre, menus, connexion simulée, menu de debug, plein écran, collisions des arbres et des panneaux. `GODOT=<binaire de Godot> bash frontend/tests/scenes/run_all.sh` les lance tous, avec une API locale morte ; sans écran, les tests qui lisent l'image passent par `xvfb-run`. Les consignes et outils des agents qui ont construit les niveaux sont dans `docs/agents/`.
+
 ## API
 
 L'API FastAPI de `backend/` gère les comptes avec double authentification par e-mail, les parties et leur chronomètre, les énigmes et les classements. Sa documentation interactive est servie sur `/api/docs`. Les routes et les règles sont dans `docs/api-contract.md`, et le branchement côté Godot dans `docs/api-godot.md`.
