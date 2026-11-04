@@ -142,11 +142,17 @@ func _rebuild() -> void:
 		var body := StaticBody3D.new()
 		var shape := CollisionShape3D.new()
 		var box := BoxShape3D.new()
-		var low := 0.0 if mount != Mount.WALL else center.y - board_size.y / 2.0
-		var high := center.y + board_size.y / 2.0
-		box.size = Vector3(board_size.x + 0.2, high - low, maxf(thickness + 0.1, 0.25))
+		if mount == Mount.HANGING:
+			# Suspendue, la planche laisse passer dessous : seul le montant de la potence arrête le joueur.
+			var arm_y := center.y + board_size.y / 2.0 + 0.35
+			box.size = Vector3(0.3, arm_y + 0.1, 0.3)
+			shape.position = Vector3(-board_size.x / 2.0 - 0.25, (arm_y + 0.1) / 2.0, 0.0)
+		else:
+			var low := 0.0 if mount != Mount.WALL else center.y - board_size.y / 2.0
+			var high := center.y + board_size.y / 2.0
+			box.size = Vector3(board_size.x + 0.2, high - low, maxf(thickness + 0.1, 0.25))
+			shape.position = Vector3(0.0, (low + high) / 2.0, center.z)
 		shape.shape = box
-		shape.position = Vector3(0.0, (low + high) / 2.0, center.z)
 		body.add_child(shape)
 		_add(body)
 
