@@ -17,7 +17,7 @@ const WIND_DB := -8.0
 ## Teinte appliquée à la pierre claire du kit pour en faire du grès.
 const SANDSTONE := Color(1.0, 0.8, 0.6)
 ## Lumière ambiante dehors et dans la cave, sombre et poussiéreuse.
-const AMBIENT_OUTSIDE := 0.45
+const AMBIENT_OUTSIDE := 0.3
 const AMBIENT_INSIDE := 0.22
 ## Au-delà de cette distance, les petits modèles des ruines disparaissent en fondu.
 const SMALL_PROP_RANGE := 70.0
@@ -36,6 +36,7 @@ var _sinking := 0.0
 var _grounded_frames := 0
 var _safe_position := Vector3.ZERO
 var _sandstorm: CPUParticles3D
+var _sand_veil: CPUParticles3D
 var _dust: CPUParticles3D
 var _slot_material: StandardMaterial3D
 var _shake_tween: Tween
@@ -99,8 +100,16 @@ func _ready() -> void:
 	_fade_small_props($Exterior/Ruins)
 	_sandstorm = _create_sandstorm()
 	_exterior.add_child(_sandstorm)
+	_sand_veil = _create_sand_veil()
+	_exterior.add_child(_sand_veil)
 	_dust = _create_dust()
 	_interior.add_child(_dust)
+	_interior.add_child(_create_falling_dust())
+	# Les sons d'ambiance tournent en boucle : le vent partout, celui qui siffle dans les ruines, la cave.
+	for sound: AudioStreamPlayer3D in $Exterior/Sounds.get_children():
+		sound.finished.connect(sound.play)
+	_wind.finished.connect(_wind.play)
+	_cave_sound.finished.connect(_cave_sound.play)
 	var slot := $Interior/RoundTable/Slots.get_child(0) as MeshInstance3D
 	_slot_material = slot.mesh.surface_get_material(0)
 	_apply_location()
@@ -112,6 +121,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	_sandstorm.global_position = _player.global_position + Vector3(-12.0, 1.5, 0.0)
+	_sand_veil.global_position = _player.global_position + Vector3(-10.0, 0.5, 0.0)
 	if _book.visible:
 		_book.rotation.y += delta * 0.8
 
@@ -190,7 +200,10 @@ func _apply_location() -> void:
 	_sun.visible = not _inside
 	_environment.fog_enabled = not _inside
 	_sandstorm.emitting = not _inside
+	_sand_veil.emitting = not _inside
 	_dust.emitting = _inside
+	for stream: CPUParticles3D in _interior.get_node("FallingDust").get_children():
+		stream.emitting = _inside
 	# Dans la cave, la lumière ambiante ne vient plus du ciel bleu mais d'une pénombre chaude.
 	_environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR if _inside else Environment.AMBIENT_SOURCE_SKY
 	_environment.ambient_light_energy = AMBIENT_INSIDE if _inside else AMBIENT_OUTSIDE
@@ -395,6 +408,76 @@ func _create_dust() -> CPUParticles3D:
 	dust.color_ramp = gradient
 	dust.emitting = false
 	return dust
+
+
+## Poussière qui tombe en filets des fissures du plafond de la cave.
+func _create_falling_dust() -> Node3D:
+	var material := StandardMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.vertex_color_use_as_albedo = true
+	var quad := QuadMesh.new()
+	quad.size = Vector2(0.03, 0.05)
+	quad.material = material
+	var gradient := Gradient.new()
+	gradient.set_color(0, Color(0.85, 0.72, 0.52, 0.0))
+	gradient.set_color(1, Color(0.85, 0.72, 0.52, 0.0))
+	gradient.add_point(0.15, Color(0.88, 0.76, 0.56, 0.55))
+	gradient.add_point(0.8, Color(0.88, 0.76, 0.56, 0.35))
+	var streams := Node3D.new()
+	streams.name = "FallingDust"
+	for spot: Vector3 in [Vector3(-5.4, 4.05, -3.6), Vector3(5.2, 4.05, -7.8), Vector3(-1.9, 4.05, -9.6), Vector3(7.6, 4.05, -1.2)]:
+		var dust := CPUParticles3D.new()
+		dust.mesh = quad
+		dust.amount = 24
+		dust.lifetime = 3.0
+		dust.preprocess = 3.0
+		dust.position = spot
+		dust.emission_shape = CPUParticles3D.EMISSION_SHAPE_BOX
+		dust.emission_box_extents = Vector3(0.18, 0.02, 0.18)
+		dust.direction = Vector3.DOWN
+		dust.spread = 5.0
+		dust.gravity = Vector3(0.0, -0.6, 0.0)
+		dust.initial_velocity_min = 0.1
+		dust.initial_velocity_max = 0.3
+		dust.color_ramp = gradient
+		dust.emitting = false
+		streams.add_child(dust)
+	return streams
+
+
+## Voiles de sable que le vent pousse au ras des dunes, larges et à peine visibles.
+func _create_sand_veil() -> CPUParticles3D:
+	var material := StandardMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.vertex_color_use_as_albedo = true
+	var quad := QuadMesh.new()
+	quad.size = Vector2(3.2, 0.7)
+	quad.material = material
+	var gradient := Gradient.new()
+	gradient.set_color(0, Color(0.95, 0.8, 0.55, 0.0))
+	gradient.set_color(1, Color(0.95, 0.8, 0.55, 0.0))
+	gradient.add_point(0.4, Color(0.95, 0.82, 0.58, 0.13))
+	gradient.add_point(0.7, Color(0.95, 0.82, 0.58, 0.1))
+	var veil := CPUParticles3D.new()
+	veil.mesh = quad
+	veil.amount = 36
+	veil.lifetime = 6.0
+	veil.preprocess = 6.0
+	veil.local_coords = false
+	veil.emission_shape = CPUParticles3D.EMISSION_SHAPE_BOX
+	veil.emission_box_extents = Vector3(10.0, 0.3, 26.0)
+	veil.direction = Vector3(1.0, 0.0, 0.15)
+	veil.spread = 8.0
+	veil.gravity = Vector3.ZERO
+	veil.initial_velocity_min = 2.0
+	veil.initial_velocity_max = 3.6
+	veil.color_ramp = gradient
+	veil.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	return veil
 
 
 ## Rafales de sable qui balaient le sol autour du joueur.
