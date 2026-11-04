@@ -69,7 +69,9 @@ class Scene:
 
     def add(self, model, position, degrees=0.0, scale=1.0, tilt=0.0, roll=0.0):
         basis = multiply(multiply(rotation_y(degrees), rotation_x(tilt)), rotation_z(roll))
-        basis = [[value * scale for value in row] for row in basis]
+        # L'échelle peut aussi se donner par axe du modèle : (x, y, z).
+        axes = scale if isinstance(scale, tuple) else (scale, scale, scale)
+        basis = [[row[column] * axes[column] for column in range(3)] for row in basis]
         name = model.rsplit("/", 1)[-1].replace("-", "_")
         self.visuals.append((name, f"{KENNEY}/{model}.glb", transform_text(basis, position)))
 

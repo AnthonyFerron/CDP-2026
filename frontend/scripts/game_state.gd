@@ -11,6 +11,7 @@ signal time_penalized(seconds: float)
 ## Le chronomètre est tombé à zéro : le volcan entre en éruption et la partie est perdue.
 signal erupted
 
+## Sauvegarde de l'invité ; un compte a la sienne, nommée d'après son profil (use_profile).
 const SAVE_PATH := "user://sauvegarde.cfg"
 const HUB_SCENE := "res://scenes/levels/hub/hub.tscn"
 ## Scène de chaque zone ; une zone sans scène n'est pas encore construite.
@@ -63,6 +64,7 @@ var has_erupted := false
 var ending: StringName = &""
 
 var _since_save := 0.0
+var _save_path := SAVE_PATH
 
 
 func _ready() -> void:
@@ -167,13 +169,36 @@ func return_to_hub(zone: StringName) -> void:
 
 ## Repart d'une partie neuve : aucun livre, chronomètre plein.
 func reset() -> void:
+	_clear()
+	save_game()
+
+
+func _clear() -> void:
 	books.clear()
 	placed_books.clear()
 	last_zone = &""
 	intro_done = false
 	time_left = TOTAL_TIME
 	has_erupted = false
-	save_game()
+
+
+## Change de joueur : l'invité (profil vide) ou un compte. Sa sauvegarde est chargée, s'il en a une.
+func use_profile(profile: String) -> void:
+	var path := SAVE_PATH if profile.is_empty() else "user://sauvegarde_%s.cfg" % profile
+	if path == _save_path:
+		return
+	_save_path = path
+	load_game()
+
+
+## Une partie commencée, et pas encore perdue, peut être reprise depuis le menu.
+func can_continue() -> bool:
+	return intro_done and not has_erupted
+
+
+## Temps mis depuis le début de la mission, en secondes, pénalités comprises.
+func elapsed_time() -> float:
+	return TOTAL_TIME - time_left
 
 
 func save_game() -> void:
@@ -185,12 +210,13 @@ func save_game() -> void:
 	file.set_value("partie", "temps_restant", time_left)
 	file.set_value("partie", "eruption", has_erupted)
 	file.set_value("partie", "introduction", intro_done)
-	file.save(SAVE_PATH)
+	file.save(_save_path)
 
 
 func load_game() -> void:
 	var file := ConfigFile.new()
-	if file.load(SAVE_PATH) != OK:
+	if file.load(_save_path) != OK:
+		_clear()
 		return
 	books.clear()
 	for book: String in file.get_value("partie", "livres", []):

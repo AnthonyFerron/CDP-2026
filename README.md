@@ -26,9 +26,26 @@ Les touches suivent la position physique sur le clavier : ZQSD en AZERTY, WASD e
 | Interagir | E |
 | Regarder autour | Souris ou flèches |
 | Relire les fragments (Village) | I ou Tab |
-| Libérer la souris | Échap |
+| Pause (et libérer la souris) | Échap ou P |
+| Indice | H |
 | Reprendre la souris | Clic |
 | Plein écran | F ou F11 |
+
+## Menus
+
+Le jeu s'ouvre sur l'accueil, `frontend/scenes/ui/menus/main_menu.tscn`, dessiné d'après les maquettes par `main_menu.gd` et les éléments communs de `ornate.gd` (cadres, boutons, champs, icônes, fond de nuit).
+
+- **Accueil invité** : « Jouer en tant qu'invité », « Se connecter » et « Créer un compte » ; « Charger partie » et « Classement » sont grisés.
+- **Connexion** et **création de compte** mènent à la **vérification en deux étapes** : six cases, un chiffre par case, un code collé se répartit seul ; « Valider » reste grisé tant que le code n'est pas complet. « Retour » ramène à l'écran d'où l'on vient.
+- **Accueil connecté** : portrait et pseudo, « Nouvelle partie », « Charger partie » (s'il existe une partie en cours), « Classement » et « Se déconnecter ». Une nouvelle partie demande confirmation si une partie est en cours.
+- **Introduction** avant chaque nouvelle partie, puis le jeu commence dans le bunker.
+- **Pause** (Échap ou P) : reprendre, ou sauvegarder et revenir au menu. Sur le web, elle s'ouvre aussi quand le navigateur libère la souris.
+- **Indice** (H) : trois indices par zone, du plus vague au plus précis, un de plus à chaque ouverture ; au hub, l'indice dit où aller.
+- **Classement** : les meilleurs temps, les trois premiers en or, argent et bronze. Le temps est envoyé quand le rituel commence.
+
+Chaque compte a sa propre sauvegarde (`user://sauvegarde_compte_<pseudo>.cfg`), l'invité garde `user://sauvegarde.cfg`.
+
+Toutes les demandes au serveur passent par l'autoload `Account` (`frontend/scripts/account.gd`) : `login`, `register`, `verify_code`, `resend_code`, `request_password_reset`, `logout`, `fetch_leaderboard` et `submit_run`. Leurs réponses sont **simulées** en attendant l'API (tout code de six chiffres est accepté, le classement est vide). Pour la brancher, remplacer le corps de ces méthodes par les appels HTTP en gardant leurs signatures et la forme de leurs résultats (`ok`, `error`, `needs_code`, `entries`) : les menus n'ont rien à changer.
 
 ## Debug
 
@@ -89,6 +106,8 @@ Pour une mise à jour de Godot, changer `GODOT_VERSION` dans `frontend/Dockerfil
 Les sons du jeu (vent, lave, marais, désert, cave, hub, village, ruisseau, pas, feu, porte, tablettes) sont synthétisés par `frontend/tools/generate_sounds.py`, sans dépendance externe. Pour en modifier un, changer sa fonction dans le script puis le relancer depuis `frontend` avec `python tools/generate_sounds.py`.
 
 Les symboles de l'interface (flèches du mécanisme, coche des codes résolus) sont dessinés par `frontend/scripts/ui_icons.gd`, et ceux des scènes (runes, soleils des stèles, repère du mécanisme) sont des maillages : Cinzel et Lora n'ont pas ces caractères, et la version web n'a pas de police système pour les remplacer. Ne pas écrire de symbole hors de l'alphabet latin dans un texte affiché.
+
+Les textures Kenney enregistrées en palette de 256 couleurs (château, arène, survie, nourriture) ont été réécrites en couleurs vraies par `frontend/tools/smooth_colormaps.py`, qui lisse leurs dégradés : en palette, chaque marche du dégradé devenait une raie horizontale sur les murs agrandis. Relancer ce script après avoir remplacé l'un de ces kits.
 
 En vue à la première personne, le corps de Devlyn ne se voit pas mais projette son ombre : `frontend/scenes/player/devlyn.gd` balance ses jambes et ses bras à chaque pas, pour que l'ombre marche avec le joueur.
 

@@ -123,10 +123,19 @@ func _scatter_trees() -> void:
 		collision.position = item.origin + Vector3.UP * 2.0
 		body.add_child(collision)
 		placed += 1
+	# Le joueur peut gravir la berge : ses arbres ont aussi leur collision au tronc.
 	for i in bank_tree_count:
 		var angle := TAU * i / bank_tree_count + _rng.randf_range(-0.05, 0.05)
 		var spot := Vector2.from_angle(angle) * (MaraisTerrain.PLAY_RADIUS + _rng.randf_range(3.0, 9.0))
-		groups[i % groups.size()].append(_ground_transform(spot, _rng.randf_range(4.5, 6.5)))
+		var item := _ground_transform(spot, _rng.randf_range(4.5, 6.5))
+		groups[i % groups.size()].append(item)
+		var shape := CylinderShape3D.new()
+		shape.radius = 0.5
+		shape.height = 4.0
+		var collision := CollisionShape3D.new()
+		collision.shape = shape
+		collision.position = item.origin + Vector3.UP * 2.0
+		body.add_child(collision)
 	for index in tree_models.size():
 		var transforms: Array[Transform3D] = []
 		transforms.assign(groups[index])

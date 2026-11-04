@@ -85,9 +85,8 @@ func _use_first_person() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_cancel"):
-		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	elif Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+	# Échap ouvre le menu pause (PauseMenu), qui libère la souris.
+	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		if event is InputEventMouseButton and event.pressed:
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	elif event is InputEventMouseMotion:

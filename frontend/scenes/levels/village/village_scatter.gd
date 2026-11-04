@@ -84,14 +84,29 @@ func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, radi
 
 
 func _add_border_trees() -> void:
+	# Le joueur peut gravir le talus : les arbres de la bordure ont aussi leur collision au tronc.
+	var body := StaticBody3D.new()
+	body.name = "BorderTrees"
+	add_child(body)
 	var groups: Array[Array] = []
 	for model in tree_models:
 		groups.append([])
 	for i in border_tree_count:
 		var angle := TAU * i / border_tree_count + _rng.randf_range(-0.05, 0.05)
 		var spot := Vector2.from_angle(angle) * (VillageTerrain.PLAY_RADIUS + _rng.randf_range(1.0, 8.0))
-		var basis := Basis(Vector3.UP, _rng.randf() * TAU).scaled(Vector3.ONE * _rng.randf_range(5.0, 7.0))
-		groups[i % groups.size()].append(Transform3D(basis, Vector3(spot.x, terrain.footing_height(spot.x, spot.y) - 0.1, spot.y)))
+		# Même ordre de tirage qu'avant : l'orientation, puis la taille.
+		var yaw := _rng.randf() * TAU
+		var scale_factor := _rng.randf_range(5.0, 7.0)
+		var basis := Basis(Vector3.UP, yaw).scaled(Vector3.ONE * scale_factor)
+		var origin := Vector3(spot.x, terrain.footing_height(spot.x, spot.y) - 0.1, spot.y)
+		groups[i % groups.size()].append(Transform3D(basis, origin))
+		var shape := CylinderShape3D.new()
+		shape.radius = 0.08 * scale_factor
+		shape.height = 4.0
+		var collision := CollisionShape3D.new()
+		collision.shape = shape
+		collision.position = origin + Vector3.UP * 2.0
+		body.add_child(collision)
 	for index in tree_models.size():
 		var transforms: Array[Transform3D] = []
 		transforms.assign(groups[index])

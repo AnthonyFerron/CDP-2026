@@ -395,7 +395,8 @@ def square_tower(scene, x, z, scale, floors, roofed=True):
     y = 0.0
     for model in ["tower-square-base"] + ["tower-square-mid-windows"] * (floors - 2) + ["tower-square-mid"]:
         scene.add(f"castle_kit/{model}", (x, y, z), 0.0, scale)
-        y += scale
+        # Un étage du kit mesure 1,01 tuile : empilés à 1, deux étages se chevaucheraient et leurs faces scintilleraient.
+        y += 1.01 * scale
     scene.add("castle_kit/tower-square-top", (x, y, z), 0.0, scale)
     scene.add_box((x, (y + 0.3 * scale) / 2, z), (scale, y + 0.3 * scale, scale))
     if roofed:
@@ -448,14 +449,17 @@ def build_castle(scene, rng):
     keep_half = KEEP_SCALE / 2
     for layer in range(2):
         y = layer * KEEP_LAYER
+        # La rangée du haut recouvre les créneaux de celle du bas : un peu plus épaisse, ses faces passent devant
+        # au lieu de se confondre avec celles du bas, qui scintilleraient.
+        scale = KEEP_SCALE if layer == 0 else (KEEP_SCALE, KEEP_SCALE, KEEP_SCALE * 1.03)
         for x in range(int(-KEEP_X), int(KEEP_X) + 1, int(KEEP_SCALE)):
             for z in (KEEP_BACK, KEEP_FRONT):
                 if z == KEEP_FRONT and x == 0 and layer == 0:
                     continue
-                scene.add("castle_kit/wall", (x, y, z), 0.0, KEEP_SCALE)
+                scene.add("castle_kit/wall", (x, y, z), 0.0, scale)
         for z in range(int(KEEP_BACK + KEEP_SCALE), int(KEEP_FRONT), int(KEEP_SCALE)):
             for x in (-KEEP_X, KEEP_X):
-                scene.add("castle_kit/wall", (x, y, z), 90.0, KEEP_SCALE)
+                scene.add("castle_kit/wall", (x, y, z), 90.0, scale)
     height = KEEP_LAYER + 1.31 * KEEP_SCALE
     for x in range(int(-KEEP_X), int(KEEP_X) + 1, int(KEEP_SCALE)):
         scene.add_box((x, height / 2, KEEP_BACK), (KEEP_SCALE, height, KEEP_SCALE))
@@ -476,6 +480,7 @@ def build_castle(scene, rng):
         for z in (-85.6, -76.4):
             for floor in range(2):
                 scene.add("fantasy_town_kit/pillar-stone", (x, floor * WALL_HEIGHT, z), 0.0, WALL_SCALE)
+            scene.add_box((x, WALL_HEIGHT, z), (0.7, 2 * WALL_HEIGHT, 0.7))
     # Le drap de la bannière est décalé de 0,4 tuile de son origine, comme les murs du kit.
     for z in (-84.0, -78.0):
         for x, degrees in ((-8.55, 180.0), (8.55, 0.0)):

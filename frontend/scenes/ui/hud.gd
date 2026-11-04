@@ -34,6 +34,12 @@ func _ready() -> void:
 	_fade.modulate.a = 0.0
 	GameState.time_penalized.connect(_on_time_penalized)
 	GameState.erupted.connect(_on_erupted)
+	# Retour à l'accueil depuis l'écran de fin, sous « Recommencer ».
+	var menu := %Restart.duplicate(Node.DUPLICATE_SCRIPTS) as Button
+	menu.name = "MainMenu"
+	menu.text = "Menu principal"
+	%Restart.add_sibling(menu)
+	menu.pressed.connect(_on_main_menu_pressed)
 	%Restart.pressed.connect(_on_restart_pressed)
 	_refresh_timer()
 	if GameState.has_erupted:
@@ -119,6 +125,12 @@ func _on_erupted() -> void:
 	set_prompt("")
 	get_tree().paused = true
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+
+func _on_main_menu_pressed() -> void:
+	GameState.reset()
+	get_tree().paused = false
+	get_tree().change_scene_to_file(MainMenu.SCENE)
 
 
 func _on_restart_pressed() -> void:

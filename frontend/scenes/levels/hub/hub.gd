@@ -339,6 +339,8 @@ func _show_repairs() -> void:
 ## Le rituel, dans la salle du château : les habitants sortent du bunker, Merlon lève son bâton, puis la bonne fin se joue.
 func _ritual() -> void:
 	_player.process_mode = Node.PROCESS_MODE_DISABLED
+	# Temps réalisé, envoyé au classement si le joueur est connecté.
+	Account.submit_run(GameState.elapsed_time())
 	await _hud.fade(true)
 	_release_survivors()
 	await _hud.fade(false)
