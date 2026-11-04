@@ -43,6 +43,8 @@ Le jeu s'ouvre sur l'accueil, `frontend/scenes/ui/menus/main_menu.tscn`, dessin�
 - **Indice** (H) : trois indices par zone, du plus vague au plus précis, un de plus à chaque ouverture ; au hub, l'indice dit où aller.
 - **Classement** : les meilleurs temps, les trois premiers en or, argent et bronze. Le temps est envoyé quand le rituel commence.
 
+Chaque changement de lieu passe par l'autoload `Transition` (`frontend/scripts/transition.gd`) : l'écran passe au noir, puis le chapitre, le nom du lieu et son énigme (d'après le scénario, `GameState.ZONE_TITLES` et `GameState.hub_title()`) apparaissent ligne par ligne pendant que la scène suivante se charge ; elle ne se dévoile qu'une fois construite, et le chronomètre est arrêté pendant ce temps. Utiliser `Transition.change_scene(chemin, lignes)` plutôt que `change_scene_to_file`.
+
 Chaque compte a sa propre sauvegarde (`user://sauvegarde_compte_<pseudo>.cfg`), l'invité garde `user://sauvegarde.cfg`.
 
 Toutes les demandes au serveur passent par l'autoload `Account` (`frontend/scripts/account.gd`) : `login`, `register`, `verify_code`, `resend_code`, `request_password_reset`, `logout`, `fetch_leaderboard` et `submit_run`. Leurs réponses sont **simulées** en attendant l'API (tout code de six chiffres est accepté, le classement est vide). Pour la brancher, remplacer le corps de ces méthodes par les appels HTTP en gardant leurs signatures et la forme de leurs résultats (`ok`, `error`, `needs_code`, `entries`) : les menus n'ont rien à changer.

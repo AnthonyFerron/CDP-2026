@@ -187,7 +187,7 @@ func _on_new_game() -> void:
 
 
 func _on_load_game() -> void:
-	get_tree().change_scene_to_file(GameState.HUB_SCENE)
+	Transition.change_scene(GameState.HUB_SCENE, GameState.hub_title())
 
 
 func _on_logout() -> void:
@@ -527,7 +527,7 @@ func _build_intro() -> void:
 func _on_begin() -> void:
 	GameState.reset()
 	Hints.revealed.clear()
-	get_tree().change_scene_to_file(GameState.HUB_SCENE)
+	Transition.change_scene(GameState.HUB_SCENE, GameState.hub_title())
 
 
 class VerticalOrnament:

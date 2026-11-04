@@ -44,6 +44,13 @@ const BOOK_COLORS := {
 	&"codonomicon": Color(0.3, 0.15, 0.5),
 }
 const BOOK_COUNT := 4
+## Lignes de la transition à l'entrée de chaque lieu, d'après le scénario : chapitre, nom du lieu, énigme.
+const ZONE_TITLES := {
+	&"plaine": ["Chapitre III", "Les plaines d'Hexcole", "Énigme 1 — Les fragments du passé"],
+	&"desert": ["Chapitre IV", "Le désert de Pythania", "Énigme 2 — Les algorithmes oubliés"],
+	&"marais": ["Chapitre V", "Les marais de Kernel Swamp", "Énigme 3 — Le tombeau du chiffrement"],
+	&"village": ["Chapitre VI", "Le village détruit", "Énigme 4 — Les cinq langages oubliés"],
+}
 ## Temps laissé au joueur avant l'éruption du Mont Sam Altan (une heure, choix de l'équipe : le scénario
 ## en annonce quarante), et coût d'une validation fausse, en secondes.
 const TOTAL_TIME := 60.0 * 60.0
@@ -159,13 +166,25 @@ func enter_zone(zone: StringName) -> void:
 		return
 	last_zone = zone
 	save_game()
-	get_tree().change_scene_to_file(ZONE_SCENES[zone])
+	Transition.change_scene(ZONE_SCENES[zone], ZONE_TITLES[zone])
 
 
 func return_to_hub(zone: StringName) -> void:
 	last_zone = zone
 	save_game()
-	get_tree().change_scene_to_file(HUB_SCENE)
+	Transition.change_scene(HUB_SCENE, hub_title())
+
+
+## Lignes de la transition vers le hub, selon l'avancée de la quête.
+func hub_title() -> Array:
+	if not intro_done:
+		return ["Chapitre II", "Le réveil du Mont Sam Altan", "An 5814"]
+	if placed_books.size() >= BOOK_COUNT:
+		return ["Épilogue", "La renaissance d'un royaume", "Codia"]
+	if books.size() >= BOOK_COUNT:
+		return ["Chapitre VII", "Le dernier espoir de Codia", "Les ruines du château"]
+	var count := books.size()
+	return ["Codia", "Les ruines du château", "%d livre%s sur quatre" % [count, "s" if count > 1 else ""]]
 
 
 ## Repart d'une partie neuve : aucun livre, chronomètre plein.
