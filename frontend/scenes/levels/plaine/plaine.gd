@@ -13,6 +13,9 @@ const BOOK_ID := &"projenomicon"
 ## Volume du vent dehors, et dans la bibliothèque où il n'arrive qu'étouffé.
 const WIND_OUTSIDE_DB := -10.0
 const WIND_INSIDE_DB := -26.0
+## Lumière ambiante du ciel, dehors et dans les archives.
+const AMBIENT_OUTSIDE := 0.75
+const AMBIENT_INSIDE := 0.5
 ## Conversation entre la bibliothécaire, cheffe de projet, et son employé, dans le bon ordre.
 const FRAGMENTS: Array[String] = [
 	"Bibliothécaire : « Nous devons organiser la restauration des archives avant la prochaine inspection. »",
@@ -39,6 +42,7 @@ var _inside := false
 var _busy := false
 var _safe_position := Vector3.ZERO
 var _ash: CPUParticles3D
+var _dust: CPUParticles3D
 ## Fragments retrouvés : numéro vers texte.
 var _found := {}
 
@@ -67,6 +71,7 @@ var _found := {}
 @onready var _slab_sound: AudioStreamPlayer = $Interior/SlabSound
 @onready var _rumble: AudioStreamPlayer = $Interior/Rumble
 @onready var _camera: Camera3D = $Player/CameraPivot/SpringArm3D/Camera3D
+@onready var _inside_ambience: AudioStreamPlayer = $Interior/InsideAmbience
 
 
 func _ready() -> void:
@@ -97,6 +102,8 @@ func _ready() -> void:
 	_apply_soot($Interior/Library/Models, interior_soot_material)
 	_ash = _create_ash()
 	_exterior.add_child(_ash)
+	_dust = _create_dust()
+	_interior.add_child(_dust)
 	_apply_location()
 	# Le nom du lieu s'affiche déjà pendant la transition du portail.
 	if GameState.has_book(BOOK_ID):
@@ -106,6 +113,7 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	_ash.global_position = _player.global_position + Vector3.UP * 6.0
+	_dust.global_position = _player.global_position + Vector3.UP * 1.6
 
 
 func _physics_process(_delta: float) -> void:
@@ -136,8 +144,15 @@ func _apply_location() -> void:
 	_exterior.visible = not _inside
 	_sun.visible = not _inside
 	_environment.fog_enabled = not _inside
+	# Sous terre, la lumière du ciel ne descend plus : les lustres et les bougies donnent le ton.
+	_environment.ambient_light_energy = AMBIENT_INSIDE if _inside else AMBIENT_OUTSIDE
 	_ash.emitting = not _inside
+	_dust.emitting = _inside
 	_wind.volume_db = WIND_INSIDE_DB if _inside else WIND_OUTSIDE_DB
+	if _inside and not _inside_ambience.playing:
+		_inside_ambience.play()
+	elif not _inside:
+		_inside_ambience.stop()
 
 
 func _on_lava_touched(body: Node3D) -> void:
@@ -282,6 +297,41 @@ func _apply_soot(root: Node, material: Material) -> void:
 		if child is GeometryInstance3D and not child is Label3D:
 			(child as GeometryInstance3D).material_overlay = material
 		_apply_soot(child, material)
+
+
+## Poussière des archives : des grains qui flottent lentement autour du joueur et accrochent la lumière des bougies.
+func _create_dust() -> CPUParticles3D:
+	var material := StandardMaterial3D.new()
+	material.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.vertex_color_use_as_albedo = true
+	material.emission_enabled = true
+	material.emission = Color(0.9, 0.7, 0.45)
+	material.emission_energy_multiplier = 0.25
+	var quad := QuadMesh.new()
+	quad.size = Vector2(0.025, 0.025)
+	quad.material = material
+	var gradient := Gradient.new()
+	gradient.set_color(0, Color(0.9, 0.8, 0.65, 0.0))
+	gradient.set_color(1, Color(0.9, 0.8, 0.65, 0.0))
+	gradient.add_point(0.3, Color(0.95, 0.85, 0.7, 0.55))
+	gradient.add_point(0.7, Color(0.9, 0.8, 0.65, 0.45))
+	var dust := CPUParticles3D.new()
+	dust.mesh = quad
+	dust.amount = 90
+	dust.lifetime = 8.0
+	dust.preprocess = 8.0
+	dust.local_coords = false
+	dust.emission_shape = CPUParticles3D.EMISSION_SHAPE_BOX
+	dust.emission_box_extents = Vector3(4.5, 1.4, 4.5)
+	dust.direction = Vector3(0.2, 0.1, 0.1)
+	dust.spread = 180.0
+	dust.gravity = Vector3(0.0, 0.01, 0.0)
+	dust.initial_velocity_min = 0.02
+	dust.initial_velocity_max = 0.08
+	dust.color_ramp = gradient
+	dust.emitting = false
+	return dust
 
 
 ## Cendres qui tombent autour du joueur, pour donner de la matière à l'air.
