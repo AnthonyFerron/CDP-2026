@@ -102,7 +102,7 @@ def test_leaderboards_expose_no_private_data(api):
 
     assert set(general.json()["items"][0]) == {"rank", "username", "elapsed_seconds", "time_formatted", "finished_at"}
     assert set(by_puzzle.json()["items"][0]) == {
-        "rank", "username", "completion_time_ms", "time_formatted", "hints_used", "solved_at"
+        "rank", "username", "completion_time_ms", "time_formatted", "solved_at"
     }
     for response in (general, by_puzzle):
         for secret in ("devlyn.secret", "email", "password", "token", "id_users", "id_game_sessions"):

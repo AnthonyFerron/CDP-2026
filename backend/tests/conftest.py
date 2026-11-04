@@ -64,7 +64,7 @@ from app.services.email import MemoryEmailSender, get_email_sender  # noqa: E402
 # Même algorithme (Argon2id), paramètres allégés pour que les tests restent rapides.
 security._password_hasher = PasswordHasher(time_cost=1, memory_cost=1024, parallelism=1)
 
-DATA_TABLES = "users, auth_challenges, auth_sessions, game_sessions, puzzle_progress"
+DATA_TABLES = "users, auth_challenges, auth_sessions, game_sessions, puzzle_progress, paper_fragments"
 DEFAULT_PASSWORD = "Volcan2026"
 START = datetime(2026, 11, 4, 12, 0, tzinfo=timezone.utc)
 
@@ -189,17 +189,25 @@ class Api:
         assert response.status_code == 200, response.text
         return response.json()
 
-    def complete(self, headers, game_id: int, placed: list[int] | None = None):
-        placed = [puzzle["id_puzzles"] for puzzle in self.puzzles()] if placed is None else placed
+    def place(self, headers, game_id: int, progress_id: int):
         return self.client.post(
-            f"/api/v1/game-sessions/{game_id}/completions", json={"placed_puzzle_ids": placed}, headers=headers
+            f"/api/v1/game-sessions/{game_id}/puzzle-progress/{progress_id}/placements", headers=headers
         )
 
+    def solve_and_place(self, headers, game_id: int, puzzle_id: int, seconds: float) -> dict:
+        solved = self.start_and_solve(headers, game_id, puzzle_id, seconds)
+        response = self.place(headers, game_id, solved["id_puzzle_progress"])
+        assert response.status_code == 200, response.text
+        return response.json()
+
+    def complete(self, headers, game_id: int):
+        return self.client.post(f"/api/v1/game-sessions/{game_id}/completions", headers=headers)
+
     def win(self, headers, splits: tuple[float, ...] = (60, 60, 60, 60), final_walk: float = 30) -> dict:
-        """Joue une partie complète : chaque énigme résolue après `splits[i]` secondes."""
+        """Joue une partie complète : chaque énigme résolue après `splits[i]` secondes, son livre posé."""
         game = self.create_game(headers)
         for puzzle, seconds in zip(self.puzzles(), splits, strict=True):
-            self.start_and_solve(headers, game["id_game_sessions"], puzzle["id_puzzles"], seconds)
+            self.solve_and_place(headers, game["id_game_sessions"], puzzle["id_puzzles"], seconds)
         self.clock.advance(final_walk)
         response = self.complete(headers, game["id_game_sessions"])
         assert response.status_code == 200, response.text

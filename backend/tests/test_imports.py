@@ -7,8 +7,9 @@ IMPORTS = "/api/v1/game-sessions/imports"
 GAMES = "/api/v1/game-sessions"
 
 
-def guest_save(api, solved: int = 2, **overrides) -> dict:
+def guest_save(api, solved: int = 2, placed: int | None = None, **overrides) -> dict:
     puzzles = api.puzzles()
+    placed = solved if placed is None else placed
     payload = {
         "status": "in_progress",
         "elapsed_seconds": 1250.5,
@@ -17,7 +18,9 @@ def guest_save(api, solved: int = 2, **overrides) -> dict:
         "position_y": 1.0,
         "position_z": 4.5,
         "rotation_y": 0.0,
-        "solved_puzzles": [{"id_puzzles": p["id_puzzles"], "hints_used": 1} for p in puzzles[:solved]],
+        "solved_puzzles": [
+            {"id_puzzles": p["id_puzzles"], "is_placed": index < placed} for index, p in enumerate(puzzles[:solved])
+        ],
     }
     payload.update(overrides)
     return payload
@@ -36,8 +39,22 @@ def test_valid_import_creates_a_paused_unranked_game(api):
     assert game["elapsed_seconds"] == 1251  # arrondi à la seconde supérieure
     progress = api.client.get(f"{GAMES}/{game['id_game_sessions']}/progress", headers=headers).json()
     assert progress["books_obtained"] == 2
+    assert progress["books_placed"] == 2
     assert [state["completion_time_ms"] for state in progress["puzzles"][:2]] == [None, None]
-    assert progress["puzzles"][0]["hints_used"] == 1
+
+
+def test_import_keeps_placed_books_and_fragments(api):
+    headers = api.player()
+    payload = guest_save(api, solved=3, placed=2, collected_fragments=[7, 0, 3])
+
+    game = api.client.post(IMPORTS, json=payload, headers=headers).json()
+
+    progress = api.client.get(f"{GAMES}/{game['id_game_sessions']}/progress", headers=headers).json()
+    assert [state["is_solved"] for state in progress["puzzles"]] == [True, True, True, False]
+    assert [state["is_placed"] for state in progress["puzzles"]] == [True, True, False, False]
+    assert progress["collected_fragments"] == [0, 3, 7]
+    fragments = api.client.get(f"{GAMES}/{game['id_game_sessions']}/paper-fragments", headers=headers).json()
+    assert [fragment["fragment_index"] for fragment in fragments] == [0, 3, 7]
 
 
 def test_imported_game_can_be_resumed_and_finished_but_never_ranked(api):
@@ -49,8 +66,8 @@ def test_imported_game_can_be_resumed_and_finished_but_never_ranked(api):
     api.clock.advance(100)
     assert api.game(headers, game_id)["elapsed_seconds"] == 1351
     for puzzle in api.puzzles()[2:]:
-        solved = api.start_and_solve(headers, game_id, puzzle["id_puzzles"], 120)
-        assert solved["completion_time_ms"] is None
+        placed = api.solve_and_place(headers, game_id, puzzle["id_puzzles"], 120)
+        assert placed["completion_time_ms"] is None
     assert api.complete(headers, game_id).status_code == 200
 
     assert api.client.get("/api/v1/leaderboards").json()["total"] == 0
@@ -98,6 +115,10 @@ def test_import_of_a_lost_game(api):
         {"position_x": float("1e12")},
         {"completion_time_ms": 1},
         {"id_users": 2},
+        {"collected_fragments": [10]},
+        {"collected_fragments": [-1]},
+        {"collected_fragments": [1, 1]},
+        {"collected_fragments": [0]},  # le Village n'est pas ouvert avec seulement deux énigmes résolues
     ],
 )
 def test_invalid_import_is_refused(api, overrides):
@@ -118,8 +139,8 @@ def test_import_rejects_incoherent_puzzles(api):
         [{"id_puzzles": ids[1]}],  # deuxième énigme sans la première
         [{"id_puzzles": ids[0]}, {"id_puzzles": ids[0]}],  # doublon
         [{"id_puzzles": 9999}],  # énigme inconnue
-        [{"id_puzzles": ids[0], "hints_used": 4}],  # plus d'indices que disponibles
-        [{"id_puzzles": ids[0], "hints_used": -1}],
+        [{"id_puzzles": ids[0], "hints_used": 0}],  # les indices ne sont plus suivis par l'API
+        [{"id_puzzles": ids[0], "is_placed": "oui"}],
         [{"id_puzzles": ids[0], "solved_at": "2026-01-01T00:00:00Z"}],
     ]
     for solved in cases:
@@ -135,6 +156,16 @@ def test_completed_import_needs_a_plausible_time(api):
     )
 
     assert too_fast.status_code == 422
+
+
+def test_completed_import_needs_every_book_placed(api):
+    headers = api.player()
+
+    response = api.client.post(
+        IMPORTS, json=guest_save(api, solved=4, placed=3, status="completed", elapsed_seconds=2000), headers=headers
+    )
+
+    assert response.status_code == 422
 
 
 def test_import_requires_authentication(api):

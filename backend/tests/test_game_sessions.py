@@ -302,14 +302,42 @@ def test_victory_requires_every_puzzle_to_be_solved(api):
 def test_victory_requires_every_book_to_be_placed(api):
     headers = api.player()
     game_id = api.create_game(headers)["id_game_sessions"]
-    ids = [puzzle["id_puzzles"] for puzzle in api.puzzles()]
-    for puzzle_id in ids:
-        api.start_and_solve(headers, game_id, puzzle_id, 60)
+    progress_ids = [
+        api.start_and_solve(headers, game_id, puzzle["id_puzzles"], 60)["id_puzzle_progress"]
+        for puzzle in api.puzzles()
+    ]
 
-    assert api.complete(headers, game_id, placed=ids[:3]).status_code == 409
-    assert api.complete(headers, game_id, placed=ids + [999]).status_code == 422
-    assert api.complete(headers, game_id, placed=ids[:3] + [ids[0]]).status_code == 422
-    assert api.complete(headers, game_id, placed=[]).status_code == 422
+    # Les quatre livres sont obtenus, mais aucun n'est posé
+    obtained_only = api.complete(headers, game_id)
+    assert obtained_only.status_code == 409
+    assert "0/4 posés" in obtained_only.json()["detail"]
+
+    for progress_id in progress_ids[:3]:
+        assert api.place(headers, game_id, progress_id).status_code == 200
+    three_placed = api.complete(headers, game_id)
+    assert three_placed.status_code == 409
+    assert "3/4 posés" in three_placed.json()["detail"]
+    assert row(game_id)["status"] == "in_progress"
+
+    assert api.place(headers, game_id, progress_ids[3]).status_code == 200
+    won = api.complete(headers, game_id)
+    assert won.status_code == 200
+    assert won.json()["status"] == "completed"
+
+
+def test_completion_takes_no_client_declaration(api):
+    headers = api.player()
+    game_id = api.create_game(headers)["id_game_sessions"]
+    for puzzle in api.puzzles():
+        api.start_and_solve(headers, game_id, puzzle["id_puzzles"], 60)
+    ids = [puzzle["id_puzzles"] for puzzle in api.puzzles()]
+
+    # Déclarer les livres posés ne sert plus à rien : seuls comptent les dépôts enregistrés
+    response = api.client.post(
+        f"{GAMES}/{game_id}/completions", json={"placed_puzzle_ids": ids}, headers=headers
+    )
+
+    assert response.status_code == 409
     assert row(game_id)["status"] == "in_progress"
 
 
@@ -317,7 +345,7 @@ def test_victory_is_refused_after_the_time_limit(api):
     headers = api.player()
     game_id = api.create_game(headers)["id_game_sessions"]
     for puzzle in api.puzzles():
-        api.start_and_solve(headers, game_id, puzzle["id_puzzles"], 60)
+        api.solve_and_place(headers, game_id, puzzle["id_puzzles"], 60)
     api.clock.advance(3600)
 
     response = api.complete(headers, game_id)
@@ -330,10 +358,12 @@ def test_victory_is_refused_while_paused(api):
     headers = api.player()
     game_id = api.create_game(headers)["id_game_sessions"]
     for puzzle in api.puzzles():
-        api.start_and_solve(headers, game_id, puzzle["id_puzzles"], 60)
+        api.solve_and_place(headers, game_id, puzzle["id_puzzles"], 60)
     api.client.post(f"{GAMES}/{game_id}/pauses", headers=headers)
 
-    assert api.complete(headers, game_id).status_code == 409
+    response = api.complete(headers, game_id)
+    assert response.status_code == 409
+    assert "pause" in response.json()["detail"]
 
 
 @pytest.mark.parametrize("ending", ["abandonments", "completions"])
@@ -354,7 +384,11 @@ def test_finished_game_cannot_be_modified(api, ending):
         api.client.post(f"{GAMES}/{game_id}/abandonments", headers=headers),
         api.complete(headers, game_id),
         api.start(headers, game_id, api.puzzles()[0]["id_puzzles"]),
+        api.client.post(f"{GAMES}/{game_id}/paper-fragments", json={"fragment_index": 0}, headers=headers),
     ]
+    first_progress = api.client.get(f"{GAMES}/{game_id}/puzzle-progress", headers=headers).json()
+    if first_progress:
+        attempts.append(api.place(headers, game_id, first_progress[0]["id_puzzle_progress"]))
 
     assert [response.status_code for response in attempts] == [409] * len(attempts)
     assert row(game_id) == before
@@ -377,7 +411,9 @@ def test_cannot_access_another_players_game(api):
         api.client.get(f"{GAMES}/{game_id}/progress", headers=mallory),
         api.client.get(f"{GAMES}/{game_id}/puzzle-progress", headers=mallory),
         api.solve(mallory, game_id, progress_id),
-        api.client.post(f"{GAMES}/{game_id}/puzzle-progress/{progress_id}/hints", headers=mallory),
+        api.place(mallory, game_id, progress_id),
+        api.client.get(f"{GAMES}/{game_id}/paper-fragments", headers=mallory),
+        api.client.post(f"{GAMES}/{game_id}/paper-fragments", json={"fragment_index": 0}, headers=mallory),
     ]
 
     assert [response.status_code for response in attempts] == [404] * len(attempts)

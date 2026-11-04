@@ -1,10 +1,7 @@
 import pytest
-from alembic import command
 from sqlalchemy import text
 
 from app.db.session import engine
-
-from conftest import alembic_config
 
 GAMES = "/api/v1/game-sessions"
 
@@ -28,8 +25,7 @@ def test_list_the_four_puzzles_without_authentication(client):
         "Le tombeau des lettres oubliées",
         "Les cinq codes oubliés",
     ]
-    assert all(puzzle["hints_count"] == 3 for puzzle in puzzles)
-    assert set(puzzles[0]) == {"id_puzzles", "title", "order_index", "hints_count"}
+    assert set(puzzles[0]) == {"id_puzzles", "title", "order_index"}
 
 
 def test_get_one_puzzle(api):
@@ -44,22 +40,8 @@ def test_puzzles_cannot_be_modified_through_the_api(api):
     first = api.puzzles()[0]["id_puzzles"]
 
     assert api.client.post("/api/v1/puzzles", json={"title": "x", "order_index": 9}).status_code == 405
-    assert api.client.patch(f"/api/v1/puzzles/{first}", json={"hints_count": 99}).status_code == 405
+    assert api.client.patch(f"/api/v1/puzzles/{first}", json={"title": "Autre"}).status_code == 405
     assert api.client.delete(f"/api/v1/puzzles/{first}").status_code == 405
-
-
-def test_puzzle_seed_is_idempotent(database, client):
-    with engine.connect() as connection:
-        before = connection.execute(text("SELECT id_puzzles, order_index FROM puzzles ORDER BY order_index")).all()
-
-    # Rejoue la migration des énigmes sur une base qui les contient déjà
-    command.stamp(alembic_config(), "28803cd8c266")
-    command.upgrade(alembic_config(), "head")
-
-    with engine.connect() as connection:
-        after = connection.execute(text("SELECT id_puzzles, order_index FROM puzzles ORDER BY order_index")).all()
-    assert after == before
-    assert len(after) == 4
 
 
 # --- Progression -----------------------------------------------------------------------------------
@@ -82,8 +64,8 @@ def test_start_a_puzzle_is_idempotent(api):
         "is_solved": False,
         "solved_at": None,
         "completion_time_ms": None,
-        "hints_used": 0,
-        "hints_remaining": 3,
+        "is_placed": False,
+        "placed_at": None,
     }
 
 
@@ -197,55 +179,32 @@ def test_progress_id_must_belong_to_the_game(api):
     assert api.solve(headers, second_game, 9999).status_code == 404
 
 
-# --- Indices ---------------------------------------------------------------------------------------
-
-def test_hints_are_limited_to_hints_count(api):
-    headers = api.player()
-    game_id = api.create_game(headers)["id_game_sessions"]
-    progress_id = api.start(headers, game_id, api.puzzles()[0]["id_puzzles"]).json()["id_puzzle_progress"]
-
-    used = [api.client.post(f"{progress_url(game_id, progress_id)}/hints", headers=headers) for _ in range(3)]
-    exceeded = api.client.post(f"{progress_url(game_id, progress_id)}/hints", headers=headers)
-
-    assert [response.json()["hints_remaining"] for response in used] == [2, 1, 0]
-    assert used[-1].json()["hints_used"] == 3
-    assert exceeded.status_code == 409
-    with engine.connect() as connection:
-        assert connection.execute(text("SELECT hints_used FROM puzzle_progress")).scalar() == 3
-
-
-def test_no_hint_after_resolution(api):
-    headers = api.player()
-    game_id = api.create_game(headers)["id_game_sessions"]
-    solved = api.start_and_solve(headers, game_id, api.puzzles()[0]["id_puzzles"], 60)
-
-    response = api.client.post(f"{progress_url(game_id, solved['id_puzzle_progress'])}/hints", headers=headers)
-
-    assert response.status_code == 409
-
-
 # --- Vue d'ensemble et livres ----------------------------------------------------------------------
 
 def test_game_progress_lists_books_and_puzzle_states(api):
     headers = api.player()
     game_id = api.create_game(headers)["id_game_sessions"]
     puzzles = api.puzzles()
-    api.start_and_solve(headers, game_id, puzzles[0]["id_puzzles"], 60)
-    second = api.start(headers, game_id, puzzles[1]["id_puzzles"]).json()
-    api.client.post(f"{progress_url(game_id, second['id_puzzle_progress'])}/hints", headers=headers)
+    api.solve_and_place(headers, game_id, puzzles[0]["id_puzzles"], 60)
+    api.start_and_solve(headers, game_id, puzzles[1]["id_puzzles"], 60)
+    api.start(headers, game_id, puzzles[2]["id_puzzles"])
 
     progress = api.client.get(f"{GAMES}/{game_id}/progress", headers=headers).json()
 
-    assert progress["books_obtained"] == 1
+    assert progress["books_obtained"] == 2
+    assert progress["books_placed"] == 1
     assert progress["total_books"] == 4
     assert progress["can_complete"] is False
-    assert progress["remaining_seconds"] == 3540
+    assert progress["remaining_seconds"] == 3480
+    assert progress["collected_fragments"] == []
+    assert progress["total_fragments"] == 10
     states = progress["puzzles"]
-    assert [state["is_solved"] for state in states] == [True, False, False, False]
-    assert [state["is_started"] for state in states] == [True, True, False, False]
-    assert [state["is_unlocked"] for state in states] == [True, True, False, False]
-    assert states[1]["hints_used"] == 1 and states[1]["hints_remaining"] == 2
-    assert states[2]["id_puzzle_progress"] is None
+    assert [state["is_solved"] for state in states] == [True, True, False, False]
+    assert [state["is_placed"] for state in states] == [True, False, False, False]
+    assert [state["is_started"] for state in states] == [True, True, True, False]
+    assert [state["is_unlocked"] for state in states] == [True, True, True, False]
+    assert states[3]["id_puzzle_progress"] is None
+    assert not any(key.startswith("hint") for key in states[0])
 
 
 def test_books_match_solved_puzzles(api):
@@ -260,5 +219,14 @@ def test_books_match_solved_puzzles(api):
 
     assert sorted(row["id_puzzles"] for row in rows if row["is_solved"]) == sorted(p["id_puzzles"] for p in puzzles)
     assert progress["books_obtained"] == 4
-    assert progress["can_complete"] is True
+    assert progress["books_placed"] == 0
+    assert progress["can_complete"] is False  # livres obtenus, mais pas encore posés
     assert sum(row["completion_time_ms"] for row in rows) == 4 * 45_000
+
+
+def test_hint_route_no_longer_exists(api):
+    headers = api.player()
+    game_id = api.create_game(headers)["id_game_sessions"]
+    progress_id = api.start(headers, game_id, api.puzzles()[0]["id_puzzles"]).json()["id_puzzle_progress"]
+
+    assert api.client.post(f"{progress_url(game_id, progress_id)}/hints", headers=headers).status_code == 404
