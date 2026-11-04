@@ -193,6 +193,15 @@ func _book_name(zone: StringName) -> String:
 	return GameState.BOOK_NAMES[GameState.ZONE_BOOKS[zone]]
 
 
+## « de » contracté devant un nom de livre : « du Projenomicon », « de l'Algonicon ».
+static func _of(name: String) -> String:
+	if name.begins_with("le "):
+		return "du " + name.substr(3)
+	if name.begins_with("les "):
+		return "des " + name.substr(4)
+	return "de " + name
+
+
 ## Première lettre en majuscule, sans toucher au reste (String.capitalize changerait « d'Hexcole »).
 static func _upper_first(text: String) -> String:
 	return text.left(1).to_upper() + text.substr(1)
@@ -352,7 +361,7 @@ func _refresh_pedestals() -> void:
 		elif GameState.has_book(book):
 			pedestal.prompt = "Poser %s" % _book_name(zone)
 		else:
-			pedestal.prompt = "Piédestal de %s" % _book_name(zone)
+			pedestal.prompt = "Piédestal %s" % _of(_book_name(zone))
 
 
 ## Les lettres du cercle s'illuminent, quart par quart, pour chaque livre posé.

@@ -22,7 +22,7 @@ const LANDMARKS: Array[Vector3] = [
 	Vector3(0.0, 60.0, 10.0), Vector3(-60.0, 0.0, 10.0), Vector3(-54.0, -30.0, 11.0),
 	Vector3(55.0, 18.0, 8.0), Vector3(50.0, 64.0, 14.0), Vector3(84.0, -40.0, 13.0),
 	# Lavoir, boulangerie, moulin, caserne et sa cour, écuries, scriptorium, herboristerie, tour de Merlon.
-	Vector3(56.0, 6.5, 5.0), Vector3(52.0, 34.0, 7.0), Vector3(61.0, 48.0, 7.5), Vector3(-48.0, -66.0, 11.0),
+	Vector3(54.0, 6.5, 5.0), Vector3(52.0, 34.0, 7.0), Vector3(61.0, 48.0, 7.5), Vector3(-48.0, -66.0, 11.0),
 	Vector3(-68.0, -46.0, 9.0), Vector3(-74.0, -16.0, 7.0), Vector3(-60.0, 30.0, 8.0), Vector3(-70.0, 58.0, 7.0),
 	# Halle du marché, verger.
 	Vector3(-24.0, 66.0, 8.0), Vector3(14.0, 82.0, 12.0),
@@ -31,27 +31,26 @@ const LANDMARKS: Array[Vector3] = [
 const LANES: Array[Vector2] = [Vector2(0.0, 55.0), Vector2(-53.0, 0.0)]
 ## Ruelles qui partent d'un chemin vers les lieux du pourtour : chaque tracé est une suite de points.
 const ALLEYS := [
-	[Vector2(-28.0, -28.0), Vector2(-41.0, -49.0), Vector2(-46.0, -58.5)],
-	[Vector2(-41.0, -49.0), Vector2(-61.0, -46.5)],
-	[Vector2(-47.0, -2.0), Vector2(-58.0, -9.0), Vector2(-69.0, -15.0)],
-	[Vector2(-29.0, 29.0), Vector2(-54.0, 30.0)],
-	[Vector2(-54.0, 30.0), Vector2(-64.0, 46.0), Vector2(-68.0, 53.0)],
+	[Vector2(-28.0, -28.0), Vector2(-41.0, -49.0), Vector2(-48.0, -61.6)],
+	[Vector2(-41.0, -49.0), Vector2(-61.6, -44.0)],
+	[Vector2(-47.0, -2.0), Vector2(-58.0, -9.0), Vector2(-69.6, -14.0)],
+	[Vector2(-29.0, 29.0), Vector2(-55.6, 32.0)],
+	[Vector2(-55.6, 32.0), Vector2(-54.0, 36.0), Vector2(-62.0, 48.0), Vector2(-67.6, 53.4)],
 	[Vector2(-5.0, 52.0), Vector2(-17.0, 58.0), Vector2(-24.0, 61.0)],
-	[Vector2(5.0, 57.0), Vector2(12.0, 72.0)],
-	[Vector2(31.0, 31.0), Vector2(47.5, 34.0)],
-	[Vector2(47.5, 34.0), Vector2(51.0, 42.0), Vector2(56.5, 48.0)],
-	[Vector2(52.0, 1.6), Vector2(55.0, 4.0)],
+	[Vector2(2.0, 52.0), Vector2(8.6, 55.0), Vector2(12.0, 72.0)],
+	[Vector2(31.0, 31.0), Vector2(47.6, 36.0)],
+	[Vector2(47.6, 36.0), Vector2(46.5, 40.0), Vector2(52.0, 46.0), Vector2(56.6, 50.0)],
 	[Vector2(71.0, 0.0), Vector2(74.0, -14.0), Vector2(78.5, -31.0)],
 	[Vector2(70.5, -66.0), Vector2(76.0, -52.0), Vector2(79.5, -38.0)],
 	[Vector2(6.0, -46.5), Vector2(29.0, -47.5), Vector2(31.0, -52.0)],
 	[Vector2(39.0, -44.0), Vector2(42.0, -52.0)],
 ]
 ## Allées gravillonnées du jardin du roi, à l'est du château.
-const PARK_AREA := Rect2(29.0, -92.0, 26.0, 40.0)
+const PARK_AREA := Rect2(29.0, -90.0, 23.0, 38.0)
 const PARK_ALLEYS := [
 	[Vector2(42.0, -52.0), Vector2(42.0, -64.0)],
-	[Vector2(42.0, -76.0), Vector2(42.0, -90.0)],
-	[Vector2(31.0, -52.0), Vector2(31.0, -90.0), Vector2(53.0, -90.0)],
+	[Vector2(42.0, -76.0), Vector2(42.0, -88.4)],
+	[Vector2(31.0, -52.0), Vector2(31.0, -88.0), Vector2(41.0, -88.0)],
 	[Vector2(30.0, -70.0), Vector2(36.0, -70.0)],
 	[Vector2(48.0, -70.0), Vector2(55.0, -66.0)],
 ]
@@ -92,7 +91,7 @@ const WATER_LEVEL := -1.1
 const RIVER_DEPTH := 1.3
 const BANK_WIDTH := 3.0
 ## Étang du jardin du roi : (x, z, rayon), son niveau et sa profondeur.
-const PONDS: Array[Vector3] = [Vector3(47.0, -84.0, 5.5)]
+const PONDS: Array[Vector3] = [Vector3(48.0, -84.5, 3.8)]
 const POND_LEVEL := -0.6
 const POND_DEPTH := 0.7
 ## Ponts : (x, z, cap du tablier en degrés, longueur, largeur). Les berges y restent ouvertes, le tablier et ses

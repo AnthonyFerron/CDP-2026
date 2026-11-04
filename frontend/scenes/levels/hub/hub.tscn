@@ -1757,7 +1757,7 @@ board_height = 1.25
 line_height = 0.16
 
 [node name="MineSign" type="Node3D" parent="Lore"]
-transform = Transform3D(0.70711, 0, -0.70711, 0, 1, 0, 0.70711, 0, 0.70711, 77.6, 0, -34.6)
+transform = Transform3D(0.96593, 0, -0.25882, 0, 1, 0, 0.25882, 0, 0.96593, 76.2, 0, -29.4)
 script = ExtResource("10_readable")
 title = "La mine d'argent"
 body = "La galerie s'est effondrée pendant la guerre. Un écriteau est cloué au boisage : « Fermée par ordre du roi Codeon V. Les mineurs ont rejoint le bunker. »"
@@ -1810,6 +1810,244 @@ mount = 0
 board_size = Vector2(1.6, 0.6)
 board_height = 1.25
 line_height = 0.13
+
+[node name="LavoirSign" type="Node3D" parent="Lore"]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, 48, 0, 3.4)
+script = ExtResource("10_readable")
+title = "Le lavoir de la rivière"
+body = "Ici, on lavait le linge dans l'eau claire qui descend des montagnes. Le jour où le roi fit sonner les cloches, en 5812, les draps sont restés sur la corde ; deux ans plus tard, le vent les avait emportés jusqu'au pont."
+prompt = "Lire : Le lavoir de la rivière"
+radius = 2.6
+
+[node name="Sign" type="Node3D" parent="Lore/LavoirSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
+text = "Lavoir"
+style = 0
+mount = 0
+board_size = Vector2(1.1, 0.5)
+board_height = 1.25
+line_height = 0.16
+
+[node name="BakerySign" type="Node3D" parent="Lore"]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 47.7, 0, 37.9)
+script = ExtResource("10_readable")
+title = "La boulangerie"
+body = "Chaque matin, l'odeur du pain chaud montait jusqu'au château. La farine venait du moulin voisin, le blé de la ferme du roi. Pendant la guerre, le boulanger cuisait encore pour les soldats, jusqu'à la dernière poignée de farine."
+prompt = "Lire : La boulangerie"
+radius = 2.6
+
+[node name="Sign" type="Node3D" parent="Lore/BakerySign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
+text = "Boulangerie"
+style = 0
+mount = 1
+board_size = Vector2(1.3, 0.5)
+board_height = 2.5
+line_height = 0.16
+
+[node name="MillSign" type="Node3D" parent="Lore"]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 56.7, 0, 52)
+script = ExtResource("10_readable")
+title = "Le moulin de la rivière"
+body = "La roue tournait jour et nuit dans le courant, et la meule réduisait le blé en farine pour tout Codia. Le meunier l'a arrêtée la veille du départ pour le bunker : elle ne repartira que si la rivière retrouve sa force."
+prompt = "Lire : Le moulin de la rivière"
+radius = 2.6
+
+[node name="Sign" type="Node3D" parent="Lore/MillSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
+text = "Moulin"
+style = 0
+mount = 1
+board_size = Vector2(1.1, 0.5)
+board_height = 2.5
+line_height = 0.16
+
+[node name="StablesSign" type="Node3D" parent="Lore"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -61.7, 0, -46.1)
+script = ExtResource("10_readable")
+title = "Les écuries royales"
+body = "Les chevaux de la garde y attendaient leurs cavaliers. Ils sont tous partis avec l'armée de Devlyn en 5804, contre Vibelandia ; aucun n'est revenu. Les stalles attendent des jours meilleurs."
+prompt = "Lire : Les écuries royales"
+radius = 2.6
+
+[node name="Sign" type="Node3D" parent="Lore/StablesSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
+text = "Écuries royales"
+style = 0
+mount = 1
+board_size = Vector2(1.5, 0.5)
+board_height = 2.5
+line_height = 0.16
+
+[node name="BarracksSign" type="Node3D" parent="Lore"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -50.3, 0, -61.7)
+script = ExtResource("10_readable")
+title = "La caserne de la garde"
+body = "Aldric y a fait ses classes, comme tous les gardes du roi. Sur le mur, la liste des volontaires partis défendre Codia contre Vibelandia couvre trois planches entières ; beaucoup de noms sont barrés."
+prompt = "Lire : La caserne de la garde"
+radius = 2.6
+
+[node name="Sign" type="Node3D" parent="Lore/BarracksSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
+text = "Caserne de la garde"
+style = 1
+mount = 1
+board_size = Vector2(1.7, 0.5)
+board_height = 2.5
+line_height = 0.13
+
+[node name="ApothecarySign" type="Node3D" parent="Lore"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -55.7, 0, 30)
+script = ExtResource("10_readable")
+title = "L'herboristerie"
+body = "Onguents, tisanes et remèdes : l'herboriste soignait ici les blessés que l'on ramenait du front. Au jardin des simples, devant la porte, quelques pieds de sauge ont survécu à la guerre."
+prompt = "Lire : L'herboristerie"
+radius = 2.6
+
+[node name="Sign" type="Node3D" parent="Lore/ApothecarySign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
+text = "Herboristerie"
+style = 0
+mount = 1
+board_size = Vector2(1.4, 0.5)
+board_height = 2.5
+line_height = 0.16
+
+[node name="ScriptoriumSign" type="Node3D" parent="Lore"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -69.7, 0, -16.1)
+script = ExtResource("10_readable")
+title = "Le scriptorium"
+body = "Les copistes de Codia y recopiaient, ligne après ligne, ce qui restait des écrits des anciens bâtisseurs. Les quatre livres originaux, disait-on, étaient perdus depuis des siècles ; on n'en gardait ici que des fragments, et des légendes."
+prompt = "Lire : Le scriptorium"
+radius = 2.6
+
+[node name="Sign" type="Node3D" parent="Lore/ScriptoriumSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
+text = "Scriptorium"
+style = 1
+mount = 1
+board_size = Vector2(1.3, 0.5)
+board_height = 2.5
+line_height = 0.16
+
+[node name="ObservatorySign" type="Node3D" parent="Lore"]
+transform = Transform3D(-0.71934, 0, -0.69466, 0, 1, 0, 0.69466, 0, -0.71934, -64.1, 0, 53.1)
+script = ExtResource("10_readable")
+title = "L'observatoire du Mont Sam Altan"
+body = "Du haut de cette tour, les veilleurs du roi guettaient le volcan, endormi depuis des siècles. Leur registre s'arrête en 5812, la veille du départ pour le bunker : « Fumée légère au sommet. Rien à signaler. »"
+prompt = "Lire : L'observatoire du Mont Sam Altan"
+radius = 2.6
+
+[node name="Sign" type="Node3D" parent="Lore/ObservatorySign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
+text = "Observatoire"
+style = 1
+mount = 0
+board_size = Vector2(1.3, 0.5)
+board_height = 1.25
+line_height = 0.16
+
+[node name="MarketHallSign" type="Node3D" parent="Lore"]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, -21, 0, 60.4)
+script = ExtResource("10_readable")
+title = "La halle du marché"
+body = "Les jours de marché, les paysans des plaines d'Hexcole et les marchands venus du désert de Pythania s'y retrouvaient à l'abri. Son toit s'est effondré pendant les combats ; les étals sont restés dessous."
+prompt = "Lire : La halle du marché"
+radius = 2.6
+
+[node name="Sign" type="Node3D" parent="Lore/MarketHallSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
+text = "Halle du marché"
+style = 0
+mount = 0
+board_size = Vector2(1.4, 0.5)
+board_height = 1.25
+line_height = 0.16
+
+[node name="OrchardSign" type="Node3D" parent="Lore"]
+transform = Transform3D(-0.98481, 0, -0.17365, 0, 1, 0, 0.17365, 0, -0.98481, 9.6, 0, 71.6)
+script = ExtResource("10_readable")
+title = "Le verger du roi"
+body = "Pommiers et poiriers en rangs serrés : le roi Codeon III les avait plantés pour les enfants du village, qui venaient y cueillir les fruits à l'automne. La guerre n'a laissé que des souches."
+prompt = "Lire : Le verger du roi"
+radius = 2.6
+
+[node name="Sign" type="Node3D" parent="Lore/OrchardSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
+text = "Verger du roi"
+style = 0
+mount = 0
+board_size = Vector2(1.3, 0.5)
+board_height = 1.25
+line_height = 0.16
+
+[node name="ParkSign" type="Node3D" parent="Lore"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 33.4, 0, -50.4)
+script = ExtResource("10_readable")
+title = "Le jardin du roi"
+body = "Allées de gravier, parterres et kiosque à musique : les habitants s'y promenaient le soir, au bord de la rivière. Au centre, la statue de Devlyn rappelle la victoire de l'an 5802 sur les Quatre Dragons du Chaos."
+prompt = "Lire : Le jardin du roi"
+radius = 2.6
+
+[node name="Sign" type="Node3D" parent="Lore/ParkSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
+text = "Jardin du roi"
+style = 1
+mount = 0
+board_size = Vector2(1.4, 0.5)
+board_height = 1.25
+line_height = 0.16
+
+[node name="KingsSign" type="Node3D" parent="Lore"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 39.4, 0, -53.4)
+script = ExtResource("10_readable")
+title = "L'allée des rois"
+body = "Codeon I, le bâtisseur ; Codeon II, le sage ; Codeon III, le jardinier ; Codeon IV, le prudent. Les statues des anciens rois bordent l'allée qui mène à celle de Devlyn. Renversées pendant la guerre, elles attendent qu'on les relève."
+prompt = "Lire : L'allée des rois"
+radius = 2.6
+
+[node name="Sign" type="Node3D" parent="Lore/KingsSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("12_sign")
+text = "Allée des rois"
+style = 1
+mount = 0
+board_size = Vector2(1.3, 0.45)
+board_height = 1.25
+line_height = 0.16
+
+[node name="Statue" type="Node3D" parent="Lore"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 42, 0, -67.4)
+script = ExtResource("10_readable")
+title = "La statue de Devlyn"
+body = "« À Devlyn, vainqueur des Quatre Dragons du Chaos, an 5802. » Le royaume la fit dresser après la bataille, quand chacun croyait la paix revenue pour toujours. Deux ans plus tard, Vibelandia déclarait la guerre."
+prompt = "Lire : La statue de Devlyn"
+radius = 2.6
+
+[node name="Text" type="Label3D" parent="Lore/Statue"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, -1.418)
+pixel_size = 0.0032
+shaded = true
+double_sided = false
+alpha_cut = 1
+modulate = Color(0.55, 0.43, 0.2, 1)
+text = "DEVLYN
+VAINQUEUR DES QUATRE
+DRAGONS DU CHAOS
+5802"
+font_size = 64
+outline_size = 0
 
 [node name="Memorial" type="Node3D" parent="Lore"]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -44, 0, -36)

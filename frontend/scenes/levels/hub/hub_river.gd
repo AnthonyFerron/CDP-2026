@@ -17,7 +17,7 @@ extends Node3D
 ## Distance du mur invisible au bord de l'eau, sur la berge.
 @export var wall_offset := 1.0
 ## Lieux où les rives restent dégagées : (x, z, rayon), le lavoir, la roue du moulin et la passerelle des pêcheurs.
-@export var clear_spots: Array[Vector3] = [Vector3(58.0, 6.5, 4.0), Vector3(70.5, 48.0, 4.5)]
+@export var clear_spots: Array[Vector3] = [Vector3(59.5, 6.5, 3.0), Vector3(70.5, 48.0, 4.5)]
 
 var _rng := RandomNumberGenerator.new()
 var _lilies: Array[MultiMesh] = []
@@ -228,11 +228,11 @@ func _build_life() -> void:
 		var group := _rng.randi() % lilies.size()
 		lilies[group].append(Transform3D(Basis(Vector3.UP, _rng.randf() * TAU).scaled(Vector3.ONE * _rng.randf_range(2.0, 3.4)), Vector3(spot.x, level + 0.02, spot.y)))
 	for index in reed_models.size():
-		_add_multimesh(reed_models[index], reeds[index])
+		_add_multimeshes(reed_models[index], reeds[index])
 	for index in rock_models.size():
-		_add_multimesh(rock_models[index], rocks[index])
+		_add_multimeshes(rock_models[index], rocks[index])
 	for index in lily_models.size():
-		_lilies.append(_add_multimesh(lily_models[index], lilies[index]).multimesh)
+		_lilies.append_array(_add_multimeshes(lily_models[index], lilies[index]))
 
 
 func _groups(models: Array[PackedScene]) -> Array[Array]:
@@ -242,16 +242,32 @@ func _groups(models: Array[PackedScene]) -> Array[Array]:
 	return groups
 
 
-func _add_multimesh(model: PackedScene, transforms: Array) -> MultiMeshInstance3D:
+## Instances d'un modèle par cases de 32 m : chaque case s'efface au loin selon sa propre distance à la caméra.
+func _add_multimeshes(model: PackedScene, transforms: Array) -> Array[MultiMesh]:
+	var mesh := _load_mesh(model)
+	var cells := {}
+	for transform: Transform3D in transforms:
+		var cell := Vector2i(floori(transform.origin.x / 32.0), floori(transform.origin.z / 32.0))
+		if not cells.has(cell):
+			cells[cell] = []
+		cells[cell].append(transform)
+	var result: Array[MultiMesh] = []
+	for cell: Vector2i in cells:
+		result.append(_add_multimesh(mesh, cells[cell]).multimesh)
+	return result
+
+
+func _add_multimesh(mesh: Mesh, transforms: Array) -> MultiMeshInstance3D:
 	var multimesh := MultiMesh.new()
 	multimesh.transform_format = MultiMesh.TRANSFORM_3D
-	multimesh.mesh = _load_mesh(model)
+	multimesh.mesh = mesh
 	multimesh.instance_count = transforms.size()
 	for index in transforms.size():
 		multimesh.set_instance_transform(index, transforms[index])
 	var instance := MultiMeshInstance3D.new()
 	instance.multimesh = multimesh
 	instance.visibility_range_end = detail_range
+	instance.visibility_range_end_margin = 10.0
 	instance.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 	add_child(instance)
 	return instance
