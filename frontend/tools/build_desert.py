@@ -502,12 +502,14 @@ def lying_skeleton(scene, x, z, degrees, buried=True, y=0.0):
 
 
 def stake_with_skull(scene, x, z, rng):
-    """Pieu planté dans le sable, coiffé d'un crâne de vautour : la marque des pilleurs."""
+    """Pieu planté dans le sable, coiffé d'un crâne de vautour : la marque des pilleurs. Le chiffon noué au pieu,
+    qui claque au vent, est posé par desert_life.gd (STAKES)."""
     scene.shape("cyl", {"top": 0.04, "bottom": 0.06, "height": 1.7, "segments": 5}, "wood_dark", (x, 0.85, z), rng.uniform(0, 90),
                 tilt=rng.uniform(-6, 6))
     vulture_skull(scene, x, z + 0.02, rng.uniform(0, 360), 1.6, y=1.62)
-    scene.shape("box", {"size": (0.06, 0.5, 0.02)}, rng.choice(["cloth_red", "cloth_ochre"]), (x + 0.05, 1.3, z), rng.uniform(0, 360),
-                roll=rng.uniform(-10, 10))
+    rng.choice(["cloth_red", "cloth_ochre"])
+    rng.uniform(0, 360)
+    rng.uniform(-10, 10)
     scene.add_box((x, 0.9, z), (0.25, 1.8, 0.25))
 
 
