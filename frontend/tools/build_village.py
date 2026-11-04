@@ -122,9 +122,6 @@ MODEL_BOXES.update({
     "nature_kit/campfire_logs": ((-0.15, 0.0, -0.15), (0.29, 0.06, 0.29)),
     "mini_arena/weapon-spear": ((-0.07, 0.0, -0.06), (0.15, 0.7, 0.12)),
 })
-# Les lits du kit ont une couverture mesurée sous leur origine, alors qu'elle repose sur le cadre : sans
-# correction, furniture() les soulève de cette profondeur et leurs pieds flottent.
-BED_SINK = 0.13
 
 # Kits dont les modèles répétés sont dessinés en une fois (MultiMesh, voir village_instances.gd) : leurs
 # modèles n'ont qu'un maillage. Les meubles du kit furniture, faits de pièces, restent des instances.
@@ -948,7 +945,7 @@ def top_of(model, scale):
 
 
 def bed(scene, frame, a, b, local, scale=1.5):
-    fp(scene, frame, "furniture_kit/bedSingle", a, b, local, scale, height=0.8, y=-BED_SINK * scale, label="lit")
+    fp(scene, frame, "furniture_kit/bedSingle", a, b, local, scale, height=0.8, label="lit")
 
 
 FLOOR = 0.05
@@ -1071,11 +1068,11 @@ def forge(scene, rng, frame):
     box(scene, "stone_dark", (hood[0], 2.25, hood[2]), (1.8, 0.7, 1.4), frame.yaw())
     flue = frame.p(far * 1.4, -frame.depth + 0.25 + 0.3)
     box(scene, "stone_dark", (flue[0], 3.3, flue[2]), (0.8, 1.4, 0.6), frame.yaw())
-    fp(scene, frame, "survival_kit/workbench-anvil", far * 0.3, -0.2, 20.0, 2.8, height=0.85, label="enclume")
+    fp(scene, frame, "survival_kit/workbench-anvil", far * 0.3, -0.2, 20.0, 2.8,
+       height=top_of("survival_kit/workbench-anvil", 2.8), label="enclume")
     fl(scene, frame, "survival_kit/tool-hammer", far * 0.3, -0.2, 70.0, 2.2, y=top_of("survival_kit/workbench-anvil", 2.8),
        tilt=90.0)
-    # Comme les lits, la meule a une pièce mesurée sous son origine : sans correction, elle flotte.
-    fp(scene, frame, "survival_kit/workbench-grind", -far * 1.0, -2.7, 0.0, 2.8, height=0.9, y=-0.09 * 2.8, label="meule")
+    fp(scene, frame, "survival_kit/workbench-grind", -far * 1.0, -2.7, 0.0, 2.8, height=0.9, label="meule")
     fp(scene, frame, "survival_kit/barrel-open", far * 2.8, -0.1, 0.0, 2.6, height=0.9, label="baquet de trempe")
     cylinder(scene, "water", frame.p(far * 2.8, -0.1, 0.8), 0.27, 0.02, sides=10)
     deep = 0.45 * 2.4
@@ -1150,7 +1147,8 @@ def cooper(scene, rng, frame):
     for a, b in ((far * 2.4, -2.4), (far * 1.3, -2.45), (far * 2.45, -1.2)):
         fp(scene, frame, "mini_dungeon/barrel", a, b, rng.uniform(0, 360), 1.8, height=0.86, label="tonneau")
     fp(scene, frame, "mini_dungeon/barrel", far * 2.0, -2.0, 0.0, 1.5, height=0.72, y=0.86, label="tonneau empilé")
-    fp(scene, frame, "survival_kit/workbench", -far * 1.5, -2.4, 0.0, 3.0, height=0.72, label="établi")
+    fp(scene, frame, "survival_kit/workbench", -far * 1.5, -2.4, 0.0, 3.0, height=top_of("survival_kit/workbench", 3.0),
+       label="établi")
     fl(scene, frame, "survival_kit/tool-hammer", -far * 1.5, -2.4, 30.0, 2.2, y=top_of("survival_kit/workbench", 3.0),
        tilt=90.0)
     for a, b, local in ((-far * 2.5, 0.2, 0.0), (-far * 2.2, 1.3, 40.0)):
