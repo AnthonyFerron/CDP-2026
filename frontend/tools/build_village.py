@@ -1273,7 +1273,7 @@ def build_gate_defense(scene, rng):
         lay(scene, "graveyard_kit/candle", (11.45, 0.0, z), 0.0, 0.8)
     for model, x, z in (("flower_redA", 11.4, 36.5), ("flower_yellowA", 11.3, 38.4), ("flower_redA", 11.5, 38.7)):
         lay(scene, f"nature_kit/{model}", (x, 0.0, z), 0.0, 1.6)
-    for x, z, radius in ((0.6, 36.4, 1.4), (-6.0, 35.0, 1.0), (1.6, 44.6, 1.6), (6.6, 34.6, 0.9)):
+    for x, z, radius in ((1.5, 36.0, 1.0), (-6.0, 35.0, 1.0), (1.6, 44.6, 1.3), (6.6, 34.6, 0.9)):
         scorch(scene, x, z, radius)
 
 
