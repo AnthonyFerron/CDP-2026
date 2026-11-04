@@ -1,8 +1,12 @@
-from fastapi import APIRouter
+from typing import Annotated
+
+from fastapi import APIRouter, Query
 
 from app.api.dependencies import DbSession, PuzzleId
 from app.api.docs import errors
+from app.schemas.leaderboards import PuzzleLeaderboardPage
 from app.schemas.puzzles import PuzzleRead
+from app.services import leaderboards as leaderboards_service
 from app.services import puzzle_progress as progress_service
 
 router = APIRouter(prefix="/puzzles")
@@ -34,3 +38,26 @@ def list_puzzles(db: DbSession) -> list[PuzzleRead]:
 def read_puzzle(puzzle_id: PuzzleId, db: DbSession) -> PuzzleRead:
     return PuzzleRead.from_model(progress_service.get_puzzle(db, puzzle_id))
 
+
+@router.get(
+    "/{puzzle_id}/leaderboards",
+    response_model=PuzzleLeaderboardPage,
+    tags=["Classements"],
+    summary="Classement d'une énigme",
+    description="Meilleur temps de résolution de chaque joueur sur cette énigme, trié par "
+    "`completion_time_ms` croissant. Seules comptent les parties gagnées ; les temps non fiables "
+    "(import, résolution invraisemblable) sont exclus. Aucune donnée privée n'est exposée.\n\n"
+    "**Authentification** : aucune.",
+    responses=NOT_FOUND,
+)
+def read_puzzle_leaderboard(
+    puzzle_id: PuzzleId,
+    db: DbSession,
+    limit: Annotated[int, Query(ge=1, le=100)] = 20,
+    offset: Annotated[int, Query(ge=0)] = 0,
+) -> PuzzleLeaderboardPage:
+    puzzle = progress_service.get_puzzle(db, puzzle_id)
+    items, total = leaderboards_service.puzzle_leaderboard(db, puzzle, limit, offset)
+    return PuzzleLeaderboardPage(
+        puzzle=PuzzleRead.from_model(puzzle), items=items, total=total, limit=limit, offset=offset
+    )
