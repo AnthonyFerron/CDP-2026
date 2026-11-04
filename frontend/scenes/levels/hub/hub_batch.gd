@@ -22,6 +22,10 @@ func _batch(group: Node3D) -> void:
 		# Seuls les modèles posés tels quels : les nœuds à script (la roue du moulin) gardent leurs enfants.
 		if not child is Node3D or child.scene_file_path.is_empty():
 			continue
+		# Les arbres restent des nœuds : peu nombreux, ils gardent chacun leur visibilité (le contrôle des collisions
+		# des arbres les retrouve ainsi par leur scène).
+		if child.scene_file_path.get_file().contains("tree"):
+			continue
 		for mesh_instance: MeshInstance3D in child.find_children("*", "MeshInstance3D", true, false):
 			if not mesh_instance.mesh:
 				continue
