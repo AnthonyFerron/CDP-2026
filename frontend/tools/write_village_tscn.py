@@ -196,7 +196,7 @@ EMBERS += [(11.1, 1.25, 28.7, 0.2), (12.3, 1.3, 18.6, 0.3)]
 # Corbeaux : position (les pieds), orientation, penché pour picorer. Sur le rempart et la tour de la porte, sur
 # l'épouvantail, la clôture de l'enclos, le faîte des écuries, et au sol parmi les vivres de la place.
 CROWS = [
-    ((-22.4, 5.24, 41.0), 160.0, False), ((13.4, 5.24, 41.1), 200.0, False), ((14.3, 5.24, 40.8), 120.0, False),
+    ((-22.4, 5.24, 43.0), 160.0, False), ((13.4, 5.24, 43.1), 200.0, False), ((14.3, 5.24, 42.8), 120.0, False),
     ((6.6, 9.2, 42.6), 10.0, False), ((-27.25, 1.49, 25.5), 100.0, False), ((21.7, 0.84, 17.6), 30.0, False),
     ((26.2, 0.84, 17.6), 250.0, False), ((24.0, 5.37, 31.0), 90.0, False),
     ((-6.2, 0.0, -6.4), 40.0, True), ((-5.5, 0.0, -7.3), 300.0, True), ((7.4, 0.0, 5.2), 200.0, True),
@@ -349,6 +349,12 @@ def main():
     for step in range(STEPS):
         lines += [f'[sub_resource type="BoxMesh" id="BoxMesh_step{step}"]', 'material = SubResource("Material_wood")',
                   f"size = Vector3(3, {STEP_RISE * (step + 1):g}, {STEP_RUN:g})", ""]
+    # Le volume plein de l'escalier, sous sa rampe : ses marches sont des blocs pleins depuis le sol, et sous la rampe
+    # seule on entrait dans l'escalier par son flanc. Le coin a pour dessus la rampe elle-même.
+    x0, x1 = 6.05 - 1.5, 6.05 + 1.5
+    wedge = [(x, y, z) for x in (x0, x1) for y, z in ((0.0, 5.0), (0.0, 5.0 - 9.0), (OFFICE, 5.0 - 9.0))]
+    lines += ['[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_stairs"]',
+              "points = PackedVector3Array(" + ", ".join(f"{x:g}, {y:g}, {z:g}" for x, y, z in wedge) + ")", ""]
     for index, (_, length, along_z) in enumerate(RAILS):
         size = f"0.12, 0.12, {length:g}" if along_z else f"{length:g}, 0.12, 0.12"
         lines += [f'[sub_resource type="BoxMesh" id="BoxMesh_rail{index}"]', 'material = SubResource("Material_wood_dark")',
@@ -371,6 +377,11 @@ def main():
     node(lines, "SkyFill", "DirectionalLight3D", props=[
         "transform = Transform3D(-0.7071, -0.3590, 0.6092, 0.0000, 0.8615, 0.5077, -0.7071, 0.3590, -0.6092, 0, 30, 0)",
         "light_color = Color(0.58, 0.64, 0.92, 1)", "light_energy = 0.24", "light_specular = 0.0"])
+    # Lumière renvoyée par le sol, chaude, sans ombre, montant droit vers le ciel : le dessous des planchers qui
+    # pendent, des toits effondrés et des auvents reste du bois sombre au lieu d'un trou noir.
+    node(lines, "GroundBounce", "DirectionalLight3D", props=[
+        "transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 20, 0)",
+        "light_color = Color(0.86, 0.62, 0.44, 1)", "light_energy = 0.6", "light_specular = 0.0"])
     node(lines, "Terrain", "StaticBody3D", props=['script = ExtResource("2_terrain")', 'ground_material = SubResource("ShaderMaterial_ground")'])
     node(lines, "Stream", "MeshInstance3D", props=[
         "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -38, -0.45, 0)", 'mesh = SubResource("PlaneMesh_stream")',
@@ -487,6 +498,7 @@ def main():
     node(lines, "RampShape", "CollisionShape3D", "Interior/Slabs", props=[
         f"transform = Transform3D(1, 0, 0, 0, {c:.6f}, {-s_:.6f}, 0, {s_:.6f}, {c:.6f}, 6.05, {OFFICE / 2 - 0.15 * c:.4f}, {0.5 - 0.15 * s_:.4f})",
         'shape = SubResource("BoxShape3D_ramp")'])
+    node(lines, "StairsShape", "CollisionShape3D", "Interior/Slabs", props=['shape = SubResource("ConvexPolygonShape3D_stairs")'])
     node(lines, "Stairs", "Node3D", "Interior")
     for step in range(STEPS):
         height = STEP_RISE * (step + 1)
