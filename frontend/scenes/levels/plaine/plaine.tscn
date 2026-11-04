@@ -39,13 +39,18 @@
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_ash_3.wav" id="38_step3"]
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_ash_4.wav" id="39_step4"]
 [ext_resource type="Script" path="res://scenes/levels/hub/volcano.gd" id="90_volcano"]
+[ext_resource type="Script" path="res://scenes/levels/plaine/plaine_life.gd" id="42_life"]
+[ext_resource type="Script" path="res://scripts/fire_effect.gd" id="43_fire"]
+[ext_resource type="Script" path="res://scripts/smoke_effect.gd" id="44_smoke"]
+[ext_resource type="AudioStream" path="res://assets/audio/fire_crackle.wav" id="45_crackle"]
+[ext_resource type="AudioStream" path="res://assets/audio/cave_ambience.wav" id="46_cave"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_obelisk"]
 size = Vector3(1.1, 3.0, 1.1)
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ash"]
 sky_top_color = Color(0.14, 0.11, 0.16, 1)
-sky_horizon_color = Color(0.42, 0.28, 0.3, 1)
+sky_horizon_color = Color(0.5, 0.29, 0.27, 1)
 ground_bottom_color = Color(0.09, 0.08, 0.1, 1)
 ground_horizon_color = Color(0.42, 0.28, 0.3, 1)
 
@@ -63,6 +68,7 @@ fog_enabled = true
 fog_light_color = Color(0.36, 0.29, 0.32, 1)
 fog_density = 0.018
 fog_sky_affect = 0.55
+fog_sun_scatter = 0.25
 glow_enabled = true
 glow_intensity = 0.7
 glow_bloom = 0.08
@@ -259,8 +265,8 @@ environment = SubResource("Environment_plaine")
 
 [node name="Sun" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.8660254, -0.25, 0.4330127, 0, 0.8660254, 0.5, -0.5, -0.4330127, 0.75, 0, 40, 0)
-light_color = Color(1, 0.74, 0.62, 1)
-light_energy = 0.7
+light_color = Color(1, 0.7, 0.55, 1)
+light_energy = 0.75
 shadow_enabled = true
 directional_shadow_max_distance = 70.0
 
@@ -428,6 +434,71 @@ board_size = Vector2(1.1, 0.8)
 board_height = 1.45
 line_height = 0.14
 roof = true
+
+[node name="Life" type="Node3D" parent="Exterior" node_paths=PackedStringArray("player", "decor")]
+script = ExtResource("42_life")
+player = NodePath("../../Player")
+decor = [NodePath("../Ruins"), NodePath("../Battlefield")]
+
+[node name="Ambience" type="Node3D" parent="Exterior"]
+
+[node name="BurningBooks" type="Node3D" parent="Exterior/Ambience"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.4, 0.05, 20.4)
+script = ExtResource("43_fire")
+size = 0.7
+light_energy = 1.4
+light_range = 5.0
+crackle_sound = ExtResource("45_crackle")
+crackle_volume_db = -10.0
+
+[node name="BurningTrebuchet" type="Node3D" parent="Exterior/Ambience"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.4, 0.3, 41.2)
+script = ExtResource("43_fire")
+size = 1.1
+light_energy = 2.0
+light_range = 6.0
+crackle_sound = ExtResource("45_crackle")
+crackle_volume_db = -6.0
+
+[node name="CampEmbers" type="Node3D" parent="Exterior/Ambience"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0.05, 42)
+script = ExtResource("43_fire")
+size = 0.35
+light_energy = 0.9
+light_range = 4.0
+crackle_sound = ExtResource("45_crackle")
+crackle_volume_db = -16.0
+
+[node name="TrebuchetSmoke" type="CPUParticles3D" parent="Exterior/Ambience"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.4, 1.2, 41.2)
+script = ExtResource("44_smoke")
+radius = 0.8
+puff_size = 3.5
+rise_speed = 1.2
+
+[node name="LibrarySmoke" type="CPUParticles3D" parent="Exterior/Ambience"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 3, -5)
+script = ExtResource("44_smoke")
+radius = 2.5
+puff_size = 6.0
+rise_speed = 1.0
+smoke_color = Color(0.24, 0.21, 0.21, 1)
+
+[node name="TowerWind" type="AudioStreamPlayer3D" parent="Exterior/Ambience"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23, 5, 52)
+stream = ExtResource("34_wind")
+volume_db = -6.0
+unit_size = 6.0
+max_distance = 32.0
+autoplay = true
+
+[node name="BreachWind" type="AudioStreamPlayer3D" parent="Exterior/Ambience"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 2, -2)
+stream = ExtResource("34_wind")
+volume_db = -9.0
+unit_size = 4.0
+max_distance = 22.0
+autoplay = true
 
 [node name="Volcano" type="Node3D" parent="Exterior"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, -6, -215)
@@ -712,6 +783,34 @@ color_ramp = SubResource("Gradient_motes")
 script = ExtResource("11_interactable")
 prompt = "Prendre le Projenomicon"
 radius = 3.0
+
+[node name="InsideAmbience" type="AudioStreamPlayer" parent="Interior"]
+stream = ExtResource("46_cave")
+volume_db = -20.0
+
+[node name="CandlesReading" type="AudioStreamPlayer3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8, 3, -6.2)
+stream = ExtResource("45_crackle")
+volume_db = -20.0
+unit_size = 2.0
+max_distance = 10.0
+autoplay = true
+
+[node name="CandlesScriptorium" type="AudioStreamPlayer3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -18)
+stream = ExtResource("45_crackle")
+volume_db = -20.0
+unit_size = 2.0
+max_distance = 10.0
+autoplay = true
+
+[node name="CandlesArchives" type="AudioStreamPlayer3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 3.1, -31.5)
+stream = ExtResource("45_crackle")
+volume_db = -20.0
+unit_size = 2.0
+max_distance = 10.0
+autoplay = true
 
 [node name="SlabSound" type="AudioStreamPlayer" parent="Interior"]
 stream = ExtResource("17_stone")

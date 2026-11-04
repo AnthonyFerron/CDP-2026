@@ -455,6 +455,8 @@ func _ember_material() -> StandardMaterial3D:
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	material.vertex_color_use_as_albedo = true
 	material.albedo_color = Color(2.5, 1.4, 0.6)
+	# Braise ronde et douce, plutôt qu'un carré.
+	material.albedo_texture = _smoke_texture()
 	return material
 
 
