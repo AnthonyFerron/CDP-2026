@@ -1397,7 +1397,8 @@ def build_interior():
         wall_banner(scene, side * 1.75, -41.6, (-side, 0), y=CRYPT_FLOOR + 1.3)
         furniture_fit(scene, "graveyard_kit/candle-multiple", (side * 1.2, CRYPT_FLOOR, -43.2), side * 30.0, 2.2,
                   height=0.45)
-        furniture_fit(scene, "graveyard_kit/urn-round", (side * 1.35, CRYPT_FLOOR, -39.0), 0.0, 2.4, height=0.9)
+        # Les urnes au fond, sous les bannières : au pied de l'escalier, elles fermaient les deux côtés du pupitre.
+        furniture_fit(scene, "graveyard_kit/urn-round", (side * 1.35, CRYPT_FLOOR, -42.3), 0.0, 2.4, height=0.9)
 
     for name in sorted(searched):
         (x, y, z), inward = searched[name]

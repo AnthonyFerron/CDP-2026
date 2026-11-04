@@ -647,7 +647,7 @@ transform = Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, -2.698, 0.3, -41.6)
 transform = Transform3D(1.90526, 0, -1.1, 0, 2.2, 0, 1.1, 0, 1.90526, -1.21355, -1, -43.2205)
 
 [node name="urn_round_82" parent="Models" instance=ExtResource("18_model")]
-transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, 0, 0, 2.4, -1.35, -1, -39)
+transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, 0, 0, 2.4, -1.35, -1, -42.3)
 
 [node name="banner_red_83" parent="Models" instance=ExtResource("17_model")]
 transform = Transform3D(-2.6, 0, -0, 0, 2.6, 0, 0, 0, -2.6, 2.698, 0.3, -41.6)
@@ -656,7 +656,7 @@ transform = Transform3D(-2.6, 0, -0, 0, 2.6, 0, 0, 0, -2.6, 2.698, 0.3, -41.6)
 transform = Transform3D(1.90526, 0, 1.1, 0, 2.2, 0, -1.1, 0, 1.90526, 1.17545, -1, -43.1985)
 
 [node name="urn_round_85" parent="Models" instance=ExtResource("18_model")]
-transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, 0, 0, 2.4, 1.35, -1, -39)
+transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, 0, 0, 2.4, 1.35, -1, -42.3)
 
 [node name="Shapes" type="Node3D" parent="."]
 
@@ -1998,7 +1998,7 @@ transform = Transform3D(0.86603, 0, -0.5, 0, 1, 0, 0.5, 0, 0.86603, -1.2, -0.775
 shape = SubResource("BoxShape3D_29")
 
 [node name="Box125" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -1.35, -0.55, -39)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -1.35, -0.55, -42.3)
 shape = SubResource("BoxShape3D_30")
 
 [node name="Box126" type="CollisionShape3D" parent="Collision"]
@@ -2006,5 +2006,5 @@ transform = Transform3D(0.86603, 0, 0.5, 0, 1, 0, -0.5, 0, 0.86603, 1.2, -0.775,
 shape = SubResource("BoxShape3D_29")
 
 [node name="Box127" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 1.35, -0.55, -39)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 1.35, -0.55, -42.3)
 shape = SubResource("BoxShape3D_30")
