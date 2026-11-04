@@ -101,7 +101,8 @@ func _flat_mask(x: float, z: float) -> float:
 	var plaza := 1.0 - smoothstep(PLAZA.z, PLAZA.z + 8.0, Vector2(x - PLAZA.x, z - PLAZA.y).length())
 	for site in SITES:
 		plaza = maxf(plaza, 1.0 - smoothstep(site.z, site.z + 6.0, Vector2(x - site.x, z - site.y).length()))
-	var path := 1.0 - smoothstep(PATH_HALF_WIDTH + 3.5, PATH_HALF_WIDTH + 8.0, absf(x))
+	# Les dunes remontent en pente douce de part et d'autre de l'allée : on peut en descendre comme y monter.
+	var path := 1.0 - smoothstep(PATH_HALF_WIDTH + 3.5, PATH_HALF_WIDTH + 12.0, absf(x))
 	path *= smoothstep(PATH_START - 6.0, PATH_START, z) * smoothstep(PATH_END + 6.0, PATH_END, z)
 	return maxf(plaza, path)
 

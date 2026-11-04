@@ -192,6 +192,9 @@ size = Vector3(3.2, 3.2, 0.9)
 material = SubResource("StandardMaterial3D_inscription")
 size = Vector3(3.2, 1.35, 0.08)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_inscription"]
+size = Vector3(3.2, 1.35, 0.1)
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_book"]
 albedo_color = Color(0.5, 0.08, 0.05, 1)
 emission_enabled = true
@@ -722,6 +725,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9, 0, -35.75)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.05, 0.04)
 mesh = SubResource("BoxMesh_inscription")
 
+[node name="Body" type="StaticBody3D" parent="Interior/Inscription"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.05, 0.04)
+
+[node name="Shape" type="CollisionShape3D" parent="Interior/Inscription/Body"]
+shape = SubResource("BoxShape3D_inscription")
+
 [node name="Text" type="Label3D" parent="Interior/Inscription"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.05, 0.095)
 pixel_size = 0.0034
@@ -782,7 +791,7 @@ color_ramp = SubResource("Gradient_motes")
 [node name="Interactable" type="Node3D" parent="Interior/Book"]
 script = ExtResource("11_interactable")
 prompt = "Prendre le Projenomicon"
-radius = 3.0
+radius = 3.6
 
 [node name="InsideAmbience" type="AudioStreamPlayer" parent="Interior"]
 stream = ExtResource("46_cave")
