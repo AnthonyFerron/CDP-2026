@@ -55,6 +55,7 @@ tmux new -s cdp
 cd ~/cdp-dev && claude
 ```
 
+- **Accès GitHub en écriture :** `dev` et `main` ont une règle « Changes must be made through a pull request », que le compte d'Anthony contourne en tant que propriétaire. Pour pousser depuis le serveur, il faut donc ses identifiants : `gh auth login`, un jeton personnel avec les droits Contents en écriture, ou une clé SSH ajoutée à son compte. La clé de déploiement de `cdp-deploy` ne suffit pas, elle ne sert qu'à lire.
 - **Mémoire :** copier `docs/agents/memoire/*.md` dans le dossier de mémoire de Claude Code pour ce projet, sous `~/.claude/projects/`. Le nom du sous-dossier est le chemin du dépôt, encodé : les `/` deviennent des `-`.
 - **Ressources :** le serveur sert aussi le jeu, l'API et PostgreSQL. Lancer les Godot de test avec `nice -n 10`, et limiter le nombre de Godot simultanés (deux ou trois). Le rendu logiciel sous Xvfb occupe plusieurs cœurs.
 - **API de test locale** (facultatif, pour les tests fonctionnels de la PR #12) :
