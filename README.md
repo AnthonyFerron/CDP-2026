@@ -35,23 +35,23 @@ Les touches suivent la position physique sur le clavier : ZQSD en AZERTY, WASD e
 
 Le jeu s'ouvre sur l'accueil, `frontend/scenes/ui/menus/main_menu.tscn`, dessiné d'après les maquettes par `main_menu.gd` et les éléments communs de `ornate.gd` (cadres, boutons, champs, icônes, fond de nuit).
 
-- **Accueil invité** : « Jouer en tant qu'invité », « Se connecter » et « Créer un compte » ; « Charger partie » et « Classement » sont grisés.
+- **Accueil invité** : « Jouer en tant qu'invité », « Charger partie » (s'il existe une partie invitée en cours sur cet appareil), « Se connecter » et « Créer un compte » ; « Classement » est grisé.
 - **Connexion** et **création de compte** mènent à la **vérification en deux étapes** : six cases, un chiffre par case, un code collé se répartit seul ; « Valider » reste grisé tant que le code n'est pas complet. « Retour » ramène à l'écran d'où l'on vient.
-- **Accueil connecté** : portrait et pseudo, « Nouvelle partie », « Charger partie » (s'il existe une partie en cours), « Classement » et « Se déconnecter ». Une nouvelle partie demande confirmation si une partie est en cours.
+- **Accueil connecté** : portrait et pseudo, « Nouvelle partie », « Charger partie » (s'il existe une partie en cours, lue sur le serveur : elle se reprend sur n'importe quel appareil), « Classement » et « Se déconnecter ». Une nouvelle partie demande confirmation si une partie est en cours, puis abandonne celle-ci sur le serveur. Après la vérification du code, le menu propose de rattacher au compte la partie invitée de l'appareil ; elle ne comptera pas pour le classement.
 - **Introduction** avant chaque nouvelle partie, puis le jeu commence dans le bunker.
 - **Pause** (Échap ou P) : reprendre, ou sauvegarder et revenir au menu. Sur le web, elle s'ouvre aussi quand le navigateur libère la souris.
 - **Indice** (H) : trois indices par zone, du plus vague au plus précis, un de plus à chaque ouverture ; au hub, l'indice dit où aller.
-- **Classement** : les meilleurs temps, les trois premiers en or, argent et bronze. Le temps est envoyé quand le rituel commence.
+- **Classement** : général ou par énigme (onglets), les trois premiers en or, argent et bronze, vingt par page. Rangs et temps viennent de l'API : le temps d'une partie est mesuré par le serveur, jamais envoyé par le jeu.
 
 Chaque changement de lieu passe par l'autoload `Transition` (`frontend/scripts/transition.gd`) : l'écran passe au noir, puis le chapitre, le nom du lieu et son énigme (d'après le scénario, `GameState.ZONE_TITLES` et `GameState.hub_title()`) apparaissent ligne par ligne pendant que la scène suivante se charge ; elle ne se dévoile qu'une fois construite, et le chronomètre est arrêté pendant ce temps. Utiliser `Transition.change_scene(chemin, lignes)` plutôt que `change_scene_to_file`.
 
-Chaque compte a sa propre sauvegarde (`user://sauvegarde_compte_<pseudo>.cfg`), l'invité garde `user://sauvegarde.cfg`.
+Chaque compte a sa propre sauvegarde (`user://sauvegarde_compte_<identifiant>.cfg`), l'invité garde `user://sauvegarde.cfg`. Elles gardent les livres trouvés et posés, les fragments de papier du Village, le temps, le niveau et la position.
 
-Toutes les demandes au serveur passent par l'autoload `Account` (`frontend/scripts/account.gd`) : `login`, `register`, `verify_code`, `resend_code`, `request_password_reset`, `logout`, `fetch_leaderboard` et `submit_run`. Leurs réponses sont **simulées** en attendant l'API (tout code de six chiffres est accepté, le classement est vide). Pour la brancher, remplacer le corps de ces méthodes par les appels HTTP en gardant leurs signatures et la forme de leurs résultats (`ok`, `error`, `needs_code`, `entries`) : les menus n'ont rien à changer.
+Le jeu est branché sur l'API (voir `docs/api-godot.md`) par trois autoloads : `Api` (`frontend/scripts/api.gd`) envoie les requêtes, `Account` (`frontend/scripts/account.gd`) gère le compte et les classements pour les menus, et `GameSync` (`frontend/scripts/game_sync.gd`) synchronise la partie d'un joueur connecté. Pour un joueur connecté, le serveur fait foi : un livre n'est posé et la victoire n'est jouée qu'après sa confirmation. La réinitialisation du mot de passe n'existe pas encore côté API : le lien l'indique au joueur.
 
 ## Debug
 
-En version de debug, `F1` ouvre un menu de test sur toute la page : aller dans chaque niveau ou au menu principal ; trouver ou **poser chaque livre** (« Poser » amène au château, met le livre en main et joue la vraie pose, avec le plan large sur la reconstruction et le rituel au quatrième livre ; « Tout poser d'un coup » saute les animations) ; régler le chronomètre, passer l'introduction du bunker, lancer les deux fins ; se connecter avec un compte de test simulé. Le site est pour l'instant exporté en version de debug (`--export-debug` dans `frontend/Dockerfile`), le menu y est donc disponible ; repasser à `--export-release` pour le retirer. Il liste les scènes de `frontend/scenes/levels/`, et les sous-dossiers qui contiennent une scène du même nom, comme `plaine/plaine.tscn` : nommer ainsi la scène principale de chaque niveau pour qu'elle y apparaisse. Le bouton « Réinitialiser la partie » efface la sauvegarde.
+En version de debug, `F1` ouvre un menu de test sur toute la page : aller dans chaque niveau ou au menu principal ; trouver ou **poser chaque livre** (« Poser » amène au château, met le livre en main et joue la vraie pose, avec le plan large sur la reconstruction et le rituel au quatrième livre ; « Tout poser d'un coup » saute les animations) ; régler le chronomètre, passer l'introduction du bunker, lancer les deux fins ; se connecter avec un compte de test simulé, sans serveur (`Account.simulated`). Avec un vrai compte, ces réglages ne changent que la partie locale : le serveur garde son propre temps. Le site est pour l'instant exporté en version de debug (`--export-debug` dans `frontend/Dockerfile`), le menu y est donc disponible ; repasser à `--export-release` pour le retirer. Il liste les scènes de `frontend/scenes/levels/`, et les sous-dossiers qui contiennent une scène du même nom, comme `plaine/plaine.tscn` : nommer ainsi la scène principale de chaque niveau pour qu'elle y apparaisse. Le bouton « Réinitialiser la partie » efface la sauvegarde.
 
 ## Progression
 
@@ -71,6 +71,8 @@ Le décor du hub est généré par `frontend/tools/build_hub.py`. Chaque éléme
 
 Le Mont Sam Altan entre en éruption au bout de 60 minutes (`GameState.TOTAL_TIME`) : le scénario en annonce quarante, l'équipe a choisi une heure. Le temps restant s'affiche en haut à droite, passe au rouge sous 5 minutes, et il est sauvegardé avec la partie. Chaque mauvaise validation d'une énigme retire 5 minutes (`GameState.penalize()`). À zéro, le jeu se fige sur l'écran de fin, et « Recommencer » relance une partie depuis le hub. Le temps s'arrête une fois les quatre livres réunis.
 
+Il ne court que dans un niveau, hors pause : il s'arrête dans les menus, la pause, les indices et les chargements. Pour un joueur connecté, le serveur fait foi : le temps affiché est recalé sur le sien, son chronomètre s'arrête quand le jeu reste figé plus d'une seconde, et c'est lui qui déclare l'éruption.
+
 ## Énigmes
 
 | Zone | Énigme | Livre | Solution |
@@ -79,6 +81,16 @@ Le Mont Sam Altan entre en éruption au bout de 60 minutes (`GameState.TOTAL_TIM
 | Désert | Les runes de l'algorithme : runes à ramasser ou à dégager du sable en maintenant E, à poser sur la table ronde de la cave | Algonicon | Jarre : TANT QUE, Puiser, Porter. Porte : SI, Ouvrir, SINON. « POUR » et « Fermer » sont des leurres |
 | Marais | Le tombeau des lettres oubliées : mécanisme à cinq cercles dans la crypte souterraine ; les épitaphes des rois Codeon I à IV, dans la chambre ouest, à l'opposé du tombeau du livre, redonnent la règle | Logiconomicon | CODIA décalé de +3, −3, +3, −3, +3 : **FLGFD** |
 | Village | Les cinq codes oubliés : dix fragments de papier cachés dans la mairie (touche I pour les relire), cinq extraits de code à résoudre dans l'ordre sur le dispositif du bureau du maire | Codonomicon | HTML : **3**. CSS : **green**. Python : **10**. PHP : **2**. TypeScript : **12** |
+
+## Tests du jeu
+
+`frontend/tests/run_tests.tscn` vérifie sans affichage que tous les scripts compilent et que toutes les scènes se chargent, puis teste la sauvegarde, le chronomètre, les fragments, les livres et l'import invité :
+
+```sh
+godot --headless --path frontend res://tests/run_tests.tscn
+```
+
+Avec une API de test et un faux serveur SMTP, il joue aussi de vrais parcours : inscription et code par e-mail, partie complète, reprise sur un autre appareil, défaite, classements, import invité, coupure réseau (voir `docs/api-godot.md`). Jamais contre la production : le script refuse. Le dossier `tests/` n'est pas exporté.
 
 ## Organisation du projet
 
