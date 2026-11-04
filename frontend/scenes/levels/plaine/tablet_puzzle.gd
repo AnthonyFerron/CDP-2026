@@ -103,7 +103,7 @@ func validate() -> void:
 	if correct:
 		_show_right()
 	else:
-		_feedback.text = "Les inscriptions virent au rouge et le sol tremble : la conversation n'a pas de sens dans cet ordre. Le Mont Sam Altan gronde…"
+		_feedback.text = "Les inscriptions virent au rouge et le sol tremble : la conversation n'a pas de sens dans cet ordre."
 		_flash_wrong()
 	validated.emit(correct)
 
