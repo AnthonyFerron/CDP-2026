@@ -358,6 +358,12 @@ light_color = Color(0.58, 0.64, 0.92, 1)
 light_energy = 0.24
 light_specular = 0.0
 
+[node name="GroundBounce" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 20, 0)
+light_color = Color(0.86, 0.62, 0.44, 1)
+light_energy = 0.6
+light_specular = 0.0
+
 [node name="Terrain" type="StaticBody3D" parent="."]
 script = ExtResource("2_terrain")
 ground_material = SubResource("ShaderMaterial_ground")

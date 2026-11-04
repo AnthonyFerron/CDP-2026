@@ -114,6 +114,11 @@ resource_name = "char"
 albedo_color = Color(0.1, 0.075, 0.06, 1)
 roughness = 1
 
+[sub_resource type="StandardMaterial3D" id="Material_char_wood"]
+resource_name = "char_wood"
+albedo_color = Color(0.27, 0.18, 0.12, 1)
+roughness = 1
+
 [sub_resource type="StandardMaterial3D" id="Material_ember"]
 resource_name = "ember"
 albedo_color = Color(0.35, 0.08, 0.02, 1)

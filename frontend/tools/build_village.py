@@ -511,6 +511,9 @@ def materials(scene):
     scene.material("soot", (0.15, 0.125, 0.105), 1.0)
     scene.material("ash", (0.27, 0.24, 0.21), 1.0)
     scene.material("char", (0.1, 0.075, 0.06), 1.0)
+    # Planches brûlées : les grands pans (plancher qui pend, toit effondré) restent lisibles comme du bois, vus d'en
+    # dessous dans l'ombre ; en charbon pur, ils faisaient des trous noirs dans l'image.
+    scene.material("char_wood", (0.27, 0.18, 0.12), 1.0)
     scene.material("ember", (0.35, 0.08, 0.02), 0.8, emission=(1.0, 0.32, 0.06), energy=2.2)
     scene.material("stone", (0.42, 0.4, 0.38), 1.0)
     scene.material("stone_dark", (0.3, 0.29, 0.29), 1.0)
@@ -671,7 +674,7 @@ def sheet(scene, material, center, width, drop, degrees, sway=0.0):
 # Côté ouest, la maison du meunier (z de -18 à -10) fait partie de l'enceinte, et la porte de l'ouest (z = 6) laisse
 # passer la rue du pont : pas de rempart à ces endroits.
 WEST_OPENINGS = (6, -10, -14, -18)
-# Côté est, la brèche ouverte par un dragon, face au cratère.
+# Côté est, la brèche ouverte par les catapultes de Vibelandia, face au cratère.
 EAST_BREACH = (-6,)
 
 
@@ -967,7 +970,7 @@ def upper_floor(scene, frame):
         box(scene, "wood_dark", frame.p(a, 0.0, WALL_HEIGHT - 0.2), (0.3, 0.3, frame.depth * 2 - 0.55), frame.yaw())
     box(scene, "wood", frame.p(-frame.far * half * 0.5, -frame.depth * 0.45, WALL_HEIGHT - 0.02),
         (frame.side * 0.9, 0.08, frame.depth * 0.8), frame.yaw())
-    box(scene, "char", frame.p(frame.far * half * 0.6, -frame.depth * 0.3, WALL_HEIGHT - 0.9),
+    box(scene, "char_wood", frame.p(frame.far * half * 0.6, -frame.depth * 0.3, WALL_HEIGHT - 0.9),
         (frame.side * 0.5, 0.08, 1.8), frame.yaw(), tilt=35.0)
 
 
@@ -1324,7 +1327,8 @@ def build_gardens(scene, rng):
     sphere(scene, "burlap", (sx, 1.78, sz), 0.16)
     cylinder(scene, "straw", (sx, 1.97, sz), 0.26, 0.03, sides=10)
     cylinder(scene, "straw", (sx, 2.07, sz), 0.13, 0.2, top=0.05, sides=8)
-    post(scene, sx, sz, 0.14, 1.9, label="épouvantail")
+    # Ses bras et son corps de paille sont à hauteur de poitrine : on s'y heurte, on ne passe pas au travers.
+    block(scene, (sx, 1.0, sz), (1.45, 2.0, 0.3), label="épouvantail")
     # Le second potager a brûlé : quelques tiges de maïs noircies dans des sillons gris.
     for z in (32.6, 34.2, 35.8, 37.4):
         for x in (-30.2, -28.6, -27.0, -25.4):
@@ -1410,7 +1414,7 @@ def build_stables(scene, rng):
     box(scene, "wood_dark", (26.1, 4.65, 30.0), (run, 0.14, 12.8), roll=-slope)
     box(scene, "wood_dark", (21.9, 4.65, 27.0), (run, 0.14, 6.6), roll=slope)
     box(scene, "wood_dark", (24.0, 5.22, 30.0), (0.3, 0.3, 12.8))
-    box(scene, "char", (21.7, 2.1, 34.0), (5.2, 0.14, 3.5), roll=42.0)
+    box(scene, "char_wood", (21.7, 2.1, 34.0), (5.2, 0.14, 3.5), roll=42.0)
     block(scene, (20.6, 0.6, 34.0), (2.2, 1.2, 3.3), label="toit effondré")
     # Poutres tombées du toit, à l'écart de l'entrée de l'écurie.
     for x, z, degrees in ((21.6, 37.6, 85.0), (24.6, 38.4, 100.0)):
@@ -1549,7 +1553,10 @@ def build_mills(scene, rng):
         add_tilted_box(scene, center, (math.hypot(run, rise) + 0.1, 0.2, 5.2), roll)
     for side in (-1, 1):
         block(scene, (-38.0, deck + 0.33, 6.0 + side * 2.9), (6.6, 0.66, 0.4), label="garde-corps du pont", structure=True)
-    # La roue du moulin à eau tourne : elle est posée dans village.tscn, contre la maison du meunier.
+    # La roue du moulin à eau tourne : elle est posée dans village.tscn, contre la maison du meunier (centre
+    # (-36.5, 1.0, -14), rayon 2,7 m, épaisse de 2,6 m). Sa collision, ici : on la longe dans le lit du ruisseau
+    # sans passer au travers. À hauteur de poitrine, la roue est presque aussi large que son diamètre.
+    block(scene, (-36.5, 0.85, -14.0), (2.6, 5.7, 5.4), label="roue du moulin à eau", structure=True)
     for model, y in (("tower-square-base", 0.0), ("tower-square-mid-windows", 3.0), ("tower-square-mid", 6.0), ("tower-square-top", 9.0)):
         scene.add(f"castle_kit/{model}", (30.0, 4.0 + y, -30.0), 0.0, 3.0)
     scene.add("castle_kit/tower-square-roof", (30.0, 4.0 + 9.9, -30.0), 0.0, 3.0)
