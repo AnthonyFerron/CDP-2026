@@ -59,6 +59,28 @@ MODEL_BOXES.update({
     "nature_kit/tree_fat": ((-0.37, 0.0, -0.32), (0.75, 1.14, 0.64)),
     "nature_kit/tree_thin_dark": ((-0.25, 0.0, -0.25), (0.68, 1.49, 0.62)),
     "nature_kit/canoe": ((-0.14, 0.0, -0.57), (0.29, 0.17, 1.14)),
+    # Intérieurs des nouveaux bâtiments.
+    "food_kit/bowl": ((-0.27, 0.0, -0.31), (0.54, 0.23, 0.62)),
+    "food_kit/mug": ((-0.12, 0.0, -0.14), (0.34, 0.27, 0.29)),
+    "food_kit/plate": ((-0.45, 0.0, -0.45), (0.89, 0.09, 0.89)),
+    "food_kit/honey": ((-0.16, 0.0, -0.16), (0.33, 0.32, 0.33)),
+    "food_kit/onion": ((-0.11, 0.0, -0.12), (0.21, 0.25, 0.25)),
+    "food_kit/pot": ((-0.33, 0.0, -0.41), (0.66, 0.36, 0.82)),
+    "food_kit/wine-red": ((-0.1, 0.0, -0.08), (0.19, 0.7, 0.17)),
+    "graveyard_kit/detail-plate": ((-0.14, 0.0, -0.14), (0.27, 0.05, 0.27)),
+    "graveyard_kit/lantern-glass": ((-0.12, 0.0, -0.12), (0.24, 0.39, 0.24)),
+    "graveyard_kit/trunk": ((-0.27, 0.0, -0.27), (0.54, 0.45, 0.55)),
+    "graveyard_kit/urn-square": ((-0.13, 0.0, -0.13), (0.26, 0.28, 0.26)),
+    "mini_dungeon/coin": ((-0.21, 0.0, -0.08), (0.42, 0.42, 0.17)),
+    "mini_dungeon/key": ((-0.3, 0.0, -0.08), (0.59, 0.36, 0.16)),
+    "survival_kit/resource-wood": ((-0.1, 0.0, -0.04), (0.21, 0.06, 0.09)),
+    "survival_kit/tool-axe": ((-0.07, 0.0, -0.02), (0.11, 0.26, 0.03)),
+    "survival_kit/tool-hoe": ((-0.07, 0.0, -0.04), (0.08, 0.24, 0.07)),
+    "survival_kit/tool-shovel": ((-0.04, 0.0, -0.02), (0.07, 0.29, 0.03)),
+    "survival_kit/bedroll-frame": ((-0.14, 0.0, -0.3), (0.27, 0.15, 0.61)),
+    "nature_kit/plant_bush": ((-0.2, 0.0, -0.2), (0.4, 0.24, 0.4)),
+    "nature_kit/plant_flatShort": ((-0.14, 0.0, -0.14), (0.28, 0.24, 0.28)),
+    "nature_kit/mushroom_red": ((-0.09, 0.0, -0.1), (0.17, 0.2, 0.2)),
 })
 
 
@@ -296,11 +318,13 @@ def furnish(scene, house, ruined, rng):
     table = frame.at(0.6, 0.2)
     furniture(scene, "furniture_kit/tableRound", table, frame.turn(rng.uniform(0, 90)), 2.2,
               height=0.8, tilt=90.0 if ruined else 0.0)
+    # Les chaises s'arrêtent au bord de la table, même tournée ; renversées, elles tombent un peu plus loin.
     for side in (-1, 1):
-        furniture(scene, "furniture_kit/chair", frame.at(0.6 + side * 1.3, 0.2), frame.turn(90.0 * side + (rng.uniform(-40, 40) if ruined else 0.0)),
-                  2.6, tilt=tilt())
+        furniture(scene, "furniture_kit/chair", frame.at(0.6 + side * (1.55 if ruined else 1.45), 0.2),
+                  frame.turn(90.0 * side + (rng.uniform(-40, 40) if ruined else 0.0)), 2.6, tilt=tilt())
     if ruined:
-        furniture(scene, "furniture_kit/bookcaseOpenLow", frame.at(hu - 1.0, 0.8), frame.turn(-90.0 + rng.uniform(-15, 15)), 3.0,
+        # L'étagère renversée gît contre le mur de gauche, à l'écart des chaises et de la porte.
+        furniture(scene, "furniture_kit/bookcaseOpenLow", frame.at(-hu + 0.9, 1.0), frame.turn(-90.0 + rng.uniform(-15, 15)), 3.0,
                   height=0.8, tilt=90.0)
     else:
         furniture(scene, "furniture_kit/bookcaseOpenLow", frame.at(hu - 0.4, 0.6), frame.turn(-90.0), 3.0, height=1.2)
@@ -858,14 +882,15 @@ def furnish_tavern(scene, house, ruined, rng):
         furniture(scene, "furniture_kit/kitchenBar", frame.at(-1.2 + index * 1.15, -hv + 0.7), frame.turn(0.0), 2.6, height=1.1)
         furniture(scene, "furniture_kit/stoolBar", frame.at(-1.2 + index * 1.15, -hv + 1.9), frame.turn(0.0), 2.4,
                   roll=90.0 if ruined and index != 1 else 0.0)
-    for x in (-hu + 1.0, -hu + 2.1):
-        furniture(scene, "mini_dungeon/barrel", frame.at(x, -hv + 0.8), frame.turn(0.0), 2.6, height=1.2)
+    # Tonneaux de bière dans le coin, derrière le bout du comptoir.
+    for v in (-hv + 0.8, -hv + 2.0):
+        furniture(scene, "mini_dungeon/barrel", frame.at(-hu + 0.7, v), frame.turn(0.0), 2.6, height=1.2)
     # Deux tables l'une derrière l'autre, dans la longueur de la salle.
     for v in (0.2, 3.2):
         table = frame.at(-0.8, v)
         furniture(scene, "furniture_kit/tableRound", table, frame.turn(0.0), 2.2, height=0.8, tilt=90.0 if ruined and v > 1 else 0.0)
         for side in (-1, 1):
-            furniture(scene, "furniture_kit/chair", frame.at(-0.8 + side * 1.3, v), frame.turn(90.0 * side), 2.6,
+            furniture(scene, "furniture_kit/chair", frame.at(-0.8 + side * 1.45, v), frame.turn(90.0 * side), 2.6,
                       tilt=90.0 if ruined and rng.random() < 0.5 else 0.0)
 
 
@@ -873,14 +898,19 @@ def furnish_chapel(scene, house, ruined, rng):
     """Chapelle : autel et croix au fond, bancs en deux rangées de part et d'autre de l'allée."""
     frame = HouseFrame(house)
     hu, hv = frame.half_u, frame.half_v
-    furniture(scene, "graveyard_kit/altar-wood", frame.at(0.0, -hv + 1.0), frame.turn(0.0), 2.4, height=1.3)
-    furniture(scene, "graveyard_kit/cross", frame.at(0.0, -hv + 0.25), frame.turn(0.0), 2.6, height=2.7, roll=90.0 if ruined else 0.0)
+    # L'autel devant la croix, sans la toucher ; tombée dans les ruines, la croix gît à ses pieds, un peu de biais.
+    furniture(scene, "graveyard_kit/altar-wood", frame.at(0.0, -hv + 1.25), frame.turn(0.0), 2.0, height=1.1)
+    if ruined:
+        furniture(scene, "graveyard_kit/cross", frame.at(-0.3, -hv + 0.45), frame.turn(8.0), 2.6, height=0.7, roll=90.0)
+    else:
+        furniture(scene, "graveyard_kit/cross", frame.at(0.0, -hv + 0.25), frame.turn(0.0), 2.6, height=2.7)
+    # Bancs de part et d'autre de l'allée, le premier rang à un pas de l'autel.
     for row in range(3):
         for side in (-1, 1):
-            furniture(scene, "graveyard_kit/bench", frame.at(side * 1.6, -1.6 + row * 1.9), frame.turn(180.0 + (rng.uniform(-25, 25) if ruined else 0.0)),
+            furniture(scene, "graveyard_kit/bench", frame.at(side * 2.0, -1.2 + row * 1.9), frame.turn(180.0 + (rng.uniform(-20, 20) if ruined else 0.0)),
                       2.2, height=1.0, roll=90.0 if ruined and rng.random() < 0.5 else 0.0)
     for side in (-1, 1):
-        furniture(scene, "graveyard_kit/candle-multiple", frame.at(side * 1.6, -hv + 0.7), frame.turn(0.0), 2.6)
+        furniture(scene, "graveyard_kit/candle-multiple", frame.at(side * 2.1, -hv + 0.7), frame.turn(0.0), 2.6)
 
 
 def furnish_forge(scene, house, ruined, rng):
@@ -994,10 +1024,11 @@ def furnish_bakery(scene, house, ruined, rng):
     table = frame.at(0.9, -hv + 1.0)
     furniture(scene, "mini_dungeon/table", table, frame.turn(0.0), 3.2, height=1.0, roll=90.0 if ruined else 0.0)
     for index in range(3):
-        # Un sac couché ne remplit pas sa boîte : on l'abaisse d'autant pour qu'il touche le sol.
+        # Un sac couché ne remplit pas sa boîte : on l'abaisse d'autant pour qu'il touche le sol. Il est tombé devant
+        # les autres, sans les toucher.
         tipped = ruined and index == 1
-        furniture(scene, "food_kit/bag", frame.at(hu - 0.6, -hv + 0.8 + index * 1.0, -0.14 if tipped else 0.0), frame.turn(rng.uniform(-20, 20)), 1.6,
-                  height=1.3, tilt=90.0 if tipped else 0.0)
+        furniture(scene, "food_kit/bag", frame.at(hu - (1.35 if tipped else 0.6), -hv + 0.8 + index * 1.0, -0.14 if tipped else 0.0),
+                  frame.turn(rng.uniform(-20, 20)), 1.6, height=1.3, tilt=90.0 if tipped else 0.0)
     furniture(scene, "mini_dungeon/barrel", frame.at(hu - 0.7, 1.4), frame.turn(0.0), 2.6, height=1.2)
     if ruined:
         furniture(scene, "food_kit/bag-flat", frame.at(-0.5, 0.5), frame.turn(rng.uniform(0, 90)), 1.6)
@@ -1005,9 +1036,25 @@ def furnish_bakery(scene, house, ruined, rng):
         return
     top = 1.0
     for index, model in enumerate(("food_kit/loaf", "food_kit/loaf-round", "food_kit/loaf-baguette")):
-        furniture(scene, model, frame.at(0.1 + index * 0.75, -hv + 1.0, top), frame.turn(rng.uniform(-30, 30)), 0.9)
-    furniture(scene, "food_kit/cutting-board", frame.at(1.9, -hv + 1.0, top), frame.turn(90.0), 1.0)
-    furniture(scene, "food_kit/rollingPin", frame.at(1.9, -hv + 1.0, top + 0.06), frame.turn(10.0), 1.0)
+        furniture(scene, model, frame.at(-0.2 + index * 0.7, -hv + 1.0, top), frame.turn(rng.uniform(-15, 15)), 0.9)
+    furniture(scene, "food_kit/cutting-board", frame.at(1.95, -hv + 1.0, top), frame.turn(90.0), 1.0)
+    furniture(scene, "food_kit/rollingPin", frame.at(1.95, -hv + 1.0, top + 0.06), frame.turn(10.0), 1.0)
+    # Le pétrin, contre le mur de gauche : la pâte qui lève dans sa jatte, la farine, le livre de comptes du boulanger
+    # (un texte à lire, posé par write_hub_tscn.py), et un tabouret.
+    kneading = 2.8 * MODEL_BOXES["mini_dungeon/table"][1][1]
+    furniture(scene, "mini_dungeon/table", frame.at(-hu + 1.0, 0.7), frame.turn(90.0), 2.8, height=kneading)
+    furniture(scene, "food_kit/bowl", frame.at(-hu + 1.0, 0.0, kneading), frame.turn(0.0), 1.6)
+    furniture(scene, "food_kit/bag-flat", frame.at(-hu + 1.1, 0.9, kneading), frame.turn(80.0), 1.3)
+    furniture(scene, "furniture_kit/books", frame.at(-hu + 0.9, 1.6, kneading), frame.turn(100.0), 2.4)
+    furniture(scene, "fantasy_town_kit/stall-stool", frame.at(-hu + 2.35, 0.9), frame.turn(0.0), 2.4)
+    # Le bois du four, empilé contre le mur de droite, entre les sacs et le tonneau.
+    furniture(scene, "nature_kit/log_stack", frame.at(hu - 0.55, 0.15), frame.turn(0.0), 1.6, height=0.6)
+    # Étagère à pain contre la façade, à gauche de la porte : les miches du jour sur le dessus.
+    shelf = frame.at(-1.5, hv - 0.5)
+    furniture(scene, "furniture_kit/bookcaseOpenLow", shelf, frame.turn(180.0), 3.0, height=1.2)
+    for index in range(3):
+        furniture(scene, "food_kit/loaf-round" if index % 2 else "food_kit/loaf", frame.at(-2.0 + index * 0.5, hv - 0.5, 1.2),
+                  frame.turn(rng.uniform(-10, 10)), 0.7)
     # Étal devant la porte : le pain du matin, sous l'auvent.
     side = -1.0 if frame.door_u >= 0 else 1.0
     stall = frame.at(side * 2.0, hv + 1.4)
@@ -1028,11 +1075,19 @@ def furnish_mill(scene, house, ruined, rng):
                   height=1.3, tilt=90.0 if tipped else 0.0)
     for index in range(2):
         furniture(scene, "survival_kit/box-large", frame.at(hu - 0.8, -hv + 1.0 + index * 1.6), frame.turn(90.0), 3.4, height=0.9)
-    furniture(scene, "mini_forest/ladder", frame.at(-hu + 0.9 if not ruined else 0.4, 0.8, 0.0 if not ruined else -0.05), frame.turn(90.0), 3.8,
-              height=3.6 if not ruined else 0.5,
-              tilt=-12.0 if not ruined else 90.0)
+    furniture(scene, "mini_forest/ladder", frame.at(-hu + 0.9 if not ruined else -1.6, 0.8 if not ruined else 1.8, 0.0 if not ruined else -0.05),
+              frame.turn(90.0), 3.8, height=3.6 if not ruined else 0.5, tilt=-12.0 if not ruined else 90.0)
     if not ruined:
         furniture(scene, "mini_dungeon/barrel", frame.at(hu - 0.7, 1.8), frame.turn(0.0), 2.6, height=1.2)
+        # La table du meunier, près de la façade : une jatte de farine, un sac entamé, une chandelle.
+        top = 2.6 * MODEL_BOXES["mini_dungeon/table"][1][1]
+        furniture(scene, "mini_dungeon/table", frame.at(-0.9, 2.5), frame.turn(0.0), 2.6, height=top)
+        furniture(scene, "food_kit/bowl", frame.at(-1.4, 2.4, top), frame.turn(20.0), 1.4)
+        furniture(scene, "food_kit/bag-flat", frame.at(-0.4, 2.6, top), frame.turn(-10.0), 1.2)
+        furniture(scene, "graveyard_kit/candle", frame.at(0.05, 2.2, top), frame.turn(0.0), 1.6)
+        # Pelle et fourche appuyées contre le mur du fond, entre les sacs et les caisses.
+        for u, model in ((0.4, "survival_kit/tool-shovel"), (1.0, "survival_kit/tool-hoe")):
+            furniture(scene, model, frame.at(u, -hv + 0.3), frame.turn(0.0), 5.0, tilt=-10.0)
         # Charrette de sacs devant la porte, du côté opposé.
         side = -1.0 if frame.door_u >= 0 else 1.0
         furniture(scene, "fantasy_town_kit/cart", frame.at(side * 2.2, hv + 2.4), frame.turn(90.0), 2.6, height=1.4)
@@ -1047,13 +1102,20 @@ def furnish_stables(scene, house, ruined, rng):
     for index, v in enumerate((-hv + 2.6, -hv + 5.4, -hv + 8.2)):
         furniture(scene, "nature_kit/fence_simple", frame.at(-hu + 1.4, v), frame.turn(90.0), 2.8, height=1.0,
                   roll=90.0 if ruined and index == 1 else 0.0)
-        furniture(scene, "graveyard_kit/hay-bale", frame.at(-hu + 0.7, v + 1.2), frame.turn(90.0 + rng.uniform(-10, 10)), 2.4, height=0.9)
-        furniture(scene, "survival_kit/barrel-open", frame.at(-hu + 0.5, v - 0.6), frame.turn(0.0), 3.0, height=1.0,
+        furniture(scene, "graveyard_kit/hay-bale", frame.at(-hu + 0.7, v + 1.1), frame.turn(90.0 + rng.uniform(-6, 6)), 2.0, height=0.8)
+        furniture(scene, "survival_kit/barrel-open", frame.at(-hu + 0.5, v - 0.7), frame.turn(0.0), 3.0, height=1.0,
                   tilt=90.0 if ruined and index == 2 else 0.0)
     furniture(scene, "survival_kit/bucket", frame.at(hu - 0.6, -hv + 0.8), frame.turn(0.0), 3.4)
     furniture(scene, "graveyard_kit/hay-bale-bundled", frame.at(hu - 0.8, -hv + 2.4), frame.turn(0.0), 2.6, height=1.0)
     if not ruined:
         furniture(scene, "survival_kit/chest", frame.at(hu - 0.7, -hv + 4.2), frame.turn(-90.0), 3.4, height=0.8)
+        furniture(scene, "graveyard_kit/lantern-candle", frame.at(hu - 0.7, -hv + 4.2, 3.4 * MODEL_BOXES["survival_kit/chest"][1][1]),
+                  frame.turn(0.0), 1.6)
+        # Fourche et pelle du palefrenier contre le mur de droite, un banc, et l'auge près de la porte.
+        for v, model in ((0.2, "survival_kit/tool-hoe"), (0.8, "survival_kit/tool-shovel")):
+            furniture(scene, model, frame.at(hu - 0.3, v), frame.turn(-90.0), 5.0, tilt=-10.0)
+        furniture(scene, "graveyard_kit/bench", frame.at(hu - 0.6, 2.3), frame.turn(-90.0), 2.0, height=0.9)
+        furniture(scene, "survival_kit/box-large-open", frame.at(hu - 0.6, 4.4), frame.turn(0.0), 2.8, height=0.85)
         # Enclos derrière les écuries, côté forêt.
         cx, cz = house[0], house[1]
         for index in range(4):
@@ -1074,14 +1136,25 @@ def furnish_barracks(scene, house, ruined, rng):
     furniture(scene, "survival_kit/chest", frame.at(4.4, -hv + 0.8), frame.turn(90.0), 3.0, height=0.7)
     table = frame.at(-3.0, 1.9)
     furniture(scene, "mini_dungeon/table", table, frame.turn(0.0), 3.4, height=1.0, roll=90.0 if ruined else 0.0)
-    furniture(scene, "furniture_kit/bench", frame.at(-3.0, 0.3), frame.turn(0.0), 3.0, tilt=90.0 if ruined else 0.0)
-    for index, v in enumerate((-0.6, 1.6)):
+    furniture(scene, "furniture_kit/bench", frame.at(-3.0, -0.2 if ruined else 0.3), frame.turn(0.0), 3.0, tilt=90.0 if ruined else 0.0)
+    for index, v in enumerate((-1.0, 1.5)):
         tipped = ruined and index == 0
         furniture(scene, "mini_arena/weapon-rack", frame.at(hu - 0.7, v, -0.45 if tipped else 0.0), frame.turn(-90.0), 3.0, height=1.4,
                   tilt=90.0 if tipped else 0.0)
     if not ruined:
         for u in (-4.2, -1.3, 1.6):
             furniture(scene, "mini_dungeon/shield-rectangle", frame.at(u, -hv + 0.25, 2.4), frame.turn(0.0), 3.0)
+        top = 3.4 * MODEL_BOXES["mini_dungeon/table"][1][1]
+        # Le registre de la garde (texte à lire, write_hub_tscn.py), ouvert devant la place du sergent.
+        furniture(scene, "furniture_kit/books", frame.at(-3.9, 1.9, top), frame.turn(15.0), 2.6)
+        furniture(scene, "graveyard_kit/candle", frame.at(-3.6, 1.2, top), frame.turn(0.0), 1.6)
+        for u, v in ((-2.5, 1.4), (-2.0, 2.4)):
+            furniture(scene, "food_kit/mug", frame.at(u, v, top), frame.turn(rng.uniform(0, 360)), 1.3)
+        furniture(scene, "graveyard_kit/detail-plate", frame.at(-2.9, 2.5, top), frame.turn(0.0), 2.4)
+        for u in (-3.6, -2.4):
+            furniture(scene, "fantasy_town_kit/stall-stool", frame.at(u, 3.35), frame.turn(0.0), 2.4)
+        furniture(scene, "survival_kit/chest", frame.at(1.6, -0.75), frame.turn(0.0), 2.6, height=0.7)
+        furniture(scene, "survival_kit/barrel", frame.at(2.4, 3.1), frame.turn(0.0), 3.0, height=1.0)
         # Cour d'entraînement, entre la caserne et l'enceinte du château : cibles, mannequins de paille, râtelier.
         cx, cz = house[0], house[1]
         for index, (x, z) in enumerate(((cx + 10.0, cz - 3.0), (cx + 13.0, cz - 3.0), (cx + 16.0, cz - 3.0))):
@@ -1099,7 +1172,7 @@ def furnish_apothecary(scene, house, ruined, rng):
     hu, hv = frame.half_u, frame.half_v
     for index, u in enumerate((-hu + 1.2, 0.0)):
         if ruined and index == 1:
-            furniture(scene, "furniture_kit/bookcaseOpen", frame.at(u, -hv + 1.6), frame.turn(0.0), 3.0, height=0.8, tilt=90.0)
+            furniture(scene, "furniture_kit/bookcaseOpen", frame.at(1.3, -hv + 1.6), frame.turn(0.0), 3.0, height=0.8, tilt=90.0)
             continue
         furniture(scene, "furniture_kit/bookcaseOpen", frame.at(u, -hv + 0.4), frame.turn(0.0), 3.0, height=2.6)
     table = frame.at(-0.6, 0.0)
@@ -1116,6 +1189,13 @@ def furnish_apothecary(scene, house, ruined, rng):
     furniture(scene, "food_kit/mortar-pestle", frame.at(0.3, 0.3, 0.94), frame.turn(0.0), 1.4)
     for index, u in enumerate((-hu + 0.9, -hu + 1.5)):
         furniture(scene, "mini_dungeon/potion", frame.at(u, -hv + 0.4, 1.25), frame.turn(rng.uniform(0, 360)), 0.7)
+    furniture(scene, "food_kit/honey", frame.at(-1.5, -0.5, 0.94), frame.turn(0.0), 1.0)
+    furniture(scene, "food_kit/honey", frame.at(-1.55, 0.05, 0.94), frame.turn(30.0), 0.8)
+    furniture(scene, "food_kit/bowl", frame.at(-1.35, 0.55, 0.94), frame.turn(0.0), 1.1)
+    furniture(scene, "fantasy_town_kit/stall-stool", frame.at(-0.6, 1.5), frame.turn(0.0), 2.4)
+    for v in (2.6, 3.3):
+        furniture(scene, "survival_kit/box-open", frame.at(hu - 0.6, v), frame.turn(rng.uniform(-10, 10)), 2.6, height=0.8)
+        furniture(scene, "nature_kit/plant_bush", frame.at(hu - 0.6, v, 0.45), frame.turn(rng.uniform(0, 360)), 1.4)
     # Jardin des simples, entre la porte et le chemin : carrés d'herbes et de racines.
     cx, cz = house[0], house[1]
     for row in range(3):
@@ -1133,24 +1213,29 @@ def furnish_scriptorium(scene, house, ruined, rng):
     hu, hv = frame.half_u, frame.half_v
     for u in (-hu + 0.4, hu - 0.4):
         if ruined and u > 0:
-            furniture(scene, "furniture_kit/bookcaseClosedWide", frame.at(hu - 1.7, -hv + 1.6), frame.turn(-90.0), 3.0, height=0.8, tilt=90.0)
+            furniture(scene, "furniture_kit/bookcaseClosedWide", frame.at(2.3, 2.4), frame.turn(-90.0), 3.0, height=0.8, tilt=90.0)
             continue
         furniture(scene, "furniture_kit/bookcaseClosedWide", frame.at(u, -hv + 1.6), frame.turn(90.0 if u < 0 else -90.0), 3.0, height=2.4)
     for row in range(2):
         for side in (-1, 1):
-            spot = frame.at(side * 1.6, -hv + 1.6 + row * 2.4)
+            spot = frame.at(side * 1.6, -hv + 1.8 + row * 2.4)
             furniture(scene, "mini_dungeon/table", spot, frame.turn(0.0), 2.4, height=0.8, roll=90.0 if ruined and side > 0 else 0.0)
-            furniture(scene, "furniture_kit/chair", frame.at(side * 1.6, -hv + 2.6 + row * 2.4), frame.turn(180.0), 2.4,
+            furniture(scene, "furniture_kit/chair", frame.at(side * 1.6, -hv + 2.9 + row * 2.4), frame.turn(180.0), 2.4,
                       tilt=90.0 if ruined and row == 1 else 0.0)
             if not ruined:
-                furniture(scene, "furniture_kit/books", frame.at(side * 1.6 - 0.2, -hv + 1.6 + row * 2.4, 0.78), frame.turn(rng.uniform(-20, 20)), 2.6)
-                furniture(scene, "graveyard_kit/candle", frame.at(side * 1.6 + 0.4, -hv + 1.4 + row * 2.4, 0.78), frame.turn(0.0), 1.6)
-    furniture(scene, "graveyard_kit/altar-wood", frame.at(0.0, -hv + 0.6), frame.turn(0.0), 1.8, height=1.0)
+                furniture(scene, "furniture_kit/books", frame.at(side * 1.6 - 0.2, -hv + 1.8 + row * 2.4, 0.78), frame.turn(rng.uniform(-20, 20)), 2.6)
+                furniture(scene, "graveyard_kit/candle", frame.at(side * 1.6 + 0.4, -hv + 1.6 + row * 2.4, 0.78), frame.turn(0.0), 1.6)
+    # Le lutrin du maître copiste, au fond : la page qu'il recopiait y est restée ouverte (texte à lire).
+    lectern = 1.6 * MODEL_BOXES["graveyard_kit/altar-wood"][1][1]
+    furniture(scene, "graveyard_kit/altar-wood", frame.at(0.0, -hv + 0.45), frame.turn(0.0), 1.6, height=lectern)
     if ruined:
         for index in range(4):
             scene.add("furniture_kit/books", frame.at(rng.uniform(-2.0, 2.0), rng.uniform(-1.0, 2.0)), rng.uniform(0, 360), 2.6)
     else:
+        furniture(scene, "furniture_kit/books", frame.at(0.0, -hv + 0.45, lectern), frame.turn(90.0), 2.6)
+        furniture(scene, "graveyard_kit/candle-multiple", frame.at(0.6, -hv + 0.35, lectern), frame.turn(0.0), 1.4)
         furniture(scene, "survival_kit/chest", frame.at(hu - 0.8, 1.6), frame.turn(-90.0), 3.0, height=0.7)
+        furniture(scene, "furniture_kit/rugRectangle", frame.at(0.0, 0.4, 0.02), frame.turn(90.0), 2.2)
 
 
 QUARTER_FURNISHERS = {"bakery": furnish_bakery, "mill": furnish_mill, "stables": furnish_stables, "barracks": furnish_barracks,
@@ -1216,6 +1301,9 @@ def build_lavoir(scene, rng):
     for index, (x, z) in enumerate(((cx - 2.6, cz - 3.0), (cx + 2.0, cz - 3.0))):
         furniture(scene, "survival_kit/barrel-open", (x, 0.0, z), 0.0, 3.0, height=1.0)
     furniture(scene, "survival_kit/bucket", (cx - 1.0, 0.0, cz - 3.0), 0.0, 3.4)
+    furniture(scene, "graveyard_kit/bench", (cx - 2.2, 0.0, cz + 3.2), 180.0, 2.2, height=1.0)
+    furniture(scene, "survival_kit/box-open", (cx + 1.8, 0.0, cz + 3.1), 15.0, 2.8, height=0.85)
+    furniture(scene, "food_kit/bag-flat", (cx + 1.8, 0.45, cz + 3.1), 40.0, 1.2)
     scene.group = "Fixed"
 
 
@@ -1247,32 +1335,101 @@ def build_market_hall(scene, rng):
             z = cz + side * 2.0
             furniture(scene, "fantasy_town_kit/stall-bench", (x, 0.0, z), 90.0, 3.0, height=0.7)
             food = ("food_kit/cabbage", "food_kit/apple", "food_kit/cheese", "food_kit/carrot", "food_kit/fish", "food_kit/loaf-round")[(index * 2 + (side > 0)) % 6]
-            for offset in (-0.8, 0.0, 0.8):
-                furniture(scene, food, (x + offset, 0.69, z), rng.uniform(0, 360), 1.6 if "cheese" not in food else 1.0)
+            scale = {"food_kit/cheese": 0.9, "food_kit/fish": 1.2}.get(food, 1.5)
+            for offset in (-0.9, 0.0, 0.9):
+                furniture(scene, food, (x + offset, 0.69, z), rng.uniform(-15, 15), scale)
     for x, z in ((cx - 6.6, cz - 3.2), (cx - 6.6, cz + 3.2), (cx + 6.6, cz - 3.2)):
         furniture(scene, "mini_dungeon/barrel", (x + 1.0 if x < cx else x - 1.0, 0.0, z), 0.0, 2.4, height=1.1)
     furniture(scene, "survival_kit/box-large", (cx + 5.6, 0.0, cz + 3.2), 90.0, 3.0, height=0.8)
+    for index, x in enumerate((cx + 4.2, cx + 3.4)):
+        furniture(scene, "food_kit/bag", (x, 0.0, cz + 3.4), rng.uniform(-20, 20), 1.6, height=1.3)
     scene.group = "Fixed"
+
+
+# Observatoire du Mont Sam Altan : centre, échelle des étages de la tour, et son quart de tour.
+OBSERVATORY = (-70.0, 58.0, 4.6)
+TOWER_YAW = 45.0
+
+
+def tower_point(x, z, a, b):
+    """Point de la tour à (a, b) dans son repère : a vers la porte (face +x du modèle), b sur le côté."""
+    c, s = math.cos(math.radians(TOWER_YAW)), math.sin(math.radians(TOWER_YAW))
+    return x + a * c + b * s, z - a * s + b * c
+
+
+def tower_walls(scene, x, z, scale, height):
+    """Murs de la tour en quatre boîtes autour de la salle du bas, au lieu d'un bloc plein : la porte, sur la face
+    +x du modèle (nord-est), reste ouverte sous son linteau."""
+    outer, inner = 0.465 * scale, 0.349 * scale
+    middle, thick = (outer + inner) / 2, outer - inner
+    door_half, door_top = 0.18 * scale, 0.6 * scale
+    for a, b, size in ((-middle, 0.0, (thick, height, 2 * outer)), (0.0, middle, (2 * outer, height, thick)),
+                       (0.0, -middle, (2 * outer, height, thick))):
+        px, pz = tower_point(x, z, a, b)
+        scene.add_box((px, height / 2, pz), size, TOWER_YAW)
+    side = outer - door_half
+    for b in (-(door_half + side / 2), door_half + side / 2):
+        px, pz = tower_point(x, z, middle, b)
+        scene.add_box((px, height / 2, pz), (thick, height, side), TOWER_YAW)
+    px, pz = tower_point(x, z, middle, 0.0)
+    scene.add_box((px, (door_top + height) / 2, pz), (thick, height - door_top, 2 * door_half), TOWER_YAW)
+
+
+def furnish_observatory(scene, x, z, scale, ruined, rng):
+    """Salle des veilleurs, au pied de la tour : la table où l'on tenait le carnet du volcan (texte à lire), la chaise,
+    la paillasse du veilleur de nuit, le coffre, et l'échelle vers la chambre de guet. Plancher de bois, et le
+    plafond de l'étage au-dessus ; dans la tour décapitée, la table est renversée et le carnet est resté à terre."""
+    def at(a, b, y=0.0):
+        px, pz = tower_point(x, z, a, b)
+        return (px, y, pz)
+
+    def turn(degrees):
+        return TOWER_YAW + degrees
+
+    side = 2 * 0.349 * scale
+    scene.add("fantasy_town_kit/planks", at(0.0, 0.0, -0.18), turn(0.0), side + 0.1)
+    if not ruined:
+        ceiling = 1.01 * scale - 0.2
+        scene.add("fantasy_town_kit/planks", at(0.0, 0.0, ceiling), turn(0.0), side + 0.1)
+        scene.add("fantasy_town_kit/planks", at(0.0, 0.0, ceiling - 0.015), turn(90.0), side + 0.1)
+    top = 2.0 * MODEL_BOXES["mini_dungeon/table"][1][1]
+    if ruined:
+        furniture(scene, "mini_dungeon/table", at(-0.8, 0.4), turn(90.0), 2.0, height=0.6, roll=90.0)
+        scene.add("furniture_kit/books", at(-0.1, -0.2), turn(rng.uniform(0, 360)), 2.4)
+        furniture(scene, "furniture_kit/chair", at(0.4, 1.0), turn(30.0), 2.4, tilt=90.0)
+        scene.add("survival_kit/resource-planks", at(0.3, -0.9), turn(rng.uniform(0, 360)), 2.6)
+    else:
+        furniture(scene, "mini_dungeon/table", at(-0.9, 0.3), turn(90.0), 2.0, height=top)
+        furniture(scene, "furniture_kit/books", at(-0.85, 0.15, top), turn(100.0), 2.4)
+        furniture(scene, "graveyard_kit/candle", at(-1.15, 0.9, top), turn(0.0), 1.6)
+        furniture(scene, "furniture_kit/chair", at(0.05, 0.3), turn(-90.0), 2.4)
+        furniture(scene, "survival_kit/bedroll", at(-0.6, -1.15), turn(0.0), 2.4)
+        furniture(scene, "survival_kit/chest", at(0.9, -1.25), turn(0.0), 2.6, height=0.7)
+        furniture(scene, "graveyard_kit/lantern-candle", at(0.9, -1.25, 2.6 * MODEL_BOXES["survival_kit/chest"][1][1]), turn(0.0), 1.4)
+        furniture(scene, "mini_forest/ladder", at(0.5, 1.35), turn(0.0), 3.8, tilt=10.0)
 
 
 def build_observatory(scene, rng):
     """L'observatoire du Mont Sam Altan, au sud-ouest : la tour d'où les veilleurs du roi guettaient le volcan
-    endormi depuis des siècles. Décapitée par la guerre, elle retrouve son toit au quatrième livre."""
-    x, z, scale = -70.0, 58.0, 4.6
+    endormi depuis des siècles. Décapitée par la guerre, elle retrouve son toit au quatrième livre. Sa salle du bas
+    se visite, par la porte du nord-est."""
+    x, z, scale = OBSERVATORY
     scene.repair("Observatory", 4)
     y = 0.0
     for model in ("tower-square-mid-door", "tower-square-mid-windows", "tower-square-mid-windows"):
-        scene.add(f"castle_kit/{model}", (x, y, z), 45.0, scale)
+        scene.add(f"castle_kit/{model}", (x, y, z), TOWER_YAW, scale)
         y += 1.01 * scale
-    scene.add_box((x, y / 2, z), (scale, y, scale), 45.0)
+    tower_walls(scene, x, z, scale, y)
+    furnish_observatory(scene, x, z, scale, True, rng)
     rubble(scene, rng, x + 3.6, z + 3.6, True, count=2, spread=2.0)
     scene.rebuilt("Observatory")
     y = 0.0
     for model in ("tower-square-mid-door", "tower-square-mid-windows", "tower-square-mid-windows", "tower-square-mid-windows"):
-        scene.add(f"castle_kit/{model}", (x, y, z), 45.0, scale)
+        scene.add(f"castle_kit/{model}", (x, y, z), TOWER_YAW, scale)
         y += 1.01 * scale
-    scene.add("castle_kit/tower-square-top-roof-high-windows", (x, y, z), 45.0, scale)
-    scene.add_box((x, (y + 1.07 * scale) / 2, z), (scale, y + 1.07 * scale, scale), 45.0)
+    scene.add("castle_kit/tower-square-top-roof-high-windows", (x, y, z), TOWER_YAW, scale)
+    tower_walls(scene, x, z, scale, y + 1.07 * scale)
+    furnish_observatory(scene, x, z, scale, False, rng)
     scene.add("castle_kit/flag-pennant", (x, y + 1.07 * scale, z), 0.0, 3.0)
     scene.group = "Fixed"
     # Banc de pierre et lanterne au pied de la tour, face au nord, d'où l'on voit le volcan.
@@ -1392,7 +1549,7 @@ def build_park(scene, rng):
     scene.repair("ParkStatue", 4)
     furniture(scene, "nature_kit/statue_block", (cx, 0.0, cz), 0.0, 6.0, height=2.3)
     furniture(scene, "nature_kit/statue_columnDamaged", (cx + 0.4, 2.34, cz - 0.3), 20.0, 3.0)
-    furniture(scene, "mini_arena/statue", (cx + 2.4, 0.0, cz + 1.6), 40.0, 2.0, height=1.4, tilt=90.0)
+    furniture(scene, "mini_arena/statue", (cx + 2.9, 0.0, cz + 2.0), 40.0, 2.0, height=1.4, tilt=90.0)
     scene.rebuilt("ParkStatue")
     furniture(scene, "nature_kit/statue_block", (cx, 0.0, cz), 0.0, 6.0, height=2.3)
     furniture(scene, "mini_arena/statue", (cx, 2.34, cz), 0.0, 2.6)
