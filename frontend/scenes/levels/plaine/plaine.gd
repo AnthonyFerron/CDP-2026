@@ -110,6 +110,7 @@ func _ready() -> void:
 	_dust = _create_dust()
 	_interior.add_child(_dust)
 	_apply_location()
+	_restart_smoke.call_deferred()
 	# Le nom du lieu s'affiche déjà pendant la transition du portail.
 	if GameState.has_book(BOOK_ID):
 		_portal.is_open = true
@@ -292,6 +293,15 @@ func _on_portal_refused() -> void:
 func _on_portal_crossed() -> void:
 	hub_requested.emit()
 	GameState.return_to_hub(ZONE)
+
+
+## Les fumées (SmokeEffect) de la scène ne prennent pas leur préchauffage au chargement : pendant leurs dix premières
+## secondes, elles faisaient une boule sombre au pied du feu au lieu d'une colonne. Relancées une fois tout prêt,
+## elles montent tout de suite à leur hauteur.
+func _restart_smoke() -> void:
+	for node in find_children("*", "CPUParticles3D", true, false):
+		if node is SmokeEffect:
+			(node as SmokeEffect).restart()
 
 
 ## Collision de chaque modèle dont le nom commence par l'un des préfixes : l'enveloppe convexe de ses maillages.
