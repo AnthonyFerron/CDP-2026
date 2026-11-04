@@ -39,6 +39,8 @@ var _fish_jump := {}
 var _ripple_timer := 2.0
 var _ripple_mesh: TorusMesh
 var _ripple_material: StandardMaterial3D
+## Distance au-delà de laquelle les pièces des bêtes ne se dessinent plus (0 : toujours).
+var _part_range := 45.0
 
 
 func _ready() -> void:
@@ -48,7 +50,9 @@ func _ready() -> void:
 	_build_ripples()
 	_build_frogs()
 	_build_bats()
+	_part_range = 0.0
 	_build_gallows()
+	_part_range = 45.0
 	# Les corbeaux cherchent leur perchoir par un rayon : on attend que le décor posé au sol soit en place.
 	await get_tree().physics_frame
 	await get_tree().physics_frame
@@ -89,6 +93,9 @@ func _part(parent: Node3D, mesh: Mesh, position: Vector3, scale := Vector3.ONE, 
 	part.scale = scale
 	part.rotation = rotation
 	part.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	# Pour le web : les petites bêtes ne se dessinent plus au-delà de 45 m (les lanternes pendues, si : _part_range).
+	part.visibility_range_end = _part_range
+	part.visibility_range_end_margin = 4.0
 	parent.add_child(part)
 	return part
 
@@ -137,6 +144,7 @@ func ripple(at: Vector3, size := 1.0) -> void:
 		ring = MeshInstance3D.new()
 		ring.mesh = _ripple_mesh
 		ring.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		ring.visibility_range_end = 45.0
 		ring.material_override = _ripple_material.duplicate()
 		add_child(ring)
 	ring.position = Vector3(at.x, MaraisTerrain.WATER_LEVEL + 0.03, at.z)

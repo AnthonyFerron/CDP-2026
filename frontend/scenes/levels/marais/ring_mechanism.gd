@@ -16,6 +16,8 @@ const PLINTH_HEIGHT := 0.1
 ## Hauteur du dessus du cercle extérieur au-dessus du socle, et marche entre deux cercles.
 const RING_BASE := 0.07
 const RING_STEP := 0.025
+## Capitales romaines des gravures (la police du texte courant perd son N en maillage).
+const ENGRAVING_FONT: Font = preload("res://ui/cinzel_bold.tres")
 
 @export var stone_color := Color(0.32, 0.3, 0.3)
 @export var letter_color := Color(0.82, 0.68, 0.38)
@@ -25,7 +27,7 @@ var letters: Array[int] = []
 
 var _rings: Array[Node3D] = []
 var _tweens: Array[Tween] = []
-var _labels: Array[Label3D] = []
+var _letter_material: StandardMaterial3D
 var _glow_materials: Array[StandardMaterial3D] = []
 
 
@@ -57,9 +59,9 @@ func set_letters(word: String) -> void:
 ## Illumine les lettres et les cercles (rouge au refus, vert à la réussite) ; une énergie faible les rend à la pierre.
 func set_glow(color: Color, energy: float) -> void:
 	var glowing := energy > 1.0
-	for label in _labels:
-		label.shaded = not glowing
-		label.modulate = Color(color.r * energy, color.g * energy, color.b * energy) if glowing else letter_color
+	if _letter_material:
+		_letter_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED if glowing else BaseMaterial3D.SHADING_MODE_PER_PIXEL
+		_letter_material.albedo_color = Color(color.r * energy, color.g * energy, color.b * energy) if glowing else letter_color
 	for material in _glow_materials:
 		material.emission_enabled = glowing
 		material.emission = color
@@ -91,6 +93,9 @@ func _build() -> void:
 	plinth_material.albedo_color = stone_color.darkened(0.2)
 	plinth_material.roughness = 1.0
 	_glow_materials = [stone, groove]
+	_letter_material = StandardMaterial3D.new()
+	_letter_material.albedo_color = letter_color
+	_letter_material.roughness = 1.0
 
 	var plinth_mesh := CylinderMesh.new()
 	plinth_mesh.top_radius = PLINTH_RADIUS
@@ -121,23 +126,28 @@ func _build() -> void:
 		disc.mesh = band
 		disc.position.y = PLINTH_HEIGHT + band.height * 0.5
 		pivot.add_child(disc)
+		# Les 26 lettres d'un cercle forment un seul maillage gravé (et non 26 textes) : un appel de dessin par cercle
+		# au lieu de vingt-six.
+		var tool := SurfaceTool.new()
 		for index in LETTERS.length():
 			var angle := -index * TAU / LETTERS.length()
-			var label := Label3D.new()
-			label.text = LETTERS[index]
-			label.font_size = 64
-			label.pixel_size = 0.0035 + ring * 0.0004
-			label.modulate = letter_color
-			label.outline_size = 0
-			label.shaded = true
-			label.double_sided = false
-			label.alpha_cut = Label3D.ALPHA_CUT_DISCARD
+			var glyph := TextMesh.new()
+			glyph.font = ENGRAVING_FONT
+			glyph.text = LETTERS[index]
+			glyph.font_size = 64
+			glyph.pixel_size = 0.0035 + ring * 0.0004
+			glyph.depth = 0.0
 			var radius := inner + RING_WIDTH * 0.5
 			# Gravée à 1 cm au-dessus de la pierre, couchée sur le cercle.
-			label.position = Vector3(sin(angle) * -radius, top + 0.01, cos(angle) * -radius)
-			label.rotation = Vector3(-PI * 0.5, 0.0, -angle)
-			pivot.add_child(label)
-			_labels.append(label)
+			var place := Transform3D(Basis.from_euler(Vector3(-PI * 0.5, 0.0, -angle)),
+				Vector3(sin(angle) * -radius, top + 0.01, cos(angle) * -radius))
+			tool.append_from(glyph, 0, place)
+		var engraved := MeshInstance3D.new()
+		engraved.name = "Letters"
+		engraved.mesh = tool.commit()
+		engraved.mesh.surface_set_material(0, _letter_material)
+		engraved.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		pivot.add_child(engraved)
 	# Repère fixe gravé dans le socle, au nord du mécanisme : un triangle doré couché, pointé vers le centre.
 	var arrow := PrismMesh.new()
 	arrow.size = Vector3(0.5, 0.45, 0.04)
