@@ -140,22 +140,31 @@ func _rebuild() -> void:
 			_label(Vector3(0.0, center.y, center.z - thickness / 2.0 - 0.018), PI)
 	if collision and not Engine.is_editor_hint():
 		var body := StaticBody3D.new()
-		var shape := CollisionShape3D.new()
-		var box := BoxShape3D.new()
-		if mount == Mount.HANGING:
-			# Suspendue, la planche laisse passer dessous : seul le montant de la potence arrête le joueur.
-			var arm_y := center.y + board_size.y / 2.0 + 0.35
-			box.size = Vector3(0.3, arm_y + 0.1, 0.3)
-			shape.position = Vector3(-board_size.x / 2.0 - 0.25, (arm_y + 0.1) / 2.0, 0.0)
-		else:
-			var low := 0.0 if mount != Mount.WALL else center.y - board_size.y / 2.0
-			var high := center.y + board_size.y / 2.0
-			box.size = Vector3(board_size.x + 0.2, high - low, maxf(thickness + 0.1, 0.25))
-			shape.position = Vector3(0.0, (low + high) / 2.0, center.z)
-		shape.shape = box
-		body.add_child(shape)
+		var depth := maxf(thickness + 0.1, 0.25)
+		match mount:
+			Mount.HANGING:
+				# Suspendue, la planche laisse passer dessous : seul le montant de la potence arrête le joueur.
+				var arm_y := center.y + board_size.y / 2.0 + 0.35
+				_collide(body, Vector3(0.3, arm_y + 0.1, 0.3), Vector3(-board_size.x / 2.0 - 0.25, (arm_y + 0.1) / 2.0, 0.0))
+			Mount.POSTS:
+				# Les deux poteaux et la planche : le dessous de la planche reste libre, sans mur invisible.
+				var post_top := center.y + board_size.y / 2.0 + 0.08
+				for side in [-1.0, 1.0]:
+					_collide(body, Vector3(0.25, post_top, 0.25), Vector3(side * (board_size.x / 2.0 + 0.03), post_top / 2.0, center.z - thickness / 2.0 - 0.05))
+				_collide(body, Vector3(board_size.x + 0.2, board_size.y, depth), center)
+			Mount.WALL:
+				_collide(body, Vector3(board_size.x + 0.2, board_size.y, depth), center)
 		_add(body)
 
+
+
+func _collide(body: StaticBody3D, size: Vector3, position: Vector3) -> void:
+	var box := BoxShape3D.new()
+	box.size = size
+	var shape := CollisionShape3D.new()
+	shape.shape = box
+	shape.position = position
+	body.add_child(shape)
 
 func _label(position: Vector3, yaw: float) -> void:
 	var font: Font = SERIF if serif else TEXT

@@ -79,8 +79,8 @@ const BORDER_HEIGHT := 30.0
 ## Rivière : points de son tracé (x, z, demi-largeur de l'eau), de sa source dans les montagnes du nord-est à
 ## sa sortie au sud-est. La roue du moulin (MILL_WHEEL de tools/build_hub.py) tourne dans son courant, à z = 48.
 const RIVER: Array[Vector3] = [
-	Vector3(51.0, -127.0, 2.6), Vector3(53.0, -115.0, 3.0), Vector3(55.0, -104.0, 3.6), Vector3(58.0, -92.0, 4.2),
-	Vector3(62.0, -78.0, 4.6), Vector3(63.0, -66.0, 4.0), Vector3(61.0, -52.0, 4.6), Vector3(60.0, -38.0, 4.8),
+	Vector3(51.0, -127.0, 2.6), Vector3(53.0, -115.0, 3.0), Vector3(56.0, -104.0, 3.6), Vector3(60.0, -92.0, 4.0),
+	Vector3(63.0, -78.0, 4.4), Vector3(63.0, -66.0, 4.0), Vector3(61.0, -52.0, 4.6), Vector3(60.0, -38.0, 4.8),
 	Vector3(61.0, -24.0, 4.5), Vector3(62.0, -12.0, 4.0), Vector3(63.4, 0.0, 3.6), Vector3(65.0, 10.0, 3.8),
 	Vector3(68.0, 20.0, 4.2), Vector3(71.0, 32.0, 4.6), Vector3(74.0, 42.0, 4.8), Vector3(73.6, 48.0, 5.4),
 	Vector3(77.0, 56.0, 4.6), Vector3(85.0, 70.0, 5.0), Vector3(95.0, 84.0, 5.0), Vector3(108.0, 96.0, 4.8),
@@ -91,9 +91,11 @@ const WATER_LEVEL := -1.1
 const RIVER_DEPTH := 1.3
 const BANK_WIDTH := 3.0
 ## Étang du jardin du roi : (x, z, rayon), son niveau et sa profondeur.
-const PONDS: Array[Vector3] = [Vector3(48.0, -84.5, 3.8)]
+const PONDS: Array[Vector3] = [Vector3(47.4, -84.8, 3.2)]
 const POND_LEVEL := -0.6
 const POND_DEPTH := 0.7
+## Berge de l'étang, plus courte que celle de la rivière : le jardin reste plat jusqu'à ses haies.
+const POND_BANK := 1.5
 ## Ponts : (x, z, cap du tablier en degrés, longueur, largeur). Les berges y restent ouvertes, le tablier et ses
 ## parapets les relient. Mêmes valeurs dans tools/build_hub.py.
 const BRIDGES := [[63.25, 0.0, 0.0, 15.5, 5.0], [63.0, -66.0, 0.0, 15.0, 3.0]]
@@ -107,6 +109,17 @@ const COLOR_HILL := Color(0.26, 0.33, 0.17)
 const COLOR_ROCK := Color(0.4, 0.38, 0.36)
 const COLOR_BANK := Color(0.37, 0.31, 0.21)
 const COLOR_BED := Color(0.24, 0.21, 0.15)
+## Sol sous les planchers des bâtiments : entre les lattes, on voit une terre sombre et non l'herbe.
+const COLOR_FLOOR := Color(0.16, 0.11, 0.08)
+## Emprise des maisons et des bâtiments (tools/build_hub.py : house_layout, LANDMARKS, QUARTERS).
+const BUILDING_FLOORS: Array[Rect2] = [
+	Rect2(-13.2, -26.2, 8, 8), Rect2(5.2, -26.2, 8, 8), Rect2(18.2, -13.2, 8, 8), Rect2(18.2, 5.2, 8, 8), Rect2(4.2, 18.6, 8, 8),
+	Rect2(-12.2, 18.6, 8, 8), Rect2(-26.6, 4.2, 8, 8), Rect2(-26.6, -12.2, 8, 8), Rect2(-20.5, -39.1, 12, 8), Rect2(8.5, -39.1, 12, 8),
+	Rect2(31.1, -18.5, 8, 8), Rect2(29.1, 10.5, 12, 8), Rect2(7.7, 32.1, 8, 8), Rect2(-15.7, 30.1, 8, 12), Rect2(-40.1, 7.7, 8, 8),
+	Rect2(-40.1, -17.7, 8, 12), Rect2(-6, 56, 12, 8), Rect2(-66, -4, 12, 8), Rect2(-60, -36, 8, 12), Rect2(51, 14, 8, 8),
+	Rect2(40, 60, 8, 8), Rect2(48, 30, 8, 8), Rect2(57, 44, 8, 8), Rect2(-74, -50, 12, 8), Rect2(-54, -70, 12, 8),
+	Rect2(-64, 26, 8, 8), Rect2(-78, -20, 8, 8),
+]
 
 @export var ground_material: Material
 
@@ -328,6 +341,10 @@ func _face_color(x: float, z: float, height: float, shore: float) -> Color:
 		color = COLOR_LAWN.lerp(COLOR_GRASS, _relief.get_noise_2d(z * 3.0, x * 3.0) * 0.25 + 0.25)
 		color = color.lerp(COLOR_GRAVEL, gravel_mask(x, z))
 	color = color.lerp(COLOR_PATH, path_mask(x, z))
+	for floor_area in BUILDING_FLOORS:
+		if floor_area.grow(-0.2).has_point(point):
+			color = COLOR_FLOOR
+			break
 	var play := play_radius(point.angle())
 	color = color.lerp(COLOR_HILL, smoothstep(play, play + 10.0, point.length()))
 	# Roche nue en haut des montagnes.
@@ -339,11 +356,11 @@ func _face_color(x: float, z: float, height: float, shore: float) -> Color:
 
 ## Creuse un lit dans le sol : le fond sous l'eau, puis une berge qui remonte jusqu'au sol naturel ; en
 ## montagne, la berge s'élargit en vallée.
-static func carve(natural: float, distance: float, half_width: float, level: float, depth: float) -> float:
+static func carve(natural: float, distance: float, half_width: float, level: float, depth: float, bank_width := BANK_WIDTH) -> float:
 	if distance < half_width:
 		var t := distance / half_width
 		return minf(natural, level - depth * (1.0 - t * t))
-	var bank := BANK_WIDTH + minf(0.6 * maxf(natural - 1.0, 0.0), 12.0)
+	var bank := bank_width + minf(0.6 * maxf(natural - 1.0, 0.0), 12.0)
 	if distance < half_width + bank:
 		return minf(natural, lerpf(level, natural, smoothstep(half_width, half_width + bank, distance)))
 	return natural
@@ -454,7 +471,7 @@ func _carve_waters(heights: PackedFloat32Array, shore: PackedFloat32Array) -> vo
 					ponds[vertex] = 0
 	for pond in PONDS:
 		var center := Vector2(pond.x, pond.y)
-		var area := Rect2(center, Vector2.ZERO).grow(pond.z + BANK_WIDTH + 2.0)
+		var area := Rect2(center, Vector2.ZERO).grow(pond.z + POND_BANK + 2.0)
 		for row in range(_row(area.position.y), _row(area.end.y) + 1):
 			for column in range(_column(area.position.x), _column(area.end.x) + 1):
 				var vertex := row * stride + column
@@ -468,7 +485,7 @@ func _carve_waters(heights: PackedFloat32Array, shore: PackedFloat32Array) -> vo
 			continue
 		var pond := ponds[vertex] == 1
 		heights[vertex] = carve(heights[vertex], nearest[vertex], half_widths[vertex],
-			POND_LEVEL if pond else WATER_LEVEL, POND_DEPTH if pond else RIVER_DEPTH)
+			POND_LEVEL if pond else WATER_LEVEL, POND_DEPTH if pond else RIVER_DEPTH, POND_BANK if pond else BANK_WIDTH)
 		shore[vertex] = nearest[vertex] - half_widths[vertex]
 
 

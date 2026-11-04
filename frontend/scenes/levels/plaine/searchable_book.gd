@@ -3,7 +3,8 @@ extends Interactable
 ## Livre d'un rayonnage, que le joueur peut ouvrir. Certains cachent un fragment de la conversation.
 ## Le nœud se pose juste devant la tranche du livre, sa face +Z tournée vers la pièce (tools/build_plaine.py en donne
 ## les places) : le livre dépasse de sa rangée, ses nervures dorées accrochent la lumière quand on le regarde, et un
-## signet pend sur le bord de la tablette. Une fois lu, il rentre dans le rang et perd son signet.
+## signet pend sur le bord de la tablette. Une fois lu, il n'est plus interactif : pris s'il cachait un fragment,
+## sinon rangé avec les autres, sans signet ni lueur.
 
 ## Épaisseur, hauteur et profondeur du livre.
 const SIZE := Vector3(0.11, 0.36, 0.27)
@@ -62,14 +63,23 @@ func _process(delta: float) -> void:
 	var target := 1.0 if focused else 0.0
 	_glow = move_toward(_glow, target, delta * 4.0)
 	_cover.emission_energy_multiplier = 0.25 * _glow
-	_bands.emission_energy_multiplier = (0.1 if searched else 0.35) + 1.2 * _glow
+	_bands.emission_energy_multiplier = 0.35 + 1.2 * _glow
 
 
+## Le livre a été ouvert : il n'est plus à fouiller, et le rayonnage ne propose plus rien.
+## Celui qui cachait un fragment est pris et disparaît ; l'autre rentre dans le rang, sans signet ni lueur.
 func mark_searched() -> void:
 	searched = true
-	prompt = "Relire le livre"
+	enabled = false
+	focused = false
 	_ribbon.visible = false
 	_book.position.z = -PUSHED_BACK
+	_cover.emission_energy_multiplier = 0.0
+	_bands.emission_energy_multiplier = 0.0
+	_bands.emission_enabled = false
+	set_process(false)
+	if fragment >= 0:
+		visible = false
 
 
 func _add_box(size: Vector3, position: Vector3, material: Material) -> MeshInstance3D:

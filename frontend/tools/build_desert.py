@@ -93,6 +93,7 @@ MATERIALS = {
     "bone": ((0.9, 0.86, 0.74), 0.85, 0.0),
     "wood": ((0.4, 0.26, 0.14), 1.0, 0.0),
     "wood_dark": ((0.2, 0.13, 0.08), 1.0, 0.0),
+    "wood_bleached": ((0.6, 0.47, 0.32), 1.0, 0.0),
     "rope": ((0.6, 0.48, 0.3), 1.0, 0.0),
     "void": ((0.015, 0.012, 0.01), 1.0, 0.0),
     "cloth_red": ((0.58, 0.16, 0.1), 1.0, 0.0),
@@ -142,6 +143,25 @@ class DesertScene(Scene):
     def box_collider(self, center, size, degrees=0.0, tilt=0.0, roll=0.0):
         basis = multiply(multiply(rotation_y(degrees), rotation_x(tilt)), rotation_z(roll))
         self.extra_colliders.append((transform_text(basis, center), "BoxShape3D", f"size = Vector3({fmt(size[0])}, {fmt(size[1])}, {fmt(size[2])})"))
+
+    def cylinder_collider(self, center, radius, height, degrees=0.0, tilt=0.0):
+        basis = multiply(rotation_y(degrees), rotation_x(tilt))
+        self.extra_colliders.append((transform_text(basis, center), "CylinderShape3D",
+                                     f"radius = {fmt(radius)}\nheight = {fmt(height)}"))
+
+    def rubble_collider(self, center, model, degrees, scale):
+        """Tas de gravats : une boîte plus basse et plus étroite que la boîte du modèle, au cœur du tas."""
+        (px, py, pz), (sx, sy, sz) = MODEL_BOXES[model]
+        self.add_box((center[0], sy * scale * 0.33, center[2]), (sx * scale * 0.75, sy * scale * 0.66, sz * scale * 0.75), degrees)
+
+    def column_collider(self, x, z, width, height, base=0.0):
+        """Colonne du kit : un socle carré au pied, puis un fût cylindrique un peu plus étroit que le chapiteau."""
+        top = base + height
+        if top <= 0.05:
+            return
+        foot = max(base, 0.0)
+        self.add_box((x, foot + 0.12 * width / 2, z), (width, 0.12 * width, width))
+        self.cylinder_collider((x, (foot + top) / 2, z), width * 0.36, top - foot)
 
     def convex_collider(self, center, degrees, points):
         text = ", ".join(f"{fmt(x)}, {fmt(y)}, {fmt(z)}" for x, y, z in points)
@@ -255,9 +275,10 @@ def local_frame(cx, cz, heading):
     return lambda u, v, y=0.0: (cx + c * u + s * v, y, cz - s * u + c * v)
 
 
-def put(scene, model, center, degrees=0.0, scale=1.0, height=None, tilt=0.0, roll=0.0, label=None):
-    """furniture() de build_plaine, en retenant l'emprise de ce qui a une collision."""
-    furniture(scene, model, center, degrees, scale, height=height, tilt=tilt, roll=roll)
+def put(scene, model, center, degrees=0.0, scale=1.0, height=None, tilt=0.0, roll=0.0, label=None, box=True):
+    """furniture() de build_plaine, en retenant l'emprise de ce qui a une collision. box=False : pas de boîte,
+    desert.gd taille la collision du modèle sur ses triangles (EXACT_MODELS), l'emprise reste vérifiée."""
+    furniture(scene, model, center, degrees, scale, height=height if box else None, tilt=tilt, roll=roll)
     if height:
         (px, py, pz), (sx, sy, sz) = MODEL_BOXES[model]
         basis = multiply(multiply(rotation_y(degrees), rotation_x(tilt)), rotation_z(roll))
@@ -314,7 +335,7 @@ def brazier(scene, x, z, rng, toppled=False, y=0.0):
                         (bx + math.sin(math.radians(a)) * r, y + 0.04, bz + math.cos(math.radians(a)) * r),
                         rng.uniform(0, 90), shadow=False)
         scene.shape("cyl", {"top": 0.5, "bottom": 0.5, "height": 0.02, "segments": 10}, "ash", (bx + dx * 0.5, y + 0.01, bz + dz * 0.5), shadow=False)
-        scene.add_box((x, y + 0.45, z), (0.62, 0.9, 0.62))
+        scene.cylinder_collider((x, y + 0.45, z), 0.31, 0.9)
         return
     scene.shape("cyl", {"top": 0.48, "bottom": 0.24, "height": 0.32, "segments": 10}, "bronze", (x, y + 1.04, z))
     scene.shape("torus", {"inner": 0.44, "outer": 0.52, "rings": 12, "sides": 4}, "bronze", (x, y + 1.2, z))
@@ -324,7 +345,7 @@ def brazier(scene, x, z, rng, toppled=False, y=0.0):
         r = rng.uniform(0.05, 0.28)
         scene.shape("box", {"size": (0.12, 0.08, 0.1)}, "charcoal", (x + math.cos(a) * r, y + 1.19, z + math.sin(a) * r),
                     rng.uniform(0, 90), shadow=False)
-    scene.add_box((x, y + 0.62, z), (0.7, 1.24, 0.7))
+    scene.cylinder_collider((x, y + 0.62, z), 0.32, 1.24)
 
 
 def jars(scene, cx, cz, rng, count, radius, y=0.0, broken=True):
@@ -422,7 +443,9 @@ def obelisk(scene, x, z, rng, height=4.6, broken=False, degrees=0.0, fallen_towa
             distance = wb - (wb - wt) * (y - y0) / height + 0.012
             glyph(scene, x, z, f, y, distance, lean, rng.choice(names))
             row += 1
-    scene.add_box((x, (y0 + shaft + 0.55) / 2, z), (1.9, y0 + shaft + 0.55, 1.9), degrees)
+    scene.add_box((x, 0.25, z), (1.9, 0.5, 1.9), degrees)
+    scene.add_box((x, 0.675, z), (1.35, 0.35, 1.35), degrees)
+    scene.add_box((x, y0 + (shaft + 0.55) / 2, z), (wb * 2 + 0.04, shaft + 0.55, wb * 2 + 0.04), degrees)
 
 
 def skeleton_beast(scene, x, z, degrees, size, rng, horns=False, walkable=False, y=0.0):
@@ -444,7 +467,8 @@ def skeleton_beast(scene, x, z, degrees, size, rng, horns=False, walkable=False,
         if walkable:
             for side in (-1, 1):
                 foot = frame(side * radius * 0.97, v, 0.0)
-                scene.add_box((foot[0], y + 0.9, foot[2]), (thick * 3, 1.8, thick * 3), degrees)
+                inward = frame(side * radius * 0.92, v, 0.0)
+                scene.add_box((inward[0], y + 0.35, inward[2]), (thick * 2.2, 0.7, thick * 2.2), degrees)
     for i in range(ribs * 2 - 1):
         v0, h0 = tops[i // 2]
         v1, h1 = tops[min(i // 2 + 1, ribs - 1)]
@@ -570,17 +594,20 @@ def build_gate(scene, rng):
             x = sign * (GATE_SCALE * (index + 1))
             scene.add(f"mini_arena/{model}", (x, 0.0, z), 0.0 if sign > 0 else 180.0, GATE_SCALE)
             if model == "wall-corner":
-                # L'angle n'occupe que 0,8 tuile, décalé vers l'intérieur du mur : sa collision le suit.
-                scene.add_box((x - sign * 0.1 * GATE_SCALE, GATE_SCALE / 2, z - sign * 0.1 * GATE_SCALE),
-                              (0.8 * GATE_SCALE, GATE_SCALE, 0.8 * GATE_SCALE))
+                # L'angle du kit est en L : un bras prolonge la muraille, l'autre tourne à son bout (vers le
+                # portail à l'ouest, vers l'esplanade à l'est, l'angle étant retourné). Les bras font 1 m d'épaisseur
+                # à hauteur d'homme ; le chapiteau qui couvre l'intérieur du L est hors de portée.
+                scene.add_box((x - sign * 2.0, GATE_SCALE * 0.4, z - sign * 0.5), (1.0, GATE_SCALE * 0.8, 4.0))
+                scene.add_box((x - sign * 0.5, GATE_SCALE * 0.4, z - sign * 2.0), (4.0, GATE_SCALE * 0.8, 1.0))
             else:
                 scene.add_box((x, GATE_SCALE / 2, z), (GATE_SCALE, GATE_SCALE, 0.6 * GATE_SCALE))
         # Longues bannières plantées devant l'arche, côté portail : leur toile a sa collision.
         scene.add("castle_kit/flag-banner-long", (sign * 3.0, 0.0, z + 1.8), -90.0, 2.4)
         scene.add_box((sign * 3.0, 2.6, z + 1.85), (1.6, 5.2, 0.35))
-        brazier(scene, sign * 5.4, z + 3.6, rng)
-    put(scene, "mini_arena/bricks", (-7.0, 0.0, z + 3.0), 20.0, 3.0, height=1.2)
-    put(scene, "mini_arena/bricks", (8.0, 0.0, z + 2.5), -40.0, 3.0, height=1.2)
+        brazier(scene, sign * 5.8, z + 4.8, rng)
+    for center, degrees in (((-7.0, 0.0, z + 3.0), 20.0), ((8.0, 0.0, z + 2.5), -40.0)):
+        put(scene, "mini_arena/bricks", center, degrees, 3.0)
+        scene.rubble_collider(center, "mini_arena/bricks", degrees, 3.0)
     # Le sable s'amasse contre la muraille, des deux côtés, loin du passage.
     for x, dz, a, h, b in ((-10.5, -2.4, 4.2, 1.0, 1.8), (10.5, -2.5, 4.5, 1.1, 2.0), (-12.8, 2.6, 4.0, 1.1, 1.7),
                            (12.6, 2.8, 4.0, 1.2, 1.8)):
@@ -609,12 +636,12 @@ def build_monument(scene, rng):
         (10.0, -14.0, "column-damaged"), (10.0, -6.0, "column"), (10.0, 2.0, "column-damaged"),
     ):
         scene.add(f"mini_arena/{model}", (x, 0.0, z), 0.0, 3.6)
-        scene.add_box((x, 1.8, z), (2.0, 3.6, 2.0))
+        scene.column_collider(x, z, 0.6 * 3.6, (1.0 if model == "column" else 0.72) * 3.6)
     scene.add("mini_arena/statue", (0.0, 0.0, -17.0), 0.0, 3.4)
     scene.add_box((0.0, 2.2, -17.0), (2.2, 4.4, 2.2))
     for x in (-5.0, 5.0):
+        # Collision taillée sur la bannière par desert.gd (EXACT_MODELS) : son pied, sa hampe et sa toile.
         scene.add("mini_arena/banner", (x, 0.0, -17.5), 0.0, 3.4)
-        scene.add_box((x, 1.75, -17.5), (2.0, 3.5, 0.8))
     # Autel des offrandes au pied de la statue, entre deux braseros.
     put(scene, "graveyard_kit/altar-stone", (0.0, 0.0, -14.6), 0.0, 2.0, height=1.0)
     put(scene, "graveyard_kit/detail-bowl", (-0.45, 0.98, -14.6), 20.0, 2.2)
@@ -625,7 +652,8 @@ def build_monument(scene, rng):
     brazier(scene, -3.6, -6.0, rng)
     brazier(scene, 3.6, -6.0, rng, toppled=True)
     # Colonne tombée dans l'avant-cour, une rune à côté (desert.tscn).
-    put(scene, "mini_arena/column-damaged", (6.5, 0.0, 6.5), 0.0, 3.0, height=1.8, tilt=90.0)
+    put(scene, "mini_arena/column-damaged", (6.5, 0.0, 6.5), 0.0, 3.0, tilt=90.0)
+    scene.cylinder_collider((6.5, 0.85, 6.5), 0.85, 2.16, 0.0, 90.0)
 
     # Murs de la salle des colonnes (x de -12 à 12, z de -19 à 5) : brèches à l'ouest et à l'est vers les
     # chambres, deux portes au nord vers le sanctuaire, une large ouverture au sud vers l'arche.
@@ -708,7 +736,7 @@ def build_sanctum(scene, rng):
     pz = -23.4
     for x in (-11.5, -7.5, -3.5, 3.5):
         scene.add("mini_arena/column", (x, -1.2, pz), 0.0, (4.0, 6.5, 4.0))
-        scene.add_box((x, 2.65, pz), (2.3, 5.3, 2.3))
+        scene.column_collider(x, pz, 0.6 * 4.0, 6.5, base=-1.2)
         mound(scene, x, pz, 1.9, 0.55, 1.6, collide=False)
     scene.add("mini_arena/column-damaged", (7.5, -1.2, pz), 0.0, (4.0, 3.0, 4.0))
     scene.add_box((7.5, 0.5, pz), (2.3, 1.0, 2.3))
@@ -736,20 +764,25 @@ def build_caravan(scene, rng):
     scene.shape("cyl", {"top": 0.6, "bottom": 0.6, "height": 0.02, "segments": 10}, "ash", at(0.0, 0.0, 0.01), shadow=False)
     put(scene, "survival_kit/tent-canvas", at(-4.2, -3.2), heading + 50.0, 5.5, height=2.7)
     put(scene, "nature_kit/tent_detailedOpen", at(4.0, -3.4), heading - 45.0, 3.6, height=2.0)
-    put(scene, "fantasy_town_kit/stall-red", at(-6.0, 3.4), heading + 90.0, 2.6, height=3.2)
-    put(scene, "fantasy_town_kit/stall-green", at(5.8, 3.8), heading - 90.0, 2.6, height=3.2)
+    # Étals ouverts sous leur auvent : collision taillée sur leurs triangles par desert.gd (EXACT_MODELS).
+    put(scene, "fantasy_town_kit/stall-red", at(-6.0, 3.4), heading + 90.0, 2.6, height=3.2, box=False)
+    put(scene, "fantasy_town_kit/stall-green", at(5.8, 3.8), heading - 90.0, 2.6, height=3.2, box=False)
     put(scene, "furniture_kit/rugRectangle", at(-2.0, -1.8), heading + 50.0, 1.6)
     put(scene, "furniture_kit/rugRound", at(2.0, -1.0), heading, 1.8)
     put(scene, "survival_kit/box-large", at(2.6, 1.8), heading + 20.0, 3.6, height=0.9)
-    put(scene, "survival_kit/chest", at(3.9, 0.3), heading + 20.0, 3.4, height=0.8)
-    for u, v in ((-3.3, 1.0), (-3.1, 2.45)):
-        put(scene, "mini_dungeon/barrel", at(u, v), rng.uniform(0, 360), 2.6, height=1.25)
+    put(scene, "survival_kit/chest", at(3.9, 0.3), heading + 20.0, 3.4, height=0.9)
+    # Deux tonneaux côte à côte, droits, sans se toucher (le vérificateur compare leurs boîtes alignées).
+    for x, z in ((-38.1, -27.4), (-39.7, -27.0)):
+        rng.uniform(0, 360)
+        put(scene, "mini_dungeon/barrel", (x, 0.0, z), 0.0, 2.6, height=1.25)
     put(scene, "survival_kit/barrel-open", at(7.0, 0.2), heading, 3.0, height=1.0)
     put(scene, "food_kit/bag", at(-7.4, 0.4), heading + 10.0, 1.2, height=1.0)
     put(scene, "food_kit/bag", at(-7.2, -0.7), heading + 80.0, 1.1, height=0.92)
     put(scene, "food_kit/bag-flat", at(-6.2, -0.8), heading + 30.0, 1.5)
-    put(scene, "fantasy_town_kit/cart", at(-1.0, -7.0), heading + 100.0, 2.8, height=1.5, roll=90.0)
-    put(scene, "fantasy_town_kit/wheel", at(1.9, -6.4), heading + 30.0, 2.8, height=0.7, roll=90.0)
+    put(scene, "fantasy_town_kit/cart", at(-1.0, -7.0), heading + 100.0, 2.8, height=1.5, roll=90.0, box=False)
+    put(scene, "fantasy_town_kit/wheel", at(1.9, -6.4), heading + 30.0, 2.8, roll=90.0)
+    wheel_center = at(1.9, -6.4)
+    scene.cylinder_collider((wheel_center[0], 0.25, wheel_center[2]), 0.62, 0.5)
     put(scene, "survival_kit/bedroll", at(-1.6, 2.8), heading + 10.0, 3.0)
     put(scene, "survival_kit/bedroll", at(1.0, 3.3), heading - 20.0, 3.0)
     # Le caravanier, à côté de la caisse où repose son carnet (desert.tscn), et un compagnon près des tentes.
@@ -816,7 +849,7 @@ def build_oasis(scene, rng):
     scene.shape("box", {"size": (2.6, 0.55, 0.9)}, "stone", (wx, 0.275, wz + 3.1))
     scene.shape("box", {"size": (2.3, 0.02, 0.6)}, "crack", (wx, 0.56, wz + 3.1), shadow=False)
     scene.add_box((wx, 0.3, wz + 3.1), (2.6, 0.6, 0.9))
-    jars(scene, 31.2, 3.8, random.Random(61), 4, 1.0)
+    jars(scene, 30.4, 4.6, random.Random(61), 4, 1.0)
     # La jarre sacrée, sur son socle, ceinte d'or : celle que l'algorithme apprend à remplir.
     jx, jz = 31.4, -0.6
     scene.shape("box", {"size": (0.9, 0.7, 0.9)}, "stone_dark", (jx, 0.35, jz))
@@ -836,7 +869,8 @@ def build_oasis(scene, rng):
 
 
 def build_cistern(scene, rng):
-    """Citerne des bâtisseurs, à l'ouest de la salle : une fosse aux murs épais (desert_terrain.gd la creuse),
+    """Citerne des bâtisseurs, à l'ouest de la salle : une fosse aux murs épais, des pans de muraille du kit comme
+    ceux de la salle, pas des boîtes unies (desert_terrain.gd la creuse),
     des colonnes qui portaient sa voûte, une poutre tombée en travers, et au fond, des jarres et un squelette."""
     x0, z0, x1, z1 = CISTERN_RECT
     ring = 1.25
@@ -848,16 +882,21 @@ def build_cistern(scene, rng):
     length_x = x1 - x0 + 2 * ring
     length_z = z1 - z0
     for z in (z0 - ring / 2, z1 + ring / 2):
-        scene.shape("box", {"size": (length_x, height, ring)}, "stone", (cx, center_y, z))
+        scene.add("mini_arena/wall", (cx, top - height, z), 0.0, (length_x, height, ring / 0.6))
         scene.shape("box", {"size": (length_x + 0.2, 0.16, ring + 0.2)}, "stone_dark", (cx, top + 0.08, z))
         scene.box_collider((cx, center_y + 0.75, z), (length_x, height + 1.5, ring))
     for x in (x0 - ring / 2, x1 + ring / 2):
-        scene.shape("box", {"size": (ring, height, length_z)}, "stone", (x, center_y, cz))
+        scene.add("mini_arena/wall", (x, top - height, cz), 90.0, (length_z, height, ring / 0.6))
         scene.shape("box", {"size": (ring + 0.2, 0.16, length_z)}, "stone_dark", (x, top + 0.08, cz))
         scene.box_collider((x, center_y + 0.75, cz), (ring, height + 1.5, length_z))
     for x in (x0 - ring / 2, x1 + ring / 2):
         for z in (z0 - ring / 2, z1 + ring / 2):
-            scene.shape("box", {"size": (1.5, 1.7, 1.5)}, "stone_dark", (x, 0.85, z))
+            scene.shape("box", {"size": (1.6, 0.35, 1.6)}, "stone_dark", (x, 0.175, z))
+            scene.shape("box", {"size": (1.3, 1.1, 1.3)}, "stone", (x, 0.9, z))
+            scene.shape("box", {"size": (1.55, 0.22, 1.55)}, "stone_dark", (x, 1.56, z))
+            scene.shape("box", {"size": (1.0, 0.15, 1.0)}, "stone", (x, 1.745, z))
+            scene.box_collider((x, 0.175, z), (1.6, 0.35, 1.6))
+            scene.box_collider((x, 1.6, z), (1.3, 2.5, 1.3))
     floor = -depth
     for x, z, damaged in ((x0 + 1.3, z0 + 1.2, False), (x1 - 1.3, z0 + 1.2, True), (x0 + 1.3, z1 - 1.2, True), (x1 - 1.3, z1 - 1.2, False)):
         if damaged:
@@ -865,7 +904,11 @@ def build_cistern(scene, rng):
         else:
             scene.add("mini_arena/column", (x, floor, z), 0.0, (1.6, 3.0, 1.6))
     beam = math.degrees(math.atan2(length_z + 2 * ring, length_x))
-    scene.shape("box", {"size": (0.6, 0.55, 9.4)}, "wood_dark", (cx, top + 0.45, cz), 90.0 - beam + 8.0, roll=4.0)
+    yaw = 90.0 - beam + 8.0
+    scene.shape("box", {"size": (0.6, 0.55, 9.4)}, "wood_bleached", (cx, top + 0.45, cz), yaw, roll=4.0)
+    for u in (-3.2, 2.6):
+        scene.shape("box", {"size": (0.66, 0.61, 0.14)}, "bronze",
+                    (cx + math.sin(math.radians(yaw)) * u, top + 0.45, cz + math.cos(math.radians(yaw)) * u), yaw, roll=4.0)
     for x, z in ((cx - 1.4, cz + 0.8), (cx + 1.6, cz - 1.0)):
         put(scene, "mini_dungeon/pot", (x, floor, z), rng.uniform(0, 360), 1.6, roll=90.0 if x > cx else 0.0)
     lying_skeleton(scene, cx + 0.4, cz + 1.2, 200.0, buried=False, y=floor)
@@ -880,7 +923,7 @@ def build_head(scene, rng):
     hx, hz, _ = REPLATS["tete"]
     # Le visage (-Z du modèle) regarde l'arche et le monument, la tête un peu renversée en arrière.
     scene.add("nature_kit/statue_head", (hx, -1.8, hz), -56.0, 7.5, tilt=10.0)
-    scene.add_box((hx, 2.6, hz), (5.0, 5.2, 4.0), -56.0)
+    scene.add_box((hx, 2.4, hz), (4.0, 4.8, 3.0), -56.0)
     mound(scene, hx - 1.4, hz + 1.6, 4.4, 1.3, 2.6, -56.0)
     mound(scene, hx - 2.4, hz - 1.2, 2.6, 0.9, 2.0, 30.0)
     mound(scene, hx + 2.6, hz - 1.4, 2.0, 0.6, 1.6, 80.0)
@@ -915,7 +958,7 @@ def build_dune_ruins(scene, rng):
         p = at(u, 0.0, -1.4)
         scene.add(f"mini_arena/{model}", p, 20.0, (2.4, height, 2.4))
         visible = (1.0 if model == "column" else 0.72) * height - 1.4
-        scene.add_box((p[0], visible / 2, p[2]), (1.4, visible, 1.4))
+        scene.column_collider(p[0], p[2], 0.6 * 2.4, (1.0 if model == "column" else 0.72) * height, base=-1.4)
         mound(scene, p[0], p[2], 1.4, 0.4, 1.2, collide=False)
     beam = at(-3.0, 0.0, 3.6 + 0.3)
     scene.shape("box", {"size": (4.6, 0.6, 1.5)}, "stone", beam, 20.0)
@@ -925,7 +968,18 @@ def build_dune_ruins(scene, rng):
     # Porte des vents : une arche seule au milieu des dunes, que le sable traverse.
     x, z, _ = REPLATS["porte"]
     scene.add("mini_arena/wall-gate", (x, -0.6, z), 35.0, 3.6)
-    scene.add_box((x, 1.5, z), (3.6, 3.0, 2.2), 35.0)
+    # Ses deux piliers, son linteau et sa grille baissée, comme l'arche d'entrée : pas de boîte pleine
+    # qui arrêterait le joueur à un mètre de la grille.
+    scale = 3.6
+    side = (0.5 - GATE_HALF_OPENING) * scale
+    offset = GATE_HALF_OPENING * scale + side / 2
+    for sign in (-1, 1):
+        scene.box_collider((x + math.cos(math.radians(35.0)) * sign * offset, -0.6 + scale / 2,
+                            z - math.sin(math.radians(35.0)) * sign * offset), (side, scale, 0.6 * scale), 35.0)
+    lintel = scale * (1 - GATE_OPENING_HEIGHT)
+    scene.box_collider((x, -0.6 + scale - lintel / 2, z), (GATE_HALF_OPENING * 2 * scale, lintel, 0.6 * scale), 35.0)
+    opening = scale * GATE_OPENING_HEIGHT
+    scene.box_collider((x, -0.6 + opening / 2, z), (GATE_HALF_OPENING * 2 * scale, opening, 0.5), 35.0)
     for side in (-1, 1):
         dx, dz = math.cos(math.radians(35.0)) * side * 3.0, -math.sin(math.radians(35.0)) * side * 3.0
         put(scene, "mini_arena/column-damaged", (x + dx, 0.0, z + dz), 0.0, 2.4, height=1.7)
@@ -935,11 +989,13 @@ def build_dune_ruins(scene, rng):
     # Tombes des caravaniers : cairns, pieux coiffés de crânes de vautours, tissus délavés.
     x, z, _ = REPLATS["tombes"]
     for dx, dz, degrees in ((-2.4, -1.0, 10.0), (0.0, 0.4, 60.0), (2.4, -0.6, 100.0), (-1.0, 2.6, 30.0)):
-        put(scene, "mini_dungeon/stones", (x + dx, 0.0, z + dz), degrees, 1.5, height=0.65)
+        put(scene, "mini_dungeon/stones", (x + dx, 0.0, z + dz), degrees, 1.5, height=0.45)
     for dx, dz in ((-3.6, 1.4), (3.4, 1.6), (1.2, 3.4)):
         stake_with_skull(scene, x + dx, z + dz, rng)
     lying_skeleton(scene, x + 0.6, z - 3.0, 250.0)
-    put(scene, "fantasy_town_kit/wheel", (x - 3.4, 0.0, z - 2.8), 20.0, 2.8, height=0.7, roll=90.0)
+    put(scene, "fantasy_town_kit/wheel", (x - 3.4, 0.0, z - 2.8), 20.0, 2.8, roll=90.0)
+    wheel_center = (x - 3.4, 0.0, z - 2.8)
+    scene.cylinder_collider((wheel_center[0], 0.25, wheel_center[2]), 0.62, 0.5)
     # Bête des sables : une cage thoracique géante sous laquelle on passe.
     x, z, _ = REPLATS["bete"]
     skeleton_beast(scene, x, z, 155.0, 5.2, rng, horns=True, walkable=True)
@@ -958,6 +1014,9 @@ CELLAR_TILES = [(x, z) for x in (-8.0, -4.0, 0.0, 4.0, 8.0) for z in (-2.0, -6.0
 CELLAR_NEIGHBOURS = {(0, -1): 180.0, (0, 1): 0.0, (1, 0): 90.0, (-1, 0): -90.0}
 # Bord du fond où s'élève la porte scellée, sous l'inscription.
 SEALED_DOOR = (0.0, -12.0)
+# Case de l'escalier et hauteur de sa cage, sous la trappe.
+STAIR_TILE = (0.0, 2.0)
+SHAFT_HEIGHT = 5.4
 
 
 def build_cellar(scene, rng):
@@ -968,7 +1027,9 @@ def build_cellar(scene, rng):
     for x, z in CELLAR_TILES:
         scene.add("modular_dungeon_kit/template-floor", (x, 0.0, z), 0.0, 1.0)
         scene.add_box((x, -0.25, z), (CELLAR_TILE, 0.5, CELLAR_TILE))
-        scene.add_box((x, CELLAR_HEIGHT + 0.25, z), (CELLAR_TILE, 0.5, CELLAR_TILE))
+        # La cage de l'escalier monte plus haut que la salle : on tient debout sur la dernière marche.
+        ceiling = SHAFT_HEIGHT if (x, z) == STAIR_TILE else CELLAR_HEIGHT
+        scene.add_box((x, ceiling + 0.25, z), (CELLAR_TILE, 0.5, CELLAR_TILE))
         # Un mur sur chaque bord qui ne donne sur aucune case : son pied regarde l'intérieur de la case.
         for (dx, dz), degrees in CELLAR_NEIGHBOURS.items():
             if (x + dx * CELLAR_TILE, z + dz * CELLAR_TILE) in tiles:
@@ -976,14 +1037,15 @@ def build_cellar(scene, rng):
             edge = (x + dx * CELLAR_TILE / 2, z + dz * CELLAR_TILE / 2)
             model = "gate-door" if edge == SEALED_DOOR else "template-wall"
             scene.add(f"modular_dungeon_kit/{model}", (edge[0], 0.0, edge[1]), degrees, 1.0)
-            size = (0.6, CELLAR_HEIGHT, CELLAR_TILE) if dx else (CELLAR_TILE, CELLAR_HEIGHT, 0.6)
-            scene.add_box((edge[0] - dx * 0.3, CELLAR_HEIGHT / 2, edge[1] - dz * 0.3), size)
+            height = SHAFT_HEIGHT if (x, z) == STAIR_TILE else CELLAR_HEIGHT
+            size = (0.6, height, CELLAR_TILE) if dx else (CELLAR_TILE, height, 0.6)
+            scene.add_box((edge[0] - dx * 0.3, height / 2, edge[1] - dz * 0.3), size)
     # Derrière la porte scellée, la roche : on ne voit plus le vide par les jours de l'arc.
     scene.shape("box", {"size": (6.4, 4.6, 0.2)}, "void", (0.0, 2.3, -12.85), shadow=False)
     # Colonnes de part et d'autre de la porte scellée.
     for x in (-4.0, 4.0):
         scene.add("mini_dungeon/column", (x, 0.0, -10.2), 0.0, 3.6)
-        scene.add_box((x, 2.0, -10.2), (1.6, 4.0, 1.6))
+        scene.column_collider(x, -10.2, 0.5 * 3.6, 1.1 * 3.6)
     # Tables de part et d'autre de l'escalier : une rune est posée sur chacune, bien en vue (desert.tscn).
     for x in (-7.0, 7.0):
         furniture(scene, "mini_dungeon/table", (x, 0.0, -1.9), 0.0, 3.0, height=0.93)
@@ -994,18 +1056,18 @@ def build_cellar(scene, rng):
     shelf(scene, -7.0, -10.95, 0.0, 2.6, 0.75, 2.7, 4, rng, "tablettes")
     shelf(scene, -3.9, -0.98, 180.0, 2.5, 0.65, 2.2, 4, rng, "rouleaux")
     shelf(scene, 3.9, -0.98, 180.0, 2.5, 0.65, 2.2, 4, rng, "rouleaux")
-    # Coffres le long du mur ouest, des rouleaux posés dessus ; tablettes empilées près des colonnes.
+    # Coffre ouvert le long du mur ouest, des rouleaux rangés dedans ; tablettes empilées près des colonnes.
     put(scene, "mini_dungeon/chest", (-8.72, 0.0, -9.6), 0.0, 2.2, height=0.62)
     for k in range(3):
         scene.shape("cyl", {"top": 0.055, "bottom": 0.055, "height": 0.6, "segments": 6}, "parchment",
-                    (-8.72 + (k - 1) * 0.14, 0.7, -9.6), 0.0, tilt=90.0, roll=0.0, shadow=False)
+                    (-8.72 + (k - 1) * 0.14, 0.4, -9.6), 0.0, tilt=90.0, roll=0.0, shadow=False)
     for x, z in ((-5.25, -11.0), (5.25, -11.0)):
         for k in range(rng.randint(4, 7)):
             scene.shape("box", {"size": (0.42, 0.06, 0.3)}, "tablet", (x + rng.uniform(-0.04, 0.04), 0.03 + k * 0.062, z),
                         rng.uniform(-15, 15), shadow=False)
     # Pupitre de lecture : un rouleau ouvert, l'encrier et des bougies éteintes.
     furniture(scene, "mini_dungeon/table", (3.9, 0.0, -2.65), 0.0, 2.0, height=0.62)
-    furniture(scene, "mini_dungeon/chair", (3.9, 0.0, -3.75), 180.0, 2.0, height=0.96)
+    furniture(scene, "mini_dungeon/chair", (3.9, 0.0, -3.75), 180.0, 2.0, height=0.55)
     scene.shape("box", {"size": (0.7, 0.01, 0.42)}, "parchment", (3.75, 0.63, -2.65), 8.0, shadow=False)
     for dx in (-0.37, 0.37):
         scene.shape("cyl", {"top": 0.035, "bottom": 0.035, "height": 0.46, "segments": 6}, "parchment",

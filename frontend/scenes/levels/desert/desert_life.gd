@@ -21,7 +21,7 @@ const CRITTERS: Array[Vector3] = [
 ## Fanions sur une hampe : pied de la hampe, hauteur de la hampe, taille du fanion, couleur. Le vent souffle vers +X.
 const PENNANTS := [
 	[Vector3(-30.95, 0.0, -37.37), 3.4, Vector2(1.5, 0.55), Color(0.62, 0.17, 0.1)],
-	[Vector3(35.2, 0.0, 30.2), 3.0, Vector2(1.3, 0.6), Color(0.18, 0.28, 0.5)],
+	[Vector3(35.2, 0.0, 30.2), 3.0, Vector2(1.3, 0.6), Color(0.24, 0.36, 0.6)],
 ]
 ## Chiffons noués aux pieux coiffés d'un crâne de vautour (tools/build_desert.py) : pied du pieu.
 const STAKES: Array[Vector3] = [Vector3(4.6, 0.0, 46.0), Vector3(-27.6, 0.0, 49.4), Vector3(-20.6, 0.0, 49.6), Vector3(-22.8, 0.0, 51.4)]

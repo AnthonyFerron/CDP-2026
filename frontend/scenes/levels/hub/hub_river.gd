@@ -199,11 +199,38 @@ func _build_life() -> void:
 			reeds[group].append(Transform3D(Basis(Vector3.UP, _rng.randf() * TAU).scaled(Vector3(1.0, _rng.randf_range(0.8, 1.2), 1.0) * scale_factor),
 				Vector3(spot.x, ground - 0.05, spot.y)))
 			placed += 1
+	# Le long des murs invisibles des berges, dans la vallée : une touffe ou une pierre tous les trois mètres environ,
+	# pour que la berge se lise comme infranchissable là où elle arrête le joueur.
+	for index in range(1, points.size() - 1, 2):
+		for side: float in [-1.0, 1.0]:
+			var spot := points[index] + normals[index] * (widths[index] + wall_offset * 0.6) * side
+			if not HubTerrain.inside_limit(spot, -1.0) or not _is_clear(spot, 1.5):
+				continue
+			var ground := maxf(terrain.surface_height(spot.x, spot.y), HubTerrain.WATER_LEVEL - 0.3)
+			if index % 6 == 1:
+				var stone := _rng.randi() % rocks.size()
+				rocks[stone].append(Transform3D(Basis(Vector3.UP, _rng.randf() * TAU).scaled(Vector3.ONE * _rng.randf_range(2.0, 3.2)), Vector3(spot.x, ground - 0.15, spot.y)))
+				continue
+			for stem in 3:
+				var offset := normals[index].orthogonal() * _rng.randf_range(-0.7, 0.7) + normals[index] * side * _rng.randf_range(-0.3, 0.3)
+				var group := reeds.size() - 1 if stem == 0 else _rng.randi() % (reeds.size() - 1)
+				var scale_factor := _rng.randf_range(1.8, 2.6) if group == reeds.size() - 1 else _rng.randf_range(0.8, 1.2)
+				reeds[group].append(Transform3D(Basis(Vector3.UP, _rng.randf() * TAU).scaled(Vector3.ONE * scale_factor), Vector3(spot.x + offset.x, ground - 0.05, spot.y + offset.y)))
+	# Même chose autour de l'étang, sur son anneau.
+	for pond in HubTerrain.PONDS:
+		for step in 18:
+			var spot := Vector2(pond.x, pond.y) + Vector2.from_angle(TAU * step / 18.0) * (pond.z + 0.5)
+			var ground := maxf(terrain.surface_height(spot.x, spot.y), HubTerrain.POND_LEVEL - 0.2)
+			var group := _rng.randi() % reeds.size()
+			reeds[group].append(Transform3D(Basis(Vector3.UP, _rng.randf() * TAU).scaled(Vector3.ONE * _rng.randf_range(0.9, 1.6)), Vector3(spot.x, ground - 0.05, spot.y)))
+			if step % 3 == 0:
+				var stone := _rng.randi() % rocks.size()
+				rocks[stone].append(Transform3D(Basis(Vector3.UP, _rng.randf() * TAU).scaled(Vector3.ONE * 1.6), Vector3(spot.x, ground - 0.1, spot.y)))
 	# Pierres : sur la berge, et quelques-unes à moitié dans l'eau.
 	for attempt in rock_count:
 		var index := _rng.randi_range(1, points.size() - 2)
 		var side := -1.0 if _rng.randf() < 0.5 else 1.0
-		var offset := _rng.randf_range(-1.4, 2.8)
+		var offset := _rng.randf_range(-1.4, 0.8)
 		var spot := points[index] + normals[index] * (widths[index] + offset) * side
 		if not _is_clear(spot, 1.5):
 			continue
