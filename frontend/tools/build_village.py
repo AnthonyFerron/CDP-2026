@@ -115,7 +115,6 @@ MODEL_BOXES.update({
     "nature_kit/flower_redA": ((-0.1, 0.0, -0.09), (0.16, 0.29, 0.18)),
     "nature_kit/flower_yellowA": ((-0.1, 0.0, -0.09), (0.16, 0.19, 0.18)),
     "nature_kit/statue_columnDamaged": ((-0.15, 0.0, -0.15), (0.3, 0.7, 0.3)),
-    "furniture_kit/bear": ((0.0, 0.0, -0.25), (0.39, 0.45, 0.25)),
     "furniture_kit/plantSmall1": ((-0.09, 0.0, -0.09), (0.19, 0.28, 0.19)),
     "furniture_kit/rugSquare": ((0.0, 0.0, -0.92), (0.9, 0.01, 0.92)),
     "mini_forest/weapon-arrow": ((-0.06, -0.06, -0.23), (0.12, 0.12, 0.46)),
@@ -647,6 +646,19 @@ def cat(scene, x, y, z, degrees, coat, lying=False):
     box(scene, coat, at(0.09, 0.03, -0.08), (0.04, 0.04, 0.24), degrees + 35.0)
 
 
+def doll(scene, position, degrees):
+    """Poupée de chiffon couchée sur le dos : un corps de toile, une robe rouge, une tête et des bras."""
+    c, s = math.cos(math.radians(degrees)), math.sin(math.radians(degrees))
+
+    def at(u, h, v):
+        return (position[0] + c * u + s * v, position[1] + h, position[2] - s * u + c * v)
+    box(scene, "cloth_red", at(0, 0.04, 0), (0.16, 0.07, 0.24), degrees)
+    sphere(scene, "burlap", at(0, 0.05, 0.17), 0.065)
+    for side in (-1, 1):
+        box(scene, "burlap", at(side * 0.12, 0.035, 0.04), (0.08, 0.04, 0.05), degrees + side * 30.0)
+        box(scene, "burlap", at(side * 0.05, 0.03, -0.17), (0.05, 0.04, 0.12), degrees)
+
+
 def sheet(scene, material, center, width, drop, degrees, sway=0.0):
     """Drap étendu sur une corde : un pan de tissu à peine incliné par le vent."""
     box(scene, material, (center[0], center[1] - drop / 2, center[2]), (width, drop, 0.02), degrees, tilt=sway)
@@ -930,9 +942,9 @@ def fl(scene, frame, model, a, b, local=0.0, scale=1.0, y=0.0, tilt=0.0, roll=0.
 
 
 def top_of(model, scale):
-    """Hauteur du dessus d'un meuble, d'après sa boîte."""
-    (_, py, _), (_, sy, _) = MODEL_BOXES[model]
-    return (py + sy) * scale
+    """Hauteur du dessus d'un meuble au-dessus de son pied, d'après sa boîte : posé par furniture() ou put(), le bas
+    de la boîte touche le sol."""
+    return MODEL_BOXES[model][1][1] * scale
 
 
 def bed(scene, frame, a, b, local, scale=1.5):
@@ -958,9 +970,9 @@ def home(scene, rng, frame, child=False):
     far = frame.far
     bed(scene, frame, far * 2.15, -1.9, 0.0)
     if child:
-        # Le petit lit de l'enfant, et l'ours en peluche oublié dans la fuite.
+        # Le petit lit de l'enfant, sa poupée de chiffon oubliée dans la fuite et sa charrette de bois.
         bed(scene, frame, -far * 2.3, -2.2, 0.0, 1.0)
-        fl(scene, frame, "furniture_kit/bear", -far * 0.9, -2.9, 200.0, 1.1, y=FLOOR)
+        doll(scene, frame.p(-far * 0.9, -2.9, FLOOR), frame.yaw(200.0))
         fl(scene, frame, "fantasy_town_kit/cart", far * 0.2, 0.2, 50.0, 0.42, y=FLOOR)
     else:
         fp(scene, frame, "mini_dungeon/chair", -far * 2.4, -2.5, 160.0, 2.2, height=1.0, label="chaise")
@@ -1604,6 +1616,14 @@ def shelf_books(scene, rng, center, degrees, rows, width):
                 2.4 + rng.uniform(-0.2, 0.3))
 
 
+def potted_plant(scene, position):
+    """Pot de terre et son buisson de simples, avec sa collision."""
+    lay(scene, "nature_kit/pot_small", position, 20.0, 2.2)
+    lay(scene, "nature_kit/plant_bushSmall", (position[0], position[1] + top_of("nature_kit/pot_small", 2.2) - 0.1, position[2]),
+        0.0, 1.6)
+    post(scene, position[0], position[2], 0.38, 0.9, y=position[1], label="pot de terre")
+
+
 def build_hall_interior():
     scene = VillageScene("VillageHall")
     materials(scene)
@@ -1613,7 +1633,7 @@ def build_hall_interior():
     room_walls(scene, 0.0, 0.0, 4, 3, 0.0, doors=set(), closed={("south", 1)})
     # Le comptoir de l'accueil et son tiroir, tourné vers les visiteurs.
     hp(scene, "furniture_kit/desk", (-2.0, 0.0, -0.6), 180.0, 2.8, label="comptoir")
-    hp(scene, "furniture_kit/chairDesk", (-2.0, 0.0, -2.2), 180.0, 2.6, label="fauteuil de l'accueil")
+    hp(scene, "furniture_kit/chair", (-2.0, 0.0, -2.0), 0.0, 3.0, label="chaise de l'accueil")
     hp(scene, "furniture_kit/sideTableDrawers", (0.4, 0.0, -0.8), 0.0, 2.6, label="tiroir de l'accueil")
     lay(scene, "graveyard_kit/candle", (-1.3, top_of("furniture_kit/desk", 2.8), -1.0), 0.0, 0.8)
     lay(scene, "furniture_kit/books", (-1.7, top_of("furniture_kit/desk", 2.8), -0.3), 20.0, 2.6)
@@ -1622,13 +1642,13 @@ def build_hall_interior():
         hp(scene, "furniture_kit/bookcaseClosedDoors", (-7.3, 0.0, z), 90.0, 3.2, label="armoire des archives")
     # Le bureau de l'archiviste, face aux armoires. Les passages entre les meubles gardent au moins un mètre.
     hp(scene, "furniture_kit/desk", (-4.4, 0.0, -3.6), 90.0, 2.8, label="bureau de l'archiviste")
-    hp(scene, "furniture_kit/chairDesk", (-3.0, 0.0, -3.6), 90.0, 2.6, label="fauteuil de l'archiviste")
+    hp(scene, "furniture_kit/chair", (-3.1, 0.0, -3.6), -90.0, 3.0, label="chaise de l'archiviste")
     lay(scene, "furniture_kit/books", (-4.2, top_of("furniture_kit/desk", 2.8), -4.2), 80.0, 2.6)
     lay(scene, "graveyard_kit/candle", (-4.9, top_of("furniture_kit/desk", 2.8), -2.9), 0.0, 0.8)
     for x in (-3.0, -1.6):
         hp(scene, "furniture_kit/bookcaseOpen", (x, 0.0, -5.28), 0.0, 3.2, label="étagère")
         shelf_books(scene, rng, (x, 0.0, -5.28), 0.0, (0.06, 0.98, 1.9), 1.1)
-    hp(scene, "furniture_kit/kitchenCabinetDrawer", (2.0, 0.0, -5.1), 0.0, 2.6, label="meuble à tiroirs")
+    hp(scene, "mini_dungeon/chest", (2.0, 0.0, -5.1), 90.0, 2.4, label="coffre de l'accueil")
     # Le coin d'attente : une table, des chaises, des bancs le long du mur sud.
     hp(scene, "furniture_kit/tableCloth", (-4.6, 0.0, 3.4), 0.0, 3.0, label="table d'attente")
     for x, z, degrees in ((-5.8, 2.2, 0.0), (-3.4, 4.6, 180.0)):
@@ -1642,27 +1662,25 @@ def build_hall_interior():
     lay(scene, "furniture_kit/rugRectangle", (-2.0, 0.0, 2.6), 90.0, 2.6)
     lay(scene, "furniture_kit/coatRackStanding", (-3.6, 0.0, 5.3), 0.0, 2.6)
     post(scene, -3.6, 5.3, 0.3, 2.0, label="portemanteau")
-    lay(scene, "furniture_kit/pottedPlant", (-0.3, 0.0, 5.3), 0.0, 2.6)
-    post(scene, -0.3, 5.3, 0.35, 1.4, label="plante")
+    potted_plant(scene, (-0.6, 0.0, 5.35))
 
     # Étage : le bureau du maire, avec le dispositif des cinq codes contre le mur nord.
     room_walls(scene, 0.0, 0.0, 4, 3, OFFICE_WALLS, doors={("west", 1)})
     office = OFFICE_FLOOR
     hp(scene, "furniture_kit/desk", (-1.0, office, -0.6), 180.0, 2.8, label="bureau du maire")
-    hp(scene, "furniture_kit/chairDesk", (-1.0, office, -2.2), 180.0, 2.6, label="fauteuil du maire")
+    hp(scene, "furniture_kit/chair", (-1.0, office, -2.0), 0.0, 3.0, label="chaise du maire")
     lay(scene, "graveyard_kit/candle", (-1.8, office + top_of("furniture_kit/desk", 2.8), -1.1), 0.0, 0.8)
     lay(scene, "furniture_kit/books", (-1.6, office + top_of("furniture_kit/desk", 2.8), -0.2), 60.0, 2.6)
     hp(scene, "furniture_kit/sideTableDrawers", (1.4, office, -0.8), 180.0, 2.6, label="tiroir du maire")
     hp(scene, "furniture_kit/bookcaseOpen", (-5.0, office, 5.28), 180.0, 3.2, label="étagère du maire")
     shelf_books(scene, rng, (-5.0, office, 5.28), 180.0, (0.06, 0.98, 1.9), 1.1)
     hp(scene, "furniture_kit/bookcaseClosedDoors", (1.6, office, 5.3), 180.0, 3.2, label="armoire du maire")
-    hp(scene, "furniture_kit/kitchenCabinetDrawer", (-6.6, office, -5.1), 0.0, 2.6, label="commode")
+    hp(scene, "mini_dungeon/chest", (-6.4, office, -5.1), 90.0, 2.4, label="coffre du bureau")
     lay(scene, "furniture_kit/rugRectangle", (-1.0, office, 1.4), 0.0, 2.6)
     lay(scene, "furniture_kit/coatRackStanding", (3.6, office, 5.3), 0.0, 2.6)
     post(scene, 3.6, 5.3, 0.3, 2.0, y=office, label="portemanteau")
     hp(scene, "mini_dungeon/chest", (6.4, office, 4.6), 0.0, 1.6, label="coffre du maire")
-    lay(scene, "furniture_kit/pottedPlant", (-7.0, office, 5.1), 0.0, 2.6)
-    post(scene, -7.0, 5.1, 0.35, 1.4, y=office, label="plante")
+    potted_plant(scene, (-7.0, office, 5.1))
     for x in (-4.4, 2.4):
         # Le drap est décalé de 0,4 tuile de l'origine du modèle, vers le mur.
         scene.add("fantasy_town_kit/banner-red", (x, office + 0.6, -4.35), 90.0, 3.4)

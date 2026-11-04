@@ -869,7 +869,7 @@ fragment = 4
 hidden_at_start = true
 
 [node name="Fragment7" type="Node3D" parent="Interior/Fragments"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7, 1.18, -5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 0.73, -5.1)
 script = ExtResource("51_fragment")
 radius = 2.2
 fragment = 7
@@ -895,7 +895,7 @@ fragment = 1
 hidden_at_start = true
 
 [node name="Fragment9" type="Node3D" parent="Interior/Fragments"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.6, 5.68, -5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.4, 5.23, -5.1)
 script = ExtResource("51_fragment")
 radius = 2.2
 fragment = 9
@@ -944,10 +944,10 @@ furniture_name = "le tiroir de l'archiviste"
 fragment = NodePath("../../Fragments/Fragment8")
 
 [node name="Dresser" type="Node3D" parent="Interior/Storages"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.66, 0.7, -5.05)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.97, 0.4, -5.1)
 script = ExtResource("52_storage")
 radius = 2.2
-furniture_name = "le meuble à tiroirs"
+furniture_name = "le coffre de l'accueil"
 
 [node name="MayorDrawer" type="Node3D" parent="Interior/Storages"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 5.2, -1.42)
@@ -964,10 +964,10 @@ furniture_name = "l'armoire du maire"
 fragment = NodePath("../../Fragments/Fragment6")
 
 [node name="OfficeDresser" type="Node3D" parent="Interior/Storages"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.6, 5.2, -4.35)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.43, 4.9, -5.1)
 script = ExtResource("52_storage")
 radius = 2.2
-furniture_name = "la commode"
+furniture_name = "le coffre du bureau"
 fragment = NodePath("../../Fragments/Fragment9")
 
 [node name="Device" type="Node3D" parent="Interior"]

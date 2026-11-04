@@ -18,116 +18,115 @@
 [ext_resource type="PackedScene" path="res://assets/models/kenney/furniture_kit/bedSingle.glb" id="16_model"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/furniture_kit/rugRound.glb" id="17_model"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/furniture_kit/bookcaseOpen.glb" id="18_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/furniture_kit/bear.glb" id="19_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/banner-red.glb" id="20_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/tower-square-mid-windows.glb" id="21_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/tower-square-roof.glb" id="22_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/door.glb" id="23_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/cart-high.glb" id="24_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/flag-banner-long.glb" id="25_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_arena/statue.glb" id="26_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/box-large-open.glb" id="27_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/box.glb" id="28_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/pear.glb" id="29_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/loaf-round.glb" id="30_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/fish.glb" id="31_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/leek.glb" id="32_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/plate.glb" id="33_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/campfire_stones.glb" id="34_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/wine-red.glb" id="35_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/loaf-baguette.glb" id="36_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/croissant.glb" id="37_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/rollingPin.glb" id="38_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/bag-flat.glb" id="39_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/fire-basket.glb" id="40_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/workbench-anvil.glb" id="41_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/tool-hammer.glb" id="42_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/workbench-grind.glb" id="43_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/resource-stone.glb" id="44_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/tool-pickaxe.glb" id="45_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/whole-ham.glb" id="46_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/mortar-pestle.glb" id="47_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/campfire_logs.glb" id="48_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/bottle.glb" id="49_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/debris-wood.glb" id="50_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/candle.glb" id="51_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/workbench.glb" id="52_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/resource-planks.glb" id="53_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-door.glb" id="54_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/bridge_wood.glb" id="55_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_arena/weapon-spear.glb" id="56_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/log_stack.glb" id="57_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/stump_old.glb" id="58_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/tool-axe.glb" id="59_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/log.glb" id="60_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/fence_planks.glb" id="61_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/hay-bale-bundled.glb" id="62_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/tool-hoe.glb" id="63_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/wall-narrow.glb" id="64_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/rocks-large.glb" id="65_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/pillar-stone.glb" id="66_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/box-open.glb" id="67_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/barrel.glb" id="68_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/apple.glb" id="69_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/carrot.glb" id="70_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/bread.glb" id="71_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/cheese.glb" id="72_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/cabbage.glb" id="73_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/onion.glb" id="74_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/plate-broken.glb" id="75_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/coin.glb" id="76_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/lantern.glb" id="77_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/debris.glb" id="78_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_arena/bricks.glb" id="79_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-window-shutters.glb" id="80_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/rocks-small.glb" id="81_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall.glb" id="82_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-broken.glb" id="83_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-doorway-round.glb" id="84_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-window-stone.glb" id="85_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/planks.glb" id="86_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/chair.glb" id="87_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/barrel-open.glb" id="88_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/pot.glb" id="89_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/table.glb" id="90_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/chest.glb" id="91_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/mug.glb" id="92_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-wood.glb" id="93_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-wood-window-shutters.glb" id="94_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-wood-broken.glb" id="95_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/pillar-wood.glb" id="96_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/planks-half.glb" id="97_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/loaf.glb" id="98_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/bag.glb" id="99_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_arena/weapon-rack.glb" id="100_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/weapon-sword.glb" id="101_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/shield-round.glb" id="102_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/pot_small.glb" id="103_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/honey.glb" id="104_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-wood-window-small.glb" id="105_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/potion.glb" id="106_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/plant_bushSmall.glb" id="107_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/bedroll.glb" id="108_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/shield-rectangle.glb" id="109_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/weapon-spear.glb" id="110_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/barrel.glb" id="111_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-detail-cross.glb" id="112_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/box-large.glb" id="113_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/fence-fortified.glb" id="114_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_forest/weapon-arrow.glb" id="115_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/crops_dirtDoubleRow.glb" id="116_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/crops_leafsStageB.glb" id="117_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/crop_carrot.glb" id="118_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/crop_turnip.glb" id="119_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/crop_pumpkin.glb" id="120_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/fence_simple.glb" id="121_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/crops_dirtRow.glb" id="122_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/crops_cornStageB.glb" id="123_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/bucket.glb" id="124_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/fence_simpleLow.glb" id="125_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/egg.glb" id="126_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/hay-bale.glb" id="127_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/crops_wheatStageB.glb" id="128_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/banner-red.glb" id="19_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/tower-square-mid-windows.glb" id="20_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/tower-square-roof.glb" id="21_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/door.glb" id="22_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/cart-high.glb" id="23_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/flag-banner-long.glb" id="24_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_arena/statue.glb" id="25_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/box-large-open.glb" id="26_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/box.glb" id="27_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/pear.glb" id="28_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/loaf-round.glb" id="29_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/fish.glb" id="30_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/leek.glb" id="31_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/plate.glb" id="32_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/campfire_stones.glb" id="33_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/wine-red.glb" id="34_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/loaf-baguette.glb" id="35_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/croissant.glb" id="36_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/rollingPin.glb" id="37_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/bag-flat.glb" id="38_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/fire-basket.glb" id="39_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/workbench-anvil.glb" id="40_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/tool-hammer.glb" id="41_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/workbench-grind.glb" id="42_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/resource-stone.glb" id="43_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/tool-pickaxe.glb" id="44_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/whole-ham.glb" id="45_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/mortar-pestle.glb" id="46_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/campfire_logs.glb" id="47_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/bottle.glb" id="48_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/debris-wood.glb" id="49_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/candle.glb" id="50_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/workbench.glb" id="51_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/resource-planks.glb" id="52_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-door.glb" id="53_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/bridge_wood.glb" id="54_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_arena/weapon-spear.glb" id="55_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/log_stack.glb" id="56_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/stump_old.glb" id="57_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/tool-axe.glb" id="58_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/log.glb" id="59_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/fence_planks.glb" id="60_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/hay-bale-bundled.glb" id="61_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/tool-hoe.glb" id="62_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/wall-narrow.glb" id="63_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/rocks-large.glb" id="64_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/pillar-stone.glb" id="65_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/box-open.glb" id="66_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/barrel.glb" id="67_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/apple.glb" id="68_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/carrot.glb" id="69_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/bread.glb" id="70_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/cheese.glb" id="71_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/cabbage.glb" id="72_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/onion.glb" id="73_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/plate-broken.glb" id="74_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/coin.glb" id="75_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/lantern.glb" id="76_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/debris.glb" id="77_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_arena/bricks.glb" id="78_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-window-shutters.glb" id="79_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/rocks-small.glb" id="80_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall.glb" id="81_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-broken.glb" id="82_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-doorway-round.glb" id="83_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-window-stone.glb" id="84_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/planks.glb" id="85_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/chair.glb" id="86_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/barrel-open.glb" id="87_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/pot.glb" id="88_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/table.glb" id="89_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/chest.glb" id="90_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/mug.glb" id="91_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-wood.glb" id="92_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-wood-window-shutters.glb" id="93_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-wood-broken.glb" id="94_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/pillar-wood.glb" id="95_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/planks-half.glb" id="96_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/loaf.glb" id="97_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/bag.glb" id="98_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_arena/weapon-rack.glb" id="99_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/weapon-sword.glb" id="100_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/shield-round.glb" id="101_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/pot_small.glb" id="102_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/honey.glb" id="103_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-wood-window-small.glb" id="104_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/potion.glb" id="105_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/plant_bushSmall.glb" id="106_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/bedroll.glb" id="107_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/shield-rectangle.glb" id="108_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/weapon-spear.glb" id="109_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/barrel.glb" id="110_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-detail-cross.glb" id="111_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/box-large.glb" id="112_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/fence-fortified.glb" id="113_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_forest/weapon-arrow.glb" id="114_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/crops_dirtDoubleRow.glb" id="115_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/crops_leafsStageB.glb" id="116_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/crop_carrot.glb" id="117_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/crop_turnip.glb" id="118_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/crop_pumpkin.glb" id="119_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/fence_simple.glb" id="120_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/crops_dirtRow.glb" id="121_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/crops_cornStageB.glb" id="122_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/bucket.glb" id="123_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/fence_simpleLow.glb" id="124_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/egg.glb" id="125_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/hay-bale.glb" id="126_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/crops_wheatStageB.glb" id="127_model"]
 [ext_resource type="Script" path="res://scenes/levels/village/village_instances.gd" id="instances"]
 [ext_resource type="Script" path="res://scripts/sign_board.gd" id="sign"]
 
@@ -889,6 +888,22 @@ size = Vector3(0.26, 0.26, 3)
 
 [sub_resource type="BoxMesh" id="BoxMesh_size_0p7_0p01_0p5"]
 size = Vector3(0.7, 0.01, 0.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_size_0p16_0p07_0p24"]
+size = Vector3(0.16, 0.07, 0.24)
+
+[sub_resource type="SphereMesh" id="SphereMesh_height0p13_is_hemisphereFalse_radial_segments10_radius0p065_rings5"]
+radius = 0.065
+height = 0.13
+radial_segments = 10
+rings = 5
+is_hemisphere = false
+
+[sub_resource type="BoxMesh" id="BoxMesh_size_0p08_0p04_0p05"]
+size = Vector3(0.08, 0.04, 0.05)
+
+[sub_resource type="BoxMesh" id="BoxMesh_size_0p05_0p04_0p12"]
+size = Vector3(0.05, 0.04, 0.12)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_bottom_radius0p47853_height0p01_radial_segments11_rings1_top_radius0p47853"]
 top_radius = 0.47853
@@ -1762,142 +1777,154 @@ buffer = PackedFloat32Array(0.86603, 0, 0.5, -26.5, 0, 1, 0, 0.15, -0.5, 0, 0.86
 [sub_resource type="MultiMesh" id="MultiMesh_11"]
 transform_format = 1
 instance_count = 2
+mesh = SubResource("BoxMesh_size_0p08_0p04_0p05")
+buffer = PackedFloat32Array(-0.98481, 0, 0.17365, -11.0009, 0, 1, 0, 0.085, -0.17365, 0, -0.98481, -20.9786, -0.64279, 0, -0.76604, -11.2264, 0, 1, 0, 0.085, 0.76604, 0, -0.64279, -20.8966)
+
+[sub_resource type="MultiMesh" id="MultiMesh_12"]
+transform_format = 1
+instance_count = 2
+mesh = SubResource("BoxMesh_size_0p05_0p04_0p12")
+buffer = PackedFloat32Array(-0.93969, 0, -0.34202, -10.9949, 0, 1, 0, 0.08, 0.34202, 0, -0.93969, -20.7573, -0.93969, 0, -0.34202, -11.0888, 0, 1, 0, 0.08, 0.34202, 0, -0.93969, -20.7232)
+
+[sub_resource type="MultiMesh" id="MultiMesh_13"]
+transform_format = 1
+instance_count = 2
 mesh = SubResource("TorusMesh_inner_radius0p36_outer_radius0p42_ring_segments4_rings12")
 buffer = PackedFloat32Array(0.93969, 0, 0.34202, 11.4, 0, 1, 0, 0.08, -0.34202, 0, 0.93969, -17.2, 0.93969, 0, 0.34202, 12.4, 0, 1, 0, 0.08, -0.34202, 0, 0.93969, -18.6)
 
-[sub_resource type="MultiMesh" id="MultiMesh_12"]
+[sub_resource type="MultiMesh" id="MultiMesh_14"]
 transform_format = 1
 instance_count = 2
 mesh = SubResource("BoxMesh_size_7p671067811865475_0p2_13p2")
 buffer = PackedFloat32Array(0.87681, -0.48083, 0, -3.05, 0.48083, 0.87681, 0, 9.82, 0, 0, 1, -26, 0.87681, 0.48083, 0, 3.05, -0.48083, 0.87681, 0, 9.82, 0, 0, 1, -26)
 
-[sub_resource type="MultiMesh" id="MultiMesh_13"]
+[sub_resource type="MultiMesh" id="MultiMesh_15"]
 transform_format = 1
 instance_count = 2
 mesh = SubResource("CylinderMesh_bottom_radius1p68_height0p01_radial_segments14_rings1_top_radius1p68")
 buffer = PackedFloat32Array(1, 0, 0, 0.6, 0, 1, 0, 0.012, 0, 0, 1, 36.4, 1, 0, 0, -15, 0, 1, 0, 0.012, 0, 0, 1, 6.4)
 
-[sub_resource type="MultiMesh" id="MultiMesh_14"]
+[sub_resource type="MultiMesh" id="MultiMesh_16"]
 transform_format = 1
 instance_count = 3
 mesh = SubResource("CylinderMesh_bottom_radius1p08_height0p01_radial_segments14_rings1_top_radius1p08")
 buffer = PackedFloat32Array(1, 0, 0, 6.6, 0, 1, 0, 0.012, 0, 0, 1, 34.6, 1, 0, 0, 1.2, 0, 1, 0, 0.012, 0, 0, 1, -17, 1, 0, 0, 16, 0, 1, 0, 0.012, 0, 0, 1, 22)
 
-[sub_resource type="MultiMesh" id="MultiMesh_15"]
+[sub_resource type="MultiMesh" id="MultiMesh_17"]
 transform_format = 1
 instance_count = 13
 mesh = SubResource("SphereMesh_height0p16_is_hemisphereFalse_radial_segments10_radius0p08_rings5")
 buffer = PackedFloat32Array(-0.17365, 0, 1.67417, -27.25, 0, 0.85, 0, 1.62, -0.98481, 0, -0.2952, 25.5, 0.86603, 0, 0.85, 21.7, 0, 0.85, 0, 0.97, -0.5, 0, 1.47224, 17.6, -0.34202, 0, -1.59748, 26.2, 0, 0.85, 0, 0.97, 0.93969, 0, -0.58143, 17.6, -0.93969, 0, 0.58143, -22.4, 0, 0.85, 0, 5.37, -0.34202, 0, -1.59748, 41, -0.93969, 0, -0.58143, 13.4, 0, 0.85, 0, 5.37, 0.34202, 0, -1.59748, 41.1, -0.5, 0, 1.47224, 14.3, 0, 0.85, 0, 5.37, -0.86603, 0, -0.85, 40.8, 0.98481, 0, 0.2952, 6.6, 0, 0.85, 0, 9.33, -0.17365, 0, 1.67417, 42.6, 0.76604, 0.31338, 0.89512, -6.2, 0, 0.69628, -0.97508, 0.13, -0.64279, 0.37348, 1.06676, -6.4, 0.5, -0.42222, -1.20599, -5.5, 0, 0.69628, -0.97508, 0.13, 0.86603, 0.24377, 0.69628, -7.3, -0.93969, -0.16675, -0.47628, 7.4, 0, 0.69628, -0.97508, 0.13, 0.34202, -0.45814, -1.30858, 5.2, 0, 0.48754, 1.39256, -25.6, 0, 0.69628, -0.97508, 0.13, -1, 0, 0, 30.6, -0.5, 0.42222, 1.20599, -1.6, 0, 0.69628, -0.97508, 0.13, -0.86603, -0.24377, -0.69628, 37.6, -0.34202, 0, -1.59748, 30.2, 0, 0.85, 0, 5.37, 0.93969, 0, -0.58143, -21.6)
 
-[sub_resource type="MultiMesh" id="MultiMesh_16"]
+[sub_resource type="MultiMesh" id="MultiMesh_18"]
 transform_format = 1
 instance_count = 13
 mesh = SubResource("SphereMesh_height0p11_is_hemisphereFalse_radial_segments10_radius0p055_rings5")
 buffer = PackedFloat32Array(-0.17365, 0, 1.08329, -27.122, 0, 1, 0, 1.7, -0.98481, 0, -0.19101, 25.4774, 0.86603, 0, 0.55, 21.765, 0, 1, 0, 1.05, -0.5, 0, 0.95263, 17.7126, -0.34202, 0, -1.03366, 26.0778, 0, 1, 0, 1.05, 0.93969, 0, -0.37622, 17.5555, -0.93969, 0, 0.37622, -22.3555, 0, 1, 0, 5.45, -0.34202, 0, -1.03366, 40.8778, -0.93969, 0, -0.37622, 13.3555, 0, 1, 0, 5.45, 0.34202, 0, -1.03366, 40.9778, -0.5, 0, 0.95263, 14.4126, 0, 1, 0, 5.45, -0.86603, 0, -0.55, 40.735, 0.98481, 0, 0.19101, 6.62257, 0, 1, 0, 9.41, -0.17365, 0, 1.08329, 42.728, 0.76604, 0, 0.70707, -6.09073, 0, 1, 0, 0.07, -0.64279, 0, 0.84265, -6.26977, 0.5, 0, -0.95263, -5.64722, 0, 1, 0, 0.07, 0.86603, 0, 0.55, -7.215, -0.93969, 0, -0.37622, 7.34186, 0, 1, 0, 0.07, 0.34202, 0, -1.03366, 5.04025, 0, 0, 1.1, -25.43, 0, 1, 0, 0.07, -1, 0, 0, 30.6, -0.5, 0, 0.95263, -1.45278, 0, 1, 0, 0.07, -0.86603, 0, -0.55, 37.515, -0.34202, 0, -1.03366, 30.0778, 0, 1, 0, 5.45, 0.93969, 0, -0.37622, -21.6445)
 
-[sub_resource type="MultiMesh" id="MultiMesh_17"]
+[sub_resource type="MultiMesh" id="MultiMesh_19"]
 transform_format = 1
 instance_count = 13
 mesh = SubResource("CylinderMesh_bottom_radius0p018_height0p07_radial_segments5_rings1_top_radius0")
 buffer = PackedFloat32Array(-0.17365, 0.98481, 0, -27.053, 0, 0, -1, 1.7, -0.98481, -0.17365, -0, 25.4653, 0.86603, 0.5, 0, 21.8, 0, 0, -1, 1.05, -0.5, 0.86603, 0, 17.7732, -0.34202, -0.93969, -0, 26.0121, 0, 0, -1, 1.05, 0.93969, -0.34202, -0, 17.5316, -0.93969, 0.34202, 0, -22.3316, 0, 0, -1, 5.45, -0.34202, -0.93969, -0, 40.8121, -0.93969, -0.34202, -0, 13.3316, 0, 0, -1, 5.45, 0.34202, -0.93969, -0, 40.9121, -0.5, 0.86603, 0, 14.4732, 0, 0, -1, 5.45, -0.86603, -0.5, -0, 40.7, 0.98481, 0.17365, 0, 6.63473, 0, 0, -1, 9.41, -0.17365, 0.98481, 0, 42.797, 0.76604, 0.58256, -0.27165, -6.04573, 0, -0.42262, -0.90631, 0.04, -0.64279, 0.69427, -0.32374, -6.21615, 0.5, -0.78489, 0.366, -5.70785, 0, -0.42262, -0.90631, 0.04, 0.86603, 0.45315, -0.21131, -7.18, -0.93969, -0.30998, 0.14454, 7.31792, 0, -0.42262, -0.90631, 0.04, 0.34202, -0.85165, 0.39713, 4.97447, 0, 0.90631, -0.42262, -25.36, 0, -0.42262, -0.90631, 0.04, -1, 0, -0, 30.6, -0.5, 0.78489, -0.366, -1.39215, 0, -0.42262, -0.90631, 0.04, -0.86603, -0.45315, 0.21131, 37.48, -0.34202, -0.93969, -0, 30.0121, 0, 0, -1, 5.45, 0.93969, -0.34202, -0, -21.6684)
 
-[sub_resource type="MultiMesh" id="MultiMesh_18"]
+[sub_resource type="MultiMesh" id="MultiMesh_20"]
 transform_format = 1
 instance_count = 13
 mesh = SubResource("BoxMesh_size_0p09_0p015_0p14")
 buffer = PackedFloat32Array(-0.17365, -0.33682, 0.92542, -27.4174, 0, 0.93969, 0.34202, 1.65, -0.98481, 0.05939, -0.16318, 25.5295, 0.86603, -0.17101, 0.46985, 21.615, 0, 0.93969, 0.34202, 1, -0.5, -0.2962, 0.8138, 17.4528, -0.34202, 0.32139, -0.88302, 26.3597, 0, 0.93969, 0.34202, 1, 0.93969, 0.11698, -0.32139, 17.6581, -0.93969, -0.11698, 0.32139, -22.4581, 0, 0.93969, 0.34202, 5.4, -0.34202, 0.32139, -0.88302, 41.1598, -0.93969, 0.11698, -0.32139, 13.4581, 0, 0.93969, 0.34202, 5.4, 0.34202, 0.32139, -0.88302, 41.2597, -0.5, -0.2962, 0.8138, 14.1528, 0, 0.93969, 0.34202, 5.4, -0.86603, 0.17101, -0.46985, 40.885, 0.98481, -0.05939, 0.16318, 6.57048, 0, 0.93969, 0.34202, 9.36, -0.17365, -0.33682, 0.92542, 42.4326, 0.76604, -0.36869, 0.52654, -6.30927, 0, 0.81915, 0.57358, 0.21, -0.64279, -0.43939, 0.62751, -6.53023, 0.5, 0.49673, -0.70941, -5.35278, 0, 0.81915, 0.57358, 0.21, 0.86603, -0.28679, 0.40958, -7.385, -0.93969, 0.19617, -0.28017, 7.45814, 0, 0.81915, 0.57358, 0.21, 0.34202, 0.53899, -0.76975, 5.35975, 0, -0.57358, 0.81915, -25.77, 0, 0.81915, 0.57358, 0.21, -1, -0, 0, 30.6, -0.5, -0.49673, 0.70941, -1.74722, 0, 0.81915, 0.57358, 0.21, -0.86603, 0.28679, -0.40958, 37.685, -0.34202, 0.32139, -0.88302, 30.3597, 0, 0.93969, 0.34202, 5.4, 0.93969, 0.11698, -0.32139, -21.5419)
 
-[sub_resource type="MultiMesh" id="MultiMesh_19"]
+[sub_resource type="MultiMesh" id="MultiMesh_21"]
 transform_format = 1
 instance_count = 26
 mesh = SubResource("BoxMesh_size_0p012_0p06_0p012")
 buffer = PackedFloat32Array(-0.17365, 0, 0.98481, -27.2448, 0, 1, 0, 1.52, -0.98481, 0, -0.17365, 25.5295, -0.17365, 0, 0.98481, -27.2552, 0, 1, 0, 1.52, -0.98481, 0, -0.17365, 25.4705, 0.86603, 0, 0.5, 21.674, 0, 1, 0, 0.87, -0.5, 0, 0.86603, 17.615, 0.86603, 0, 0.5, 21.726, 0, 1, 0, 0.87, -0.5, 0, 0.86603, 17.585, -0.34202, 0, -0.93969, 26.2103, 0, 1, 0, 0.87, 0.93969, 0, -0.34202, 17.5718, -0.34202, 0, -0.93969, 26.1897, 0, 1, 0, 0.87, 0.93969, 0, -0.34202, 17.6282, -0.93969, 0, 0.34202, -22.3718, 0, 1, 0, 5.27, -0.34202, 0, -0.93969, 41.0103, -0.93969, 0, 0.34202, -22.4282, 0, 1, 0, 5.27, -0.34202, 0, -0.93969, 40.9897, -0.93969, 0, -0.34202, 13.4282, 0, 1, 0, 5.27, 0.34202, 0, -0.93969, 41.0897, -0.93969, 0, -0.34202, 13.3718, 0, 1, 0, 5.27, 0.34202, 0, -0.93969, 41.1103, -0.5, 0, 0.86603, 14.315, 0, 1, 0, 5.27, -0.86603, 0, -0.5, 40.826, -0.5, 0, 0.86603, 14.285, 0, 1, 0, 5.27, -0.86603, 0, -0.5, 40.774, 0.98481, 0, 0.17365, 6.57046, 0, 1, 0, 9.23, -0.17365, 0, 0.98481, 42.6052, 0.98481, 0, 0.17365, 6.62954, 0, 1, 0, 9.23, -0.17365, 0, 0.98481, 42.5948, 0.76604, 0, 0.64279, -6.22298, 0, 1, 0, 0.03, -0.64279, 0, 0.76604, -6.38072, 0.76604, 0, 0.64279, -6.17702, 0, 1, 0, 0.03, -0.64279, 0, 0.76604, -6.41928, 0.5, 0, -0.86603, -5.515, 0, 1, 0, 0.03, 0.86603, 0, 0.5, -7.32598, 0.5, 0, -0.86603, -5.485, 0, 1, 0, 0.03, 0.86603, 0, 0.5, -7.27402, -0.93969, 0, -0.34202, 7.42819, 0, 1, 0, 0.03, 0.34202, 0, -0.93969, 5.18974, -0.93969, 0, -0.34202, 7.37181, 0, 1, 0, 0.03, 0.34202, 0, -0.93969, 5.21026, 0, 0, 1, -25.6, 0, 1, 0, 0.03, -1, 0, 0, 30.63, 0, 0, 1, -25.6, 0, 1, 0, 0.03, -1, 0, 0, 30.57, -0.5, 0, 0.86603, -1.585, 0, 1, 0, 0.03, -0.86603, 0, -0.5, 37.626, -0.5, 0, 0.86603, -1.615, 0, 1, 0, 0.03, -0.86603, 0, -0.5, 37.574, -0.34202, 0, -0.93969, 30.2103, 0, 1, 0, 5.27, 0.93969, 0, -0.34202, -21.6282, -0.34202, 0, -0.93969, 30.1897, 0, 1, 0, 5.27, 0.93969, 0, -0.34202, -21.5718)
 
-[sub_resource type="MultiMesh" id="MultiMesh_20"]
+[sub_resource type="MultiMesh" id="MultiMesh_22"]
 transform_format = 1
 instance_count = 4
 mesh = SubResource("BoxMesh_size_0p05_0p6_0p05")
 buffer = PackedFloat32Array(0.97515, -0.05298, 0.21511, -28.3967, 0, 0.97099, 0.23914, 0.3, -0.22154, -0.23319, 0.94686, 32.6, 0.90073, 0.06363, 0.4297, -26.8596, 0, 0.98921, -0.14647, 0.3, -0.43438, 0.13193, 0.89101, 32.6, 0.57412, 0.16326, 0.80233, -29.7148, 0, 0.97992, -0.1994, 0.3, -0.81877, 0.11448, 0.56259, 37.4, 0.74797, -0.11684, 0.65337, -28.614, 0, 0.98438, 0.17603, 0.3, -0.66374, -0.13167, 0.73629, 37.4)
 
-[sub_resource type="MultiMesh" id="MultiMesh_21"]
+[sub_resource type="MultiMesh" id="MultiMesh_23"]
 transform_format = 1
 instance_count = 2
 mesh = SubResource("CylinderMesh_bottom_radius1p56_height0p01_radial_segments14_rings1_top_radius1p56")
 buffer = PackedFloat32Array(1, 0, 0, -26, 0, 1, 0, 0.06, 0, 0, 1, 36.6, 1, 0, 0, 0.8, 0, 1, 0, 0.012, 0, 0, 1, 26)
 
-[sub_resource type="MultiMesh" id="MultiMesh_22"]
+[sub_resource type="MultiMesh" id="MultiMesh_24"]
 transform_format = 1
 instance_count = 2
 mesh = SubResource("BoxMesh_size_0p14_1p9_0p14")
 buffer = PackedFloat32Array(1, 0, 0, -20.78, 0, 1, 0, 1.35, 0, 0, 1, 29, 1, 0, 0, -19.22, 0, 1, 0, 1.35, 0, 0, 1, 29)
 
-[sub_resource type="MultiMesh" id="MultiMesh_23"]
+[sub_resource type="MultiMesh" id="MultiMesh_25"]
 transform_format = 1
 instance_count = 2
 mesh = SubResource("BoxMesh_size_1p95_0p06_0p72")
 buffer = PackedFloat32Array(1, 0, 0, -20, 0, 0.84805, -0.52992, 2.36, 0, 0.52992, 0.84805, 28.7, 1, 0, 0, -20, 0, 0.84805, 0.52992, 2.36, 0, -0.52992, 0.84805, 29.3)
 
-[sub_resource type="MultiMesh" id="MultiMesh_24"]
+[sub_resource type="MultiMesh" id="MultiMesh_26"]
 transform_format = 1
 instance_count = 2
 mesh = SubResource("CylinderMesh_bottom_radius0p025_height0p06_radial_segments4_rings1_top_radius0")
 buffer = PackedFloat32Array(-0.86603, 0, -0.5, -20.431, 0, 1, 0, 1.4, 0.5, 0, -0.86603, 28.3429, -0.86603, 0, -0.5, -20.509, 0, 1, 0, 1.4, 0.5, 0, -0.86603, 28.3879)
 
-[sub_resource type="MultiMesh" id="MultiMesh_25"]
+[sub_resource type="MultiMesh" id="MultiMesh_27"]
 transform_format = 1
 instance_count = 4
 mesh = SubResource("SphereMesh_height0p024_is_hemisphereFalse_radial_segments10_radius0p012_rings5")
 buffer = PackedFloat32Array(1, 0, 0, -20.4788, 0, 1, 0, 1.325, 0, 0, 1, 28.2781, 1, 0, 0, -20.5412, 0, 1, 0, 1.325, 0, 0, 1, 28.3141, 1, 0, 0, -2.62513, 0, 1, 0, 0.375, 0, 0, 1, -19.0005, 1, 0, 0, -2.69279, 0, 1, 0, 0.375, 0, 0, 1, -19.0251)
 
-[sub_resource type="MultiMesh" id="MultiMesh_26"]
+[sub_resource type="MultiMesh" id="MultiMesh_28"]
 transform_format = 1
 instance_count = 4
 mesh = SubResource("BoxMesh_size_0p1_2p3_0p1")
 buffer = PackedFloat32Array(1, 0, 0, -21.6, 0, 1, 0, 1.15, 0, 0, 1, 36.4, 1, 0, 0, -15.4, 0, 1, 0, 1.15, 0, 0, 1, 36.4, 1, 0, 0, -22.5, 0, 1, 0, 1.15, 0, 0, 1, -5.2, 1, 0, 0, -22.5, 0, 1, 0, 1.15, 0, 0, 1, -0.8)
 
-[sub_resource type="MultiMesh" id="MultiMesh_27"]
+[sub_resource type="MultiMesh" id="MultiMesh_29"]
 transform_format = 1
 instance_count = 3
 mesh = SubResource("BoxMesh_size_0p6_0p55_1p8")
 buffer = PackedFloat32Array(1, 0, 0, 27.2, 0, 1, 0, 0.3, 0, 0, 1, 26, 1, 0, 0, 27.2, 0, 1, 0, 0.3, 0, 0, 1, 30, 1, 0, 0, 27.2, 0, 1, 0, 0.3, 0, 0, 1, 34)
 
-[sub_resource type="MultiMesh" id="MultiMesh_28"]
+[sub_resource type="MultiMesh" id="MultiMesh_30"]
 transform_format = 1
 instance_count = 3
 mesh = SubResource("BoxMesh_size_0p5_0p04_1p7")
 buffer = PackedFloat32Array(1, 0, 0, 27.2, 0, 1, 0, 0.56, 0, 0, 1, 26, 1, 0, 0, 27.2, 0, 1, 0, 0.56, 0, 0, 1, 30, 1, 0, 0, 27.2, 0, 1, 0, 0.56, 0, 0, 1, 34)
 
-[sub_resource type="MultiMesh" id="MultiMesh_29"]
+[sub_resource type="MultiMesh" id="MultiMesh_31"]
 transform_format = 1
 instance_count = 3
 mesh = SubResource("TorusMesh_inner_radius0p05_outer_radius0p08_ring_segments4_rings12")
 buffer = PackedFloat32Array(0.64723, 0, -0.76229, 24.2, 0, 1, 0, 0.02, 0.76229, 0, 0.64723, 26.2, 0.44464, 0, 0.89571, 21.4, 0, 1, 0, 0.02, -0.89571, 0, 0.44464, 30.6, 0.15544, 0, 0.98784, 23, 0, 1, 0, 0.02, -0.98784, 0, 0.15544, 21)
 
-[sub_resource type="MultiMesh" id="MultiMesh_30"]
+[sub_resource type="MultiMesh" id="MultiMesh_32"]
 transform_format = 1
 instance_count = 3
 mesh = SubResource("BoxMesh_size_0p26_0p26_2p8")
 buffer = PackedFloat32Array(0.93969, 0, 0.34202, 23.6, 0, 1, 0, 0.15, -0.34202, 0, 0.93969, -6.4, -0.34202, 0, 0.93969, 29.6, 0, 1, 0, 0.15, -0.93969, 0, -0.34202, 0.2, 0.25882, 0, 0.96593, 25.2, 0, 1, 0, 0.15, -0.96593, 0, 0.25882, -9.4)
 
-[sub_resource type="MultiMesh" id="MultiMesh_31"]
+[sub_resource type="MultiMesh" id="MultiMesh_33"]
 transform_format = 1
 instance_count = 2
 mesh = SubResource("CylinderMesh_bottom_radius1p32_height0p01_radial_segments14_rings1_top_radius1p32")
 buffer = PackedFloat32Array(1, 0, 0, -1, 0, 1, 0, 0.012, 0, 0, 1, 14.6, 1, 0, 0, -19, 0, 1, 0, 0.012, 0, 0, 1, -12.6)
 
-[sub_resource type="MultiMesh" id="MultiMesh_32"]
+[sub_resource type="MultiMesh" id="MultiMesh_34"]
 transform_format = 1
 instance_count = 12
 mesh = SubResource("BoxMesh_size_0p6_0p3_0p5")
 buffer = PackedFloat32Array(0.13816, 0, 0.99041, 19.9638, 0, 1, 0, 0.15, -0.99041, 0, 0.13816, -21.4, 0.99965, 0, 0.02654, 19.8505, 0, 1, 0, 0.15, -0.02654, 0, 0.99965, -19.4, 0.55769, 0, 0.83005, 19.8, 0, 1, 0, 0.15, -0.83005, 0, 0.55769, -18.4, 0.25562, 0, 0.96678, 19.7658, 0, 1, 0, 0.15, -0.96678, 0, 0.25562, -16.4, 0.7548, 0, 0.65595, 19.6574, 0, 1, 0, 0.15, -0.65595, 0, 0.7548, -15.4, 0.18349, 0, 0.98302, 19.7538, 0, 1, 0, 0.15, -0.98302, 0, 0.18349, -13.4, 0.22022, 0, 0.97545, 20.7116, 0, 1, 0, 0.15, -0.97545, 0, 0.22022, -20.4, 0.68392, 0, 0.72956, 20.9633, 0, 1, 0, 0.15, -0.72956, 0, 0.68392, -19.4, 0.95903, 0, 0.28332, 20.8203, 0, 1, 0, 0.15, -0.28332, 0, 0.95903, -17.4, 0.99695, 0, 0.07809, 20.9489, 0, 1, 0, 0.15, -0.07809, 0, 0.99695, -16.4, 0.55677, 0, 0.83066, 20.7411, 0, 1, 0, 0.15, -0.83066, 0, 0.55677, -14.4, 0.84242, 0, 0.53882, 20.9304, 0, 1, 0, 0.15, -0.53882, 0, 0.84242, -13.4)
 
-[sub_resource type="MultiMesh" id="MultiMesh_33"]
+[sub_resource type="MultiMesh" id="MultiMesh_35"]
 transform_format = 1
 instance_count = 2
 mesh = SubResource("CylinderMesh_bottom_radius0p025_height0p06_radial_segments4_rings1_top_radius0")
 buffer = PackedFloat32Array(-0.93969, 0, 0.34202, -2.64403, 0, 1, 0, 0.45, -0.34202, 0, -0.93969, -18.9222, -0.93969, 0, 0.34202, -2.72861, 0, 1, 0, 0.45, -0.34202, 0, -0.93969, -18.953)
 
-[sub_resource type="MultiMesh" id="MultiMesh_34"]
+[sub_resource type="MultiMesh" id="MultiMesh_36"]
 transform_format = 1
 instance_count = 2
 mesh = SubResource("CylinderMesh_bottom_radius0p022_height0p05_radial_segments4_rings1_top_radius0")
@@ -2000,560 +2027,557 @@ transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -15.275, 0, -18.4825)
 [node name="bedSingle_30" parent="Models" instance=ExtResource("16_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.45, 0, -19.255)
 
-[node name="bear_31" parent="Models" instance=ExtResource("19_model")]
-transform = Transform3D(-1.03366, 0, -0.37622, 0, 1.1, 0, 0.37622, 0, -1.03366, -10.9455, 0.05, -21.1026)
-
-[node name="cart_32" parent="Models" instance=ExtResource("12_model")]
+[node name="cart_31" parent="Models" instance=ExtResource("12_model")]
 transform = Transform3D(0.26997, 0, 0.32174, 0, 0.42, 0, -0.32174, 0, 0.26997, -12.211, 0.05, -17.8065)
 
-[node name="rugRound_33" parent="Models" instance=ExtResource("17_model")]
+[node name="rugRound_32" parent="Models" instance=ExtResource("17_model")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -11.02, 0.05, -18.48)
 
-[node name="banner_red_34" parent="Models" instance=ExtResource("20_model")]
+[node name="banner_red_33" parent="Models" instance=ExtResource("19_model")]
 transform = Transform3D(0, 0, -3.4, 0, 3.4, 0, 3.4, 0, 0, -2.6, 4.8, -19.8)
 
-[node name="banner_red_35" parent="Models" instance=ExtResource("20_model")]
+[node name="banner_red_34" parent="Models" instance=ExtResource("19_model")]
 transform = Transform3D(0, 0, -3.4, 0, 3.4, 0, 3.4, 0, 0, 2.6, 4.8, -19.8)
 
-[node name="tower_square_base_36" parent="Models" instance=ExtResource("1_model")]
+[node name="tower_square_base_35" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 30, 4, -30)
 
-[node name="tower_square_mid_windows_37" parent="Models" instance=ExtResource("21_model")]
+[node name="tower_square_mid_windows_36" parent="Models" instance=ExtResource("20_model")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 30, 7, -30)
 
-[node name="tower_square_mid_38" parent="Models" instance=ExtResource("2_model")]
+[node name="tower_square_mid_37" parent="Models" instance=ExtResource("2_model")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 30, 10, -30)
 
-[node name="tower_square_top_39" parent="Models" instance=ExtResource("3_model")]
+[node name="tower_square_top_38" parent="Models" instance=ExtResource("3_model")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 30, 13, -30)
 
-[node name="tower_square_roof_40" parent="Models" instance=ExtResource("22_model")]
+[node name="tower_square_roof_39" parent="Models" instance=ExtResource("21_model")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 30, 13.9, -30)
 
-[node name="door_41" parent="Models" instance=ExtResource("23_model")]
+[node name="door_40" parent="Models" instance=ExtResource("22_model")]
 transform = Transform3D(0, 0, -3, 0, 3, 0, 3, 0, 0, 28.48, 4, -30)
 
-[node name="cart_high_42" parent="Models" instance=ExtResource("24_model")]
+[node name="cart_high_41" parent="Models" instance=ExtResource("23_model")]
 transform = Transform3D(0, -0, 2.6, 2.6, 0, 0, -0, 2.6, 0, -6.343, 0.832, 36.382)
 
-[node name="cart_43" parent="Models" instance=ExtResource("12_model")]
+[node name="cart_42" parent="Models" instance=ExtResource("12_model")]
 transform = Transform3D(0, -0.72469, 2.70459, 2.8, 0, 0, -0, 2.70459, 0.72469, 6.11453, 0.896, 36.448)
 
-[node name="wheel_44" parent="Models" instance=ExtResource("13_model")]
+[node name="wheel_43" parent="Models" instance=ExtResource("13_model")]
 transform = Transform3D(2.5605, 0.45149, 0, 0, 0, -2.6, -0.45149, 2.5605, 0, 7.67228, 0.624, 35.13)
 
-[node name="flag_banner_long_45" parent="Models" instance=ExtResource("25_model")]
+[node name="flag_banner_long_44" parent="Models" instance=ExtResource("24_model")]
 transform = Transform3D(-0, 0.24311, 1.37873, 1.4, 0, 0, -0, 1.37873, -0.24311, -4.65688, 0, 32.7029)
 
-[node name="cart_high_46" parent="Models" instance=ExtResource("24_model")]
+[node name="cart_high_45" parent="Models" instance=ExtResource("23_model")]
 transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 22.589, 0, 28.479)
 
-[node name="cart_47" parent="Models" instance=ExtResource("12_model")]
+[node name="cart_46" parent="Models" instance=ExtResource("12_model")]
 transform = Transform3D(-0, 2.63114, -0.95766, 2.8, 0, 0, 0, -0.95766, -2.63114, 23.5183, 0.896, 2.9375)
 
-[node name="statue_48" parent="Models" instance=ExtResource("26_model")]
+[node name="statue_47" parent="Models" instance=ExtResource("25_model")]
 transform = Transform3D(-0.85, 1.47224, 0, 0, 0, -1.7, -1.47224, -0.85, -0, -5.8864, 0.595, -6.6305)
 
-[node name="box_large_open_49" parent="Models" instance=ExtResource("27_model")]
+[node name="box_large_open_48" parent="Models" instance=ExtResource("26_model")]
 transform = Transform3D(0.88925, 0, 2.4432, 0, 2.6, 0, -2.4432, 0, 0.88925, 10.0045, 0, -8.31222)
 
-[node name="box_large_open_50" parent="Models" instance=ExtResource("27_model")]
+[node name="box_large_open_49" parent="Models" instance=ExtResource("26_model")]
 transform = Transform3D(-2.6, 0, 0, 0, 2.6, 0, -0, 0, -2.6, -14.713, 0, -8.6)
 
-[node name="box_51" parent="Models" instance=ExtResource("28_model")]
+[node name="box_50" parent="Models" instance=ExtResource("27_model")]
 transform = Transform3D(1.83851, 1.54269, 0, 0, 0, -2.4, -1.54269, 1.83851, 0, 10.6164, 0.288, 1.36247)
 
-[node name="pear_52" parent="Models" instance=ExtResource("29_model")]
+[node name="pear_51" parent="Models" instance=ExtResource("28_model")]
 transform = Transform3D(0.14864, 0, 0.39282, 0, 0.42, 0, -0.39282, 0, 0.14864, -5.6, 0, -7.4)
 
-[node name="loaf_round_53" parent="Models" instance=ExtResource("30_model")]
+[node name="loaf_round_52" parent="Models" instance=ExtResource("29_model")]
 transform = Transform3D(0.39966, 0, -0.12912, 0, 0.42, 0, 0.12912, 0, 0.39966, 7.80135, 0, 5.60264)
 
-[node name="loaf_round_54" parent="Models" instance=ExtResource("30_model")]
+[node name="loaf_round_53" parent="Models" instance=ExtResource("29_model")]
 transform = Transform3D(0.2379, 0, -0.34613, 0, 0.42, 0, 0.34613, 0, 0.2379, 10.6995, 0.744, 30.8529)
 
-[node name="fish_55" parent="Models" instance=ExtResource("31_model")]
+[node name="fish_54" parent="Models" instance=ExtResource("30_model")]
 transform = Transform3D(-0.11786, 0, -0.48591, 0, 0.5, 0, 0.48591, 0, -0.11786, 9.8, 0, 0.4)
 
-[node name="leek_56" parent="Models" instance=ExtResource("32_model")]
+[node name="leek_55" parent="Models" instance=ExtResource("31_model")]
 transform = Transform3D(-0.32299, 0.31333, 0, 0, 0, -0.45, -0.31333, -0.32299, -0, 6.86522, 0.0585, -12.0643)
 
-[node name="leek_57" parent="Models" instance=ExtResource("32_model")]
+[node name="leek_56" parent="Models" instance=ExtResource("31_model")]
 transform = Transform3D(-0.14136, 0.42722, 0, 0, 0, -0.45, -0.42722, -0.14136, -0, -15.7823, 0.1085, -8.54206)
 
-[node name="plate_58" parent="Models" instance=ExtResource("33_model")]
+[node name="plate_57" parent="Models" instance=ExtResource("32_model")]
 transform = Transform3D(0, 0, 0.3, 0, 0.3, 0, -0.3, 0, 0, -9.8985, 0.682, 18.7985)
 
-[node name="plate_59" parent="Models" instance=ExtResource("33_model")]
+[node name="plate_58" parent="Models" instance=ExtResource("32_model")]
 transform = Transform3D(0, 0, 0.3, 0, 0.3, 0, -0.3, 0, 0, -11.9985, 0.682, 20.7985)
 
-[node name="campfire_stones_60" parent="Models" instance=ExtResource("34_model")]
+[node name="campfire_stones_59" parent="Models" instance=ExtResource("33_model")]
 transform = Transform3D(0, 0, 2.2, 0, 2.2, 0, -2.2, 0, 0, -12.4, 0.05, 17.744)
 
-[node name="wine_red_61" parent="Models" instance=ExtResource("35_model")]
+[node name="wine_red_60" parent="Models" instance=ExtResource("34_model")]
 transform = Transform3D(0.39767, -0.13514, -0, 0, 0, -0.42, 0.13514, 0.39767, 0, -7.65071, 0.0878, 20.1615)
 
-[node name="wine_red_62" parent="Models" instance=ExtResource("35_model")]
+[node name="wine_red_61" parent="Models" instance=ExtResource("34_model")]
 transform = Transform3D(-0.29711, -0.29686, -0, 0, 0, -0.42, 0.29686, -0.29711, -0, -8.29759, 0.0878, 18.2055)
 
-[node name="loaf_baguette_63" parent="Models" instance=ExtResource("36_model")]
+[node name="loaf_baguette_62" parent="Models" instance=ExtResource("35_model")]
 transform = Transform3D(0.60676, 0, -0.34905, 0, 0.7, 0, 0.34905, 0, 0.60676, 10.1513, 0.744, 31.2548)
 
-[node name="croissant_64" parent="Models" instance=ExtResource("37_model")]
+[node name="croissant_63" parent="Models" instance=ExtResource("36_model")]
 transform = Transform3D(-0.21473, 0, 0.27639, 0, 0.35, 0, -0.27639, 0, -0.21473, 10.0011, 0.744, 30.8014)
 
-[node name="rollingPin_65" parent="Models" instance=ExtResource("38_model")]
+[node name="rollingPin_64" parent="Models" instance=ExtResource("37_model")]
 transform = Transform3D(0.44109, 0, 0.23545, 0, 0.5, 0, -0.23545, 0, 0.44109, 11.4522, 0.779, 30.9988)
 
-[node name="bag_flat_66" parent="Models" instance=ExtResource("39_model")]
+[node name="bag_flat_65" parent="Models" instance=ExtResource("38_model")]
 transform = Transform3D(0.34202, 0, -0.93969, 0, 1, 0, 0.93969, 0, 0.34202, 8.10299, 0.05, 28.7936)
 
-[node name="bag_flat_67" parent="Models" instance=ExtResource("39_model")]
+[node name="bag_flat_66" parent="Models" instance=ExtResource("38_model")]
 transform = Transform3D(-0.93969, 0, 0.34202, 0, 1, 0, -0.34202, 0, -0.93969, -31.497, 0.05, -15.2936)
 
-[node name="fire_basket_68" parent="Models" instance=ExtResource("40_model")]
+[node name="fire_basket_67" parent="Models" instance=ExtResource("39_model")]
 transform = Transform3D(0, 0, -2.4, 0, 2.4, 0, 2.4, 0, 0, 12.3, 0.9, 18.6)
 
-[node name="workbench_anvil_69" parent="Models" instance=ExtResource("41_model")]
+[node name="workbench_anvil_68" parent="Models" instance=ExtResource("40_model")]
 transform = Transform3D(0.95766, 0, -2.63114, 0, 2.8, 0, 2.63114, 0, 0.95766, 10.1904, 0, 19.6737)
 
-[node name="tool_hammer_70" parent="Models" instance=ExtResource("42_model")]
+[node name="tool_hammer_69" parent="Models" instance=ExtResource("41_model")]
 transform = Transform3D(2.06732, -0.75244, -0, 0, 0, -2.2, 0.75244, 2.06732, 0, 10.2461, 0.884, 19.5412)
 
-[node name="tool_hammer_71" parent="Models" instance=ExtResource("42_model")]
+[node name="tool_hammer_70" parent="Models" instance=ExtResource("41_model")]
 transform = Transform3D(1.90526, 1.1, 0, 0, 0, -2.2, -1.1, 1.90526, 0, 13.408, 0.764, -20.5374)
 
-[node name="workbench_grind_72" parent="Models" instance=ExtResource("43_model")]
+[node name="workbench_grind_71" parent="Models" instance=ExtResource("42_model")]
 transform = Transform3D(0, 0, -2.8, 0, 2.8, 0, 2.8, 0, 0, 12.714, 0, 21)
 
-[node name="resource_stone_73" parent="Models" instance=ExtResource("44_model")]
+[node name="resource_stone_72" parent="Models" instance=ExtResource("43_model")]
 transform = Transform3D(1.90254, 0, -1.46299, 0, 2.4, 0, 1.46299, 0, 1.90254, 8.49049, 0.05, 17.4927)
 
-[node name="resource_stone_74" parent="Models" instance=ExtResource("44_model")]
+[node name="resource_stone_73" parent="Models" instance=ExtResource("43_model")]
 transform = Transform3D(0.67064, 0, 2.3044, 0, 2.4, 0, -2.3044, 0, 0.67064, 7.89665, 0.05, 17.2115)
 
-[node name="tool_pickaxe_75" parent="Models" instance=ExtResource("45_model")]
+[node name="tool_pickaxe_74" parent="Models" instance=ExtResource("44_model")]
 transform = Transform3D(0.45149, -2.5605, -0, 0, 0, -2.6, 2.5605, 0.45149, 0, 11.7073, 0.102, 21.8458)
 
-[node name="whole_ham_76" parent="Models" instance=ExtResource("46_model")]
+[node name="whole_ham_75" parent="Models" instance=ExtResource("45_model")]
 transform = Transform3D(0.17988, 0, -0.51975, 0, 0.55, 0, 0.51975, 0, 0.17988, -18.9, 0.806, -5)
 
-[node name="mortar_pestle_77" parent="Models" instance=ExtResource("47_model")]
+[node name="mortar_pestle_76" parent="Models" instance=ExtResource("46_model")]
 transform = Transform3D(0, 0, -0.5, 0, 0.5, 0, 0.5, 0, 0, 18.5975, 0.744, -6.1975)
 
-[node name="campfire_logs_78" parent="Models" instance=ExtResource("48_model")]
+[node name="campfire_logs_77" parent="Models" instance=ExtResource("47_model")]
 transform = Transform3D(0, 0, -2.6, 0, 2.6, 0, 2.6, 0, 0, 19.387, 0.05, -9.987)
 
-[node name="bottle_79" parent="Models" instance=ExtResource("49_model")]
+[node name="bottle_78" parent="Models" instance=ExtResource("48_model")]
 transform = Transform3D(-1.107, 2.12945, 0, 0, 0, -2.4, -2.12945, -1.107, -0, 15.8348, 0.122, -4.92762)
 
-[node name="bottle_80" parent="Models" instance=ExtResource("49_model")]
+[node name="bottle_79" parent="Models" instance=ExtResource("48_model")]
 transform = Transform3D(-1.94152, 1.41085, 0, 0, 0, -2.4, -1.41085, -1.94152, -0, 14.8845, 0.122, -7.86144)
 
-[node name="debris_wood_81" parent="Models" instance=ExtResource("50_model")]
+[node name="debris_wood_80" parent="Models" instance=ExtResource("49_model")]
 transform = Transform3D(2.20983, 0, 0.93629, 0, 2.4, 0, -0.93629, 0, 2.20983, -30.4, 0.05, 0)
 
-[node name="debris_wood_82" parent="Models" instance=ExtResource("50_model")]
+[node name="debris_wood_81" parent="Models" instance=ExtResource("49_model")]
 transform = Transform3D(0.88306, 0, 2.23164, 0, 2.4, 0, -2.23164, 0, 0.88306, -25.5, 0.05, -4.6)
 
-[node name="candle_83" parent="Models" instance=ExtResource("51_model")]
+[node name="candle_82" parent="Models" instance=ExtResource("50_model")]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 21.9, 0.682, 12.9)
 
-[node name="workbench_84" parent="Models" instance=ExtResource("52_model")]
+[node name="workbench_83" parent="Models" instance=ExtResource("51_model")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 13.5, 0, -20.4)
 
-[node name="resource_planks_85" parent="Models" instance=ExtResource("53_model")]
+[node name="resource_planks_84" parent="Models" instance=ExtResource("52_model")]
 transform = Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, 14.513, 0.05, -17.813)
 
-[node name="resource_planks_86" parent="Models" instance=ExtResource("53_model")]
+[node name="resource_planks_85" parent="Models" instance=ExtResource("52_model")]
 transform = Transform3D(1.99172, 0, 1.67125, 0, 2.6, 0, -1.67125, 0, 1.99172, 14.2016, 0.05, -16.7183)
 
-[node name="wall_door_87" parent="Models" instance=ExtResource("54_model")]
+[node name="wall_door_86" parent="Models" instance=ExtResource("53_model")]
 transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 0, 0, -21.8)
 
-[node name="bridge_wood_88" parent="Models" instance=ExtResource("55_model")]
+[node name="bridge_wood_87" parent="Models" instance=ExtResource("54_model")]
 transform = Transform3D(0, 0, 6.5, 0, 6.5, 0, -6.5, 0, 0, -38, -0.3, 6)
 
-[node name="weapon_spear_89" parent="Models" instance=ExtResource("56_model")]
+[node name="weapon_spear_88" parent="Models" instance=ExtResource("55_model")]
 transform = Transform3D(-0.26147, 2.98858, 0, 0, 0, -3, -2.98858, -0.26147, -0, -16.6447, 0.18, 38.7065)
 
-[node name="log_stack_90" parent="Models" instance=ExtResource("57_model")]
+[node name="log_stack_89" parent="Models" instance=ExtResource("56_model")]
 transform = Transform3D(0, 0, 2.6, 0, 2.6, 0, -2.6, 0, 0, -22.513, 0, -25.026)
 
-[node name="log_stack_91" parent="Models" instance=ExtResource("57_model")]
+[node name="log_stack_90" parent="Models" instance=ExtResource("56_model")]
 transform = Transform3D(0, 0, 2.6, 0, 2.6, 0, -2.6, 0, 0, -20.313, 0, -25.226)
 
-[node name="stump_old_92" parent="Models" instance=ExtResource("58_model")]
+[node name="stump_old_91" parent="Models" instance=ExtResource("57_model")]
 transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, -24.444, 0, -22.989)
 
-[node name="tool_axe_93" parent="Models" instance=ExtResource("59_model")]
+[node name="tool_axe_92" parent="Models" instance=ExtResource("58_model")]
 transform = Transform3D(2.59808, -0.70421, 1.32442, 0, 2.64884, 1.40841, -1.5, -1.21972, 2.29397, -24.3, 0.58, -23)
 
-[node name="log_94" parent="Models" instance=ExtResource("60_model")]
+[node name="log_93" parent="Models" instance=ExtResource("59_model")]
 transform = Transform3D(-1.05679, 0, 1.20133, 0, 1.6, 0, -1.20133, 0, -1.05679, -23.6007, 0, -22.1887)
 
-[node name="log_95" parent="Models" instance=ExtResource("60_model")]
+[node name="log_94" parent="Models" instance=ExtResource("59_model")]
 transform = Transform3D(0.33353, 0, -1.56485, 0, 1.6, 0, 1.56485, 0, 0.33353, -24.9938, 0, -22.0095)
 
-[node name="fence_planks_96" parent="Models" instance=ExtResource("61_model")]
+[node name="fence_planks_95" parent="Models" instance=ExtResource("60_model")]
 transform = Transform3D(2.9, 0, 0, 0, 3.6, 0, 0, 0, 2, 26.25, 0, 28.48)
 
-[node name="fence_planks_97" parent="Models" instance=ExtResource("61_model")]
+[node name="fence_planks_96" parent="Models" instance=ExtResource("60_model")]
 transform = Transform3D(2.9, 0, 0, 0, 3.6, 0, 0, 0, 2, 26.25, 0, 32.48)
 
-[node name="hay_bale_bundled_98" parent="Models" instance=ExtResource("62_model")]
+[node name="hay_bale_bundled_97" parent="Models" instance=ExtResource("61_model")]
 transform = Transform3D(0, 0, 2, 0, 2, 0, -2, 0, 0, 21.61, 0, 24.91)
 
-[node name="tool_hoe_99" parent="Models" instance=ExtResource("63_model")]
+[node name="tool_hoe_98" parent="Models" instance=ExtResource("62_model")]
 transform = Transform3D(0, 0, 5.6, -1.35476, 5.43366, 0, -5.43366, -1.35476, 0, 20.45, 0, 29)
 
 [node name="Instances" type="Node3D" parent="."]
 
 [node name="castle_kit_wall_narrow" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("64_model")
+model = ExtResource("63_model")
 transforms = Array[Transform3D]([Transform3D(0, 0, 4, 0, 4.03817, 0, -4, 0, 0, -30, -0.05, 42), Transform3D(0, 0, 4, 0, 4.03817, 0, -4, 0, 0, -22, -0.05, 42), Transform3D(0, 0, 4, 0, 4.03817, 0, -4, 0, 0, -14, -0.05, 42), Transform3D(0, 0, 4, 0, 4.03817, 0, -4, 0, 0, 10, -0.05, 42), Transform3D(0, 0, 4, 0, 4.03817, 0, -4, 0, 0, 14, -0.05, 42), Transform3D(0, 0, 4, 0, 4.03817, 0, -4, 0, 0, 30, -0.05, 42), Transform3D(4, 0, 0, 0, 5.10687, 0, 0, 0, 4, -34, -1.45, 38), Transform3D(4, 0, 0, 0, 5.10687, 0, 0, 0, 4, -34, -1.45, 34), Transform3D(4, 0, 0, 0, 5.10687, 0, 0, 0, 4, -34, -1.45, 30), Transform3D(4, 0, 0, 0, 5.10687, 0, 0, 0, 4, -34, -1.45, 18), Transform3D(4, 0, 0, 0, 5.10687, 0, 0, 0, 4, -34, -1.45, -2), Transform3D(4, 0, 0, 0, 4.03817, 0, 0, 0, 4, 34, -0.05, 38), Transform3D(4, 0, 0, 0, 4.03817, 0, 0, 0, 4, 34, -0.05, 30), Transform3D(4, 0, 0, 0, 4.03817, 0, 0, 0, 4, 34, -0.05, 22), Transform3D(4, 0, 0, 0, 4.03817, 0, 0, 0, 4, 34, -0.05, 14), Transform3D(4, 0, 0, 0, 4.03817, 0, 0, 0, 4, 34, -0.05, 6), Transform3D(4, 0, 0, 0, 4.03817, 0, 0, 0, 4, 34, -0.05, 2), Transform3D(4, 0, 0, 0, 4.03817, 0, 0, 0, 4, 34, -0.05, -2), Transform3D(4, 0, 0, 0, 4.50307, 0, 0, 0, 4, 34, -0.05, -18), Transform3D(4, 0, 0, 0, 6.96578, 0, 0, 0, 4, 34, -0.05, -22), Transform3D(4, 0, 0, 0, 7.0916, 0, 0, 0, 4, 34, -0.05, -26)])
 
 [node name="castle_kit_rocks_large" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("65_model")
+model = ExtResource("64_model")
 transforms = Array[Transform3D]([Transform3D(0.43879, 0, -2.56271, 0, 2.6, 0, 2.56271, 0, 0.43879, -26, 0, 42), Transform3D(1.98141, 0, 1.68345, 0, 2.6, 0, -1.68345, 0, 1.98141, -18, 0, 42), Transform3D(2.24751, 0, 1.30716, 0, 2.6, 0, -1.30716, 0, 2.24751, -10, 0, 42), Transform3D(-1.58781, 0, 2.05885, 0, 2.6, 0, -2.05885, 0, -1.58781, 18, 0, 42), Transform3D(0.33259, 0, -2.57864, 0, 2.6, 0, 2.57864, 0, 0.33259, 22, 0, 42), Transform3D(-0.53147, 0, -2.5451, 0, 2.6, 0, 2.5451, 0, -0.53147, 26, 0, 42), Transform3D(1.6853, 0, 1.41413, 0, 2.2, 0, -1.41413, 0, 1.6853, 33, 0, -6), Transform3D(-1.02846, 0, 1.22567, 0, 1.6, 0, -1.22567, 0, -1.02846, 30.8, 0, -7.4), Transform3D(-0.47883, 0, -1.31557, 0, 1.4, 0, 1.31557, 0, -0.47883, 30.8, 0, -4.4)])
 
 [node name="fantasy_town_kit_pillar_stone" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("66_model")
+model = ExtResource("65_model")
 transforms = Array[Transform3D]([Transform3D(7, 0, 0, 0, 6.4, 0, 0, 0, 7, -34.6, -0.4, 2.9), Transform3D(7, 0, 0, 0, 6.4, 0, 0, 0, 7, -34.6, -0.4, 9.1), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -14, 0, 26), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -14, 0, 34), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -6, 0, 26), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -6, 0, 34), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 6, 0, 16), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 6, 4, 16), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 6, 0, 24), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 6, 4, 24), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 14, 0, 16), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 14, 4, 16), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 14, 0, 24), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 14, 4, 24), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -21, 0, -12), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -21, 4, -12), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -21, 0, 0), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -21, 4, 0), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -13, 0, -12), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -13, 4, -12), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -13, 0, 0), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -13, 4, 0), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -32, 0, -6), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -32, 0, 2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -24, 0, -6), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -24, 0, 2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 17, 0, 8), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 17, 0, 16), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 25, 0, 8), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 25, 0, 16), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 8, 0, -22), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 8, 4, -22), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 8, 0, -14), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 8, 4, -14), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 16, 0, -22), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 16, 4, -22), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 16, 0, -14), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 16, 4, -14), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -6, 0, -32), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -6, 4, -32), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -6, 0, -20), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -6, 4, -20), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 6, 0, -32), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 6, 4, -32), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 6, 0, -20), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 6, 4, -20)])
 
 [node name="survival_kit_box_open" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("67_model")
+model = ExtResource("66_model")
 transforms = Array[Transform3D]([Transform3D(2.51141, 0, 0.67293, 0, 2.6, 0, -0.67293, 0, 2.51141, -9.58408, 0, -11.1908), Transform3D(-1.3, 2.25167, 0, 0, 0, -2.6, -2.25167, -1.3, -0, -14.7555, 0.312, -3.80976), Transform3D(2.06732, 0, 0.75244, 0, 2.2, 0, -0.75244, 0, 2.06732, -15.8859, 0, 37.4066)])
 
 [node name="food_kit_barrel" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("68_model")
+model = ExtResource("67_model")
 transforms = Array[Transform3D]([Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, -10.4, 0, -8.6), Transform3D(-1.35, 0, 0, 0, 1.35, 0, -0, 0, -1.35, -12.5, 0, 22.641), Transform3D(-1.35, 0, 0, 0, 1.35, 0, -0, 0, -1.35, -11.3, 0, 22.641), Transform3D(-0, 1.35, 0, 1.35, 0, 0, -0, 0, -1.35, -10.159, 0.513, 22.641), Transform3D(0, 0, 1.35, 0, 1.35, 0, -1.35, 0, 0, -15.4, 0, -10.3)])
 visibility_end = 45
 
 [node name="food_kit_apple" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("69_model")
+model = ExtResource("68_model")
 transforms = Array[Transform3D]([Transform3D(0.40945, 0, 0.09355, 0, 0.42, 0, -0.09355, 0, 0.40945, -6, 0, -6.8), Transform3D(0.36628, 0, 0.20553, 0, 0.42, 0, -0.20553, 0, 0.36628, -5.4, 0, -6.2), Transform3D(0.41817, 0, 0.03921, 0, 0.42, 0, -0.03921, 0, 0.41817, -6.6, 0, -6), Transform3D(-0.41957, 0, 0.01895, 0, 0.42, 0, -0.01895, 0, -0.41957, -9, 0, -10.2), Transform3D(-0.41934, 0, -0.02358, 0, 0.42, 0, 0.02358, 0, -0.41934, -8.6, 0, -11.6), Transform3D(0.12818, 0, 0.39996, 0, 0.42, 0, -0.39996, 0, 0.12818, 5, 0, 2.8), Transform3D(-0.49303, 0, 0.08318, 0, 0.5, 0, -0.08318, 0, -0.49303, -16.6, 0.05, -7.6)])
 visibility_end = 45
 
 [node name="food_kit_carrot" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("70_model")
+model = ExtResource("69_model")
 transforms = Array[Transform3D]([Transform3D(-0.20319, 0.24721, 0, 0, 0, -0.32, -0.24721, -0.20319, -0, 5.911, 0.0544, -7.32685), Transform3D(0.12739, 0.29355, 0, 0, 0, -0.32, -0.29355, 0.12739, 0, 9.29432, 0.0544, -6.04586), Transform3D(0.29433, 0.12557, 0, 0, 0, -0.32, -0.12557, 0.29433, 0, 6.65479, 0.0544, -7.00596), Transform3D(-0.17896, -0.46688, -0, 0, 0, -0.5, 0.46688, -0.17896, -0, -15.2319, 0.135, -3.33558)])
 visibility_end = 45
 
 [node name="food_kit_bread" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("71_model")
+model = ExtResource("70_model")
 transforms = Array[Transform3D]([Transform3D(0.13208, 0, 0.29147, 0, 0.32, 0, -0.29147, 0, 0.13208, 7.19854, 0, 5.99934), Transform3D(-0.16355, 0, -0.27505, 0, 0.32, 0, 0.27505, 0, -0.16355, 8.70138, 0.05, 30.4008), Transform3D(-0.3109, 0, -0.07578, 0, 0.32, 0, 0.07578, 0, -0.3109, 9.60038, 0.05, 29.5016)])
 visibility_end = 45
 
 [node name="food_kit_cheese" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("72_model")
+model = ExtResource("71_model")
 transforms = Array[Transform3D]([Transform3D(0.25035, 0, -0.48972, 0, 0.55, 0, 0.48972, 0, 0.25035, -4.4, 0, 6.2), Transform3D(-0.48505, 0, 0.25928, 0, 0.55, 0, -0.25928, 0, -0.48505, -18.8, 0.806, -6.2), Transform3D(0.42724, 0, -0.14129, 0, 0.45, 0, 0.14129, 0, 0.42724, -18.6, 0.806, -5.6)])
 visibility_end = 45
 
 [node name="food_kit_cabbage" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("73_model")
+model = ExtResource("72_model")
 transforms = Array[Transform3D]([Transform3D(0.46635, 0, -0.37752, 0, 0.6, 0, 0.37752, 0, 0.46635, -8.8, 0, -6.2), Transform3D(-0.44546, 0, -0.40195, 0, 0.6, 0, 0.40195, 0, -0.44546, 8.2, 0, -6.6), Transform3D(0.49137, 0, -0.09252, 0, 0.5, 0, 0.09252, 0, 0.49137, -15.2, 0.05, -4.4)])
 visibility_end = 45
 
 [node name="food_kit_onion" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("74_model")
+model = ExtResource("73_model")
 transforms = Array[Transform3D]([Transform3D(-0.46078, 0, 0.19413, 0, 0.5, 0, -0.19413, 0, -0.46078, -6.20327, 0, 6.90133), Transform3D(-0.03452, 0, -0.49881, 0, 0.5, 0, 0.49881, 0, -0.03452, -14.3977, 0.05, -4.59733), Transform3D(-0.476, 0, 0.15306, 0, 0.5, 0, -0.15306, 0, -0.476, -14.6031, 0.05, -3.19839)])
 visibility_end = 45
 
 [node name="food_kit_plate_broken" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("75_model")
+model = ExtResource("74_model")
 transforms = Array[Transform3D]([Transform3D(0.21052, 0, 0.39772, 0, 0.45, 0, -0.39772, 0, 0.21052, -8.09696, 0, -11.0009), Transform3D(-0.28895, 0, 0.34497, 0, 0.45, 0, -0.34497, 0, -0.28895, 6.70028, 0, -11.8032), Transform3D(0.25583, 0, -0.3702, 0, 0.45, 0, 0.3702, 0, 0.25583, -3.20057, 0, 5.90313), Transform3D(-0.40244, 0, -0.20135, 0, 0.45, 0, 0.20135, 0, -0.40244, -11.903, 0.05, 30.699), Transform3D(-0.36546, 0, 0.26256, 0, 0.45, 0, -0.26256, 0, -0.36546, -8.80051, 0.05, 29.3969), Transform3D(0.3656, 0, -0.26236, 0, 0.45, 0, 0.26236, 0, 0.3656, -7.79948, 0.05, 28.5031), Transform3D(-0.28925, 0, 0.34472, 0, 0.45, 0, -0.34472, 0, -0.28925, -10.1997, 0.05, 20.2968), Transform3D(-0.41651, 0, -0.17036, 0, 0.45, 0, 0.17036, 0, -0.41651, -20.7029, 0.05, 12.0988), Transform3D(0.33972, 0, -0.29511, 0, 0.45, 0, 0.29511, 0, 0.33972, -19.3998, 0.05, 15.2032), Transform3D(0.03798, 0, -0.44839, 0, 0.45, 0, 0.44839, 0, 0.03798, -21.5021, 0.05, 16.2024), Transform3D(-0.4494, 0, 0.02315, 0, 0.45, 0, -0.02315, 0, -0.4494, -12.7021, 0.05, -19.9024), Transform3D(-0.18323, 0, 0.41101, 0, 0.45, 0, -0.41101, 0, -0.18323, -11.3989, 0.05, -16.803), Transform3D(0.40696, 0, 0.19205, 0, 0.45, 0, -0.19205, 0, 0.40696, -13.497, 0.05, -15.7989)])
 visibility_end = 45
 
 [node name="mini_dungeon_coin" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("76_model")
+model = ExtResource("75_model")
 transforms = Array[Transform3D]([Transform3D(0.24175, -0.37955, -0, 0, 0, -0.45, 0.37955, 0.24175, 0, -6.72029, 0.0405, -4.85077), Transform3D(0.09971, -0.43881, -0, 0, 0, -0.45, 0.43881, 0.09971, 0, -6.30785, 0.0405, -5.22094), Transform3D(0.34001, -0.29478, -0, 0, 0, -0.45, 0.29478, 0.34001, 0, -7.1381, 0.0405, -5.0714), Transform3D(-0.23179, 0.38571, 0, 0, 0, -0.45, -0.38571, -0.23179, -0, 5.519, 0.0405, -8.35132)])
 visibility_end = 45
 
 [node name="fantasy_town_kit_lantern" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("77_model")
+model = ExtResource("76_model")
 transforms = Array[Transform3D]([Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, -2.4, 0, 30), Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 2.4, 0, 20), Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, -2.4, 0, 10), Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 2.4, 0, -14), Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, -10.6, 0, 8.6), Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 11, 0, -12.8), Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, -11.2, 0, -13.4), Transform3D(-0.38203, 2.16658, 0, 0, 0, -2.2, -2.16658, -0.38203, -0, -13.5899, 0.242, 3.19798), Transform3D(1.7, 0, 0, 0, 1.7, 0, 0, 0, 1.7, -2.3, 0, -19.3), Transform3D(1.7, 0, 0, 0, 1.7, 0, 0, 0, 1.7, 2.3, 0, -19.3), Transform3D(0.06649, -1.9041, 1.1, 2.19866, 0.07678, 0, -0.03839, 1.09933, 1.90526, -1, 0, 33.2)])
 
 [node name="graveyard_kit_debris" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("78_model")
+model = ExtResource("77_model")
 transforms = Array[Transform3D]([Transform3D(-0.36353, 0, -1.35198, 0, 1.4, 0, 1.35198, 0, -0.36353, -6.77146, 0, -1.39093), Transform3D(1.02582, 0, -0.95273, 0, 1.4, 0, 0.95273, 0, 1.02582, -9.24283, 0, 0.10734), Transform3D(-1.39884, 0, 0.05709, 0, 1.4, 0, -0.05709, 0, -1.39884, -9.21585, 0, -3.13479), Transform3D(-0.74073, 0, 1.18799, 0, 1.4, 0, -1.18799, 0, -0.74073, 29.3259, 0, -3.56121), Transform3D(-0.05742, 0, -1.39882, 0, 1.4, 0, 1.39882, 0, -0.05742, 26.0836, 0, -1.19659), Transform3D(0.33955, 0, 1.3582, 0, 1.4, 0, -1.3582, 0, 0.33955, 26.0059, 0, -5.99494), Transform3D(-1.67596, 0, 1.09141, 0, 2, 0, -1.09141, 0, -1.67596, 30.0047, 0, -9.28049), Transform3D(-0.61264, 0, -1.90386, 0, 2, 0, 1.90386, 0, -0.61264, 23.9211, 0, 0.01663), Transform3D(1.77022, 0, -0.93077, 0, 2, 0, 0.93077, 0, 1.77022, 29.8028, 0, 2.48057)])
 
 [node name="mini_arena_bricks" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("79_model")
+model = ExtResource("78_model")
 transforms = Array[Transform3D]([Transform3D(-0.51588, 0, 0.30637, 0, 0.6, 0, -0.30637, 0, -0.51588, -7.97514, 0, 0.14496), Transform3D(-0.26868, 0, 0.53648, 0, 0.6, 0, -0.53648, 0, -0.26868, -10.2566, 0, -1.54853), Transform3D(-0.17492, 0, 0.57394, 0, 0.6, 0, -0.57394, 0, -0.17492, -7.73163, 0, -3.18832), Transform3D(-0.12665, 0, 0.58648, 0, 0.6, 0, -0.58648, 0, -0.12665, 28.4549, 0, -1.78033), Transform3D(0.39676, 0, 0.45009, 0, 0.6, 0, -0.45009, 0, 0.39676, 24.4243, 0, -2.99699), Transform3D(0.53469, 0, 0.27223, 0, 0.6, 0, -0.27223, 0, 0.53469, 28.6645, 0, -5.60597)])
 
 [node name="fantasy_town_kit_wall_window_shutters" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("80_model")
+model = ExtResource("79_model")
 transforms = Array[Transform3D]([Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -12, 0, 27.8), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -8, 0, 32.2), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 12, 0, 17.8), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -19, 0, -10.2), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -30.2, 0, -4), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 10, 0, -20.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 14.2, 0, -20), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -4, 0, -30.2), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 4, 0, -30.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -4, 0, -21.8), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 4, 0, -21.8), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 4.2, 0, -30), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 4.2, 0, -22), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -4.2, 0, -30), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -4.2, 0, -22)])
 
 [node name="castle_kit_rocks_small" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("81_model")
+model = ExtResource("80_model")
 transforms = Array[Transform3D]([Transform3D(1.34698, 0, -0.86351, 0, 1.6, 0, 0.86351, 0, 1.34698, -8, 0, 26), Transform3D(-0.60227, 0, 1.48232, 0, 1.6, 0, -1.48232, 0, -0.60227, -12, 0, 16), Transform3D(-1.57519, 0, -0.28066, 0, 1.6, 0, 0.28066, 0, -1.57519, -8, 0, 24), Transform3D(-1.57642, 0, -0.27369, 0, 1.6, 0, 0.27369, 0, -1.57642, 8, 0, 26), Transform3D(-1.06322, 0, -1.19565, 0, 1.6, 0, 1.19565, 0, -1.06322, 8, 0, 34), Transform3D(0.62724, 0, -1.47193, 0, 1.6, 0, 1.47193, 0, 0.62724, 12, 0, 24), Transform3D(1.02625, 0, -1.22752, 0, 1.6, 0, 1.22752, 0, 1.02625, -24, 0, 16), Transform3D(-1.54597, 0, -0.4123, 0, 1.6, 0, 0.4123, 0, -1.54597, -32, 0, 0), Transform3D(-1.49403, 0, 0.57261, 0, 1.6, 0, -0.57261, 0, -1.49403, -16, 0, -16), Transform3D(1.37092, 0, -0.82497, 0, 1.6, 0, 0.82497, 0, 1.37092, 8, 0, -20), Transform3D(1.54206, 0, 0.42667, 0, 1.6, 0, -0.42667, 0, 1.54206, -35, 0, -12)])
 
 [node name="fantasy_town_kit_wall" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("82_model")
+model = ExtResource("81_model")
 transforms = Array[Transform3D]([Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -12, 0, 32.2), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -12.2, 0, 32), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 8, 0, 22.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -14.8, 0, -2), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -19.2, 0, -10), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -19.2, 0, -6), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -19.2, 0, -2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -30, 0, 0.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -25.8, 0, -4), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 19, 0, 9.8), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 14, 0, -20.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 14.2, 0, -16), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 0, 0, -30.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 4.2, 0, -26), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -4.2, 0, -26)])
 
 [node name="fantasy_town_kit_wall_broken" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("83_model")
+model = ExtResource("82_model")
 transforms = Array[Transform3D]([Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -7.8, 0, 28), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 7.8, 0, 18), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -19, 0, -1.8), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -15, 0, -1.8), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -14.8, 0, -10), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -26, 0, -4.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 19, 0, 14.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 23.2, 0, 10), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 9.8, 0, -16)])
 
 [node name="fantasy_town_kit_wall_doorway_round" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("84_model")
+model = ExtResource("83_model")
 transforms = Array[Transform3D]([Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -7.8, 0, 32), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -7.8, 0, 22), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 7.8, 0, 32), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 7.8, 0, 22), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -14.8, 0, -6), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 14.8, 0, -6), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -18, 0, 16.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -26, 0, 0.2), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 18.8, 0, 14), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -10, 0, -15.8), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 14, 0, -15.8), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -28.8, 0, -12)])
 
 [node name="fantasy_town_kit_wall_window_stone" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("85_model")
+model = ExtResource("84_model")
 transforms = Array[Transform3D]([Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -12.2, 0, 28), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 8, 0, 17.8), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 12.2, 0, 18), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 12.2, 0, 22), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -15, 0, -10.2), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -30, 0, -4.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -25.8, 0, 0), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 23, 0, 9.8), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 23, 0, 14.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 23.2, 0, 14), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 18.8, 0, 10), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 10, 0, -15.8), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -4, 4, -30.2), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 4, 4, -30.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -4, 4, -21.8), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 0, 4, -21.8), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 4, 4, -21.8), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 4.2, 4, -30), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 4.2, 4, -22), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -4.2, 4, -30), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -4.2, 4, -22)])
 
 [node name="fantasy_town_kit_planks" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("86_model")
+model = ExtResource("85_model")
 transforms = Array[Transform3D]([Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -12, -0.2, 28), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -12, -0.2, 32), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -8, -0.2, 28), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -8, -0.2, 32), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -12, -0.2, 18), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 8, -0.2, 28), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 8, -0.2, 32), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 12, -0.2, 32), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 8, -0.2, 18), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 8, -0.2, 22), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 12, -0.2, 18), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -19, -0.2, -10), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -19, -0.2, -2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -15, -0.2, -10), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -15, -0.2, -6), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 15, -0.2, -10), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 15, -0.2, -6), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 15, -0.2, -2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 19, -0.2, -2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -18, -0.2, 12), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -30, -0.2, 0), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -26, -0.2, -4), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 19, -0.2, 14), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 23, -0.2, 14), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -14, -0.2, -20), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -10, -0.2, -20), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -10, -0.2, -16), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 14, -0.2, -16), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -33, -0.2, -16), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -29, -0.2, -12)])
 
 [node name="mini_dungeon_chair" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("87_model")
+model = ExtResource("86_model")
 transforms = Array[Transform3D]([Transform3D(-0.75244, 0, -2.06732, 0, 2.2, 0, 2.06732, 0, -0.75244, -12.4962, 0, 32.3897), Transform3D(0, 2.2, 0, 0, 0, -2.2, -2.2, 0, 0, -9.528, 0.418, 29.111), Transform3D(-2, 0, 0, 0, 2, 0, -0, 0, -2, -10.19, 0, 19.9), Transform3D(-0, 0, -2, 0, 2, 0, 2, 0, -0, -11.2, 0, 20.69), Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -9.81, 0, 17.4), Transform3D(-1.28558, 1.53209, 0, 0, 0, -2, -1.53209, -1.28558, -0, -8.66127, 0.38, 18.7162), Transform3D(-2.06732, 0, 0.75244, 0, 2.2, 0, -0.75244, 0, -2.06732, -17.5897, 0, 11.5038), Transform3D(2.2, 0, 0, 0, 0, -2.2, 0, 2.2, 0, -20.911, 0.418, 14.472), Transform3D(0, 0, 2, 0, 2, 0, -2, 0, 0, 20.4, 0, 13.41), Transform3D(2.2, 0, 0, 0, 0, -2.2, 0, 2.2, 0, -12.911, 0.418, -17.528)])
 
 [node name="survival_kit_barrel_open" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("88_model")
+model = ExtResource("87_model")
 transforms = Array[Transform3D]([Transform3D(0, 0, 2.6, 0, 2.6, 0, -2.6, 0, 0, -10.6, 0, 32.8), Transform3D(0, 0, -2.6, 0, 2.6, 0, 2.6, 0, 0, 10.1, 0, 17.2), Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, -17.2, 0, 13.4), Transform3D(0, -2.6, 0, 2.6, 0, 0, 0, 0, 2.6, 11.542, 0.312, -18.8), Transform3D(0, 0, 2.6, 0, 2.6, 0, -2.6, 0, 0, -29.6, 0, -11.3)])
 
 [node name="mini_dungeon_pot" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("89_model")
+model = ExtResource("88_model")
 transforms = Array[Transform3D]([Transform3D(-0.55, 0, 0.95263, 0, 1.1, 0, -0.95263, 0, -0.55, -12.9048, 0.05, 31.6028), Transform3D(-0.47883, 0, 1.31557, 0, 1.4, 0, -1.31557, 0, -0.47883, -12.4066, 0.05, 17.7024), Transform3D(0, 0, -1.5, 0, 1.5, 0, 1.5, 0, 0, 19.4075, 0, -10), Transform3D(0.95263, 0, 0.55, 0, 1.1, 0, -0.55, 0, 0.95263, -18.4028, 0.05, 11.0952)])
 
 [node name="mini_dungeon_table" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("90_model")
+model = ExtResource("89_model")
 transforms = Array[Transform3D]([Transform3D(-0, 1.01428, 2.17514, 2.4, 0, 0, -0, 2.17514, -1.01428, -10.5681, 1.056, 30.0679), Transform3D(-2.2, 0, 0, 0, 2.2, 0, -0, 0, -2.2, -10.2, 0, 18.711), Transform3D(0, 0, 2.2, 0, 2.2, 0, -2.2, 0, 0, -12.311, 0, 20.7), Transform3D(-0, 0.5694, 2.12504, 2.2, 0, 0, -0, 2.12504, -0.5694, -8.59888, 0.968, 20.0735), Transform3D(2.4, 0, 0, 0, 2.4, 0, 0, 0, 2.4, 10.6, 0, 31.088), Transform3D(0, 0, 2.6, 0, 2.6, 0, -2.6, 0, 0, -18.813, 0, -5.6), Transform3D(0, 0, -2.4, 0, 2.4, 0, 2.4, 0, 0, 18.612, 0, -6.6), Transform3D(0, -2.17514, 1.01428, 2.4, 0, 0, -0, 1.01428, 2.17514, -19.2679, 1.056, 13.4319), Transform3D(0, 0, -2.2, 0, 2.2, 0, 2.2, 0, 0, 21.611, 0, 13.4), Transform3D(0, -2.17514, 1.01428, 2.4, 0, 0, -0, 1.01428, 2.17514, -11.2679, 1.056, -18.5681)])
 
 [node name="mini_dungeon_chest" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("91_model")
+model = ExtResource("90_model")
 transforms = Array[Transform3D]([Transform3D(0, 0, 1.6, 0, 1.6, 0, -1.6, 0, 0, -8.96, 0.08, 27.46), Transform3D(-1.6, 0, 0, 0, 1.6, 0, -0, 0, -1.6, -22.54, 0.08, 15.36), Transform3D(0, 0, 1.6, 0, 1.6, 0, -1.6, 0, 0, 20.24, 0.08, 9.46), Transform3D(-1.6, 0, 0, 0, 1.6, 0, -0, 0, -1.6, -14.54, 0.08, -16.64)])
 
 [node name="food_kit_mug" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("92_model")
+model = ExtResource("91_model")
 transforms = Array[Transform3D]([Transform3D(-0, 0.39392, 0.06946, 0.4, 0, 0, -0, 0.06946, -0.39392, -9.15353, 0.098, 31.3926), Transform3D(0.30736, 0, -0.25599, 0, 0.4, 0, 0.25599, 0, 0.30736, -10.0641, 0.682, 18.2857), Transform3D(-0.17253, 0, -0.36088, 0, 0.4, 0, 0.36088, 0, -0.17253, -10.3896, 0.682, 19.0328), Transform3D(0.3948, 0, -0.06431, 0, 0.4, 0, 0.06431, 0, 0.3948, -12.1694, 0.682, 20.2948), Transform3D(-0.16169, 0, 0.36586, 0, 0.4, 0, -0.36586, 0, -0.16169, -12.4937, 0.682, 21.0691), Transform3D(0, -0.06946, 0.39392, 0.4, 0, 0, -0, 0.39392, 0.06946, -18.5926, 0.098, 14.8465), Transform3D(0, -0.06946, 0.39392, 0.4, 0, 0, -0, 0.39392, 0.06946, -10.5926, 0.098, -17.1535)])
 visibility_end = 45
 
 [node name="fantasy_town_kit_wall_wood" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("93_model")
+model = ExtResource("92_model")
 transforms = Array[Transform3D]([Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -8, 0, 17.8), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -12, 0, 22.2), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -12.2, 0, 18), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 12, 0, 27.8), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 7.8, 0, 28), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 12.2, 4, 18), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 19, 0, -10.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 19.2, 0, -10), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -22, 0, 11.8), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -18, 0, 11.8), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -22, 0, 16.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -17.8, 0, 16), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -10, 0, -20.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -14, 0, -15.8), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -14.2, 0, -20), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 10, 4, -15.8), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 14.2, 4, -20), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -33, 0, -16.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -29, 0, -11.8), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -33.2, 0, -16), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 26.2, 0, 26), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 26.2, 0, 30), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 26.2, 0, 34), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 26, 0, 25.8)])
 
 [node name="fantasy_town_kit_wall_wood_window_shutters" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("94_model")
+model = ExtResource("93_model")
 transforms = Array[Transform3D]([Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -8, 4, 17.8), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -7.8, 0, 18), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 12, 0, 32.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 12.2, 0, 28), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 12, 4, 17.8), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 12.2, 4, 22), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -19, 4, -10.2), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -15, 4, -10.2), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -19.2, 4, -6), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -19.2, 4, -2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 15, 0, -1.8), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 14.8, 0, -2), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -22.2, 0, 12), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -29, 0, -16.2)])
 
 [node name="fantasy_town_kit_wall_wood_broken" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("95_model")
+model = ExtResource("94_model")
 transforms = Array[Transform3D]([Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -12, 4, 22.2), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -12.2, 4, 18), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -12.2, 0, 22), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 12.2, 0, 32), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -19.2, 4, -10), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 15, 0, -10.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 19.2, 0, -6), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 19.2, 0, -2), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 14.8, 0, -10), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -17.8, 0, 12), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 10, 4, -20.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -33, 0, -11.8), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -28.8, 0, -16), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 22, 0, 25.8), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 26, 0, 34.2)])
 
 [node name="fantasy_town_kit_pillar_wood" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("96_model")
+model = ExtResource("95_model")
 transforms = Array[Transform3D]([Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -14, 0, 16), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -14, 4, 16), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -14, 0, 24), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -14, 4, 24), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -6, 0, 16), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -6, 4, 16), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -6, 0, 24), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -6, 4, 24), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 6, 0, 26), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 6, 0, 34), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 14, 0, 26), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 14, 0, 34), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 13, 0, -12), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 13, 0, 0), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 21, 0, -12), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 21, 0, 0), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -24, 0, 10), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -24, 0, 18), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -16, 0, 10), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -16, 0, 18), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -16, 0, -22), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -16, 0, -14), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -8, 0, -22), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -8, 0, -14), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -35, 0, -18), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -35, 0, -10), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -27, 0, -18), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -27, 0, -10), Transform3D(3, 0, 0, 0, 4, 0, 0, 0, 3, 20, 0, 24), Transform3D(3, 0, 0, 0, 4, 0, 0, 0, 3, 20, 0, 28), Transform3D(3, 0, 0, 0, 4, 0, 0, 0, 3, 20, 0, 32), Transform3D(3, 0, 0, 0, 4, 0, 0, 0, 3, 20, 0, 36), Transform3D(3, 0, 0, 0, 4, 0, 0, 0, 3, 28, 0, 24), Transform3D(3, 0, 0, 0, 4, 0, 0, 0, 3, 28, 0, 28), Transform3D(3, 0, 0, 0, 4, 0, 0, 0, 3, 28, 0, 32), Transform3D(3, 0, 0, 0, 4, 0, 0, 0, 3, 28, 0, 36)])
 
 [node name="fantasy_town_kit_planks_half" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("97_model")
+model = ExtResource("96_model")
 transforms = Array[Transform3D]([Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -9, -0.2, 18), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -9, -0.2, 22), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 11, -0.2, 22), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -20, -0.2, -6), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 18, -0.2, -10), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 18, -0.2, -6), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -23, -0.2, 12), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -23, -0.2, 16), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -19, -0.2, 16), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -27, -0.2, 0), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 18, -0.2, 10), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 22, -0.2, 10), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -15, -0.2, -16), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 9, -0.2, -20), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 9, -0.2, -16), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 13, -0.2, -20), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -30, -0.2, -16)])
 
 [node name="food_kit_loaf" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("98_model")
+model = ExtResource("97_model")
 transforms = Array[Transform3D]([Transform3D(-0.45793, 0, 0.20076, 0, 0.5, 0, -0.20076, 0, -0.45793, 11.099, 0.744, 31.4023), Transform3D(-0.4, 0, -0, 0, 0.4, 0, 0, 0, -0.4, 12.35, 0.06, 32.777), Transform3D(-0.4, 0, -0, 0, 0.4, 0, 0, 0, -0.4, 12.2, 0.8, 32.777), Transform3D(-0.4, 0, -0, 0, 0.4, 0, 0, 0, -0.4, 12.05, 1.52, 32.777)])
 visibility_end = 45
 
 [node name="food_kit_bag" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("99_model")
+model = ExtResource("98_model")
 transforms = Array[Transform3D]([Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 9.3, 0, 27.405), Transform3D(0.5, 0, -0.86603, 0, 1, 0, 0.86603, 0, 0.5, 8.5025, 0, 27.4043), Transform3D(0.93969, 0, -0.34202, 0, 1, 0, 0.34202, 0, 0.93969, 8.9047, 0, 28.1017), Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -15.8, 0, -3.005), Transform3D(-0.42262, 0, 0.90631, 0, 1, 0, -0.90631, 0, -0.42262, -15.1021, 0, -2.40453), Transform3D(-0.86603, 0, 0.5, 0, 1, 0, -0.5, 0, -0.86603, -15.9043, 0, -1.8025), Transform3D(0, 0, 1.05, 0, 1.05, 0, -1.05, 0, 0, -33.6, 0, -16.6053), Transform3D(-0.67493, 0, 0.80435, 0, 1.05, 0, -0.80435, 0, -0.67493, -33.7034, 0, -15.904), Transform3D(-1.03405, 0, 0.18233, 0, 1.05, 0, -0.18233, 0, -1.03405, -32.8052, 0, -16.6009), Transform3D(-0.18233, 0, 1.03405, 0, 1.05, 0, -1.03405, 0, -0.18233, -30.6009, 0, -16.6052), Transform3D(0.98668, 0, 0.35912, 0, 1.05, 0, -0.35912, 0, 0.98668, 27.8049, 4, -28.4018), Transform3D(0.18233, 0, 1.03405, 0, 1.05, 0, -1.03405, 0, 0.18233, 27.6009, 4, -27.6052), Transform3D(-0.80435, 0, 0.67493, 0, 1.05, 0, -0.67493, 0, -0.80435, 28.396, 4, -27.4034)])
 visibility_end = 45
 
 [node name="mini_arena_weapon_rack" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("100_model")
+model = ExtResource("99_model")
 transforms = Array[Transform3D]([Transform3D(-2.4, 0, -0, 0, 2.4, 0, 0, 0, -2.4, 10.528, 0, 22.74), Transform3D(-2.4, 0, -0, 0, 2.4, 0, 0, 0, -2.4, 23.328, 0, 14.74), Transform3D(-2.4, 0, 0, 0, 2.4, 0, -0, 0, -2.4, -17.672, 0, 39.28)])
 
 [node name="mini_dungeon_weapon_sword" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("101_model")
+model = ExtResource("100_model")
 transforms = Array[Transform3D]([Transform3D(1.90526, -1.1, -0, 0, 0, -2.2, 1.1, 1.90526, 0, 9.14703, 0.182, 21.1673), Transform3D(1.90526, 1.1, 0, 0, 0, -2.2, -1.1, 1.90526, 0, -7.72797, 0.132, 35.1563), Transform3D(-2.06732, 0.75244, 0, 0, 0, -2.2, -0.75244, -2.06732, -0, 9.49561, 0.132, 37.6546)])
 
 [node name="mini_dungeon_shield_round" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("102_model")
+model = ExtResource("101_model")
 transforms = Array[Transform3D]([Transform3D(0, -1.8, -0, 0, 0, -1.8, 1.8, 0, 0, 8.4, 0.158, 19.1), Transform3D(-0.29757, 1.87655, 0, 0, 0, -1.9, -1.87655, -0.29757, -0, -5.2, 0.114, 34.9), Transform3D(-0.16131, -1.89314, -0, 0, 0, -1.9, 1.89314, -0.16131, -0, -11.4, 0.114, 36.6)])
 
 [node name="nature_kit_pot_small" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("103_model")
+model = ExtResource("102_model")
 transforms = Array[Transform3D]([Transform3D(-1.00833, 0, -0.43962, 0, 1.1, 0, 0.43962, 0, -1.00833, -19.4, 0.06, -10.775), Transform3D(-0.57526, 0, 0.93759, 0, 1.1, 0, -0.93759, 0, -0.57526, -19, 1.52, -10.775), Transform3D(-1.07069, 0, -0.25224, 0, 1.1, 0, 0.25224, 0, -1.07069, -17.8, 0.06, -10.775), Transform3D(0.6705, 0, 0.87203, 0, 1.1, 0, -0.87203, 0, 0.6705, -17.4, 1.52, -10.775), Transform3D(-0.8976, 0, -0.63585, 0, 1.1, 0, 0.63585, 0, -0.8976, -19.4, 0.06, -1.225), Transform3D(-0.64841, 0, 0.88857, 0, 1.1, 0, -0.88857, 0, -0.64841, -19, 1.52, -1.225), Transform3D(0.4014, 0, 1.54883, 0, 1.6, 0, -1.54883, 0, 0.4014, 16, 0, -10.4), Transform3D(0.75596, 0, 1.41015, 0, 1.6, 0, -1.41015, 0, 0.75596, 14.8, 0, -9.4), Transform3D(-0.86481, 0, -1.34614, 0, 1.6, 0, 1.34614, 0, -0.86481, 14.4, 0, -10.4)])
 
 [node name="food_kit_honey" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("104_model")
+model = ExtResource("103_model")
 transforms = Array[Transform3D]([Transform3D(0.4465, 0, 0.05603, 0, 0.45, 0, -0.05603, 0, 0.4465, -19.2025, 0.8, -10.7769), Transform3D(-0.28581, 0, -0.34758, 0, 0.45, 0, 0.34758, 0, -0.28581, -17.5968, 0.8, -10.7753), Transform3D(0.25024, 0, -0.37401, 0, 0.45, 0, 0.37401, 0, 0.25024, -19.1994, 0.8, -1.22812)])
 visibility_end = 45
 
 [node name="fantasy_town_kit_wall_wood_window_small" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("105_model")
+model = ExtResource("104_model")
 transforms = Array[Transform3D]([Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 19, 0, -1.8), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -14, 0, -20.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -9.8, 0, -20), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -9.8, 0, -16)])
 
 [node name="mini_dungeon_potion" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("106_model")
+model = ExtResource("105_model")
 transforms = Array[Transform3D]([Transform3D(0.18209, 0, -0.51898, 0, 0.55, 0, 0.51898, 0, 0.18209, 19.4517, 0.06, -1.22851), Transform3D(-0.315, 0, -0.45086, 0, 0.55, 0, 0.45086, 0, -0.315, 19.2038, 0.8, -1.22568), Transform3D(0.5278, 0, -0.1547, 0, 0.55, 0, 0.1547, 0, 0.5278, 18.9481, 1.52, -1.22841), Transform3D(0.52567, 0, -0.16179, 0, 0.55, 0, 0.16179, 0, 0.52567, 17.8482, 0.06, -1.22844), Transform3D(0.00177, 0, 0.55, 0, 0.55, 0, -0.55, 0, 0.00177, 17.5972, 0.8, -1.22226), Transform3D(-0.3533, 0, 0.42152, 0, 0.55, 0, -0.42152, 0, -0.3533, 17.3497, 1.52, -1.22113), Transform3D(-0.02653, 0, -0.4993, 0, 0.5, 0, 0.4993, 0, -0.02653, 18.5026, 0.744, -6.00236), Transform3D(0.48026, 0, 0.13912, 0, 0.5, 0, -0.13912, 0, 0.48026, 18.4969, 0.744, -7.10171)])
 visibility_end = 45
 
 [node name="nature_kit_plant_bushSmall" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("107_model")
+model = ExtResource("106_model")
 transforms = Array[Transform3D]([Transform3D(0, 0, -1.2, 0, 1.2, 0, 1.2, 0, 0, 18.8, 0.744, -7.1), Transform3D(0.91353, 0, -0.40676, 0, 1, 0, 0.40676, 0, 0.91353, 16, 0.352, -10.4), Transform3D(0.91, 0, 0.4146, 0, 1, 0, -0.4146, 0, 0.91, 14.8, 0.352, -9.4), Transform3D(0.38518, 0, -0.92284, 0, 1, 0, 0.92284, 0, 0.38518, 14.4, 0.352, -10.4)])
 visibility_end = 45
 
 [node name="survival_kit_bedroll" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("108_model")
+model = ExtResource("107_model")
 transforms = Array[Transform3D]([Transform3D(0, 0, -3, 0, 3, 0, 3, 0, 0, 23.315, 0.05, 9.415), Transform3D(0, 0, -3, 0, 3, 0, 3, 0, 0, 23.315, 0.05, 10.415), Transform3D(0, 0, -3, 0, 3, 0, 3, 0, 0, 23.315, 0.05, 11.415)])
 
 [node name="mini_dungeon_shield_rectangle" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("109_model")
+model = ExtResource("108_model")
 transforms = Array[Transform3D]([Transform3D(0.8853, -2.44464, -0, 0, 0, -2.6, 2.44464, 0.8853, 0, 20.7667, 0.258, 9.4672), Transform3D(-2.00846, 1.65109, 0, 0, 0, -2.6, -1.65109, -2.00846, -0, 19.2523, 0.258, 10.9013), Transform3D(0.46908, 2.76043, 0, 0, 0, -2.8, -2.76043, 0.46908, 0, 6.98594, 0.224, 34.8296), Transform3D(-1.24446, -2.50825, -0, 0, 0, -2.8, 2.50825, -1.24446, -0, 3.77624, 0.224, 35.9867)])
 
 [node name="mini_dungeon_weapon_spear" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("110_model")
+model = ExtResource("109_model")
 transforms = Array[Transform3D]([Transform3D(3.00702, -1.09446, -0, 0, 0, -3.2, 1.09446, 3.00702, 0, 19.6133, 0.242, 11.4924), Transform3D(1.09446, 3.00702, 0, 0, 0, -3.2, -3.00702, 1.09446, 0, -5.30758, 0.192, 35.5867), Transform3D(-1.6, 2.77128, 0, 0, 0, -3.2, -2.77128, -1.6, -0, 3.37662, 0.192, 35.0939)])
 
 [node name="mini_dungeon_barrel" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("111_model")
+model = ExtResource("110_model")
 transforms = Array[Transform3D]([Transform3D(-1.74946, 0, 0.42353, 0, 1.8, 0, -0.42353, 0, -1.74946, 9.6, 0, -20.4), Transform3D(-0.50416, 0, -1.72795, 0, 1.8, 0, 1.72795, 0, -0.50416, 10.7, 0, -20.45), Transform3D(-1.35201, 0, 1.18831, 0, 1.8, 0, -1.18831, 0, -1.35201, 9.55, 0, -19.2), Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 10, 0.86, -20), Transform3D(-1.40843, 0, -1.69007, 0, 2.2, 0, 1.69007, 0, -1.40843, -3.5, 0, 38.9), Transform3D(2.17289, 0, 0.3443, 0, 2.2, 0, -0.3443, 0, 2.17289, 3.6, 0, 39.1), Transform3D(0, -1.90526, 1.1, 2.2, 0, 0, -0, 1.1, 1.90526, -8.94274, 0.572, 35.736)])
 
 [node name="fantasy_town_kit_wall_detail_cross" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("112_model")
+model = ExtResource("111_model")
 transforms = Array[Transform3D]([Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 0, 4, -30.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 4.2, 4, -26), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -4.2, 4, -26)])
 
 [node name="survival_kit_box_large" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("113_model")
+model = ExtResource("112_model")
 transforms = Array[Transform3D]([Transform3D(3.09096, 0, 0.82822, 0, 3.2, 0, -0.82822, 0, 3.09096, -9.58455, 0, 38.3959), Transform3D(-0.67293, 0, 2.51141, 0, 2.6, 0, -2.51141, 0, -0.67293, -9.80336, 0.8, 38.3874), Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 4.315, 0, 26.6)])
 
 [node name="survival_kit_fence_fortified" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("114_model")
+model = ExtResource("113_model")
 transforms = Array[Transform3D]([Transform3D(2.95442, 0, 0.52094, 0, 3, 0, -0.52094, 0, 2.95442, -12.4828, 0, 38.8648), Transform3D(2.93444, 0, -0.62374, 0, 3, 0, 0.62374, 0, 2.93444, -14.7403, 0, 38.5603), Transform3D(2.9708, 0, -0.41752, 0, 3, 0, 0.41752, 0, 2.9708, 10.7061, 0, 39.2684), Transform3D(2.91089, 0, 0.72577, 0, 3, 0, -0.72577, 0, 2.91089, 12.7633, 0, 39.6549)])
 
 [node name="mini_forest_weapon_arrow" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("115_model")
+model = ExtResource("114_model")
 transforms = Array[Transform3D]([Transform3D(2.81908, 0.58852, 0.8405, 0, 2.45746, -1.72073, -1.02606, 1.61696, 2.30925, -3.3, 0.12, 33), Transform3D(-2.81908, -0.65954, -0.78601, 0, 2.29813, -1.92836, 1.02606, -1.81207, -2.15954, 3.1, 0.12, 31.4), Transform3D(-2.59808, 0.75, 1.29904, 0, 2.59808, -1.5, -1.5, -1.29904, -2.25, -3.6, 0.12, 27.5), Transform3D(2.95442, 0.36836, 0.36836, 0, 2.12132, -2.12132, -0.52094, 2.08909, 2.08909, 3.4, 0.12, 41.2), Transform3D(3, 0, 0, 0, 1.92836, -2.29813, 0, 2.29813, 1.92836, -1.9, 0.12, 44), Transform3D(-0.52094, -1.47721, -2.55861, 0, 2.59808, -1.5, 2.95442, -0.26047, -0.45115, 5, 0.12, 36.1)])
 visibility_end = 45
 
 [node name="nature_kit_crops_dirtDoubleRow" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("116_model")
+model = ExtResource("115_model")
 transforms = Array[Transform3D]([Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -30.2, 0, 22.2), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -28.6, 0, 22.2), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -27, 0, 22.2), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -25.4, 0, 22.2), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -30.2, 0, 24.4), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -28.6, 0, 24.4), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -27, 0, 24.4), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -25.4, 0, 24.4), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -30.2, 0, 26.6), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -28.6, 0, 26.6), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -27, 0, 26.6), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -25.4, 0, 26.6), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -30.2, 0, 28.8), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -28.6, 0, 28.8), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -27, 0, 28.8), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -25.4, 0, 28.8)])
 
 [node name="nature_kit_crops_leafsStageB" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("117_model")
+model = ExtResource("116_model")
 transforms = Array[Transform3D]([Transform3D(-0.97242, 0.2297, 0.0405, 0, 0.17365, -0.98481, -0.23325, -0.95764, -0.16886, -30.6734, 0.23696, 22.8976), Transform3D(-0.95706, 0, 0.2899, 0, 1, 0, -0.2899, 0, -0.95706, -29.7967, 0.04, 21.8362), Transform3D(-0.91112, 0.40589, 0.07157, 0, 0.17365, -0.98481, -0.41215, -0.89727, -0.15821, -29.9338, 0.23696, 22.8779), Transform3D(-0.95674, 0, -0.29094, 0, 1, 0, 0.29094, 0, -0.95674, -28.9938, 0.04, 21.8333), Transform3D(0.44733, 0, 0.89437, 0, 1, 0, -0.89437, 0, 0.44733, -29.0067, 0.04, 22.5722), Transform3D(-0.71091, 0, 0.70328, 0, 1, 0, -0.70328, 0, -0.71091, -28.2, 0.04, 21.8371), Transform3D(0.13966, 0, -0.9902, 0, 1, 0, 0.9902, 0, 0.13966, -27.3957, 0.04, 21.8243), Transform3D(-0.89055, 0, -0.45488, 0, 1, 0, 0.45488, 0, -0.89055, -27.3933, 0.04, 22.5722), Transform3D(0.92695, 0.36949, 0.06515, 0, 0.17365, -0.98481, -0.37519, 0.91287, 0.16096, -26.7306, 0.23696, 21.5207), Transform3D(-0.28598, 0, 0.95824, 0, 1, 0, -0.95824, 0, -0.28598, -26.6034, 0.04, 22.5762), Transform3D(0.79764, 0, 0.60313, 0, 1, 0, -0.60313, 0, 0.79764, -25.807, 0.04, 21.829), Transform3D(0.91214, 0, -0.40987, 0, 1, 0, 0.40987, 0, 0.91214, -25.8025, 0.04, 22.5634), Transform3D(-0.71704, -0.68644, -0.12104, 0, 0.17365, -0.98481, 0.69703, -0.70615, -0.12451, -24.7624, 0.23696, 22.0672), Transform3D(-0.48876, 0, 0.87242, 0, 1, 0, -0.87242, 0, -0.48876, -25.0019, 0.04, 22.5768)])
 visibility_end = 45
 
 [node name="nature_kit_crop_carrot" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("118_model")
+model = ExtResource("117_model")
 transforms = Array[Transform3D]([Transform3D(0.44926, 0, 0.77985, 0, 0.9, 0, -0.77985, 0, 0.44926, -30.6, 0.04, 24.03), Transform3D(0.85578, 0, 0.27864, 0, 0.9, 0, -0.27864, 0, 0.85578, -30.6, 0.04, 24.77), Transform3D(0.35219, 0, 0.82823, 0, 0.9, 0, -0.82823, 0, 0.35219, -29.8, 0.04, 24.03), Transform3D(-0.85244, 0, -0.28869, 0, 0.9, 0, 0.28869, 0, -0.85244, -29.8, 0.04, 24.77), Transform3D(0.86462, 0, -0.24985, 0, 0.9, 0, 0.24985, 0, 0.86462, -29, 0.04, 24.77), Transform3D(0.8802, -0.18489, -0.0326, 0, 0.15628, -0.88633, 0.18774, 0.86683, 0.15285, -28.1427, 0.19068, 23.7613), Transform3D(0.62771, 0.63516, 0.112, 0, 0.15628, -0.88633, -0.64496, 0.61818, 0.109, -28.3969, 0.19068, 24.5784), Transform3D(0.31796, 0, -0.84196, 0, 0.9, 0, 0.84196, 0, 0.31796, -27.4, 0.04, 24.77), Transform3D(0.8745, 0, 0.21271, 0, 0.9, 0, -0.21271, 0, 0.8745, -26.6, 0.04, 24.77), Transform3D(0.63911, 0, 0.63367, 0, 0.9, 0, -0.63367, 0, 0.63911, -25.8, 0.04, 24.77), Transform3D(0.7406, 0, -0.51139, 0, 0.9, 0, 0.51139, 0, 0.7406, -25, 0.04, 24.03), Transform3D(-0.18373, 0, -0.88105, 0, 0.9, 0, 0.88105, 0, -0.18373, -25, 0.04, 24.77)])
 visibility_end = 45
 
 [node name="nature_kit_crop_turnip" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("119_model")
+model = ExtResource("118_model")
 transforms = Array[Transform3D]([Transform3D(-0.26183, 0, -0.86107, 0, 0.9, 0, 0.86107, 0, -0.26183, -30.6, 0.04, 26.23), Transform3D(-0.67732, 0, 0.59265, 0, 0.9, 0, -0.59265, 0, -0.67732, -30.6, 0.04, 26.97), Transform3D(0.24515, 0.85281, 0.15037, 0, 0.15628, -0.88633, -0.86597, 0.24142, 0.04257, -30.0814, 0.19068, 26.1503), Transform3D(-0.35719, 0, -0.82608, 0, 0.9, 0, 0.82608, 0, -0.35719, -29.8, 0.04, 26.97), Transform3D(-0.77083, 0, -0.46456, 0, 0.9, 0, 0.46456, 0, -0.77083, -29, 0.04, 26.23), Transform3D(-0.51517, 0, 0.73797, 0, 0.9, 0, -0.73797, 0, -0.51517, -29, 0.04, 26.97), Transform3D(0.87832, 0, -0.19634, 0, 0.9, 0, 0.19634, 0, 0.87832, -27.4, 0.04, 26.23), Transform3D(0.15788, 0, 0.88604, 0, 0.9, 0, -0.88604, 0, 0.15788, -27.4, 0.04, 26.97), Transform3D(0.14155, 0, 0.8888, 0, 0.9, 0, -0.8888, 0, 0.14155, -25.8, 0.04, 26.23), Transform3D(0.88688, 0.15077, 0.02658, 0, 0.15628, -0.88633, -0.1531, 0.87341, 0.15401, -25.8498, 0.19068, 26.6818), Transform3D(-0.89791, 0, -0.06123, 0, 0.9, 0, 0.06123, 0, -0.89791, -25, 0.04, 26.23), Transform3D(0.85789, 0, -0.27208, 0, 0.9, 0, 0.27208, 0, 0.85789, -25, 0.04, 26.97)])
 visibility_end = 45
 
 [node name="nature_kit_crop_pumpkin" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("120_model")
+model = ExtResource("119_model")
 transforms = Array[Transform3D]([Transform3D(0.75329, 0, 0.8016, 0, 1.1, 0, -0.8016, 0, 0.75329, -30.196, 0.04, 28.4338), Transform3D(1.09919, 0, 0.04226, 0, 1.1, 0, -0.04226, 0, 1.09919, -30.1998, 0.04, 29.1755), Transform3D(-0.7902, -0.75361, -0.13288, 0, 0.19101, -1.08329, 0.76523, -0.7782, -0.13722, -28.4763, 0.27832, 28.5577), Transform3D(-0.78335, 0.76051, 0.1341, 0, 0.19101, -1.08329, -0.77225, -0.77145, -0.13603, -27.1248, 0.27832, 28.5566), Transform3D(0.73332, 0, 0.8199, 0, 1.1, 0, -0.8199, 0, 0.73332, -26.9959, 0.04, 29.1737), Transform3D(0.34194, 0, 1.0455, 0, 1.1, 0, -1.0455, 0, 0.34194, -25.3948, 0.04, 28.4317)])
 visibility_end = 45
 
 [node name="nature_kit_fence_simple" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("121_model")
+model = ExtResource("120_model")
 transforms = Array[Transform3D]([Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -30.6, 0, 31.23), Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -30.6, 0, 21.63), Transform3D(1.98054, 0.27729, 0.02426, 0, 0.17431, -1.99239, -0.27835, 1.973, 0.17262, -28.6372, -0.85673, 30.435), Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -28.6, 0, 21.63), Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -26.6, 0, 31.23), Transform3D(1.98054, 0.27729, 0.02426, 0, 0.17431, -1.99239, -0.27835, 1.973, 0.17262, -26.6372, -0.85673, 20.835), Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -24.6, 0, 31.23), Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -24.6, 0, 21.63), Transform3D(0, 0, 2, 0, 2, 0, -2, 0, 0, -30.77, 0, 21.7), Transform3D(0, 0, 2, 0, 2, 0, -2, 0, 0, -22.57, 0, 21.7), Transform3D(0, 0, 2, 0, 2, 0, -2, 0, 0, -30.77, 0, 23.7), Transform3D(0, 0, 2, 0, 2, 0, -2, 0, 0, -30.77, 0, 25.7), Transform3D(0, 0, 2, 0, 2, 0, -2, 0, 0, -30.77, 0, 27.7), Transform3D(0, 0, 2, 0, 2, 0, -2, 0, 0, -22.57, 0, 27.7), Transform3D(0, 0, 2, 0, 2, 0, -1.5, 0, 0, -30.77, 0, 29.55), Transform3D(0, 0, 2, 0, 2, 0, -1.5, 0, 0, -22.57, 0, 29.55), Transform3D(2.4, 0, 0, 0, 2.4, 0, 0, 0, 2.4, 19.2, 0, 18.716), Transform3D(2.4, 0, 0, 0, 2.4, 0, 0, 0, 2.4, 21.6, 0, 18.716), Transform3D(2.39087, 0.20714, 0.02911, 0, 0.33402, -2.37664, -0.20917, 2.3676, 0.33274, 23.9773, -1.02196, 17.6404), Transform3D(2.4, 0, 0, 0, 2.4, 0, 0, 0, 2.4, 26.4, 0, 18.716), Transform3D(2.4, 0, 0, 0, 2.4, 0, 0, 0, 2.4, 28.8, 0, 18.716), Transform3D(0, 0, 2.4, 0, 2.4, 0, -2.4, 0, 0, 19.116, 0, 19), Transform3D(0, 0, 2.4, 0, 2.4, 0, -2.4, 0, 0, 31.116, 0, 19), Transform3D(0, 0, 2.4, 0, 2.4, 0, -1.6, 0, 0, 19.116, 0, 22.9), Transform3D(0, 0, 2.4, 0, 2.4, 0, -1.6, 0, 0, 31.116, 0, 22.9)])
 
 [node name="nature_kit_crops_dirtRow" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("122_model")
+model = ExtResource("121_model")
 transforms = Array[Transform3D]([Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -30.2, 0, 32.6), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -28.6, 0, 32.6), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -27, 0, 32.6), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -25.4, 0, 32.6), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -30.2, 0, 34.2), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -28.6, 0, 34.2), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -27, 0, 34.2), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -25.4, 0, 34.2), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -30.2, 0, 35.8), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -28.6, 0, 35.8), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -27, 0, 35.8), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -25.4, 0, 35.8), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -30.2, 0, 37.4), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -28.6, 0, 37.4), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -27, 0, 37.4), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -25.4, 0, 37.4)])
 
 [node name="nature_kit_crops_cornStageB" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("123_model")
+model = ExtResource("122_model")
 transforms = Array[Transform3D]([Transform3D(-0.18949, 0, 1.28612, 0, 1.3, 0, -1.28612, 0, -0.18949, -30.0405, 0.03, 32.6), Transform3D(-1.22051, 0, 0.4476, 0, 1.3, 0, -0.4476, 0, -1.22051, -25.4153, 0.03, 32.6), Transform3D(-0.83349, 0, -0.99764, 0, 1.3, 0, 0.99764, 0, -0.83349, -29.8554, 0.03, 35.8), Transform3D(0.95762, 0, -0.87919, 0, 1.3, 0, 0.87919, 0, 0.95762, -27.3135, 0.03, 35.8), Transform3D(-0.1364, 0, 1.29282, 0, 1.3, 0, -1.29282, 0, -0.1364, -27.0457, 0.03, 37.4), Transform3D(-0.81708, 0, 1.01113, 0, 1.3, 0, -1.01113, 0, -0.81708, -25.1565, 0.03, 37.4)])
 
 [node name="survival_kit_bucket" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("124_model")
+model = ExtResource("123_model")
 transforms = Array[Transform3D]([Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, -19.9, 1, 29), Transform3D(0, -1.6853, 1.41413, 2.2, 0, 0, -0, 1.41413, 1.6853, -18.5399, 0.154, 29.4657), Transform3D(-1.8466, 0, 1.19586, 0, 2.2, 0, -1.19586, 0, -1.8466, 25.2, 0, 31.2), Transform3D(-2.12394, 0, -0.57348, 0, 2.2, 0, 0.57348, 0, -2.12394, 23.4, 0, 33)])
 visibility_end = 45
 
 [node name="nature_kit_fence_simpleLow" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("125_model")
+model = ExtResource("124_model")
 transforms = Array[Transform3D]([Transform3D(2.4, 0, 0, 0, 2.4, 0, 0, 0, 2.4, -24.6, 0, -26.084), Transform3D(2.4, 0, 0, 0, 2.4, 0, 0, 0, 2.4, -28.2, 0, -26.084), Transform3D(0, 0, 2.4, 0, 2.4, 0, -2.4, 0, 0, -23.284, 0, -30.4)])
 
 [node name="food_kit_egg" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("126_model")
+model = ExtResource("125_model")
 transforms = Array[Transform3D]([Transform3D(-0.12778, 0, -0.37904, 0, 0.4, 0, 0.37904, 0, -0.12778, -25.6019, 0, -27.9006), Transform3D(-0.37842, 0, 0.1296, 0, 0.4, 0, -0.1296, 0, -0.37842, -25.3993, 0, -28.1019), Transform3D(-0.1464, 0, 0.37225, 0, 0.4, 0, -0.37225, 0, -0.1464, -26.9981, 0, -27.6007)])
 visibility_end = 45
 
 [node name="graveyard_kit_hay_bale" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("127_model")
+model = ExtResource("126_model")
 transforms = Array[Transform3D]([Transform3D(1.96962, 0, 0.3473, 0, 2, 0, -0.3473, 0, 1.96962, 25.5902, -0.02, 25.2017), Transform3D(0.3473, 0, 1.96962, 0, 2, 0, -1.96962, 0, 0.3473, 25.3983, -0.02, 30.6099), Transform3D(1.73205, 0, 1, 0, 2, 0, -1, 0, 1.73205, 25.9913, -0.02, 34.805), Transform3D(1.73867, 0, 0.46587, 0, 1.8, 0, -0.46587, 0, 1.73867, 22.5913, 1.474, 28.4023), Transform3D(1.37888, 0, 1.15702, 0, 1.8, 0, -1.15702, 0, 1.37888, 27.5931, -0.018, 21.8058)])
 
 [node name="nature_kit_crops_wheatStageB" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("128_model")
+model = ExtResource("127_model")
 transforms = Array[Transform3D]([Transform3D(0.93907, 0, 1.76583, 0, 2, 0, -1.76583, 0, 0.93907, 17.5912, 0, -21.4047), Transform3D(-0.02341, 0, 1.99986, 0, 2, 0, -1.99986, 0, -0.02341, 17.59, 0, -20.3999), Transform3D(0.31402, 0, -1.97519, 0, 2, 0, 1.97519, 0, 0.31402, 17.6099, 0, -19.4016), Transform3D(1.94524, 0, -0.46479, 0, 2, 0, 0.46479, 0, 1.94524, 17.6023, 0, -18.4097), Transform3D(1.66291, 0, 1.11119, 0, 2, 0, -1.11119, 0, 1.66291, 17.5944, 0, -17.4083), Transform3D(1.68981, 0, 1.06983, 0, 2, 0, -1.06983, 0, 1.68981, 17.5947, 0, -16.4084), Transform3D(0.01482, 0, -1.99995, 0, 2, 0, 1.99995, 0, 0.01482, 17.61, 0, -15.4001), Transform3D(-0.81718, 0, 1.82544, 0, 2, 0, -1.82544, 0, -0.81718, 17.5909, 0, -14.3959), Transform3D(-1.51489, 0, 1.3058, 0, 2, 0, -1.3058, 0, -1.51489, 17.5935, 0, -13.3924), Transform3D(1.426, 0, -1.40233, 0, 2, 0, 1.40233, 0, 1.426, 18.707, 0, -21.4071), Transform3D(-0.05278, 0, -1.9993, 0, 2, 0, 1.9993, 0, -0.05278, 18.71, 0, -20.3997), Transform3D(-1.06405, 0, -1.69346, 0, 2, 0, 1.69346, 0, -1.06405, 18.7085, 0, -19.3947), Transform3D(1.34744, 0, -1.47798, 0, 2, 0, 1.47798, 0, 1.34744, 18.7074, 0, -18.4067), Transform3D(-0.22517, 0, -1.98728, 0, 2, 0, 1.98728, 0, -0.22517, 18.7099, 0, -17.3989), Transform3D(0.73916, 0, -1.8584, 0, 2, 0, 1.8584, 0, 0.73916, 18.7093, 0, -16.4037), Transform3D(-1.24311, 0, -1.56674, 0, 2, 0, 1.56674, 0, -1.24311, 18.7078, 0, -15.3938), Transform3D(-1.66706, 0, -1.10495, 0, 2, 0, 1.10495, 0, -1.66706, 18.7055, 0, -14.3917), Transform3D(1.86018, 0, 0.73467, 0, 2, 0, -0.73467, 0, 1.86018, 18.6963, 0, -13.4093), Transform3D(-1.18919, 0, 1.60805, 0, 2, 0, -1.60805, 0, -1.18919, 19.792, 0, -20.3941), Transform3D(-0.5433, 0, 1.92479, 0, 2, 0, -1.92479, 0, -0.5433, 19.7904, 0, -17.3973), Transform3D(1.71264, 0, 1.03289, 0, 2, 0, -1.03289, 0, 1.71264, 19.7948, 0, -14.4086), Transform3D(-1.52121, 0, -1.29843, 0, 2, 0, 1.29843, 0, -1.52121, 20.9065, 0, -21.3924), Transform3D(-0.47866, 0, 1.94188, 0, 2, 0, -1.94188, 0, -0.47866, 20.8903, 0, -18.3976), Transform3D(1.88097, 0, -0.67968, 0, 2, 0, 0.67968, 0, 1.88097, 20.9034, 0, -15.4094)])
 
 [node name="Shapes" type="Node3D" parent="."]
@@ -2773,6 +2797,24 @@ transform = Transform3D(0.20791, 0, -0.97815, 0, 1, 0, 0.97815, 0, 0.20791, 21.6
 material_override = SubResource("Material_parchment")
 mesh = SubResource("BoxMesh_size_0p7_0p01_0p5")
 
+[node name="BoxMesh_size_0p16_0p07_0p24_cloth_red" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.93969, 0, -0.34202, 0, 1, 0, 0.34202, 0, -0.93969, -11.1, 0.09, -20.9)
+material_override = SubResource("Material_cloth_red")
+mesh = SubResource("BoxMesh_size_0p16_0p07_0p24")
+
+[node name="SphereMesh_height0p13_is_hemisphereFalse_radial_segments10_radius0p065_rings5_burlap" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.1581, 0.1, -21.0598)
+material_override = SubResource("Material_burlap")
+mesh = SubResource("SphereMesh_height0p13_is_hemisphereFalse_radial_segments10_radius0p065_rings5")
+
+[node name="BoxMesh_size_0p08_0p04_0p05_burlap" type="MultiMeshInstance3D" parent="Shapes"]
+material_override = SubResource("Material_burlap")
+multimesh = SubResource("MultiMesh_11")
+
+[node name="BoxMesh_size_0p05_0p04_0p12_burlap" type="MultiMeshInstance3D" parent="Shapes"]
+material_override = SubResource("Material_burlap")
+multimesh = SubResource("MultiMesh_12")
+
 [node name="CylinderMesh_bottom_radius0p47853_height0p01_radial_segments11_rings1_top_radius0p47853_soot" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(0.21187, 0, 0.9773, 0, 1, 0, -0.9773, 0, 0.21187, -12.2421, 0.064, -17.6243)
 material_override = SubResource("Material_soot")
@@ -2790,7 +2832,7 @@ mesh = SubResource("CylinderMesh_bottom_radius0p53617_height0p01_radial_segments
 
 [node name="TorusMesh_inner_radius0p36_outer_radius0p42_ring_segments4_rings12_iron" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_iron")
-multimesh = SubResource("MultiMesh_11")
+multimesh = SubResource("MultiMesh_13")
 
 [node name="BoxMesh_size_0p7_1p5_8p9_stone_dark" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.95, -0.7, -14)
@@ -2824,7 +2866,7 @@ mesh = SubResource("PrismMesh_size_12p4_3p4_12p4")
 
 [node name="BoxMesh_size_7p671067811865475_0p2_13p2_roof" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_roof")
-multimesh = SubResource("MultiMesh_12")
+multimesh = SubResource("MultiMesh_14")
 
 [node name="BoxMesh_size_0p4_0p3_13p3_roof" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11.45, -26)
@@ -2843,7 +2885,7 @@ mesh = SubResource("CylinderMesh_bottom_radius0p8_height0p35_radial_segments14_r
 
 [node name="CylinderMesh_bottom_radius1p68_height0p01_radial_segments14_rings1_top_radius1p68_ash" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_ash")
-multimesh = SubResource("MultiMesh_13")
+multimesh = SubResource("MultiMesh_15")
 
 [node name="CylinderMesh_bottom_radius1p02911_height0p01_radial_segments11_rings1_top_radius1p02911_soot" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(-0.17916, 0, 0.98382, 0, 1, 0, -0.98382, 0, -0.17916, 0.98425, 0.016, 36.4189)
@@ -2897,7 +2939,7 @@ mesh = SubResource("CylinderMesh_bottom_radius1p00573_height0p01_radial_segments
 
 [node name="CylinderMesh_bottom_radius1p08_height0p01_radial_segments14_rings1_top_radius1p08_ash" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_ash")
-multimesh = SubResource("MultiMesh_14")
+multimesh = SubResource("MultiMesh_16")
 
 [node name="CylinderMesh_bottom_radius0p51032_height0p01_radial_segments11_rings1_top_radius0p51032_soot" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(-0.03021, 0, -0.99954, 0, 1, 0, 0.99954, 0, -0.03021, 6.88572, 0.016, 34.5763)
@@ -2951,27 +2993,27 @@ mesh = SubResource("CylinderMesh_bottom_radius0p13_height0p2_radial_segments8_ri
 
 [node name="SphereMesh_height0p16_is_hemisphereFalse_radial_segments10_radius0p08_rings5_crow" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_crow")
-multimesh = SubResource("MultiMesh_15")
+multimesh = SubResource("MultiMesh_17")
 
 [node name="SphereMesh_height0p11_is_hemisphereFalse_radial_segments10_radius0p055_rings5_crow" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_crow")
-multimesh = SubResource("MultiMesh_16")
+multimesh = SubResource("MultiMesh_18")
 
 [node name="CylinderMesh_bottom_radius0p018_height0p07_radial_segments5_rings1_top_radius0_beak" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_beak")
-multimesh = SubResource("MultiMesh_17")
+multimesh = SubResource("MultiMesh_19")
 
 [node name="BoxMesh_size_0p09_0p015_0p14_crow" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_crow")
-multimesh = SubResource("MultiMesh_18")
+multimesh = SubResource("MultiMesh_20")
 
 [node name="BoxMesh_size_0p012_0p06_0p012_beak" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_beak")
-multimesh = SubResource("MultiMesh_19")
+multimesh = SubResource("MultiMesh_21")
 
 [node name="BoxMesh_size_0p05_0p6_0p05_char" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_char")
-multimesh = SubResource("MultiMesh_20")
+multimesh = SubResource("MultiMesh_22")
 
 [node name="CylinderMesh_bottom_radius2p16_height0p01_radial_segments14_rings1_top_radius2p16_ash" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.6, 0.06, 34.4)
@@ -2995,7 +3037,7 @@ mesh = SubResource("CylinderMesh_bottom_radius1p1425_height0p01_radial_segments1
 
 [node name="CylinderMesh_bottom_radius1p56_height0p01_radial_segments14_rings1_top_radius1p56_ash" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_ash")
-multimesh = SubResource("MultiMesh_21")
+multimesh = SubResource("MultiMesh_23")
 
 [node name="CylinderMesh_bottom_radius0p74632_height0p01_radial_segments11_rings1_top_radius0p74632_soot" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(0.94517, 0, 0.32659, 0, 1, 0, -0.32659, 0, 0.94517, -25.5563, 0.064, 36.6564)
@@ -3044,7 +3086,7 @@ mesh = SubResource("CylinderMesh_bottom_radius0p86_height0p06_radial_segments14_
 
 [node name="BoxMesh_size_0p14_1p9_0p14_wood_dark" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_wood_dark")
-multimesh = SubResource("MultiMesh_22")
+multimesh = SubResource("MultiMesh_24")
 
 [node name="CylinderMesh_bottom_radius0p06_height1p7_radial_segments8_rings1_top_radius0p06_wood" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, -20, 1.9, 29)
@@ -3053,7 +3095,7 @@ mesh = SubResource("CylinderMesh_bottom_radius0p06_height1p7_radial_segments8_ri
 
 [node name="BoxMesh_size_1p95_0p06_0p72_wood" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_wood")
-multimesh = SubResource("MultiMesh_23")
+multimesh = SubResource("MultiMesh_25")
 
 [node name="BoxMesh_size_0p02_0p7_0p02_rope" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.9, 1.55, 29)
@@ -3072,11 +3114,11 @@ mesh = SubResource("SphereMesh_height0p16_is_hemisphereFalse_radial_segments10_r
 
 [node name="CylinderMesh_bottom_radius0p025_height0p06_radial_segments4_rings1_top_radius0_cat_grey" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_cat_grey")
-multimesh = SubResource("MultiMesh_24")
+multimesh = SubResource("MultiMesh_26")
 
 [node name="SphereMesh_height0p024_is_hemisphereFalse_radial_segments10_radius0p012_rings5_eye" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_eye")
-multimesh = SubResource("MultiMesh_25")
+multimesh = SubResource("MultiMesh_27")
 
 [node name="BoxMesh_size_0p04_0p04_0p24_cat_grey" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(-0.42262, 0, -0.90631, 0, 1, 0, 0.90631, 0, -0.42262, -20.4879, 0.98, 28.5143)
@@ -3085,7 +3127,7 @@ mesh = SubResource("BoxMesh_size_0p04_0p04_0p24")
 
 [node name="BoxMesh_size_0p1_2p3_0p1_wood_dark" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_wood_dark")
-multimesh = SubResource("MultiMesh_26")
+multimesh = SubResource("MultiMesh_28")
 
 [node name="BoxMesh_size_6p2_0p02_0p02_rope" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.5, 2.15, 36.4)
@@ -3179,11 +3221,11 @@ mesh = SubResource("BoxMesh_size_5p2_0p14_3p5")
 
 [node name="BoxMesh_size_0p6_0p55_1p8_wood" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_wood")
-multimesh = SubResource("MultiMesh_27")
+multimesh = SubResource("MultiMesh_29")
 
 [node name="BoxMesh_size_0p5_0p04_1p7_straw" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_straw")
-multimesh = SubResource("MultiMesh_28")
+multimesh = SubResource("MultiMesh_30")
 
 [node name="BoxMesh_size_0p5_0p12_0p6_leather" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 1.32, 28)
@@ -3192,7 +3234,7 @@ mesh = SubResource("BoxMesh_size_0p5_0p12_0p6")
 
 [node name="TorusMesh_inner_radius0p05_outer_radius0p08_ring_segments4_rings12_iron" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_iron")
-multimesh = SubResource("MultiMesh_29")
+multimesh = SubResource("MultiMesh_31")
 
 [node name="BoxMesh_size_2p0_0p6_0p7_wood" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 0.3, 20.6)
@@ -3226,7 +3268,7 @@ mesh = SubResource("CylinderMesh_bottom_radius2p0339_height0p01_radial_segments1
 
 [node name="BoxMesh_size_0p26_0p26_2p8_char" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_char")
-multimesh = SubResource("MultiMesh_30")
+multimesh = SubResource("MultiMesh_32")
 
 [node name="CylinderMesh_bottom_radius0p80627_height0p01_radial_segments11_rings1_top_radius0p80627_soot" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(0.32238, 0, 0.94661, 0, 1, 0, -0.94661, 0, 0.32238, 1.11235, 0.016, 25.9356)
@@ -3245,7 +3287,7 @@ mesh = SubResource("CylinderMesh_bottom_radius0p86315_height0p01_radial_segments
 
 [node name="CylinderMesh_bottom_radius1p32_height0p01_radial_segments14_rings1_top_radius1p32_ash" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_ash")
-multimesh = SubResource("MultiMesh_31")
+multimesh = SubResource("MultiMesh_33")
 
 [node name="CylinderMesh_bottom_radius0p7292_height0p01_radial_segments11_rings1_top_radius0p7292_soot" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(-0.95562, 0, -0.29461, 0, 1, 0, 0.29461, 0, -0.95562, -0.78523, 0.016, 14.7016)
@@ -3419,7 +3461,7 @@ mesh = SubResource("CylinderMesh_bottom_radius0p72163_height0p01_radial_segments
 
 [node name="BoxMesh_size_0p6_0p3_0p5_char" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_char")
-multimesh = SubResource("MultiMesh_32")
+multimesh = SubResource("MultiMesh_34")
 
 [node name="CylinderMesh_bottom_radius2p64_height0p01_radial_segments14_rings1_top_radius2p64_ash" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.6, 0.012, -17.6)
@@ -3453,7 +3495,7 @@ mesh = SubResource("SphereMesh_height0p16_is_hemisphereFalse_radial_segments10_r
 
 [node name="CylinderMesh_bottom_radius0p025_height0p06_radial_segments4_rings1_top_radius0_cat_black" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_cat_black")
-multimesh = SubResource("MultiMesh_33")
+multimesh = SubResource("MultiMesh_35")
 
 [node name="BoxMesh_size_0p04_0p04_0p24_cat_black" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(-0.96593, 0, -0.25882, 0, 1, 0, 0.25882, 0, -0.96593, -2.81193, 0.03, -18.8556)
@@ -3472,7 +3514,7 @@ mesh = SubResource("SphereMesh_height0p15_is_hemisphereFalse_radial_segments10_r
 
 [node name="CylinderMesh_bottom_radius0p022_height0p05_radial_segments4_rings1_top_radius0_cat_ginger" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_cat_ginger")
-multimesh = SubResource("MultiMesh_34")
+multimesh = SubResource("MultiMesh_36")
 
 [node name="BoxMesh_size_0p26_0p05_0p05_cat_ginger" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(0.17365, 0, 0.98481, 0, 1, 0, -0.98481, 0, 0.17365, 4.4049, 0.8, 26.5183)
