@@ -314,7 +314,7 @@ transform = Transform3D(-0.45149, 0, 2.5605, 0, 2.6, 0, -2.5605, 0, -0.45149, -2
 transform = Transform3D(1.22567, 0, 1.02846, 0, 1.6, 0, -1.02846, 0, 1.22567, -24.9, 0.4, 24.8)
 
 [node name="lantern_candle_10" parent="Models" instance=ExtResource("10_model")]
-transform = Transform3D(1.87939, 0, 0.68404, 0, 2, 0, -0.68404, 0, 1.87939, -25, 0.94, 22.8)
+transform = Transform3D(1.87939, 0, 0.68404, 0, 2, 0, -0.68404, 0, 1.87939, -25, 1.21, 22.8)
 
 [node name="shovel_11" parent="Models" instance=ExtResource("11_model")]
 transform = Transform3D(1.5, 0.45115, 2.55861, 0, 2.95442, -0.52094, -2.59808, 0.26047, 1.47721, -24.1301, 0.42605, 26.3076)

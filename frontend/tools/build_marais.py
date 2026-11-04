@@ -330,7 +330,8 @@ def build_hut(scene):
     ):
         scene.place(model, position, degrees, scale, height=height)
     # Lanterne sur le coffre, pelle plantée contre la tente, bois coupé près du feu.
-    scene.place("graveyard_kit/lantern-candle", (-25.0, GROUND + 0.54, 22.8), 20.0, 2.0)
+    chest_top = bounds("mini_dungeon/chest", 15.0, 1.8)[1][1] - bounds("mini_dungeon/chest", 15.0, 1.8)[0][1]
+    scene.place("graveyard_kit/lantern-candle", (-25.0, GROUND + chest_top, 22.8), 20.0, 2.0)
     scene.place("graveyard_kit/shovel", (-24.0, GROUND, 26.4), 60.0, 3.0, tilt=10.0, height=True)
     scene.place("survival_kit/resource-wood", (-19.8, GROUND, 19.8), 35.0, 4.0)
 

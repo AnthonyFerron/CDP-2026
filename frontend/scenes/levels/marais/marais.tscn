@@ -661,10 +661,10 @@ omni_range = 12.0
 flicker = 0.15
 
 [node name="LightStairs" type="OmniLight3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.2, 10.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.4, 11.4)
 script = ExtResource("14_flicker")
-light_color = Color(1, 0.8, 0.6, 1)
-light_energy = 0.9
+light_color = Color(0.72, 0.8, 0.88, 1)
+light_energy = 0.7
 omni_range = 12.0
 flicker = 0.15
 
@@ -1268,6 +1268,7 @@ player = NodePath("../Player")
 fish_model = ExtResource("60_fish")
 lantern_model = ExtResource("61_hanging_lantern")
 frog_islands = Array[Vector3]([Vector3(0, 56, 8.5), Vector3(-20, 22, 5.8), Vector3(16, 0, 12.3), Vector3(0, -36, 10.4)])
+pad_frogs = Array[Vector2]([Vector2(-9.83, 42.73), Vector2(-11.17, 32.27), Vector2(-7.55, 16.27), Vector2(-2.45, 6.73), Vector2(4.35, -15.03), Vector2(7.15, -22.97)])
 crow_perches = Array[Vector3]([Vector3(-27.42, 0, -43.20), Vector3(-31.35, 0, -41.66), Vector3(-29.80, 0, -46.69), Vector3(33, 0, -27.2), Vector3(11.5, 0, -9.0), Vector3(22.2, 0, -5.3)])
 shy_crows = PackedInt32Array(4, 5)
 bat_roosts = Array[Vector3]([Vector3(-18.5, -36.15, 3), Vector3(-17, -36.15, 1.5), Vector3(18.5, -36.15, 3), Vector3(3.5, -36.15, -3.8), Vector3(-3.5, -36.15, -18.5), Vector3(-24, -36.15, -12), Vector3(21.5, -36.15, -15)])

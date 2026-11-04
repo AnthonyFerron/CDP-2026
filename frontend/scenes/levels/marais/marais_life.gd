@@ -15,6 +15,8 @@ extends Node3D
 @export var lantern_model: PackedScene
 ## Îlots dont les berges accueillent les grenouilles : centre (x, z) et rayon du replat.
 @export var frog_islands: Array[Vector3] = []
+## Nénuphars où des grenouilles attendent, au bord des pontons : position (x, z).
+@export var pad_frogs: Array[Vector2] = []
 ## Corbeaux : point au-dessus duquel ils se posent (sur ce que l'on trouve en dessous), et s'ils s'envolent.
 @export var crow_perches: Array[Vector3] = []
 @export var shy_crows: PackedInt32Array = PackedInt32Array()
@@ -22,6 +24,8 @@ extends Node3D
 @export var bat_roosts: Array[Vector3] = []
 ## Potences des lanternes qui se balancent : pied (x, z) et orientation du bras (w, en degrés).
 @export var gallows: Array[Vector4] = []
+
+const FROG_SIZE := 1.9
 
 var _rng := RandomNumberGenerator.new()
 var _time := 0.0
@@ -110,7 +114,9 @@ func _build_ripples() -> void:
 	_ripple_material = StandardMaterial3D.new()
 	_ripple_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	_ripple_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	_ripple_material.albedo_color = Color(0.75, 0.85, 0.85, 0.5)
+	_ripple_material.albedo_color = Color(0.85, 0.95, 0.95, 0.75)
+	# Dessinés après les nappes de brume, pour rester visibles à travers elles.
+	_ripple_material.render_priority = 3
 	_ripple_mesh.material = _ripple_material
 	if fish_model:
 		_fish = fish_model.instantiate()
@@ -133,7 +139,7 @@ func ripple(at: Vector3, size := 1.0) -> void:
 		ring.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		ring.material_override = _ripple_material.duplicate()
 		add_child(ring)
-	ring.position = Vector3(at.x, MaraisTerrain.WATER_LEVEL + 0.02, at.z)
+	ring.position = Vector3(at.x, MaraisTerrain.WATER_LEVEL + 0.03, at.z)
 	ring.show()
 	_ripples.append({"node": ring, "age": 0.0, "size": size})
 
@@ -150,7 +156,7 @@ func _update_ripples(delta: float) -> void:
 			continue
 		var radius: float = lerpf(0.3, 2.4, t) * entry.size
 		ring.scale = Vector3(radius, 0.05, radius)
-		(ring.material_override as StandardMaterial3D).albedo_color.a = 0.5 * (1.0 - t)
+		(ring.material_override as StandardMaterial3D).albedo_color.a = 0.75 * (1.0 - t)
 
 
 ## De temps en temps, un rond dans l'eau profonde près du joueur ; une fois sur quatre, un poisson saute.
@@ -190,15 +196,15 @@ func _update_fish(delta: float, feet: Vector3) -> void:
 ## Une grenouille de formes simples : corps aplati, deux yeux saillants, pattes repliées.
 func _make_frog() -> Node3D:
 	var frog := Node3D.new()
-	var skin := _material(Color(0.22, 0.38, 0.12))
-	var belly := _material(Color(0.5, 0.55, 0.25))
-	var eye := _material(Color(0.85, 0.75, 0.2))
+	var skin := _material(Color(0.32, 0.52, 0.16))
+	var belly := _material(Color(0.62, 0.66, 0.3))
+	var eye := _material(Color(0.95, 0.8, 0.25))
 	_part(frog, _sphere(0.1, skin), Vector3(0, 0.07, 0), Vector3(1.0, 0.6, 1.3))
 	_part(frog, _sphere(0.08, belly), Vector3(0, 0.05, 0.03), Vector3(1.0, 0.5, 1.1))
 	for side in [-1.0, 1.0]:
 		_part(frog, _sphere(0.035, eye), Vector3(side * 0.055, 0.13, 0.08))
 		_part(frog, _sphere(0.05, skin), Vector3(side * 0.09, 0.03, -0.07), Vector3(1.0, 0.6, 1.6))
-	frog.scale = Vector3.ONE * 1.4
+	frog.scale = Vector3.ONE * FROG_SIZE
 	add_child(frog)
 	return frog
 
@@ -209,16 +215,31 @@ func _build_frogs() -> void:
 			var angle := _rng.randf() * TAU
 			var direction := Vector2.from_angle(angle)
 			var spot := Vector2(island.x, island.y) + direction * island.z
-			# On descend la berge jusqu'au bord de l'eau.
+			# On descend la berge jusqu'au-dessus des roseaux, qui poussent au ras de l'eau : la grenouille s'y voit.
 			for walk in 30:
-				if terrain.surface_height(spot.x, spot.y) < 0.12:
+				if terrain.surface_height(spot.x, spot.y) < 0.26:
 					break
-				spot += direction * 0.4
-			var frog := _make_frog()
-			var home := Vector3(spot.x, maxf(terrain.surface_height(spot.x, spot.y), MaraisTerrain.WATER_LEVEL), spot.y)
-			frog.position = home
-			frog.rotation.y = -angle + PI * 0.5 + PI
-			_frogs.append({"node": frog, "home": home, "out": Vector3(direction.x, 0.0, direction.y), "state": "rest", "time": 0.0})
+				spot += direction * 0.3
+			_add_frog(Vector3(spot.x, terrain.surface_height(spot.x, spot.y), spot.y), direction)
+	# D'autres attendent sur un nénuphar, au bord des pontons, et plongent quand on passe.
+	var pad := CylinderMesh.new()
+	pad.top_radius = 0.32
+	pad.bottom_radius = 0.32
+	pad.height = 0.02
+	pad.radial_segments = 12
+	pad.material = _material(Color(0.2, 0.42, 0.22))
+	for spot in pad_frogs:
+		var leaf := _part(self, pad, Vector3(spot.x, MaraisTerrain.WATER_LEVEL + 0.01, spot.y))
+		leaf.rotation.y = _rng.randf() * TAU
+		var away := Vector2.from_angle(_rng.randf() * TAU)
+		_add_frog(Vector3(spot.x, MaraisTerrain.WATER_LEVEL + 0.02, spot.y), away)
+
+
+func _add_frog(home: Vector3, out: Vector2) -> void:
+	var frog := _make_frog()
+	frog.position = home
+	frog.rotation.y = atan2(out.x, out.y)
+	_frogs.append({"node": frog, "home": home, "out": Vector3(out.x, 0.0, out.y), "state": "rest", "time": 0.0})
 
 
 func _update_frogs(delta: float, feet: Vector3) -> void:
@@ -230,7 +251,7 @@ func _update_frogs(delta: float, feet: Vector3) -> void:
 		match frog.state:
 			"rest":
 				# Gorge qui palpite.
-				node.scale.y = 1.4 * (1.0 + sin(_time * 7.0 + home.x) * 0.06)
+				node.scale.y = FROG_SIZE * (1.0 + sin(_time * 7.0 + home.x) * 0.06)
 				if distance < 3.2:
 					frog.state = "jump"
 					frog.time = 0.0
