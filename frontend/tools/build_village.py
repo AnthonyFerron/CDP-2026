@@ -1221,14 +1221,15 @@ def shop_sign(scene, number):
     width = 1.6 if len(text) > 12 else 1.2
     reach = width / 2 + 0.25
     along = frame.door_a - 2.0 * (1 if frame.door_a > 0 else -1) if abs(frame.door_a) > 0.5 else -2.0
-    foot = frame.p(along, frame.depth + 0.33)
+    foot = frame.p(along, frame.depth + 0.42)
     out = frame.f
     # La potence est contre le mur, la planche avance vers la rue : sa face regarde le long de la façade.
     node = (foot[0] + out[0] * reach, 0.0, foot[2] + out[1] * reach)
     degrees = math.degrees(math.atan2(-out[1], out[0]))
+    # Le panneau suspendu n'arrête le joueur qu'à son montant (sign_board.gd) : on note seulement son emprise.
     sign(scene, f"Enseigne_{trade}", node, degrees, text=text, mount=2, board_size=(width, 0.55), board_height=2.75,
-               line_height=0.16, double_sided=True, collision=False)
-    block(scene, (foot[0], 1.65, foot[2]), (0.16, 3.3, 0.16), label=f"potence {trade}")
+         line_height=0.16, double_sided=True)
+    LAYOUT.add(f"potence {trade}", None, foot, (0.3, 3.4, 0.3), degrees, 0.0, 3.4)
 
 
 # --- Abords de la porte : la dernière défense des gardes ------------------------------------------------------------
