@@ -31,6 +31,9 @@ const WATER_KEEP_OUT: Array[Vector3] = [
 	Vector3(-36.0, 44.5, 3.0),
 	Vector3(-7.0, 38.5, 2.5),
 ]
+## Côté des cases des petits détails, et marge de leur fondu au loin.
+const CHUNK_SIZE := 32.0
+const FADE_MARGIN := 6.0
 const PLANK_WIDTH := 2.4
 const PLANK_STEP := 1.2
 ## Lanternes des pontons : un pieu planté dans la vase, au bord des planches, tous les quelques mètres.
@@ -66,7 +69,7 @@ const LANTERN_SCALE := 2.3
 @export var bush_count := 160
 @export var mushroom_count := 70
 @export var log_count := 14
-## Distance à laquelle les petits détails disparaissent.
+## Distance à laquelle les petits détails disparaissent, case par case.
 @export var detail_range := 55.0
 
 var _rng := RandomNumberGenerator.new()
@@ -275,8 +278,7 @@ func _scatter_by_height(
 		var item := _ground_transform(spot, _rng.randf_range(scale_range.x, scale_range.y))
 		item.origin.y -= sink
 		items.append(item)
-	var instance := _add_multimesh(_load_mesh(model), items)
-	instance.material_override = material
+	_add_chunked(_load_mesh(model), items, material)
 
 
 ## Nénuphars sur les eaux profondes ; une partie des grands porte une fleur, posée au cœur de la feuille.
@@ -300,11 +302,11 @@ func _scatter_lilies() -> void:
 				var bloom := Basis(Vector3.UP, _rng.randf() * TAU).scaled(Vector3.ONE * size * 0.55)
 				var heart := Vector3(spot.x, MaraisTerrain.WATER_LEVEL - 0.03 + 0.035 * size, spot.y)
 				flowers[_rng.randi() % flowers.size()].append(Transform3D(bloom, heart))
-		_add_multimesh(_load_mesh(lily_models[model_index]), items)
+		_add_chunked(_load_mesh(lily_models[model_index]), items)
 	for index in flower_models.size():
 		var transforms: Array[Transform3D] = []
 		transforms.assign(flowers[index])
-		_add_multimesh(_load_mesh(flower_models[index]), transforms)
+		_add_chunked(_load_mesh(flower_models[index]), transforms)
 
 
 func _scatter_logs() -> void:
@@ -372,19 +374,39 @@ func _ground_transform(spot: Vector2, scale_factor: float) -> Transform3D:
 	return Transform3D(basis, Vector3(spot.x, terrain.footing_height(spot.x, spot.y) - 0.05, spot.y))
 
 
-func _add_multimesh(mesh: Mesh, transforms: Array[Transform3D]) -> MultiMeshInstance3D:
+## Dispersion permanente (arbres, troncs noyés) : un seul MultiMesh pour toute la carte, visible de partout.
+func _add_multimesh(mesh: Mesh, transforms: Array[Transform3D], origin := Vector3.ZERO) -> MultiMeshInstance3D:
 	var multimesh := MultiMesh.new()
 	multimesh.transform_format = MultiMesh.TRANSFORM_3D
 	multimesh.mesh = mesh
 	multimesh.instance_count = transforms.size()
 	for index in transforms.size():
-		multimesh.set_instance_transform(index, transforms[index])
+		multimesh.set_instance_transform(index, transforms[index].translated(-origin))
 	var instance := MultiMeshInstance3D.new()
 	instance.multimesh = multimesh
-	instance.visibility_range_end = detail_range
-	instance.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
+	instance.position = origin
 	add_child(instance)
 	return instance
+
+
+## Petits détails (roseaux, nénuphars, fleurs, buissons, champignons) : découpés en cases de CHUNK_SIZE mètres,
+## un MultiMesh par case, posé au centre de sa case. Godot mesure la distance d'affichage jusqu'au centre de chaque
+## MultiMesh : une case entière s'efface au loin, mais jamais ce qui est sous les pieds du joueur.
+func _add_chunked(mesh: Mesh, transforms: Array[Transform3D], material: Material = null) -> void:
+	var cells := {}
+	for item in transforms:
+		var key := Vector2i(floori(item.origin.x / CHUNK_SIZE), floori(item.origin.z / CHUNK_SIZE))
+		if not cells.has(key):
+			cells[key] = [] as Array[Transform3D]
+		cells[key].append(item)
+	for key: Vector2i in cells:
+		var center := Vector3((key.x + 0.5) * CHUNK_SIZE, 0.0, (key.y + 0.5) * CHUNK_SIZE)
+		var instance := _add_multimesh(mesh, cells[key], center)
+		instance.name = "Detail_%d_%d" % [key.x, key.y]
+		instance.material_override = material
+		instance.visibility_range_end = detail_range
+		instance.visibility_range_end_margin = FADE_MARGIN
+		instance.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 
 
 func _flat_material(color: Color) -> StandardMaterial3D:
