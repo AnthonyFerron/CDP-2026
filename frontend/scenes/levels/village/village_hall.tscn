@@ -35,63 +35,60 @@ size = Vector3(4, 4, 0.5)
 size = Vector3(0.5, 4, 4)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_3"]
-size = Vector3(2.044, 1.064, 1.568)
+size = Vector3(2.044, 1.064, 1.092)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4"]
 size = Vector3(0.6, 1.41, 0.6)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5"]
-size = Vector3(1.378, 0.988, 1.014)
+size = Vector3(1.378, 0.988, 0.572)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_6"]
-size = Vector3(0.864, 2.72, 1.792)
+size = Vector3(0.8, 2.72, 1.28)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7"]
-size = Vector3(1.568, 1.064, 2.044)
+size = Vector3(1.092, 1.064, 2.044)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_8"]
 size = Vector3(1.28, 2.816, 0.8)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_9"]
-size = Vector3(1.378, 0.988, 0.572)
+size = Vector3(1.2, 1.08, 1.2)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_10"]
-size = Vector3(1.68, 0.72, 1.2)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_11"]
 size = Vector3(2.52, 0.99, 1.35)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_12"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_11"]
 size = Vector3(1.2, 0.8, 0.6)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_13"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_12"]
 size = Vector3(0.9, 0.9, 1.8)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_14"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_13"]
 size = Vector3(1.352, 1.248, 1.352)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_15"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_14"]
 size = Vector3(0.5, 4, 1.05)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_16"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_15"]
 size = Vector3(0.5, 1.1, 1.9)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_16"]
+size = Vector3(1.28, 2.72, 0.8)
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_17"]
-size = Vector3(1.792, 2.72, 0.864)
+size = Vector3(0.8, 0.72, 0.8)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_18"]
-size = Vector3(0.8, 0.48, 1.12)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_19"]
 size = Vector3(0.3, 2.4, 6.2)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_20"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_19"]
 size = Vector3(3.4, 2.4, 0.3)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_21"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_20"]
 size = Vector3(1, 1.1, 1)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_22"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_21"]
 size = Vector3(0.52, 0.56, 0.52)
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_1"]
@@ -103,18 +100,22 @@ height = 0.9
 radius = 0.38
 
 [sub_resource type="StandardMaterial3D" id="Material_soot"]
+resource_name = "soot"
 albedo_color = Color(0.15, 0.125, 0.105, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_ash"]
+resource_name = "ash"
 albedo_color = Color(0.27, 0.24, 0.21, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_char"]
+resource_name = "char"
 albedo_color = Color(0.1, 0.075, 0.06, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_ember"]
+resource_name = "ember"
 albedo_color = Color(0.35, 0.08, 0.02, 1)
 roughness = 0.8
 emission_enabled = true
@@ -122,71 +123,88 @@ emission = Color(1, 0.32, 0.06, 1)
 emission_energy_multiplier = 2.2
 
 [sub_resource type="StandardMaterial3D" id="Material_stone"]
+resource_name = "stone"
 albedo_color = Color(0.42, 0.4, 0.38, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_stone_dark"]
+resource_name = "stone_dark"
 albedo_color = Color(0.3, 0.29, 0.29, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_brick"]
+resource_name = "brick"
 albedo_color = Color(0.5, 0.27, 0.18, 1)
 roughness = 0.95
 
 [sub_resource type="StandardMaterial3D" id="Material_wood"]
+resource_name = "wood"
 albedo_color = Color(0.42, 0.28, 0.17, 1)
 roughness = 0.9
 
 [sub_resource type="StandardMaterial3D" id="Material_wood_dark"]
+resource_name = "wood_dark"
 albedo_color = Color(0.26, 0.17, 0.1, 1)
 roughness = 0.9
 
 [sub_resource type="StandardMaterial3D" id="Material_rope"]
+resource_name = "rope"
 albedo_color = Color(0.55, 0.47, 0.33, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_iron"]
+resource_name = "iron"
 albedo_color = Color(0.2, 0.2, 0.22, 1)
 roughness = 0.5
 metallic = 0.6
 
 [sub_resource type="StandardMaterial3D" id="Material_water"]
+resource_name = "water"
 albedo_color = Color(0.08, 0.13, 0.16, 1)
 roughness = 0.15
 
 [sub_resource type="StandardMaterial3D" id="Material_flour"]
+resource_name = "flour"
 albedo_color = Color(0.86, 0.83, 0.76, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_burlap"]
+resource_name = "burlap"
 albedo_color = Color(0.62, 0.5, 0.32, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_straw"]
+resource_name = "straw"
 albedo_color = Color(0.78, 0.65, 0.33, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_crow"]
+resource_name = "crow"
 albedo_color = Color(0.05, 0.05, 0.07, 1)
 roughness = 0.6
 
 [sub_resource type="StandardMaterial3D" id="Material_beak"]
+resource_name = "beak"
 albedo_color = Color(0.16, 0.15, 0.14, 1)
 roughness = 0.6
 
 [sub_resource type="StandardMaterial3D" id="Material_cat_grey"]
+resource_name = "cat_grey"
 albedo_color = Color(0.36, 0.35, 0.36, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_cat_ginger"]
+resource_name = "cat_ginger"
 albedo_color = Color(0.72, 0.42, 0.18, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_cat_black"]
+resource_name = "cat_black"
 albedo_color = Color(0.07, 0.07, 0.08, 1)
 roughness = 0.9
 
 [sub_resource type="StandardMaterial3D" id="Material_eye"]
+resource_name = "eye"
 albedo_color = Color(0.6, 0.55, 0.12, 1)
 roughness = 0.4
 emission_enabled = true
@@ -194,42 +212,52 @@ emission = Color(0.4, 0.36, 0.05, 1)
 emission_energy_multiplier = 0.6
 
 [sub_resource type="StandardMaterial3D" id="Material_linen"]
+resource_name = "linen"
 albedo_color = Color(0.86, 0.83, 0.74, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_linen_blue"]
+resource_name = "linen_blue"
 albedo_color = Color(0.45, 0.55, 0.68, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_linen_red"]
+resource_name = "linen_red"
 albedo_color = Color(0.62, 0.28, 0.22, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_linen_green"]
+resource_name = "linen_green"
 albedo_color = Color(0.4, 0.5, 0.33, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_linen_burnt"]
+resource_name = "linen_burnt"
 albedo_color = Color(0.25, 0.2, 0.16, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_herb"]
+resource_name = "herb"
 albedo_color = Color(0.32, 0.42, 0.2, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_herb_dry"]
+resource_name = "herb_dry"
 albedo_color = Color(0.48, 0.45, 0.24, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_parchment"]
+resource_name = "parchment"
 albedo_color = Color(0.86, 0.78, 0.6, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_leather"]
+resource_name = "leather"
 albedo_color = Color(0.36, 0.2, 0.11, 1)
 roughness = 0.8
 
 [sub_resource type="StandardMaterial3D" id="Material_cloth_red"]
+resource_name = "cloth_red"
 albedo_color = Color(0.55, 0.12, 0.1, 1)
 roughness = 1
 
@@ -247,28 +275,28 @@ size = Vector3(0.95, 0.12, 0.8)
 [node name="Models" type="Node3D" parent="."]
 
 [node name="desk_0" parent="Models" instance=ExtResource("1_model")]
-transform = Transform3D(-2.8, 0, 0, 0, 2.8, 0, -0, 0, -2.8, -1.006, 0, -0.88)
+transform = Transform3D(-2.8, 0, 0, 0, 2.8, 0, -0, 0, -2.8, -1.006, 0, -1.118)
 
 [node name="chair_1" parent="Models" instance=ExtResource("2_model")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -2.3, 0, -1.7)
 
 [node name="sideTableDrawers_2" parent="Models" instance=ExtResource("3_model")]
-transform = Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, -0.263, 0, -0.761)
+transform = Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, -0.263, 0, -0.54)
 
 [node name="books_3" parent="Models" instance=ExtResource("4_model")]
 transform = Transform3D(2.4432, 0, 0.88925, 0, 2.6, 0, -0.88925, 0, 2.4432, -1.84322, 1.064, -0.12336)
 
 [node name="bookcaseClosedDoors_4" parent="Models" instance=ExtResource("5_model")]
-transform = Transform3D(0, 0, 3.2, 0, 3.2, 0, -3.2, 0, 0, -6.932, 0, -3.116)
+transform = Transform3D(0, 0, 3.2, 0, 3.2, 0, -3.2, 0, 0, -6.9, 0, -2.86)
 
 [node name="bookcaseClosedDoors_5" parent="Models" instance=ExtResource("5_model")]
-transform = Transform3D(0, 0, 3.2, 0, 3.2, 0, -3.2, 0, 0, -6.932, 0, -0.616)
+transform = Transform3D(0, 0, 3.2, 0, 3.2, 0, -3.2, 0, 0, -6.9, 0, -0.36)
 
 [node name="bookcaseClosedDoors_6" parent="Models" instance=ExtResource("5_model")]
-transform = Transform3D(0, 0, 3.2, 0, 3.2, 0, -3.2, 0, 0, -6.932, 0, 1.884)
+transform = Transform3D(0, 0, 3.2, 0, 3.2, 0, -3.2, 0, 0, -6.9, 0, 2.14)
 
 [node name="desk_7" parent="Models" instance=ExtResource("1_model")]
-transform = Transform3D(0, 0, 2.8, 0, 2.8, 0, -2.8, 0, 0, -4.12, 0, -2.606)
+transform = Transform3D(0, 0, 2.8, 0, 2.8, 0, -2.8, 0, 0, -3.882, 0, -2.606)
 
 [node name="chair_8" parent="Models" instance=ExtResource("2_model")]
 transform = Transform3D(0, 0, -3, 0, 3, 0, 3, 0, 0, -3.4, 0, -3.9)
@@ -337,7 +365,7 @@ transform = Transform3D(0, 0, 2.6, 0, 2.6, 0, -2.6, 0, 0, -0.804, 0, 4.641)
 transform = Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, -3.587, 0, 5.313)
 
 [node name="desk_30" parent="Models" instance=ExtResource("1_model")]
-transform = Transform3D(-2.8, 0, 0, 0, 2.8, 0, -0, 0, -2.8, -0.006, 4.5, -0.88)
+transform = Transform3D(-2.8, 0, 0, 0, 2.8, 0, -0, 0, -2.8, -0.006, 4.5, -1.118)
 
 [node name="chair_31" parent="Models" instance=ExtResource("2_model")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -1.3, 4.5, -1.7)
@@ -346,7 +374,7 @@ transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -1.3, 4.5, -1.7)
 transform = Transform3D(1.3, 0, 2.25167, 0, 2.6, 0, -2.25167, 0, 1.3, -1.59618, 5.564, 0.02737)
 
 [node name="sideTableDrawers_33" parent="Models" instance=ExtResource("3_model")]
-transform = Transform3D(-2.6, 0, 0, 0, 2.6, 0, -0, 0, -2.6, 2.063, 4.5, -0.839)
+transform = Transform3D(-2.6, 0, 0, 0, 2.6, 0, -0, 0, -2.6, 2.063, 4.5, -1.06)
 
 [node name="bookcaseOpen_34" parent="Models" instance=ExtResource("6_model")]
 transform = Transform3D(-3.2, 0, 0, 0, 3.2, 0, -0, 0, -3.2, -4.36, 4.5, 4.88)
@@ -364,7 +392,7 @@ transform = Transform3D(-2.57157, 0, 0, 0, 2.57157, 0, -0, 0, -2.57157, -4.45713
 transform = Transform3D(-2.48844, 0, 0, 0, 2.48844, 0, -0, 0, -2.48844, -4.88337, 6.4, 5.16802)
 
 [node name="bookcaseClosedDoors_39" parent="Models" instance=ExtResource("5_model")]
-transform = Transform3D(-3.2, 0, 0, 0, 3.2, 0, -0, 0, -3.2, 1.984, 4.5, 4.932)
+transform = Transform3D(-3.2, 0, 0, 0, 3.2, 0, -0, 0, -3.2, 2.24, 4.5, 4.9)
 
 [node name="rugRectangle_40" parent="Models" instance=ExtResource("10_model")]
 transform = Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, -3.041, 4.5, 2.596)
@@ -448,7 +476,7 @@ visibility_end = 45
 [node name="mini_dungeon_chest" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
 model = ExtResource("25_model")
-transforms = Array[Transform3D]([Transform3D(0, 0, 2.4, 0, 2.4, 0, -2.4, 0, 0, 3.26, 0.12, -5.1), Transform3D(0, 0, 2.4, 0, 2.4, 0, -2.4, 0, 0, -6.64, 4.62, -5.1), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, 6.4, 4.58, 4.44)])
+transforms = Array[Transform3D]([Transform3D(0, 0, 2.4, 0, 2.4, 0, -2.4, 0, 0, 3.5, 0, -5.1), Transform3D(0, 0, 2.4, 0, 2.4, 0, -2.4, 0, 0, -6.4, 4.5, -5.1), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, 6.4, 4.5, 4.6)])
 
 [node name="graveyard_kit_candle_multiple" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
@@ -573,15 +601,15 @@ shape = SubResource("BoxShape3D_8")
 
 [node name="Box24" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 1.6, 0.494, -5.4)
-shape = SubResource("BoxShape3D_9")
+shape = SubResource("BoxShape3D_5")
 
 [node name="Box25" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 3.5, 0.36, -5.1)
-shape = SubResource("BoxShape3D_10")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 3.5, 0.54, -5.1)
+shape = SubResource("BoxShape3D_9")
 
 [node name="Box26" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -4.6, 0.495, 3.4)
-shape = SubResource("BoxShape3D_11")
+shape = SubResource("BoxShape3D_10")
 
 [node name="Box27" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -5.8, 0.705, 2.2)
@@ -593,19 +621,19 @@ shape = SubResource("BoxShape3D_4")
 
 [node name="Box29" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 1, 0.4, 5.4)
-shape = SubResource("BoxShape3D_12")
+shape = SubResource("BoxShape3D_11")
 
 [node name="Box30" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 3, 0.4, 5.4)
-shape = SubResource("BoxShape3D_12")
+shape = SubResource("BoxShape3D_11")
 
 [node name="Box31" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -7, 0.45, 4.6)
-shape = SubResource("BoxShape3D_13")
+shape = SubResource("BoxShape3D_12")
 
 [node name="Box32" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -4.9, 0.624, 5)
-shape = SubResource("BoxShape3D_14")
+shape = SubResource("BoxShape3D_13")
 
 [node name="Box33" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -6, 6, -6)
@@ -657,15 +685,15 @@ shape = SubResource("BoxShape3D_2")
 
 [node name="Box45" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -8, 6, -1.48)
-shape = SubResource("BoxShape3D_15")
+shape = SubResource("BoxShape3D_14")
 
 [node name="Box46" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -8, 6, 1.48)
-shape = SubResource("BoxShape3D_15")
+shape = SubResource("BoxShape3D_14")
 
 [node name="Box47" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -8, 7.45, 0)
-shape = SubResource("BoxShape3D_16")
+shape = SubResource("BoxShape3D_15")
 
 [node name="Box48" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -8, 6, 4)
@@ -689,23 +717,23 @@ shape = SubResource("BoxShape3D_8")
 
 [node name="Box53" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 1.6, 5.86, 5.3)
-shape = SubResource("BoxShape3D_17")
+shape = SubResource("BoxShape3D_16")
 
 [node name="Box54" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -6.4, 4.86, -5.1)
-shape = SubResource("BoxShape3D_10")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -6.4, 5.04, -5.1)
+shape = SubResource("BoxShape3D_9")
 
 [node name="Box55" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 6.4, 4.74, 4.6)
-shape = SubResource("BoxShape3D_18")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 6.4, 4.86, 4.6)
+shape = SubResource("BoxShape3D_17")
 
 [node name="Box56" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 4.5, 5.7, -1.1)
-shape = SubResource("BoxShape3D_19")
+shape = SubResource("BoxShape3D_18")
 
 [node name="Box57" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 6.2, 5.7, 2.1)
-shape = SubResource("BoxShape3D_20")
+shape = SubResource("BoxShape3D_19")
 
 [node name="Box58" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -14, 6, -4)
@@ -733,15 +761,15 @@ shape = SubResource("BoxShape3D_2")
 
 [node name="Box64" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -12.6, 5.05, 0)
-shape = SubResource("BoxShape3D_21")
+shape = SubResource("BoxShape3D_20")
 
 [node name="Box65" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -12.8, 4.78, -3.1)
-shape = SubResource("BoxShape3D_22")
+shape = SubResource("BoxShape3D_21")
 
 [node name="Box66" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -12.8, 4.78, 3.1)
-shape = SubResource("BoxShape3D_22")
+shape = SubResource("BoxShape3D_21")
 
 [node name="Cylinder0" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -3.6, 1, 5.3)

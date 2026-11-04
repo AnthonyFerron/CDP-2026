@@ -24,7 +24,9 @@ Le lieu le plus marqué par la guerre : les attaques de Vibelandia ont forcé la
 
 Chaque maison a son métier, meublé et pillé : auberge du Chaudron, boulangerie et son four de briques, forge et son foyer, épicerie, herboristerie, corps de garde, tonnellerie, maison du meunier, logis (dont celui d'une famille, avec la poupée et la charrette de bois de l'enfant), et une maison brûlée de fond en comble. Les boutiques ont leur enseigne pendue à une potence (`SignBoard`). Corbeaux et chats sont restés au village.
 
-L'ambiance est celle d'une fin de journée : un soleil bas et doré perce les nuages, des fumées montent encore des ruines et quelques feux couvent (barricade, cratères, maison brûlée, écuries).
+L'ambiance est celle d'une fin de journée : un soleil bas et doré perce les nuages, une lumière froide du ciel éclaire le côté des murs à l'ombre, des fumées montent encore des ruines et des cheminées de la boulangerie et de la forge, quelques feux couvent et lâchent leurs braises (barricade, cratères, maison brûlée, écuries). Les fenêtres de la mairie luisent dans le soir. On entend le ruisseau, la roue du moulin qui éclabousse, le vent dans la brèche, la porte et le moulin à vent, le four et la forge qui crépitent ; dans la mairie, la poussière flotte dans la lumière.
+
+Le village vit encore un peu : les corbeaux picorent ou guettent et s'envolent quand on approche, puis reviennent quand on est loin ; deux chats se promènent devant la mairie et autour du puits ; le linge et les bannières ondulent au vent.
 
 Une limite invisible (`village_terrain.gd`, `LIMIT_RADIUS`, 72 m) ferme la zone au milieu du talus qui l'entoure : on ne la franchit ni en marchant, ni en sautant d'un mur, d'une tour ou d'une charrette.
 
@@ -46,7 +48,7 @@ L'intérieur de la mairie est posé sous la carte (nœud `Interior`, à y = -40)
 - **Rez-de-chaussée, l'accueil des habitants** : le comptoir, le bureau de l'archiviste, les armoires des archives, étagères, table d'attente, coffre, caisses et bancs. Un escalier monte le long du mur est ; son garde-corps empêche de sauter dans la cage d'escalier.
 - **Étage, le bureau du maire** : bureau, armoire, coffre, étagère, et contre le mur nord le dispositif aux cinq sections, avec au-dessus l'inscription des anciens bâtisseurs : « Cinq langages, cinq épreuves, un seul savoir. Comprends les instructions des anciens bâtisseurs et le dernier secret du village te sera révélé. »
 - **Fragments** : dix fragments de papier, deux par langage, sont posés sur les meubles ou rangés dans les tiroirs, les armoires et les coffres. Ouvrir un meuble avec E montre ce qu'il contient ; certains sont vides. La touche **I** ouvre le carnet des fragments retrouvés.
-- **Le dispositif** : il montre les cinq extraits de code, à résoudre dans l'ordre. Une bonne réponse allume la section en vert. Une mauvaise la fait rougir, fait vibrer les murs et coûte 5 minutes au chronomètre du volcan. Les majuscules, espaces et guillemets ne comptent pas.
+- **Le dispositif** : son panneau, dans le style des menus, a un onglet par langage ; chaque extrait est une page des archives de la mairie, avec ses numéros de ligne, et les fragments retrouvés sont à relire à côté. Les épreuves se résolvent dans l'ordre (les suivantes restent cadenassées) ; une bonne réponse allume la section en vert, scelle la page « Résolu » et passe à l'épreuve suivante. Une mauvaise fait rougir et trembler le dispositif et les murs, et coûte 5 minutes au chronomètre du volcan (le bandeau du HUD l'annonce sous le panneau). Les majuscules, espaces et guillemets ne comptent pas.
 - **Fin de l'énigme** : les cinq codes résolus, le dispositif s'illumine d'une intense lumière bleutée, un bruit mécanique résonne, la bibliothèque du mur ouest glisse et révèle la petite salle secrète, intacte. Le Codonomicon y repose sur un pupitre de pierre, et le prendre rallume le portail.
 
 | Code | Langage | Question | Réponse | Fragments |
@@ -70,7 +72,10 @@ Les extraits, les questions et les indices ont été écrits pour cette version,
 | `village_hall.tscn` | Murs et meubles de l'intérieur de la mairie, générés par `tools/build_village.py` |
 | `village_instances.gd` | Copies répétées d'un même modèle dessinées en une fois (MultiMesh), pour la version web |
 | `paper_fragment.gd`, `storage.gd` | Fragment de papier à ramasser, tiroir, armoire ou coffre à ouvrir |
-| `code_puzzle.tscn`, `code_puzzle.gd` | Interface du dispositif des cinq codes |
-| `paper_notebook.tscn`, `paper_notebook.gd` | Carnet des fragments, ouvert avec I |
+| `code_puzzle.tscn`, `code_puzzle.gd` | Panneau du dispositif des cinq codes, construit avec `scenes/ui/menus/ornate.gd` |
+| `paper_notebook.tscn`, `paper_notebook.gd` | Carnet des fragments, ouvert avec I, dans le même style |
+| `village_particles.gd` | Braises des feux, poussière de la mairie, éclaboussures de la roue |
+| `village_crow.gd`, `village_cat.gd` | Corbeaux qui s'envolent à l'approche, chats qui se promènent |
+| `village_life.gd`, `village_cloth.gdshader` | Linge et bannières qui ondulent au vent |
 
 `tools/build_village.py` contrôle le décor qu'il pose : il signale tout objet solide qui en traverse un autre, et tout objet posé sur un passage à garder libre (grande rue, portes, chemins de l'énigme). Les formes simples (traces de brûlure, corbeaux, chats, linge, four, épouvantail) y sont regroupées en MultiMesh, et les modèles répétés passent par `village_instances.gd`.
