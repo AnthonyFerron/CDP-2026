@@ -107,6 +107,10 @@
 [ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/wood-structure.glb" id="105_model"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/resource-stone-large.glb" id="106_model"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/tool-pickaxe.glb" id="107_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/bridge_wood.glb" id="108_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/bridge_stoneRound.glb" id="109_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/lightpost-single.glb" id="110_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/bridge_woodRound.glb" id="111_model"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
 size = Vector3(1.8, 0.6, 1.8)
@@ -509,6 +513,21 @@ size = Vector3(2.958, 1.69, 3.719)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_134"]
 size = Vector3(0.9, 0.9, 1.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_135"]
+size = Vector3(16.1, 0.5, 5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_136"]
+size = Vector3(16.1, 2.2, 0.3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_137"]
+size = Vector3(0.45, 2.8, 0.45)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_138"]
+size = Vector3(15.6, 0.5, 3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_139"]
+size = Vector3(15.6, 2.2, 0.3)
 
 [node name="HubProps" type="Node3D"]
 
@@ -2207,6 +2226,30 @@ shape = SubResource("BoxShape3D_134")
 [node name="Box967" type="CollisionShape3D" parent="Fixed/Collision"]
 transform = Transform3D(0.86603, 0, 0.5, 0, 1, 0, -0.5, 0, 0.86603, 77, 0.45, -38.6)
 shape = SubResource("BoxShape3D_134")
+
+[node name="Box968" type="CollisionShape3D" parent="Fixed/Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 63.25, -0.15, 0)
+shape = SubResource("BoxShape3D_135")
+
+[node name="Box969" type="CollisionShape3D" parent="Fixed/Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 63.25, 1.2, -2.06)
+shape = SubResource("BoxShape3D_136")
+
+[node name="Box970" type="CollisionShape3D" parent="Fixed/Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 63.25, 1.2, 2.06)
+shape = SubResource("BoxShape3D_136")
+
+[node name="Box975" type="CollisionShape3D" parent="Fixed/Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 63, -0.15, -66)
+shape = SubResource("BoxShape3D_138")
+
+[node name="Box976" type="CollisionShape3D" parent="Fixed/Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 63, 1.2, -67.24)
+shape = SubResource("BoxShape3D_139")
+
+[node name="Box977" type="CollisionShape3D" parent="Fixed/Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 63, 1.2, -64.76)
+shape = SubResource("BoxShape3D_139")
 
 [node name="Repairs" type="Node3D" parent="."]
 
@@ -10492,3 +10535,71 @@ shape = SubResource("BoxShape3D_61")
 [node name="Box939" type="CollisionShape3D" parent="Repairs/Farm/Rebuilt/Collision"]
 transform = Transform3D(0.95459, 0, 0.29792, 0, 1, 0, -0.29792, 0, 0.95459, 45.5, 0.5, 73.4)
 shape = SubResource("BoxShape3D_61")
+
+[node name="GreatBridge" type="Node3D" parent="Repairs"]
+metadata/stage = 1
+
+[node name="Ruins" type="Node3D" parent="Repairs/GreatBridge"]
+
+[node name="bridge_wood_1941" parent="Repairs/GreatBridge/Ruins" instance=ExtResource("108_model")]
+transform = Transform3D(14.9039, 0, 0, 0, 6, 0, 0, 0, 4.80769, 63.25, -0.8, 0)
+
+[node name="rocks_small_1942" parent="Repairs/GreatBridge/Ruins" instance=ExtResource("11_model")]
+transform = Transform3D(1.4359, 0, -0.70583, 0, 1.6, 0, 0.70583, 0, 1.4359, 58.75, -1.3, 3.64)
+
+[node name="rocks_small_1943" parent="Repairs/GreatBridge/Ruins" instance=ExtResource("11_model")]
+transform = Transform3D(-1.15966, 0, 1.10235, 0, 1.6, 0, -1.10235, 0, -1.15966, 66.25, -1.3, -3.78)
+
+[node name="rocks_small_1944" parent="Repairs/GreatBridge/Ruins" instance=ExtResource("11_model")]
+transform = Transform3D(-1.50816, 0, 0.53428, 0, 1.6, 0, -0.53428, 0, -1.50816, 68.75, -1.3, 3.36)
+
+[node name="Rebuilt" type="Node3D" parent="Repairs/GreatBridge"]
+
+[node name="bridge_stoneRound_1945" parent="Repairs/GreatBridge/Rebuilt" instance=ExtResource("109_model")]
+transform = Transform3D(14.9039, 0, 0, 0, 6, 0, 0, 0, 4.80769, 63.25, -0.8, 0)
+
+[node name="lightpost_single_1946" parent="Repairs/GreatBridge/Rebuilt" instance=ExtResource("110_model")]
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 54.8, 0, -2.9)
+
+[node name="lightpost_single_1947" parent="Repairs/GreatBridge/Rebuilt" instance=ExtResource("110_model")]
+transform = Transform3D(-2.2, 0, 0, 0, 2.2, 0, -0, 0, -2.2, 54.8, 0, 2.9)
+
+[node name="lightpost_single_1948" parent="Repairs/GreatBridge/Rebuilt" instance=ExtResource("110_model")]
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 71.7, 0, -2.9)
+
+[node name="lightpost_single_1949" parent="Repairs/GreatBridge/Rebuilt" instance=ExtResource("110_model")]
+transform = Transform3D(-2.2, 0, 0, 0, 2.2, 0, -0, 0, -2.2, 71.7, 0, 2.9)
+
+[node name="Collision" type="StaticBody3D" parent="Repairs/GreatBridge/Rebuilt"]
+
+[node name="Box971" type="CollisionShape3D" parent="Repairs/GreatBridge/Rebuilt/Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 54.8, 1.4, -2.9)
+shape = SubResource("BoxShape3D_137")
+
+[node name="Box972" type="CollisionShape3D" parent="Repairs/GreatBridge/Rebuilt/Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 54.8, 1.4, 2.9)
+shape = SubResource("BoxShape3D_137")
+
+[node name="Box973" type="CollisionShape3D" parent="Repairs/GreatBridge/Rebuilt/Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 71.7, 1.4, -2.9)
+shape = SubResource("BoxShape3D_137")
+
+[node name="Box974" type="CollisionShape3D" parent="Repairs/GreatBridge/Rebuilt/Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 71.7, 1.4, 2.9)
+shape = SubResource("BoxShape3D_137")
+
+[node name="ParkFootbridge" type="Node3D" parent="Repairs"]
+metadata/stage = 2
+
+[node name="Ruins" type="Node3D" parent="Repairs/ParkFootbridge"]
+
+[node name="bridge_wood_1950" parent="Repairs/ParkFootbridge/Ruins" instance=ExtResource("108_model")]
+transform = Transform3D(14.4231, 0, 0, 0, 6, 0, 0, 0, 2.88462, 63, -0.8, -66)
+
+[node name="resource_planks_1951" parent="Repairs/ParkFootbridge/Ruins" instance=ExtResource("25_model")]
+transform = Transform3D(2.25167, 0, 1.3, 0, 2.6, 0, -1.3, 0, 2.25167, 69.5, -1, -63.4)
+
+[node name="Rebuilt" type="Node3D" parent="Repairs/ParkFootbridge"]
+
+[node name="bridge_woodRound_1952" parent="Repairs/ParkFootbridge/Rebuilt" instance=ExtResource("111_model")]
+transform = Transform3D(14.4231, 0, 0, 0, 6, 0, 0, 0, 2.88462, 63, -0.8, -66)

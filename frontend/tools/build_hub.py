@@ -596,6 +596,8 @@ def build_shelter():
             scene.add("fantasy_town_kit/planks", (x, -0.2, z), 0.0, TILE)
             scene.add("fantasy_town_kit/planks", (x, WALL_HEIGHT + 0.24, z), 0.0, TILE, tilt=180.0)
     scene.add_box((cx, -0.2, cz), (width * TILE, 0.48, depth * TILE))
+    # Plafond plein, de mur à mur et au-delà : même en sautant depuis un lit superposé, on ne sort pas de l'abri.
+    scene.add_box((cx, WALL_HEIGHT + 0.5, cz), (width * TILE + 2.0, 1.0, depth * TILE + 2.0))
     # Dalle de terre au-dessus du plafond : l'abri est enterré, aucun jour ne passe entre les planches.
     scene.add("fantasy_town_kit/roof-flat", (cx, WALL_HEIGHT + 0.3, cz), 0.0, 1.0)
     for column in range(width):
@@ -776,6 +778,52 @@ def build_mine(scene, rng):
         furniture(scene, "survival_kit/box-large", (x, 0.0, z), 30.0, 3.6, height=0.9)
 
 
+# Ponts sur la rivière : (x, z, cap du tablier, longueur, largeur), comme BRIDGES dans hub_terrain.gd.
+# Le tablier affleure le chemin (dessus à 0,1 m) ; ses parapets portent une collision haute, pour qu'on ne saute pas
+# dans la rivière, dont les berges ne s'ouvrent que sous les ponts.
+BRIDGES = [(63.25, 0.0, 0.0, 15.5, 5.0), (63.0, -66.0, 0.0, 15.0, 3.0)]
+DECK_TOP = 0.1
+
+
+def bridge_collision(scene, x, z, degrees, length, width, rail):
+    """Tablier et parapets d'un pont : la collision est la même, pont de fortune ou reconstruit."""
+    c, s = math.cos(math.radians(degrees)), math.sin(math.radians(degrees))
+    scene.add_box((x, DECK_TOP - 0.25, z), (length + 0.6, 0.5, width), degrees)
+    for side in (-1, 1):
+        # Le côté du tablier : la normale de son axe, dans le plan.
+        nx, nz = s * side * rail, c * side * rail
+        scene.add_box((x + nx, DECK_TOP + 1.1, z + nz), (length + 0.6, 2.2, 0.3), degrees)
+
+
+def build_bridges(scene, rng):
+    """Le grand pont de pierre du chemin du bunker, et la passerelle du jardin du roi vers la rive est."""
+    x, z, degrees, length, width = BRIDGES[0]
+    scene.group = "Fixed"
+    bridge_collision(scene, x, z, degrees, length, width, 2.06)
+    # Avant le premier livre : un pont de fortune, des planches jetées sur les piles du pont effondré.
+    scene.repair("GreatBridge", 1)
+    scene.add("nature_kit/bridge_wood", (x, DECK_TOP - 0.15 * 6.0, z), degrees, (length / 1.04, 6.0, width / 1.04))
+    for dx, dz in ((-4.5, 2.6), (3.0, -2.7), (5.5, 2.4)):
+        scene.add("castle_kit/rocks-small", (x + dx, -1.3, z + dz * 1.4), rng.uniform(0, 360), 1.6)
+    scene.rebuilt("GreatBridge")
+    scene.add("nature_kit/bridge_stoneRound", (x, DECK_TOP - 0.15 * 6.0, z), degrees, (length / 1.04, 6.0, width / 1.04))
+    for end in (-1, 1):
+        for side in (-1, 1):
+            lx, lz = x + end * (length / 2 + 0.7), z + side * 2.9
+            scene.add("graveyard_kit/lightpost-single", (lx, 0.0, lz), 0.0 if side < 0 else 180.0, 2.2)
+            scene.add_box((lx, 1.4, lz), (0.45, 2.8, 0.45))
+    # Passerelle de bois du jardin du roi : reconstruite avec le jardin, au deuxième livre.
+    x, z, degrees, length, width = BRIDGES[1]
+    scene.group = "Fixed"
+    bridge_collision(scene, x, z, degrees, length, width, 1.24)
+    scene.repair("ParkFootbridge", 2)
+    scene.add("nature_kit/bridge_wood", (x, DECK_TOP - 0.15 * 6.0, z), degrees, (length / 1.04, 6.0, width / 1.04))
+    scene.add("survival_kit/resource-planks", (x + 6.5, -1.0, z + 2.6), 30.0, 2.6)
+    scene.rebuilt("ParkFootbridge")
+    scene.add("nature_kit/bridge_woodRound", (x, DECK_TOP - 0.15 * 6.0, z), degrees, (length / 1.04, 6.0, width / 1.04))
+    scene.group = "Fixed"
+
+
 def main():
     build_shelter()
     rng = random.Random(5814)
@@ -786,6 +834,7 @@ def main():
     build_bunker(scene, rng)
     build_landmarks(scene, rng)
     build_mine(scene, rng)
+    build_bridges(scene, rng)
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(scene.text(), encoding="utf-8", newline="\n")
     print(f"{OUTPUT.name} : {len(scene.visuals)} modèles, {len(scene.colliders)} collisions")

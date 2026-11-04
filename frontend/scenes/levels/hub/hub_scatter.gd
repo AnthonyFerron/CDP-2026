@@ -44,9 +44,17 @@ func set_life(life: float) -> void:
 
 
 func _is_free(spot: Vector2, margin: float) -> bool:
-	if terrain.flat_mask(spot.x, spot.y) > 0.2 or spot.length() > HubTerrain.LIMIT_RADIUS - 2.0:
+	if not HubTerrain.inside_limit(spot, 2.0) or terrain.flat_mask(spot.x, spot.y) > 0.2:
 		return false
 	if HubTerrain.castle_distance(spot) < 6.0 + margin or spot.distance_to(HubTerrain.BUNKER) < 14.0:
+		return false
+	# Ni dans la rivière ni sur ses berges, ni dans le jardin du roi, dont les arbres sont plantés en allées.
+	if terrain.shore_distance(spot.x, spot.y) < 3.5 + margin or HubTerrain.PARK_AREA.grow(3.0 + margin).has_point(spot):
+		return false
+	for bridge: Array in HubTerrain.BRIDGES:
+		if HubTerrain.bridge_contains(bridge, spot, 3.0 + margin):
+			return false
+	if HubTerrain.alley_distance(spot, false, 4.0) < 3.0 + margin:
 		return false
 	for target: Vector2 in HubTerrain.destinations():
 		if spot.distance_to(target) < 6.0 + margin:
@@ -72,7 +80,8 @@ func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, radi
 	for attempt in count * 12:
 		if placed >= count:
 			break
-		var spot := Vector2.from_angle(_rng.randf() * TAU) * sqrt(_rng.randf()) * HubTerrain.LIMIT_RADIUS
+		var angle := _rng.randf() * TAU
+		var spot := Vector2.from_angle(angle) * sqrt(_rng.randf()) * HubTerrain.limit_radius(angle)
 		if not _is_free(spot, 1.0):
 			continue
 		var slope := terrain.slope_at(spot.x, spot.y)
@@ -110,8 +119,9 @@ func _add_forest() -> void:
 	for attempt in forest_tree_count * 6:
 		if placed >= forest_tree_count:
 			break
-		var spot := Vector2.from_angle(_rng.randf() * TAU) * _rng.randf_range(HubTerrain.LIMIT_RADIUS + 1.0, HubTerrain.PLAY_RADIUS + 24.0)
-		if terrain.slope_at(spot.x, spot.y) > 1.0:
+		var angle := _rng.randf() * TAU
+		var spot := Vector2.from_angle(angle) * _rng.randf_range(HubTerrain.limit_radius(angle) + 1.0, HubTerrain.play_radius(angle) + 24.0)
+		if terrain.slope_at(spot.x, spot.y) > 1.0 or terrain.shore_distance(spot.x, spot.y) < 2.5:
 			continue
 		var scale_factor := _rng.randf_range(4.5, 6.5)
 		var ground := terrain.surface_height(spot.x, spot.y) - 0.2 * scale_factor
