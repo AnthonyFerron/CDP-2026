@@ -47,24 +47,28 @@ Les secrets restent dans `/opt/cdp-2026/.env`. `pg_dump` tourne dans le conteneu
 
 ## Mise en place sur le serveur
 
-**État au 4 novembre 2026 : le serveur utilise encore l'ancien `cdp-deploy`**, qui ne sauvegarde pas la base et n'applique pas les migrations. Le nouveau est prêt dans le dépôt mais n'est pas installé.
+**État au 4 novembre 2026 : le nouveau `cdp-deploy` est installé en production** dans `/usr/local/bin/cdp-deploy` (`755`, `root:root`). L'ancien est conservé dans `/usr/local/lib/cdp-deploy/cdp-deploy.ancien-20261104`, et le dossier `/opt/cdp-2026/backups` existe déjà.
 
-Le compose de production exige la variable `CDP_DEPLOY`, que seul `deploy.sh` définit. Tant que l'ancien `cdp-deploy` est en place, un déploiement de cette version échoue donc dès la lecture de `docker-compose.prod.yml`, avant de toucher aux conteneurs. La production reste telle quelle, et le workflow apparaît en échec.
+Son mécanisme de repli a déjà servi en production : le déploiement du 4 novembre à 10:57 UTC, sur un `main` qui n'avait pas encore `deploy.sh`, s'est déroulé comme avec l'ancien script et a réussi.
 
-Installation, une seule fois, depuis un dépôt à jour :
+**`deploy.sh` n'a en revanche jamais été exécuté en production**, seulement sur un environnement isolé. Il servira pour la première fois au premier déploiement d'un `main` qui le contient. Ce premier passage est à surveiller :
+
+- le suivre dans les journaux du workflow « Déployer » ;
+- vérifier la nouvelle sauvegarde dans `/opt/cdp-2026/backups` ;
+- vérifier la sortie d'`alembic upgrade head` (aucune migration en attente à ce jour) ;
+- vérifier `/api/v1/health/database`.
+
+Il recréera une fois le conteneur de l'API, dont la configuration change (étiquette `CDP_DEPLOY`), soit quelques secondes de coupure.
+
+Retour à l'ancien script, en détenant le verrou de déploiement :
 
 ```sh
-sudo install -m 755 infrastructure/cdp-deploy /usr/local/bin/cdp-deploy
-sudo install -d -o deploy -g deploy -m 700 /opt/cdp-2026/backups
+sudo flock /opt/cdp-2026/.deploy.lock install -o root -g root -m 755 /usr/local/lib/cdp-deploy/cdp-deploy.ancien-20261104 /usr/local/bin/cdp-deploy
 ```
 
-Le nouveau `cdp-deploy` peut être installé avant ou après la fusion dans `main` : avec un `main` qui n'a pas encore `deploy.sh`, il déploie comme l'ancien. Relancer `sudo bash infrastructure/setup-server.sh` fait la même chose, sans régénérer la clé SSH si elle existe déjà.
+Ne revenir à l'ancien script qu'avec un `main` sans `deploy.sh`. Sur la version actuelle, il échoue avant de toucher aux conteneurs, puisque le compose de production exige `CDP_DEPLOY`.
 
-Pour valider le mécanisme après l'installation, lancer un déploiement à la main (`sudo -u deploy cdp-deploy`) et vérifier :
-
-- la nouvelle sauvegarde dans `/opt/cdp-2026/backups` ;
-- la sortie d'`alembic upgrade head` ;
-- `/api/v1/health/database`.
+Installation sur un nouveau serveur : `sudo bash infrastructure/setup-server.sh` installe `cdp-deploy` et crée le dossier des sauvegardes. Le relancer met le script à jour, sans régénérer la clé SSH si elle existe déjà.
 
 ## Sauvegardes
 
