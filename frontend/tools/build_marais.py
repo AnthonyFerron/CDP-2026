@@ -721,28 +721,31 @@ def build_crypt_underground(scene, rng):
     scene.add_box((0.0, mid_y - normal[0] * 0.3, mid_z + normal[1] * 0.3), (3.0, 0.6, length), 0.0, tilt=-slope)
     for side in (-1.0, 1.0):
         scene.add_box((side * 1.8, 4.3, sz - 2.0), (0.7, 8.6, 8.4))
-    # Plafond : en pente au-dessus des marches, plat au-dessus du palier, à 4,2 m des marches au plus bas.
-    ceiling = (sz - 6.2, CRYPT_HEIGHT), (sz - 2.3, 8.55)
-    run_c = ceiling[1][0] - ceiling[0][0]
-    rise_c = ceiling[1][1] - ceiling[0][1]
+    # Plafond : en pente au-dessus du pied de l'escalier, en suivant le haut de ses murs, puis plat à 4,15 m au-dessus
+    # du palier, jusqu'au fond. Les murs du modèle montent plus haut : aucun jour entre eux et le plafond.
+    lx, ly, lz = LANDING
+    top = ly + CRYPT_HEIGHT
+    low_end = sz - 6.2
+    high_end = low_end + (top - CRYPT_HEIGHT) / (8.55 - CRYPT_HEIGHT) * 3.9
+    run_c, rise_c = high_end - low_end, top - CRYPT_HEIGHT
     tilt_c = math.degrees(math.atan2(rise_c, run_c))
     length_c = math.hypot(run_c, rise_c)
-    scene.add("modular_dungeon_kit/template-floor", (0.0, (ceiling[0][1] + ceiling[1][1]) / 2, (ceiling[0][0] + ceiling[1][0]) / 2),
-              0.0, (0.75, 1.0, length_c / 4.0), tilt=180.0 - tilt_c)
-    scene.add_box((0.0, (ceiling[0][1] + ceiling[1][1]) / 2 + 0.3, (ceiling[0][0] + ceiling[1][0]) / 2), (3.6, 0.6, length_c + 0.4), 0.0, tilt=-tilt_c)
-    scene.add("modular_dungeon_kit/template-floor", (0.0, 8.55, sz - 0.05), 0.0, (0.75, 1.0, 1.1), tilt=180.0)
-    scene.add_box((0.0, 8.85, sz), (3.6, 0.6, 4.6))
-    # Palier du haut, sous la trappe : son sol, ses murs, son plafond.
-    lx, ly, lz = LANDING
+    middle = ((CRYPT_HEIGHT + top) / 2, (low_end + high_end) / 2)
+    scene.add("modular_dungeon_kit/template-floor", (0.0, middle[0], middle[1]), 0.0, (0.75, 1.0, length_c / 4.0), tilt=180.0 - tilt_c)
+    scene.add_box((0.0, middle[0] + 0.3 * math.cos(math.radians(tilt_c)), middle[1] - 0.3 * math.sin(math.radians(tilt_c))),
+                  (3.6, 0.6, length_c + 0.3), 0.0, tilt=-tilt_c)
+    flat_end = lz + 2.0
+    flat_length = flat_end - high_end
+    scene.add("modular_dungeon_kit/template-floor", (0.0, top, (high_end + flat_end) / 2), 0.0, (0.75, 1.0, flat_length / 4.0), tilt=180.0)
+    scene.add_box((0.0, top + 0.3, (high_end + flat_end) / 2), (3.6, 0.6, flat_length + 0.2))
+    # Palier du haut, sous la trappe : son sol (qui rejoint la dernière marche), ses murs.
     scene.add("modular_dungeon_kit/template-floor", (lx, ly, lz), 0.0, (0.75, 1.0, 1.0))
-    scene.add_box((lx, ly - 0.25, lz), (3.6, 0.5, 4.0))
-    scene.add("modular_dungeon_kit/template-floor", (lx, ly + CRYPT_HEIGHT, lz), 0.0, (0.75, 1.0, 1.0), tilt=180.0)
-    scene.add_box((lx, ly + CRYPT_HEIGHT + 0.25, lz), (3.6, 0.5, 4.0))
+    scene.add_box((lx, ly - 0.25, lz - 0.3), (3.6, 0.5, 4.6))
     for (dx, dz), degrees in ((1, 0), 90.0), ((-1, 0), -90.0), ((0, 1), 0.0):
-        edge = (lx + dx * 1.5, lz + dz * 2.0)
-        scene.add("modular_dungeon_kit/template-wall", (edge[0], ly, edge[1]), degrees, (0.75, 1.0, 1.0) if dz else 1.0)
-        size = (0.6, CRYPT_HEIGHT, 4.0) if dx else (3.6, CRYPT_HEIGHT, 0.6)
-        scene.add_box((edge[0] + dx * 0.15, ly + CRYPT_HEIGHT / 2, edge[1] - dz * 0.3), size)
+        edge = (lx + dx * 1.9, lz + dz * 2.0)
+        scene.add("modular_dungeon_kit/template-wall", (edge[0], ly, edge[1]), degrees, (0.95, 1.0, 1.0) if dz else 1.0)
+        size = (0.6, CRYPT_HEIGHT + 0.2, 4.0) if dx else (3.8, CRYPT_HEIGHT + 0.2, 0.6)
+        scene.add_box((edge[0] - dx * 0.3, ly + CRYPT_HEIGHT / 2, edge[1] - dz * 0.3), size)
 
     # Salle du mécanisme : colonnes aux angles, bannières et cierges autour du mécanisme, braseros au fond.
     for x in (-7.0, 7.0):

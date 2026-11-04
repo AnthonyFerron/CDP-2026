@@ -51,9 +51,12 @@ const LANTERN_SCALE := 2.3
 @export var lantern_model: PackedScene
 ## Décor dont chaque objet est descendu au sol maillé : marais_grounded.tscn.
 @export var grounded: Node3D
-## Racines dont les modèles nommés « moss_… » reçoivent la mousse.
-@export var mossy_roots: Array[Node3D]
+## Décor dont les modèles nommés « moss_… » reçoivent la mousse et « dust_… » la poussière : marais_props.tscn
+## et marais_crypt.tscn (et marais_grounded.tscn, ci-dessus).
+@export var props_root: Node3D
+@export var crypt_root: Node3D
 @export var moss_material: Material
+@export var dust_material: Material
 @export var island_tree_count := 70
 @export var bank_tree_count := 60
 @export var reed_count := 520
@@ -307,16 +310,18 @@ func _ground_props() -> void:
 		item.position.y += lowest
 
 
-## Mousse en surcouche sur les modèles nommés « moss_… » : pierres levées, ruines, épaves, tombes usées.
+## Mousse en surcouche sur les modèles nommés « moss_… » (pierres levées, ruines, épaves, tombes usées), poussière
+## sur les « dust_… » (tombeaux et ossements de la crypte).
 func _apply_moss() -> void:
-	if not moss_material:
-		return
-	for root in mossy_roots:
+	for root: Node3D in [grounded, props_root, crypt_root]:
 		if not root:
 			continue
-		for node in root.find_children("moss_*", "Node3D", true, false):
-			for mesh: MeshInstance3D in node.find_children("*", "MeshInstance3D", true, false):
-				mesh.material_overlay = moss_material
+		for coat: Array in [["moss_*", moss_material], ["dust_*", dust_material]]:
+			if not coat[1]:
+				continue
+			for node in root.find_children(coat[0], "Node3D", true, false):
+				for mesh: MeshInstance3D in node.find_children("*", "MeshInstance3D", true, false):
+					mesh.material_overlay = coat[1]
 
 
 func _is_reserved(spot: Vector2, margin: float) -> bool:
