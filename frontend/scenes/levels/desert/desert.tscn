@@ -260,14 +260,62 @@ size = Vector3(1.7, 1.0, 1.7)
 
 [sub_resource type="BoxMesh" id="BoxMesh_ceiling"]
 material = SubResource("StandardMaterial3D_cave_stone")
-size = Vector3(20.4, 0.3, 16.4)
+size = Vector3(20.4, 0.3, 12.4)
 
-[sub_resource type="BoxMesh" id="BoxMesh_cellar_step"]
+[sub_resource type="BoxMesh" id="BoxMesh_shaft_ceiling"]
 material = SubResource("StandardMaterial3D_cave_stone")
-size = Vector3(2.8, 0.39, 0.36)
+size = Vector3(4.0, 0.3, 4.2)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_cellar_stairs"]
-size = Vector3(2.8, 3.9, 3.6)
+[sub_resource type="BoxMesh" id="BoxMesh_shaft_lintel"]
+material = SubResource("StandardMaterial3D_cave_stone")
+size = Vector3(4.0, 1.45, 0.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_shaft_side"]
+material = SubResource("StandardMaterial3D_cave_stone")
+size = Vector3(0.6, 1.45, 4.0)
+
+[sub_resource type="BoxMesh" id="BoxMesh_shaft_back"]
+material = SubResource("StandardMaterial3D_cave_stone")
+size = Vector3(4.0, 1.45, 0.6)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cellar_ramp"]
+size = Vector3(2.8, 0.6, 4.54)
+
+[sub_resource type="BoxMesh" id="BoxMesh_step0"]
+material = SubResource("StandardMaterial3D_cave_stone")
+size = Vector3(2.8, 0.3, 0.34)
+
+[sub_resource type="BoxMesh" id="BoxMesh_step1"]
+material = SubResource("StandardMaterial3D_cave_stone")
+size = Vector3(2.8, 0.6, 0.34)
+
+[sub_resource type="BoxMesh" id="BoxMesh_step2"]
+material = SubResource("StandardMaterial3D_cave_stone")
+size = Vector3(2.8, 0.9, 0.34)
+
+[sub_resource type="BoxMesh" id="BoxMesh_step3"]
+material = SubResource("StandardMaterial3D_cave_stone")
+size = Vector3(2.8, 1.2, 0.34)
+
+[sub_resource type="BoxMesh" id="BoxMesh_step4"]
+material = SubResource("StandardMaterial3D_cave_stone")
+size = Vector3(2.8, 1.5, 0.34)
+
+[sub_resource type="BoxMesh" id="BoxMesh_step5"]
+material = SubResource("StandardMaterial3D_cave_stone")
+size = Vector3(2.8, 1.8, 0.34)
+
+[sub_resource type="BoxMesh" id="BoxMesh_step6"]
+material = SubResource("StandardMaterial3D_cave_stone")
+size = Vector3(2.8, 2.1, 0.34)
+
+[sub_resource type="BoxMesh" id="BoxMesh_step7"]
+material = SubResource("StandardMaterial3D_cave_stone")
+size = Vector3(2.8, 2.4, 0.34)
+
+[sub_resource type="BoxMesh" id="BoxMesh_step8"]
+material = SubResource("StandardMaterial3D_cave_stone")
+size = Vector3(2.8, 2.7, 0.34)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sun_mark"]
 albedo_color = Color(0.55, 0.3, 0.1, 1)
@@ -643,54 +691,70 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -40, 0)
 [node name="Cellar" parent="Interior" instance=ExtResource("7_cellar")]
 
 [node name="Ceiling" type="MeshInstance3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.3, -4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.3, -6)
 mesh = SubResource("BoxMesh_ceiling")
+
+[node name="ShaftCeiling" type="MeshInstance3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.55, 2.0)
+mesh = SubResource("BoxMesh_shaft_ceiling")
+
+[node name="ShaftLintel" type="MeshInstance3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.85, 0.2)
+mesh = SubResource("BoxMesh_shaft_lintel")
+
+[node name="ShaftWest" type="MeshInstance3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.7, 4.85, 2)
+mesh = SubResource("BoxMesh_shaft_side")
+
+[node name="ShaftEast" type="MeshInstance3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7, 4.85, 2)
+mesh = SubResource("BoxMesh_shaft_side")
+
+[node name="ShaftBack" type="MeshInstance3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.85, 3.7)
+mesh = SubResource("BoxMesh_shaft_back")
 
 [node name="Stairs" type="StaticBody3D" parent="Interior"]
 
 [node name="Step0" type="MeshInstance3D" parent="Interior/Stairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.195, 0.58)
-mesh = SubResource("BoxMesh_cellar_step")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0.37)
+mesh = SubResource("BoxMesh_step0")
 
 [node name="Step1" type="MeshInstance3D" parent="Interior/Stairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.585, 0.94)
-mesh = SubResource("BoxMesh_cellar_step")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0.71)
+mesh = SubResource("BoxMesh_step1")
 
 [node name="Step2" type="MeshInstance3D" parent="Interior/Stairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.975, 1.3)
-mesh = SubResource("BoxMesh_cellar_step")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 1.05)
+mesh = SubResource("BoxMesh_step2")
 
 [node name="Step3" type="MeshInstance3D" parent="Interior/Stairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.365, 1.66)
-mesh = SubResource("BoxMesh_cellar_step")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 1.39)
+mesh = SubResource("BoxMesh_step3")
 
 [node name="Step4" type="MeshInstance3D" parent="Interior/Stairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.755, 2.02)
-mesh = SubResource("BoxMesh_cellar_step")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 1.73)
+mesh = SubResource("BoxMesh_step4")
 
 [node name="Step5" type="MeshInstance3D" parent="Interior/Stairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.145, 2.38)
-mesh = SubResource("BoxMesh_cellar_step")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 2.07)
+mesh = SubResource("BoxMesh_step5")
 
 [node name="Step6" type="MeshInstance3D" parent="Interior/Stairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.535, 2.74)
-mesh = SubResource("BoxMesh_cellar_step")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 2.41)
+mesh = SubResource("BoxMesh_step6")
 
 [node name="Step7" type="MeshInstance3D" parent="Interior/Stairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.925, 3.1)
-mesh = SubResource("BoxMesh_cellar_step")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 2.75)
+mesh = SubResource("BoxMesh_step7")
 
 [node name="Step8" type="MeshInstance3D" parent="Interior/Stairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.315, 3.46)
-mesh = SubResource("BoxMesh_cellar_step")
-
-[node name="Step9" type="MeshInstance3D" parent="Interior/Stairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.705, 3.82)
-mesh = SubResource("BoxMesh_cellar_step")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 3.09)
+mesh = SubResource("BoxMesh_step8")
 
 [node name="Shape" type="CollisionShape3D" parent="Interior/Stairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.95, 2.2)
-shape = SubResource("BoxShape3D_cellar_stairs")
+transform = Transform3D(1, 0, 0, 0, 0.749838, 0.661622, 0, -0.661622, 0.749838, 0, 1.125, 1.758)
+shape = SubResource("BoxShape3D_cellar_ramp")
 
 [node name="LightStairs" type="OmniLight3D" parent="Interior"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 2.6)
@@ -762,10 +826,10 @@ crackle_volume_db = -14.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, -1.0)
 
 [node name="Exit" type="Node3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0.05)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 1.7)
 script = ExtResource("11_interactable")
 prompt = "Remonter à la surface"
-radius = 2.2
+radius = 2.8
 
 [node name="Clues" type="Node3D" parent="Interior"]
 

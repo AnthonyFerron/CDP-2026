@@ -960,6 +960,9 @@ CELLAR_TILES = [(x, z) for x in (-8.0, -4.0, 0.0, 4.0, 8.0) for z in (-2.0, -6.0
 CELLAR_NEIGHBOURS = {(0, -1): 180.0, (0, 1): 0.0, (1, 0): 90.0, (-1, 0): -90.0}
 # Bord du fond où s'élève la porte scellée, sous l'inscription.
 SEALED_DOOR = (0.0, -12.0)
+# Case de l'escalier et hauteur de sa cage, sous la trappe.
+STAIR_TILE = (0.0, 2.0)
+SHAFT_HEIGHT = 5.4
 
 
 def build_cellar(scene, rng):
@@ -970,7 +973,9 @@ def build_cellar(scene, rng):
     for x, z in CELLAR_TILES:
         scene.add("modular_dungeon_kit/template-floor", (x, 0.0, z), 0.0, 1.0)
         scene.add_box((x, -0.25, z), (CELLAR_TILE, 0.5, CELLAR_TILE))
-        scene.add_box((x, CELLAR_HEIGHT + 0.25, z), (CELLAR_TILE, 0.5, CELLAR_TILE))
+        # La cage de l'escalier monte plus haut que la salle : on tient debout sur la dernière marche.
+        ceiling = SHAFT_HEIGHT if (x, z) == STAIR_TILE else CELLAR_HEIGHT
+        scene.add_box((x, ceiling + 0.25, z), (CELLAR_TILE, 0.5, CELLAR_TILE))
         # Un mur sur chaque bord qui ne donne sur aucune case : son pied regarde l'intérieur de la case.
         for (dx, dz), degrees in CELLAR_NEIGHBOURS.items():
             if (x + dx * CELLAR_TILE, z + dz * CELLAR_TILE) in tiles:
@@ -978,8 +983,9 @@ def build_cellar(scene, rng):
             edge = (x + dx * CELLAR_TILE / 2, z + dz * CELLAR_TILE / 2)
             model = "gate-door" if edge == SEALED_DOOR else "template-wall"
             scene.add(f"modular_dungeon_kit/{model}", (edge[0], 0.0, edge[1]), degrees, 1.0)
-            size = (0.6, CELLAR_HEIGHT, CELLAR_TILE) if dx else (CELLAR_TILE, CELLAR_HEIGHT, 0.6)
-            scene.add_box((edge[0] - dx * 0.3, CELLAR_HEIGHT / 2, edge[1] - dz * 0.3), size)
+            height = SHAFT_HEIGHT if (x, z) == STAIR_TILE else CELLAR_HEIGHT
+            size = (0.6, height, CELLAR_TILE) if dx else (CELLAR_TILE, height, 0.6)
+            scene.add_box((edge[0] - dx * 0.3, height / 2, edge[1] - dz * 0.3), size)
     # Derrière la porte scellée, la roche : on ne voit plus le vide par les jours de l'arc.
     scene.shape("box", {"size": (6.4, 4.6, 0.2)}, "void", (0.0, 2.3, -12.85), shadow=False)
     # Colonnes de part et d'autre de la porte scellée.
