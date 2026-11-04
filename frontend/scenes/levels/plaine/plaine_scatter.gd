@@ -11,6 +11,10 @@ const LIT_CRATERS := 4
 const SMOKING_IMPACTS := 4
 ## Hauteur des poteaux des lanternes.
 const POST_HEIGHT := 2.7
+## Pas des bandes de la zone qui brûle, et épaisseur de lave à partir de laquelle elle brûle.
+const HAZARD_STEP := 0.25
+const HAZARD_DEPTH := 0.08
+const HAZARD_LENGTH := 1.0
 ## Côté des cases des petits détails (herbes, cailloux), et longueur de leur fondu au loin.
 const CHUNK_SIZE := 32.0
 const CHUNK_FADE := 8.0
@@ -65,6 +69,7 @@ func _ready() -> void:
 	_add_lanterns()
 	_add_crater_effects()
 	_add_lava_flow()
+	_add_lava_hazards()
 
 
 func is_near_lava(point: Vector3, margin: float) -> bool:
@@ -264,11 +269,10 @@ func _add_crater_effects() -> void:
 		var crater := PlaineTerrain.CRATERS[index]
 		var center := Vector3(crater.x, terrain.height_at(crater.x, crater.y), crater.y)
 		var radius := crater.z * PlaineTerrain.LAVA_RATIO
-		var surface := _lava_level(crater, radius)
+		var surface := terrain.crater_lava_level(index)
 		var pool := Vector3(crater.x, surface, crater.y)
 		lava_pools.append({center = pool, radius = radius})
 		add_child(_lava_surface(pool, radius))
-		add_child(_lava_hazard(pool, radius))
 		add_child(_embers(pool, radius, ember_material))
 		if lava_sound:
 			var rumble := AudioStreamPlayer3D.new()
@@ -299,17 +303,9 @@ func _add_crater_effects() -> void:
 		add_child(smoke)
 
 
-## Hauteur de la lave : juste sous le sol au bord du bassin, pour qu'elle ne flotte pas au-dessus.
-func _lava_level(crater: Vector4, radius: float) -> float:
-	var lowest := INF
-	for i in 12:
-		var edge := Vector2.from_angle(TAU * i / 12.0) * radius
-		lowest = minf(lowest, terrain.base_height_at(crater.x + edge.x, crater.y + edge.y))
-	return lowest - 0.08
-
-
-## Coulée de lave : un ruban incandescent au fond du lit, qui suit sa pente d'un cratère à l'autre,
-## avec sa zone qui brûle, ses braises, sa lueur et son grondement.
+## Coulée de lave : un ruban incandescent au fond du lit, qui suit sa pente d'un cratère à l'autre et se jette dans
+## leurs lacs à leur niveau (PlaineTerrain.flow_lava_height), avec sa zone qui brûle, ses braises, sa lueur et son
+## grondement.
 func _add_lava_flow() -> void:
 	var points: Array[Vector2] = []
 	var flow := PlaineTerrain.LAVA_FLOW
@@ -320,7 +316,7 @@ func _add_lava_flow() -> void:
 	points.append(flow[flow.size() - 1])
 	var heights: Array[float] = []
 	for point in points:
-		heights.append(terrain.height_at(point.x, point.y) + PlaineTerrain.FLOW_LAVA_RISE)
+		heights.append(terrain.flow_lava_height(point.x, point.y))
 
 	# Ruban un peu plus large que la lave visible : ses bords passent sous les berges.
 	var half := PlaineTerrain.flow_lava_half_width() + 0.5
@@ -353,22 +349,6 @@ func _add_lava_flow() -> void:
 	surface.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(surface)
 
-	# Zone qui brûle : des boîtes courtes qui suivent la pente, sous le tablier du pont.
-	var area := Area3D.new()
-	area.name = "LavaFlowHazard"
-	add_child(area)
-	for index in range(0, points.size() - 1, 2):
-		var last := mini(index + 2, points.size() - 1)
-		var a := Vector3(points[index].x, heights[index], points[index].y)
-		var b := Vector3(points[last].x, heights[last], points[last].y)
-		var shape := BoxShape3D.new()
-		shape.size = Vector3(PlaineTerrain.flow_lava_half_width() * 1.8, 1.6, a.distance_to(b) + 0.4)
-		var collision := CollisionShape3D.new()
-		collision.shape = shape
-		var middle := (a + b) * 0.5
-		collision.transform = Transform3D(Basis.looking_at(Vector3(b.x - a.x, 0.0, b.z - a.z)), middle + Vector3.DOWN * 0.5)
-		area.add_child(collision)
-	area.body_entered.connect(func(body: Node3D) -> void: lava_touched.emit(body))
 
 	# Braises, lueurs et grondement le long du lit.
 	var ember_material := _ember_material()
@@ -411,17 +391,78 @@ func _lava_surface(center: Vector3, radius: float) -> MeshInstance3D:
 	return surface
 
 
-func _lava_hazard(center: Vector3, radius: float) -> Area3D:
-	var shape := CylinderShape3D.new()
-	shape.radius = radius * 0.92
-	shape.height = 3.4
+## Hauteur de la lave visible en un point : lac d'un cratère ou ruban de la coulée, sinon -INF.
+func lava_surface_at(x: float, z: float) -> float:
+	var lava := -INF
+	for pool in lava_pools:
+		var center: Vector3 = pool.center
+		if Vector2(x - center.x, z - center.z).length() < pool.radius:
+			lava = maxf(lava, center.y)
+	if PlaineTerrain.flow_distance(x, z) < PlaineTerrain.flow_lava_half_width() + 0.5:
+		var nearest := PlaineTerrain.flow_nearest(x, z)
+		lava = maxf(lava, terrain.flow_lava_height(nearest.x, nearest.y))
+	return lava
+
+
+## Zone qui brûle, calée sur la lave visible : par rangées de HAZARD_STEP mètres, des bandes là où la lave couvre le
+## sol de plus de HAZARD_DEPTH. Elle colle aux rives tortueuses des lacs comme aux élargissements de la coulée, et
+## reste sous le tablier du pont.
+func _add_lava_hazards() -> void:
+	var area := Area3D.new()
+	area.name = "LavaHazard"
+	add_child(area)
+	var regions: Array[Rect2] = []
+	for pool in lava_pools:
+		var center: Vector3 = pool.center
+		regions.append(Rect2(center.x - pool.radius, center.z - pool.radius, pool.radius * 2.0, pool.radius * 2.0))
+	var flow := PlaineTerrain.LAVA_FLOW
+	var bounds := Rect2(flow[0], Vector2.ZERO)
+	for point in flow:
+		bounds = bounds.expand(point)
+	regions.append(bounds.grow(PlaineTerrain.flow_lava_half_width() + 0.5))
+	for region in regions:
+		var z := region.position.y + HAZARD_STEP * 0.5
+		while z < region.end.y:
+			var start := INF
+			var top := -INF
+			var bottom := INF
+			var x := region.position.x
+			while x <= region.end.x + HAZARD_STEP:
+				var ground := terrain.surface_height(x, z)
+				var lava := lava_surface_at(x, z) if x <= region.end.x else -INF
+				# La bande couvre toute sa rangée : la lave doit y couvrir le sol d'un bord à l'autre.
+				var depth := lava - ground
+				for edge in [-HAZARD_STEP * 0.48, HAZARD_STEP * 0.48]:
+					depth = minf(depth, lava_surface_at(x, z + edge) - terrain.surface_height(x, z + edge))
+				# Bandes courtes, pour que leur dessus suive la lave : jamais au-dessus du tablier du pont.
+				if start != INF and x - start > HAZARD_LENGTH:
+					_hazard_strip(area, start, x, z, bottom - 0.4, top + 0.3)
+					start = INF
+					top = -INF
+					bottom = INF
+				if depth > HAZARD_DEPTH:
+					if start == INF:
+						start = x
+					top = maxf(top, lava)
+					bottom = minf(bottom, ground)
+				elif start != INF:
+					_hazard_strip(area, start, x, z, bottom - 0.4, top + 0.3)
+					start = INF
+					top = -INF
+					bottom = INF
+				x += HAZARD_STEP * 0.5
+			z += HAZARD_STEP
+	print_verbose("Plaine : %d bandes de lave" % area.get_child_count())
+	area.body_entered.connect(func(body: Node3D) -> void: lava_touched.emit(body))
+
+
+func _hazard_strip(area: Area3D, from_x: float, to_x: float, z: float, bottom: float, top: float) -> void:
+	var shape := BoxShape3D.new()
+	shape.size = Vector3(to_x - from_x, top - bottom, HAZARD_STEP)
 	var collision := CollisionShape3D.new()
 	collision.shape = shape
-	var area := Area3D.new()
-	area.position = center + Vector3.DOWN * 1.3
+	collision.position = Vector3((from_x + to_x) * 0.5 - HAZARD_STEP * 0.25, (top + bottom) * 0.5, z)
 	area.add_child(collision)
-	area.body_entered.connect(func(body: Node3D) -> void: lava_touched.emit(body))
-	return area
 
 
 func _embers(center: Vector3, radius: float, material: Material) -> CPUParticles3D:
