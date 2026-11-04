@@ -67,67 +67,67 @@ size = Vector3(3, 1.75, 3)
 size = Vector3(5, 5, 3)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4"]
-size = Vector3(4, 5, 4)
+size = Vector3(1, 4, 4)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5"]
-size = Vector3(1.6, 5.2, 0.35)
+size = Vector3(4, 4, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_6"]
-size = Vector3(0.7, 1.24, 0.7)
+size = Vector3(1.6, 5.2, 0.35)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7"]
-size = Vector3(2.31, 1.2, 2.55)
+size = Vector3(1.732, 0.812, 1.912)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_8"]
 size = Vector3(0.25, 1.8, 0.25)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_9"]
-size = Vector3(1.9, 6, 1.9)
+size = Vector3(1.9, 0.5, 1.9)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_10"]
-size = Vector3(1.9, 3.7, 1.9)
+size = Vector3(1.35, 0.35, 1.35)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_11"]
-size = Vector3(2, 3.6, 2)
+size = Vector3(1.04, 5.15, 1.04)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_12"]
-size = Vector3(2.2, 4.4, 2.2)
+size = Vector3(1.04, 2.85, 1.04)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_13"]
-size = Vector3(2, 3.5, 0.8)
+size = Vector3(2.16, 0.259, 2.16)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_14"]
-size = Vector3(2.08, 1, 1.3)
+size = Vector3(2.2, 4.4, 2.2)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_15"]
-size = Vector3(0.62, 0.9, 0.62)
+size = Vector3(2.08, 1, 1.3)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_16"]
-size = Vector3(1.8, 1.8, 2.16)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_17"]
 size = Vector3(1.2, 3.4, 5.4)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_18"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_17"]
 size = Vector3(1.2, 2.6, 4)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_19"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_18"]
 size = Vector3(1.2, 1.6, 4)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_20"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_19"]
 size = Vector3(1.2, 2.8, 4)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_21"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_20"]
 size = Vector3(1.2, 3, 5.4)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_22"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_21"]
 size = Vector3(1.2, 3.2, 4)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_23"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_22"]
 size = Vector3(1.2, 2.2, 4)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_24"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_23"]
 size = Vector3(2.464, 1.3, 2.72)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_24"]
+size = Vector3(2.31, 1.2, 2.55)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_25"]
 size = Vector3(2.002, 1.05, 2.21)
@@ -196,7 +196,7 @@ size = Vector3(0.907, 0.65, 0.62)
 size = Vector3(30, 4, 3.6)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_47"]
-size = Vector3(2.3, 5.3, 2.3)
+size = Vector3(2.4, 0.288, 2.4)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_48"]
 size = Vector3(2.3, 1, 2.3)
@@ -214,120 +214,99 @@ size = Vector3(3.08, 2.7, 3.08)
 size = Vector3(3.132, 2, 2.412)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_53"]
-size = Vector3(2.6, 3.2, 2.6)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_54"]
 size = Vector3(0.9, 0.9, 1.8)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_55"]
-size = Vector3(0.884, 0.8, 0.918)
+[sub_resource type="BoxShape3D" id="BoxShape3D_54"]
+size = Vector3(0.884, 0.9, 0.918)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_56"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_55"]
 size = Vector3(1.352, 1.25, 1.352)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_57"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_56"]
 size = Vector3(0.72, 1, 0.72)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_58"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_57"]
 size = Vector3(0.372, 1, 0.696)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_59"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_58"]
 size = Vector3(0.341, 0.92, 0.638)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_60"]
-size = Vector3(3.57, 2.492, 3.846)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_61"]
-size = Vector3(1.696, 0.672, 1.713)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_62"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_59"]
 size = Vector3(1.438, 0.75, 4.25)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_63"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_60"]
 size = Vector3(0.977, 1.086, 0.954)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_64"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_61"]
 size = Vector3(0.66, 0.711, 0.66)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_65"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_62"]
 size = Vector3(0.7, 3, 0.7)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_66"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_63"]
 size = Vector3(0.2, 2.3, 0.2)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_67"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_64"]
 size = Vector3(2.4, 1, 2.4)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_68"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_65"]
 size = Vector3(2.6, 0.6, 0.9)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_69"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_66"]
 size = Vector3(0.691, 0.744, 0.691)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_70"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_67"]
 size = Vector3(0.928, 0.665, 0.634)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_71"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_68"]
 size = Vector3(0.661, 0.712, 0.661)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_72"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_69"]
 size = Vector3(0.95, 1.9, 0.95)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_73"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_70"]
 size = Vector3(1.02, 1.5, 0.9)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_74"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_71"]
 size = Vector3(1.14, 0.813, 0.782)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_75"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_72"]
 size = Vector3(0.828, 0.892, 0.828)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_76"]
-size = Vector3(5, 5.2, 4)
+[sub_resource type="BoxShape3D" id="BoxShape3D_73"]
+size = Vector3(4, 4.8, 3)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_77"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_74"]
 size = Vector3(3, 2.4, 1.2)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_78"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_75"]
 size = Vector3(1.2, 1.8, 3)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_79"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_76"]
 size = Vector3(1.56, 1.9, 1.56)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_80"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_77"]
 size = Vector3(1.848, 1, 2.04)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_81"]
-size = Vector3(1.4, 3.6, 1.4)
+[sub_resource type="BoxShape3D" id="BoxShape3D_78"]
+size = Vector3(1.44, 0.173, 1.44)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_82"]
-size = Vector3(1.4, 1.624, 1.4)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_83"]
-size = Vector3(1.4, 1.6, 1.4)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_84"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_79"]
 size = Vector3(1.3, 0.65, 1.3)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_85"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_80"]
 size = Vector3(1.38, 0.72, 4.08)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_86"]
-size = Vector3(3.6, 3, 2.2)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_87"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_81"]
 size = Vector3(1.44, 1.7, 1.44)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_88"]
-size = Vector3(1.335, 0.65, 1.2)
+[sub_resource type="BoxShape3D" id="BoxShape3D_82"]
+size = Vector3(1.335, 0.45, 1.2)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_89"]
-size = Vector3(1.713, 0.672, 1.696)
+[sub_resource type="BoxShape3D" id="BoxShape3D_83"]
+size = Vector3(0.572, 0.7, 0.572)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_90"]
-size = Vector3(0.78, 1.8, 0.78)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_91"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_84"]
 size = Vector3(0.704, 0.758, 0.704)
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_grain"]
@@ -409,6 +388,10 @@ roughness = 1
 albedo_color = Color(0.62, 0.35, 0.19, 1)
 roughness = 1
 
+[sub_resource type="StandardMaterial3D" id="Material_wood_bleached"]
+albedo_color = Color(0.6, 0.47, 0.32, 1)
+roughness = 1
+
 [sub_resource type="CylinderMesh" id="Mesh_0"]
 material = SubResource("Material_stone_dark")
 top_radius = 0.2
@@ -421,7 +404,7 @@ rings = 1
 transform_format = 1
 instance_count = 7
 mesh = SubResource("Mesh_0")
-buffer = PackedFloat32Array(1, 0, 0, -5.4, 0, 1, 0, 0.4, 0, 0, 1, 19.6, 1, 0, 0, 5.4, 0, 1, 0, 0.4, 0, 0, 1, 19.6, 1, 0, 0, -2.8, 0, 1, 0, 0.4, 0, 0, 1, -15.3, 1, 0, 0, 2.8, 0, 1, 0, 0.4, 0, 0, 1, -15.3, 1, 0, 0, -3.6, 0, 1, 0, 0.4, 0, 0, 1, -6, 1, 0, 0, 3.6, 0, 1, 0, 0.4, 0, 0, 1, -6, 1, 0, 0, 40, 0, 1, 0, 0.4, 0, 0, 1, 27.4)
+buffer = PackedFloat32Array(1, 0, 0, -5.8, 0, 1, 0, 0.4, 0, 0, 1, 20.8, 1, 0, 0, 5.8, 0, 1, 0, 0.4, 0, 0, 1, 20.8, 1, 0, 0, -2.8, 0, 1, 0, 0.4, 0, 0, 1, -15.3, 1, 0, 0, 2.8, 0, 1, 0, 0.4, 0, 0, 1, -15.3, 1, 0, 0, -3.6, 0, 1, 0, 0.4, 0, 0, 1, -6, 1, 0, 0, 3.6, 0, 1, 0, 0.4, 0, 0, 1, -6, 1, 0, 0, 40, 0, 1, 0, 0.4, 0, 0, 1, 27.4)
 
 [sub_resource type="CylinderMesh" id="Mesh_1"]
 material = SubResource("Material_stone")
@@ -435,7 +418,7 @@ rings = 1
 transform_format = 1
 instance_count = 7
 mesh = SubResource("Mesh_1")
-buffer = PackedFloat32Array(1, 0, 0, -5.4, 0, 1, 0, 0.84, 0, 0, 1, 19.6, 1, 0, 0, 5.4, 0, 1, 0, 0.84, 0, 0, 1, 19.6, 1, 0, 0, -2.8, 0, 1, 0, 0.84, 0, 0, 1, -15.3, 1, 0, 0, 2.8, 0, 1, 0, 0.84, 0, 0, 1, -15.3, 1, 0, 0, -3.6, 0, 1, 0, 0.84, 0, 0, 1, -6, 1, 0, 0, 3.6, 0, 1, 0, 0.84, 0, 0, 1, -6, 1, 0, 0, 40, 0, 1, 0, 0.84, 0, 0, 1, 27.4)
+buffer = PackedFloat32Array(1, 0, 0, -5.8, 0, 1, 0, 0.84, 0, 0, 1, 20.8, 1, 0, 0, 5.8, 0, 1, 0, 0.84, 0, 0, 1, 20.8, 1, 0, 0, -2.8, 0, 1, 0, 0.84, 0, 0, 1, -15.3, 1, 0, 0, 2.8, 0, 1, 0, 0.84, 0, 0, 1, -15.3, 1, 0, 0, -3.6, 0, 1, 0, 0.84, 0, 0, 1, -6, 1, 0, 0, 3.6, 0, 1, 0, 0.84, 0, 0, 1, -6, 1, 0, 0, 40, 0, 1, 0, 0.84, 0, 0, 1, 27.4)
 
 [sub_resource type="CylinderMesh" id="Mesh_2"]
 material = SubResource("Material_bronze")
@@ -449,7 +432,7 @@ rings = 1
 transform_format = 1
 instance_count = 5
 mesh = SubResource("Mesh_2")
-buffer = PackedFloat32Array(1, 0, 0, -5.4, 0, 1, 0, 1.04, 0, 0, 1, 19.6, 1, 0, 0, 5.4, 0, 1, 0, 1.04, 0, 0, 1, 19.6, 1, 0, 0, -2.8, 0, 1, 0, 1.04, 0, 0, 1, -15.3, 1, 0, 0, 2.8, 0, 1, 0, 1.04, 0, 0, 1, -15.3, 1, 0, 0, -3.6, 0, 1, 0, 1.04, 0, 0, 1, -6)
+buffer = PackedFloat32Array(1, 0, 0, -5.8, 0, 1, 0, 1.04, 0, 0, 1, 20.8, 1, 0, 0, 5.8, 0, 1, 0, 1.04, 0, 0, 1, 20.8, 1, 0, 0, -2.8, 0, 1, 0, 1.04, 0, 0, 1, -15.3, 1, 0, 0, 2.8, 0, 1, 0, 1.04, 0, 0, 1, -15.3, 1, 0, 0, -3.6, 0, 1, 0, 1.04, 0, 0, 1, -6)
 
 [sub_resource type="TorusMesh" id="Mesh_3"]
 material = SubResource("Material_bronze")
@@ -462,7 +445,7 @@ ring_segments = 4
 transform_format = 1
 instance_count = 5
 mesh = SubResource("Mesh_3")
-buffer = PackedFloat32Array(1, 0, 0, -5.4, 0, 1, 0, 1.2, 0, 0, 1, 19.6, 1, 0, 0, 5.4, 0, 1, 0, 1.2, 0, 0, 1, 19.6, 1, 0, 0, -2.8, 0, 1, 0, 1.2, 0, 0, 1, -15.3, 1, 0, 0, 2.8, 0, 1, 0, 1.2, 0, 0, 1, -15.3, 1, 0, 0, -3.6, 0, 1, 0, 1.2, 0, 0, 1, -6)
+buffer = PackedFloat32Array(1, 0, 0, -5.8, 0, 1, 0, 1.2, 0, 0, 1, 20.8, 1, 0, 0, 5.8, 0, 1, 0, 1.2, 0, 0, 1, 20.8, 1, 0, 0, -2.8, 0, 1, 0, 1.2, 0, 0, 1, -15.3, 1, 0, 0, 2.8, 0, 1, 0, 1.2, 0, 0, 1, -15.3, 1, 0, 0, -3.6, 0, 1, 0, 1.2, 0, 0, 1, -6)
 
 [sub_resource type="CylinderMesh" id="Mesh_4"]
 material = SubResource("Material_charcoal")
@@ -476,7 +459,7 @@ rings = 1
 transform_format = 1
 instance_count = 5
 mesh = SubResource("Mesh_4")
-buffer = PackedFloat32Array(1, 0, 0, -5.4, 0, 1, 0, 1.15, 0, 0, 1, 19.6, 1, 0, 0, 5.4, 0, 1, 0, 1.15, 0, 0, 1, 19.6, 1, 0, 0, -2.8, 0, 1, 0, 1.15, 0, 0, 1, -15.3, 1, 0, 0, 2.8, 0, 1, 0, 1.15, 0, 0, 1, -15.3, 1, 0, 0, -3.6, 0, 1, 0, 1.15, 0, 0, 1, -6)
+buffer = PackedFloat32Array(1, 0, 0, -5.8, 0, 1, 0, 1.15, 0, 0, 1, 20.8, 1, 0, 0, 5.8, 0, 1, 0, 1.15, 0, 0, 1, 20.8, 1, 0, 0, -2.8, 0, 1, 0, 1.15, 0, 0, 1, -15.3, 1, 0, 0, 2.8, 0, 1, 0, 1.15, 0, 0, 1, -15.3, 1, 0, 0, -3.6, 0, 1, 0, 1.15, 0, 0, 1, -6)
 
 [sub_resource type="BoxMesh" id="Mesh_5"]
 material = SubResource("Material_charcoal")
@@ -486,7 +469,7 @@ size = Vector3(0.12, 0.08, 0.1)
 transform_format = 1
 instance_count = 32
 mesh = SubResource("Mesh_5")
-buffer = PackedFloat32Array(0.97641, 0, 0.2159, -5.53221, 0, 1, 0, 1.19, -0.2159, 0, 0.97641, 19.6313, 0.70401, 0, 0.71019, -5.36558, 0, 1, 0, 1.19, -0.71019, 0, 0.70401, 19.5617, 0.64433, 0, 0.76475, -5.34495, 0, 1, 0, 1.19, -0.76475, 0, 0.64433, 19.5591, 0.82795, 0, 0.56081, -5.44415, 0, 1, 0, 1.19, -0.56081, 0, 0.82795, 19.5602, 0.41857, 0, 0.90819, 5.35564, 0, 1, 0, 1.19, -0.90819, 0, 0.41857, 19.4526, 0.98485, 0, 0.1734, 5.45769, 0, 1, 0, 1.19, -0.1734, 0, 0.98485, 19.6874, 0.59988, 0, 0.80009, 5.13772, 0, 1, 0, 1.19, -0.80009, 0, 0.59988, 19.5897, 0.38834, 0, 0.92151, 5.42095, 0, 1, 0, 1.19, -0.92151, 0, 0.38834, 19.4633, 0.99898, 0, 0.04518, -3.05992, 0, 1, 0, 1.19, -0.04518, 0, 0.99898, -15.3588, 0.65617, 0, 0.75462, -2.54577, 0, 1, 0, 1.19, -0.75462, 0, 0.65617, -15.3109, 0.14163, 0, 0.98992, -2.97165, 0, 1, 0, 1.19, -0.98992, 0, 0.14163, -15.3255, 0.65877, 0, 0.75234, -2.61871, 0, 1, 0, 1.19, -0.75234, 0, 0.65877, -15.2208, 0.42482, 0, 0.90528, 2.73261, 0, 1, 0, 1.19, -0.90528, 0, 0.42482, -15.094, 0.75679, 0, 0.65366, 2.96808, 0, 1, 0, 1.19, -0.65366, 0, 0.75679, -15.1726, 0.99654, 0, 0.08307, 2.60392, 0, 1, 0, 1.19, -0.08307, 0, 0.99654, -15.2879, 0.18933, 0, 0.98191, 2.6916, 0, 1, 0, 1.19, -0.98191, 0, 0.18933, -15.3818, 0.4121, 0, 0.91114, -3.57166, 0, 1, 0, 1.19, -0.91114, 0, 0.4121, -5.76237, 0.9984, 0, 0.05652, -3.77781, 0, 1, 0, 1.19, -0.05652, 0, 0.9984, -6.17778, 0.48443, 0, 0.87483, -3.75668, 0, 1, 0, 1.19, -0.87483, 0, 0.48443, -6.10932, 0.95621, 0, 0.29267, -3.65486, 0, 1, 0, 1.19, -0.29267, 0, 0.95621, -5.96356, 0.84868, 0, 0.5289, 3.03732, 0, 1, 0, 0.04, -0.5289, 0, 0.84868, -7.16465, 0.99917, 0, 0.04078, 2.57827, 0, 1, 0, 0.04, -0.04078, 0, 0.99917, -7.20313, 0.33457, 0, 0.94237, 2.68325, 0, 1, 0, 0.04, -0.94237, 0, 0.33457, -7.51894, 0.60011, 0, 0.79992, 2.69865, 0, 1, 0, 0.04, -0.79992, 0, 0.60011, -6.76936, 0.25965, 0, 0.9657, 2.0206, 0, 1, 0, 0.04, -0.9657, 0, 0.25965, -6.78109, 0.93471, 0, 0.35541, 2.85209, 0, 1, 0, 0.04, -0.35541, 0, 0.93471, -7.08164, 0.83856, 0, 0.54481, 39.211, 0, 1, 0, 0.04, -0.54481, 0, 0.83856, 28.5801, 0.99441, 0, 0.10562, 39.5752, 0, 1, 0, 0.04, -0.10562, 0, 0.99441, 29.0896, 0.62603, 0, 0.7798, 38.8557, 0, 1, 0, 0.04, -0.7798, 0, 0.62603, 28.5789, 0.48195, 0, 0.8762, 39.0499, 0, 1, 0, 0.04, -0.8762, 0, 0.48195, 28.3485, 0.85963, 0, 0.51092, 38.9889, 0, 1, 0, 0.04, -0.51092, 0, 0.85963, 28.5638, 0.99585, 0, 0.09101, 38.6195, 0, 1, 0, 0.04, -0.09101, 0, 0.99585, 28.3384)
+buffer = PackedFloat32Array(0.97641, 0, 0.2159, -5.93221, 0, 1, 0, 1.19, -0.2159, 0, 0.97641, 20.8313, 0.70401, 0, 0.71019, -5.76558, 0, 1, 0, 1.19, -0.71019, 0, 0.70401, 20.7617, 0.64433, 0, 0.76475, -5.74495, 0, 1, 0, 1.19, -0.76475, 0, 0.64433, 20.7591, 0.82795, 0, 0.56081, -5.84415, 0, 1, 0, 1.19, -0.56081, 0, 0.82795, 20.7602, 0.41857, 0, 0.90819, 5.75564, 0, 1, 0, 1.19, -0.90819, 0, 0.41857, 20.6526, 0.98485, 0, 0.1734, 5.85769, 0, 1, 0, 1.19, -0.1734, 0, 0.98485, 20.8874, 0.59988, 0, 0.80009, 5.53772, 0, 1, 0, 1.19, -0.80009, 0, 0.59988, 20.7897, 0.38834, 0, 0.92151, 5.82095, 0, 1, 0, 1.19, -0.92151, 0, 0.38834, 20.6634, 0.99898, 0, 0.04518, -3.05992, 0, 1, 0, 1.19, -0.04518, 0, 0.99898, -15.3588, 0.65617, 0, 0.75462, -2.54577, 0, 1, 0, 1.19, -0.75462, 0, 0.65617, -15.3109, 0.14163, 0, 0.98992, -2.97165, 0, 1, 0, 1.19, -0.98992, 0, 0.14163, -15.3255, 0.65877, 0, 0.75234, -2.61871, 0, 1, 0, 1.19, -0.75234, 0, 0.65877, -15.2208, 0.42482, 0, 0.90528, 2.73261, 0, 1, 0, 1.19, -0.90528, 0, 0.42482, -15.094, 0.75679, 0, 0.65366, 2.96808, 0, 1, 0, 1.19, -0.65366, 0, 0.75679, -15.1726, 0.99654, 0, 0.08307, 2.60392, 0, 1, 0, 1.19, -0.08307, 0, 0.99654, -15.2879, 0.18933, 0, 0.98191, 2.6916, 0, 1, 0, 1.19, -0.98191, 0, 0.18933, -15.3818, 0.4121, 0, 0.91114, -3.57166, 0, 1, 0, 1.19, -0.91114, 0, 0.4121, -5.76237, 0.9984, 0, 0.05652, -3.77781, 0, 1, 0, 1.19, -0.05652, 0, 0.9984, -6.17778, 0.48443, 0, 0.87483, -3.75668, 0, 1, 0, 1.19, -0.87483, 0, 0.48443, -6.10932, 0.95621, 0, 0.29267, -3.65486, 0, 1, 0, 1.19, -0.29267, 0, 0.95621, -5.96356, 0.84868, 0, 0.5289, 3.03732, 0, 1, 0, 0.04, -0.5289, 0, 0.84868, -7.16465, 0.99917, 0, 0.04078, 2.57827, 0, 1, 0, 0.04, -0.04078, 0, 0.99917, -7.20313, 0.33457, 0, 0.94237, 2.68325, 0, 1, 0, 0.04, -0.94237, 0, 0.33457, -7.51894, 0.60011, 0, 0.79992, 2.69865, 0, 1, 0, 0.04, -0.79992, 0, 0.60011, -6.76936, 0.25965, 0, 0.9657, 2.0206, 0, 1, 0, 0.04, -0.9657, 0, 0.25965, -6.78109, 0.93471, 0, 0.35541, 2.85209, 0, 1, 0, 0.04, -0.35541, 0, 0.93471, -7.08164, 0.83856, 0, 0.54481, 39.211, 0, 1, 0, 0.04, -0.54481, 0, 0.83856, 28.5801, 0.99441, 0, 0.10562, 39.5752, 0, 1, 0, 0.04, -0.10562, 0, 0.99441, 29.0896, 0.62603, 0, 0.7798, 38.8557, 0, 1, 0, 0.04, -0.7798, 0, 0.62603, 28.5789, 0.48195, 0, 0.8762, 39.0499, 0, 1, 0, 0.04, -0.8762, 0, 0.48195, 28.3485, 0.85963, 0, 0.51092, 38.9889, 0, 1, 0, 0.04, -0.51092, 0, 0.85963, 28.5638, 0.99585, 0, 0.09101, 38.6195, 0, 1, 0, 0.04, -0.09101, 0, 0.99585, 28.3384)
 
 [sub_resource type="SphereMesh" id="Mesh_6"]
 material = SubResource("Material_sand")
@@ -1809,64 +1792,76 @@ material = SubResource("Material_wood")
 size = Vector3(0.08, 0.08, 1.8)
 
 [sub_resource type="BoxMesh" id="Mesh_119"]
-material = SubResource("Material_stone")
-size = Vector3(10, 2.7, 1.25)
-
-[sub_resource type="BoxMesh" id="Mesh_120"]
 material = SubResource("Material_stone_dark")
 size = Vector3(10.2, 0.16, 1.45)
 
-[sub_resource type="BoxMesh" id="Mesh_121"]
-material = SubResource("Material_stone")
-size = Vector3(1.25, 2.7, 5)
-
-[sub_resource type="BoxMesh" id="Mesh_122"]
+[sub_resource type="BoxMesh" id="Mesh_120"]
 material = SubResource("Material_stone_dark")
 size = Vector3(1.45, 0.16, 5)
 
+[sub_resource type="BoxMesh" id="Mesh_121"]
+material = SubResource("Material_stone_dark")
+size = Vector3(1.6, 0.35, 1.6)
+
+[sub_resource type="MultiMesh" id="MultiMesh_121_0"]
+transform_format = 1
+instance_count = 4
+mesh = SubResource("Mesh_121")
+buffer = PackedFloat32Array(1, 0, 0, -34.375, 0, 1, 0, 0.175, 0, 0, 1, -5.625, 1, 0, 0, -34.375, 0, 1, 0, 0.175, 0, 0, 1, 0.625, 1, 0, 0, -25.625, 0, 1, 0, 0.175, 0, 0, 1, -5.625, 1, 0, 0, -25.625, 0, 1, 0, 0.175, 0, 0, 1, 0.625)
+
+[sub_resource type="BoxMesh" id="Mesh_122"]
+material = SubResource("Material_stone")
+size = Vector3(1.3, 1.1, 1.3)
+
+[sub_resource type="MultiMesh" id="MultiMesh_122_0"]
+transform_format = 1
+instance_count = 4
+mesh = SubResource("Mesh_122")
+buffer = PackedFloat32Array(1, 0, 0, -34.375, 0, 1, 0, 0.9, 0, 0, 1, -5.625, 1, 0, 0, -34.375, 0, 1, 0, 0.9, 0, 0, 1, 0.625, 1, 0, 0, -25.625, 0, 1, 0, 0.9, 0, 0, 1, -5.625, 1, 0, 0, -25.625, 0, 1, 0, 0.9, 0, 0, 1, 0.625)
+
 [sub_resource type="BoxMesh" id="Mesh_123"]
 material = SubResource("Material_stone_dark")
-size = Vector3(1.5, 1.7, 1.5)
+size = Vector3(1.55, 0.22, 1.55)
 
 [sub_resource type="MultiMesh" id="MultiMesh_123_0"]
 transform_format = 1
 instance_count = 4
 mesh = SubResource("Mesh_123")
-buffer = PackedFloat32Array(1, 0, 0, -34.375, 0, 1, 0, 0.85, 0, 0, 1, -5.625, 1, 0, 0, -34.375, 0, 1, 0, 0.85, 0, 0, 1, 0.625, 1, 0, 0, -25.625, 0, 1, 0, 0.85, 0, 0, 1, -5.625, 1, 0, 0, -25.625, 0, 1, 0, 0.85, 0, 0, 1, 0.625)
+buffer = PackedFloat32Array(1, 0, 0, -34.375, 0, 1, 0, 1.56, 0, 0, 1, -5.625, 1, 0, 0, -34.375, 0, 1, 0, 1.56, 0, 0, 1, 0.625, 1, 0, 0, -25.625, 0, 1, 0, 1.56, 0, 0, 1, -5.625, 1, 0, 0, -25.625, 0, 1, 0, 1.56, 0, 0, 1, 0.625)
 
 [sub_resource type="BoxMesh" id="Mesh_124"]
-material = SubResource("Material_wood_dark")
-size = Vector3(0.6, 0.55, 9.4)
+material = SubResource("Material_stone")
+size = Vector3(1, 0.15, 1)
+
+[sub_resource type="MultiMesh" id="MultiMesh_124_0"]
+transform_format = 1
+instance_count = 4
+mesh = SubResource("Mesh_124")
+buffer = PackedFloat32Array(1, 0, 0, -34.375, 0, 1, 0, 1.745, 0, 0, 1, -5.625, 1, 0, 0, -34.375, 0, 1, 0, 1.745, 0, 0, 1, 0.625, 1, 0, 0, -25.625, 0, 1, 0, 1.745, 0, 0, 1, -5.625, 1, 0, 0, -25.625, 0, 1, 0, 1.745, 0, 0, 1, 0.625)
 
 [sub_resource type="BoxMesh" id="Mesh_125"]
+material = SubResource("Material_wood_bleached")
+size = Vector3(0.6, 0.55, 9.4)
+
+[sub_resource type="BoxMesh" id="Mesh_126"]
+material = SubResource("Material_bronze")
+size = Vector3(0.66, 0.61, 0.14)
+
+[sub_resource type="BoxMesh" id="Mesh_127"]
 material = SubResource("Material_stone")
 size = Vector3(4.6, 0.6, 1.5)
 
-[sub_resource type="TorusMesh" id="Mesh_126"]
+[sub_resource type="TorusMesh" id="Mesh_128"]
 material = SubResource("Material_bone")
 inner_radius = 0.303
 outer_radius = 0.423
 rings = 14
 ring_segments = 5
 
-[sub_resource type="TorusMesh" id="Mesh_127"]
+[sub_resource type="TorusMesh" id="Mesh_129"]
 material = SubResource("Material_bone")
 inner_radius = 0.468
 outer_radius = 0.588
-rings = 14
-ring_segments = 5
-
-[sub_resource type="TorusMesh" id="Mesh_128"]
-material = SubResource("Material_bone")
-inner_radius = 0.567
-outer_radius = 0.687
-rings = 14
-ring_segments = 5
-
-[sub_resource type="TorusMesh" id="Mesh_129"]
-material = SubResource("Material_bone")
-inner_radius = 0.6
-outer_radius = 0.72
 rings = 14
 ring_segments = 5
 
@@ -1877,17 +1872,31 @@ outer_radius = 0.687
 rings = 14
 ring_segments = 5
 
-[sub_resource type="BoxMesh" id="Mesh_131"]
+[sub_resource type="TorusMesh" id="Mesh_131"]
+material = SubResource("Material_bone")
+inner_radius = 0.6
+outer_radius = 0.72
+rings = 14
+ring_segments = 5
+
+[sub_resource type="TorusMesh" id="Mesh_132"]
+material = SubResource("Material_bone")
+inner_radius = 0.567
+outer_radius = 0.687
+rings = 14
+ring_segments = 5
+
+[sub_resource type="BoxMesh" id="Mesh_133"]
 material = SubResource("Material_bone")
 size = Vector3(0.192, 0.144, 0.168)
 
-[sub_resource type="MultiMesh" id="MultiMesh_131_0"]
+[sub_resource type="MultiMesh" id="MultiMesh_133_0"]
 transform_format = 1
 instance_count = 13
-mesh = SubResource("Mesh_131")
+mesh = SubResource("Mesh_133")
 buffer = PackedFloat32Array(-0.32793, 0, 0.9447, -20.5312, 0, 1, 0, 0.30225, -0.9447, 0, -0.32793, -44.4907, -0.43248, 0, 0.90164, -20.3244, 0, 1, 0, 0.36413, -0.90164, 0, -0.43248, -44.566, -0.44525, 0, 0.8954, -20.1177, 0, 1, 0, 0.426, -0.8954, 0, -0.44525, -44.6412, -0.41536, 0, 0.90965, -19.911, 0, 1, 0, 0.46313, -0.90965, 0, -0.41536, -44.7165, -0.26791, 0, 0.96344, -19.7042, 0, 1, 0, 0.50025, -0.96344, 0, -0.26791, -44.7917, -0.24546, 0, 0.96941, -19.4975, 0, 1, 0, 0.51262, -0.96941, 0, -0.24546, -44.867, -0.30097, 0, 0.95363, -19.2908, 0, 1, 0, 0.525, -0.95363, 0, -0.30097, -44.9422, -0.27173, 0, 0.96237, -19.0841, 0, 1, 0, 0.51263, -0.96237, 0, -0.27173, -45.0174, -0.40748, 0, 0.91321, -18.8773, 0, 1, 0, 0.50025, -0.91321, 0, -0.40748, -45.0927, -0.44331, 0, 0.89637, -18.6706, 0, 1, 0, 0.46313, -0.89637, 0, -0.44331, -45.1679, -0.30085, 0, 0.95367, -18.4639, 0, 1, 0, 0.426, -0.95367, 0, -0.30085, -45.2432, -0.22384, 0, 0.97463, -18.2571, 0, 1, 0, 0.36413, -0.97463, 0, -0.22384, -45.3184, -0.28772, 0, 0.95772, -18.0504, 0, 1, 0, 0.30225, -0.95772, 0, -0.28772, -45.3937)
 
-[sub_resource type="CylinderMesh" id="Mesh_132"]
+[sub_resource type="CylinderMesh" id="Mesh_134"]
 material = SubResource("Material_bone")
 top_radius = 0.132
 bottom_radius = 0.264
@@ -1895,21 +1904,21 @@ height = 0.9
 radial_segments = 6
 rings = 1
 
-[sub_resource type="BoxMesh" id="Mesh_133"]
+[sub_resource type="BoxMesh" id="Mesh_135"]
 material = SubResource("Material_bone")
 size = Vector3(0.096, 0.072, 0.72)
 
-[sub_resource type="BoxMesh" id="Mesh_134"]
+[sub_resource type="BoxMesh" id="Mesh_136"]
 material = SubResource("Material_bone")
 size = Vector3(0.12, 0.096, 0.144)
 
-[sub_resource type="MultiMesh" id="MultiMesh_134_0"]
+[sub_resource type="MultiMesh" id="MultiMesh_136_0"]
 transform_format = 1
 instance_count = 4
-mesh = SubResource("Mesh_134")
+mesh = SubResource("Mesh_136")
 buffer = PackedFloat32Array(-0.69065, 0, 0.72319, -20.7567, 0, 1, 0, 0.048, -0.72319, 0, -0.69065, -44.4087, -0.7312, 0, 0.68216, -20.94, 0, 1, 0, 0.048, -0.68216, 0, -0.7312, -44.2807, -0.0679, 0, 0.99769, -21.1507, 0, 1, 0, 0.048, -0.99769, 0, -0.0679, -44.2281, -0.71843, 0, 0.6956, -21.3716, 0, 1, 0, 0.048, -0.6956, 0, -0.71843, -44.2033)
 
-[sub_resource type="CylinderMesh" id="Mesh_135"]
+[sub_resource type="CylinderMesh" id="Mesh_137"]
 material = SubResource("Material_bone")
 top_radius = 0.042
 bottom_radius = 0.042
@@ -1917,37 +1926,23 @@ height = 1.02
 radial_segments = 6
 rings = 1
 
-[sub_resource type="MultiMesh" id="MultiMesh_135_0"]
+[sub_resource type="MultiMesh" id="MultiMesh_137_0"]
 transform_format = 1
 instance_count = 4
-mesh = SubResource("Mesh_135")
+mesh = SubResource("Mesh_137")
 buffer = PackedFloat32Array(-0.99067, 0.13627, 0, -20.346, 0, 0, -1, 0.048, -0.13627, -0.99067, -0, -43.2101, -0.55314, -0.83309, -0, -17.7338, 0, 0, -1, 0.048, 0.83309, -0.55314, -0, -44.5237, -0.73878, -0.67395, -0, -21.1423, 0, 0, -1, 0.048, 0.67395, -0.73878, -0, -45.3978, -0.99461, 0.10366, 0, -18.3971, 0, 0, -1, 0.048, -0.10366, -0.99461, -0, -46.3462)
 
-[sub_resource type="TorusMesh" id="Mesh_136"]
+[sub_resource type="TorusMesh" id="Mesh_138"]
 material = SubResource("Material_bone")
 inner_radius = 1.313
 outer_radius = 1.833
 rings = 14
 ring_segments = 5
 
-[sub_resource type="TorusMesh" id="Mesh_137"]
+[sub_resource type="TorusMesh" id="Mesh_139"]
 material = SubResource("Material_bone")
 inner_radius = 2.028
 outer_radius = 2.548
-rings = 14
-ring_segments = 5
-
-[sub_resource type="TorusMesh" id="Mesh_138"]
-material = SubResource("Material_bone")
-inner_radius = 2.457
-outer_radius = 2.977
-rings = 14
-ring_segments = 5
-
-[sub_resource type="TorusMesh" id="Mesh_139"]
-material = SubResource("Material_bone")
-inner_radius = 2.6
-outer_radius = 3.12
 rings = 14
 ring_segments = 5
 
@@ -1958,17 +1953,31 @@ outer_radius = 2.977
 rings = 14
 ring_segments = 5
 
-[sub_resource type="BoxMesh" id="Mesh_141"]
+[sub_resource type="TorusMesh" id="Mesh_141"]
+material = SubResource("Material_bone")
+inner_radius = 2.6
+outer_radius = 3.12
+rings = 14
+ring_segments = 5
+
+[sub_resource type="TorusMesh" id="Mesh_142"]
+material = SubResource("Material_bone")
+inner_radius = 2.457
+outer_radius = 2.977
+rings = 14
+ring_segments = 5
+
+[sub_resource type="BoxMesh" id="Mesh_143"]
 material = SubResource("Material_bone")
 size = Vector3(0.832, 0.624, 0.728)
 
-[sub_resource type="MultiMesh" id="MultiMesh_141_0"]
+[sub_resource type="MultiMesh" id="MultiMesh_143_0"]
 transform_format = 1
 instance_count = 13
-mesh = SubResource("Mesh_141")
+mesh = SubResource("Mesh_143")
 buffer = PackedFloat32Array(-0.90109, 0, 0.43364, 23.5826, 0, 1, 0, 1.30975, -0.43364, 0, -0.90109, 55.1841, -0.95432, 0, 0.29878, 23.9855, 0, 1, 0, 1.57788, -0.29878, 0, -0.95432, 54.3201, -0.94335, 0, 0.33181, 24.3884, 0, 1, 0, 1.846, -0.33181, 0, -0.94335, 53.456, -0.89205, 0, 0.45194, 24.7913, 0, 1, 0, 2.00687, -0.45194, 0, -0.89205, 52.592, -0.86051, 0, 0.50943, 25.1942, 0, 1, 0, 2.16775, -0.50943, 0, -0.86051, 51.728, -0.94248, 0, 0.33427, 25.5971, 0, 1, 0, 2.22138, -0.33427, 0, -0.94248, 50.864, -0.88346, 0, 0.46851, 26, 0, 1, 0, 2.275, -0.46851, 0, -0.88346, 50, -0.84076, 0, 0.54141, 26.4029, 0, 1, 0, 2.22138, -0.54141, 0, -0.84076, 49.136, -0.84969, 0, 0.52728, 26.8058, 0, 1, 0, 2.16775, -0.52728, 0, -0.84969, 48.272, -0.91571, 0, 0.40184, 27.2087, 0, 1, 0, 2.00687, -0.40184, 0, -0.91571, 47.408, -0.92074, 0, 0.39017, 27.6116, 0, 1, 0, 1.846, -0.39017, 0, -0.92074, 46.544, -0.94062, 0, 0.33945, 28.0145, 0, 1, 0, 1.57788, -0.33945, 0, -0.94062, 45.6799, -0.83945, 0, 0.54344, 28.4174, 0, 1, 0, 1.30975, -0.54344, 0, -0.83945, 44.8159)
 
-[sub_resource type="CylinderMesh" id="Mesh_142"]
+[sub_resource type="CylinderMesh" id="Mesh_144"]
 material = SubResource("Material_bone")
 top_radius = 0.572
 bottom_radius = 1.144
@@ -1976,7 +1985,7 @@ height = 3.9
 radial_segments = 6
 rings = 1
 
-[sub_resource type="CylinderMesh" id="Mesh_143"]
+[sub_resource type="CylinderMesh" id="Mesh_145"]
 material = SubResource("Material_bone")
 top_radius = 0.078
 bottom_radius = 0.312
@@ -1984,21 +1993,21 @@ height = 3.64
 radial_segments = 6
 rings = 1
 
-[sub_resource type="BoxMesh" id="Mesh_144"]
+[sub_resource type="BoxMesh" id="Mesh_146"]
 material = SubResource("Material_bone")
 size = Vector3(0.416, 0.312, 3.12)
 
-[sub_resource type="BoxMesh" id="Mesh_145"]
+[sub_resource type="BoxMesh" id="Mesh_147"]
 material = SubResource("Material_bone")
 size = Vector3(0.52, 0.416, 0.624)
 
-[sub_resource type="MultiMesh" id="MultiMesh_145_0"]
+[sub_resource type="MultiMesh" id="MultiMesh_147_0"]
 transform_format = 1
 instance_count = 4
-mesh = SubResource("Mesh_145")
+mesh = SubResource("Mesh_147")
 buffer = PackedFloat32Array(-0.98564, 0, 0.16888, 23.3559, 0, 1, 0, 0.208, -0.16888, 0, -0.98564, 56.2259, -0.81781, 0, 0.57549, 22.8226, 0, 1, 0, 0.208, -0.57549, 0, -0.81781, 57.01, -0.99979, 0, -0.02028, 22.5325, 0, 1, 0, 0.208, 0.02028, 0, -0.99979, 57.9074, -0.99986, 0, -0.01692, 21.8875, 0, 1, 0, 0.208, 0.01692, 0, -0.99986, 58.6394)
 
-[sub_resource type="CylinderMesh" id="Mesh_146"]
+[sub_resource type="CylinderMesh" id="Mesh_148"]
 material = SubResource("Material_bone")
 top_radius = 0.182
 bottom_radius = 0.182
@@ -2006,104 +2015,236 @@ height = 4.42
 radial_segments = 6
 rings = 1
 
-[sub_resource type="MultiMesh" id="MultiMesh_146_0"]
+[sub_resource type="MultiMesh" id="MultiMesh_148_0"]
 transform_format = 1
 instance_count = 4
-mesh = SubResource("Mesh_146")
+mesh = SubResource("Mesh_148")
 buffer = PackedFloat32Array(-0.58284, -0.81259, -0, 27.5384, 0, 0, -1, 0.208, 0.81259, -0.58284, -0, 58.291, -0.28092, -0.95973, -0, 33.1733, 0, 0, -1, 0.208, 0.95973, -0.28092, -0, 47.0336, 0.4073, -0.91329, -0, 19.127, 0, 0, -1, 0.208, 0.91329, 0.4073, 0, 54.3686, 0.39885, -0.91701, -0, 23.3463, 0, 0, -1, 0.208, 0.91701, 0.39885, 0, 42.4512)
 
-[sub_resource type="ConvexPolygonShape3D" id="Shape_0"]
-points = PackedVector3Array(0, 1, 0, 4.2, 0, 0, 3.39787, 0, 1.05801, 1.29787, 0, 1.7119, -1.29787, 0, 1.7119, -3.39787, 0, 1.05801, -4.2, 0, 0, -3.39787, 0, -1.05801, -1.29787, 0, -1.7119, 1.29787, 0, -1.7119, 3.39787, 0, -1.05801, 3.2046, 0.5, 0, 2.59258, 0.5, 0.80726, 0.99028, 0.5, 1.30618, -0.99028, 0.5, 1.30618, -2.59258, 0.5, 0.80726, -3.2046, 0.5, 0, -2.59258, 0.5, -0.80726, -0.99028, 0.5, -1.30618, 0.99028, 0.5, -1.30618, 2.59258, 0.5, -0.80726, 2.1126, 0.8, 0, 1.70913, 0.8, 0.53218, 0.65283, 0.8, 0.86109, -0.65283, 0.8, 0.86109, -1.70913, 0.8, 0.53218, -2.1126, 0.8, 0, -1.70913, 0.8, -0.53218, -0.65283, 0.8, -0.86109, 0.65283, 0.8, -0.86109, 1.70913, 0.8, -0.53218)
+[sub_resource type="CylinderShape3D" id="Shape_0"]
+radius = 0.32
+height = 1.24
 
-[sub_resource type="ConvexPolygonShape3D" id="Shape_1"]
-points = PackedVector3Array(0, 1.1, 0, 4.5, 0, 0, 3.64058, 0, 1.17557, 1.39058, 0, 1.90211, -1.39058, 0, 1.90211, -3.64058, 0, 1.17557, -4.5, 0, 0, -3.64058, 0, -1.17557, -1.39058, 0, -1.90211, 1.39058, 0, -1.90211, 3.64058, 0, -1.17557, 3.4335, 0.55, 0, 2.77776, 0.55, 0.89696, 1.06101, 0.55, 1.45131, -1.06101, 0.55, 1.45131, -2.77776, 0.55, 0.89696, -3.4335, 0.55, 0, -2.77776, 0.55, -0.89696, -1.06101, 0.55, -1.45131, 1.06101, 0.55, -1.45131, 2.77776, 0.55, -0.89696, 2.2635, 0.88, 0, 1.83121, 0.88, 0.59131, 0.69946, 0.88, 0.95676, -0.69946, 0.88, 0.95676, -1.83121, 0.88, 0.59131, -2.2635, 0.88, 0, -1.83121, 0.88, -0.59131, -0.69946, 0.88, -0.95676, 0.69946, 0.88, -0.95676, 1.83121, 0.88, -0.59131)
+[sub_resource type="CylinderShape3D" id="Shape_1"]
+radius = 0.32
+height = 1.24
 
 [sub_resource type="ConvexPolygonShape3D" id="Shape_2"]
-points = PackedVector3Array(0, 1.1, 0, 4, 0, 0, 3.23607, 0, 0.99923, 1.23607, 0, 1.6168, -1.23607, 0, 1.6168, -3.23607, 0, 0.99923, -4, 0, 0, -3.23607, 0, -0.99923, -1.23607, 0, -1.6168, 1.23607, 0, -1.6168, 3.23607, 0, -0.99923, 3.052, 0.55, 0, 2.46912, 0.55, 0.76242, 0.94312, 0.55, 1.23362, -0.94312, 0.55, 1.23362, -2.46912, 0.55, 0.76242, -3.052, 0.55, 0, -2.46912, 0.55, -0.76242, -0.94312, 0.55, -1.23362, 0.94312, 0.55, -1.23362, 2.46912, 0.55, -0.76242, 2.012, 0.88, 0, 1.62774, 0.88, 0.50262, 0.62174, 0.88, 0.81325, -0.62174, 0.88, 0.81325, -1.62774, 0.88, 0.50262, -2.012, 0.88, 0, -1.62774, 0.88, -0.50262, -0.62174, 0.88, -0.81325, 0.62174, 0.88, -0.81325, 1.62774, 0.88, -0.50262)
+points = PackedVector3Array(0, 1, 0, 4.2, 0, 0, 3.39787, 0, 1.05801, 1.29787, 0, 1.7119, -1.29787, 0, 1.7119, -3.39787, 0, 1.05801, -4.2, 0, 0, -3.39787, 0, -1.05801, -1.29787, 0, -1.7119, 1.29787, 0, -1.7119, 3.39787, 0, -1.05801, 3.2046, 0.5, 0, 2.59258, 0.5, 0.80726, 0.99028, 0.5, 1.30618, -0.99028, 0.5, 1.30618, -2.59258, 0.5, 0.80726, -3.2046, 0.5, 0, -2.59258, 0.5, -0.80726, -0.99028, 0.5, -1.30618, 0.99028, 0.5, -1.30618, 2.59258, 0.5, -0.80726, 2.1126, 0.8, 0, 1.70913, 0.8, 0.53218, 0.65283, 0.8, 0.86109, -0.65283, 0.8, 0.86109, -1.70913, 0.8, 0.53218, -2.1126, 0.8, 0, -1.70913, 0.8, -0.53218, -0.65283, 0.8, -0.86109, 0.65283, 0.8, -0.86109, 1.70913, 0.8, -0.53218)
 
 [sub_resource type="ConvexPolygonShape3D" id="Shape_3"]
-points = PackedVector3Array(0, 1.2, 0, 4, 0, 0, 3.23607, 0, 1.05801, 1.23607, 0, 1.7119, -1.23607, 0, 1.7119, -3.23607, 0, 1.05801, -4, 0, 0, -3.23607, 0, -1.05801, -1.23607, 0, -1.7119, 1.23607, 0, -1.7119, 3.23607, 0, -1.05801, 3.052, 0.6, 0, 2.46912, 0.6, 0.80726, 0.94312, 0.6, 1.30618, -0.94312, 0.6, 1.30618, -2.46912, 0.6, 0.80726, -3.052, 0.6, 0, -2.46912, 0.6, -0.80726, -0.94312, 0.6, -1.30618, 0.94312, 0.6, -1.30618, 2.46912, 0.6, -0.80726, 2.012, 0.96, 0, 1.62774, 0.96, 0.53218, 0.62174, 0.96, 0.86109, -0.62174, 0.96, 0.86109, -1.62774, 0.96, 0.53218, -2.012, 0.96, 0, -1.62774, 0.96, -0.53218, -0.62174, 0.96, -0.86109, 0.62174, 0.96, -0.86109, 1.62774, 0.96, -0.53218)
+points = PackedVector3Array(0, 1.1, 0, 4.5, 0, 0, 3.64058, 0, 1.17557, 1.39058, 0, 1.90211, -1.39058, 0, 1.90211, -3.64058, 0, 1.17557, -4.5, 0, 0, -3.64058, 0, -1.17557, -1.39058, 0, -1.90211, 1.39058, 0, -1.90211, 3.64058, 0, -1.17557, 3.4335, 0.55, 0, 2.77776, 0.55, 0.89696, 1.06101, 0.55, 1.45131, -1.06101, 0.55, 1.45131, -2.77776, 0.55, 0.89696, -3.4335, 0.55, 0, -2.77776, 0.55, -0.89696, -1.06101, 0.55, -1.45131, 1.06101, 0.55, -1.45131, 2.77776, 0.55, -0.89696, 2.2635, 0.88, 0, 1.83121, 0.88, 0.59131, 0.69946, 0.88, 0.95676, -0.69946, 0.88, 0.95676, -1.83121, 0.88, 0.59131, -2.2635, 0.88, 0, -1.83121, 0.88, -0.59131, -0.69946, 0.88, -0.95676, 0.69946, 0.88, -0.95676, 1.83121, 0.88, -0.59131)
 
-[sub_resource type="BoxShape3D" id="Shape_4"]
-size = Vector3(0.8, 0.72, 2.9)
+[sub_resource type="ConvexPolygonShape3D" id="Shape_4"]
+points = PackedVector3Array(0, 1.1, 0, 4, 0, 0, 3.23607, 0, 0.99923, 1.23607, 0, 1.6168, -1.23607, 0, 1.6168, -3.23607, 0, 0.99923, -4, 0, 0, -3.23607, 0, -0.99923, -1.23607, 0, -1.6168, 1.23607, 0, -1.6168, 3.23607, 0, -0.99923, 3.052, 0.55, 0, 2.46912, 0.55, 0.76242, 0.94312, 0.55, 1.23362, -0.94312, 0.55, 1.23362, -2.46912, 0.55, 0.76242, -3.052, 0.55, 0, -2.46912, 0.55, -0.76242, -0.94312, 0.55, -1.23362, 0.94312, 0.55, -1.23362, 2.46912, 0.55, -0.76242, 2.012, 0.88, 0, 1.62774, 0.88, 0.50262, 0.62174, 0.88, 0.81325, -0.62174, 0.88, 0.81325, -1.62774, 0.88, 0.50262, -2.012, 0.88, 0, -1.62774, 0.88, -0.50262, -0.62174, 0.88, -0.81325, 0.62174, 0.88, -0.81325, 1.62774, 0.88, -0.50262)
 
 [sub_resource type="ConvexPolygonShape3D" id="Shape_5"]
-points = PackedVector3Array(0, 0.5, 0, 1.8, 0, 0, 1.45623, 0, 0.8229, 0.55623, 0, 1.33148, -0.55623, 0, 1.33148, -1.45623, 0, 0.8229, -1.8, 0, 0, -1.45623, 0, -0.8229, -0.55623, 0, -1.33148, 0.55623, 0, -1.33148, 1.45623, 0, -0.8229, 1.3734, 0.25, 0, 1.1111, 0.25, 0.62787, 0.4244, 0.25, 1.01592, -0.4244, 0.25, 1.01592, -1.1111, 0.25, 0.62787, -1.3734, 0.25, 0, -1.1111, 0.25, -0.62787, -0.4244, 0.25, -1.01592, 0.4244, 0.25, -1.01592, 1.1111, 0.25, -0.62787, 0.9054, 0.4, 0, 0.73248, 0.4, 0.41392, 0.27978, 0.4, 0.66973, -0.27978, 0.4, 0.66973, -0.73248, 0.4, 0.41392, -0.9054, 0.4, 0, -0.73248, 0.4, -0.41392, -0.27978, 0.4, -0.66973, 0.27978, 0.4, -0.66973, 0.73248, 0.4, -0.41392)
+points = PackedVector3Array(0, 1.2, 0, 4, 0, 0, 3.23607, 0, 1.05801, 1.23607, 0, 1.7119, -1.23607, 0, 1.7119, -3.23607, 0, 1.05801, -4, 0, 0, -3.23607, 0, -1.05801, -1.23607, 0, -1.7119, 1.23607, 0, -1.7119, 3.23607, 0, -1.05801, 3.052, 0.6, 0, 2.46912, 0.6, 0.80726, 0.94312, 0.6, 1.30618, -0.94312, 0.6, 1.30618, -2.46912, 0.6, 0.80726, -3.052, 0.6, 0, -2.46912, 0.6, -0.80726, -0.94312, 0.6, -1.30618, 0.94312, 0.6, -1.30618, 2.46912, 0.6, -0.80726, 2.012, 0.96, 0, 1.62774, 0.96, 0.53218, 0.62174, 0.96, 0.86109, -0.62174, 0.96, 0.86109, -1.62774, 0.96, 0.53218, -2.012, 0.96, 0, -1.62774, 0.96, -0.53218, -0.62174, 0.96, -0.86109, 0.62174, 0.96, -0.86109, 1.62774, 0.96, -0.53218)
 
-[sub_resource type="ConvexPolygonShape3D" id="Shape_6"]
-points = PackedVector3Array(0, 0.4, 0, 1.5, 0, 0, 1.21353, 0, 0.94046, 0.46353, 0, 1.52169, -0.46353, 0, 1.52169, -1.21353, 0, 0.94046, -1.5, 0, 0, -1.21353, 0, -0.94046, -0.46353, 0, -1.52169, 0.46353, 0, -1.52169, 1.21353, 0, -0.94046, 1.1445, 0.2, 0, 0.92592, 0.2, 0.71757, 0.35367, 0.2, 1.16105, -0.35367, 0.2, 1.16105, -0.92592, 0.2, 0.71757, -1.1445, 0.2, 0, -0.92592, 0.2, -0.71757, -0.35367, 0.2, -1.16105, 0.35367, 0.2, -1.16105, 0.92592, 0.2, -0.71757, 0.7545, 0.32, 0, 0.6104, 0.32, 0.47305, 0.23315, 0.32, 0.76541, -0.23315, 0.32, 0.76541, -0.6104, 0.32, 0.47305, -0.7545, 0.32, 0, -0.6104, 0.32, -0.47305, -0.23315, 0.32, -0.76541, 0.23315, 0.32, -0.76541, 0.6104, 0.32, -0.47305)
-
-[sub_resource type="ConvexPolygonShape3D" id="Shape_7"]
-points = PackedVector3Array(0, 0.45, 0, 2, 0, 0, 1.61803, 0, 0.70534, 0.61803, 0, 1.14127, -0.61803, 0, 1.14127, -1.61803, 0, 0.70534, -2, 0, 0, -1.61803, 0, -0.70534, -0.61803, 0, -1.14127, 0.61803, 0, -1.14127, 1.61803, 0, -0.70534, 1.526, 0.225, 0, 1.23456, 0.225, 0.53818, 0.47156, 0.225, 0.87079, -0.47156, 0.225, 0.87079, -1.23456, 0.225, 0.53818, -1.526, 0.225, 0, -1.23456, 0.225, -0.53818, -0.47156, 0.225, -0.87079, 0.47156, 0.225, -0.87079, 1.23456, 0.225, -0.53818, 1.006, 0.36, 0, 0.81387, 0.36, 0.35479, 0.31087, 0.36, 0.57406, -0.31087, 0.36, 0.57406, -0.81387, 0.36, 0.35479, -1.006, 0.36, 0, -0.81387, 0.36, -0.35479, -0.31087, 0.36, -0.57406, 0.31087, 0.36, -0.57406, 0.81387, 0.36, -0.35479)
-
-[sub_resource type="ConvexPolygonShape3D" id="Shape_8"]
-points = PackedVector3Array(0, 0.35, 0, 1.2, 0, 0, 0.97082, 0, 1.05801, 0.37082, 0, 1.7119, -0.37082, 0, 1.7119, -0.97082, 0, 1.05801, -1.2, 0, 0, -0.97082, 0, -1.05801, -0.37082, 0, -1.7119, 0.37082, 0, -1.7119, 0.97082, 0, -1.05801, 0.9156, 0.175, 0, 0.74074, 0.175, 0.80726, 0.28294, 0.175, 1.30618, -0.28294, 0.175, 1.30618, -0.74074, 0.175, 0.80726, -0.9156, 0.175, 0, -0.74074, 0.175, -0.80726, -0.28294, 0.175, -1.30618, 0.28294, 0.175, -1.30618, 0.74074, 0.175, -0.80726, 0.6036, 0.28, 0, 0.48832, 0.28, 0.53218, 0.18652, 0.28, 0.86109, -0.18652, 0.28, 0.86109, -0.48832, 0.28, 0.53218, -0.6036, 0.28, 0, -0.48832, 0.28, -0.53218, -0.18652, 0.28, -0.86109, 0.18652, 0.28, -0.86109, 0.48832, 0.28, -0.53218)
-
-[sub_resource type="ConvexPolygonShape3D" id="Shape_9"]
-points = PackedVector3Array(0, 0.35, 0, 1.2, 0, 0, 0.97082, 0, 0.94046, 0.37082, 0, 1.52169, -0.37082, 0, 1.52169, -0.97082, 0, 0.94046, -1.2, 0, 0, -0.97082, 0, -0.94046, -0.37082, 0, -1.52169, 0.37082, 0, -1.52169, 0.97082, 0, -0.94046, 0.9156, 0.175, 0, 0.74074, 0.175, 0.71757, 0.28294, 0.175, 1.16105, -0.28294, 0.175, 1.16105, -0.74074, 0.175, 0.71757, -0.9156, 0.175, 0, -0.74074, 0.175, -0.71757, -0.28294, 0.175, -1.16105, 0.28294, 0.175, -1.16105, 0.74074, 0.175, -0.71757, 0.6036, 0.28, 0, 0.48832, 0.28, 0.47305, 0.18652, 0.28, 0.76541, -0.18652, 0.28, 0.76541, -0.48832, 0.28, 0.47305, -0.6036, 0.28, 0, -0.48832, 0.28, -0.47305, -0.18652, 0.28, -0.76541, 0.18652, 0.28, -0.76541, 0.48832, 0.28, -0.47305)
-
-[sub_resource type="ConvexPolygonShape3D" id="Shape_10"]
-points = PackedVector3Array(0, 4.2, 0, 18, 0, 0, 14.5623, 0, 3.8206, 5.56231, 0, 6.18187, -5.56231, 0, 6.18187, -14.5623, 0, 3.8206, -18, 0, 0, -14.5623, 0, -3.8206, -5.56231, 0, -6.18187, 5.56231, 0, -6.18187, 14.5623, 0, -3.8206, 13.734, 2.1, 0, 11.111, 2.1, 2.91512, 4.24404, 2.1, 4.71676, -4.24404, 2.1, 4.71676, -11.111, 2.1, 2.91512, -13.734, 2.1, 0, -11.111, 2.1, -2.91512, -4.24404, 2.1, -4.71676, 4.24404, 2.1, -4.71676, 11.111, 2.1, -2.91512, 9.054, 3.36, 0, 7.32484, 3.36, 1.92176, 2.79784, 3.36, 3.10948, -2.79784, 3.36, 3.10948, -7.32484, 3.36, 1.92176, -9.054, 3.36, 0, -7.32484, 3.36, -1.92176, -2.79784, 3.36, -3.10948, 2.79784, 3.36, -3.10948, 7.32484, 3.36, -1.92176)
-
-[sub_resource type="ConvexPolygonShape3D" id="Shape_11"]
-points = PackedVector3Array(0, 3, 0, 3.8, 0, 0, 3.07426, 0, 2.11603, 1.17426, 0, 3.4238, -1.17426, 0, 3.4238, -3.07426, 0, 2.11603, -3.8, 0, 0, -3.07426, 0, -2.11603, -1.17426, 0, -3.4238, 1.17426, 0, -3.4238, 3.07426, 0, -2.11603, 2.8994, 1.5, 0, 2.34566, 1.5, 1.61453, 0.89596, 1.5, 2.61236, -0.89596, 1.5, 2.61236, -2.34566, 1.5, 1.61453, -2.8994, 1.5, 0, -2.34566, 1.5, -1.61453, -0.89596, 1.5, -2.61236, 0.89596, 1.5, -2.61236, 2.34566, 1.5, -1.61453, 1.9114, 2.4, 0, 1.54636, 2.4, 1.06436, 0.59066, 2.4, 1.72217, -0.59066, 2.4, 1.72217, -1.54636, 2.4, 1.06436, -1.9114, 2.4, 0, -1.54636, 2.4, -1.06436, -0.59066, 2.4, -1.72217, 0.59066, 2.4, -1.72217, 1.54636, 2.4, -1.06436)
-
-[sub_resource type="ConvexPolygonShape3D" id="Shape_12"]
-points = PackedVector3Array(0, 3.2, 0, 3.8, 0, 0, 3.07426, 0, 2.11603, 1.17426, 0, 3.4238, -1.17426, 0, 3.4238, -3.07426, 0, 2.11603, -3.8, 0, 0, -3.07426, 0, -2.11603, -1.17426, 0, -3.4238, 1.17426, 0, -3.4238, 3.07426, 0, -2.11603, 2.8994, 1.6, 0, 2.34566, 1.6, 1.61453, 0.89596, 1.6, 2.61236, -0.89596, 1.6, 2.61236, -2.34566, 1.6, 1.61453, -2.8994, 1.6, 0, -2.34566, 1.6, -1.61453, -0.89596, 1.6, -2.61236, 0.89596, 1.6, -2.61236, 2.34566, 1.6, -1.61453, 1.9114, 2.56, 0, 1.54636, 2.56, 1.06436, 0.59066, 2.56, 1.72217, -0.59066, 2.56, 1.72217, -1.54636, 2.56, 1.06436, -1.9114, 2.56, 0, -1.54636, 2.56, -1.06436, -0.59066, 2.56, -1.72217, 0.59066, 2.56, -1.72217, 1.54636, 2.56, -1.06436)
-
-[sub_resource type="ConvexPolygonShape3D" id="Shape_13"]
-points = PackedVector3Array(0, 1.3, 0, 2.6, 0, 0, 2.10344, 0, 0.8229, 0.80344, 0, 1.33148, -0.80344, 0, 1.33148, -2.10344, 0, 0.8229, -2.6, 0, 0, -2.10344, 0, -0.8229, -0.80344, 0, -1.33148, 0.80344, 0, -1.33148, 2.10344, 0, -0.8229, 1.9838, 0.65, 0, 1.60493, 0.65, 0.62787, 0.61303, 0.65, 1.01592, -0.61303, 0.65, 1.01592, -1.60493, 0.65, 0.62787, -1.9838, 0.65, 0, -1.60493, 0.65, -0.62787, -0.61303, 0.65, -1.01592, 0.61303, 0.65, -1.01592, 1.60493, 0.65, -0.62787, 1.3078, 1.04, 0, 1.05803, 1.04, 0.41392, 0.40413, 1.04, 0.66973, -0.40413, 1.04, 0.66973, -1.05803, 1.04, 0.41392, -1.3078, 1.04, 0, -1.05803, 1.04, -0.41392, -0.40413, 1.04, -0.66973, 0.40413, 1.04, -0.66973, 1.05803, 1.04, -0.41392)
-
-[sub_resource type="ConvexPolygonShape3D" id="Shape_14"]
-points = PackedVector3Array(0, 1.3, 0, 4.2, 0, 0, 3.39787, 0, 0.88168, 1.29787, 0, 1.42658, -1.29787, 0, 1.42658, -3.39787, 0, 0.88168, -4.2, 0, 0, -3.39787, 0, -0.88168, -1.29787, 0, -1.42658, 1.29787, 0, -1.42658, 3.39787, 0, -0.88168, 3.2046, 0.65, 0, 2.59258, 0.65, 0.67272, 0.99028, 0.65, 1.08848, -0.99028, 0.65, 1.08848, -2.59258, 0.65, 0.67272, -3.2046, 0.65, 0, -2.59258, 0.65, -0.67272, -0.99028, 0.65, -1.08848, 0.99028, 0.65, -1.08848, 2.59258, 0.65, -0.67272, 2.1126, 1.04, 0, 1.70913, 1.04, 0.44348, 0.65283, 1.04, 0.71757, -0.65283, 1.04, 0.71757, -1.70913, 1.04, 0.44348, -2.1126, 1.04, 0, -1.70913, 1.04, -0.44348, -0.65283, 1.04, -0.71757, 0.65283, 1.04, -0.71757, 1.70913, 1.04, -0.44348)
-
-[sub_resource type="ConvexPolygonShape3D" id="Shape_15"]
-points = PackedVector3Array(0, 1.4, 0, 4.4, 0, 0, 3.55967, 0, 0.94046, 1.35967, 0, 1.52169, -1.35967, 0, 1.52169, -3.55967, 0, 0.94046, -4.4, 0, 0, -3.55967, 0, -0.94046, -1.35967, 0, -1.52169, 1.35967, 0, -1.52169, 3.55967, 0, -0.94046, 3.3572, 0.7, 0, 2.71603, 0.7, 0.71757, 1.03743, 0.7, 1.16105, -1.03743, 0.7, 1.16105, -2.71603, 0.7, 0.71757, -3.3572, 0.7, 0, -2.71603, 0.7, -0.71757, -1.03743, 0.7, -1.16105, 1.03743, 0.7, -1.16105, 2.71603, 0.7, -0.71757, 2.2132, 1.12, 0, 1.79052, 1.12, 0.47305, 0.68392, 1.12, 0.76541, -0.68392, 1.12, 0.76541, -1.79052, 1.12, 0.47305, -2.2132, 1.12, 0, -1.79052, 1.12, -0.47305, -0.68392, 1.12, -0.76541, 0.68392, 1.12, -0.76541, 1.79052, 1.12, -0.47305)
-
-[sub_resource type="BoxShape3D" id="Shape_16"]
-size = Vector3(7.1, 0.9, 2.6)
-
-[sub_resource type="ConvexPolygonShape3D" id="Shape_17"]
-points = PackedVector3Array(0, 0.7, 0, 2.4, 0, 0, 1.94164, 0, 1.05801, 0.74164, 0, 1.7119, -0.74164, 0, 1.7119, -1.94164, 0, 1.05801, -2.4, 0, 0, -1.94164, 0, -1.05801, -0.74164, 0, -1.7119, 0.74164, 0, -1.7119, 1.94164, 0, -1.05801, 1.8312, 0.35, 0, 1.48147, 0.35, 0.80726, 0.56587, 0.35, 1.30618, -0.56587, 0.35, 1.30618, -1.48147, 0.35, 0.80726, -1.8312, 0.35, 0, -1.48147, 0.35, -0.80726, -0.56587, 0.35, -1.30618, 0.56587, 0.35, -1.30618, 1.48147, 0.35, -0.80726, 1.2072, 0.56, 0, 0.97665, 0.56, 0.53218, 0.37305, 0.56, 0.86109, -0.37305, 0.56, 0.86109, -0.97665, 0.56, 0.53218, -1.2072, 0.56, 0, -0.97665, 0.56, -0.53218, -0.37305, 0.56, -0.86109, 0.37305, 0.56, -0.86109, 0.97665, 0.56, -0.53218)
-
-[sub_resource type="ConvexPolygonShape3D" id="Shape_18"]
-points = PackedVector3Array(0, 0.6, 0, 2.6, 0, 0, 2.10344, 0, 0.8229, 0.80344, 0, 1.33148, -0.80344, 0, 1.33148, -2.10344, 0, 0.8229, -2.6, 0, 0, -2.10344, 0, -0.8229, -0.80344, 0, -1.33148, 0.80344, 0, -1.33148, 2.10344, 0, -0.8229, 1.9838, 0.3, 0, 1.60493, 0.3, 0.62787, 0.61303, 0.3, 1.01592, -0.61303, 0.3, 1.01592, -1.60493, 0.3, 0.62787, -1.9838, 0.3, 0, -1.60493, 0.3, -0.62787, -0.61303, 0.3, -1.01592, 0.61303, 0.3, -1.01592, 1.60493, 0.3, -0.62787, 1.3078, 0.48, 0, 1.05803, 0.48, 0.41392, 0.40413, 0.48, 0.66973, -0.40413, 0.48, 0.66973, -1.05803, 0.48, 0.41392, -1.3078, 0.48, 0, -1.05803, 0.48, -0.41392, -0.40413, 0.48, -0.66973, 0.40413, 0.48, -0.66973, 1.05803, 0.48, -0.41392)
-
-[sub_resource type="BoxShape3D" id="Shape_19"]
-size = Vector3(0.7, 0.8, 7)
-
-[sub_resource type="BoxShape3D" id="Shape_20"]
-size = Vector3(10, 4.2, 1.25)
-
-[sub_resource type="BoxShape3D" id="Shape_21"]
-size = Vector3(10, 4.2, 1.25)
-
-[sub_resource type="BoxShape3D" id="Shape_22"]
-size = Vector3(1.25, 4.2, 5)
-
-[sub_resource type="BoxShape3D" id="Shape_23"]
-size = Vector3(1.25, 4.2, 5)
-
-[sub_resource type="ConvexPolygonShape3D" id="Shape_24"]
-points = PackedVector3Array(0, 1.3, 0, 4.4, 0, 0, 3.55967, 0, 1.52824, 1.35967, 0, 2.47275, -1.35967, 0, 2.47275, -3.55967, 0, 1.52824, -4.4, 0, 0, -3.55967, 0, -1.52824, -1.35967, 0, -2.47275, 1.35967, 0, -2.47275, 3.55967, 0, -1.52824, 3.3572, 0.65, 0, 2.71603, 0.65, 1.16605, 1.03743, 0.65, 1.88671, -1.03743, 0.65, 1.88671, -2.71603, 0.65, 1.16605, -3.3572, 0.65, 0, -2.71603, 0.65, -1.16605, -1.03743, 0.65, -1.88671, 1.03743, 0.65, -1.88671, 2.71603, 0.65, -1.16605, 2.2132, 1.04, 0, 1.79052, 1.04, 0.76871, 0.68392, 1.04, 1.24379, -0.68392, 1.04, 1.24379, -1.79052, 1.04, 0.76871, -2.2132, 1.04, 0, -1.79052, 1.04, -0.76871, -0.68392, 1.04, -1.24379, 0.68392, 1.04, -1.24379, 1.79052, 1.04, -0.76871)
-
-[sub_resource type="ConvexPolygonShape3D" id="Shape_25"]
-points = PackedVector3Array(0, 0.9, 0, 2.6, 0, 0, 2.10344, 0, 1.17557, 0.80344, 0, 1.90211, -0.80344, 0, 1.90211, -2.10344, 0, 1.17557, -2.6, 0, 0, -2.10344, 0, -1.17557, -0.80344, 0, -1.90211, 0.80344, 0, -1.90211, 2.10344, 0, -1.17557, 1.9838, 0.45, 0, 1.60493, 0.45, 0.89696, 0.61303, 0.45, 1.45131, -0.61303, 0.45, 1.45131, -1.60493, 0.45, 0.89696, -1.9838, 0.45, 0, -1.60493, 0.45, -0.89696, -0.61303, 0.45, -1.45131, 0.61303, 0.45, -1.45131, 1.60493, 0.45, -0.89696, 1.3078, 0.72, 0, 1.05803, 0.72, 0.59131, 0.40413, 0.72, 0.95676, -0.40413, 0.72, 0.95676, -1.05803, 0.72, 0.59131, -1.3078, 0.72, 0, -1.05803, 0.72, -0.59131, -0.40413, 0.72, -0.95676, 0.40413, 0.72, -0.95676, 1.05803, 0.72, -0.59131)
-
-[sub_resource type="ConvexPolygonShape3D" id="Shape_26"]
-points = PackedVector3Array(0, 0.6, 0, 2, 0, 0, 1.61803, 0, 0.94046, 0.61803, 0, 1.52169, -0.61803, 0, 1.52169, -1.61803, 0, 0.94046, -2, 0, 0, -1.61803, 0, -0.94046, -0.61803, 0, -1.52169, 0.61803, 0, -1.52169, 1.61803, 0, -0.94046, 1.526, 0.3, 0, 1.23456, 0.3, 0.71757, 0.47156, 0.3, 1.16105, -0.47156, 0.3, 1.16105, -1.23456, 0.3, 0.71757, -1.526, 0.3, 0, -1.23456, 0.3, -0.71757, -0.47156, 0.3, -1.16105, 0.47156, 0.3, -1.16105, 1.23456, 0.3, -0.71757, 1.006, 0.48, 0, 0.81387, 0.48, 0.47305, 0.31087, 0.48, 0.76541, -0.31087, 0.48, 0.76541, -0.81387, 0.48, 0.47305, -1.006, 0.48, 0, -0.81387, 0.48, -0.47305, -0.31087, 0.48, -0.76541, 0.31087, 0.48, -0.76541, 0.81387, 0.48, -0.47305)
-
-[sub_resource type="BoxShape3D" id="Shape_27"]
+[sub_resource type="BoxShape3D" id="Shape_6"]
 size = Vector3(0.8, 0.72, 2.9)
 
+[sub_resource type="CylinderShape3D" id="Shape_7"]
+radius = 0.7776
+height = 3.6
+
+[sub_resource type="CylinderShape3D" id="Shape_8"]
+radius = 0.7776
+height = 2.592
+
+[sub_resource type="CylinderShape3D" id="Shape_9"]
+radius = 0.7776
+height = 3.6
+
+[sub_resource type="CylinderShape3D" id="Shape_10"]
+radius = 0.7776
+height = 2.592
+
+[sub_resource type="CylinderShape3D" id="Shape_11"]
+radius = 0.7776
+height = 3.6
+
+[sub_resource type="CylinderShape3D" id="Shape_12"]
+radius = 0.7776
+height = 2.592
+
+[sub_resource type="CylinderShape3D" id="Shape_13"]
+radius = 0.32
+height = 1.24
+
+[sub_resource type="CylinderShape3D" id="Shape_14"]
+radius = 0.32
+height = 1.24
+
+[sub_resource type="CylinderShape3D" id="Shape_15"]
+radius = 0.32
+height = 1.24
+
+[sub_resource type="CylinderShape3D" id="Shape_16"]
+radius = 0.31
+height = 0.9
+
+[sub_resource type="CylinderShape3D" id="Shape_17"]
+radius = 0.85
+height = 2.16
+
+[sub_resource type="ConvexPolygonShape3D" id="Shape_18"]
+points = PackedVector3Array(0, 0.5, 0, 1.8, 0, 0, 1.45623, 0, 0.8229, 0.55623, 0, 1.33148, -0.55623, 0, 1.33148, -1.45623, 0, 0.8229, -1.8, 0, 0, -1.45623, 0, -0.8229, -0.55623, 0, -1.33148, 0.55623, 0, -1.33148, 1.45623, 0, -0.8229, 1.3734, 0.25, 0, 1.1111, 0.25, 0.62787, 0.4244, 0.25, 1.01592, -0.4244, 0.25, 1.01592, -1.1111, 0.25, 0.62787, -1.3734, 0.25, 0, -1.1111, 0.25, -0.62787, -0.4244, 0.25, -1.01592, 0.4244, 0.25, -1.01592, 1.1111, 0.25, -0.62787, 0.9054, 0.4, 0, 0.73248, 0.4, 0.41392, 0.27978, 0.4, 0.66973, -0.27978, 0.4, 0.66973, -0.73248, 0.4, 0.41392, -0.9054, 0.4, 0, -0.73248, 0.4, -0.41392, -0.27978, 0.4, -0.66973, 0.27978, 0.4, -0.66973, 0.73248, 0.4, -0.41392)
+
+[sub_resource type="ConvexPolygonShape3D" id="Shape_19"]
+points = PackedVector3Array(0, 0.4, 0, 1.5, 0, 0, 1.21353, 0, 0.94046, 0.46353, 0, 1.52169, -0.46353, 0, 1.52169, -1.21353, 0, 0.94046, -1.5, 0, 0, -1.21353, 0, -0.94046, -0.46353, 0, -1.52169, 0.46353, 0, -1.52169, 1.21353, 0, -0.94046, 1.1445, 0.2, 0, 0.92592, 0.2, 0.71757, 0.35367, 0.2, 1.16105, -0.35367, 0.2, 1.16105, -0.92592, 0.2, 0.71757, -1.1445, 0.2, 0, -0.92592, 0.2, -0.71757, -0.35367, 0.2, -1.16105, 0.35367, 0.2, -1.16105, 0.92592, 0.2, -0.71757, 0.7545, 0.32, 0, 0.6104, 0.32, 0.47305, 0.23315, 0.32, 0.76541, -0.23315, 0.32, 0.76541, -0.6104, 0.32, 0.47305, -0.7545, 0.32, 0, -0.6104, 0.32, -0.47305, -0.23315, 0.32, -0.76541, 0.23315, 0.32, -0.76541, 0.6104, 0.32, -0.47305)
+
+[sub_resource type="ConvexPolygonShape3D" id="Shape_20"]
+points = PackedVector3Array(0, 0.45, 0, 2, 0, 0, 1.61803, 0, 0.70534, 0.61803, 0, 1.14127, -0.61803, 0, 1.14127, -1.61803, 0, 0.70534, -2, 0, 0, -1.61803, 0, -0.70534, -0.61803, 0, -1.14127, 0.61803, 0, -1.14127, 1.61803, 0, -0.70534, 1.526, 0.225, 0, 1.23456, 0.225, 0.53818, 0.47156, 0.225, 0.87079, -0.47156, 0.225, 0.87079, -1.23456, 0.225, 0.53818, -1.526, 0.225, 0, -1.23456, 0.225, -0.53818, -0.47156, 0.225, -0.87079, 0.47156, 0.225, -0.87079, 1.23456, 0.225, -0.53818, 1.006, 0.36, 0, 0.81387, 0.36, 0.35479, 0.31087, 0.36, 0.57406, -0.31087, 0.36, 0.57406, -0.81387, 0.36, 0.35479, -1.006, 0.36, 0, -0.81387, 0.36, -0.35479, -0.31087, 0.36, -0.57406, 0.31087, 0.36, -0.57406, 0.81387, 0.36, -0.35479)
+
+[sub_resource type="ConvexPolygonShape3D" id="Shape_21"]
+points = PackedVector3Array(0, 0.35, 0, 1.2, 0, 0, 0.97082, 0, 1.05801, 0.37082, 0, 1.7119, -0.37082, 0, 1.7119, -0.97082, 0, 1.05801, -1.2, 0, 0, -0.97082, 0, -1.05801, -0.37082, 0, -1.7119, 0.37082, 0, -1.7119, 0.97082, 0, -1.05801, 0.9156, 0.175, 0, 0.74074, 0.175, 0.80726, 0.28294, 0.175, 1.30618, -0.28294, 0.175, 1.30618, -0.74074, 0.175, 0.80726, -0.9156, 0.175, 0, -0.74074, 0.175, -0.80726, -0.28294, 0.175, -1.30618, 0.28294, 0.175, -1.30618, 0.74074, 0.175, -0.80726, 0.6036, 0.28, 0, 0.48832, 0.28, 0.53218, 0.18652, 0.28, 0.86109, -0.18652, 0.28, 0.86109, -0.48832, 0.28, 0.53218, -0.6036, 0.28, 0, -0.48832, 0.28, -0.53218, -0.18652, 0.28, -0.86109, 0.18652, 0.28, -0.86109, 0.48832, 0.28, -0.53218)
+
+[sub_resource type="ConvexPolygonShape3D" id="Shape_22"]
+points = PackedVector3Array(0, 0.35, 0, 1.2, 0, 0, 0.97082, 0, 0.94046, 0.37082, 0, 1.52169, -0.37082, 0, 1.52169, -0.97082, 0, 0.94046, -1.2, 0, 0, -0.97082, 0, -0.94046, -0.37082, 0, -1.52169, 0.37082, 0, -1.52169, 0.97082, 0, -0.94046, 0.9156, 0.175, 0, 0.74074, 0.175, 0.71757, 0.28294, 0.175, 1.16105, -0.28294, 0.175, 1.16105, -0.74074, 0.175, 0.71757, -0.9156, 0.175, 0, -0.74074, 0.175, -0.71757, -0.28294, 0.175, -1.16105, 0.28294, 0.175, -1.16105, 0.74074, 0.175, -0.71757, 0.6036, 0.28, 0, 0.48832, 0.28, 0.47305, 0.18652, 0.28, 0.76541, -0.18652, 0.28, 0.76541, -0.48832, 0.28, 0.47305, -0.6036, 0.28, 0, -0.48832, 0.28, -0.47305, -0.18652, 0.28, -0.76541, 0.18652, 0.28, -0.76541, 0.48832, 0.28, -0.47305)
+
+[sub_resource type="ConvexPolygonShape3D" id="Shape_23"]
+points = PackedVector3Array(0, 4.2, 0, 18, 0, 0, 14.5623, 0, 3.8206, 5.56231, 0, 6.18187, -5.56231, 0, 6.18187, -14.5623, 0, 3.8206, -18, 0, 0, -14.5623, 0, -3.8206, -5.56231, 0, -6.18187, 5.56231, 0, -6.18187, 14.5623, 0, -3.8206, 13.734, 2.1, 0, 11.111, 2.1, 2.91512, 4.24404, 2.1, 4.71676, -4.24404, 2.1, 4.71676, -11.111, 2.1, 2.91512, -13.734, 2.1, 0, -11.111, 2.1, -2.91512, -4.24404, 2.1, -4.71676, 4.24404, 2.1, -4.71676, 11.111, 2.1, -2.91512, 9.054, 3.36, 0, 7.32484, 3.36, 1.92176, 2.79784, 3.36, 3.10948, -2.79784, 3.36, 3.10948, -7.32484, 3.36, 1.92176, -9.054, 3.36, 0, -7.32484, 3.36, -1.92176, -2.79784, 3.36, -3.10948, 2.79784, 3.36, -3.10948, 7.32484, 3.36, -1.92176)
+
+[sub_resource type="ConvexPolygonShape3D" id="Shape_24"]
+points = PackedVector3Array(0, 3, 0, 3.8, 0, 0, 3.07426, 0, 2.11603, 1.17426, 0, 3.4238, -1.17426, 0, 3.4238, -3.07426, 0, 2.11603, -3.8, 0, 0, -3.07426, 0, -2.11603, -1.17426, 0, -3.4238, 1.17426, 0, -3.4238, 3.07426, 0, -2.11603, 2.8994, 1.5, 0, 2.34566, 1.5, 1.61453, 0.89596, 1.5, 2.61236, -0.89596, 1.5, 2.61236, -2.34566, 1.5, 1.61453, -2.8994, 1.5, 0, -2.34566, 1.5, -1.61453, -0.89596, 1.5, -2.61236, 0.89596, 1.5, -2.61236, 2.34566, 1.5, -1.61453, 1.9114, 2.4, 0, 1.54636, 2.4, 1.06436, 0.59066, 2.4, 1.72217, -0.59066, 2.4, 1.72217, -1.54636, 2.4, 1.06436, -1.9114, 2.4, 0, -1.54636, 2.4, -1.06436, -0.59066, 2.4, -1.72217, 0.59066, 2.4, -1.72217, 1.54636, 2.4, -1.06436)
+
+[sub_resource type="ConvexPolygonShape3D" id="Shape_25"]
+points = PackedVector3Array(0, 3.2, 0, 3.8, 0, 0, 3.07426, 0, 2.11603, 1.17426, 0, 3.4238, -1.17426, 0, 3.4238, -3.07426, 0, 2.11603, -3.8, 0, 0, -3.07426, 0, -2.11603, -1.17426, 0, -3.4238, 1.17426, 0, -3.4238, 3.07426, 0, -2.11603, 2.8994, 1.6, 0, 2.34566, 1.6, 1.61453, 0.89596, 1.6, 2.61236, -0.89596, 1.6, 2.61236, -2.34566, 1.6, 1.61453, -2.8994, 1.6, 0, -2.34566, 1.6, -1.61453, -0.89596, 1.6, -2.61236, 0.89596, 1.6, -2.61236, 2.34566, 1.6, -1.61453, 1.9114, 2.56, 0, 1.54636, 2.56, 1.06436, 0.59066, 2.56, 1.72217, -0.59066, 2.56, 1.72217, -1.54636, 2.56, 1.06436, -1.9114, 2.56, 0, -1.54636, 2.56, -1.06436, -0.59066, 2.56, -1.72217, 0.59066, 2.56, -1.72217, 1.54636, 2.56, -1.06436)
+
+[sub_resource type="ConvexPolygonShape3D" id="Shape_26"]
+points = PackedVector3Array(0, 1.3, 0, 2.6, 0, 0, 2.10344, 0, 0.8229, 0.80344, 0, 1.33148, -0.80344, 0, 1.33148, -2.10344, 0, 0.8229, -2.6, 0, 0, -2.10344, 0, -0.8229, -0.80344, 0, -1.33148, 0.80344, 0, -1.33148, 2.10344, 0, -0.8229, 1.9838, 0.65, 0, 1.60493, 0.65, 0.62787, 0.61303, 0.65, 1.01592, -0.61303, 0.65, 1.01592, -1.60493, 0.65, 0.62787, -1.9838, 0.65, 0, -1.60493, 0.65, -0.62787, -0.61303, 0.65, -1.01592, 0.61303, 0.65, -1.01592, 1.60493, 0.65, -0.62787, 1.3078, 1.04, 0, 1.05803, 1.04, 0.41392, 0.40413, 1.04, 0.66973, -0.40413, 1.04, 0.66973, -1.05803, 1.04, 0.41392, -1.3078, 1.04, 0, -1.05803, 1.04, -0.41392, -0.40413, 1.04, -0.66973, 0.40413, 1.04, -0.66973, 1.05803, 1.04, -0.41392)
+
+[sub_resource type="ConvexPolygonShape3D" id="Shape_27"]
+points = PackedVector3Array(0, 1.3, 0, 4.2, 0, 0, 3.39787, 0, 0.88168, 1.29787, 0, 1.42658, -1.29787, 0, 1.42658, -3.39787, 0, 0.88168, -4.2, 0, 0, -3.39787, 0, -0.88168, -1.29787, 0, -1.42658, 1.29787, 0, -1.42658, 3.39787, 0, -0.88168, 3.2046, 0.65, 0, 2.59258, 0.65, 0.67272, 0.99028, 0.65, 1.08848, -0.99028, 0.65, 1.08848, -2.59258, 0.65, 0.67272, -3.2046, 0.65, 0, -2.59258, 0.65, -0.67272, -0.99028, 0.65, -1.08848, 0.99028, 0.65, -1.08848, 2.59258, 0.65, -0.67272, 2.1126, 1.04, 0, 1.70913, 1.04, 0.44348, 0.65283, 1.04, 0.71757, -0.65283, 1.04, 0.71757, -1.70913, 1.04, 0.44348, -2.1126, 1.04, 0, -1.70913, 1.04, -0.44348, -0.65283, 1.04, -0.71757, 0.65283, 1.04, -0.71757, 1.70913, 1.04, -0.44348)
+
 [sub_resource type="ConvexPolygonShape3D" id="Shape_28"]
+points = PackedVector3Array(0, 1.4, 0, 4.4, 0, 0, 3.55967, 0, 0.94046, 1.35967, 0, 1.52169, -1.35967, 0, 1.52169, -3.55967, 0, 0.94046, -4.4, 0, 0, -3.55967, 0, -0.94046, -1.35967, 0, -1.52169, 1.35967, 0, -1.52169, 3.55967, 0, -0.94046, 3.3572, 0.7, 0, 2.71603, 0.7, 0.71757, 1.03743, 0.7, 1.16105, -1.03743, 0.7, 1.16105, -2.71603, 0.7, 0.71757, -3.3572, 0.7, 0, -2.71603, 0.7, -0.71757, -1.03743, 0.7, -1.16105, 1.03743, 0.7, -1.16105, 2.71603, 0.7, -0.71757, 2.2132, 1.12, 0, 1.79052, 1.12, 0.47305, 0.68392, 1.12, 0.76541, -0.68392, 1.12, 0.76541, -1.79052, 1.12, 0.47305, -2.2132, 1.12, 0, -1.79052, 1.12, -0.47305, -0.68392, 1.12, -0.76541, 0.68392, 1.12, -0.76541, 1.79052, 1.12, -0.47305)
+
+[sub_resource type="CylinderShape3D" id="Shape_29"]
+radius = 0.864
+height = 5.3
+
+[sub_resource type="CylinderShape3D" id="Shape_30"]
+radius = 0.864
+height = 5.3
+
+[sub_resource type="CylinderShape3D" id="Shape_31"]
+radius = 0.864
+height = 5.3
+
+[sub_resource type="CylinderShape3D" id="Shape_32"]
+radius = 0.864
+height = 5.3
+
+[sub_resource type="BoxShape3D" id="Shape_33"]
+size = Vector3(7.1, 0.9, 2.6)
+
+[sub_resource type="CylinderShape3D" id="Shape_34"]
+radius = 0.62
+height = 0.5
+
+[sub_resource type="ConvexPolygonShape3D" id="Shape_35"]
+points = PackedVector3Array(0, 0.7, 0, 2.4, 0, 0, 1.94164, 0, 1.05801, 0.74164, 0, 1.7119, -0.74164, 0, 1.7119, -1.94164, 0, 1.05801, -2.4, 0, 0, -1.94164, 0, -1.05801, -0.74164, 0, -1.7119, 0.74164, 0, -1.7119, 1.94164, 0, -1.05801, 1.8312, 0.35, 0, 1.48147, 0.35, 0.80726, 0.56587, 0.35, 1.30618, -0.56587, 0.35, 1.30618, -1.48147, 0.35, 0.80726, -1.8312, 0.35, 0, -1.48147, 0.35, -0.80726, -0.56587, 0.35, -1.30618, 0.56587, 0.35, -1.30618, 1.48147, 0.35, -0.80726, 1.2072, 0.56, 0, 0.97665, 0.56, 0.53218, 0.37305, 0.56, 0.86109, -0.37305, 0.56, 0.86109, -0.97665, 0.56, 0.53218, -1.2072, 0.56, 0, -0.97665, 0.56, -0.53218, -0.37305, 0.56, -0.86109, 0.37305, 0.56, -0.86109, 0.97665, 0.56, -0.53218)
+
+[sub_resource type="ConvexPolygonShape3D" id="Shape_36"]
+points = PackedVector3Array(0, 0.6, 0, 2.6, 0, 0, 2.10344, 0, 0.8229, 0.80344, 0, 1.33148, -0.80344, 0, 1.33148, -2.10344, 0, 0.8229, -2.6, 0, 0, -2.10344, 0, -0.8229, -0.80344, 0, -1.33148, 0.80344, 0, -1.33148, 2.10344, 0, -0.8229, 1.9838, 0.3, 0, 1.60493, 0.3, 0.62787, 0.61303, 0.3, 1.01592, -0.61303, 0.3, 1.01592, -1.60493, 0.3, 0.62787, -1.9838, 0.3, 0, -1.60493, 0.3, -0.62787, -0.61303, 0.3, -1.01592, 0.61303, 0.3, -1.01592, 1.60493, 0.3, -0.62787, 1.3078, 0.48, 0, 1.05803, 0.48, 0.41392, 0.40413, 0.48, 0.66973, -0.40413, 0.48, 0.66973, -1.05803, 0.48, 0.41392, -1.3078, 0.48, 0, -1.05803, 0.48, -0.41392, -0.40413, 0.48, -0.66973, 0.40413, 0.48, -0.66973, 1.05803, 0.48, -0.41392)
+
+[sub_resource type="BoxShape3D" id="Shape_37"]
+size = Vector3(0.7, 0.8, 7)
+
+[sub_resource type="BoxShape3D" id="Shape_38"]
+size = Vector3(10, 4.2, 1.25)
+
+[sub_resource type="BoxShape3D" id="Shape_39"]
+size = Vector3(10, 4.2, 1.25)
+
+[sub_resource type="BoxShape3D" id="Shape_40"]
+size = Vector3(1.25, 4.2, 5)
+
+[sub_resource type="BoxShape3D" id="Shape_41"]
+size = Vector3(1.25, 4.2, 5)
+
+[sub_resource type="BoxShape3D" id="Shape_42"]
+size = Vector3(1.6, 0.35, 1.6)
+
+[sub_resource type="BoxShape3D" id="Shape_43"]
+size = Vector3(1.3, 2.5, 1.3)
+
+[sub_resource type="BoxShape3D" id="Shape_44"]
+size = Vector3(1.6, 0.35, 1.6)
+
+[sub_resource type="BoxShape3D" id="Shape_45"]
+size = Vector3(1.3, 2.5, 1.3)
+
+[sub_resource type="BoxShape3D" id="Shape_46"]
+size = Vector3(1.6, 0.35, 1.6)
+
+[sub_resource type="BoxShape3D" id="Shape_47"]
+size = Vector3(1.3, 2.5, 1.3)
+
+[sub_resource type="BoxShape3D" id="Shape_48"]
+size = Vector3(1.6, 0.35, 1.6)
+
+[sub_resource type="BoxShape3D" id="Shape_49"]
+size = Vector3(1.3, 2.5, 1.3)
+
+[sub_resource type="ConvexPolygonShape3D" id="Shape_50"]
+points = PackedVector3Array(0, 1.3, 0, 4.4, 0, 0, 3.55967, 0, 1.52824, 1.35967, 0, 2.47275, -1.35967, 0, 2.47275, -3.55967, 0, 1.52824, -4.4, 0, 0, -3.55967, 0, -1.52824, -1.35967, 0, -2.47275, 1.35967, 0, -2.47275, 3.55967, 0, -1.52824, 3.3572, 0.65, 0, 2.71603, 0.65, 1.16605, 1.03743, 0.65, 1.88671, -1.03743, 0.65, 1.88671, -2.71603, 0.65, 1.16605, -3.3572, 0.65, 0, -2.71603, 0.65, -1.16605, -1.03743, 0.65, -1.88671, 1.03743, 0.65, -1.88671, 2.71603, 0.65, -1.16605, 2.2132, 1.04, 0, 1.79052, 1.04, 0.76871, 0.68392, 1.04, 1.24379, -0.68392, 1.04, 1.24379, -1.79052, 1.04, 0.76871, -2.2132, 1.04, 0, -1.79052, 1.04, -0.76871, -0.68392, 1.04, -1.24379, 0.68392, 1.04, -1.24379, 1.79052, 1.04, -0.76871)
+
+[sub_resource type="ConvexPolygonShape3D" id="Shape_51"]
+points = PackedVector3Array(0, 0.9, 0, 2.6, 0, 0, 2.10344, 0, 1.17557, 0.80344, 0, 1.90211, -0.80344, 0, 1.90211, -2.10344, 0, 1.17557, -2.6, 0, 0, -2.10344, 0, -1.17557, -0.80344, 0, -1.90211, 0.80344, 0, -1.90211, 2.10344, 0, -1.17557, 1.9838, 0.45, 0, 1.60493, 0.45, 0.89696, 0.61303, 0.45, 1.45131, -0.61303, 0.45, 1.45131, -1.60493, 0.45, 0.89696, -1.9838, 0.45, 0, -1.60493, 0.45, -0.89696, -0.61303, 0.45, -1.45131, 0.61303, 0.45, -1.45131, 1.60493, 0.45, -0.89696, 1.3078, 0.72, 0, 1.05803, 0.72, 0.59131, 0.40413, 0.72, 0.95676, -0.40413, 0.72, 0.95676, -1.05803, 0.72, 0.59131, -1.3078, 0.72, 0, -1.05803, 0.72, -0.59131, -0.40413, 0.72, -0.95676, 0.40413, 0.72, -0.95676, 1.05803, 0.72, -0.59131)
+
+[sub_resource type="ConvexPolygonShape3D" id="Shape_52"]
+points = PackedVector3Array(0, 0.6, 0, 2, 0, 0, 1.61803, 0, 0.94046, 0.61803, 0, 1.52169, -0.61803, 0, 1.52169, -1.61803, 0, 0.94046, -2, 0, 0, -1.61803, 0, -0.94046, -0.61803, 0, -1.52169, 0.61803, 0, -1.52169, 1.61803, 0, -0.94046, 1.526, 0.3, 0, 1.23456, 0.3, 0.71757, 0.47156, 0.3, 1.16105, -0.47156, 0.3, 1.16105, -1.23456, 0.3, 0.71757, -1.526, 0.3, 0, -1.23456, 0.3, -0.71757, -0.47156, 0.3, -1.16105, 0.47156, 0.3, -1.16105, 1.23456, 0.3, -0.71757, 1.006, 0.48, 0, 0.81387, 0.48, 0.47305, 0.31087, 0.48, 0.76541, -0.31087, 0.48, 0.76541, -0.81387, 0.48, 0.47305, -1.006, 0.48, 0, -0.81387, 0.48, -0.47305, -0.31087, 0.48, -0.76541, 0.31087, 0.48, -0.76541, 0.81387, 0.48, -0.47305)
+
+[sub_resource type="BoxShape3D" id="Shape_53"]
+size = Vector3(0.8, 0.72, 2.9)
+
+[sub_resource type="CylinderShape3D" id="Shape_54"]
+radius = 0.31
+height = 0.9
+
+[sub_resource type="ConvexPolygonShape3D" id="Shape_55"]
 points = PackedVector3Array(0, 0.8, 0, 2.6, 0, 0, 2.10344, 0, 0.8229, 0.80344, 0, 1.33148, -0.80344, 0, 1.33148, -2.10344, 0, 0.8229, -2.6, 0, 0, -2.10344, 0, -0.8229, -0.80344, 0, -1.33148, 0.80344, 0, -1.33148, 2.10344, 0, -0.8229, 1.9838, 0.4, 0, 1.60493, 0.4, 0.62787, 0.61303, 0.4, 1.01592, -0.61303, 0.4, 1.01592, -1.60493, 0.4, 0.62787, -1.9838, 0.4, 0, -1.60493, 0.4, -0.62787, -0.61303, 0.4, -1.01592, 0.61303, 0.4, -1.01592, 1.60493, 0.4, -0.62787, 1.3078, 0.64, 0, 1.05803, 0.64, 0.41392, 0.40413, 0.64, 0.66973, -0.40413, 0.64, 0.66973, -1.05803, 0.64, 0.41392, -1.3078, 0.64, 0, -1.05803, 0.64, -0.41392, -0.40413, 0.64, -0.66973, 0.40413, 0.64, -0.66973, 1.05803, 0.64, -0.41392)
 
-[sub_resource type="ConvexPolygonShape3D" id="Shape_29"]
+[sub_resource type="CylinderShape3D" id="Shape_56"]
+radius = 0.5184
+height = 3.6
+
+[sub_resource type="CylinderShape3D" id="Shape_57"]
+radius = 0.5184
+height = 3.6
+
+[sub_resource type="CylinderShape3D" id="Shape_58"]
+radius = 0.5184
+height = 1.624
+
+[sub_resource type="CylinderShape3D" id="Shape_59"]
+radius = 0.5184
+height = 1.6
+
+[sub_resource type="ConvexPolygonShape3D" id="Shape_60"]
 points = PackedVector3Array(0, 1.2, 0, 5, 0, 0, 4.04508, 0, 1.05801, 1.54508, 0, 1.7119, -1.54508, 0, 1.7119, -4.04508, 0, 1.05801, -5, 0, 0, -4.04508, 0, -1.05801, -1.54508, 0, -1.7119, 1.54508, 0, -1.7119, 4.04508, 0, -1.05801, 3.815, 0.6, 0, 3.0864, 0.6, 0.80726, 1.1789, 0.6, 1.30618, -1.1789, 0.6, 1.30618, -3.0864, 0.6, 0.80726, -3.815, 0.6, 0, -3.0864, 0.6, -0.80726, -1.1789, 0.6, -1.30618, 1.1789, 0.6, -1.30618, 3.0864, 0.6, -0.80726, 2.515, 0.96, 0, 2.03468, 0.96, 0.53218, 0.77718, 0.96, 0.86109, -0.77718, 0.96, 0.86109, -2.03468, 0.96, 0.53218, -2.515, 0.96, 0, -2.03468, 0.96, -0.53218, -0.77718, 0.96, -0.86109, 0.77718, 0.96, -0.86109, 2.03468, 0.96, -0.53218)
 
-[sub_resource type="ConvexPolygonShape3D" id="Shape_30"]
+[sub_resource type="BoxShape3D" id="Shape_61"]
+size = Vector3(0.72, 3.6, 2.16)
+
+[sub_resource type="BoxShape3D" id="Shape_62"]
+size = Vector3(0.72, 3.6, 2.16)
+
+[sub_resource type="BoxShape3D" id="Shape_63"]
+size = Vector3(2.16, 1.26, 2.16)
+
+[sub_resource type="BoxShape3D" id="Shape_64"]
+size = Vector3(2.16, 2.34, 0.5)
+
+[sub_resource type="ConvexPolygonShape3D" id="Shape_65"]
 points = PackedVector3Array(0, 0.9, 0, 3.2, 0, 0, 2.58885, 0, 0.94046, 0.98885, 0, 1.52169, -0.98885, 0, 1.52169, -2.58885, 0, 0.94046, -3.2, 0, 0, -2.58885, 0, -0.94046, -0.98885, 0, -1.52169, 0.98885, 0, -1.52169, 2.58885, 0, -0.94046, 2.4416, 0.45, 0, 1.9753, 0.45, 0.71757, 0.7545, 0.45, 1.16105, -0.7545, 0.45, 1.16105, -1.9753, 0.45, 0.71757, -2.4416, 0.45, 0, -1.9753, 0.45, -0.71757, -0.7545, 0.45, -1.16105, 0.7545, 0.45, -1.16105, 1.9753, 0.45, -0.71757, 1.6096, 0.72, 0, 1.30219, 0.72, 0.47305, 0.49739, 0.72, 0.76541, -0.49739, 0.72, 0.76541, -1.30219, 0.72, 0.47305, -1.6096, 0.72, 0, -1.30219, 0.72, -0.47305, -0.49739, 0.72, -0.76541, 0.49739, 0.72, -0.76541, 1.30219, 0.72, -0.47305)
+
+[sub_resource type="CylinderShape3D" id="Shape_66"]
+radius = 0.62
+height = 0.5
 
 [node name="DesertRuins" type="Node3D"]
 
@@ -2449,10 +2590,10 @@ transform = Transform3D(1.8, 0, 3.11769, 0, 3.6, 0, -3.11769, 0, 1.8, -32.8423, 
 transform = Transform3D(1.7, 0, 2.94449, 0, 3.4, 0, -2.94449, 0, 1.7, -32.8049, 0, -32.2686)
 
 [node name="barrel_113" parent="Models" instance=ExtResource("28_model")]
-transform = Transform3D(2.40601, 0, -0.98545, 0, 2.6, 0, 0.98545, 0, 2.40601, -37.8852, 0, -27.1128)
+transform = Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, -38.1, 0, -27.4)
 
 [node name="barrel_114" parent="Models" instance=ExtResource("28_model")]
-transform = Transform3D(2.57097, 0, -0.38746, 0, 2.6, 0, 0.38746, 0, 2.57097, -36.7999, 0, -26.1305)
+transform = Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, -39.7, 0, -27)
 
 [node name="barrel_open_115" parent="Models" instance=ExtResource("29_model")]
 transform = Transform3D(2.29813, 0, 1.92836, 0, 3, 0, -1.92836, 0, 2.29813, -30.5091, 0, -34.3463)
@@ -2536,19 +2677,19 @@ transform = Transform3D(3, -5.18349, -0.36247, 0, 0.41854, -5.98538, 5.19615, 2.
 transform = Transform3D(3.93923, 0, 0.69459, 0, 4, 0, -0.69459, 0, 3.93923, 34.2, 1.06, 1.5)
 
 [node name="urn_square_142" parent="Models" instance=ExtResource("49_model")]
-transform = Transform3D(-1.14567, 0, 2.39675, 0, 2.65649, 0, -2.39675, 0, -1.14567, 30.4543, 0, 3.82584)
+transform = Transform3D(-1.14567, 0, 2.39675, 0, 2.65649, 0, -2.39675, 0, -1.14567, 29.6543, 0, 4.62584)
 
 [node name="pot_143" parent="Models" instance=ExtResource("14_model")]
-transform = Transform3D(-0.8311, 0, 1.30347, 0, 1.54588, 0, -1.30347, 0, -0.8311, 31.7202, 0, 4.47593)
+transform = Transform3D(-0.8311, 0, 1.30347, 0, 1.54588, 0, -1.30347, 0, -0.8311, 30.9202, 0, 5.27593)
 
 [node name="urn_square_144" parent="Models" instance=ExtResource("49_model")]
-transform = Transform3D(-1.97728, 0, -1.59859, 0, 2.54267, 0, 1.59859, 0, -1.97728, 31.7829, 0, 3.19126)
+transform = Transform3D(-1.97728, 0, -1.59859, 0, 2.54267, 0, 1.59859, 0, -1.97728, 30.9829, 0, 3.99126)
 
 [node name="plate_broken_145" parent="Models" instance=ExtResource("15_model")]
-transform = Transform3D(-1.45557, 0, -0.66431, 0, 1.6, 0, 0.66431, 0, -1.45557, 31.6677, 0, 5.53624)
+transform = Transform3D(-1.45557, 0, -0.66431, 0, 1.6, 0, 0.66431, 0, -1.45557, 30.8677, 0, 6.33624)
 
 [node name="plate_broken_146" parent="Models" instance=ExtResource("15_model")]
-transform = Transform3D(-0.07307, 0, 1.59833, 0, 1.6, 0, -1.59833, 0, -0.07307, 29.8649, 0, 4.64606)
+transform = Transform3D(-0.07307, 0, 1.59833, 0, 1.6, 0, -1.59833, 0, -0.07307, 29.0649, 0, 5.44606)
 
 [node name="bucket_147" parent="Models" instance=ExtResource("48_model")]
 transform = Transform3D(3.46594, -0.48711, -0, 0, 0, -3.5, 0.48711, 3.46594, 0, 37.025, 0.27, 5.6773)
@@ -2559,130 +2700,142 @@ transform = Transform3D(1.31112, 3.24514, 0, 0, 0, -3.5, -3.24514, 1.31112, 0, 3
 [node name="cactus_short_149" parent="Models" instance=ExtResource("50_model")]
 transform = Transform3D(2.59808, 0, 1.5, 0, 3, 0, -1.5, 0, 2.59808, 46.955, 0, 5.92206)
 
-[node name="column_150" parent="Models" instance=ExtResource("7_model")]
+[node name="wall_150" parent="Models" instance=ExtResource("2_model")]
+transform = Transform3D(10, 0, 0, 0, 2.7, 0, 0, 0, 2.08333, -30, -1.7, -5.625)
+
+[node name="wall_151" parent="Models" instance=ExtResource("2_model")]
+transform = Transform3D(10, 0, 0, 0, 2.7, 0, 0, 0, 2.08333, -30, -1.7, 0.625)
+
+[node name="wall_152" parent="Models" instance=ExtResource("2_model")]
+transform = Transform3D(0, 0, 2.08333, 0, 2.7, 0, -5, 0, 0, -34.375, -1.7, -2.5)
+
+[node name="wall_153" parent="Models" instance=ExtResource("2_model")]
+transform = Transform3D(0, 0, 2.08333, 0, 2.7, 0, -5, 0, 0, -25.625, -1.7, -2.5)
+
+[node name="column_154" parent="Models" instance=ExtResource("7_model")]
 transform = Transform3D(1.6, 0, 0, 0, 3, 0, 0, 0, 1.6, -32.45, -1.6, -3.8)
 
-[node name="column_damaged_151" parent="Models" instance=ExtResource("8_model")]
+[node name="column_damaged_155" parent="Models" instance=ExtResource("8_model")]
 transform = Transform3D(1.6, 0, 0, 0, 3.4, 0, 0, 0, 1.6, -27.55, -1.6, -3.8)
 
-[node name="column_damaged_152" parent="Models" instance=ExtResource("8_model")]
+[node name="column_damaged_156" parent="Models" instance=ExtResource("8_model")]
 transform = Transform3D(1.6, 0, 0, 0, 3.4, 0, 0, 0, 1.6, -32.45, -1.6, -1.2)
 
-[node name="column_153" parent="Models" instance=ExtResource("7_model")]
+[node name="column_157" parent="Models" instance=ExtResource("7_model")]
 transform = Transform3D(1.6, 0, 0, 0, 3, 0, 0, 0, 1.6, -27.55, -1.6, -1.2)
 
-[node name="pot_154" parent="Models" instance=ExtResource("14_model")]
+[node name="pot_158" parent="Models" instance=ExtResource("14_model")]
 transform = Transform3D(0.02076, 0, -1.59987, 0, 1.6, 0, 1.59987, 0, 0.02076, -31.392, -1.6, -1.7001)
 
-[node name="pot_155" parent="Models" instance=ExtResource("14_model")]
+[node name="pot_159" parent="Models" instance=ExtResource("14_model")]
 transform = Transform3D(-0, 1.44175, 0.69379, 1.6, 0, 0, -0, 0.69379, -1.44175, -28.7135, -1.12, -3.64196)
 
-[node name="character_skeleton_156" parent="Models" instance=ExtResource("35_model")]
+[node name="character_skeleton_160" parent="Models" instance=ExtResource("35_model")]
 transform = Transform3D(-3.00702, 1.09446, -0, 0, 0, 3.2, 1.09446, 3.00702, -0, -29.6588, -1.12, -1.41481)
 
-[node name="bucket_157" parent="Models" instance=ExtResource("48_model")]
+[node name="bucket_161" parent="Models" instance=ExtResource("48_model")]
 transform = Transform3D(2.68116, 2.24976, 0, 0, 0, -3.5, -2.24976, 2.68116, 0, -30.6, -1.4, -3.8)
 
-[node name="pot_158" parent="Models" instance=ExtResource("14_model")]
+[node name="pot_162" parent="Models" instance=ExtResource("14_model")]
 transform = Transform3D(1.89139, 0, -0.01165, 0, 1.89143, 0, 0.01165, 0, 1.89139, -23.9667, 0, 2.62448)
 
-[node name="urn_square_159" parent="Models" instance=ExtResource("49_model")]
+[node name="urn_square_163" parent="Models" instance=ExtResource("49_model")]
 transform = Transform3D(-1.63867, 0, -2.7302, 0, 3.18422, 0, 2.7302, 0, -1.63867, -23.1954, 0, 1.61617)
 
-[node name="plate_broken_160" parent="Models" instance=ExtResource("15_model")]
+[node name="plate_broken_164" parent="Models" instance=ExtResource("15_model")]
 transform = Transform3D(0.60051, 0, 1.48303, 0, 1.6, 0, -1.48303, 0, 0.60051, -22.8918, 0, 1.03033)
 
-[node name="plate_broken_161" parent="Models" instance=ExtResource("15_model")]
+[node name="plate_broken_165" parent="Models" instance=ExtResource("15_model")]
 transform = Transform3D(-1.59945, 0, -0.04213, 0, 1.6, 0, 0.04213, 0, -1.59945, -25.2532, 0, 2.27886)
 
-[node name="statue_head_162" parent="Models" instance=ExtResource("51_model")]
+[node name="statue_head_166" parent="Models" instance=ExtResource("51_model")]
 transform = Transform3D(4.19395, -1.07971, -6.12332, 0, 7.38606, -1.30236, 6.21778, 0.72827, 4.13023, -34, -1.8, 30)
 
-[node name="block_163" parent="Models" instance=ExtResource("18_model")]
+[node name="block_167" parent="Models" instance=ExtResource("18_model")]
 transform = Transform3D(1.40954, 0, 0.51303, 0, 1.5, 0, -0.51303, 0, 1.40954, -38.4, 0, 32.8)
 
-[node name="block_164" parent="Models" instance=ExtResource("18_model")]
+[node name="block_168" parent="Models" instance=ExtResource("18_model")]
 transform = Transform3D(0.63393, 0, 1.35946, 0, 1.5, 0, -1.35946, 0, 0.63393, -39.2, 0, 28.4)
 
-[node name="character_skeleton_165" parent="Models" instance=ExtResource("35_model")]
+[node name="character_skeleton_169" parent="Models" instance=ExtResource("35_model")]
 transform = Transform3D(-2.77128, 1.6, -0, 0, 0, 3.2, 1.6, 2.77128, -0, -30.8779, 0.48, 33.6972)
 
-[node name="tool_pickaxe_166" parent="Models" instance=ExtResource("52_model")]
+[node name="tool_pickaxe_170" parent="Models" instance=ExtResource("52_model")]
 transform = Transform3D(1.5, 2.59808, 0, 0, 0, -3, -2.59808, 1.5, 0, -29.9118, 0.06, 32.62)
 
-[node name="wall_167" parent="Models" instance=ExtResource("2_model")]
+[node name="wall_171" parent="Models" instance=ExtResource("2_model")]
 transform = Transform3D(3, 0, 0, 0, 2.4, 0, 0, 0, 2, 35.5, 0, 32.4)
 
-[node name="wall_168" parent="Models" instance=ExtResource("2_model")]
+[node name="wall_172" parent="Models" instance=ExtResource("2_model")]
 transform = Transform3D(0, 0, 2, 0, 1.8, 0, -3, 0, 0, 38.3, 0, 29.8)
 
-[node name="column_damaged_169" parent="Models" instance=ExtResource("8_model")]
+[node name="column_damaged_173" parent="Models" instance=ExtResource("8_model")]
 transform = Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, 40.6, 0, 33.4)
 
-[node name="bricks_170" parent="Models" instance=ExtResource("5_model")]
+[node name="bricks_174" parent="Models" instance=ExtResource("5_model")]
 transform = Transform3D(2.07846, 0, 1.2, 0, 2.4, 0, -1.2, 0, 2.07846, 36.6044, 0, 30.5836)
 
-[node name="character_skeleton_171" parent="Models" instance=ExtResource("35_model")]
+[node name="character_skeleton_175" parent="Models" instance=ExtResource("35_model")]
 transform = Transform3D(2.77128, -1.6, 0, 0, 0, 3.2, -1.6, -2.77128, 0, 36.0779, 0.48, 28.5028)
 
-[node name="shield_round_172" parent="Models" instance=ExtResource("53_model")]
+[node name="shield_round_176" parent="Models" instance=ExtResource("53_model")]
 transform = Transform3D(1.99172, 1.67125, 0, 0, 0, -2.6, -1.67125, 1.99172, 0, 34.8, 0.156, 27.6)
 
-[node name="weapon_sword_173" parent="Models" instance=ExtResource("54_model")]
+[node name="weapon_sword_177" parent="Models" instance=ExtResource("54_model")]
 transform = Transform3D(-0.88925, 2.4432, 0, 0, 0, -2.6, -2.4432, -0.88925, -0, 36.8901, 0.156, 27.4989)
 
-[node name="column_174" parent="Models" instance=ExtResource("7_model")]
+[node name="column_178" parent="Models" instance=ExtResource("7_model")]
 transform = Transform3D(2.25526, 0, 0.82085, 0, 5, 0, -0.82085, 0, 2.25526, -26.2286, -1.4, -46.4609)
 
-[node name="column_175" parent="Models" instance=ExtResource("7_model")]
+[node name="column_179" parent="Models" instance=ExtResource("7_model")]
 transform = Transform3D(2.25526, 0, 0.82085, 0, 5, 0, -0.82085, 0, 2.25526, -23.4095, -1.4, -47.487)
 
-[node name="column_damaged_176" parent="Models" instance=ExtResource("8_model")]
+[node name="column_damaged_180" parent="Models" instance=ExtResource("8_model")]
 transform = Transform3D(2.25526, 0, 0.82085, 0, 4.2, 0, -0.82085, 0, 2.25526, -20.5905, -1.4, -48.513)
 
-[node name="column_177" parent="Models" instance=ExtResource("7_model")]
+[node name="column_181" parent="Models" instance=ExtResource("7_model")]
 transform = Transform3D(2.25526, 0, 0.82085, 0, 3, 0, -0.82085, 0, 2.25526, -17.7714, -1.4, -49.5391)
 
-[node name="block_178" parent="Models" instance=ExtResource("18_model")]
+[node name="block_182" parent="Models" instance=ExtResource("18_model")]
 transform = Transform3D(0.83562, 0, 0.99586, 0, 1.3, 0, -0.99586, 0, 0.83562, -20.1711, 0, -45.8988)
 
-[node name="wall_gate_179" parent="Models" instance=ExtResource("1_model")]
+[node name="wall_gate_183" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(2.94895, 0, 2.06488, 0, 3.6, 0, -2.06488, 0, 2.94895, 24, -0.6, -44)
 
-[node name="column_damaged_180" parent="Models" instance=ExtResource("8_model")]
+[node name="column_damaged_184" parent="Models" instance=ExtResource("8_model")]
 transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, 0, 0, 2.4, 21.5425, 0, -42.2793)
 
-[node name="column_damaged_181" parent="Models" instance=ExtResource("8_model")]
+[node name="column_damaged_185" parent="Models" instance=ExtResource("8_model")]
 transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, 0, 0, 2.4, 26.4575, 0, -45.7207)
 
-[node name="character_skeleton_182" parent="Models" instance=ExtResource("35_model")]
+[node name="character_skeleton_186" parent="Models" instance=ExtResource("35_model")]
 transform = Transform3D(-1.6, -2.77128, 0, 0, 0, 3.2, -2.77128, 1.6, -0, 21.9029, 0.48, -41.4779)
 
-[node name="stones_183" parent="Models" instance=ExtResource("55_model")]
+[node name="stones_187" parent="Models" instance=ExtResource("55_model")]
 transform = Transform3D(1.47721, 0, 0.26047, 0, 1.5, 0, -0.26047, 0, 1.47721, -26.3926, 0, 46.9987)
 
-[node name="stones_184" parent="Models" instance=ExtResource("55_model")]
+[node name="stones_188" parent="Models" instance=ExtResource("55_model")]
 transform = Transform3D(0.75, 0, 1.29904, 0, 1.5, 0, -1.29904, 0, 0.75, -23.9962, 0, 48.3935)
 
-[node name="stones_185" parent="Models" instance=ExtResource("55_model")]
+[node name="stones_189" parent="Models" instance=ExtResource("55_model")]
 transform = Transform3D(-0.26047, 0, 1.47721, 0, 1.5, 0, -1.47721, 0, -0.26047, -21.6013, 0, 47.3926)
 
-[node name="stones_186" parent="Models" instance=ExtResource("55_model")]
+[node name="stones_190" parent="Models" instance=ExtResource("55_model")]
 transform = Transform3D(1.29904, 0, 0.75, 0, 1.5, 0, -0.75, 0, 1.29904, -24.9935, 0, 50.5962)
 
-[node name="character_skeleton_187" parent="Models" instance=ExtResource("35_model")]
+[node name="character_skeleton_191" parent="Models" instance=ExtResource("35_model")]
 transform = Transform3D(-1.09446, 3.00702, -0, 0, 0, 3.2, 3.00702, 1.09446, -0, -23.5257, 0.48, 44.9713)
 
-[node name="wheel_188" parent="Models" instance=ExtResource("33_model")]
+[node name="wheel_192" parent="Models" instance=ExtResource("33_model")]
 transform = Transform3D(0, -2.63114, 0.95766, 2.8, 0, 0, -0, 0.95766, 2.63114, -26.7733, -0.56, 44.957)
 
-[node name="urn_round_189" parent="Models" instance=ExtResource("36_model")]
+[node name="urn_round_193" parent="Models" instance=ExtResource("36_model")]
 transform = Transform3D(1.37115, 0, -2.33449, 0, 2.70738, 0, 2.33449, 0, 1.37115, 21.9963, 0, 46.5849)
 
-[node name="plate_broken_190" parent="Models" instance=ExtResource("15_model")]
+[node name="plate_broken_194" parent="Models" instance=ExtResource("15_model")]
 transform = Transform3D(1.30492, 0, 0.92584, 0, 1.6, 0, -0.92584, 0, 1.30492, 21.2656, 0, 45.9228)
 
-[node name="plate_broken_191" parent="Models" instance=ExtResource("15_model")]
+[node name="plate_broken_195" parent="Models" instance=ExtResource("15_model")]
 transform = Transform3D(-0.5615, 0, 1.49824, 0, 1.6, 0, -1.49824, 0, -0.5615, 23.4746, 0, 47.0286)
 
 [node name="Collision" type="StaticBody3D" parent="."]
@@ -2708,15 +2861,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -10, 2.5, 16)
 shape = SubResource("BoxShape3D_3")
 
 [node name="Box5" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -14.5, 2.5, 16.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -13, 2, 16.5)
 shape = SubResource("BoxShape3D_4")
 
 [node name="Box6" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -3, 2.6, 17.85)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -14.5, 2, 18)
 shape = SubResource("BoxShape3D_5")
 
 [node name="Box7" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -5.4, 0.62, 19.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -3, 2.6, 17.85)
 shape = SubResource("BoxShape3D_6")
 
 [node name="Box8" type="CollisionShape3D" parent="Collision"]
@@ -2728,23 +2881,23 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 10, 2.5, 16)
 shape = SubResource("BoxShape3D_3")
 
 [node name="Box10" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 14.5, 2.5, 15.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 13, 2, 15.5)
 shape = SubResource("BoxShape3D_4")
 
 [node name="Box11" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 3, 2.6, 17.85)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 14.5, 2, 14)
 shape = SubResource("BoxShape3D_5")
 
 [node name="Box12" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 5.4, 0.62, 19.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 3, 2.6, 17.85)
 shape = SubResource("BoxShape3D_6")
 
 [node name="Box13" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.93969, 0, 0.34202, 0, 1, 0, -0.34202, 0, 0.93969, -7, 0.6, 19)
+transform = Transform3D(0.93969, 0, 0.34202, 0, 1, 0, -0.34202, 0, 0.93969, -7, 0.4059, 19)
 shape = SubResource("BoxShape3D_7")
 
 [node name="Box14" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.76604, 0, -0.64279, 0, 1, 0, 0.64279, 0, 0.76604, 8, 0.6, 18.5)
+transform = Transform3D(0.76604, 0, -0.64279, 0, 1, 0, 0.64279, 0, 0.76604, 8, 0.4059, 18.5)
 shape = SubResource("BoxShape3D_7")
 
 [node name="Box15" type="CollisionShape3D" parent="Collision"]
@@ -2752,552 +2905,552 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 4.6, 0.9, 46)
 shape = SubResource("BoxShape3D_8")
 
 [node name="Box16" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -6.2, 3, 24)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -6.2, 0.25, 24)
 shape = SubResource("BoxShape3D_9")
 
 [node name="Box17" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 6.2, 3, 24)
-shape = SubResource("BoxShape3D_9")
-
-[node name="Box18" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -6.2, 3, 32)
-shape = SubResource("BoxShape3D_9")
-
-[node name="Box19" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 6.2, 1.85, 32)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -6.2, 0.675, 24)
 shape = SubResource("BoxShape3D_10")
 
-[node name="Box20" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -6.2, 3, 40)
+[node name="Box18" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -6.2, 3.425, 24)
+shape = SubResource("BoxShape3D_11")
+
+[node name="Box19" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 6.2, 0.25, 24)
 shape = SubResource("BoxShape3D_9")
+
+[node name="Box20" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 6.2, 0.675, 24)
+shape = SubResource("BoxShape3D_10")
 
 [node name="Box21" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 6.2, 3, 40)
-shape = SubResource("BoxShape3D_9")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 6.2, 3.425, 24)
+shape = SubResource("BoxShape3D_11")
 
 [node name="Box22" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -10, 1.8, -14)
-shape = SubResource("BoxShape3D_11")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -6.2, 0.25, 32)
+shape = SubResource("BoxShape3D_9")
 
 [node name="Box23" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -10, 1.8, -6)
-shape = SubResource("BoxShape3D_11")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -6.2, 0.675, 32)
+shape = SubResource("BoxShape3D_10")
 
 [node name="Box24" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -10, 1.8, 2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -6.2, 3.425, 32)
 shape = SubResource("BoxShape3D_11")
 
 [node name="Box25" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 10, 1.8, -14)
-shape = SubResource("BoxShape3D_11")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 6.2, 0.25, 32)
+shape = SubResource("BoxShape3D_9")
 
 [node name="Box26" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 10, 1.8, -6)
-shape = SubResource("BoxShape3D_11")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 6.2, 0.675, 32)
+shape = SubResource("BoxShape3D_10")
 
 [node name="Box27" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 10, 1.8, 2)
-shape = SubResource("BoxShape3D_11")
-
-[node name="Box28" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 2.2, -17)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 6.2, 2.275, 32)
 shape = SubResource("BoxShape3D_12")
 
+[node name="Box28" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -6.2, 0.25, 40)
+shape = SubResource("BoxShape3D_9")
+
 [node name="Box29" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -5, 1.75, -17.5)
-shape = SubResource("BoxShape3D_13")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -6.2, 0.675, 40)
+shape = SubResource("BoxShape3D_10")
 
 [node name="Box30" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 5, 1.75, -17.5)
-shape = SubResource("BoxShape3D_13")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -6.2, 3.425, 40)
+shape = SubResource("BoxShape3D_11")
 
 [node name="Box31" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0.5, -14.6)
-shape = SubResource("BoxShape3D_14")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 6.2, 0.25, 40)
+shape = SubResource("BoxShape3D_9")
 
 [node name="Box32" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -2.8, 0.62, -15.3)
-shape = SubResource("BoxShape3D_6")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 6.2, 0.675, 40)
+shape = SubResource("BoxShape3D_10")
 
 [node name="Box33" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 2.8, 0.62, -15.3)
-shape = SubResource("BoxShape3D_6")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 6.2, 3.425, 40)
+shape = SubResource("BoxShape3D_11")
 
 [node name="Box34" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -3.6, 0.62, -6)
-shape = SubResource("BoxShape3D_6")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -10, 0.1296, -14)
+shape = SubResource("BoxShape3D_13")
 
 [node name="Box35" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 3.6, 0.45, -6)
-shape = SubResource("BoxShape3D_15")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -10, 0.1296, -6)
+shape = SubResource("BoxShape3D_13")
 
 [node name="Box36" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 6.5, 0.9, 6.5)
-shape = SubResource("BoxShape3D_16")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -10, 0.1296, 2)
+shape = SubResource("BoxShape3D_13")
 
 [node name="Box37" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -12.6, 1.7, -16.7)
-shape = SubResource("BoxShape3D_17")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 10, 0.1296, -14)
+shape = SubResource("BoxShape3D_13")
 
 [node name="Box38" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -12.6, 1.3, -8)
-shape = SubResource("BoxShape3D_18")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 10, 0.1296, -6)
+shape = SubResource("BoxShape3D_13")
 
 [node name="Box39" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -12.6, 0.8, 0)
-shape = SubResource("BoxShape3D_19")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 10, 0.1296, 2)
+shape = SubResource("BoxShape3D_13")
 
 [node name="Box40" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -12.6, 1.4, 4)
-shape = SubResource("BoxShape3D_20")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 2.2, -17)
+shape = SubResource("BoxShape3D_14")
 
 [node name="Box41" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 12.6, 1.5, -16.7)
-shape = SubResource("BoxShape3D_21")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0.5, -14.6)
+shape = SubResource("BoxShape3D_15")
 
 [node name="Box42" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 12.6, 1.6, -8)
-shape = SubResource("BoxShape3D_22")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -12.6, 1.7, -16.7)
+shape = SubResource("BoxShape3D_16")
 
 [node name="Box43" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 12.6, 0.8, -4)
-shape = SubResource("BoxShape3D_19")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -12.6, 1.3, -8)
+shape = SubResource("BoxShape3D_17")
 
 [node name="Box44" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 12.6, 1.1, 2)
-shape = SubResource("BoxShape3D_23")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -12.6, 0.8, 0)
+shape = SubResource("BoxShape3D_18")
 
 [node name="Box45" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.34202, 0, 0.93969, 0, 1, 0, -0.93969, 0, 0.34202, -12.6, 0.65, -4)
-shape = SubResource("BoxShape3D_24")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -12.6, 1.4, 4)
+shape = SubResource("BoxShape3D_19")
 
 [node name="Box46" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.93969, 0, -0.34202, 0, 1, 0, 0.34202, 0, 0.93969, 12.6, 0.6, -1)
-shape = SubResource("BoxShape3D_7")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 12.6, 1.5, -16.7)
+shape = SubResource("BoxShape3D_20")
 
 [node name="Box47" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 12.6, 1.6, -8)
+shape = SubResource("BoxShape3D_21")
+
+[node name="Box48" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 12.6, 0.8, -4)
+shape = SubResource("BoxShape3D_18")
+
+[node name="Box49" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 12.6, 1.1, 2)
+shape = SubResource("BoxShape3D_22")
+
+[node name="Box50" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.34202, 0, 0.93969, 0, 1, 0, -0.93969, 0, 0.34202, -12.6, 0.65, -4)
+shape = SubResource("BoxShape3D_23")
+
+[node name="Box51" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.93969, 0, -0.34202, 0, 1, 0, 0.34202, 0, 0.93969, 12.6, 0.6, -1)
+shape = SubResource("BoxShape3D_24")
+
+[node name="Box52" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(0.64279, 0, 0.76604, 0, 1, 0, -0.76604, 0, 0.64279, 12.4, 0.525, 4.9)
 shape = SubResource("BoxShape3D_25")
 
-[node name="Box48" type="CollisionShape3D" parent="Collision"]
+[node name="Box53" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -10.9, 1.8, -19.8)
 shape = SubResource("BoxShape3D_26")
 
-[node name="Box49" type="CollisionShape3D" parent="Collision"]
+[node name="Box54" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 2.1, -19.8)
 shape = SubResource("BoxShape3D_27")
 
-[node name="Box50" type="CollisionShape3D" parent="Collision"]
+[node name="Box55" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 10.9, 1.1, -19.8)
 shape = SubResource("BoxShape3D_28")
 
-[node name="Box51" type="CollisionShape3D" parent="Collision"]
+[node name="Box56" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -9.85, 1.1, 5.4)
 shape = SubResource("BoxShape3D_29")
 
-[node name="Box52" type="CollisionShape3D" parent="Collision"]
+[node name="Box57" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 10.6, 0.7, 5.4)
 shape = SubResource("BoxShape3D_30")
 
-[node name="Box53" type="CollisionShape3D" parent="Collision"]
+[node name="Box58" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -10.3326, 0.52258, -16.8793)
 shape = SubResource("BoxShape3D_31")
 
-[node name="Box54" type="CollisionShape3D" parent="Collision"]
+[node name="Box59" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(-0.1859, 0, -0.98257, 0, 1, 0, 0.98257, 0, -0.1859, 7.12686, 0.39777, 2.97286)
 shape = SubResource("BoxShape3D_32")
 
-[node name="Box55" type="CollisionShape3D" parent="Collision"]
+[node name="Box60" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -19.8, 1.4, -14.6)
 shape = SubResource("BoxShape3D_33")
 
-[node name="Box56" type="CollisionShape3D" parent="Collision"]
+[node name="Box61" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -19.8, 1, -7.9)
 shape = SubResource("BoxShape3D_34")
 
-[node name="Box57" type="CollisionShape3D" parent="Collision"]
+[node name="Box62" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -16.2, 1.5, -17.4)
 shape = SubResource("BoxShape3D_35")
 
-[node name="Box58" type="CollisionShape3D" parent="Collision"]
+[node name="Box63" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -17.4, 1.1, -6.6)
 shape = SubResource("BoxShape3D_36")
 
-[node name="Box59" type="CollisionShape3D" parent="Collision"]
+[node name="Box64" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(0.17365, 0, 0.98481, 0, 1, 0, -0.98481, 0, 0.17365, -19.8, 0.525, -10.6)
 shape = SubResource("BoxShape3D_25")
 
-[node name="Box60" type="CollisionShape3D" parent="Collision"]
+[node name="Box65" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -16.6, 0.72, -9)
 shape = SubResource("BoxShape3D_37")
 
-[node name="Box61" type="CollisionShape3D" parent="Collision"]
+[node name="Box66" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(-0.36735, 0, -0.93008, 0, 1, 0, 0.93008, 0, -0.36735, -18.4818, 0.39924, -15.3387)
 shape = SubResource("BoxShape3D_38")
 
-[node name="Box62" type="CollisionShape3D" parent="Collision"]
+[node name="Box67" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 19.8, 1.3, -12.6)
 shape = SubResource("BoxShape3D_39")
 
-[node name="Box63" type="CollisionShape3D" parent="Collision"]
+[node name="Box68" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 16.2, 1.2, -17.4)
 shape = SubResource("BoxShape3D_40")
 
-[node name="Box64" type="CollisionShape3D" parent="Collision"]
+[node name="Box69" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 15, 1.4, -6.6)
 shape = SubResource("BoxShape3D_41")
 
-[node name="Box65" type="CollisionShape3D" parent="Collision"]
+[node name="Box70" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(0.86603, 0, 0.5, 0, 1, 0, -0.5, 0, 0.86603, 18, 0.55, -7.8)
 shape = SubResource("BoxShape3D_42")
 
-[node name="Box66" type="CollisionShape3D" parent="Collision"]
+[node name="Box71" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, 0.90631, 14, 0.35, -15.6)
 shape = SubResource("BoxShape3D_43")
 
-[node name="Box67" type="CollisionShape3D" parent="Collision"]
+[node name="Box72" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(0.34202, 0, 0.93969, 0, 1, 0, -0.93969, 0, 0.34202, 15.9, 0.3, -16.2)
 shape = SubResource("BoxShape3D_44")
 
-[node name="Box68" type="CollisionShape3D" parent="Collision"]
+[node name="Box73" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(-0.44445, 0, -0.8958, 0, 1, 0, 0.8958, 0, -0.44445, 18.3291, 0.325, -15.685)
 shape = SubResource("BoxShape3D_45")
 
-[node name="Box69" type="CollisionShape3D" parent="Collision"]
+[node name="Box74" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 2, -29)
 shape = SubResource("BoxShape3D_46")
 
-[node name="Box70" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -11.5, 2.65, -23.4)
+[node name="Box75" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -11.5, 0.144, -23.4)
 shape = SubResource("BoxShape3D_47")
 
-[node name="Box71" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -7.5, 2.65, -23.4)
+[node name="Box76" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -7.5, 0.144, -23.4)
 shape = SubResource("BoxShape3D_47")
 
-[node name="Box72" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -3.5, 2.65, -23.4)
+[node name="Box77" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -3.5, 0.144, -23.4)
 shape = SubResource("BoxShape3D_47")
 
-[node name="Box73" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 3.5, 2.65, -23.4)
+[node name="Box78" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 3.5, 0.144, -23.4)
 shape = SubResource("BoxShape3D_47")
 
-[node name="Box74" type="CollisionShape3D" parent="Collision"]
+[node name="Box79" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 7.5, 0.5, -23.4)
 shape = SubResource("BoxShape3D_48")
 
-[node name="Box75" type="CollisionShape3D" parent="Collision"]
+[node name="Box80" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 14.6, 1.2, -21.6)
 shape = SubResource("BoxShape3D_49")
 
-[node name="Box76" type="CollisionShape3D" parent="Collision"]
+[node name="Box81" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, 0.90631, 10, 0.375, -25.7)
 shape = SubResource("BoxShape3D_50")
 
-[node name="Box77" type="CollisionShape3D" parent="Collision"]
+[node name="Box82" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(0.5, 0, 0.86603, 0, 1, 0, -0.86603, 0, 0.5, 5.2, 0.375, -25.9)
 shape = SubResource("BoxShape3D_50")
 
-[node name="Box78" type="CollisionShape3D" parent="Collision"]
+[node name="Box83" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(0.17365, 0, 0.98481, 0, 1, 0, -0.98481, 0, 0.17365, 12.1, 0.375, -24)
 shape = SubResource("BoxShape3D_50")
 
-[node name="Box79" type="CollisionShape3D" parent="Collision"]
+[node name="Box84" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -41.2743, 1.35, -29.7516)
 shape = SubResource("BoxShape3D_51")
 
-[node name="Box80" type="CollisionShape3D" parent="Collision"]
+[node name="Box85" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(0.99619, 0, -0.08716, 0, 1, 0, 0.08716, 0, 0.99619, -35.1213, 1, -35.1757)
 shape = SubResource("BoxShape3D_52")
 
-[node name="Box81" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.64279, 0, 0.76604, 0, 1, 0, -0.76604, 0, -0.64279, -38.4108, 1.6, -23.5387)
-shape = SubResource("BoxShape3D_53")
-
-[node name="Box82" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.64279, 0, -0.76604, 0, 1, 0, 0.76604, 0, 0.64279, -29.1144, 1.6, -30.8172)
-shape = SubResource("BoxShape3D_53")
-
-[node name="Box83" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.5, 0, 0.86603, 0, 1, 0, -0.86603, 0, 0.5, -32.8513, 0.45, -30.2924)
-shape = SubResource("BoxShape3D_54")
-
-[node name="Box84" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.5, 0, 0.86603, 0, 1, 0, -0.86603, 0, 0.5, -32.8196, 0.4, -32.2771)
-shape = SubResource("BoxShape3D_55")
-
-[node name="Box85" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.92539, 0, -0.37902, 0, 1, 0, 0.37902, 0, 0.92539, -37.8852, 0.625, -27.1128)
-shape = SubResource("BoxShape3D_56")
-
 [node name="Box86" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.98883, 0, -0.14902, 0, 1, 0, 0.14902, 0, 0.98883, -36.7999, 0.625, -26.1305)
-shape = SubResource("BoxShape3D_56")
+transform = Transform3D(0.5, 0, 0.86603, 0, 1, 0, -0.86603, 0, 0.5, -32.8513, 0.45, -30.2924)
+shape = SubResource("BoxShape3D_53")
 
 [node name="Box87" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.76604, 0, 0.64279, 0, 1, 0, -0.64279, 0, 0.76604, -30.5091, 0.5, -34.3463)
-shape = SubResource("BoxShape3D_57")
+transform = Transform3D(0.5, 0, 0.86603, 0, 1, 0, -0.86603, 0, 0.5, -32.8196, 0.45, -32.2771)
+shape = SubResource("BoxShape3D_54")
 
 [node name="Box88" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.64279, 0, 0.76604, 0, 1, 0, -0.76604, 0, 0.64279, -41.4116, 0.5, -24.9369)
-shape = SubResource("BoxShape3D_58")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -38.1, 0.625, -27.4)
+shape = SubResource("BoxShape3D_55")
 
 [node name="Box89" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.5, 0, 0.86603, 0, 1, 0, -0.86603, 0, -0.5, -41.9655, 0.46, -25.9082)
-shape = SubResource("BoxShape3D_59")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -39.7, 0.625, -27)
+shape = SubResource("BoxShape3D_55")
 
 [node name="Box90" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -41.2656, 1.246, -34.7195)
-shape = SubResource("BoxShape3D_60")
+transform = Transform3D(0.76604, 0, 0.64279, 0, 1, 0, -0.64279, 0, 0.76604, -30.5091, 0.5, -34.3463)
+shape = SubResource("BoxShape3D_56")
 
 [node name="Box91" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -38.6584, 0.336, -36.124)
-shape = SubResource("BoxShape3D_61")
+transform = Transform3D(0.64279, 0, 0.76604, 0, 1, 0, -0.76604, 0, 0.64279, -41.4116, 0.5, -24.9369)
+shape = SubResource("BoxShape3D_57")
 
 [node name="Box92" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.64279, 0, -0.76604, 0, 1, 0, 0.76604, 0, 0.64279, -32.9696, 0.375, -23.666)
-shape = SubResource("BoxShape3D_62")
+transform = Transform3D(-0.5, 0, 0.86603, 0, 1, 0, -0.86603, 0, -0.5, -41.9655, 0.46, -25.9082)
+shape = SubResource("BoxShape3D_58")
 
 [node name="Box93" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -43.3387, 0.54318, -26.3161)
-shape = SubResource("BoxShape3D_63")
+transform = Transform3D(0.64279, 0, -0.76604, 0, 1, 0, 0.76604, 0, 0.64279, -32.9696, 0.375, -23.666)
+shape = SubResource("BoxShape3D_59")
 
 [node name="Box94" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.99625, 0, -0.08658, 0, 1, 0, 0.08658, 0, 0.99625, -42.9899, 0.35558, -27.6765)
-shape = SubResource("BoxShape3D_64")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -43.3387, 0.54318, -26.3161)
+shape = SubResource("BoxShape3D_60")
 
 [node name="Box95" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 35, 1.5, -6.8)
-shape = SubResource("BoxShape3D_65")
+transform = Transform3D(0.99625, 0, -0.08658, 0, 1, 0, 0.08658, 0, 0.99625, -42.9899, 0.35558, -27.6765)
+shape = SubResource("BoxShape3D_61")
 
 [node name="Box96" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 36.6, 1.5, 4.4)
-shape = SubResource("BoxShape3D_65")
-
-[node name="Box97" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 44.2, 1.5, 4.6)
-shape = SubResource("BoxShape3D_65")
-
-[node name="Box98" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 47.6, 1.5, -3.8)
-shape = SubResource("BoxShape3D_65")
-
-[node name="Box99" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 43.8, 1.5, -9.4)
-shape = SubResource("BoxShape3D_65")
-
-[node name="Box100" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 32.86, 1.15, 1.5)
-shape = SubResource("BoxShape3D_66")
-
-[node name="Box101" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 35.54, 1.15, 1.5)
-shape = SubResource("BoxShape3D_66")
-
-[node name="Box102" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 34.2, 0.5, 1.5)
-shape = SubResource("BoxShape3D_67")
-
-[node name="Box103" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 34.2, 0.3, 4.6)
-shape = SubResource("BoxShape3D_68")
-
-[node name="Box104" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.43127, 0, 0.90222, 0, 1, 0, -0.90222, 0, -0.43127, 30.4543, 0.37191, 3.82584)
-shape = SubResource("BoxShape3D_69")
-
-[node name="Box105" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.53762, 0, 0.84319, 0, 1, 0, -0.84319, 0, -0.53762, 31.7267, 0.33237, 4.47177)
-shape = SubResource("BoxShape3D_70")
-
-[node name="Box106" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.77764, 0, -0.62871, 0, 1, 0, 0.62871, 0, -0.77764, 31.7829, 0.35597, 3.19126)
-shape = SubResource("BoxShape3D_71")
-
-[node name="Box107" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 31.4, 0.95, -0.6)
-shape = SubResource("BoxShape3D_72")
-
-[node name="Box108" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.25882, 0, 0.96593, 0, 1, 0, -0.96593, 0, 0.25882, 46.8415, 0.375, 2.4647)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 35, 1.5, -6.8)
 shape = SubResource("BoxShape3D_62")
 
+[node name="Box97" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 36.6, 1.5, 4.4)
+shape = SubResource("BoxShape3D_62")
+
+[node name="Box98" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 44.2, 1.5, 4.6)
+shape = SubResource("BoxShape3D_62")
+
+[node name="Box99" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 47.6, 1.5, -3.8)
+shape = SubResource("BoxShape3D_62")
+
+[node name="Box100" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 43.8, 1.5, -9.4)
+shape = SubResource("BoxShape3D_62")
+
+[node name="Box101" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 32.86, 1.15, 1.5)
+shape = SubResource("BoxShape3D_63")
+
+[node name="Box102" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 35.54, 1.15, 1.5)
+shape = SubResource("BoxShape3D_63")
+
+[node name="Box103" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 34.2, 0.5, 1.5)
+shape = SubResource("BoxShape3D_64")
+
+[node name="Box104" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 34.2, 0.3, 4.6)
+shape = SubResource("BoxShape3D_65")
+
+[node name="Box105" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(-0.43127, 0, 0.90222, 0, 1, 0, -0.90222, 0, -0.43127, 29.6543, 0.37191, 4.62584)
+shape = SubResource("BoxShape3D_66")
+
+[node name="Box106" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(-0.53762, 0, 0.84319, 0, 1, 0, -0.84319, 0, -0.53762, 30.9267, 0.33237, 5.27177)
+shape = SubResource("BoxShape3D_67")
+
+[node name="Box107" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(-0.77764, 0, -0.62871, 0, 1, 0, 0.62871, 0, -0.77764, 30.9829, 0.35597, 3.99126)
+shape = SubResource("BoxShape3D_68")
+
+[node name="Box108" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 31.4, 0.95, -0.6)
+shape = SubResource("BoxShape3D_69")
+
 [node name="Box109" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.86603, 0, 0.5, 0, 1, 0, -0.5, 0, 0.86603, 47, 0.75, 6)
-shape = SubResource("BoxShape3D_73")
+transform = Transform3D(0.25882, 0, 0.96593, 0, 1, 0, -0.96593, 0, 0.25882, 46.8415, 0.375, 2.4647)
+shape = SubResource("BoxShape3D_59")
 
 [node name="Box110" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -23.9668, 0.40666, 2.63394)
-shape = SubResource("BoxShape3D_74")
+transform = Transform3D(0.86603, 0, 0.5, 0, 1, 0, -0.5, 0, 0.86603, 47, 0.75, 6)
+shape = SubResource("BoxShape3D_70")
 
 [node name="Box111" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.51462, 0, -0.85742, 0, 1, 0, 0.85742, 0, -0.51462, -23.1954, 0.44579, 1.61617)
-shape = SubResource("BoxShape3D_75")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -23.9668, 0.40666, 2.63394)
+shape = SubResource("BoxShape3D_71")
 
 [node name="Box112" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.55919, 0, -0.82904, 0, 1, 0, 0.82904, 0, 0.55919, -34, 2.6, 30)
-shape = SubResource("BoxShape3D_76")
+transform = Transform3D(-0.51462, 0, -0.85742, 0, 1, 0, 0.85742, 0, -0.51462, -23.1954, 0.44579, 1.61617)
+shape = SubResource("BoxShape3D_72")
 
 [node name="Box113" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -29, 1.85, 26.4)
-shape = SubResource("BoxShape3D_10")
+transform = Transform3D(0.55919, 0, -0.82904, 0, 1, 0, 0.82904, 0, 0.55919, -34, 2.4, 30)
+shape = SubResource("BoxShape3D_73")
 
 [node name="Box114" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -29, 0.25, 26.4)
+shape = SubResource("BoxShape3D_9")
+
+[node name="Box115" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -29, 0.675, 26.4)
+shape = SubResource("BoxShape3D_10")
+
+[node name="Box116" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -29, 2.275, 26.4)
+shape = SubResource("BoxShape3D_12")
+
+[node name="Box117" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(0.93969, 0, 0.34202, 0, 1, 0, -0.34202, 0, 0.93969, -38.4, 0.375, 32.8)
 shape = SubResource("BoxShape3D_50")
 
-[node name="Box115" type="CollisionShape3D" parent="Collision"]
+[node name="Box118" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(0.42262, 0, 0.90631, 0, 1, 0, -0.90631, 0, 0.42262, -39.2, 0.375, 28.4)
 shape = SubResource("BoxShape3D_50")
 
-[node name="Box116" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 35.5, 1.2, 32.4)
-shape = SubResource("BoxShape3D_77")
-
-[node name="Box117" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 38.3, 0.9, 29.8)
-shape = SubResource("BoxShape3D_78")
-
-[node name="Box118" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 40.6, 0.95, 33.4)
-shape = SubResource("BoxShape3D_79")
-
 [node name="Box119" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.86603, 0, 0.5, 0, 1, 0, -0.5, 0, 0.86603, 36.6, 0.5, 30.6)
-shape = SubResource("BoxShape3D_80")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 35.5, 1.2, 32.4)
+shape = SubResource("BoxShape3D_74")
 
 [node name="Box120" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 40, 0.45, 27.4)
-shape = SubResource("BoxShape3D_15")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 38.3, 0.9, 29.8)
+shape = SubResource("BoxShape3D_75")
 
 [node name="Box121" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -26.2286, 1.8, -46.4609)
-shape = SubResource("BoxShape3D_81")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 40.6, 0.95, 33.4)
+shape = SubResource("BoxShape3D_76")
 
 [node name="Box122" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -23.4095, 1.8, -47.487)
-shape = SubResource("BoxShape3D_81")
+transform = Transform3D(0.86603, 0, 0.5, 0, 1, 0, -0.5, 0, 0.86603, 36.6, 0.5, 30.6)
+shape = SubResource("BoxShape3D_77")
 
 [node name="Box123" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -20.5905, 0.812, -48.513)
-shape = SubResource("BoxShape3D_82")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -26.2286, 0.0864, -46.4609)
+shape = SubResource("BoxShape3D_78")
 
 [node name="Box124" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -17.7714, 0.8, -49.5391)
-shape = SubResource("BoxShape3D_83")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -23.4095, 0.0864, -47.487)
+shape = SubResource("BoxShape3D_78")
 
 [node name="Box125" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.64279, 0, 0.76604, 0, 1, 0, -0.76604, 0, 0.64279, -20.1711, 0.325, -45.8988)
-shape = SubResource("BoxShape3D_84")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -20.5905, 0.0864, -48.513)
+shape = SubResource("BoxShape3D_78")
 
 [node name="Box126" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.34202, 0, 0.93969, 0, 1, 0, -0.93969, 0, -0.34202, -19.0653, 0.36, -45.0243)
-shape = SubResource("BoxShape3D_85")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -17.7714, 0.0864, -49.5391)
+shape = SubResource("BoxShape3D_78")
 
 [node name="Box127" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.81915, 0, 0.57358, 0, 1, 0, -0.57358, 0, 0.81915, 24, 1.5, -44)
-shape = SubResource("BoxShape3D_86")
+transform = Transform3D(0.64279, 0, 0.76604, 0, 1, 0, -0.76604, 0, 0.64279, -20.1711, 0.325, -45.8988)
+shape = SubResource("BoxShape3D_79")
 
 [node name="Box128" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 21.5425, 0.85, -42.2793)
-shape = SubResource("BoxShape3D_87")
+transform = Transform3D(-0.34202, 0, 0.93969, 0, 1, 0, -0.93969, 0, -0.34202, -19.0653, 0.36, -45.0243)
+shape = SubResource("BoxShape3D_80")
 
 [node name="Box129" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 26.4575, 0.85, -45.7207)
-shape = SubResource("BoxShape3D_87")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 21.5425, 0.85, -42.2793)
+shape = SubResource("BoxShape3D_81")
 
 [node name="Box130" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.98481, 0, 0.17365, 0, 1, 0, -0.17365, 0, 0.98481, -26.4, 0.325, 47)
-shape = SubResource("BoxShape3D_88")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 26.4575, 0.85, -45.7207)
+shape = SubResource("BoxShape3D_81")
 
 [node name="Box131" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.5, 0, 0.86603, 0, 1, 0, -0.86603, 0, 0.5, -24, 0.325, 48.4)
-shape = SubResource("BoxShape3D_88")
+transform = Transform3D(0.98481, 0, 0.17365, 0, 1, 0, -0.17365, 0, 0.98481, -26.4, 0.225, 47)
+shape = SubResource("BoxShape3D_82")
 
 [node name="Box132" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.17365, 0, 0.98481, 0, 1, 0, -0.98481, 0, -0.17365, -21.6, 0.325, 47.4)
-shape = SubResource("BoxShape3D_88")
+transform = Transform3D(0.5, 0, 0.86603, 0, 1, 0, -0.86603, 0, 0.5, -24, 0.225, 48.4)
+shape = SubResource("BoxShape3D_82")
 
 [node name="Box133" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.86603, 0, 0.5, 0, 1, 0, -0.5, 0, 0.86603, -25, 0.325, 50.6)
-shape = SubResource("BoxShape3D_88")
+transform = Transform3D(-0.17365, 0, 0.98481, 0, 1, 0, -0.98481, 0, -0.17365, -21.6, 0.225, 47.4)
+shape = SubResource("BoxShape3D_82")
 
 [node name="Box134" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.86603, 0, 0.5, 0, 1, 0, -0.5, 0, 0.86603, -25, 0.225, 50.6)
+shape = SubResource("BoxShape3D_82")
+
+[node name="Box135" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -27.6, 0.9, 49.4)
 shape = SubResource("BoxShape3D_8")
 
-[node name="Box135" type="CollisionShape3D" parent="Collision"]
+[node name="Box136" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -20.6, 0.9, 49.6)
 shape = SubResource("BoxShape3D_8")
 
-[node name="Box136" type="CollisionShape3D" parent="Collision"]
+[node name="Box137" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -22.8, 0.9, 51.4)
 shape = SubResource("BoxShape3D_8")
 
-[node name="Box137" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -27.4, 0.336, 45.2)
-shape = SubResource("BoxShape3D_89")
-
 [node name="Box138" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 24.9655, 0.9, 55.8289)
-shape = SubResource("BoxShape3D_90")
+transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 24.8942, 0.35, 55.7957)
+shape = SubResource("BoxShape3D_83")
 
 [node name="Box139" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 22.1998, 0.9, 54.5393)
-shape = SubResource("BoxShape3D_90")
+transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 22.271, 0.35, 54.5725)
+shape = SubResource("BoxShape3D_83")
 
 [node name="Box140" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 26.3998, 0.9, 54.394)
-shape = SubResource("BoxShape3D_90")
+transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 26.2962, 0.35, 54.3456)
+shape = SubResource("BoxShape3D_83")
 
 [node name="Box141" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 22.377, 0.9, 52.5181)
-shape = SubResource("BoxShape3D_90")
+transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 22.4807, 0.35, 52.5665)
+shape = SubResource("BoxShape3D_83")
 
 [node name="Box142" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 27.5828, 0.9, 52.8418)
-shape = SubResource("BoxShape3D_90")
+transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 27.4596, 0.35, 52.7844)
+shape = SubResource("BoxShape3D_83")
 
 [node name="Box143" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 22.8056, 0.9, 50.6142)
-shape = SubResource("BoxShape3D_90")
+transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 22.9288, 0.35, 50.6716)
+shape = SubResource("BoxShape3D_83")
 
 [node name="Box144" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 28.5143, 0.9, 51.1724)
-shape = SubResource("BoxShape3D_90")
+transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 28.3847, 0.35, 51.112)
+shape = SubResource("BoxShape3D_83")
 
 [node name="Box145" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 23.4857, 0.9, 48.8276)
-shape = SubResource("BoxShape3D_90")
+transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 23.6153, 0.35, 48.888)
+shape = SubResource("BoxShape3D_83")
 
 [node name="Box146" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 29.1944, 0.9, 49.3858)
-shape = SubResource("BoxShape3D_90")
+transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 29.0712, 0.35, 49.3284)
+shape = SubResource("BoxShape3D_83")
 
 [node name="Box147" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 24.4172, 0.9, 47.1582)
-shape = SubResource("BoxShape3D_90")
+transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 24.5404, 0.35, 47.2156)
+shape = SubResource("BoxShape3D_83")
 
 [node name="Box148" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 29.623, 0.9, 47.4819)
-shape = SubResource("BoxShape3D_90")
+transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 29.5193, 0.35, 47.4335)
+shape = SubResource("BoxShape3D_83")
 
 [node name="Box149" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 25.6002, 0.9, 45.606)
-shape = SubResource("BoxShape3D_90")
+transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 25.7038, 0.35, 45.6544)
+shape = SubResource("BoxShape3D_83")
 
 [node name="Box150" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 29.8002, 0.9, 45.4607)
-shape = SubResource("BoxShape3D_90")
+transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 29.729, 0.35, 45.4275)
+shape = SubResource("BoxShape3D_83")
 
 [node name="Box151" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 27.0345, 0.9, 44.1711)
-shape = SubResource("BoxShape3D_90")
+transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 27.1058, 0.35, 44.2043)
+shape = SubResource("BoxShape3D_83")
 
 [node name="Box152" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(0.50645, 0, -0.86227, 0, 1, 0, 0.86227, 0, 0.50645, 21.9963, 0.37903, 46.5849)
-shape = SubResource("BoxShape3D_91")
+shape = SubResource("BoxShape3D_84")
 
 [node name="Shapes" type="Node3D" parent="."]
 
@@ -4637,268 +4790,413 @@ transform = Transform3D(0.86603, 0, 0.5, 0, 1, 0, -0.5, 0, 0.86603, 37.5, 0.04, 
 mesh = SubResource("Mesh_118")
 
 [node name="box_119_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, -0.35, -5.625)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 1.08, -5.625)
 mesh = SubResource("Mesh_119")
 
 [node name="box_119_1" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, -0.35, 0.625)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 1.08, 0.625)
 mesh = SubResource("Mesh_119")
 
 [node name="box_120_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 1.08, -5.625)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.375, 1.08, -2.5)
 mesh = SubResource("Mesh_120")
 
 [node name="box_120_1" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 1.08, 0.625)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.625, 1.08, -2.5)
 mesh = SubResource("Mesh_120")
 
-[node name="box_121_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.375, -0.35, -2.5)
-mesh = SubResource("Mesh_121")
+[node name="box_121_0" type="MultiMeshInstance3D" parent="Shapes"]
+multimesh = SubResource("MultiMesh_121_0")
 
-[node name="box_121_1" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.625, -0.35, -2.5)
-mesh = SubResource("Mesh_121")
-
-[node name="box_122_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.375, 1.08, -2.5)
-mesh = SubResource("Mesh_122")
-
-[node name="box_122_1" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.625, 1.08, -2.5)
-mesh = SubResource("Mesh_122")
+[node name="box_122_0" type="MultiMeshInstance3D" parent="Shapes"]
+multimesh = SubResource("MultiMesh_122_0")
 
 [node name="box_123_0" type="MultiMeshInstance3D" parent="Shapes"]
 multimesh = SubResource("MultiMesh_123_0")
 
-[node name="box_124_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(0.48165, -0.03368, 0.87572, 0.06976, 0.99756, 0, -0.87359, 0.06109, 0.48282, -30, 1.45, -2.5)
-mesh = SubResource("Mesh_124")
+[node name="box_124_0" type="MultiMeshInstance3D" parent="Shapes"]
+multimesh = SubResource("MultiMesh_124_0")
 
 [node name="box_125_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(0.93969, 0, 0.34202, 0, 1, 0, -0.34202, 0, 0.93969, -24.8191, 3.9, -46.9739)
+transform = Transform3D(0.48165, -0.03368, 0.87572, 0.06976, 0.99756, 0, -0.87359, 0.06109, 0.48282, -30, 1.45, -2.5)
 mesh = SubResource("Mesh_125")
 
-[node name="torus_126_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.34202, 0.93969, 0, 0, 0, -1, -0.93969, -0.34202, -0, -20.5312, -0.09075, -44.4907)
+[node name="box_126_0" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(0.48165, -0.03368, 0.87572, 0.06976, 0.99756, 0, -0.87359, 0.06109, 0.48282, -32.8023, 1.45, -4.04503)
 mesh = SubResource("Mesh_126")
 
-[node name="torus_126_1" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.34202, 0.93969, 0, 0, 0, -1, -0.93969, -0.34202, -0, -18.0504, -0.09075, -45.3937)
+[node name="box_126_1" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(0.48165, -0.03368, 0.87572, 0.06976, 0.99756, 0, -0.87359, 0.06109, 0.48282, -27.7231, 1.45, -1.24466)
 mesh = SubResource("Mesh_126")
 
-[node name="torus_127_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.34202, 0.93969, 0, 0, 0, -1, -0.93969, -0.34202, -0, -20.1177, -0.132, -44.6412)
-mesh = SubResource("Mesh_127")
-
-[node name="torus_127_1" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.34202, 0.93969, 0, 0, 0, -1, -0.93969, -0.34202, -0, -18.4639, -0.132, -45.2432)
+[node name="box_127_0" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(0.93969, 0, 0.34202, 0, 1, 0, -0.34202, 0, 0.93969, -24.8191, 3.9, -46.9739)
 mesh = SubResource("Mesh_127")
 
 [node name="torus_128_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.34202, 0.93969, 0, 0, 0, -1, -0.93969, -0.34202, -0, -19.7042, -0.15675, -44.7917)
+transform = Transform3D(-0.34202, 0.93969, 0, 0, 0, -1, -0.93969, -0.34202, -0, -20.5312, -0.09075, -44.4907)
+mesh = SubResource("Mesh_128")
+
+[node name="torus_128_1" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.34202, 0.93969, 0, 0, 0, -1, -0.93969, -0.34202, -0, -18.0504, -0.09075, -45.3937)
 mesh = SubResource("Mesh_128")
 
 [node name="torus_129_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.34202, 0.93969, 0, 0, 0, -1, -0.93969, -0.34202, -0, -19.2908, -0.165, -44.9422)
+transform = Transform3D(-0.34202, 0.93969, 0, 0, 0, -1, -0.93969, -0.34202, -0, -20.1177, -0.132, -44.6412)
+mesh = SubResource("Mesh_129")
+
+[node name="torus_129_1" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.34202, 0.93969, 0, 0, 0, -1, -0.93969, -0.34202, -0, -18.4639, -0.132, -45.2432)
 mesh = SubResource("Mesh_129")
 
 [node name="torus_130_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.34202, 0.93969, 0, 0, 0, -1, -0.93969, -0.34202, -0, -18.8773, -0.15675, -45.0927)
+transform = Transform3D(-0.34202, 0.93969, 0, 0, 0, -1, -0.93969, -0.34202, -0, -19.7042, -0.15675, -44.7917)
 mesh = SubResource("Mesh_130")
 
-[node name="box_131_0" type="MultiMeshInstance3D" parent="Shapes"]
-multimesh = SubResource("MultiMesh_131_0")
+[node name="torus_131_0" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.34202, 0.93969, 0, 0, 0, -1, -0.93969, -0.34202, -0, -19.2908, -0.165, -44.9422)
+mesh = SubResource("Mesh_131")
 
-[node name="cyl_132_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.24709, 0.93454, -0.25608, 0.49726, -0.10453, -0.86128, -0.83167, -0.34015, -0.43889, -17.4302, 0.204, -45.6194)
+[node name="torus_132_0" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.34202, 0.93969, 0, 0, 0, -1, -0.93969, -0.34202, -0, -18.8773, -0.15675, -45.0927)
 mesh = SubResource("Mesh_132")
 
-[node name="box_133_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.61566, 0, 0.78801, 0, 1, 0, -0.78801, 0, -0.61566, -17.3349, 0.036, -45.8839)
-mesh = SubResource("Mesh_133")
+[node name="box_133_0" type="MultiMeshInstance3D" parent="Shapes"]
+multimesh = SubResource("MultiMesh_133_0")
 
-[node name="box_134_0" type="MultiMeshInstance3D" parent="Shapes"]
-multimesh = SubResource("MultiMesh_134_0")
+[node name="cyl_134_0" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.24709, 0.93454, -0.25608, 0.49726, -0.10453, -0.86128, -0.83167, -0.34015, -0.43889, -17.4302, 0.204, -45.6194)
+mesh = SubResource("Mesh_134")
+
+[node name="box_135_0" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.61566, 0, 0.78801, 0, 1, 0, -0.78801, 0, -0.61566, -17.3349, 0.036, -45.8839)
+mesh = SubResource("Mesh_135")
+
+[node name="box_136_0" type="MultiMeshInstance3D" parent="Shapes"]
+multimesh = SubResource("MultiMesh_136_0")
 cast_shadow = 0
 
-[node name="cyl_135_0" type="MultiMeshInstance3D" parent="Shapes"]
-multimesh = SubResource("MultiMesh_135_0")
-
-[node name="torus_136_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.90631, 0.42262, 0, 0, 0, -1, -0.42262, -0.90631, -0, 23.5826, -0.39325, 55.1841)
-mesh = SubResource("Mesh_136")
-
-[node name="torus_136_1" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.90631, 0.42262, 0, 0, 0, -1, -0.42262, -0.90631, -0, 28.4174, -0.39325, 44.8159)
-mesh = SubResource("Mesh_136")
-
-[node name="torus_137_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.90631, 0.42262, 0, 0, 0, -1, -0.42262, -0.90631, -0, 24.3884, -0.572, 53.456)
-mesh = SubResource("Mesh_137")
-
-[node name="torus_137_1" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.90631, 0.42262, 0, 0, 0, -1, -0.42262, -0.90631, -0, 27.6116, -0.572, 46.544)
-mesh = SubResource("Mesh_137")
+[node name="cyl_137_0" type="MultiMeshInstance3D" parent="Shapes"]
+multimesh = SubResource("MultiMesh_137_0")
 
 [node name="torus_138_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.90631, 0.42262, 0, 0, 0, -1, -0.42262, -0.90631, -0, 25.1942, -0.67925, 51.728)
+transform = Transform3D(-0.90631, 0.42262, 0, 0, 0, -1, -0.42262, -0.90631, -0, 23.5826, -0.39325, 55.1841)
+mesh = SubResource("Mesh_138")
+
+[node name="torus_138_1" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.90631, 0.42262, 0, 0, 0, -1, -0.42262, -0.90631, -0, 28.4174, -0.39325, 44.8159)
 mesh = SubResource("Mesh_138")
 
 [node name="torus_139_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.90631, 0.42262, 0, 0, 0, -1, -0.42262, -0.90631, -0, 26, -0.715, 50)
+transform = Transform3D(-0.90631, 0.42262, 0, 0, 0, -1, -0.42262, -0.90631, -0, 24.3884, -0.572, 53.456)
+mesh = SubResource("Mesh_139")
+
+[node name="torus_139_1" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.90631, 0.42262, 0, 0, 0, -1, -0.42262, -0.90631, -0, 27.6116, -0.572, 46.544)
 mesh = SubResource("Mesh_139")
 
 [node name="torus_140_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.90631, 0.42262, 0, 0, 0, -1, -0.42262, -0.90631, -0, 26.8058, -0.67925, 48.272)
+transform = Transform3D(-0.90631, 0.42262, 0, 0, 0, -1, -0.42262, -0.90631, -0, 25.1942, -0.67925, 51.728)
 mesh = SubResource("Mesh_140")
 
-[node name="box_141_0" type="MultiMeshInstance3D" parent="Shapes"]
-multimesh = SubResource("MultiMesh_141_0")
+[node name="torus_141_0" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.90631, 0.42262, 0, 0, 0, -1, -0.42262, -0.90631, -0, 26, -0.715, 50)
+mesh = SubResource("Mesh_141")
 
-[node name="cyl_142_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.7628, 0.4203, -0.49141, 0.49726, -0.10453, -0.86128, -0.41337, -0.90134, -0.12927, 29.6261, 0.884, 42.2239)
+[node name="torus_142_0" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.90631, 0.42262, 0, 0, 0, -1, -0.42262, -0.90631, -0, 26.8058, -0.67925, 48.272)
 mesh = SubResource("Mesh_142")
 
-[node name="cyl_143_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.9281, 0.25464, 0.27165, 0.36869, 0.52654, 0.76604, 0.05203, 0.81112, -0.58256, 30.0979, 2.184, 44.1651)
-mesh = SubResource("Mesh_143")
+[node name="box_143_0" type="MultiMeshInstance3D" parent="Shapes"]
+multimesh = SubResource("MultiMesh_143_0")
 
-[node name="cyl_143_1" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.55671, -0.78503, 0.27165, -0.36869, 0.52654, 0.76604, -0.74441, 0.32631, -0.58256, 27.8357, 2.184, 43.1103)
-mesh = SubResource("Mesh_143")
-
-[node name="box_144_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.99255, 0, 0.12187, 0, 1, 0, -0.12187, 0, -0.99255, 29.1074, 0.156, 41.1214)
+[node name="cyl_144_0" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.7628, 0.4203, -0.49141, 0.49726, -0.10453, -0.86128, -0.41337, -0.90134, -0.12927, 29.6261, 0.884, 42.2239)
 mesh = SubResource("Mesh_144")
 
-[node name="box_145_0" type="MultiMeshInstance3D" parent="Shapes"]
-multimesh = SubResource("MultiMesh_145_0")
+[node name="cyl_145_0" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.9281, 0.25464, 0.27165, 0.36869, 0.52654, 0.76604, 0.05203, 0.81112, -0.58256, 30.0979, 2.184, 44.1651)
+mesh = SubResource("Mesh_145")
+
+[node name="cyl_145_1" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.55671, -0.78503, 0.27165, -0.36869, 0.52654, 0.76604, -0.74441, 0.32631, -0.58256, 27.8357, 2.184, 43.1103)
+mesh = SubResource("Mesh_145")
+
+[node name="box_146_0" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.99255, 0, 0.12187, 0, 1, 0, -0.12187, 0, -0.99255, 29.1074, 0.156, 41.1214)
+mesh = SubResource("Mesh_146")
+
+[node name="box_147_0" type="MultiMeshInstance3D" parent="Shapes"]
+multimesh = SubResource("MultiMesh_147_0")
 cast_shadow = 0
 
-[node name="cyl_146_0" type="MultiMeshInstance3D" parent="Shapes"]
-multimesh = SubResource("MultiMesh_146_0")
+[node name="cyl_148_0" type="MultiMeshInstance3D" parent="Shapes"]
+multimesh = SubResource("MultiMesh_148_0")
 
 [node name="Shape0" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -10.5, 0, 13.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.8, 0.62, 20.8)
 shape = SubResource("Shape_0")
 
 [node name="Shape1" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 10.5, 0, 13.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.8, 0.62, 20.8)
 shape = SubResource("Shape_1")
 
 [node name="Shape2" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -12.8, 0, 18.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -10.5, 0, 13.6)
 shape = SubResource("Shape_2")
 
 [node name="Shape3" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 12.6, 0, 18.8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 10.5, 0, 13.5)
 shape = SubResource("Shape_3")
 
 [node name="Shape4" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, 6.2, 0.36, 29.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -12.8, 0, 18.6)
 shape = SubResource("Shape_4")
 
 [node name="Shape5" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -11, 0, -18.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 12.6, 0, 18.8)
 shape = SubResource("Shape_5")
 
 [node name="Shape6" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 11.2, 0, 3.4)
+transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, 6.2, 0.36, 29.2)
 shape = SubResource("Shape_6")
 
 [node name="Shape7" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 7.6, 0, -18.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.8, -14)
 shape = SubResource("Shape_7")
 
 [node name="Shape8" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -18.6, 0, -12.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.296, -6)
 shape = SubResource("Shape_8")
 
 [node name="Shape9" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 18.6, 0, -10.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.8, 2)
 shape = SubResource("Shape_9")
 
 [node name="Shape10" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0, -34.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.296, -14)
 shape = SubResource("Shape_10")
 
 [node name="Shape11" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -16.4, 0, -29)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.8, -6)
 shape = SubResource("Shape_11")
 
 [node name="Shape12" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 16.4, 0, -29)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.296, 2)
 shape = SubResource("Shape_12")
 
 [node name="Shape13" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0, -26.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.8, 0.62, -15.3)
 shape = SubResource("Shape_13")
 
 [node name="Shape14" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -8.5, 0, -26.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8, 0.62, -15.3)
 shape = SubResource("Shape_14")
 
 [node name="Shape15" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 8.2, 0, -26.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.6, 0.62, -6)
 shape = SubResource("Shape_15")
 
 [node name="Shape16" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.69993, 0.71421, 0, -0.71421, 0.69993, 0, 0, 0, 1, 7.15, 2.8, -23.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.6, 0.45, -6)
 shape = SubResource("Shape_16")
 
 [node name="Shape17" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.76604, 0, 0.64279, 0, 1, 0, -0.64279, 0, 0.76604, -43.657, 0, -30.102)
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 6.5, 0.85, 6.5)
 shape = SubResource("Shape_17")
 
 [node name="Shape18" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.76604, 0, 0.64279, 0, 1, 0, -0.64279, 0, -0.76604, -41.2462, 0, -36.5633)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -11, 0, -18.2)
 shape = SubResource("Shape_18")
 
 [node name="Shape19" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.5, 0, -0.86603, 0, 1, 0, 0.86603, 0, 0.5, 35.0624, 0.4, -8.5034)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 11.2, 0, 3.4)
 shape = SubResource("Shape_19")
 
 [node name="Shape20" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 0.4, -5.625)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 7.6, 0, -18.4)
 shape = SubResource("Shape_20")
 
 [node name="Shape21" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 0.4, 0.625)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -18.6, 0, -12.4)
 shape = SubResource("Shape_21")
 
 [node name="Shape22" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.375, 0.4, -2.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 18.6, 0, -10.2)
 shape = SubResource("Shape_22")
 
 [node name="Shape23" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.625, 0.4, -2.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0, -34.2)
 shape = SubResource("Shape_23")
 
 [node name="Shape24" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.55919, 0, -0.82904, 0, 1, 0, 0.82904, 0, 0.55919, -35.4, 0, 31.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -16.4, 0, -29)
 shape = SubResource("Shape_24")
 
 [node name="Shape25" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.86603, 0, 0.5, 0, 1, 0, -0.5, 0, 0.86603, -36.4, 0, 28.8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 16.4, 0, -29)
 shape = SubResource("Shape_25")
 
 [node name="Shape26" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.17365, 0, 0.98481, 0, 1, 0, -0.98481, 0, 0.17365, -31.4, 0, 28.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0, -26.3)
 shape = SubResource("Shape_26")
 
 [node name="Shape27" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.86603, 0, 0.5, 0, 1, 0, -0.5, 0, -0.86603, -27.6, 0.36, 23.9751)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -8.5, 0, -26.5)
 shape = SubResource("Shape_27")
 
 [node name="Shape28" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 35.5, 0, 34)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 8.2, 0, -26.4)
 shape = SubResource("Shape_28")
 
 [node name="Shape29" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.93969, 0, 0.34202, 0, 1, 0, -0.34202, 0, 0.93969, -22.7524, 0, -50.0673)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5, 2.65, -23.4)
 shape = SubResource("Shape_29")
 
 [node name="Shape30" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.81915, 0, 0.57358, 0, 1, 0, -0.57358, 0, 0.81915, 25.2, 0, -42)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 2.65, -23.4)
 shape = SubResource("Shape_30")
+
+[node name="Shape31" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 2.65, -23.4)
+shape = SubResource("Shape_31")
+
+[node name="Shape32" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 2.65, -23.4)
+shape = SubResource("Shape_32")
+
+[node name="Shape33" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.69993, 0.71421, 0, -0.71421, 0.69993, 0, 0, 0, 1, 7.15, 2.8, -23.4)
+shape = SubResource("Shape_33")
+
+[node name="Shape34" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -38.6584, 0.25, -36.124)
+shape = SubResource("Shape_34")
+
+[node name="Shape35" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.76604, 0, 0.64279, 0, 1, 0, -0.64279, 0, 0.76604, -43.657, 0, -30.102)
+shape = SubResource("Shape_35")
+
+[node name="Shape36" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(-0.76604, 0, 0.64279, 0, 1, 0, -0.64279, 0, -0.76604, -41.2462, 0, -36.5633)
+shape = SubResource("Shape_36")
+
+[node name="Shape37" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.5, 0, -0.86603, 0, 1, 0, 0.86603, 0, 0.5, 35.0624, 0.4, -8.5034)
+shape = SubResource("Shape_37")
+
+[node name="Shape38" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 0.4, -5.625)
+shape = SubResource("Shape_38")
+
+[node name="Shape39" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 0.4, 0.625)
+shape = SubResource("Shape_39")
+
+[node name="Shape40" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.375, 0.4, -2.5)
+shape = SubResource("Shape_40")
+
+[node name="Shape41" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.625, 0.4, -2.5)
+shape = SubResource("Shape_41")
+
+[node name="Shape42" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.375, 0.175, -5.625)
+shape = SubResource("Shape_42")
+
+[node name="Shape43" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.375, 1.6, -5.625)
+shape = SubResource("Shape_43")
+
+[node name="Shape44" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.375, 0.175, 0.625)
+shape = SubResource("Shape_44")
+
+[node name="Shape45" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.375, 1.6, 0.625)
+shape = SubResource("Shape_45")
+
+[node name="Shape46" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.625, 0.175, -5.625)
+shape = SubResource("Shape_46")
+
+[node name="Shape47" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.625, 1.6, -5.625)
+shape = SubResource("Shape_47")
+
+[node name="Shape48" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.625, 0.175, 0.625)
+shape = SubResource("Shape_48")
+
+[node name="Shape49" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.625, 1.6, 0.625)
+shape = SubResource("Shape_49")
+
+[node name="Shape50" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.55919, 0, -0.82904, 0, 1, 0, 0.82904, 0, 0.55919, -35.4, 0, 31.6)
+shape = SubResource("Shape_50")
+
+[node name="Shape51" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.86603, 0, 0.5, 0, 1, 0, -0.5, 0, 0.86603, -36.4, 0, 28.8)
+shape = SubResource("Shape_51")
+
+[node name="Shape52" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.17365, 0, 0.98481, 0, 1, 0, -0.98481, 0, 0.17365, -31.4, 0, 28.6)
+shape = SubResource("Shape_52")
+
+[node name="Shape53" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(-0.86603, 0, 0.5, 0, 1, 0, -0.5, 0, -0.86603, -27.6, 0.36, 23.9751)
+shape = SubResource("Shape_53")
+
+[node name="Shape54" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 0.45, 27.4)
+shape = SubResource("Shape_54")
+
+[node name="Shape55" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 35.5, 0, 34)
+shape = SubResource("Shape_55")
+
+[node name="Shape56" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.2286, 1.8, -46.4609)
+shape = SubResource("Shape_56")
+
+[node name="Shape57" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23.4095, 1.8, -47.487)
+shape = SubResource("Shape_57")
+
+[node name="Shape58" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.5905, 0.812, -48.513)
+shape = SubResource("Shape_58")
+
+[node name="Shape59" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.7714, 0.8, -49.5391)
+shape = SubResource("Shape_59")
+
+[node name="Shape60" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.93969, 0, 0.34202, 0, 1, 0, -0.34202, 0, 0.93969, -22.7524, 0, -50.0673)
+shape = SubResource("Shape_60")
+
+[node name="Shape61" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.81915, 0, 0.57358, 0, 1, 0, -0.57358, 0, 0.81915, 22.8204, 1.2, -43.1741)
+shape = SubResource("Shape_61")
+
+[node name="Shape62" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.81915, 0, 0.57358, 0, 1, 0, -0.57358, 0, 0.81915, 25.1796, 1.2, -44.8259)
+shape = SubResource("Shape_62")
+
+[node name="Shape63" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.81915, 0, 0.57358, 0, 1, 0, -0.57358, 0, 0.81915, 24, 2.37, -44)
+shape = SubResource("Shape_63")
+
+[node name="Shape64" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.81915, 0, 0.57358, 0, 1, 0, -0.57358, 0, 0.81915, 24, 0.57, -44)
+shape = SubResource("Shape_64")
+
+[node name="Shape65" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.81915, 0, 0.57358, 0, 1, 0, -0.57358, 0, 0.81915, 25.2, 0, -42)
+shape = SubResource("Shape_65")
+
+[node name="Shape66" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.4, 0.25, 45.2)
+shape = SubResource("Shape_66")

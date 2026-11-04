@@ -559,6 +559,26 @@ def along_wall(center, inward, offset, out=0.0, up=0.0):
     return (center[0] + nz * offset + nx * out, center[1] + up, center[2] - nx * offset + nz * out)
 
 
+def furniture_fit(scene, model, center, degrees=0.0, scale=2.6, height=None, tilt=0.0, roll=0.0, footprint=1.0):
+    """Comme furniture(), mais la collision suit l'objet : une boîte tournée comme lui, à la taille de sa boîte une
+    fois penché ou couché, et non la boîte droite qui englobe le tout (elle laissait des murs invisibles autour des
+    objets couchés de biais). footprint réduit l'emprise des épaves et des tas, faits de pièces éparses."""
+    furniture(scene, model, center, degrees, scale, tilt=tilt, roll=roll)
+    if not height:
+        return
+    (px, py, pz), (sx, sy, sz) = MODEL_BOXES[model]
+    basis = multiply(rotation_x(tilt), rotation_z(roll))
+    corners = []
+    for cx in (px, px + sx):
+        for cy in (py, py + sy):
+            for cz in (pz, pz + sz):
+                local = (cx * scale, cy * scale, cz * scale)
+                corners.append([sum(basis[r][i] * local[i] for i in range(3)) for r in range(3)])
+    size = [max(c[i] for c in corners) - min(c[i] for c in corners) for i in range(3)]
+    high = size[1] if (tilt or roll) else height
+    scene.add_box((center[0], center[1] + high / 2, center[2]), (size[0] * footprint, high, size[2] * footprint), degrees)
+
+
 def facing(inward):
     """Angle qui tourne la face avant (+Z) d'un modèle vers la pièce."""
     return math.degrees(math.atan2(inward[0], inward[1]))
@@ -588,7 +608,7 @@ def bookcase(scene, rng, model, wall_point, inward, fill=0.85, gaps=(), searched
     nx, nz = inward
     center = (wall_point[0] + nx * depth / 2, 0.0, wall_point[1] + nz * depth / 2)
     degrees = facing(inward)
-    furniture(scene, model, center, degrees, SHELF_SCALE, height=height)
+    furniture_fit(scene, model, center, degrees, SHELF_SCALE, height=height)
     # Repère du meuble : a suit l'axe x des modèles tournés comme lui, n sort vers la pièce.
     ax, az = math.cos(math.radians(degrees)), -math.sin(math.radians(degrees))
     front = depth / 2
@@ -639,9 +659,10 @@ def floor_books(scene, rng, x, z, count, spread=0.8, y=0.0):
     for _ in range(count):
         px, pz = x + rng.uniform(-spread, spread), z + rng.uniform(-spread, spread)
         # Debout, renversés sur le dos ou en pile couchée : chaque pose garde le modèle au-dessus du sol.
-        tilt, roll = rng.choice(((0.0, 0.0), (90.0, 0.0), (90.0, 0.0), (0.0, 90.0)))
+        # Couchés, sur le dos ou sur la tranche : moins de 30 cm, on les enjambe sans collision.
+        tilt, roll = rng.choice(((90.0, 0.0), (90.0, 0.0), (90.0, 12.0), (90.0, -12.0)))
         scene.add_many("furniture_kit/books", (px, y + 0.003, pz), rng.uniform(0, 360),
-                       BOOKS_SCALE * rng.uniform(0.85, 1.05), tilt=tilt, roll=roll)
+                       BOOKS_SCALE * rng.uniform(0.85, 1.0), tilt=tilt, roll=roll)
 
 
 def sheets(scene, rng, x, z, count, spread=1.0, y=0.0, scrolls=0):
@@ -692,14 +713,14 @@ def chandelier(scene, x, z, ceiling=WALL_HEIGHT, drop=0.9, radius=0.75):
 
 
 def fallen_chandelier(scene, x, z, radius=0.75):
-    """Lustre tombé du plafond, couché de travers, ses bougies éteintes éparpillées."""
-    scene.add_shape("torus", (radius - 0.06, radius), IRON, (x, 0.18, z), degrees=20.0, tilt=12.0, roughness=0.5)
+    """Lustre tombé du plafond, couché de travers, ses bougies éteintes éparpillées : bas, il s'enjambe."""
+    scene.add_shape("torus", (radius - 0.06, radius), IRON, (x, 0.1, z), degrees=20.0, tilt=3.0, roughness=0.5)
     for index in range(5):
         angle = math.radians(index * 70.0 + 10.0)
         scene.add_shape("cylinder", (0.035, 0.16), WAX,
                         (x + math.cos(angle) * (radius + 0.2), 0.035, z + math.sin(angle) * (radius + 0.2)),
                         degrees=index * 37.0, tilt=90.0)
-    scene.add_box((x, 0.2, z), (radius * 2, 0.4, radius * 2))
+    # Couché, il ne dépasse pas la cheville : on l'enjambe, sans collision.
 
 
 def lectern(scene, x, z, degrees, open_book=True):
@@ -721,12 +742,12 @@ def lectern(scene, x, z, degrees, open_book=True):
 def writing_desk(scene, rng, x, z, degrees, overturned=False):
     """Pupitre de scribe : une table, un tabouret, une bougie, un encrier, une plume et des feuillets."""
     if overturned:
-        furniture(scene, "mini_dungeon/table", (x, 0.0, z), degrees, 2.2, height=1.0, roll=90.0)
-        furniture(scene, "fantasy_town_kit/stall-stool", (x + 1.2, 0.0, z + 0.9), degrees + 40.0, 2.4, height=0.5,
+        furniture_fit(scene, "mini_dungeon/table", (x, 0.0, z), degrees, 2.2, height=1.0, roll=90.0)
+        furniture_fit(scene, "fantasy_town_kit/stall-stool", (x + 1.2, 0.0, z + 0.9), degrees + 40.0, 2.4, height=0.5,
                   tilt=90.0)
         sheets(scene, rng, x + 0.6, z + 0.4, 6, 1.0)
         return
-    furniture(scene, "mini_dungeon/table", (x, 0.0, z), degrees, 2.2, height=0.69)
+    furniture_fit(scene, "mini_dungeon/table", (x, 0.0, z), degrees, 2.2, height=0.69)
     top = 0.31 * 2.2
     c, s = math.cos(math.radians(degrees)), math.sin(math.radians(degrees))
 
@@ -735,7 +756,7 @@ def writing_desk(scene, rng, x, z, degrees, overturned=False):
 
     # Tabouret du scribe, devant la table.
     sx, sz = on_desk(0.0, 1.05)
-    furniture(scene, "fantasy_town_kit/stall-stool", (sx, 0.0, sz), degrees, 2.4, height=0.55)
+    furniture_fit(scene, "fantasy_town_kit/stall-stool", (sx, 0.0, sz), degrees, 2.4, height=0.55)
     cx, cz = on_desk(-0.65, -0.3)
     candle(scene, cx, top, cz, 0.18, 0.04)
     ix, iz = on_desk(0.55, -0.35)
@@ -755,7 +776,7 @@ def writing_desk(scene, rng, x, z, degrees, overturned=False):
 
 def reading_table(scene, rng, x, z, degrees, chairs=((-1, -0.55), (-1, 0.55), (1, -0.55), (1, 0.55)), tipped=()):
     """Longue table de lecture, ses chaises, des livres empilés et une bougie."""
-    furniture(scene, "furniture_kit/table", (x, 0.0, z), degrees, 3.0, height=0.99)
+    furniture_fit(scene, "furniture_kit/table", (x, 0.0, z), degrees, 3.0, height=0.99)
     top = 0.33 * 3.0
     c, s = math.cos(math.radians(degrees)), math.sin(math.radians(degrees))
 
@@ -766,9 +787,14 @@ def reading_table(scene, rng, x, z, degrees, chairs=((-1, -0.55), (-1, 0.55), (1
         px, pz = at(along * 2.0, side * 1.1)
         yaw = degrees + (180.0 if side > 0 else 0.0)
         if index in tipped:
-            furniture(scene, "furniture_kit/chair", (px + 0.2 * side, 0.0, pz), yaw + 25.0, 3.0, height=0.6, tilt=-90.0)
+            # Chaise renversée sur le dos : une boîte orientée comme elle, pas la boîte droite qui l'englobe.
+            furniture_fit(scene, "furniture_kit/chair", (px + 0.2 * side, 0.0, pz), yaw + 25.0, 3.0, tilt=-90.0)
+            # Seuls l'assise et les pieds se dressent ; le dossier à plat s'enjambe.
+            lying = math.radians(yaw + 25.0)
+            scene.add_box((px + 0.2 * side + math.sin(lying) * 0.33, 0.3, pz + math.cos(lying) * 0.33), (0.6, 0.6, 0.7),
+                          yaw + 25.0)
         else:
-            furniture(scene, "furniture_kit/chair", (px, 0.0, pz), yaw + rng.uniform(-12, 12), 3.0, height=1.4)
+            furniture_fit(scene, "furniture_kit/chair", (px, 0.0, pz), yaw + rng.uniform(-12, 12), 3.0, height=1.4)
     for u, v in ((-0.7, 0.1), (0.6, -0.15)):
         px, pz = at(u, v)
         scene.add_many("furniture_kit/books", (px, top, pz), degrees + rng.uniform(-30, 30), BOOKS_SCALE, roll=90.0)
@@ -778,7 +804,7 @@ def reading_table(scene, rng, x, z, degrees, chairs=((-1, -0.55), (-1, 0.55), (1
         qx, qz = at(0.05 + side * 0.12, 0.05)
         scene.add_shape("box", (0.23, 0.02, 0.32), PARCHMENT, (qx, top + 0.035, qz), degrees + 10.0, roll=side * 3.0)
     cx, cz = at(0.0, -0.3)
-    furniture(scene, "graveyard_kit/candle-multiple", (cx, top, cz), 0.0, 1.8)
+    furniture_fit(scene, "graveyard_kit/candle-multiple", (cx, top, cz), 0.0, 1.8)
     for index in range(rng.randint(1, 3)):
         qx, qz = at(rng.uniform(-1.0, 1.0), rng.uniform(-0.4, 0.4))
         scene.add_shape("box", (0.3, 0.004, 0.4), PARCHMENT, (qx, top + 0.003, qz), rng.uniform(0, 360))
@@ -836,16 +862,30 @@ def soldiers_camp(scene, rng, cx, cz, heading):
         c, s = math.cos(math.radians(heading)), math.sin(math.radians(heading))
         return (cx + c * u + s * v, 0.0, cz - s * u + c * v)
 
-    furniture(scene, "nature_kit/campfire_stones", at(0.0, 0.0), heading, 3.0)
+    furniture_fit(scene, "nature_kit/campfire_stones", at(0.0, 0.0), heading, 3.0)
     for u, yaw in ((-3.6, 60.0), (3.4, -50.0)):
-        furniture(scene, "nature_kit/tent_detailedOpen", at(u, -2.6), heading + yaw, 3.6, height=2.0)
+        furniture_fit(scene, "nature_kit/tent_detailedOpen", at(u, -2.6), heading + yaw, 3.6)
     for u, v in ((-1.6, 2.6), (1.2, 3.4)):
-        furniture(scene, "nature_kit/log_stack", at(u, v), heading + rng.uniform(60, 120), 2.6, height=0.9)
-    furniture(scene, "survival_kit/chest", at(2.6, 1.2), heading + 20.0, 3.4, height=0.9)
+        furniture_fit(scene, "nature_kit/log_stack", at(u, v), heading + rng.uniform(60, 120), 2.6, height=0.9)
+    furniture_fit(scene, "survival_kit/chest", at(2.6, 1.2), heading + 20.0, 3.4, height=0.9)
     for u, v in ((-4.0, 0.9), (-5.5, 2.7)):
-        furniture(scene, "mini_dungeon/barrel", at(u, v), rng.uniform(0, 360), 2.6, height=1.2)
-    furniture(scene, "survival_kit/box-large", at(5.6, 1.4), heading + 70.0, 3.6, height=0.9)
-    furniture(scene, "fantasy_town_kit/cart", at(-1.0, -6.4), heading + 100.0, 2.8, height=1.5, roll=90.0)
+        furniture_fit(scene, "mini_dungeon/barrel", at(u, v), rng.uniform(0, 360), 2.6, height=1.2)
+    furniture_fit(scene, "survival_kit/box-large", at(5.6, 1.4), heading + 70.0, 3.6, height=0.9)
+    furniture_fit(scene, "fantasy_town_kit/cart", at(-1.0, -6.4), heading + 100.0, 2.8, roll=90.0)
+
+
+def arch_fill(scene, center, outward):
+    """Complète la collision d'un mur voûté posé par doorway() : son arche ne laisse que ±0,80 m de passage jusqu'à
+    1,8 m, puis se referme en pointe jusqu'à 2,9 m, alors que doorway() laisse ±0,95 m sur toute la hauteur."""
+    x, z = center
+    along = (0, 1) if outward[0] else (1, 0)
+    for sign in (-1, 1):
+        for inner, outer, low, high in ((0.8, 0.95, 0.0, DOORWAY_HEIGHT), (0.5, 0.8, 2.3, DOORWAY_HEIGHT),
+                                        (0.15, 0.5, 2.7, DOORWAY_HEIGHT)):
+            offset = sign * (inner + outer) / 2
+            width = outer - inner
+            size = (WALL_THICKNESS, high - low, width) if outward[0] else (width, high - low, WALL_THICKNESS)
+            scene.add_box((x + along[0] * offset, (low + high) / 2, z + along[1] * offset), size)
 
 
 def build_ruins():
@@ -876,7 +916,7 @@ def build_ruins():
     for x in (-6.0, -2.4, 2.4, 6.0):
         scene.add("fantasy_town_kit/pillar-stone", (x, 0.0, front + 3.0), 0.0, 8.0)
         scene.add_box((x, 4.0, front + 3.0), (1.3, 8.0, 1.3))
-    furniture(scene, "fantasy_town_kit/pillar-stone", (13.5, 0.0, 13.5), 40.0, 7.0, height=1.2, tilt=90.0)
+    furniture_fit(scene, "fantasy_town_kit/pillar-stone", (13.5, 0.0, 13.5), 40.0, 7.0, height=1.2, tilt=90.0)
 
     # Bannières qui encadrent l'entrée, et deux poteaux de bois dont la potence tend une lanterne à bougie vers la
     # porte (leur lumière est dans plaine.tscn).
@@ -894,7 +934,7 @@ def build_ruins():
         ("rock-large", (5.0, 0.0, 3.0), 160.0, 1.4),
     ):
         model = f"fantasy_town_kit/{model}"
-        furniture(scene, model, position, degrees, scale, height=MODEL_BOXES[model][1][1] * scale * 0.85)
+        furniture_fit(scene, model, position, degrees, scale)
     # Rayonnages renversés au sol et rayonnages encore debout, chacun avec sa collision.
     for position, degrees, tilt in (
         ((-5.0, 0.0, 2.0), 20.0, 90.0),
@@ -903,11 +943,11 @@ def build_ruins():
         ((7.0, 0.0, -4.0), -90.0, 0.0),
         ((13.5, 0.0, 7.0), 60.0, 90.0),
     ):
-        furniture(scene, "furniture_kit/bookcaseClosedWide", position, degrees, 3.2, height=2.5, tilt=tilt)
+        furniture_fit(scene, "furniture_kit/bookcaseClosedWide", position, degrees, 3.2, height=2.5, tilt=tilt)
     # Campement des soldats envoyés défendre la bibliothèque, sur le replat au bord du chemin.
     soldiers_camp(scene, random.Random(7), 14.0, 42.0, -30.0)
     for position, degrees in (((-3.0, 0.0, 12.5), 30.0), ((4.5, 0.0, 13.5), 200.0), ((-9.0, 0.0, 12.5), 80.0)):
-        furniture(scene, "furniture_kit/books", position, degrees, 5.0, height=0.5)
+        furniture_fit(scene, "furniture_kit/books", position, degrees, 5.0, height=0.5)
     return scene
 
 
@@ -937,34 +977,39 @@ def stake_line(scene, rng, start, end, broken=(), fallen=()):
         t = (index + 0.5) / count
         x, z = start[0] + dx * t, start[1] + dz * t
         if index in fallen:
-            furniture(scene, "survival_kit/fence-fortified", (x, 0.0, z + 0.6), degrees + rng.uniform(-10, 10), scale,
+            furniture_fit(scene, "survival_kit/fence-fortified", (x, 0.0, z + 0.6), degrees + rng.uniform(-10, 10), scale,
                       height=0.4, tilt=-80.0)
         else:
-            furniture(scene, "survival_kit/fence-fortified", (x, 0.0, z), degrees + rng.uniform(-4, 4), scale,
+            furniture_fit(scene, "survival_kit/fence-fortified", (x, 0.0, z), degrees + rng.uniform(-4, 4), scale,
                       height=1.9, tilt=rng.uniform(-6, 6))
 
 
 def planted_sword(scene, rng, x, z, scale=3.0):
     """Épée plantée en terre, un peu de travers."""
-    scene.add("mini_dungeon/weapon-sword", (x, 0.1 * scale - 0.25, z), rng.uniform(0, 360), scale,
+    yaw = rng.uniform(0, 360)
+    scene.add("mini_dungeon/weapon-sword", (x, 0.1 * scale - 0.25, z), yaw, scale,
               tilt=rng.uniform(-14, 14), roll=rng.uniform(-10, 10))
-    scene.add_box((x, 0.6, z), (0.3, 1.2, 0.3))
+    scene.add_box((x, 0.65, z), (0.25 * scale, 1.3, 0.14 * scale), yaw)
 
 
 def planted_spear(scene, rng, x, z, scale=3.2, lean=25.0):
     """Lance ou carreau fiché de biais dans le sol ; sa collision suit la hampe penchée."""
     yaw = rng.uniform(0, 360)
     scene.add("mini_dungeon/weapon-spear", (x, -0.3, z), yaw, scale, tilt=lean)
-    leaning_box(scene, x, z, yaw, lean, 0.6 * scale - 0.3)
+    leaning_box(scene, x, z, yaw, lean, 0.6 * scale, thickness=0.25, y=-0.3)
 
 
-def leaning_box(scene, x, z, yaw, lean, length, thickness=0.3, top=2.2):
-    """Collision d'une hampe plantée de biais : rotation_x(lean) penche +y vers +z local, que yaw tourne.
-    La boîte couvre la hampe jusqu'à la hauteur top, au-delà de laquelle le joueur ne la touche plus."""
-    up = min(math.cos(math.radians(lean)) * length, top)
-    reach = math.tan(math.radians(lean)) * up
-    c, s = math.cos(math.radians(yaw)), math.sin(math.radians(yaw))
-    scene.add_box((x + s * reach / 2, up / 2, z + c * reach / 2), (thickness, up, thickness + abs(reach)), yaw)
+def leaning_box(scene, x, z, yaw, lean, length, thickness=0.3, top=2.2, width=None, shift=0.0, start=0.0, y=0.0):
+    """Collision d'une hampe plantée de biais : une boîte penchée comme elle (rotation_x(lean), puis yaw), le long de
+    son axe, de start jusqu'à la hauteur top au-delà de laquelle le joueur ne la touche plus. width l'élargit à
+    l'étoffe d'une bannière, décalée de shift sur l'axe z du modèle."""
+    reach = min(length, top / max(math.cos(math.radians(lean)), 0.2)) - start
+    if reach <= 0.0:
+        return
+    basis = multiply(rotation_y(yaw), rotation_x(lean))
+    local = (0.0, start + reach / 2, shift)
+    center = [sum(basis[r][i] * local[i] for i in range(3)) for r in range(3)]
+    scene.add_tilted_box((x + center[0], y + center[1], z + center[2]), (thickness, reach, width or thickness), yaw, lean)
 
 
 def arrows(scene, rng, x, z, count, spread=1.5):
@@ -981,17 +1026,26 @@ def banner_pole(scene, rng, x, z, model="castle_kit/flag-banner-long", scale=1.8
     yaw = rng.uniform(0, 360) if degrees is None else degrees
     stretch = rng.uniform(0.85, 1.0)
     scene.add(model, (x, -0.2, z), yaw, (scale, scale * stretch, scale), tilt=lean)
-    leaning_box(scene, x, z, yaw, lean, MODEL_BOXES[model][1][1] * scale * stretch)
+    (_, _, pz), (_, sy, sz) = MODEL_BOXES[model]
+    if model.endswith("pennant"):
+        # Une hampe, et un fanion entre 0,57 et 0,73 de sa hauteur.
+        leaning_box(scene, x, z, yaw, lean, sy * scale * stretch, y=-0.2)
+        leaning_box(scene, x, z, yaw, lean, 0.73 * scale * stretch, width=0.5 * scale, shift=-0.24 * scale,
+                    start=0.57 * scale * stretch, y=-0.2)
+    else:
+        # Panneau ou étoffe tendue sur toute la hauteur.
+        leaning_box(scene, x, z, yaw, lean, sy * scale * stretch, thickness=0.25, width=sz * scale,
+                    shift=(pz + sz / 2) * scale, y=-0.2)
 
 
 def book_cart(scene, rng, x, z, degrees, tipped=False, scale=2.6):
     """Charrette de livres abandonnée pendant l'évacuation : son plateau chargé, et des livres tombés autour."""
     if tipped:
-        furniture(scene, "fantasy_town_kit/cart", (x, 0.0, z), degrees, scale, height=1.5, roll=90.0)
+        furniture_fit(scene, "fantasy_town_kit/cart", (x, 0.0, z), degrees, scale, roll=90.0)
         floor_books(scene, rng, x + 1.4, z + 0.4, 9, 1.1)
         sheets(scene, rng, x + 1.8, z, 10, 1.6)
         return
-    furniture(scene, "fantasy_town_kit/cart", (x, 0.0, z), degrees, scale, height=1.5)
+    furniture_fit(scene, "fantasy_town_kit/cart", (x, 0.0, z), degrees, scale)
     c, s = math.cos(math.radians(degrees)), math.sin(math.radians(degrees))
     bed = 0.3 * scale
     for u, v in ((-0.2, -0.6), (0.25, -0.5), (-0.15, 0.0), (0.2, 0.2), (0.0, 0.6), (-0.25, 0.55)):
@@ -1006,13 +1060,13 @@ def graves(scene, rng):
     gx, gz, _ = SITES["graves"]
     for row, z in enumerate((gz - 1.8, gz + 2.2)):
         for column, x in enumerate((gx - 2.6, gx, gx + 2.6)):
-            furniture(scene, "graveyard_kit/grave", (x, 0.0, z), rng.uniform(-4, 4), 2.2)
+            furniture_fit(scene, "graveyard_kit/grave", (x, 0.0, z), rng.uniform(-4, 4), 2.2)
             head = z - 1.9
             if (row + column) % 2:
-                furniture(scene, "graveyard_kit/cross-wood", (x, 0.0, head), rng.uniform(-6, 6), 2.0, height=2.1,
+                furniture_fit(scene, "graveyard_kit/cross-wood", (x, 0.0, head), rng.uniform(-6, 6), 2.0, height=2.1,
                           tilt=rng.uniform(-5, 5))
                 # Le bouclier du mort, posé à plat sur son tertre.
-                furniture(scene, "mini_dungeon/shield-round", (x, 0.11 * 2.2, z + 0.2), rng.uniform(0, 360), 2.4,
+                furniture_fit(scene, "mini_dungeon/shield-round", (x, 0.11 * 2.2, z + 0.2), rng.uniform(0, 360), 2.4,
                           height=0.3, tilt=-90.0)
             else:
                 planted_sword(scene, rng, x, head)
@@ -1027,32 +1081,34 @@ def watchtower(scene, rng):
     bx, bz = tx - 0.6, tz + 1.2
     scene.add("castle_kit/tower-square-base", (bx, 0.0, bz), 8.0, scale)
     scene.add("castle_kit/tower-square-mid-open", (bx, 1.01 * scale, bz), 8.0, scale, tilt=4.0)
-    scene.add_box((bx, 1.01 * scale, bz), (3.3, 2.02 * scale, 3.3), 8.0)
-    furniture(scene, "castle_kit/tower-square-top", (tx + 4.0, 0.0, tz - 0.6), 30.0, 3.0, height=1.0, roll=6.0)
-    furniture(scene, "castle_kit/tower-hexagon-top-wood", (tx - 4.6, 0.0, tz - 2.4), 140.0, 3.0, height=1.4,
+    scene.add_box((bx, 1.01 * scale, bz), (3.45, 2.02 * scale, 3.45), 8.0)
+    furniture_fit(scene, "castle_kit/tower-square-top", (tx + 4.0, 0.0, tz - 0.6), 30.0, 3.0, height=1.0, roll=6.0)
+    furniture_fit(scene, "castle_kit/tower-hexagon-top-wood", (tx - 4.6, 0.0, tz - 2.4), 140.0, 3.0,
               roll=14.0)
     for position, model, degrees, scale_rock in (((tx + 0.0, tz + 5.4), "rocks-large", 20.0, 2.4),
                                                  ((tx - 4.0, tz + 2.8), "rocks-small", 70.0, 2.2),
                                                  ((tx + 1.0, tz - 4.6), "rocks-small", 150.0, 1.8)):
-        furniture(scene, f"castle_kit/{model}", (position[0], 0.0, position[1]), degrees, scale_rock, height=0.9)
+        furniture_fit(scene, f"castle_kit/{model}", (position[0], 0.0, position[1]), degrees, scale_rock)
     for position, degrees in (((tx + 4.2, tz + 3.4), 15.0), ((tx - 1.6, tz - 4.4), 75.0), ((tx + 5.6, tz - 4.0), 120.0)):
-        furniture(scene, "survival_kit/resource-planks", (position[0], 0.0, position[1]), degrees, 3.0, height=0.3)
+        # 2,5 : la pile ne monte qu'à 22 cm, on l'enjambe sans collision.
+        furniture_fit(scene, "survival_kit/resource-planks", (position[0], 0.0, position[1]), degrees, 2.5)
     banner_pole(scene, rng, tx - 3.4, tz + 5.4, lean=28.0)
 
 
 def siege_works(scene, rng):
     """Engins de siège de Vibelandia, brisés par les défenseurs : trébuchet, catapulte, boulets et roues."""
     sx, sz, _ = SITES["siege"]
-    furniture(scene, "castle_kit/siege-trebuchet-demolished", (sx - 3.0, 0.0, sz + 2.5), 25.0, 2.4, height=0.8)
-    furniture(scene, "castle_kit/siege-catapult-demolished", (sx + 3.8, 0.0, sz - 2.4), -40.0, 2.2, height=0.7)
+    furniture_fit(scene, "castle_kit/siege-trebuchet-demolished", (sx - 3.0, 0.0, sz + 2.5), 25.0, 2.4)
+    furniture_fit(scene, "castle_kit/siege-catapult-demolished", (sx + 3.8, 0.0, sz - 2.4), -40.0, 2.2)
     for position, scale in (((sx - 2.2, sz - 4.0), 1.6), ((sx - 0.8, sz - 4.6), 1.4), ((sx - 1.8, sz - 5.9), 1.2)):
-        furniture(scene, "survival_kit/resource-stone-large", (position[0], 0.0, position[1]), rng.uniform(0, 360),
-                  scale * 2.0, height=0.55 * scale)
+        furniture_fit(scene, "survival_kit/resource-stone-large", (position[0], 0.0, position[1]), rng.uniform(0, 360),
+                  scale * 2.0)
     for position, degrees in (((sx - 5.6, sz - 3.0), 30.0), ((sx + 5.2, sz + 3.4), 120.0)):
-        furniture(scene, "fantasy_town_kit/wheel", (position[0], 0.0, position[1]), degrees, 3.0, height=0.3, roll=90.0)
-    furniture(scene, "nature_kit/log_large", (sx + 3.0, 0.0, sz + 5.4), 165.0, 2.4, height=1.0)
+        furniture_fit(scene, "fantasy_town_kit/wheel", (position[0], 0.0, position[1]), degrees, 3.0, height=0.3, roll=90.0)
+    furniture_fit(scene, "nature_kit/log_large", (sx + 3.0, 0.0, sz + 5.4), 165.0, 2.4, height=1.0)
     for position, degrees in (((sx - 0.2, sz - 2.2), 40.0), ((sx + 2.4, sz + 2.2), 100.0)):
-        furniture(scene, "survival_kit/resource-planks", (position[0], 0.0, position[1]), degrees, 3.0, height=0.3)
+        # 2,5 : la pile ne monte qu'à 22 cm, on l'enjambe sans collision.
+        furniture_fit(scene, "survival_kit/resource-planks", (position[0], 0.0, position[1]), degrees, 2.5)
     banner_pole(scene, rng, sx + 0.6, sz + 3.6, model="castle_kit/flag-wide", scale=3.4, lean=-16.0)
     arrows(scene, rng, sx + 4.5, sz - 6.0, 9, 1.2)
 
@@ -1060,12 +1116,12 @@ def siege_works(scene, rng):
 def battery(scene, rng):
     """Batterie de balistes de l'ennemi, derrière la bibliothèque : brisées, leurs carreaux plantés dans la cendre."""
     bx, bz, _ = SITES["battery"]
-    furniture(scene, "castle_kit/siege-ballista-demolished", (bx - 2.4, 0.0, bz + 2.0), 210.0, 2.2, height=0.8)
-    furniture(scene, "castle_kit/siege-ballista-demolished", (bx + 2.6, 0.0, bz - 2.2), 160.0, 2.2, height=0.8)
+    furniture_fit(scene, "castle_kit/siege-ballista-demolished", (bx - 2.4, 0.0, bz + 2.0), 210.0, 2.2)
+    furniture_fit(scene, "castle_kit/siege-ballista-demolished", (bx + 2.6, 0.0, bz - 2.2), 160.0, 2.2)
     for position in ((bx - 4.0, bz - 2.0), (bx - 3.2, bz - 2.8), (bx - 1.0, bz - 5.0)):
         planted_spear(scene, rng, position[0], position[1], lean=35.0)
-    furniture(scene, "mini_dungeon/barrel", (bx + 3.6, 0.0, bz + 2.4), 30.0, 2.6, height=1.2)
-    furniture(scene, "survival_kit/box-large-open", (bx + 1.8, 0.0, bz + 3.6), 80.0, 3.4, height=1.0)
+    furniture_fit(scene, "mini_dungeon/barrel", (bx + 3.6, 0.0, bz + 2.4), 30.0, 2.6, height=1.2)
+    furniture_fit(scene, "survival_kit/box-large-open", (bx + 1.8, 0.0, bz + 3.6), 80.0, 3.4, height=1.0)
     # Carreaux tirés sur la bibliothèque, fichés dans le sol devant son mur du fond.
     for x in (-6.5, -2.8, 1.5, 5.8):
         planted_spear(scene, rng, x, -15.0 + rng.uniform(-1.0, 1.0), lean=-38.0)
@@ -1079,9 +1135,9 @@ def library_front(scene, rng):
     stake_line(scene, rng, (8.2, 19.0), (14.6, 15.4), fallen=(1,))
     book_cart(scene, rng, 6.0, 19.8, 80.0, tipped=True)
     for position in ((3.2, 18.8), (3.9, 17.4)):
-        furniture(scene, "mini_dungeon/barrel", (position[0], 0.0, position[1]), rng.uniform(0, 360), 2.2, height=1.0)
+        furniture_fit(scene, "mini_dungeon/barrel", (position[0], 0.0, position[1]), rng.uniform(0, 360), 2.2, height=1.0)
     # Le bélier, abandonné devant l'entrée, pointé vers la porte.
-    furniture(scene, "castle_kit/siege-ram-demolished", (7.2, 0.0, 13.4), 35.0, 2.4, height=1.0)
+    furniture_fit(scene, "castle_kit/siege-ram-demolished", (7.2, 0.0, 13.4), 35.0, 2.4)
     # Charrette chargée devant la brèche ouest, où l'on passait les livres.
     book_cart(scene, rng, -13.2, -2.0, 0.0)
     floor_books(scene, rng, -11.0, -2.0, 5, 0.6)
@@ -1090,9 +1146,9 @@ def library_front(scene, rng):
     for position in ((-6.0, 17.0), (-10.4, 15.3), (10.4, 16.0)):
         planted_sword(scene, rng, position[0], position[1])
     for position, degrees in (((-7.6, 18.0), 20.0), ((11.6, 20.8), 200.0)):
-        furniture(scene, "mini_dungeon/shield-round", (position[0], 0.0, position[1]), degrees, 2.6, height=0.3,
+        furniture_fit(scene, "mini_dungeon/shield-round", (position[0], 0.0, position[1]), degrees, 2.6, height=0.3,
                   tilt=-90.0)
-    furniture(scene, "mini_dungeon/shield-rectangle", (-12.0, 0.0, 14.2), 60.0, 3.0, height=0.4, tilt=-90.0)
+    furniture_fit(scene, "mini_dungeon/shield-rectangle", (-12.0, 0.0, 14.2), 60.0, 3.0, height=0.4, tilt=-90.0)
     arrows(scene, rng, -8.5, 21.2, 8, 1.2)
     arrows(scene, rng, 11.0, 20.0, 6, 1.0)
     banner_pole(scene, rng, -5.2, 21.8, model="castle_kit/flag-banner-long", lean=-9.0, degrees=10.0)
@@ -1106,7 +1162,7 @@ def library_front(scene, rng):
 def road(scene, rng):
     """Le long du chemin : une charrette de livres abandonnée, une bannière tombée, des armes."""
     book_cart(scene, rng, -4.0, 41.5, 4.0)
-    furniture(scene, "fantasy_town_kit/wheel", (-4.4, 0.0, 44.4), 70.0, 2.6, height=0.3, roll=90.0)
+    furniture_fit(scene, "fantasy_town_kit/wheel", (-4.4, 0.0, 44.4), 70.0, 2.6, height=0.3, roll=90.0)
     sheets(scene, rng, -2.6, 40.0, 6, 1.4)
     banner_pole(scene, rng, 4.2, 26.0, model="castle_kit/flag-pennant", scale=3.0, lean=-30.0, degrees=80.0)
     for position in ((4.6, 34.2), (-4.3, 24.6)):
@@ -1117,12 +1173,12 @@ def road(scene, rng):
 def camp_extras(scene, rng):
     """Autour du campement : le râtelier d'armes, la table du capitaine et le tableau de l'ordre d'évacuation."""
     cx, cz, _ = SITES["camp"]
-    furniture(scene, "mini_arena/weapon-rack", (cx - 5.2, 0.0, cz + 4.8), 60.0, 2.6, height=1.2)
-    furniture(scene, "mini_dungeon/table", (cx + 5.0, 0.0, cz + 3.6), -30.0, 2.2, height=0.69)
+    furniture_fit(scene, "mini_arena/weapon-rack", (cx - 5.2, 0.0, cz + 4.8), 60.0, 2.6, height=1.2)
+    furniture_fit(scene, "mini_dungeon/table", (cx + 5.0, 0.0, cz + 3.6), -30.0, 2.2, height=0.69)
     top = 0.31 * 2.2
     scene.add_shape("box", (1.0, 0.006, 0.7), PARCHMENT_DARK, (cx + 5.0, top + 0.004, cz + 3.6), -24.0)
-    furniture(scene, "graveyard_kit/candle", (cx + 4.6, top, cz + 3.4), 0.0, 1.6)
-    furniture(scene, "mini_dungeon/chair", (cx + 3.2, 0.0, cz + 5.5), 150.0, 2.4, height=1.1)
+    furniture_fit(scene, "graveyard_kit/candle", (cx + 4.6, top, cz + 3.4), 0.0, 1.6)
+    furniture_fit(scene, "mini_dungeon/chair", (cx + 3.2, 0.0, cz + 5.5), 150.0, 2.4, height=1.1)
 
 
 def build_battlefield():
@@ -1232,6 +1288,7 @@ def build_interior():
         for x in cell_x:
             if x == opening:
                 doorway(scene, (x, z), (0, -1))
+                arch_fill(scene, (x, z), (0, -1))
             else:
                 wall(scene, "wall", (x, z), (0, -1))
 
@@ -1239,6 +1296,7 @@ def build_interior():
     wall(scene, "wall", (-4.0, end), (0, -1))
     wall(scene, "wall", (4.0, end), (0, -1))
     doorway(scene, (0.0, end), (0, -1))
+    arch_fill(scene, (0.0, end), (0, -1))
     passage(scene)
 
     # Sol des trois salles, jusqu'au palier derrière la dalle, et plafond.
@@ -1267,7 +1325,7 @@ def build_interior():
                     continue
                 if (side, room, place) in (("west", 2, 1), ("east", 0, 0)):
                     sign = inward[0]
-                    furniture(scene, wide, (x + sign * 1.35, 0.0, z), facing(inward), SHELF_SCALE, height=0.8,
+                    furniture_fit(scene, wide, (x + sign * 1.35, 0.0, z), facing(inward), SHELF_SCALE, height=0.8,
                               tilt=90.0)
                     floor_books(scene, rng, x + sign * 3.0, z + 0.4, 10, 1.0)
                     sheets(scene, rng, x + sign * 3.2, z, 10, 1.3, scrolls=3)
@@ -1292,7 +1350,7 @@ def build_interior():
                          (-1.45, -24.25, (0, -1)), (-4.35, -24.25, (0, -1))):
         # Le rayonnage du scriptorium près du passage est tombé en avant, ses livres répandus devant lui.
         if (x, z) == (4.35, -12.25):
-            furniture(scene, wide, (x, 0.0, z - 1.35), 180.0, SHELF_SCALE, height=0.8, tilt=90.0)
+            furniture_fit(scene, wide, (x, 0.0, z - 1.35), 180.0, SHELF_SCALE, height=0.8, tilt=90.0)
             floor_books(scene, rng, x - 0.6, z - 3.0, 8, 0.9)
             sheets(scene, rng, x - 0.8, z - 3.2, 6, 1.0, scrolls=2)
             continue
@@ -1307,7 +1365,8 @@ def build_interior():
     floor_books(scene, rng, -1.2, -9.5, 4, 0.6)
     floor_books(scene, rng, 0.2, -3.6, 3, 0.8)
     sheets(scene, rng, 0.0, -4.0, 10, 2.4, scrolls=3)
-    furniture(scene, "graveyard_kit/debris", (-0.6, 0.0, -9.0), 30.0, 2.6, height=0.4)
+    # Gravats bas, qu'on enjambe : pas de collision, plutôt qu'une boîte plus haute que le tas.
+    furniture_fit(scene, "graveyard_kit/debris", (-0.6, 0.0, -9.0), 30.0, 1.4)
 
     # Scriptorium : pupitres de scribes, l'un renversé, la carte du royaume au mur.
     writing_desk(scene, rng, 1.9, -15.6, 180.0)
@@ -1318,16 +1377,16 @@ def build_interior():
     wall_map(scene, -1.45, -12.25, (0, -1), y=2.95, width=1.5, height=0.9)
     sheets(scene, rng, 0.5, -17.5, 14, 2.6, scrolls=4)
     floor_books(scene, rng, -0.6, -21.0, 4, 0.9)
-    furniture(scene, "graveyard_kit/debris-wood", (-0.8, 0.0, -21.8), 80.0, 2.8, height=0.3)
+    furniture_fit(scene, "graveyard_kit/debris-wood", (-0.8, 0.0, -21.8), 80.0, 2.4)
 
     # Archives : coffres et caisses d'archives, un lustre tombé, des registres répandus autour de la tablette.
     for position, model, degrees, scale, height in (
         ((-4.3, -26.3), "mini_dungeon/chest", 80.0, 2.0, 0.9),
         ((-3.9, -33.8), "mini_dungeon/chest", 100.0, 2.0, 0.9),
-        ((-2.6, -34.6), "survival_kit/box-large-open", 10.0, 3.0, 0.9),
+        ((-1.0, -26.4), "survival_kit/box-large-open", 10.0, 3.0, 0.9),
         ((-2.2, -26.0), "survival_kit/box-open", 35.0, 3.0, 0.9),
     ):
-        furniture(scene, model, (position[0], 0.0, position[1]), degrees, scale, height=height)
+        furniture_fit(scene, model, (position[0], 0.0, position[1]), degrees, scale, height=height)
     fallen_chandelier(scene, -1.6, -29.0)
     floor_books(scene, rng, 1.6, -27.0, 5, 0.8)
     sheets(scene, rng, -0.5, -30.0, 14, 2.4)
@@ -1336,9 +1395,10 @@ def build_interior():
     # Petite salle du livre : bannières de Codia et bougies autour du pupitre de pierre.
     for side in (-1, 1):
         wall_banner(scene, side * 1.75, -41.6, (-side, 0), y=CRYPT_FLOOR + 1.3)
-        furniture(scene, "graveyard_kit/candle-multiple", (side * 1.2, CRYPT_FLOOR, -43.2), side * 30.0, 2.2,
+        furniture_fit(scene, "graveyard_kit/candle-multiple", (side * 1.2, CRYPT_FLOOR, -43.2), side * 30.0, 2.2,
                   height=0.45)
-        furniture(scene, "graveyard_kit/urn-round", (side * 1.35, CRYPT_FLOOR, -39.0), 0.0, 2.4, height=0.9)
+        # Les urnes au fond, sous les bannières : au pied de l'escalier, elles fermaient les deux côtés du pupitre.
+        furniture_fit(scene, "graveyard_kit/urn-round", (side * 1.35, CRYPT_FLOOR, -42.3), 0.0, 2.4, height=0.9)
 
     for name in sorted(searched):
         (x, y, z), inward = searched[name]
