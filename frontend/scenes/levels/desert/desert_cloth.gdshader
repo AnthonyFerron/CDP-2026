@@ -18,6 +18,15 @@ void vertex() {
 
 void fragment() {
 	// Toile délavée par le soleil, plus claire vers le bord libre.
-	ALBEDO = color * (0.8 + 0.25 * (hanging ? UV.y : UV.x));
+	vec3 base = color * (0.8 + 0.25 * (hanging ? UV.y : UV.x));
+	// Une bande claire tissée au milieu (verticale sur une bannière, en long sur un fanion) et un liseré sombre
+	// le long des bords cousus : la toile a un motif, pas un aplat uni.
+	float band = hanging ? step(abs(UV.x - 0.5), 0.12) : step(abs(UV.y - 0.5), 0.11);
+	float hem = hanging
+		? max(step(UV.y, 0.05), max(step(UV.x, 0.05), step(0.95, UV.x)))
+		: max(step(UV.x, 0.06), max(step(UV.y, 0.09), step(0.91, UV.y)));
+	base = mix(base, mix(base, vec3(0.93, 0.84, 0.66), 0.55), band);
+	base = mix(base, base * 0.55, hem);
+	ALBEDO = base;
 	ROUGHNESS = 1.0;
 }
