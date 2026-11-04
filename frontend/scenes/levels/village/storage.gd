@@ -25,5 +25,6 @@ func interact() -> void:
 	var paper := get_node_or_null(fragment) as PaperFragment
 	if paper:
 		paper.reveal()
-	opened.emit(paper != null)
+	# Un fragment déjà ramassé lors d'une session précédente ne compte plus : le meuble paraît vide.
+	opened.emit(paper != null and not paper.collected)
 	super.interact()

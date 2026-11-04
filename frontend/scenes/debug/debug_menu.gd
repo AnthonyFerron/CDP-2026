@@ -122,7 +122,12 @@ func _refresh() -> void:
 	_state.text = "%d livre(s) trouvé(s), %d posé(s)   ·   chronomètre %d:%02d   ·   %s" % [
 		GameState.books.size(), GameState.placed_books.size(), remaining / 60, remaining % 60,
 		"mission commencée" if GameState.intro_done else "introduction du bunker"]
-	_account_state.text = ("Connecté : %s (réponses simulées)" % Account.pseudo) if Account.is_logged_in() else "Invité"
+	if not Account.is_logged_in():
+		_account_state.text = "Invité"
+	elif Account.simulated:
+		_account_state.text = "Connecté : %s (compte de test simulé, aucun serveur)" % Account.pseudo
+	else:
+		_account_state.text = "Connecté : %s (serveur %s) ; livres et fins ne changent que la partie locale, et le chronomètre suit celui du serveur" % [Account.pseudo, Api.base_url]
 
 
 func _fill_levels() -> void:
@@ -313,7 +318,8 @@ func _clear_books() -> void:
 
 # --- Compte de test ------------------------------------------------------------------------------------------
 
-## Connexion de test par l'autoload Account, dont les réponses sont simulées : le code est validé d'office.
+## Connexion de test par l'autoload Account, en mode simulé : aucune requête au serveur, le code est validé
+## d'office. Pour un vrai compte, passer par le menu principal (code reçu par e-mail).
 func _on_login_pressed() -> void:
 	var identifier := _username.text.strip_edges()
 	if identifier.is_empty() or _password.text.is_empty():
@@ -322,6 +328,9 @@ func _on_login_pressed() -> void:
 	var address := identifier if identifier.contains("@") else "%s@test.codia" % identifier
 	var password := _password.text
 	_password.clear()
+	if Account.is_online():
+		Account.logout()
+	Account.simulated = true
 	var result: Dictionary = await Account.login(address, password)
 	if result.ok:
 		result = await Account.verify_code("000000")
@@ -329,6 +338,7 @@ func _on_login_pressed() -> void:
 		GameState.use_profile(Account.profile_id())
 		_login_status.text = "Connecté en test : %s (réponses simulées, aucun serveur)." % Account.pseudo
 	else:
+		Account.simulated = false
 		_login_status.text = result.error
 	_refresh()
 
@@ -340,6 +350,7 @@ func _quick_login() -> void:
 
 
 func _logout() -> void:
+	await GameSync.pause_before_logout()
 	Account.logout()
 	GameState.use_profile(Account.profile_id())
 	_login_status.text = "Déconnecté : la partie de l'invité est rechargée."
