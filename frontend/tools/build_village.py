@@ -732,16 +732,19 @@ def build_rampart(scene, rng):
 
 def build_streets(scene, rng):
     """Place du marché autour de la fontaine : les pavés des rues sont peints par le terrain. Les étals ont été
-    renversés, les vivres piétinés, et la statue du roi fondateur gît au bord du bassin."""
+    renversés, les vivres piétinés ; la statue du roi fondateur tient encore debout au bord du bassin, noircie."""
     scene.add("fantasy_town_kit/fountain-round", (0.0, 0.0, -2.0), 0.0, 3.6)
     # Bassin rond : quatre boîtes tournées épousent mieux le cercle qu'un seul carré.
     for degrees in (0.0, 45.0):
         scene.add_box((0.0, 0.5, -2.0), (6.9, 1.0, 2.9), degrees)
         scene.add_box((0.0, 0.5, -2.0), (2.9, 1.0, 6.9), degrees)
     LAYOUT.add("fontaine", "fontaine", (0.0, 0, -2.0), (6.9, 1.0, 6.9), 0.0, 0.0, 1.0)
-    # Le socle de la statue, resté au milieu de l'eau, et la statue tombée sur le pavé.
+    # La colonne brisée de la fontaine, au milieu de l'eau, et la statue du roi fondateur, debout sur son socle :
+    # couchée, son socle à gradins se dressait comme une planche plantée de travers.
     add_single(scene, "nature_kit/statue_columnDamaged", (0.0, 0.0, -2.0), 20.0, 3.0)
-    place(scene, "mini_arena/statue", (-4.9, 0.0, -7.2), 120.0, 1.7, height=1.0, tilt=90.0, label="statue renversée")
+    place(scene, "mini_arena/statue", (-4.4, 0.0, -6.5), 35.0, 1.7, height=top_of("mini_arena/statue", 1.7),
+          label="statue du roi fondateur")
+    scorch(scene, -4.6, -6.2, 1.1)
     for x, z, degrees, model in ((-7.0, -9.0, 20.0, "stall-red"), (7.5, -9.5, -15.0, "stall-green"), (8.5, 4.0, 200.0, "stall")):
         place(scene, f"fantasy_town_kit/{model}", (x, 0.0, z), degrees, 3.0, height=1.1 if model == "stall" else 3.6,
               label=f"étal {model}")
