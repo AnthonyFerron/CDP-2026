@@ -1244,7 +1244,7 @@ def build_gate_defense(scene, rng):
     place(scene, "survival_kit/box-large", (-9.6, 0.0, 38.4), 15.0, 3.2, height=0.8, label="caisse")
     place(scene, "survival_kit/box-large", (-9.8, 0.8, 38.4), 105.0, 2.6, height=0.65, label="caisse empilée")
     # Pieux plantés face à la porte.
-    for x, z, degrees in ((-12.6, 38.2, 10.0), (-14.6, 37.9, -12.0), (10.8, 38.6, -8.0), (12.6, 39.0, 14.0)):
+    for x, z, degrees in ((-12.6, 38.2, 10.0), (-14.6, 37.9, -12.0), (9.4, 39.2, -8.0), (14.8, 38.7, 14.0)):
         place(scene, "survival_kit/fence-fortified", (x, 0.0, z), degrees, 3.0, height=1.5, label="pieux")
     # Le râtelier des gardes, contre le rempart, et leurs armes abandonnées.
     place(scene, "mini_arena/weapon-rack", (-17.6, 0.0, 39.1), 180.0, 2.4, height=1.15, label="râtelier des gardes")
@@ -1262,6 +1262,17 @@ def build_gate_defense(scene, rng):
                                 (3.4, 41.2, 10.0, 45.0), (-1.9, 44.0, 0.0, 50.0), (5.0, 36.1, 260.0, 30.0)):
         decor(scene, "mini_forest/weapon-arrow", (x, 0.12, z), degrees, 3.0, tilt=lean)
     scene.add("fantasy_town_kit/lantern", (-1.0, 0.0, 33.2), 30.0, 2.2, tilt=0.0, roll=88.0)
+    # Autour du mémorial des gardes (posé dans village.tscn, en (12, 37,5)) : leurs lances plantées, leurs boucliers
+    # appuyés au socle, des bougies et des fleurs déposées par les survivants.
+    for z in (36.0, 39.0):
+        scene.add("mini_dungeon/weapon-spear", (12.6, 0.0, z), 0.0, 3.2)
+        post(scene, 12.6, z, 0.09, 1.9, label="lance du mémorial")
+    for z, degrees in ((36.8, -80.0), (38.2, -100.0)):
+        decor(scene, "mini_dungeon/shield-round", (11.75, 0.42, z), degrees, 1.9, tilt=-12.0)
+    for z in (37.1, 37.9):
+        lay(scene, "graveyard_kit/candle", (11.45, 0.0, z), 0.0, 0.8)
+    for model, x, z in (("flower_redA", 11.4, 36.5), ("flower_yellowA", 11.3, 38.4), ("flower_redA", 11.5, 38.7)):
+        lay(scene, f"nature_kit/{model}", (x, 0.0, z), 0.0, 1.6)
     for x, z, radius in ((0.6, 36.4, 1.4), (-6.0, 35.0, 1.0), (1.6, 44.6, 1.6), (6.6, 34.6, 0.9)):
         scorch(scene, x, z, radius)
 
@@ -1648,7 +1659,9 @@ def build_hall_interior():
     for x in (-3.0, -1.6):
         hp(scene, "furniture_kit/bookcaseOpen", (x, 0.0, -5.28), 0.0, 3.2, label="étagère")
         shelf_books(scene, rng, (x, 0.0, -5.28), 0.0, (0.06, 0.98, 1.9), 1.1)
-    hp(scene, "mini_dungeon/chest", (2.0, 0.0, -5.1), 90.0, 2.4, label="coffre de l'accueil")
+    # Une table d'appoint au plateau plat contre le mur nord (un fragment y est posé), et le coffre de l'accueil.
+    hp(scene, "furniture_kit/sideTable", (1.6, 0.0, -5.4), 0.0, 2.6, label="table d'appoint")
+    hp(scene, "mini_dungeon/chest", (3.5, 0.0, -5.1), 90.0, 2.4, label="coffre de l'accueil")
     # Le coin d'attente : une table, des chaises, des bancs le long du mur sud.
     hp(scene, "furniture_kit/tableCloth", (-4.6, 0.0, 3.4), 0.0, 3.0, label="table d'attente")
     for x, z, degrees in ((-5.8, 2.2, 0.0), (-3.4, 4.6, 180.0)):
