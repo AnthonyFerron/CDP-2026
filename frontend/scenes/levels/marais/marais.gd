@@ -17,8 +17,9 @@ const WADE_SPEED := 0.55
 ## Images passées au sol, hors de l'eau, avant de retenir la position comme sûre.
 const SAFE_FRAMES := 15
 const AMBIENCE_DB := -6.0
-## Teinte des dalles de la crypte.
-const CRYPT_STONE := Color(0.46, 0.5, 0.52)
+## Teinte des dalles de la crypte, et le shader qui la leur donne.
+const CRYPT_STONE := Color(0.6, 0.63, 0.64)
+const STONE_SHADER := preload("res://scenes/levels/marais/crypt_stone.gdshader")
 
 @export var ground_steps: Array[AudioStream]
 @export var water_steps: Array[AudioStream]
@@ -289,9 +290,11 @@ func _tint_crypt() -> void:
 			if not source is BaseMaterial3D:
 				continue
 			if not tinted.has(source):
-				var copy: BaseMaterial3D = source.duplicate()
-				copy.albedo_color = source.albedo_color * CRYPT_STONE
-				tinted[source] = copy
+				var stone := ShaderMaterial.new()
+				stone.shader = STONE_SHADER
+				stone.set_shader_parameter(&"albedo_texture", (source as BaseMaterial3D).albedo_texture)
+				stone.set_shader_parameter(&"tint", CRYPT_STONE)
+				tinted[source] = stone
 			mesh.material_override = tinted[source]
 
 

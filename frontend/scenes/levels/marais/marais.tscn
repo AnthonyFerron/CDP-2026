@@ -561,7 +561,7 @@ prompt = "Lire l'inscription"
 radius = 5.0
 
 [node name="Slab" type="Node3D" parent="Interior/Inscription"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.6, -0.55)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.6, -0.37)
 script = ExtResource("17_sign")
 text = "Pour ouvrir le tombeau, inscris le nom du royaume dans lequel tu te trouves. Puis, pour chaque lettre, alterne entre trois lettres en avant et trois lettres en arrière dans l'alphabet. Seul le nom ainsi transformé révélera le secret des anciens."
 style = 1
@@ -844,7 +844,7 @@ prompt = "Lire l'hommage"
 radius = 2.8
 
 [node name="Slab" type="Node3D" parent="Interior/KingsTribute"]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -0.65, -2.5, 0)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -0.47, -2.5, 0)
 script = ExtResource("17_sign")
 text = "Nos bons rois et protecteurs\ndu Royaume de Codia !"
 style = 1
