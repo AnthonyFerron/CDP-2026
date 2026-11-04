@@ -3,7 +3,10 @@ from fastapi import APIRouter
 from app.api.routes import (
     auth_challenges,
     auth_sessions,
+    game_sessions,
     health,
+    puzzle_progress,
+    puzzles,
     users,
 )
 
@@ -14,5 +17,8 @@ for module in (
     users,
     auth_challenges,
     auth_sessions,
+    game_sessions,
+    puzzle_progress,
+    puzzles,
 ):
     api_router.include_router(module.router)
