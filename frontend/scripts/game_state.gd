@@ -44,7 +44,8 @@ const BOOK_COLORS := {
 	&"codonomicon": Color(0.3, 0.15, 0.5),
 }
 const BOOK_COUNT := 4
-## Temps laissé au joueur avant l'éruption, et coût d'une validation fausse, en secondes.
+## Temps laissé au joueur avant l'éruption du Mont Sam Altan (une heure, choix de l'équipe : le scénario
+## en annonce quarante), et coût d'une validation fausse, en secondes.
 const TOTAL_TIME := 60.0 * 60.0
 const PENALTY := 5.0 * 60.0
 ## Intervalle entre deux sauvegardes du chronomètre.
