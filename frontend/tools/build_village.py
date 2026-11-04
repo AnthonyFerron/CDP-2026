@@ -122,9 +122,6 @@ MODEL_BOXES.update({
     "nature_kit/campfire_logs": ((-0.15, 0.0, -0.15), (0.29, 0.06, 0.29)),
     "mini_arena/weapon-spear": ((-0.07, 0.0, -0.06), (0.15, 0.7, 0.12)),
 })
-# Les lits du kit ont une couverture mesurée sous leur origine, alors qu'elle repose sur le cadre : sans
-# correction, furniture() les soulève de cette profondeur et leurs pieds flottent.
-BED_SINK = 0.13
 
 # Kits dont les modèles répétés sont dessinés en une fois (MultiMesh, voir village_instances.gd) : leurs
 # modèles n'ont qu'un maillage. Les meubles du kit furniture, faits de pièces, restent des instances.
@@ -257,7 +254,7 @@ class VillageScene(Scene):
                 lines += [f'[sub_resource type="CylinderShape3D" id="{cylinder_ids[key]}"]',
                           f"height = {key[1]:g}", f"radius = {key[0]:g}", ""]
         for key, (color, roughness, emission, energy, metallic) in self.materials.items():
-            lines += [f'[sub_resource type="StandardMaterial3D" id="Material_{key}"]',
+            lines += [f'[sub_resource type="StandardMaterial3D" id="Material_{key}"]', f'resource_name = "{key}"',
                       "albedo_color = Color(%s, 1)" % ", ".join(fmt(c) for c in color), f"roughness = {fmt(roughness)}"]
             if metallic:
                 lines.append(f"metallic = {fmt(metallic)}")
@@ -948,7 +945,7 @@ def top_of(model, scale):
 
 
 def bed(scene, frame, a, b, local, scale=1.5):
-    fp(scene, frame, "furniture_kit/bedSingle", a, b, local, scale, height=0.8, y=-BED_SINK * scale, label="lit")
+    fp(scene, frame, "furniture_kit/bedSingle", a, b, local, scale, height=0.8, label="lit")
 
 
 FLOOR = 0.05
@@ -1071,11 +1068,11 @@ def forge(scene, rng, frame):
     box(scene, "stone_dark", (hood[0], 2.25, hood[2]), (1.8, 0.7, 1.4), frame.yaw())
     flue = frame.p(far * 1.4, -frame.depth + 0.25 + 0.3)
     box(scene, "stone_dark", (flue[0], 3.3, flue[2]), (0.8, 1.4, 0.6), frame.yaw())
-    fp(scene, frame, "survival_kit/workbench-anvil", far * 0.3, -0.2, 20.0, 2.8, height=0.85, label="enclume")
+    fp(scene, frame, "survival_kit/workbench-anvil", far * 0.3, -0.2, 20.0, 2.8,
+       height=top_of("survival_kit/workbench-anvil", 2.8), label="enclume")
     fl(scene, frame, "survival_kit/tool-hammer", far * 0.3, -0.2, 70.0, 2.2, y=top_of("survival_kit/workbench-anvil", 2.8),
        tilt=90.0)
-    # Comme les lits, la meule a une pièce mesurée sous son origine : sans correction, elle flotte.
-    fp(scene, frame, "survival_kit/workbench-grind", -far * 1.0, -2.7, 0.0, 2.8, height=0.9, y=-0.09 * 2.8, label="meule")
+    fp(scene, frame, "survival_kit/workbench-grind", -far * 1.0, -2.7, 0.0, 2.8, height=0.9, label="meule")
     fp(scene, frame, "survival_kit/barrel-open", far * 2.8, -0.1, 0.0, 2.6, height=0.9, label="baquet de trempe")
     cylinder(scene, "water", frame.p(far * 2.8, -0.1, 0.8), 0.27, 0.02, sides=10)
     deep = 0.45 * 2.4
@@ -1150,7 +1147,8 @@ def cooper(scene, rng, frame):
     for a, b in ((far * 2.4, -2.4), (far * 1.3, -2.45), (far * 2.45, -1.2)):
         fp(scene, frame, "mini_dungeon/barrel", a, b, rng.uniform(0, 360), 1.8, height=0.86, label="tonneau")
     fp(scene, frame, "mini_dungeon/barrel", far * 2.0, -2.0, 0.0, 1.5, height=0.72, y=0.86, label="tonneau empilé")
-    fp(scene, frame, "survival_kit/workbench", -far * 1.5, -2.4, 0.0, 3.0, height=0.72, label="établi")
+    fp(scene, frame, "survival_kit/workbench", -far * 1.5, -2.4, 0.0, 3.0, height=top_of("survival_kit/workbench", 3.0),
+       label="établi")
     fl(scene, frame, "survival_kit/tool-hammer", -far * 1.5, -2.4, 30.0, 2.2, y=top_of("survival_kit/workbench", 3.0),
        tilt=90.0)
     for a, b, local in ((-far * 2.5, 0.2, 0.0), (-far * 2.2, 1.3, 40.0)):
@@ -1221,14 +1219,15 @@ def shop_sign(scene, number):
     width = 1.6 if len(text) > 12 else 1.2
     reach = width / 2 + 0.25
     along = frame.door_a - 2.0 * (1 if frame.door_a > 0 else -1) if abs(frame.door_a) > 0.5 else -2.0
-    foot = frame.p(along, frame.depth + 0.33)
+    foot = frame.p(along, frame.depth + 0.42)
     out = frame.f
     # La potence est contre le mur, la planche avance vers la rue : sa face regarde le long de la façade.
     node = (foot[0] + out[0] * reach, 0.0, foot[2] + out[1] * reach)
     degrees = math.degrees(math.atan2(-out[1], out[0]))
+    # Le panneau suspendu n'arrête le joueur qu'à son montant (sign_board.gd) : on note seulement son emprise.
     sign(scene, f"Enseigne_{trade}", node, degrees, text=text, mount=2, board_size=(width, 0.55), board_height=2.75,
-               line_height=0.16, double_sided=True, collision=False)
-    block(scene, (foot[0], 1.65, foot[2]), (0.16, 3.3, 0.16), label=f"potence {trade}")
+         line_height=0.16, double_sided=True)
+    LAYOUT.add(f"potence {trade}", None, foot, (0.3, 3.4, 0.3), degrees, 0.0, 3.4)
 
 
 # --- Abords de la porte : la dernière défense des gardes ------------------------------------------------------------
@@ -1318,7 +1317,6 @@ def build_gardens(scene, rng):
     cylinder(scene, "straw", (sx, 1.97, sz), 0.26, 0.03, sides=10)
     cylinder(scene, "straw", (sx, 2.07, sz), 0.13, 0.2, top=0.05, sides=8)
     post(scene, sx, sz, 0.14, 1.9, label="épouvantail")
-    crow(scene, sx + 0.55, 1.49, sz, 100.0)
     # Le second potager a brûlé : quelques tiges de maïs noircies dans des sillons gris.
     for z in (32.6, 34.2, 35.8, 37.4):
         for x in (-30.2, -28.6, -27.0, -25.4):
@@ -1442,8 +1440,6 @@ def build_stables(scene, rng):
     box(scene, "water", (25.0, 0.58, 20.6), (1.8, 0.02, 0.5))
     block(scene, (25.0, 0.3, 20.6), (2.0, 0.6, 0.7), label="abreuvoir")
     lay(scene, "graveyard_kit/hay-bale", (27.6, 0.0, 21.8), 40.0, 1.8)
-    crow(scene, 21.7, top_of("nature_kit/fence_simple", 2.4), 17.6, 30.0)
-    crow(scene, 26.2, top_of("nature_kit/fence_simple", 2.4), 17.6, 250.0)
 
 
 # --- Traces de l'attaque -------------------------------------------------------------------------------------------
@@ -1456,7 +1452,7 @@ def build_battle_scars(scene, rng):
         charred_beam(scene, (x, 0.15, z), 2.8, degrees)
     for x, z in ((30.0, -9.2), (24.0, 0.0), (29.8, 2.4)):
         lay(scene, "graveyard_kit/debris", (x, 0.0, z), rng.uniform(0, 360), 2.0)
-    for x, z, radius in ((0.8, 26.0, 1.3), (-1.0, 14.6, 1.1), (1.2, -17.0, 0.9), (-15.0, 6.4, 1.4), (-25.0, 5.4, 1.0),
+    for x, z, radius in ((1.7, 26.5, 0.8), (-1.7, 14.6, 0.8), (1.6, -16.5, 0.7), (-15.0, 6.4, 1.4), (-25.0, 5.4, 1.0),
                          (-4.2, 22.0, 0.8), (4.6, 12.0, 1.0), (14.6, 2.4, 1.2), (16.0, 22.0, 0.9), (-13.4, 12.0, 1.0),
                          (0.4, -24.0, 0.8), (-19.0, -12.6, 1.1)):
         scorch(scene, x, z, radius)
@@ -1470,18 +1466,12 @@ def build_battle_scars(scene, rng):
             lay(scene, "nature_kit/crops_wheatStageB", (x, 0.0, z), rng.uniform(0, 360), 2.0)
     block(scene, (19.25, 0.5, -17.4), (4.4, 1.0, 9.0), label="champ de blé")
     scorch(scene, 20.6, -17.6, 2.2)
-    # Corbeaux sur le rempart, la tour de la porte et la place.
-    for x, y, z, degrees, pecking in ((-22.4, 5.24, 41.0, 160.0, False), (13.4, 5.24, 41.1, 200.0, False),
-                                      (14.3, 5.24, 40.8, 120.0, False), (6.6, 9.2, 42.6, 10.0, False),
-                                      (-6.2, 0.0, -6.4, 40.0, True), (-5.5, 0.0, -7.3, 300.0, True),
-                                      (7.4, 0.0, 5.2, 200.0, True), (-25.6, 0.0, 30.6, 90.0, True),
-                                      (-1.6, 0.0, 37.6, 120.0, True), (30.2, 5.24, -21.6, 250.0, False)):
-        crow(scene, x, y, z, degrees, pecking)
+    # Les corbeaux, qui s'envolent quand on approche, sont posés dans village.tscn (village_crow.gd).
 
 
 def build_wildlife(scene):
-    """Les chats restés au village : l'un garde la porte de la mairie, l'autre dort sur une caisse de la rue."""
-    cat(scene, -2.7, 0.0, -18.9, 160.0, "cat_black")
+    """Les chats restés au village : l'un dort sur une caisse de la rue (le gris du puits est posé avec le puits ; ceux
+    qui se promènent sont dans village.tscn, village_cat.gd)."""
     place(scene, "survival_kit/box-large", (4.3, 0.0, 26.6), 0.0, 3.0, height=0.75, label="caisse devant la boulangerie")
     cat(scene, 4.3, 0.75, 26.4, 60.0, "cat_ginger", lying=True)
 
@@ -1506,6 +1496,13 @@ def build_town_hall(scene):
             block(scene, (x, WALL_HEIGHT, z), (0.7, WALL_HEIGHT * 2, 0.7), group="mairie", label="pilier", structure=True)
     for x in (-2.6, 2.6):
         scene.add("fantasy_town_kit/banner-red", (x, 4.8, cz + 6.2), -90.0, 3.4)
+    # Ses fenêtres luisent dans le soir : une lueur chaude derrière chaque vitre, côté intérieur.
+    for side, index, count, center, outward in edge_tiles(cx, cz, width, depth):
+        inward = (center[0] - outward[0] * 0.45, center[1] - outward[1] * 0.45)
+        size = (0.04, 1.6, 1.4) if outward[0] else (1.4, 1.6, 0.04)
+        floors = (1.9, 5.9) if index != 1 else (5.9,) if side == "south" else ()
+        for y in floors:
+            box(scene, "window_glow", (inward[0], y, inward[1]), size)
     # Toit à deux pans, pignon sur la place, et sa cheminée.
     top = WALL_HEIGHT * 2
     prism(scene, "plaster", (cx, top + 1.7, cz), (12.4, 3.4, 12.4))
@@ -1548,6 +1545,7 @@ def build_props():
     materials(scene)
     scene.material("plaster", (0.8, 0.74, 0.64), 1.0)
     scene.material("roof", (0.36, 0.2, 0.16), 0.9)
+    scene.material("window_glow", (0.9, 0.6, 0.32), 1.0, emission=(1.0, 0.6, 0.28), energy=1.6)
     # Passages à garder libres : la grande rue, le tour de la fontaine emprunté par le test, la rue du pont.
     LAYOUT.keep_clear("grande rue", -2.0, 2.0, 9.0, 62.0)
     LAYOUT.keep_clear("grande rue, au nord de la place", -2.0, 2.0, -19.5, -12.5)
