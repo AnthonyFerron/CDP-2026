@@ -9,6 +9,7 @@ extends Node3D
 @export var cactus_models: Array[PackedScene]
 @export var rock_models: Array[PackedScene]
 @export var ruin_models: Array[PackedScene]
+## Catapulte, baliste et trébuchet démolis, dans l'ordre de WRECK_BOXES : aucun engin couvert d'un toit.
 @export var wreck_models: Array[PackedScene]
 ## Lance, bouclier, épée, jarre, roue, tonneau, squelette : les restes épars de PROPS.
 @export var prop_models: Array[PackedScene]
@@ -23,10 +24,21 @@ extends Node3D
 ## Distance à laquelle les petits détails disparaissent.
 @export var detail_range := 70.0
 
-## Épaves de machines de siège : position (x, z) et cap en degrés.
+## Épaves de machines de siège, sans toit (catapulte, baliste, trébuchet) : position (x, z) et échelle.
+## Leur cap est tiré au hasard ; elles sont à moitié ensablées.
 const WRECKS: Array[Vector3] = [
-	Vector3(26.0, 32.0, 40.0), Vector3(-46.0, 14.0, 200.0), Vector3(30.0, -18.0, 120.0), Vector3(-14.0, -38.0, 300.0),
+	Vector3(26.0, 32.0, 4.4), Vector3(-46.0, 14.0, 4.0), Vector3(30.0, -18.0, 4.2), Vector3(-14.0, -38.0, 3.8),
+	Vector3(44.0, -40.0, 4.0), Vector3(-52.0, -6.0, 3.6),
 ]
+## Boîte des épaves à l'échelle 1, dans l'ordre de wreck_models : coin et taille.
+const WRECK_BOXES := [
+	[Vector3(-0.64, 0.0, -0.87), Vector3(1.68, 0.32, 1.67)],
+	[Vector3(-0.91, 0.0, -0.79), Vector3(1.75, 0.51, 1.55)],
+	[Vector3(-0.87, 0.0, -1.05), Vector3(1.93, 0.31, 2.1)],
+]
+## Côté des cases qui découpent les détails épars : la distance de visibilité d'un MultiMesh se mesure jusqu'au
+## centre de sa boîte, il en faut un par case pour que rien ne disparaisse sous les pieds loin du centre.
+const CHUNK := 32.0
 ## Restes épars dans les dunes, posés sur le sol maillé : modèle (indice dans prop_models), x, z, cap,
 ## échelle, inclinaison en degrés, enfoncement en mètres, rayon de collision (0 : aucune, l'objet est bas).
 ## Armes de la guerre plantées dans le sable, jarres brisées, roues et squelettes de voyageurs perdus.
@@ -96,7 +108,7 @@ func is_free(spot: Vector2, margin: float) -> bool:
 		if spot.distance_to(Vector2(site.x, site.y)) < site.z + 2.0 + margin:
 			return false
 	for wreck in WRECKS:
-		if spot.distance_to(Vector2(wreck.x, wreck.y)) < 4.5 + margin:
+		if spot.distance_to(Vector2(wreck.x, wreck.y)) < 6.5 + margin:
 			return false
 	for prop: Array in PROPS:
 		if spot.distance_to(Vector2(prop[1], prop[2])) < 1.5 + margin:
@@ -153,24 +165,43 @@ func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, soli
 		_add_multimesh(_load_mesh(models[index]), transforms)
 
 
-## Épaves de machines de siège, restes de la guerre, posées à des endroits fixes.
+## Épaves de machines de siège, restes de la guerre, à moitié ensablées à des endroits fixes : chacune a la
+## collision de sa boîte, tournée comme elle, et une congère qui la recouvre d'un côté.
 func _add_wrecks() -> void:
 	var body := StaticBody3D.new()
 	add_child(body)
+	var sand := StandardMaterial3D.new()
+	sand.albedo_color = Color(0.84, 0.64, 0.4)
+	sand.roughness = 1.0
+	var drift := SphereMesh.new()
+	drift.radial_segments = 14
+	drift.rings = 7
+	drift.material = sand
 	for index in WRECKS.size():
 		var spot := WRECKS[index]
-		var model: PackedScene = wreck_models[index % wreck_models.size()]
-		var wreck: Node3D = model.instantiate()
-		wreck.position = Vector3(spot.x, terrain.footing_height(spot.x, spot.y) - 0.1, spot.y)
-		wreck.rotation.y = deg_to_rad(spot.z)
-		wreck.scale = Vector3.ONE * 4.5
+		var kind := index % wreck_models.size()
+		var wreck: Node3D = wreck_models[kind].instantiate()
+		var scale_factor := spot.z
+		var box: Array = WRECK_BOXES[kind]
+		var height: float = box[1].y * scale_factor
+		var basis := Basis(Vector3.UP, _rng.randf() * TAU) * Basis(Vector3.RIGHT, _rng.randf_range(-0.05, 0.05))
+		var origin := Vector3(spot.x, terrain.footing_height(spot.x, spot.y) - height * 0.45, spot.y)
+		wreck.transform = Transform3D(basis.scaled(Vector3.ONE * scale_factor), origin)
 		add_child(wreck)
 		var shape := BoxShape3D.new()
-		shape.size = Vector3(6.0, 1.6, 6.0)
+		shape.size = Vector3(box[1].x, box[1].y, box[1].z) * scale_factor
 		var collision := CollisionShape3D.new()
 		collision.shape = shape
-		collision.position = wreck.position + Vector3.UP * 0.8
+		var center: Vector3 = (box[0] + box[1] * 0.5) * scale_factor
+		collision.transform = Transform3D(basis, origin + basis * center)
 		body.add_child(collision)
+		# Le sable s'est amassé contre l'épave, du côté du vent.
+		var mound := MeshInstance3D.new()
+		mound.mesh = drift
+		var side := basis * Vector3(box[1].x * 0.3 * scale_factor, 0.0, 0.0)
+		mound.transform = Transform3D(basis.scaled(Vector3(box[1].x * 0.45, 0.5 * height, box[1].z * 0.5) * scale_factor), origin + side)
+		mound.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		add_child(mound)
 
 
 func _add_props() -> void:
@@ -236,8 +267,7 @@ func _add_bones() -> void:
 			var basis := Basis(Vector3.UP, _rng.randf() * TAU) * Basis(Vector3.RIGHT, _rng.randf_range(-0.2, 0.2))
 			var origin := Vector3(spot.x, terrain.footing_height(spot.x, spot.y) - 0.03, spot.y)
 			transforms.append(Transform3D(basis.scaled(Vector3.ONE * _rng.randf_range(item[2], item[3])), origin))
-		var instance := _add_multimesh(item[0], transforms)
-		instance.visibility_range_end = 55.0
+		_add_multimesh(item[0], transforms, 55.0)
 
 
 func _cone(top: float, bottom: float, height: float, segments: int) -> CylinderMesh:
@@ -275,8 +305,7 @@ func _add_border_rocks() -> void:
 	for index in rock_models.size():
 		var transforms: Array[Transform3D] = []
 		transforms.assign(items[index])
-		var instance := _add_multimesh(_load_mesh(rock_models[index]), transforms)
-		instance.visibility_range_end = 0.0
+		_add_multimesh(_load_mesh(rock_models[index]), transforms, 0.0)
 
 
 func _add_quicksands() -> void:
@@ -296,7 +325,27 @@ func _add_quicksands() -> void:
 		add_child(surface)
 
 
-func _add_multimesh(mesh: Mesh, transforms: Array[Transform3D]) -> MultiMeshInstance3D:
+## Pose des instances en MultiMesh : sans distance de visibilité (rochers des crêtes), un seul pour toute la carte ;
+## sinon un par case de CHUNK mètres, chacune avec sa distance mesurée jusqu'à elle et son fondu.
+func _add_multimesh(mesh: Mesh, transforms: Array[Transform3D], range_end := -1.0) -> void:
+	if range_end < 0.0:
+		range_end = detail_range
+	if range_end == 0.0:
+		_add_multimesh_part(mesh, transforms, 0.0)
+		return
+	var cells := {}
+	for item in transforms:
+		var key := Vector2i(floori(item.origin.x / CHUNK), floori(item.origin.z / CHUNK))
+		if not cells.has(key):
+			cells[key] = []
+		cells[key].append(item)
+	for key: Vector2i in cells:
+		var part: Array[Transform3D] = []
+		part.assign(cells[key])
+		_add_multimesh_part(mesh, part, range_end)
+
+
+func _add_multimesh_part(mesh: Mesh, transforms: Array[Transform3D], range_end: float) -> MultiMeshInstance3D:
 	var multimesh := MultiMesh.new()
 	multimesh.transform_format = MultiMesh.TRANSFORM_3D
 	multimesh.mesh = mesh
@@ -305,8 +354,10 @@ func _add_multimesh(mesh: Mesh, transforms: Array[Transform3D]) -> MultiMeshInst
 		multimesh.set_instance_transform(index, transforms[index])
 	var instance := MultiMeshInstance3D.new()
 	instance.multimesh = multimesh
-	instance.visibility_range_end = detail_range
-	instance.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
+	instance.visibility_range_end = range_end
+	if range_end > 0.0:
+		instance.visibility_range_end_margin = 10.0
+		instance.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 	add_child(instance)
 	return instance
 
