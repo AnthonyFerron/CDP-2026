@@ -66,13 +66,13 @@ size = Vector3(1.6, 4, 1.6)
 size = Vector3(1.26, 0.51, 1.26)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_15"]
-size = Vector3(2.52, 0.6, 1.71)
+size = Vector3(2.52, 0.96, 1.71)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_16"]
 size = Vector3(1.3, 0.98, 2.08)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_17"]
-size = Vector3(0.624, 0.672, 0.624)
+size = Vector3(0.624, 0.912, 0.624)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_18"]
 size = Vector3(1.47, 2.814, 1.47)
@@ -84,7 +84,7 @@ size = Vector3(0.72, 1.17, 0.72)
 size = Vector3(1.482, 0.52, 2.184)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_21"]
-size = Vector3(2.352, 0.56, 1.596)
+size = Vector3(2.352, 0.896, 1.596)
 
 [node name="MaraisCrypt" type="Node3D"]
 
@@ -718,13 +718,13 @@ transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 8.4, 0, -20.6)
 transform = Transform3D(0, 0, 3, 0, 3, 0, -3, 0, 0, -4.3, 0, -3.915)
 
 [node name="candle_209" parent="Models" instance=ExtResource("9_model")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -3.7, 0.6, -3.9)
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -3.7, 0.96, -3.9)
 
 [node name="dust_coffin_210" parent="Models" instance=ExtResource("8_model")]
 transform = Transform3D(0, 0, 3, 0, 3, 0, -3, 0, 0, 4.3, 0, -3.915)
 
 [node name="candle_211" parent="Models" instance=ExtResource("9_model")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 4.9, 0.6, -3.9)
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 4.9, 0.96, -3.9)
 
 [node name="banner_212" parent="Models" instance=ExtResource("5_model")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -14, 0.71, -11.94)
@@ -820,7 +820,7 @@ transform = Transform3D(2.25167, 0, 1.3, 0, 2.6, 0, -1.3, 0, 2.25167, -17.095, 0
 transform = Transform3D(1.69145, 0, 0.61564, 0, 1.8, 0, -0.61564, 0, 1.69145, -16.1915, 0, 3.39692)
 
 [node name="dust_urn_round_243" parent="Models" instance=ExtResource("19_model")]
-transform = Transform3D(1.83851, 1.54269, 0, 0, 0, -2.4, -1.54269, 1.83851, 0, -15.416, 0.312, 4.44261)
+transform = Transform3D(1.83851, 1.54269, 0, 0, 0, -2.4, -1.54269, 1.83851, 0, -15.4931, 0.312, 4.35068)
 
 [node name="candle_multiple_244" parent="Models" instance=ExtResource("6_model")]
 transform = Transform3D(2.36354, 0, 0.41676, 0, 2.4, 0, -0.41676, 0, 2.36354, -18.2257, 0, 2.19235)
@@ -841,7 +841,7 @@ transform = Transform3D(1.8, 0, 0, 0, 0, 1.8, 0, -1.8, 0, 20.4, 0.61, 3.9)
 transform = Transform3D(0, 0, 2.8, 0, 2.8, 0, -2.8, 0, 0, 18.6, 0, 0.286)
 
 [node name="weapon_spear_250" parent="Models" instance=ExtResource("21_model")]
-transform = Transform3D(0, -0, 2.6, 2.6, 0, 0, -0, 2.6, 0, 18.6, 0.742, -0.48)
+transform = Transform3D(0, -0, 2.6, 2.6, 0, 0, -0, 2.6, 0, 18.6, 1.078, -0.48)
 
 [node name="candle_multiple_251" parent="Models" instance=ExtResource("6_model")]
 transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, 0, 0, 2.4, 15.976, 0, 0.588)
@@ -850,7 +850,7 @@ transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, 0, 0, 2.4, 15.976, 0, 0.588)
 transform = Transform3D(2.07846, 0, 1.2, 0, 2.4, 0, -1.2, 0, 2.07846, 20.9732, 0, 1.60161)
 
 [node name="dust_character_skeleton_253" parent="Models" instance=ExtResource("22_model")]
-transform = Transform3D(-1.7, -0, 0, 0, 0, 1.7, -0, 1.7, -0, -9.1085, 0.805, -8.068)
+transform = Transform3D(-1.15, -0, 0, 0, 0, 1.15, -0, 1.15, -0, -9.1, 0.7225, -8.4255)
 
 [node name="dust_urn_round_254" parent="Models" instance=ExtResource("19_model")]
 transform = Transform3D(1.68813, 0, 1.07249, 0, 2, 0, -1.07249, 0, 1.68813, -9.1, 1.56, -8.6)
@@ -862,7 +862,7 @@ transform = Transform3D(0.55431, 0, 1.92165, 0, 2, 0, -1.92165, 0, 0.55431, -9.1
 transform = Transform3D(1.30136, 0, 1.5187, 0, 2, 0, -1.5187, 0, 1.30136, -9.1, 1.56, -7.4)
 
 [node name="dust_character_skeleton_257" parent="Models" instance=ExtResource("22_model")]
-transform = Transform3D(-1.7, -0, 0, 0, 0, 1.7, -0, 1.7, -0, -9.1085, 0.805, -16.068)
+transform = Transform3D(-1.15, -0, 0, 0, 0, 1.15, -0, 1.15, -0, -9.1, 0.7225, -16.4255)
 
 [node name="dust_urn_round_258" parent="Models" instance=ExtResource("19_model")]
 transform = Transform3D(0.81586, 0, 1.82602, 0, 2, 0, -1.82602, 0, 0.81586, -9.1, 1.56, -16.6)
@@ -874,7 +874,7 @@ transform = Transform3D(0.07689, 0, 1.99852, 0, 2, 0, -1.99852, 0, 0.07689, -9.1
 transform = Transform3D(1.36396, 0, 1.46274, 0, 2, 0, -1.46274, 0, 1.36396, -9.1, 1.56, -15.4)
 
 [node name="dust_character_skeleton_261" parent="Models" instance=ExtResource("22_model")]
-transform = Transform3D(1.7, 0, 0, 0, 0, 1.7, 0, -1.7, 0, 9.1085, 0.805, -7.932)
+transform = Transform3D(1.15, 0, 0, 0, 0, 1.15, 0, -1.15, 0, 9.1, 0.7225, -7.5745)
 
 [node name="dust_urn_round_262" parent="Models" instance=ExtResource("19_model")]
 transform = Transform3D(1.88798, 0, 0.65995, 0, 2, 0, -0.65995, 0, 1.88798, 9.1, 1.56, -7.4)
@@ -886,7 +886,7 @@ transform = Transform3D(1.99835, 0, 0.08126, 0, 2, 0, -0.08126, 0, 1.99835, 9.1,
 transform = Transform3D(1.12012, 0, 1.6569, 0, 2, 0, -1.6569, 0, 1.12012, 9.1, 1.56, -8.6)
 
 [node name="dust_character_skeleton_265" parent="Models" instance=ExtResource("22_model")]
-transform = Transform3D(-1.7, -0, 0, 0, 0, 1.7, -0, 1.7, -0, 9.0915, 0.805, -16.068)
+transform = Transform3D(-1.15, -0, 0, 0, 0, 1.15, -0, 1.15, -0, 9.1, 0.7225, -16.4255)
 
 [node name="dust_urn_round_266" parent="Models" instance=ExtResource("19_model")]
 transform = Transform3D(0.83011, 0, 1.81959, 0, 2, 0, -1.81959, 0, 0.83011, 9.1, 1.56, -15.4)
@@ -898,7 +898,7 @@ transform = Transform3D(1.02969, 0, 1.71457, 0, 2, 0, -1.71457, 0, 1.02969, 9.1,
 transform = Transform3D(1.01292, 0, 1.72453, 0, 2, 0, -1.72453, 0, 1.01292, 9.1, 1.56, -16.6)
 
 [node name="dust_character_skeleton_269" parent="Models" instance=ExtResource("22_model")]
-transform = Transform3D(0, -1.7, 0, 0, 0, 1.7, -1.7, -0, 0, -17.932, 0.805, 5.0915)
+transform = Transform3D(0, -1.15, 0, 0, 0, 1.15, -1.15, -0, 0, -17.5745, 0.7225, 5.1)
 
 [node name="dust_urn_round_270" parent="Models" instance=ExtResource("19_model")]
 transform = Transform3D(1.99191, 0, 0.1797, 0, 2, 0, -0.1797, 0, 1.99191, -17.4, 1.56, 5.1)
@@ -910,7 +910,7 @@ transform = Transform3D(1.9264, 0, 0.53759, 0, 2, 0, -0.53759, 0, 1.9264, -18, 1
 transform = Transform3D(1.91228, 0, 0.58583, 0, 2, 0, -0.58583, 0, 1.91228, -18.6, 1.56, 5.1)
 
 [node name="dust_character_skeleton_273" parent="Models" instance=ExtResource("22_model")]
-transform = Transform3D(0, -1.7, 0, 0, 0, 1.7, -1.7, -0, 0, 18.068, 0.805, 5.0915)
+transform = Transform3D(0, -1.15, 0, 0, 0, 1.15, -1.15, -0, 0, 18.4255, 0.7225, 5.1)
 
 [node name="dust_urn_round_274" parent="Models" instance=ExtResource("19_model")]
 transform = Transform3D(1.09492, 0, 1.67366, 0, 2, 0, -1.67366, 0, 1.09492, 18.6, 1.56, 5.1)
@@ -1748,11 +1748,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.4, 0.255, -20.6)
 shape = SubResource("BoxShape3D_14")
 
 [node name="Box206" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.3, 0.3, -3.9)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.3, 0.48, -3.9)
 shape = SubResource("BoxShape3D_15")
 
 [node name="Box207" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.3, 0.3, -3.9)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.3, 0.48, -3.9)
 shape = SubResource("BoxShape3D_15")
 
 [node name="Box208" type="CollisionShape3D" parent="Collision"]
@@ -1760,19 +1760,19 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.35, 0.49, -12)
 shape = SubResource("BoxShape3D_16")
 
 [node name="Box209" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.16284, 0, 0.98665, 0, 1, 0, -0.98665, 0, 0.16284, -28.7, 0.336, -7.3)
+transform = Transform3D(0.16284, 0, 0.98665, 0, 1, 0, -0.98665, 0, 0.16284, -28.7, 0.456, -7.3)
 shape = SubResource("BoxShape3D_17")
 
 [node name="Box210" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.69349, 0, 0.72047, 0, 1, 0, -0.72047, 0, 0.69349, -28.7, 0.336, -16.7)
+transform = Transform3D(0.69349, 0, 0.72047, 0, 1, 0, -0.72047, 0, 0.69349, -28.7, 0.456, -16.7)
 shape = SubResource("BoxShape3D_17")
 
 [node name="Box211" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.3437, 0, 0.93908, 0, 1, 0, -0.93908, 0, 0.3437, -19.3, 0.336, -7.3)
+transform = Transform3D(0.3437, 0, 0.93908, 0, 1, 0, -0.93908, 0, 0.3437, -19.3, 0.456, -7.3)
 shape = SubResource("BoxShape3D_17")
 
 [node name="Box212" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.90122, 0, 0.43336, 0, 1, 0, -0.43336, 0, 0.90122, -19.3, 0.336, -16.7)
+transform = Transform3D(0.90122, 0, 0.43336, 0, 1, 0, -0.43336, 0, 0.90122, -19.3, 0.456, -16.7)
 shape = SubResource("BoxShape3D_17")
 
 [node name="Box213" type="CollisionShape3D" parent="Collision"]
@@ -1804,5 +1804,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.4, 0.26, 3.9)
 shape = SubResource("BoxShape3D_20")
 
 [node name="Box220" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.6, 0.28, 0.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.6, 0.448, 0.3)
 shape = SubResource("BoxShape3D_21")
