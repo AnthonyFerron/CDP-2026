@@ -150,31 +150,31 @@ def doorway(scene, center, outward):
 # Boîte englobante (coin, taille) des modèles à l'échelle 1 : la plupart ont leur origine dans un coin,
 # et certains descendent sous leur origine.
 MODEL_BOXES = {
-    "furniture_kit/desk": ((-0.01, 0.0, -0.38), (0.73, 0.38, 0.56)),
+    "furniture_kit/desk": ((-0.01, 0, -0.38), (0.73, 0.38, 0.39)),
     "furniture_kit/bookcaseClosedWide": ((0.0, 0.0, -0.25), (0.8, 0.79, 0.25)),
     "furniture_kit/bookcaseOpen": ((0.0, 0.0, -0.25), (0.4, 0.88, 0.25)),
     "furniture_kit/bookcaseOpenLow": ((0.0, 0.0, -0.25), (0.4, 0.4, 0.25)),
-    "furniture_kit/bookcaseClosedDoors": ((-0.16, 0.0, -0.25), (0.56, 0.85, 0.27)),
-    "furniture_kit/kitchenCabinetDrawer": ((0.0, 0.0, -0.45), (0.43, 0.45, 0.48)),
-    "furniture_kit/kitchenCabinet": ((0.0, 0.0, -0.45), (0.43, 0.45, 0.48)),
-    "furniture_kit/kitchenStove": ((0.0, 0.0, -0.45), (0.43, 0.45, 0.48)),
-    "furniture_kit/kitchenSink": ((0.0, 0.0, -0.45), (0.43, 0.49, 0.48)),
-    "furniture_kit/sideTableDrawers": ((-0.01, 0.0, -0.21), (0.53, 0.38, 0.39)),
+    "furniture_kit/bookcaseClosedDoors": ((0, 0, -0.25), (0.4, 0.85, 0.25)),
+    "furniture_kit/kitchenCabinetDrawer": ((0, 0, -0.45), (0.43, 0.45, 0.45)),
+    "furniture_kit/kitchenCabinet": ((0, 0, -0.45), (0.43, 0.45, 0.45)),
+    "furniture_kit/kitchenStove": ((0, 0, -0.45), (0.43, 0.45, 0.45)),
+    "furniture_kit/kitchenSink": ((0, 0, -0.45), (0.43, 0.49, 0.45)),
+    "furniture_kit/sideTableDrawers": ((-0.01, 0, -0.21), (0.53, 0.38, 0.22)),
     "furniture_kit/sideTable": ((-0.01, 0.0, -0.21), (0.53, 0.38, 0.22)),
     "furniture_kit/cabinetBed": ((-0.01, 0.0, -0.21), (0.27, 0.23, 0.22)),
     "furniture_kit/tableCloth": ((0.0, 0.0, -0.45), (0.84, 0.33, 0.45)),
     "furniture_kit/table": ((0.0, 0.0, -0.45), (0.84, 0.33, 0.45)),
     "furniture_kit/tableRound": ((0.0, -0.27, -0.8), (0.69, 0.37, 0.8)),
-    "furniture_kit/chairDesk": ((-0.17, 0.0, -0.28), (0.48, 0.42, 0.44)),
+    "furniture_kit/chairDesk": ((0, 0, -0.31), (0.34, 0.61, 0.31)),
     "furniture_kit/chair": ((0.0, 0.0, -0.2), (0.2, 0.47, 0.2)),
     "furniture_kit/bench": ((0.0, 0.0, -0.2), (0.4, 0.47, 0.2)),
-    "furniture_kit/bedSingle": ((-0.06, -0.13, -1.89), (1.62, 0.51, 1.89)),
-    "furniture_kit/bedDouble": ((-0.06, -0.13, -1.89), (1.62, 0.51, 1.91)),
+    "furniture_kit/bedSingle": ((0.39, 0, -1.12), (0.57, 0.38, 1.12)),
+    "furniture_kit/bedDouble": ((0, 0, -1.12), (0.96, 0.38, 1.12)),
     "furniture_kit/rugRectangle": ((0.0, 0.0, -0.92), (1.57, 0.01, 0.92)),
     "furniture_kit/rugRound": ((0.0, 0.0, -0.92), (0.92, 0.01, 0.92)),
     "furniture_kit/coatRackStanding": ((-0.14, 0.0, -0.14), (0.27, 0.77, 0.27)),
     "furniture_kit/lampRoundFloor": ((-0.02, 0.0, -0.15), (0.15, 0.86, 0.18)),
-    "furniture_kit/pottedPlant": ((-0.04, 0.0, -0.24), (0.25, 0.54, 0.29)),
+    "furniture_kit/pottedPlant": ((-0.11, 0, -0.12), (0.21, 0.65, 0.24)),
     "furniture_kit/cardboardBoxClosed": ((0.0, 0.0, -0.21), (0.21, 0.28, 0.21)),
     "furniture_kit/books": ((0.0, 0.0, -0.09), (0.15, 0.1, 0.09)),
     "graveyard_kit/altar-stone": ((-0.52, 0.0, -0.33), (1.04, 0.49, 0.65)),
@@ -184,21 +184,21 @@ MODEL_BOXES = {
     "graveyard_kit/hay-bale-bundled": ((-0.3, 0.0, -0.22), (0.61, 0.38, 0.43)),
     "graveyard_kit/lightpost-single": ((-0.1, 0.0, -0.1), (0.21, 1.27, 0.46)),
     "mini_dungeon/barrel": ((-0.26, 0.0, -0.26), (0.52, 0.48, 0.52)),
-    "mini_dungeon/chest": ((-0.25, -0.05, -0.25), (0.5, 0.3, 0.7)),
+    "mini_dungeon/chest": ((-0.25, 0, -0.25), (0.5, 0.45, 0.5)),
     "mini_dungeon/table": ((-0.44, 0.0, -0.32), (0.88, 0.31, 0.65)),
     "mini_dungeon/weapon-spear": ((-0.07, 0.0, -0.06), (0.15, 0.6, 0.12)),
     "mini_dungeon/shield-round": ((-0.19, -0.19, -0.05), (0.38, 0.38, 0.11)),
     "survival_kit/box-large": ((-0.13, 0.0, -0.25), (0.25, 0.25, 0.5)),
     "survival_kit/barrel": ((-0.12, 0.0, -0.12), (0.24, 0.34, 0.24)),
     "survival_kit/box": ((-0.13, 0.0, -0.13), (0.25, 0.25, 0.25)),
-    "fantasy_town_kit/cart-high": ((-0.32, 0.0, -0.64), (0.65, 0.86, 1.39)),
-    "castle_kit/siege-ballista": ((-0.66, -0.2, -0.6), (1.33, 1.11, 1.2)),
-    "castle_kit/siege-catapult": ((-1.42, -0.2, -0.47), (2.15, 1.38, 0.94)),
+    "fantasy_town_kit/cart-high": ((-0.45, 0, -0.65), (0.89, 0.86, 1.39)),
+    "castle_kit/siege-ballista": ((-0.64, 0, -0.6), (1.63, 0.91, 1.2)),
+    "castle_kit/siege-catapult": ((-1, -0.15, -0.6), (1.74, 1.33, 1.21)),
     "castle_kit/tree-large": ((-0.44, 0.0, -0.44), (0.89, 1.85, 0.89)),
     "castle_kit/tree-small": ((-0.37, 0.0, -0.36), (0.74, 1.35, 0.72)),
     "fantasy_town_kit/pillar-stone": ((-0.08, 0.0, -0.08), (0.16, 1.0, 0.16)),
-    "survival_kit/workbench-anvil": ((-0.15, 0.0, -0.15), (0.32, 0.3, 0.3)),
-    "survival_kit/workbench-grind": ((-0.13, -0.09, -0.16), (0.26, 0.31, 0.33)),
+    "survival_kit/workbench-anvil": ((-0.15, 0, -0.15), (0.32, 0.34, 0.3)),
+    "survival_kit/workbench-grind": ((-0.13, 0, -0.17), (0.26, 0.28, 0.33)),
     "mini_dungeon/wood-structure": ((-0.54, 0.0, -0.54), (1.09, 1.0, 1.09)),
     "mini_dungeon/wood-support": ((-0.54, 0.0, -0.12), (1.09, 1.0, 0.24)),
     "survival_kit/resource-stone-large": ((-0.19, 0.0, -0.17), (0.38, 0.16, 0.34)),
@@ -219,25 +219,25 @@ MODEL_BOXES = {
     "nature_kit/log_stack": ((-0.22, 0.0, -0.35), (0.42, 0.35, 0.71)),
     "nature_kit/tent_detailedOpen": ((-0.44, 0.0, -0.35), (0.87, 0.56, 0.67)),
     "nature_kit/campfire_stones": ((-0.25, 0.0, -0.26), (0.54, 0.08, 0.52)),
-    "survival_kit/chest": ((-0.13, -0.04, -0.14), (0.26, 0.21, 0.39)),
+    "survival_kit/chest": ((-0.13, 0, -0.14), (0.26, 0.26, 0.27)),
     "fantasy_town_kit/stall-bench": ((-0.13, 0.0, -0.47), (0.26, 0.23, 0.94)),
     "fantasy_town_kit/stall-red": ((-0.5, 0.0, -0.5), (1.0, 1.24, 1.0)),
     "fantasy_town_kit/stall-green": ((-0.5, 0.0, -0.5), (1.0, 1.24, 1.0)),
     "fantasy_town_kit/stall": ((-0.32, 0.0, -0.5), (0.65, 0.37, 1.0)),
-    "fantasy_town_kit/cart": ((-0.32, 0.0, -0.64), (0.65, 0.54, 1.34)),
+    "fantasy_town_kit/cart": ((-0.45, 0, -0.65), (0.89, 0.54, 1.34)),
     "fantasy_town_kit/wheel": ((0.2, 0.0, -0.23), (0.24, 0.48, 0.47)),
     "fantasy_town_kit/poles-horizontal": ((0.4, 0.0, -0.5), (0.1, 1.0, 1.0)),
     "fantasy_town_kit/planks": ((-0.5, 0.0, -0.5), (1.0, 0.06, 1.0)),
     "fantasy_town_kit/planks-half": ((0.0, 0.0, -0.5), (0.5, 0.06, 1.0)),
     "castle_kit/gate": ((-0.08, 0.0, -0.33), (0.15, 0.91, 0.66)),
     "mini_arena/column-damaged": ((-0.3, 0.0, -0.3), (0.6, 0.72, 0.6)),
-    "furniture_kit/bedBunk": ((-0.06, -0.13, -1.89), (1.62, 0.98, 1.89)),
+    "furniture_kit/bedBunk": ((0, 0, -1.09), (0.57, 0.85, 1.09)),
     "furniture_kit/bookcaseClosed": ((0.0, 0.0, -0.25), (0.4, 0.85, 0.25)),
-    "furniture_kit/tableCross": ((0.0, 0.0, -1.07), (2.03, 0.83, 1.07)),
+    "furniture_kit/tableCross": ((0, 0, -0.45), (0.85, 0.35, 0.45)),
     "furniture_kit/benchCushionLow": ((-0.01, 0.0, -0.21), (0.42, 0.2, 0.22)),
     "graveyard_kit/lantern-candle": ((-0.12, 0.0, -0.12), (0.24, 0.39, 0.24)),
     "survival_kit/bedroll": ((-0.16, 0.0, -0.3), (0.31, 0.13, 0.61)),
-    "survival_kit/workbench": ((-0.15, 0.0, -0.15), (0.3, 0.24, 0.3)),
+    "survival_kit/workbench": ((-0.15, 0, -0.15), (0.33, 0.29, 0.3)),
     "fantasy_town_kit/stall-stool": ((-0.13, 0.0, -0.13), (0.26, 0.23, 0.26)),
     "survival_kit/barrel-open": ((-0.12, 0.0, -0.12), (0.24, 0.34, 0.24)),
     # Plaine : champ de bataille et bibliothèque.
@@ -362,23 +362,20 @@ def camp(scene, rng, cx, cz, heading):
 
 
 def against_wall(scene, model, point, inward, along_offset=0.0, scale=3.2, width=0.8, depth=0.25, height=0.8):
-    """Adosse un meuble au mur, centré sur le point donné, sa face tournée vers la pièce."""
+    """Adosse un meuble au mur, centré sur le point donné, sa face tournée vers la pièce.
+    Les meubles du kit ont leur face avant vers +Z, leur origine au coin avant gauche et leur dos vers -Z :
+    on tourne +Z vers la pièce, et l'origine se pose à une profondeur du mur."""
     x, z = point
     nx, nz = inward
-    degrees = {(1, 0): -90, (-1, 0): 90, (0, 1): 180, (0, -1): 0}[inward]
-    along_x, along_z = (nz, -nx) if degrees in (0, 180) else (-nz, nx)
-    if degrees == 0:
-        along_x, along_z = 1, 0
-    elif degrees == 180:
-        along_x, along_z = -1, 0
-    elif degrees == -90:
-        along_x, along_z = 0, 1
-    else:
-        along_x, along_z = 0, -1
+    degrees = {(1, 0): 90, (-1, 0): -90, (0, 1): 0, (0, -1): 180}[inward]
+    # Axe x du modèle une fois tourné : rotation_y(degrees) envoie (1, 0, 0) vers (cos, 0, -sin).
+    along_x = round(math.cos(math.radians(degrees)))
+    along_z = round(-math.sin(math.radians(degrees)))
     half = width * scale / 2
-    origin = (x - along_x * half + along_x * along_offset, 0.0, z - along_z * half + along_z * along_offset)
-    scene.add(f"furniture_kit/{model}", origin, degrees, scale)
     real_depth = depth * scale
+    origin = (x - along_x * half + along_x * along_offset + nx * real_depth, 0.0,
+              z - along_z * half + along_z * along_offset + nz * real_depth)
+    scene.add(f"furniture_kit/{model}", origin, degrees, scale)
     center = (
         x + along_x * along_offset + nx * real_depth / 2,
         height * scale / 2,
@@ -844,7 +841,7 @@ def soldiers_camp(scene, rng, cx, cz, heading):
         furniture(scene, "nature_kit/tent_detailedOpen", at(u, -2.6), heading + yaw, 3.6, height=2.0)
     for u, v in ((-1.6, 2.6), (1.2, 3.4)):
         furniture(scene, "nature_kit/log_stack", at(u, v), heading + rng.uniform(60, 120), 2.6, height=0.9)
-    furniture(scene, "survival_kit/chest", at(2.6, 1.2), heading + 20.0, 3.4, height=0.8)
+    furniture(scene, "survival_kit/chest", at(2.6, 1.2), heading + 20.0, 3.4, height=0.9)
     for u, v in ((-4.0, 0.9), (-5.5, 2.7)):
         furniture(scene, "mini_dungeon/barrel", at(u, v), rng.uniform(0, 360), 2.6, height=1.2)
     furniture(scene, "survival_kit/box-large", at(5.6, 1.4), heading + 70.0, 3.6, height=0.9)

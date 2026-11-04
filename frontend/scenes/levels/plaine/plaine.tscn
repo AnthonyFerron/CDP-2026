@@ -364,7 +364,7 @@ board_height = 1.0
 line_height = 0.16
 
 [node name="Journal" type="Node3D" parent="Exterior/Lore"]
-transform = Transform3D(0.98481, 0, -0.17365, 0, 1, 0, 0.17365, 0, 0.98481, 15.65, 0.86, 44.35)
+transform = Transform3D(0.98481, 0, -0.17365, 0, 1, 0, 0.17365, 0, 0.98481, 15.65, 1.03, 44.35)
 script = ExtResource("12_readable")
 title = "Le journal d'un soldat"
 body = "Jour douze. Les troupes de Vibelandia ont mis le feu à la bibliothèque à l'aube. Le capitaine Aubrac nous a ordonné de charger les livres sur les charrettes, mais le Projenomicon était déjà descendu sous la terre, avec la bibliothécaire et son registre. Si quelqu'un lit ces lignes : les archives sont sous les ruines, et leurs pages ont gardé l'ordre de la discussion."
