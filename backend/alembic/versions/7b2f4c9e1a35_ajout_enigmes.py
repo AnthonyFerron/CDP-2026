@@ -21,12 +21,13 @@ branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
 
-# (order_index, titre, nombre d'indices) — Plaine, Désert, Marais, Village
+# (order_index, titre, hint_count) — Plaine, Désert, Marais, Village
+# Aucun indice suivi en base : ceux des énigmes sont visuels et restent dans Godot.
 PUZZLES = [
-    (1, "La discussion oubliée", 3),
-    (2, "Les runes de l'algorithme", 3),
-    (3, "Le tombeau des lettres oubliées", 3),
-    (4, "Les cinq codes oubliés", 3),
+    (1, "La discussion oubliée", 0),
+    (2, "Les runes de l'algorithme", 0),
+    (3, "Le tombeau des lettres oubliées", 0),
+    (4, "Les cinq codes oubliés", 0),
 ]
 
 

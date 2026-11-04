@@ -205,7 +205,7 @@ Toutes les variables sont décrites dans `backend/.env.example` (développement)
 | `e3a91d5c7f20` | `puzzle_progress.placed_at`, nullable, et la contrainte `ck_puzzle_progress_placed_after_solved` | Aucune ligne modifiée : aucun livre n'est considéré comme posé |
 | `5d8c2b6e4a17` | Table `paper_fragments` | Nouvelle table, rien d'autre n'est touché |
 
-Les trois dernières sont additives et n'ont été appliquées qu'à des bases de test. Le seed des énigmes renseigne encore `hint_count = 3`, une valeur que l'API n'utilise plus.
+Les trois dernières sont additives et n'ont été appliquées qu'à des bases de test. Le seed des énigmes renseigne `hint_count = 0` : aucun indice n'est suivi en base.
 
 ## Déploiement
 

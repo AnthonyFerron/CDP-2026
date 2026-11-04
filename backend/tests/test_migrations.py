@@ -29,6 +29,13 @@ def test_puzzle_seed_is_idempotent(database):
     assert len(before) == 4
 
 
+def test_puzzle_seed_tracks_no_hints(database):
+    # Les indices des énigmes sont visuels et restent dans Godot
+    with engine.connect() as connection:
+        hint_counts = connection.execute(text("SELECT hint_count FROM puzzles ORDER BY order_index")).scalars().all()
+    assert hint_counts == [0, 0, 0, 0]
+
+
 def test_models_match_the_migrations(database):
     # Échoue si un modèle SQLAlchemy décrit une structure absente des migrations, ou l'inverse
     command.check(alembic_config())
