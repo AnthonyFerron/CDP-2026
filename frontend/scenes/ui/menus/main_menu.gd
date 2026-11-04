@@ -10,8 +10,8 @@ extends Control
 
 const SCENE := "res://scenes/ui/menus/main_menu.tscn"
 const INTRO_TEXT := [
-	"En l'an 5814, le royaume de Codia n'est plus qu'un désert ravagé par dix années de guerre.",
-	"Devlyn, un ancien héros légendaire, reçoit de Merlon, un mystérieux mage, une mission cruciale : retrouver quatre livres anciens capables de restaurer les terres.",
+	"En l'an 5814, le royaume de Codia n'est plus qu'un désert ravagé par dix années de guerre contre Vibelandia.",
+	"Devlyn, un ancien héros légendaire, reçoit de Merlon, un mystérieux mage, une mission cruciale : retrouver quatre livres anciens capables d'apaiser le Mont Sam Altan et de restaurer les terres.",
 	"Pour les retrouver, il devra explorer les ruines de Codia, surmonter des obstacles et résoudre des énigmes.",
 ]
 
@@ -187,7 +187,7 @@ func _on_new_game() -> void:
 
 
 func _on_load_game() -> void:
-	get_tree().change_scene_to_file(GameState.HUB_SCENE)
+	Transition.change_scene(GameState.HUB_SCENE, GameState.hub_title())
 
 
 func _on_logout() -> void:
@@ -505,18 +505,18 @@ func _build_intro() -> void:
 	var line := Ornate.place(frame, VerticalOrnament.new(), Vector2(380, 90), Vector2(20, 380))
 	line.name = "Ornament"
 	var story := VBoxContainer.new()
-	story.add_theme_constant_override("separation", 18)
-	Ornate.place(frame, story, Vector2(430, 100), Vector2(700, 380))
+	story.add_theme_constant_override("separation", 12)
+	Ornate.place(frame, story, Vector2(430, 92), Vector2(710, 380))
 	for paragraph in INTRO_TEXT:
-		var text := Ornate.label(paragraph, 28)
+		var text := Ornate.label(paragraph, 25)
 		text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		text.custom_minimum_size = Vector2(700, 0)
+		text.custom_minimum_size = Vector2(710, 0)
 		story.add_child(text)
 	var goal_title := Ornate.place(frame, GoalTitle.new(), Vector2(60, 486), Vector2(1080, 80))
 	goal_title.name = "GoalTitle"
 	var goal := Ornate.place(frame, GoalBox.new(), Vector2(90, 580), Vector2(1020, 150))
 	goal.name = "Goal"
-	var text := Ornate.label("Retrouver les 4 livres dans le temps imparti pour éviter le réveil du volcan.", 30)
+	var text := Ornate.label("Retrouver les 4 livres en une heure pour éviter l'éruption du Mont Sam Altan.", 30)
 	text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	text.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	Ornate.place(goal, text, Vector2(200, 20), Vector2(600, 110))
@@ -527,7 +527,7 @@ func _build_intro() -> void:
 func _on_begin() -> void:
 	GameState.reset()
 	Hints.revealed.clear()
-	get_tree().change_scene_to_file(GameState.HUB_SCENE)
+	Transition.change_scene(GameState.HUB_SCENE, GameState.hub_title())
 
 
 class VerticalOrnament:

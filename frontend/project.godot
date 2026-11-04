@@ -22,6 +22,7 @@ Display="*res://scripts/display.gd"
 Account="*res://scripts/account.gd"
 PauseMenu="*res://scripts/pause_menu.gd"
 Hints="*res://scripts/hints.gd"
+Transition="*res://scripts/transition.gd"
 DebugMenu="*res://scenes/debug/debug_menu.tscn"
 
 [display]

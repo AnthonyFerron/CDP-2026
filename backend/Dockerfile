@@ -9,6 +9,9 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app ./app
+# Migrations embarquées : docker compose exec api alembic upgrade head
+COPY alembic.ini .
+COPY alembic ./alembic
 
 RUN useradd --system --no-create-home api
 USER api

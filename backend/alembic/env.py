@@ -14,6 +14,7 @@ from app.models.auth_session import AuthSession
 from app.models.game_session import GameSession
 from app.models.puzzle import Puzzle
 from app.models.puzzle_progress import PuzzleProgress
+from app.models.paper_fragment import PaperFragment
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
