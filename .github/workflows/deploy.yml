@@ -22,6 +22,25 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    # Base jetable pour les tests d'API, recréée à chaque exécution
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: escape_game_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U test_user -d escape_game_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      TEST_DATABASE_URL: postgresql+psycopg://test_user:test_password@localhost:5432/escape_game_test
+
     steps:
       - uses: actions/checkout@v7
 
