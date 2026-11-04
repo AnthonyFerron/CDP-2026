@@ -114,7 +114,7 @@ shader = ExtResource("18_moss")
 shader_parameter/moss_color = Color(0.55, 0.52, 0.47, 1)
 shader_parameter/damp_color = Color(0.4, 0.38, 0.35, 1)
 shader_parameter/coverage = 0.55
-shader_parameter/damp_height = -100.0
+shader_parameter/damp_amount = 0.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_book"]
 albedo_color = Color(0.1, 0.35, 0.25, 1)
@@ -312,7 +312,7 @@ flicker = 0.25
 [node name="Clues" type="Node3D" parent="."]
 
 [node name="Notebook" type="Node3D" parent="Clues"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.6, 1.55, 25.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.8, 1.2, 25.9)
 script = ExtResource("12_readable")
 title = "Journal du gardien, an 5803"
 body = "La crypte garde l'un des livres anciens. Son tombeau ne s'ouvre que si l'on inscrit, sur le mécanisme des cinq cercles, le nom du royaume transformé selon la règle gravée au mur. Je l'ai noté ici pour ne jamais l'oublier… et j'ai arraché la page le lendemain."
@@ -360,7 +360,7 @@ prompt = "Lire le panneau"
 radius = 2.6
 
 [node name="Journal" type="MeshInstance3D" parent="Clues/Notebook"]
-transform = Transform3D(0.906308, 0, 0.422618, 0, 1, 0, -0.422618, 0, 0.906308, 0, -0.115, 0)
+transform = Transform3D(0.766044, 0, 0.642788, 0, 1, 0, -0.642788, 0, 0.766044, 0, -0.085, 0)
 mesh = SubResource("BoxMesh_journal")
 
 [node name="Plate" type="Node3D" parent="Clues/KeeperTomb"]

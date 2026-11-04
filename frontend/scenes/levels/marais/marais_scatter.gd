@@ -153,6 +153,25 @@ func _build_lanterns() -> void:
 	flame.radius = 0.09
 	flame.height = 0.2
 	flame.material = glow
+	# Halo de la flamme, tourné vers la caméra : la lanterne se voit de loin dans la brume.
+	var gradient := Gradient.new()
+	gradient.set_color(0, Color(1.0, 1.0, 1.0, 0.8))
+	gradient.set_color(1, Color(1.0, 1.0, 1.0, 0.0))
+	var texture := GradientTexture2D.new()
+	texture.gradient = gradient
+	texture.fill = GradientTexture2D.FILL_RADIAL
+	texture.fill_from = Vector2(0.5, 0.5)
+	texture.fill_to = Vector2(1.0, 0.5)
+	var halo_material := StandardMaterial3D.new()
+	halo_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	halo_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	halo_material.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+	halo_material.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+	halo_material.albedo_texture = texture
+	halo_material.albedo_color = Color(1.0, 0.75, 0.4, 0.5)
+	var halo := QuadMesh.new()
+	halo.size = Vector2(1.1, 1.1)
+	halo.material = halo_material
 	var deck_top := MaraisTerrain.DECK_HEIGHT - 0.03
 	var side := 1.0
 	for walk in MaraisTerrain.BOARDWALKS:
@@ -180,6 +199,12 @@ func _build_lanterns() -> void:
 			light.scale = Vector3.ONE / LANTERN_SCALE
 			light.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 			lantern.add_child(light)
+			var shine := MeshInstance3D.new()
+			shine.mesh = halo
+			shine.position = light.position
+			shine.scale = light.scale
+			shine.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			lantern.add_child(shine)
 			var shape := CylinderShape3D.new()
 			shape.radius = 0.28
 			shape.height = 5.4

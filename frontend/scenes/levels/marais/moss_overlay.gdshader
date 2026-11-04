@@ -8,8 +8,9 @@ uniform vec3 moss_color : source_color = vec3(0.17, 0.27, 0.1);
 uniform vec3 damp_color : source_color = vec3(0.1, 0.16, 0.08);
 // Plus la valeur est basse, plus la mousse gagne les faces inclinées.
 uniform float coverage = 0.35;
-// Hauteur au-dessus de l'eau jusqu'où remonte la mousse humide.
+// Hauteur au-dessus de l'eau jusqu'où remonte la mousse humide, et sa force (0 pour la poussière de la crypte).
 uniform float damp_height = 0.9;
+uniform float damp_amount = 0.85;
 
 varying vec3 world_normal;
 varying vec3 world_pos;
@@ -34,12 +35,12 @@ void vertex() {
 }
 
 void fragment() {
-	float patches = noise(world_pos * 1.7) * 0.65 + noise(world_pos * 5.3) * 0.35;
+	float patches = noise(world_pos * 2.6) * 0.6 + noise(world_pos * 7.1) * 0.4;
 	float top = smoothstep(coverage, coverage + 0.3, world_normal.y + (patches - 0.5) * 0.9);
-	float damp = (1.0 - smoothstep(0.0, damp_height, world_pos.y)) * smoothstep(0.35, 0.6, patches);
-	float amount = clamp(max(top, damp * 0.85), 0.0, 1.0);
+	float damp = (1.0 - smoothstep(0.0, max(damp_height, 0.01), world_pos.y)) * smoothstep(0.35, 0.6, patches);
+	float amount = clamp(max(top, damp * damp_amount), 0.0, 1.0);
 	ALBEDO = mix(damp_color, moss_color, top) * (0.75 + patches * 0.5);
 	ROUGHNESS = 1.0;
 	SPECULAR = 0.1;
-	ALPHA = amount * 0.92;
+	ALPHA = amount * 0.78;
 }

@@ -17,6 +17,8 @@ const WADE_SPEED := 0.55
 ## Images passées au sol, hors de l'eau, avant de retenir la position comme sûre.
 const SAFE_FRAMES := 15
 const AMBIENCE_DB := -6.0
+## Teinte des dalles de la crypte.
+const CRYPT_STONE := Color(0.46, 0.5, 0.52)
 
 @export var ground_steps: Array[AudioStream]
 @export var water_steps: Array[AudioStream]
@@ -108,6 +110,7 @@ func _ready() -> void:
 		mist.position = Vector3(bank.x, 0.3, bank.y)
 		_mist_banks.append(mist)
 		add_child(mist)
+	_tint_crypt()
 	_apply_location()
 	# Le nom du lieu s'affiche déjà pendant la transition du portail.
 	if GameState.has_book(BOOK_ID):
@@ -272,6 +275,24 @@ func _on_book_taken() -> void:
 	_hud.show_message("Le Logiconomicon, le livre de la logique et du chiffrement, est à vous. Rapportez-le au château : le portail s'est rouvert.")
 	GameState.collect_book(BOOK_ID)
 	book_collected.emit(BOOK_ID)
+
+
+## Les dalles du kit de donjon sont orangées : sous le marais, le sol, le plafond et l'escalier deviennent de pierre
+## froide et humide. La texture reste, seule sa teinte change.
+func _tint_crypt() -> void:
+	var tinted := {}
+	for model: Node in $Interior/Crypt/Models.get_children():
+		if not (model.name.contains("template_floor") or model.name.contains("stairs")):
+			continue
+		for mesh: MeshInstance3D in model.find_children("*", "MeshInstance3D", true, false):
+			var source := mesh.get_active_material(0)
+			if not source is BaseMaterial3D:
+				continue
+			if not tinted.has(source):
+				var copy: BaseMaterial3D = source.duplicate()
+				copy.albedo_color = source.albedo_color * CRYPT_STONE
+				tinted[source] = copy
+			mesh.material_override = tinted[source]
 
 
 ## Secoue une caméra quelques instants : le sol de la crypte gronde.

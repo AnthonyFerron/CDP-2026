@@ -317,17 +317,18 @@ def build_hut(scene):
     scene.add("survival_kit/campfire-pit", (-18.0, GROUND, 21.0), 0.0, 5.0)
     scene.place("survival_kit/campfire-fishing-stand", (-18.0, GROUND, 21.0), 70.0, 3.4, height=True)
     for model, position, degrees, scale, height in (
-        ("survival_kit/barrel", (-24.2, GROUND, 20.6), 15.0, 4.0, True),
+        ("mini_dungeon/barrel", (-24.2, GROUND, 20.6), 15.0, 2.0, True),
         ("survival_kit/bucket", (-23.2, GROUND, 19.6), 15.0, 4.0, True),
-        ("survival_kit/box", (-19.6, GROUND, 25.6), 15.0, 4.0, True),
-        ("survival_kit/box", (-25.0, GROUND, 22.8), 15.0, 3.2, True),
+        # La table du gardien, où son journal est resté ouvert.
+        ("mini_dungeon/table", (-19.8, GROUND, 25.9), 25.0, 2.2, True),
+        ("mini_dungeon/chest", (-25.0, GROUND, 22.8), 15.0, 1.8, True),
         ("survival_kit/bedroll", (-21.2, GROUND, 22.2), 30.0, 3.5, None),
         ("nature_kit/log_stack", (-21.2, GROUND, 18.4), 100.0, 2.6, True),
-        ("survival_kit/box-open", (-24.9, GROUND, 24.8), 40.0, 3.0, True),
+        ("mini_dungeon/barrel", (-24.9, GROUND, 24.8), 40.0, 1.6, True),
     ):
         scene.place(model, position, degrees, scale, height=height)
-    # Lanterne sur la caisse, pelle plantée contre la tente, bois coupé près du feu.
-    scene.place("graveyard_kit/lantern-candle", (-25.0, GROUND + 0.8, 22.8), 20.0, 2.0)
+    # Lanterne sur le coffre, pelle plantée contre la tente, bois coupé près du feu.
+    scene.place("graveyard_kit/lantern-candle", (-25.0, GROUND + 0.54, 22.8), 20.0, 2.0)
     scene.place("graveyard_kit/shovel", (-24.0, GROUND, 26.4), 60.0, 3.0, tilt=10.0, height=True)
     scene.place("survival_kit/resource-wood", (-19.8, GROUND, 19.8), 35.0, 4.0)
 
@@ -424,6 +425,13 @@ def build_crypt(scene, ground, rng):
         (-1.9, -36.5, "grass_large", 3.0), (1.9, -36.5, "grass_large", 3.2),
     ):
         scene.place(f"nature_kit/{model}", (x, GROUND, z), rng.uniform(0, 360), scale)
+    # Un arbre mort tombé contre l'angle gauche de la façade, et sa mousse ; deux buissons devant les angles.
+    scene.add("graveyard_kit/trunk-long", (-6.0, GROUND - 0.2, -34.8), 122.2, (1.3, 4.6, 1.3), tilt=40.4, coat="moss")
+    scene.add_box((-5.55, 1.0, -35.05), (0.8, 1.4, 0.8), 122.2)
+    for x, y, z in ((-4.9, 1.6, -35.6), (-4.2, 2.4, -35.9)):
+        scene.add("nature_kit/hanging_moss", (x, GROUND + y, z - 0.48 * 3.0), 30.0, 3.0)
+    scene.place("nature_kit/plant_bushLarge", (-3.4, GROUND, -35.3), 40.0, 3.6)
+    scene.place("nature_kit/plant_bushDetailed", (3.6, GROUND, -35.2), 10.0, 3.0)
     # Chemin de dalles du ponton à la porte.
     for index in range(6):
         t = index / 5
@@ -464,8 +472,8 @@ def build_arrival(scene, ground, rng):
     scene.place("nature_kit/canoe", (x, -0.22, z), yaw + 6.0, 3.5, roll=4.0, coat="moss")
     x, z = at(2.2, 0.4)
     scene.place("nature_kit/canoe_paddle", (x, 0.37, z), yaw + 70.0, 3.0)
-    ground.item(6.5, 54.6, footprint=0.5).place("survival_kit/barrel", degrees=20.0, scale=4.0, height=True)
-    ground.item(6.9, 55.9, footprint=0.5).place("survival_kit/box-open", degrees=-15.0, scale=3.4, height=True)
+    ground.item(6.5, 54.6, footprint=0.5).place("mini_dungeon/barrel", degrees=20.0, scale=2.0, height=True)
+    ground.item(6.9, 55.9, footprint=0.5).place("survival_kit/chest", degrees=-15.0, scale=3.4, height=True)
     ground.item(-9.2, 60.4, footprint=2.0, sink=0.1).place("nature_kit/canoe", degrees=25.0, scale=3.5, roll=180.0, height=True, coat="moss")
     dead_tree(ground, rng, -10.0, 51.0, height=4.8, lean=14.0)
     dead_tree(ground, rng, 9.6, 61.2, height=3.8, lean=-9.0, branches=2)
@@ -509,12 +517,12 @@ def build_village(scene, rng):
             scene.place("nature_kit/path_wood", (x, 0.55, 31.0), 90.0 + rng.uniform(-8, 8), 2.2, roll=rng.uniform(-4, 4))
     # Épaves qui flottent : tonneaux, caisses et planches.
     for x, z, model, degrees, roll, bottom, scale in (
-        (20.6, 27.4, "survival_kit/barrel", 30.0, 90.0, -0.42, 4.0),
-        (27.6, 25.8, "survival_kit/box-open", 10.0, 18.0, -0.5, 3.6),
+        (20.6, 27.4, "mini_dungeon/barrel", 30.0, 90.0, -0.5, 1.9),
+        (27.6, 25.8, "mini_dungeon/chest", 10.0, 18.0, -0.4, 1.8),
         (15.2, 33.6, "nature_kit/path_wood", 40.0, 4.0, -0.03, 2.2),
-        (31.5, 35.0, "survival_kit/barrel-open", 75.0, 90.0, -0.42, 4.0),
+        (31.5, 35.0, "mini_dungeon/barrel", 75.0, 90.0, -0.5, 1.9),
         (23.0, 35.2, "nature_kit/path_wood", 110.0, -3.0, -0.03, 2.0),
-        (14.8, 21.6, "survival_kit/box", 50.0, 12.0, -0.45, 3.4),
+        (14.8, 21.6, "survival_kit/chest", 50.0, 12.0, -0.45, 3.4),
     ):
         scene.place(model, (x, bottom, z), degrees, scale, roll=roll, coat="moss")
     scene.place("fantasy_town_kit/fence-broken", (16.4, -0.9, 27.2), 35.0, 2.6, tilt=8.0)
@@ -532,7 +540,7 @@ def build_last_house(scene, ground):
     scene.add("fantasy_town_kit/chimney", (x, LOW_GROUND + 2.6, z), yaw + 180.0, 3.0)
     ground.item(32.4, 33.4, footprint=0.4).place("fantasy_town_kit/lantern", degrees=0.0, scale=1.5, height=True)
     ground.item(39.6, 29.2, footprint=2.0, sink=0.1).place("nature_kit/canoe", degrees=120.0, scale=3.5, tilt=5.0, height=0.6, coat="moss")
-    ground.item(34.0, 34.6, footprint=0.5).place("survival_kit/barrel", degrees=0.0, scale=4.0, height=True)
+    ground.item(34.0, 34.6, footprint=0.5).place("mini_dungeon/barrel", degrees=0.0, scale=2.0, height=True)
     ground.item(38.4, 34.6, footprint=0.6).place("survival_kit/campfire-fishing-stand", degrees=20.0, scale=3.0, height=True)
 
 
@@ -542,8 +550,8 @@ def build_landing(scene, ground, rng):
     ground.item(-43.6, 36.6, footprint=2.0, sink=0.1).place("nature_kit/canoe", degrees=-25.0, scale=3.4, roll=180.0, height=0.6, coat="moss")
     ground.item(-41.0, 41.5, footprint=0.6).place("nature_kit/campfire_stones", degrees=0.0, scale=3.0)
     ground.items[-1].place("survival_kit/campfire-fishing-stand", (0.0, 0.0, 0.0), 40.0, 3.0, height=True)
-    ground.item(-38.4, 37.8, footprint=0.5).place("survival_kit/barrel", degrees=0.0, scale=4.0, height=True)
-    ground.item(-39.3, 37.0, footprint=0.5).place("survival_kit/box", degrees=25.0, scale=3.6, height=True)
+    ground.item(-38.4, 37.8, footprint=0.5).place("mini_dungeon/barrel", degrees=0.0, scale=2.0, height=True)
+    ground.item(-39.3, 37.0, footprint=0.5).place("survival_kit/chest", degrees=25.0, scale=3.6, height=True)
     for index, (x, z) in enumerate(((-35.6, 45.0), (-34.4, 46.2), (-33.2, 47.4))):
         for side in (-1.0, 1.0):
             px, pz = x - side * 0.75, z + side * 0.75
@@ -580,7 +588,7 @@ def build_chapel(scene, ground, rng):
     ruin_wall("wall-window-stone", (-38.0, -2.0), (0, 1), WALL_HEIGHT)
     ruin_wall("wall-broken", (-34.0, -2.0), (0, 1), 3.0)
     # Fronton brisé au-dessus de la porte.
-    scene.add("fantasy_town_kit/wall-broken", (-32.0 - 1.8, base + WALL_HEIGHT, -4.0), 0.0, 4.0, coat="moss")
+    scene.add("fantasy_town_kit/wall-broken", (-32.0 - 1.8, base + WALL_HEIGHT, -4.0), 0.0, (4.0, 2.2, 4.0), coat="moss")
     # Dans la nef (x de -39,8 à -32,2, z de -5,8 à -2,2) : l'autel, un banc debout, un autre renversé.
     scene.place("graveyard_kit/altar-stone", (-38.7, base, -4.0), 90.0, 2.0, height=True, coat="moss")
     scene.place("graveyard_kit/candle-multiple", (-38.7, base + 0.98, -4.5), 0.0, 2.0)

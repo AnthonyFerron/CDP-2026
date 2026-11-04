@@ -6,29 +6,28 @@
 [ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/stone-wall-damaged.glb" id="4_model"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/pine.glb" id="5_model"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/trunk-long.glb" id="6_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/barrel.glb" id="7_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/box-open.glb" id="8_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/barrel.glb" id="7_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/chest.glb" id="8_model"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/canoe.glb" id="9_model"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/lantern.glb" id="10_model"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/campfire-fishing-stand.glb" id="11_model"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/campfire_stones.glb" id="12_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/box.glb" id="13_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/cross.glb" id="14_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/gravestone-broken.glb" id="15_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/cross-wood.glb" id="16_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/gravestone-bevel.glb" id="17_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/gravestone-debris.glb" id="18_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/gravestone-round.glb" id="19_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/stump_oldTall.glb" id="20_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/log_large.glb" id="21_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/mushroom_redTall.glb" id="22_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/mushroom_tanGroup.glb" id="23_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/stone_tallA.glb" id="24_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/stone_tallB.glb" id="25_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/stone_tallC.glb" id="26_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/stone_tallD.glb" id="27_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/stone_tallG.glb" id="28_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/altar-stone.glb" id="29_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/cross.glb" id="13_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/gravestone-broken.glb" id="14_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/cross-wood.glb" id="15_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/gravestone-bevel.glb" id="16_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/gravestone-debris.glb" id="17_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/gravestone-round.glb" id="18_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/stump_oldTall.glb" id="19_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/log_large.glb" id="20_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/mushroom_redTall.glb" id="21_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/mushroom_tanGroup.glb" id="22_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/stone_tallA.glb" id="23_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/stone_tallB.glb" id="24_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/stone_tallC.glb" id="25_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/stone_tallD.glb" id="26_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/stone_tallG.glb" id="27_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/altar-stone.glb" id="28_model"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
 size = Vector3(0.33, 2.6, 3)
@@ -52,10 +51,10 @@ size = Vector3(0.864, 5, 0.864)
 size = Vector3(0.864, 4.2, 0.864)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_8"]
-size = Vector3(0.96, 1.36, 0.96)
+size = Vector3(1.04, 0.96, 1.04)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_9"]
-size = Vector3(0.85, 1.054, 0.85)
+size = Vector3(0.884, 0.714, 1.326)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_10"]
 size = Vector3(2.653, 0.63, 4.092)
@@ -82,7 +81,7 @@ size = Vector3(3.285, 0.6, 4.048)
 size = Vector3(2.577, 0.6, 3.975)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_18"]
-size = Vector3(0.9, 0.9, 0.9)
+size = Vector3(0.936, 0.756, 1.404)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_19"]
 size = Vector3(0.864, 4.4, 0.864)
@@ -589,25 +588,25 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, -0.05, 54.6)
 metadata/footprint = 0.5
 
 [node name="barrel_0" parent="Item30" instance=ExtResource("7_model")]
-transform = Transform3D(3.75877, 0, 1.36808, 0, 4, 0, -1.36808, 0, 3.75877, 0, 0, 0)
+transform = Transform3D(1.87939, 0, 0.68404, 0, 2, 0, -0.68404, 0, 1.87939, 0, 0, 0)
 
 [node name="Body" type="StaticBody3D" parent="Item30"]
 
 [node name="Shape0" type="CollisionShape3D" parent="Item30/Body"]
-transform = Transform3D(0.93969, 0, 0.34202, 0, 1, 0, -0.34202, 0, 0.93969, 0, 0.68, 0)
+transform = Transform3D(0.93969, 0, 0.34202, 0, 1, 0, -0.34202, 0, 0.93969, 0, 0.48, 0)
 shape = SubResource("BoxShape3D_8")
 
 [node name="Item31" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.9, -0.05, 55.9)
 metadata/footprint = 0.5
 
-[node name="box_open_0" parent="Item31" instance=ExtResource("8_model")]
-transform = Transform3D(3.28415, 0, -0.87998, 0, 3.4, 0, 0.87998, 0, 3.28415, 0.01202, 0, 0.02082)
+[node name="chest_0" parent="Item31" instance=ExtResource("8_model")]
+transform = Transform3D(3.28415, 0, -0.87998, 0, 3.4, 0, 0.87998, 0, 3.28415, 0.0484, 0.136, -0.18063)
 
 [node name="Body" type="StaticBody3D" parent="Item31"]
 
 [node name="Shape0" type="CollisionShape3D" parent="Item31/Body"]
-transform = Transform3D(0.96593, 0, -0.25882, 0, 1, 0, 0.25882, 0, 0.96593, 0, 0.527, 0)
+transform = Transform3D(0.96593, 0, -0.25882, 0, 1, 0, 0.25882, 0, 0.96593, 0, 0.357, 0)
 shape = SubResource("BoxShape3D_9")
 
 [node name="Item32" type="Node3D" parent="."]
@@ -725,12 +724,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34, -0.05, 34.6)
 metadata/footprint = 0.5
 
 [node name="barrel_0" parent="Item37" instance=ExtResource("7_model")]
-transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0)
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 
 [node name="Body" type="StaticBody3D" parent="Item37"]
 
 [node name="Shape0" type="CollisionShape3D" parent="Item37/Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.68, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.48, 0)
 shape = SubResource("BoxShape3D_8")
 
 [node name="Item38" type="Node3D" parent="."]
@@ -793,25 +792,25 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -38.4, -0.05, 37.8)
 metadata/footprint = 0.5
 
 [node name="barrel_0" parent="Item42" instance=ExtResource("7_model")]
-transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0)
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 
 [node name="Body" type="StaticBody3D" parent="Item42"]
 
 [node name="Shape0" type="CollisionShape3D" parent="Item42/Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.68, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.48, 0)
 shape = SubResource("BoxShape3D_8")
 
 [node name="Item43" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -39.3, -0.05, 37)
 metadata/footprint = 0.5
 
-[node name="box_0" parent="Item43" instance=ExtResource("13_model")]
-transform = Transform3D(3.26271, 0, 1.52143, 0, 3.6, 0, -1.52143, 0, 3.26271, 0.02392, 0, 0.00871)
+[node name="chest_0" parent="Item43" instance=ExtResource("8_model")]
+transform = Transform3D(3.26271, 0, 1.52143, 0, 3.6, 0, -1.52143, 0, 3.26271, -0.08368, 0.144, -0.17945)
 
 [node name="Body" type="StaticBody3D" parent="Item43"]
 
 [node name="Shape0" type="CollisionShape3D" parent="Item43/Body"]
-transform = Transform3D(0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, 0.90631, 0, 0.45, 0)
+transform = Transform3D(0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, 0.90631, 0, 0.378, 0)
 shape = SubResource("BoxShape3D_18")
 
 [node name="Item44" type="Node3D" parent="."]
@@ -855,14 +854,14 @@ shape = SubResource("BoxShape3D_19")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, -0.08, -4.3)
 metadata/footprint = 1.2
 
-[node name="moss_cross_0" parent="Item45" instance=ExtResource("14_model")]
+[node name="moss_cross_0" parent="Item45" instance=ExtResource("13_model")]
 transform = Transform3D(0.45149, -2.5605, 0, 0, 0, 2.6, -2.5605, -0.45149, 0, 1.34201, 0.338, 0.24983)
 
 [node name="Item46" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -31, -0.06, -7.6)
 metadata/footprint = 0.5
 
-[node name="moss_gravestone_broken_0" parent="Item46" instance=ExtResource("15_model")]
+[node name="moss_gravestone_broken_0" parent="Item46" instance=ExtResource("14_model")]
 transform = Transform3D(-2.4432, 0, -0.88925, 0, 2.6, 0, 0.88925, 0, -2.4432, 0.14331, 0, 0.12768)
 
 [node name="Body" type="StaticBody3D" parent="Item46"]
@@ -875,7 +874,7 @@ shape = SubResource("BoxShape3D_20")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.6, -0.06, -0.6)
 metadata/footprint = 0.5
 
-[node name="moss_cross_wood_0" parent="Item47" instance=ExtResource("16_model")]
+[node name="moss_cross_wood_0" parent="Item47" instance=ExtResource("15_model")]
 transform = Transform3D(-0.45149, 0, -2.5605, 0, 2.6, 0, 2.5605, 0, -0.45149, -0.01506, 0, 0.01055)
 
 [node name="Body" type="StaticBody3D" parent="Item47"]
@@ -888,7 +887,7 @@ shape = SubResource("BoxShape3D_21")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -41.4, -0.06, 0.4)
 metadata/footprint = 0.5
 
-[node name="moss_gravestone_bevel_0" parent="Item48" instance=ExtResource("17_model")]
+[node name="moss_gravestone_bevel_0" parent="Item48" instance=ExtResource("16_model")]
 transform = Transform3D(2.4432, 0, 0.88925, 0, 2.6, 0, -0.88925, 0, 2.4432, -0.00777, 0, 0.01666)
 
 [node name="Body" type="StaticBody3D" parent="Item48"]
@@ -901,7 +900,7 @@ shape = SubResource("BoxShape3D_22")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -41.6, -0.06, -7.8)
 metadata/footprint = 0.5
 
-[node name="moss_gravestone_debris_0" parent="Item49" instance=ExtResource("18_model")]
+[node name="moss_gravestone_debris_0" parent="Item49" instance=ExtResource("17_model")]
 transform = Transform3D(-1.99172, 0, 1.67125, 0, 2.6, 0, -1.67125, 0, -1.99172, 0.29442, 0.13, -0.43177)
 
 [node name="Body" type="StaticBody3D" parent="Item49"]
@@ -914,7 +913,7 @@ shape = SubResource("BoxShape3D_23")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33.4, -0.06, 0.6)
 metadata/footprint = 0.5
 
-[node name="moss_gravestone_round_0" parent="Item50" instance=ExtResource("19_model")]
+[node name="moss_gravestone_round_0" parent="Item50" instance=ExtResource("18_model")]
 transform = Transform3D(2.25167, 0, -1.3, 0, 2.6, 0, 1.3, 0, 2.25167, -0.01776, 0, 0.00476)
 
 [node name="Body" type="StaticBody3D" parent="Item50"]
@@ -1109,7 +1108,7 @@ shape = SubResource("BoxShape3D_11")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33, -0.05, -27.2)
 metadata/footprint = 0.4
 
-[node name="moss_stump_oldTall_0" parent="Item56" instance=ExtResource("20_model")]
+[node name="moss_stump_oldTall_0" parent="Item56" instance=ExtResource("19_model")]
 transform = Transform3D(2.29813, 0, 1.92836, 0, 3, 0, -1.92836, 0, 2.29813, -0.03632, 0, 0.05006)
 
 [node name="Body" type="StaticBody3D" parent="Item56"]
@@ -1122,7 +1121,7 @@ shape = SubResource("BoxShape3D_28")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.2, -0.1, -31)
 metadata/footprint = 1.3
 
-[node name="moss_log_large_0" parent="Item57" instance=ExtResource("21_model")]
+[node name="moss_log_large_0" parent="Item57" instance=ExtResource("20_model")]
 transform = Transform3D(2.59808, 0, 1.5, 0, 3, 0, -1.5, 0, 2.59808, -0.0375, 0, -0.06495)
 
 [node name="Body" type="StaticBody3D" parent="Item57"]
@@ -1135,28 +1134,28 @@ shape = SubResource("BoxShape3D_29")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33.6, -0.02, -26.6)
 metadata/footprint = 0.2
 
-[node name="mushroom_redTall_0" parent="Item58" instance=ExtResource("22_model")]
+[node name="mushroom_redTall_0" parent="Item58" instance=ExtResource("21_model")]
 transform = Transform3D(1.00209, 0, 2.82769, 0, 3, 0, -2.82769, 0, 1.00209, 0, 0, 0)
 
 [node name="Item59" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.8, -0.02, -30.4)
 metadata/footprint = 0.2
 
-[node name="mushroom_tanGroup_0" parent="Item59" instance=ExtResource("23_model")]
+[node name="mushroom_tanGroup_0" parent="Item59" instance=ExtResource("22_model")]
 transform = Transform3D(-1.36415, 0, -2.67191, 0, 3, 0, 2.67191, 0, -1.36415, 0.03326, 0, 0.03382)
 
 [node name="Item60" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.2, -0.02, -29)
 metadata/footprint = 0.2
 
-[node name="mushroom_tanGroup_0" parent="Item60" instance=ExtResource("23_model")]
+[node name="mushroom_tanGroup_0" parent="Item60" instance=ExtResource("22_model")]
 transform = Transform3D(-2.98335, 0, -0.31561, 0, 3, 0, 0.31561, 0, -2.98335, -0.01018, 0, 0.04633)
 
 [node name="Item61" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.4206, -0.15, -43.2021)
 metadata/footprint = 0.5
 
-[node name="moss_stone_tallA_0" parent="Item61" instance=ExtResource("24_model")]
+[node name="moss_stone_tallA_0" parent="Item61" instance=ExtResource("23_model")]
 transform = Transform3D(-0.88378, -0.00472, -2.48543, 0, 2.63788, -0.00501, 2.48543, -0.00168, -0.88378, 0.00236, 0.0017, 0.00084)
 
 [node name="Body" type="StaticBody3D" parent="Item61"]
@@ -1169,7 +1168,7 @@ shape = SubResource("BoxShape3D_30")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.0156, -0.15, -41.4859)
 metadata/footprint = 0.5
 
-[node name="moss_stone_tallB_0" parent="Item62" instance=ExtResource("25_model")]
+[node name="moss_stone_tallB_0" parent="Item62" instance=ExtResource("24_model")]
 transform = Transform3D(-2.63525, -0.05713, -0.89726, 0, 2.77877, -0.17694, 0.89908, -0.16746, -2.62992, 0.02065, 0.06724, 0.06053)
 
 [node name="Body" type="StaticBody3D" parent="Item62"]
@@ -1182,7 +1181,7 @@ shape = SubResource("BoxShape3D_31")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -31.3519, -0.15, -41.6628)
 metadata/footprint = 0.5
 
-[node name="moss_stone_tallC_0" parent="Item63" instance=ExtResource("26_model")]
+[node name="moss_stone_tallC_0" parent="Item63" instance=ExtResource("25_model")]
 transform = Transform3D(-2.39999, -0.05111, 1.10338, 0, 2.63914, 0.12225, -1.10456, 0.11105, -2.39742, 0.01993, 0.02689, -0.04331)
 
 [node name="Body" type="StaticBody3D" parent="Item63"]
@@ -1195,7 +1194,7 @@ shape = SubResource("BoxShape3D_32")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.6702, -0.15, -43.5997)
 metadata/footprint = 0.5
 
-[node name="moss_stone_tallD_0" parent="Item64" instance=ExtResource("27_model")]
+[node name="moss_stone_tallD_0" parent="Item64" instance=ExtResource("26_model")]
 transform = Transform3D(-0.84307, 0.11666, 2.25012, 0, 2.40248, -0.12456, -2.25315, -0.04365, -0.84194, -0.04491, 0.02865, 0.01681)
 
 [node name="Body" type="StaticBody3D" parent="Item64"]
@@ -1208,7 +1207,7 @@ shape = SubResource("BoxShape3D_33")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -31.9778, -0.15, -45.8381)
 metadata/footprint = 0.5
 
-[node name="moss_stone_tallG_0" parent="Item65" instance=ExtResource("28_model")]
+[node name="moss_stone_tallG_0" parent="Item65" instance=ExtResource("27_model")]
 transform = Transform3D(1.76997, 1.88598, 0.26506, 0, 0.36185, -2.5747, -1.90452, 1.75275, 0.24633, -0.73421, 0.61793, -0.68234)
 
 [node name="Body" type="StaticBody3D" parent="Item65"]
@@ -1221,7 +1220,7 @@ shape = SubResource("BoxShape3D_34")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.7961, -0.15, -46.6923)
 metadata/footprint = 0.5
 
-[node name="moss_stone_tallA_0" parent="Item66" instance=ExtResource("24_model")]
+[node name="moss_stone_tallA_0" parent="Item66" instance=ExtResource("23_model")]
 transform = Transform3D(2.33299, -0.03775, -0.60451, 0, 2.40565, -0.15022, 0.60569, 0.1454, 2.32846, 0.01887, 0.05107, -0.0727)
 
 [node name="Body" type="StaticBody3D" parent="Item66"]
@@ -1234,7 +1233,7 @@ shape = SubResource("BoxShape3D_35")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.7679, -0.15, -45.5192)
 metadata/footprint = 0.5
 
-[node name="moss_stone_tallC_0" parent="Item67" instance=ExtResource("26_model")]
+[node name="moss_stone_tallC_0" parent="Item67" instance=ExtResource("25_model")]
 transform = Transform3D(1.85889, -0.08103, -1.79184, 0, 2.58053, -0.1167, 1.79367, 0.08398, 1.857, 0.0316, 0.02567, -0.03275)
 
 [node name="Body" type="StaticBody3D" parent="Item67"]
@@ -1247,7 +1246,7 @@ shape = SubResource("BoxShape3D_36")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, -0.05, -44)
 metadata/footprint = 0.8
 
-[node name="moss_altar_stone_0" parent="Item68" instance=ExtResource("29_model")]
+[node name="moss_altar_stone_0" parent="Item68" instance=ExtResource("28_model")]
 transform = Transform3D(1.45009, 0, 0.67619, 0, 1.6, 0, -0.67619, 0, 1.45009, 0.00338, 0, 0.00725)
 
 [node name="Body" type="StaticBody3D" parent="Item68"]
@@ -1260,49 +1259,49 @@ shape = SubResource("BoxShape3D_37")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.8293, -0.02, -42.9094)
 metadata/footprint = 0.2
 
-[node name="mushroom_tanGroup_0" parent="Item69" instance=ExtResource("23_model")]
+[node name="mushroom_tanGroup_0" parent="Item69" instance=ExtResource("22_model")]
 transform = Transform3D(1.84153, 0, 1.53908, 0, 2.4, 0, -1.53908, 0, 1.84153, -0.01388, 0, -0.03532)
 
 [node name="Item70" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.1228, -0.02, -42.4047)
 metadata/footprint = 0.2
 
-[node name="mushroom_tanGroup_0" parent="Item70" instance=ExtResource("23_model")]
+[node name="mushroom_tanGroup_0" parent="Item70" instance=ExtResource("22_model")]
 transform = Transform3D(2.37447, 0, -0.34913, 0, 2.4, 0, 0.34913, 0, 2.37447, 0.01711, 0, -0.03387)
 
 [node name="Item71" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -31.3238, -0.02, -43.1013)
 metadata/footprint = 0.2
 
-[node name="mushroom_tanGroup_0" parent="Item71" instance=ExtResource("23_model")]
+[node name="mushroom_tanGroup_0" parent="Item71" instance=ExtResource("22_model")]
 transform = Transform3D(-2.0477, 0, 1.25177, 0, 2.4, 0, -1.25177, 0, -2.0477, -0.02902, 0, 0.02446)
 
 [node name="Item72" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -31.528, -0.02, -44.4747)
 metadata/footprint = 0.2
 
-[node name="mushroom_tanGroup_0" parent="Item72" instance=ExtResource("23_model")]
+[node name="mushroom_tanGroup_0" parent="Item72" instance=ExtResource("22_model")]
 transform = Transform3D(0.50813, 0, 2.34559, 0, 2.4, 0, -2.34559, 0, 0.50813, -0.03264, 0, -0.01935)
 
 [node name="Item73" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.5816, -0.02, -45.4906)
 metadata/footprint = 0.2
 
-[node name="mushroom_tanGroup_0" parent="Item73" instance=ExtResource("23_model")]
+[node name="mushroom_tanGroup_0" parent="Item73" instance=ExtResource("22_model")]
 transform = Transform3D(-1.24791, 0, -2.05005, 0, 2.4, 0, 2.05005, 0, -1.24791, 0.02451, 0, 0.02897)
 
 [node name="Item74" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.1972, -0.02, -45.384)
 metadata/footprint = 0.2
 
-[node name="mushroom_tanGroup_0" parent="Item74" instance=ExtResource("23_model")]
+[node name="mushroom_tanGroup_0" parent="Item74" instance=ExtResource("22_model")]
 transform = Transform3D(-1.40214, 0, -1.94782, 0, 2.4, 0, 1.94782, 0, -1.40214, 0.02221, 0, 0.03077)
 
 [node name="Item75" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.4174, -0.02, -44.2353)
 metadata/footprint = 0.2
 
-[node name="mushroom_tanGroup_0" parent="Item75" instance=ExtResource("23_model")]
+[node name="mushroom_tanGroup_0" parent="Item75" instance=ExtResource("22_model")]
 transform = Transform3D(0.05136, 0, 2.39945, 0, 2.4, 0, -2.39945, 0, 0.05136, -0.03573, 0, -0.01277)
 
 [node name="Item76" type="Node3D" parent="."]

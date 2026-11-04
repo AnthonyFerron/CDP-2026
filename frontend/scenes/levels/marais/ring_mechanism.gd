@@ -161,14 +161,19 @@ func _build() -> void:
 	hub.mesh = center
 	hub.position.y = PLINTH_HEIGHT + center.height * 0.5
 	add_child(hub)
-	# On ne marche pas sur le mécanisme : un cylindre bas le borde.
+	# On marche sur le mécanisme comme sur une estrade : sa collision est un cône tronqué très bas, dont le dessus
+	# couvre les cercles et dont la pente douce monte du sol au bord du socle, sans marche qui arrête le pas.
 	if not Engine.is_editor_hint():
-		var body := StaticBody3D.new()
+		var points := PackedVector3Array()
+		var top_radius := INNER_RADIUS + RING_COUNT * RING_WIDTH - 0.06
+		for step in 24:
+			var angle := TAU * step / 24.0
+			points.append(Vector3(cos(angle) * (PLINTH_RADIUS + 0.05), 0.0, sin(angle) * (PLINTH_RADIUS + 0.05)))
+			points.append(Vector3(cos(angle) * top_radius, ring_top(0) + 0.015, sin(angle) * top_radius))
+		var cone := ConvexPolygonShape3D.new()
+		cone.points = points
 		var shape := CollisionShape3D.new()
-		var cylinder := CylinderShape3D.new()
-		cylinder.radius = PLINTH_RADIUS
-		cylinder.height = 0.4
-		shape.shape = cylinder
-		shape.position.y = 0.2
+		shape.shape = cone
+		var body := StaticBody3D.new()
 		body.add_child(shape)
 		add_child(body)
