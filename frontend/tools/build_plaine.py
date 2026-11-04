@@ -639,9 +639,10 @@ def floor_books(scene, rng, x, z, count, spread=0.8, y=0.0):
     for _ in range(count):
         px, pz = x + rng.uniform(-spread, spread), z + rng.uniform(-spread, spread)
         # Debout, renversés sur le dos ou en pile couchée : chaque pose garde le modèle au-dessus du sol.
-        tilt, roll = rng.choice(((0.0, 0.0), (90.0, 0.0), (90.0, 0.0), (0.0, 90.0)))
+        # Couchés, sur le dos ou sur la tranche : moins de 30 cm, on les enjambe sans collision.
+        tilt, roll = rng.choice(((90.0, 0.0), (90.0, 0.0), (90.0, 12.0), (90.0, -12.0)))
         scene.add_many("furniture_kit/books", (px, y + 0.003, pz), rng.uniform(0, 360),
-                       BOOKS_SCALE * rng.uniform(0.85, 1.05), tilt=tilt, roll=roll)
+                       BOOKS_SCALE * rng.uniform(0.85, 1.0), tilt=tilt, roll=roll)
 
 
 def sheets(scene, rng, x, z, count, spread=1.0, y=0.0, scrolls=0):
@@ -692,14 +693,14 @@ def chandelier(scene, x, z, ceiling=WALL_HEIGHT, drop=0.9, radius=0.75):
 
 
 def fallen_chandelier(scene, x, z, radius=0.75):
-    """Lustre tombé du plafond, couché de travers, ses bougies éteintes éparpillées."""
-    scene.add_shape("torus", (radius - 0.06, radius), IRON, (x, 0.18, z), degrees=20.0, tilt=12.0, roughness=0.5)
+    """Lustre tombé du plafond, couché de travers, ses bougies éteintes éparpillées : bas, il s'enjambe."""
+    scene.add_shape("torus", (radius - 0.06, radius), IRON, (x, 0.1, z), degrees=20.0, tilt=3.0, roughness=0.5)
     for index in range(5):
         angle = math.radians(index * 70.0 + 10.0)
         scene.add_shape("cylinder", (0.035, 0.16), WAX,
                         (x + math.cos(angle) * (radius + 0.2), 0.035, z + math.sin(angle) * (radius + 0.2)),
                         degrees=index * 37.0, tilt=90.0)
-    scene.add_box((x, 0.2, z), (radius * 2, 0.4, radius * 2))
+    # Couché, il ne dépasse pas la cheville : on l'enjambe, sans collision.
 
 
 def lectern(scene, x, z, degrees, open_book=True):
@@ -766,7 +767,12 @@ def reading_table(scene, rng, x, z, degrees, chairs=((-1, -0.55), (-1, 0.55), (1
         px, pz = at(along * 2.0, side * 1.1)
         yaw = degrees + (180.0 if side > 0 else 0.0)
         if index in tipped:
-            furniture(scene, "furniture_kit/chair", (px + 0.2 * side, 0.0, pz), yaw + 25.0, 3.0, height=0.6, tilt=-90.0)
+            # Chaise renversée sur le dos : une boîte orientée comme elle, pas la boîte droite qui l'englobe.
+            furniture(scene, "furniture_kit/chair", (px + 0.2 * side, 0.0, pz), yaw + 25.0, 3.0, tilt=-90.0)
+            # Seuls l'assise et les pieds se dressent ; le dossier à plat s'enjambe.
+            lying = math.radians(yaw + 25.0)
+            scene.add_box((px + 0.2 * side + math.sin(lying) * 0.33, 0.3, pz + math.cos(lying) * 0.33), (0.6, 0.6, 0.7),
+                          yaw + 25.0)
         else:
             furniture(scene, "furniture_kit/chair", (px, 0.0, pz), yaw + rng.uniform(-12, 12), 3.0, height=1.4)
     for u, v in ((-0.7, 0.1), (0.6, -0.15)):
@@ -846,6 +852,20 @@ def soldiers_camp(scene, rng, cx, cz, heading):
         furniture(scene, "mini_dungeon/barrel", at(u, v), rng.uniform(0, 360), 2.6, height=1.2)
     furniture(scene, "survival_kit/box-large", at(5.6, 1.4), heading + 70.0, 3.6, height=0.9)
     furniture(scene, "fantasy_town_kit/cart", at(-1.0, -6.4), heading + 100.0, 2.8, height=1.5, roll=90.0)
+
+
+def arch_fill(scene, center, outward):
+    """Complète la collision d'un mur voûté posé par doorway() : son arche ne laisse que ±0,80 m de passage jusqu'à
+    1,8 m, puis se referme en pointe jusqu'à 2,9 m, alors que doorway() laisse ±0,95 m sur toute la hauteur."""
+    x, z = center
+    along = (0, 1) if outward[0] else (1, 0)
+    for sign in (-1, 1):
+        for inner, outer, low, high in ((0.8, 0.95, 0.0, DOORWAY_HEIGHT), (0.5, 0.8, 2.3, DOORWAY_HEIGHT),
+                                        (0.15, 0.5, 2.7, DOORWAY_HEIGHT)):
+            offset = sign * (inner + outer) / 2
+            width = outer - inner
+            size = (WALL_THICKNESS, high - low, width) if outward[0] else (width, high - low, WALL_THICKNESS)
+            scene.add_box((x + along[0] * offset, (low + high) / 2, z + along[1] * offset), size)
 
 
 def build_ruins():
@@ -1232,6 +1252,7 @@ def build_interior():
         for x in cell_x:
             if x == opening:
                 doorway(scene, (x, z), (0, -1))
+                arch_fill(scene, (x, z), (0, -1))
             else:
                 wall(scene, "wall", (x, z), (0, -1))
 
@@ -1239,6 +1260,7 @@ def build_interior():
     wall(scene, "wall", (-4.0, end), (0, -1))
     wall(scene, "wall", (4.0, end), (0, -1))
     doorway(scene, (0.0, end), (0, -1))
+    arch_fill(scene, (0.0, end), (0, -1))
     passage(scene)
 
     # Sol des trois salles, jusqu'au palier derrière la dalle, et plafond.
@@ -1307,7 +1329,8 @@ def build_interior():
     floor_books(scene, rng, -1.2, -9.5, 4, 0.6)
     floor_books(scene, rng, 0.2, -3.6, 3, 0.8)
     sheets(scene, rng, 0.0, -4.0, 10, 2.4, scrolls=3)
-    furniture(scene, "graveyard_kit/debris", (-0.6, 0.0, -9.0), 30.0, 2.6, height=0.4)
+    # Gravats bas, qu'on enjambe : pas de collision, plutôt qu'une boîte plus haute que le tas.
+    furniture(scene, "graveyard_kit/debris", (-0.6, 0.0, -9.0), 30.0, 1.7)
 
     # Scriptorium : pupitres de scribes, l'un renversé, la carte du royaume au mur.
     writing_desk(scene, rng, 1.9, -15.6, 180.0)
@@ -1318,13 +1341,13 @@ def build_interior():
     wall_map(scene, -1.45, -12.25, (0, -1), y=2.95, width=1.5, height=0.9)
     sheets(scene, rng, 0.5, -17.5, 14, 2.6, scrolls=4)
     floor_books(scene, rng, -0.6, -21.0, 4, 0.9)
-    furniture(scene, "graveyard_kit/debris-wood", (-0.8, 0.0, -21.8), 80.0, 2.8, height=0.3)
+    furniture(scene, "graveyard_kit/debris-wood", (-0.8, 0.0, -21.8), 80.0, 2.4)
 
     # Archives : coffres et caisses d'archives, un lustre tombé, des registres répandus autour de la tablette.
     for position, model, degrees, scale, height in (
         ((-4.3, -26.3), "mini_dungeon/chest", 80.0, 2.0, 0.9),
         ((-3.9, -33.8), "mini_dungeon/chest", 100.0, 2.0, 0.9),
-        ((-2.6, -34.6), "survival_kit/box-large-open", 10.0, 3.0, 0.9),
+        ((-1.0, -26.4), "survival_kit/box-large-open", 10.0, 3.0, 0.9),
         ((-2.2, -26.0), "survival_kit/box-open", 35.0, 3.0, 0.9),
     ):
         furniture(scene, model, (position[0], 0.0, position[1]), degrees, scale, height=height)
