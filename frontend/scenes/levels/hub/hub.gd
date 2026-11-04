@@ -25,8 +25,8 @@ const INTRO_SPEAKERS: Array[StringName] = [&"Codeon", &"Merlon"]
 ## Couleur des lettres du cercle magique, éteintes (gravées) et allumées par leur livre.
 const LETTER_DARK := Color(0.22, 0.2, 0.19)
 const LETTER_LIT := Color(0.62, 0.86, 1.0)
-## Bras de Merlon levés pendant l'incantation : rotation des os des bras.
-const ARMS_RAISED := {&"arm-left": Vector3(-0.35, -0.3, 1.25), &"arm-right": Vector3(-0.35, 0.3, -1.25)}
+## Pendant l'incantation, Merlon brandit son bâton et tend l'autre main vers le cercle : rotation des os des bras.
+const ARMS_RAISED := {&"arm-left": Vector3(0.0, -1.05, 0.5), &"arm-right": Vector3(0.0, 0.9, -0.75)}
 
 @export_group("Ciel sans livre")
 @export var dead_sky := Color(0.3, 0.29, 0.36)
