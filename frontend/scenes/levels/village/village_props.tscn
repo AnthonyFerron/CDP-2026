@@ -668,6 +668,13 @@ roughness = 1
 albedo_color = Color(0.36, 0.2, 0.16, 1)
 roughness = 0.9
 
+[sub_resource type="StandardMaterial3D" id="Material_window_glow"]
+albedo_color = Color(0.9, 0.6, 0.32, 1)
+roughness = 1
+emission_enabled = true
+emission = Color(1, 0.6, 0.28, 1)
+emission_energy_multiplier = 1.6
+
 [sub_resource type="CylinderMesh" id="CylinderMesh_bottom_radius2p4_height0p01_radial_segments14_rings1_top_radius2p4"]
 top_radius = 2.4
 bottom_radius = 2.4
@@ -961,6 +968,12 @@ bottom_radius = 0.8
 height = 0.01
 radial_segments = 9
 rings = 1
+
+[sub_resource type="BoxMesh" id="BoxMesh_size_1p4_1p6_0p04"]
+size = Vector3(1.4, 1.6, 0.04)
+
+[sub_resource type="BoxMesh" id="BoxMesh_size_0p04_1p6_1p4"]
+size = Vector3(0.04, 1.6, 1.4)
 
 [sub_resource type="PrismMesh" id="PrismMesh_size_12p4_3p4_12p4"]
 size = Vector3(12.4, 3.4, 12.4)
@@ -1382,72 +1395,72 @@ rings = 1
 [sub_resource type="BoxMesh" id="BoxMesh_size_0p26_0p26_2p8"]
 size = Vector3(0.26, 0.26, 2.8)
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_bottom_radius0p80627_height0p01_radial_segments11_rings1_top_radius0p80627"]
-top_radius = 0.80627
-bottom_radius = 0.80627
+[sub_resource type="CylinderMesh" id="CylinderMesh_bottom_radius0p59581_height0p01_radial_segments11_rings1_top_radius0p59581"]
+top_radius = 0.59581
+bottom_radius = 0.59581
 height = 0.01
 radial_segments = 11
 rings = 1
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_bottom_radius0p74889_height0p01_radial_segments11_rings1_top_radius0p74889"]
-top_radius = 0.74889
-bottom_radius = 0.74889
+[sub_resource type="CylinderMesh" id="CylinderMesh_bottom_radius0p5886_height0p01_radial_segments11_rings1_top_radius0p5886"]
+top_radius = 0.5886
+bottom_radius = 0.5886
 height = 0.01
 radial_segments = 11
 rings = 1
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_bottom_radius0p86315_height0p01_radial_segments11_rings1_top_radius0p86315"]
-top_radius = 0.86315
-bottom_radius = 0.86315
+[sub_resource type="CylinderMesh" id="CylinderMesh_bottom_radius0p45405_height0p01_radial_segments11_rings1_top_radius0p45405"]
+top_radius = 0.45405
+bottom_radius = 0.45405
 height = 0.01
 radial_segments = 11
 rings = 1
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_bottom_radius1p32_height0p01_radial_segments14_rings1_top_radius1p32"]
-top_radius = 1.32
-bottom_radius = 1.32
+[sub_resource type="CylinderMesh" id="CylinderMesh_bottom_radius0p51452_height0p01_radial_segments11_rings1_top_radius0p51452"]
+top_radius = 0.51452
+bottom_radius = 0.51452
+height = 0.01
+radial_segments = 11
+rings = 1
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_bottom_radius0p57067_height0p01_radial_segments11_rings1_top_radius0p57067"]
+top_radius = 0.57067
+bottom_radius = 0.57067
+height = 0.01
+radial_segments = 11
+rings = 1
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_bottom_radius0p59559_height0p01_radial_segments11_rings1_top_radius0p59559"]
+top_radius = 0.59559
+bottom_radius = 0.59559
+height = 0.01
+radial_segments = 11
+rings = 1
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_bottom_radius0p84_height0p01_radial_segments14_rings1_top_radius0p84"]
+top_radius = 0.84
+bottom_radius = 0.84
 height = 0.01
 radial_segments = 14
 rings = 1
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_bottom_radius0p7292_height0p01_radial_segments11_rings1_top_radius0p7292"]
-top_radius = 0.7292
-bottom_radius = 0.7292
+[sub_resource type="CylinderMesh" id="CylinderMesh_bottom_radius0p40258_height0p01_radial_segments11_rings1_top_radius0p40258"]
+top_radius = 0.40258
+bottom_radius = 0.40258
 height = 0.01
 radial_segments = 11
 rings = 1
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_bottom_radius0p76919_height0p01_radial_segments11_rings1_top_radius0p76919"]
-top_radius = 0.76919
-bottom_radius = 0.76919
+[sub_resource type="CylinderMesh" id="CylinderMesh_bottom_radius0p40156_height0p01_radial_segments11_rings1_top_radius0p40156"]
+top_radius = 0.40156
+bottom_radius = 0.40156
 height = 0.01
 radial_segments = 11
 rings = 1
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_bottom_radius0p70499_height0p01_radial_segments11_rings1_top_radius0p70499"]
-top_radius = 0.70499
-bottom_radius = 0.70499
-height = 0.01
-radial_segments = 11
-rings = 1
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_bottom_radius0p54409_height0p01_radial_segments11_rings1_top_radius0p54409"]
-top_radius = 0.54409
-bottom_radius = 0.54409
-height = 0.01
-radial_segments = 11
-rings = 1
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_bottom_radius0p56967_height0p01_radial_segments11_rings1_top_radius0p56967"]
-top_radius = 0.56967
-bottom_radius = 0.56967
-height = 0.01
-radial_segments = 11
-rings = 1
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_bottom_radius0p57545_height0p01_radial_segments11_rings1_top_radius0p57545"]
-top_radius = 0.57545
-bottom_radius = 0.57545
+[sub_resource type="CylinderMesh" id="CylinderMesh_bottom_radius0p44322_height0p01_radial_segments11_rings1_top_radius0p44322"]
+top_radius = 0.44322
+bottom_radius = 0.44322
 height = 0.01
 radial_segments = 11
 rings = 1
@@ -1634,6 +1647,13 @@ height = 0.01
 radial_segments = 11
 rings = 1
 
+[sub_resource type="CylinderMesh" id="CylinderMesh_bottom_radius1p32_height0p01_radial_segments14_rings1_top_radius1p32"]
+top_radius = 1.32
+bottom_radius = 1.32
+height = 0.01
+radial_segments = 14
+rings = 1
+
 [sub_resource type="CylinderMesh" id="CylinderMesh_bottom_radius0p63607_height0p01_radial_segments11_rings1_top_radius0p63607"]
 top_radius = 0.63607
 bottom_radius = 0.63607
@@ -1718,9 +1738,9 @@ buffer = PackedFloat32Array(0.86343, 0, 0.5297, -8.4, 0, 0.85, 0, 0.25, -0.50447
 
 [sub_resource type="MultiMesh" id="MultiMesh_2"]
 transform_format = 1
-instance_count = 5
+instance_count = 7
 mesh = SubResource("CylinderMesh_bottom_radius0p96_height0p01_radial_segments14_rings1_top_radius0p96")
-buffer = PackedFloat32Array(1, 0, 0, -9.6, 0, 1, 0, 0.06, 0, 0, 1, 29.6, 1, 0, 0, -20.4, 0, 1, 0, 0.06, 0, 0, 1, 14.4, 1, 0, 0, -12.4, 0, 1, 0, 0.06, 0, 0, 1, -17.6, 1, 0, 0, -4.2, 0, 1, 0, 0.012, 0, 0, 1, 22, 1, 0, 0, 0.4, 0, 1, 0, 0.012, 0, 0, 1, -24)
+buffer = PackedFloat32Array(1, 0, 0, -9.6, 0, 1, 0, 0.06, 0, 0, 1, 29.6, 1, 0, 0, -20.4, 0, 1, 0, 0.06, 0, 0, 1, 14.4, 1, 0, 0, -12.4, 0, 1, 0, 0.06, 0, 0, 1, -17.6, 1, 0, 0, 1.7, 0, 1, 0, 0.012, 0, 0, 1, 26.5, 1, 0, 0, -1.7, 0, 1, 0, 0.012, 0, 0, 1, 14.6, 1, 0, 0, -4.2, 0, 1, 0, 0.012, 0, 0, 1, 22, 1, 0, 0, 0.4, 0, 1, 0, 0.012, 0, 0, 1, -24)
 
 [sub_resource type="MultiMesh" id="MultiMesh_3"]
 transform_format = 1
@@ -1790,131 +1810,137 @@ buffer = PackedFloat32Array(0.93969, 0, 0.34202, 11.4, 0, 1, 0, 0.08, -0.34202, 
 
 [sub_resource type="MultiMesh" id="MultiMesh_14"]
 transform_format = 1
+instance_count = 9
+mesh = SubResource("BoxMesh_size_1p4_1p6_0p04")
+buffer = PackedFloat32Array(1, 0, 0, -4, 0, 1, 0, 1.9, 0, 0, 1, -31.55, 1, 0, 0, -4, 0, 1, 0, 5.9, 0, 0, 1, -31.55, 1, 0, 0, 4, 0, 1, 0, 1.9, 0, 0, 1, -31.55, 1, 0, 0, 4, 0, 1, 0, 5.9, 0, 0, 1, -31.55, 1, 0, 0, -4, 0, 1, 0, 1.9, 0, 0, 1, -20.45, 1, 0, 0, -4, 0, 1, 0, 5.9, 0, 0, 1, -20.45, 1, 0, 0, 0, 0, 1, 0, 5.9, 0, 0, 1, -20.45, 1, 0, 0, 4, 0, 1, 0, 1.9, 0, 0, 1, -20.45, 1, 0, 0, 4, 0, 1, 0, 5.9, 0, 0, 1, -20.45)
+
+[sub_resource type="MultiMesh" id="MultiMesh_15"]
+transform_format = 1
+instance_count = 8
+mesh = SubResource("BoxMesh_size_0p04_1p6_1p4")
+buffer = PackedFloat32Array(1, 0, 0, 5.55, 0, 1, 0, 1.9, 0, 0, 1, -30, 1, 0, 0, 5.55, 0, 1, 0, 5.9, 0, 0, 1, -30, 1, 0, 0, 5.55, 0, 1, 0, 1.9, 0, 0, 1, -22, 1, 0, 0, 5.55, 0, 1, 0, 5.9, 0, 0, 1, -22, 1, 0, 0, -5.55, 0, 1, 0, 1.9, 0, 0, 1, -30, 1, 0, 0, -5.55, 0, 1, 0, 5.9, 0, 0, 1, -30, 1, 0, 0, -5.55, 0, 1, 0, 1.9, 0, 0, 1, -22, 1, 0, 0, -5.55, 0, 1, 0, 5.9, 0, 0, 1, -22)
+
+[sub_resource type="MultiMesh" id="MultiMesh_16"]
+transform_format = 1
 instance_count = 2
 mesh = SubResource("BoxMesh_size_7p671067811865475_0p2_13p2")
 buffer = PackedFloat32Array(0.87681, -0.48083, 0, -3.05, 0.48083, 0.87681, 0, 9.82, 0, 0, 1, -26, 0.87681, 0.48083, 0, 3.05, -0.48083, 0.87681, 0, 9.82, 0, 0, 1, -26)
 
-[sub_resource type="MultiMesh" id="MultiMesh_15"]
-transform_format = 1
-instance_count = 3
-mesh = SubResource("CylinderMesh_bottom_radius1p56_height0p01_radial_segments14_rings1_top_radius1p56")
-buffer = PackedFloat32Array(1, 0, 0, 1.6, 0, 1, 0, 0.012, 0, 0, 1, 44.6, 1, 0, 0, -26, 0, 1, 0, 0.06, 0, 0, 1, 36.6, 1, 0, 0, 0.8, 0, 1, 0, 0.012, 0, 0, 1, 26)
-
-[sub_resource type="MultiMesh" id="MultiMesh_16"]
-transform_format = 1
-instance_count = 3
-mesh = SubResource("CylinderMesh_bottom_radius1p08_height0p01_radial_segments14_rings1_top_radius1p08")
-buffer = PackedFloat32Array(1, 0, 0, 6.6, 0, 1, 0, 0.012, 0, 0, 1, 34.6, 1, 0, 0, 1.2, 0, 1, 0, 0.012, 0, 0, 1, -17, 1, 0, 0, 16, 0, 1, 0, 0.012, 0, 0, 1, 22)
-
 [sub_resource type="MultiMesh" id="MultiMesh_17"]
+transform_format = 1
+instance_count = 2
+mesh = SubResource("CylinderMesh_bottom_radius1p56_height0p01_radial_segments14_rings1_top_radius1p56")
+buffer = PackedFloat32Array(1, 0, 0, 1.6, 0, 1, 0, 0.012, 0, 0, 1, 44.6, 1, 0, 0, -26, 0, 1, 0, 0.06, 0, 0, 1, 36.6)
+
+[sub_resource type="MultiMesh" id="MultiMesh_18"]
+transform_format = 1
+instance_count = 2
+mesh = SubResource("CylinderMesh_bottom_radius1p08_height0p01_radial_segments14_rings1_top_radius1p08")
+buffer = PackedFloat32Array(1, 0, 0, 6.6, 0, 1, 0, 0.012, 0, 0, 1, 34.6, 1, 0, 0, 16, 0, 1, 0, 0.012, 0, 0, 1, 22)
+
+[sub_resource type="MultiMesh" id="MultiMesh_19"]
 transform_format = 1
 instance_count = 13
 mesh = SubResource("SphereMesh_height0p16_is_hemisphereFalse_radial_segments10_radius0p08_rings5")
 buffer = PackedFloat32Array(-0.17365, 0, 1.67417, -27.25, 0, 0.85, 0, 1.62, -0.98481, 0, -0.2952, 25.5, 0.86603, 0, 0.85, 21.7, 0, 0.85, 0, 0.97, -0.5, 0, 1.47224, 17.6, -0.34202, 0, -1.59748, 26.2, 0, 0.85, 0, 0.97, 0.93969, 0, -0.58143, 17.6, -0.93969, 0, 0.58143, -22.4, 0, 0.85, 0, 5.37, -0.34202, 0, -1.59748, 41, -0.93969, 0, -0.58143, 13.4, 0, 0.85, 0, 5.37, 0.34202, 0, -1.59748, 41.1, -0.5, 0, 1.47224, 14.3, 0, 0.85, 0, 5.37, -0.86603, 0, -0.85, 40.8, 0.98481, 0, 0.2952, 6.6, 0, 0.85, 0, 9.33, -0.17365, 0, 1.67417, 42.6, 0.76604, 0.31338, 0.89512, -6.2, 0, 0.69628, -0.97508, 0.13, -0.64279, 0.37348, 1.06676, -6.4, 0.5, -0.42222, -1.20599, -5.5, 0, 0.69628, -0.97508, 0.13, 0.86603, 0.24377, 0.69628, -7.3, -0.93969, -0.16675, -0.47628, 7.4, 0, 0.69628, -0.97508, 0.13, 0.34202, -0.45814, -1.30858, 5.2, 0, 0.48754, 1.39256, -25.6, 0, 0.69628, -0.97508, 0.13, -1, 0, 0, 30.6, -0.5, 0.42222, 1.20599, -1.6, 0, 0.69628, -0.97508, 0.13, -0.86603, -0.24377, -0.69628, 37.6, -0.34202, 0, -1.59748, 30.2, 0, 0.85, 0, 5.37, 0.93969, 0, -0.58143, -21.6)
 
-[sub_resource type="MultiMesh" id="MultiMesh_18"]
+[sub_resource type="MultiMesh" id="MultiMesh_20"]
 transform_format = 1
 instance_count = 13
 mesh = SubResource("SphereMesh_height0p11_is_hemisphereFalse_radial_segments10_radius0p055_rings5")
 buffer = PackedFloat32Array(-0.17365, 0, 1.08329, -27.122, 0, 1, 0, 1.7, -0.98481, 0, -0.19101, 25.4774, 0.86603, 0, 0.55, 21.765, 0, 1, 0, 1.05, -0.5, 0, 0.95263, 17.7126, -0.34202, 0, -1.03366, 26.0778, 0, 1, 0, 1.05, 0.93969, 0, -0.37622, 17.5555, -0.93969, 0, 0.37622, -22.3555, 0, 1, 0, 5.45, -0.34202, 0, -1.03366, 40.8778, -0.93969, 0, -0.37622, 13.3555, 0, 1, 0, 5.45, 0.34202, 0, -1.03366, 40.9778, -0.5, 0, 0.95263, 14.4126, 0, 1, 0, 5.45, -0.86603, 0, -0.55, 40.735, 0.98481, 0, 0.19101, 6.62257, 0, 1, 0, 9.41, -0.17365, 0, 1.08329, 42.728, 0.76604, 0, 0.70707, -6.09073, 0, 1, 0, 0.07, -0.64279, 0, 0.84265, -6.26977, 0.5, 0, -0.95263, -5.64722, 0, 1, 0, 0.07, 0.86603, 0, 0.55, -7.215, -0.93969, 0, -0.37622, 7.34186, 0, 1, 0, 0.07, 0.34202, 0, -1.03366, 5.04025, 0, 0, 1.1, -25.43, 0, 1, 0, 0.07, -1, 0, 0, 30.6, -0.5, 0, 0.95263, -1.45278, 0, 1, 0, 0.07, -0.86603, 0, -0.55, 37.515, -0.34202, 0, -1.03366, 30.0778, 0, 1, 0, 5.45, 0.93969, 0, -0.37622, -21.6445)
 
-[sub_resource type="MultiMesh" id="MultiMesh_19"]
+[sub_resource type="MultiMesh" id="MultiMesh_21"]
 transform_format = 1
 instance_count = 13
 mesh = SubResource("CylinderMesh_bottom_radius0p018_height0p07_radial_segments5_rings1_top_radius0")
 buffer = PackedFloat32Array(-0.17365, 0.98481, 0, -27.053, 0, 0, -1, 1.7, -0.98481, -0.17365, -0, 25.4653, 0.86603, 0.5, 0, 21.8, 0, 0, -1, 1.05, -0.5, 0.86603, 0, 17.7732, -0.34202, -0.93969, -0, 26.0121, 0, 0, -1, 1.05, 0.93969, -0.34202, -0, 17.5316, -0.93969, 0.34202, 0, -22.3316, 0, 0, -1, 5.45, -0.34202, -0.93969, -0, 40.8121, -0.93969, -0.34202, -0, 13.3316, 0, 0, -1, 5.45, 0.34202, -0.93969, -0, 40.9121, -0.5, 0.86603, 0, 14.4732, 0, 0, -1, 5.45, -0.86603, -0.5, -0, 40.7, 0.98481, 0.17365, 0, 6.63473, 0, 0, -1, 9.41, -0.17365, 0.98481, 0, 42.797, 0.76604, 0.58256, -0.27165, -6.04573, 0, -0.42262, -0.90631, 0.04, -0.64279, 0.69427, -0.32374, -6.21615, 0.5, -0.78489, 0.366, -5.70785, 0, -0.42262, -0.90631, 0.04, 0.86603, 0.45315, -0.21131, -7.18, -0.93969, -0.30998, 0.14454, 7.31792, 0, -0.42262, -0.90631, 0.04, 0.34202, -0.85165, 0.39713, 4.97447, 0, 0.90631, -0.42262, -25.36, 0, -0.42262, -0.90631, 0.04, -1, 0, -0, 30.6, -0.5, 0.78489, -0.366, -1.39215, 0, -0.42262, -0.90631, 0.04, -0.86603, -0.45315, 0.21131, 37.48, -0.34202, -0.93969, -0, 30.0121, 0, 0, -1, 5.45, 0.93969, -0.34202, -0, -21.6684)
 
-[sub_resource type="MultiMesh" id="MultiMesh_20"]
+[sub_resource type="MultiMesh" id="MultiMesh_22"]
 transform_format = 1
 instance_count = 13
 mesh = SubResource("BoxMesh_size_0p09_0p015_0p14")
 buffer = PackedFloat32Array(-0.17365, -0.33682, 0.92542, -27.4174, 0, 0.93969, 0.34202, 1.65, -0.98481, 0.05939, -0.16318, 25.5295, 0.86603, -0.17101, 0.46985, 21.615, 0, 0.93969, 0.34202, 1, -0.5, -0.2962, 0.8138, 17.4528, -0.34202, 0.32139, -0.88302, 26.3597, 0, 0.93969, 0.34202, 1, 0.93969, 0.11698, -0.32139, 17.6581, -0.93969, -0.11698, 0.32139, -22.4581, 0, 0.93969, 0.34202, 5.4, -0.34202, 0.32139, -0.88302, 41.1598, -0.93969, 0.11698, -0.32139, 13.4581, 0, 0.93969, 0.34202, 5.4, 0.34202, 0.32139, -0.88302, 41.2597, -0.5, -0.2962, 0.8138, 14.1528, 0, 0.93969, 0.34202, 5.4, -0.86603, 0.17101, -0.46985, 40.885, 0.98481, -0.05939, 0.16318, 6.57048, 0, 0.93969, 0.34202, 9.36, -0.17365, -0.33682, 0.92542, 42.4326, 0.76604, -0.36869, 0.52654, -6.30927, 0, 0.81915, 0.57358, 0.21, -0.64279, -0.43939, 0.62751, -6.53023, 0.5, 0.49673, -0.70941, -5.35278, 0, 0.81915, 0.57358, 0.21, 0.86603, -0.28679, 0.40958, -7.385, -0.93969, 0.19617, -0.28017, 7.45814, 0, 0.81915, 0.57358, 0.21, 0.34202, 0.53899, -0.76975, 5.35975, 0, -0.57358, 0.81915, -25.77, 0, 0.81915, 0.57358, 0.21, -1, -0, 0, 30.6, -0.5, -0.49673, 0.70941, -1.74722, 0, 0.81915, 0.57358, 0.21, -0.86603, 0.28679, -0.40958, 37.685, -0.34202, 0.32139, -0.88302, 30.3597, 0, 0.93969, 0.34202, 5.4, 0.93969, 0.11698, -0.32139, -21.5419)
 
-[sub_resource type="MultiMesh" id="MultiMesh_21"]
+[sub_resource type="MultiMesh" id="MultiMesh_23"]
 transform_format = 1
 instance_count = 26
 mesh = SubResource("BoxMesh_size_0p012_0p06_0p012")
 buffer = PackedFloat32Array(-0.17365, 0, 0.98481, -27.2448, 0, 1, 0, 1.52, -0.98481, 0, -0.17365, 25.5295, -0.17365, 0, 0.98481, -27.2552, 0, 1, 0, 1.52, -0.98481, 0, -0.17365, 25.4705, 0.86603, 0, 0.5, 21.674, 0, 1, 0, 0.87, -0.5, 0, 0.86603, 17.615, 0.86603, 0, 0.5, 21.726, 0, 1, 0, 0.87, -0.5, 0, 0.86603, 17.585, -0.34202, 0, -0.93969, 26.2103, 0, 1, 0, 0.87, 0.93969, 0, -0.34202, 17.5718, -0.34202, 0, -0.93969, 26.1897, 0, 1, 0, 0.87, 0.93969, 0, -0.34202, 17.6282, -0.93969, 0, 0.34202, -22.3718, 0, 1, 0, 5.27, -0.34202, 0, -0.93969, 41.0103, -0.93969, 0, 0.34202, -22.4282, 0, 1, 0, 5.27, -0.34202, 0, -0.93969, 40.9897, -0.93969, 0, -0.34202, 13.4282, 0, 1, 0, 5.27, 0.34202, 0, -0.93969, 41.0897, -0.93969, 0, -0.34202, 13.3718, 0, 1, 0, 5.27, 0.34202, 0, -0.93969, 41.1103, -0.5, 0, 0.86603, 14.315, 0, 1, 0, 5.27, -0.86603, 0, -0.5, 40.826, -0.5, 0, 0.86603, 14.285, 0, 1, 0, 5.27, -0.86603, 0, -0.5, 40.774, 0.98481, 0, 0.17365, 6.57046, 0, 1, 0, 9.23, -0.17365, 0, 0.98481, 42.6052, 0.98481, 0, 0.17365, 6.62954, 0, 1, 0, 9.23, -0.17365, 0, 0.98481, 42.5948, 0.76604, 0, 0.64279, -6.22298, 0, 1, 0, 0.03, -0.64279, 0, 0.76604, -6.38072, 0.76604, 0, 0.64279, -6.17702, 0, 1, 0, 0.03, -0.64279, 0, 0.76604, -6.41928, 0.5, 0, -0.86603, -5.515, 0, 1, 0, 0.03, 0.86603, 0, 0.5, -7.32598, 0.5, 0, -0.86603, -5.485, 0, 1, 0, 0.03, 0.86603, 0, 0.5, -7.27402, -0.93969, 0, -0.34202, 7.42819, 0, 1, 0, 0.03, 0.34202, 0, -0.93969, 5.18974, -0.93969, 0, -0.34202, 7.37181, 0, 1, 0, 0.03, 0.34202, 0, -0.93969, 5.21026, 0, 0, 1, -25.6, 0, 1, 0, 0.03, -1, 0, 0, 30.63, 0, 0, 1, -25.6, 0, 1, 0, 0.03, -1, 0, 0, 30.57, -0.5, 0, 0.86603, -1.585, 0, 1, 0, 0.03, -0.86603, 0, -0.5, 37.626, -0.5, 0, 0.86603, -1.615, 0, 1, 0, 0.03, -0.86603, 0, -0.5, 37.574, -0.34202, 0, -0.93969, 30.2103, 0, 1, 0, 5.27, 0.93969, 0, -0.34202, -21.6282, -0.34202, 0, -0.93969, 30.1897, 0, 1, 0, 5.27, 0.93969, 0, -0.34202, -21.5718)
 
-[sub_resource type="MultiMesh" id="MultiMesh_22"]
+[sub_resource type="MultiMesh" id="MultiMesh_24"]
 transform_format = 1
 instance_count = 4
 mesh = SubResource("BoxMesh_size_0p05_0p6_0p05")
 buffer = PackedFloat32Array(0.97515, -0.05298, 0.21511, -28.3967, 0, 0.97099, 0.23914, 0.3, -0.22154, -0.23319, 0.94686, 32.6, 0.90073, 0.06363, 0.4297, -26.8596, 0, 0.98921, -0.14647, 0.3, -0.43438, 0.13193, 0.89101, 32.6, 0.57412, 0.16326, 0.80233, -29.7148, 0, 0.97992, -0.1994, 0.3, -0.81877, 0.11448, 0.56259, 37.4, 0.74797, -0.11684, 0.65337, -28.614, 0, 0.98438, 0.17603, 0.3, -0.66374, -0.13167, 0.73629, 37.4)
 
-[sub_resource type="MultiMesh" id="MultiMesh_23"]
+[sub_resource type="MultiMesh" id="MultiMesh_25"]
 transform_format = 1
 instance_count = 2
 mesh = SubResource("BoxMesh_size_0p14_1p9_0p14")
 buffer = PackedFloat32Array(1, 0, 0, -20.78, 0, 1, 0, 1.35, 0, 0, 1, 29, 1, 0, 0, -19.22, 0, 1, 0, 1.35, 0, 0, 1, 29)
 
-[sub_resource type="MultiMesh" id="MultiMesh_24"]
+[sub_resource type="MultiMesh" id="MultiMesh_26"]
 transform_format = 1
 instance_count = 2
 mesh = SubResource("BoxMesh_size_1p95_0p06_0p72")
 buffer = PackedFloat32Array(1, 0, 0, -20, 0, 0.84805, -0.52992, 2.36, 0, 0.52992, 0.84805, 28.7, 1, 0, 0, -20, 0, 0.84805, 0.52992, 2.36, 0, -0.52992, 0.84805, 29.3)
 
-[sub_resource type="MultiMesh" id="MultiMesh_25"]
+[sub_resource type="MultiMesh" id="MultiMesh_27"]
 transform_format = 1
 instance_count = 2
 mesh = SubResource("CylinderMesh_bottom_radius0p025_height0p06_radial_segments4_rings1_top_radius0")
 buffer = PackedFloat32Array(-0.86603, 0, -0.5, -20.431, 0, 1, 0, 1.4, 0.5, 0, -0.86603, 28.3429, -0.86603, 0, -0.5, -20.509, 0, 1, 0, 1.4, 0.5, 0, -0.86603, 28.3879)
 
-[sub_resource type="MultiMesh" id="MultiMesh_26"]
+[sub_resource type="MultiMesh" id="MultiMesh_28"]
 transform_format = 1
 instance_count = 4
 mesh = SubResource("SphereMesh_height0p024_is_hemisphereFalse_radial_segments10_radius0p012_rings5")
 buffer = PackedFloat32Array(1, 0, 0, -20.4788, 0, 1, 0, 1.325, 0, 0, 1, 28.2781, 1, 0, 0, -20.5412, 0, 1, 0, 1.325, 0, 0, 1, 28.3141, 1, 0, 0, -2.62513, 0, 1, 0, 0.375, 0, 0, 1, -19.0005, 1, 0, 0, -2.69279, 0, 1, 0, 0.375, 0, 0, 1, -19.0251)
 
-[sub_resource type="MultiMesh" id="MultiMesh_27"]
+[sub_resource type="MultiMesh" id="MultiMesh_29"]
 transform_format = 1
 instance_count = 4
 mesh = SubResource("BoxMesh_size_0p1_2p3_0p1")
 buffer = PackedFloat32Array(1, 0, 0, -21.6, 0, 1, 0, 1.15, 0, 0, 1, 36.4, 1, 0, 0, -15.4, 0, 1, 0, 1.15, 0, 0, 1, 36.4, 1, 0, 0, -22.5, 0, 1, 0, 1.15, 0, 0, 1, -5.2, 1, 0, 0, -22.5, 0, 1, 0, 1.15, 0, 0, 1, -0.8)
 
-[sub_resource type="MultiMesh" id="MultiMesh_28"]
+[sub_resource type="MultiMesh" id="MultiMesh_30"]
 transform_format = 1
 instance_count = 3
 mesh = SubResource("BoxMesh_size_0p6_0p55_1p8")
 buffer = PackedFloat32Array(1, 0, 0, 27.2, 0, 1, 0, 0.3, 0, 0, 1, 26, 1, 0, 0, 27.2, 0, 1, 0, 0.3, 0, 0, 1, 30, 1, 0, 0, 27.2, 0, 1, 0, 0.3, 0, 0, 1, 34)
 
-[sub_resource type="MultiMesh" id="MultiMesh_29"]
+[sub_resource type="MultiMesh" id="MultiMesh_31"]
 transform_format = 1
 instance_count = 3
 mesh = SubResource("BoxMesh_size_0p5_0p04_1p7")
 buffer = PackedFloat32Array(1, 0, 0, 27.2, 0, 1, 0, 0.56, 0, 0, 1, 26, 1, 0, 0, 27.2, 0, 1, 0, 0.56, 0, 0, 1, 30, 1, 0, 0, 27.2, 0, 1, 0, 0.56, 0, 0, 1, 34)
 
-[sub_resource type="MultiMesh" id="MultiMesh_30"]
+[sub_resource type="MultiMesh" id="MultiMesh_32"]
 transform_format = 1
 instance_count = 3
 mesh = SubResource("TorusMesh_inner_radius0p05_outer_radius0p08_ring_segments4_rings12")
 buffer = PackedFloat32Array(0.64723, 0, -0.76229, 24.2, 0, 1, 0, 0.02, 0.76229, 0, 0.64723, 26.2, 0.44464, 0, 0.89571, 21.4, 0, 1, 0, 0.02, -0.89571, 0, 0.44464, 30.6, 0.15544, 0, 0.98784, 23, 0, 1, 0, 0.02, -0.98784, 0, 0.15544, 21)
 
-[sub_resource type="MultiMesh" id="MultiMesh_31"]
+[sub_resource type="MultiMesh" id="MultiMesh_33"]
 transform_format = 1
 instance_count = 3
 mesh = SubResource("BoxMesh_size_0p26_0p26_2p8")
 buffer = PackedFloat32Array(0.93969, 0, 0.34202, 23.6, 0, 1, 0, 0.15, -0.34202, 0, 0.93969, -6.4, -0.34202, 0, 0.93969, 29.6, 0, 1, 0, 0.15, -0.93969, 0, -0.34202, 0.2, 0.25882, 0, 0.96593, 25.2, 0, 1, 0, 0.15, -0.96593, 0, 0.25882, -9.4)
 
-[sub_resource type="MultiMesh" id="MultiMesh_32"]
-transform_format = 1
-instance_count = 2
-mesh = SubResource("CylinderMesh_bottom_radius1p32_height0p01_radial_segments14_rings1_top_radius1p32")
-buffer = PackedFloat32Array(1, 0, 0, -1, 0, 1, 0, 0.012, 0, 0, 1, 14.6, 1, 0, 0, -19, 0, 1, 0, 0.012, 0, 0, 1, -12.6)
-
-[sub_resource type="MultiMesh" id="MultiMesh_33"]
+[sub_resource type="MultiMesh" id="MultiMesh_34"]
 transform_format = 1
 instance_count = 12
 mesh = SubResource("BoxMesh_size_0p6_0p3_0p5")
 buffer = PackedFloat32Array(0.13816, 0, 0.99041, 19.9638, 0, 1, 0, 0.15, -0.99041, 0, 0.13816, -21.4, 0.99965, 0, 0.02654, 19.8505, 0, 1, 0, 0.15, -0.02654, 0, 0.99965, -19.4, 0.55769, 0, 0.83005, 19.8, 0, 1, 0, 0.15, -0.83005, 0, 0.55769, -18.4, 0.25562, 0, 0.96678, 19.7658, 0, 1, 0, 0.15, -0.96678, 0, 0.25562, -16.4, 0.7548, 0, 0.65595, 19.6574, 0, 1, 0, 0.15, -0.65595, 0, 0.7548, -15.4, 0.18349, 0, 0.98302, 19.7538, 0, 1, 0, 0.15, -0.98302, 0, 0.18349, -13.4, 0.22022, 0, 0.97545, 20.7116, 0, 1, 0, 0.15, -0.97545, 0, 0.22022, -20.4, 0.68392, 0, 0.72956, 20.9633, 0, 1, 0, 0.15, -0.72956, 0, 0.68392, -19.4, 0.95903, 0, 0.28332, 20.8203, 0, 1, 0, 0.15, -0.28332, 0, 0.95903, -17.4, 0.99695, 0, 0.07809, 20.9489, 0, 1, 0, 0.15, -0.07809, 0, 0.99695, -16.4, 0.55677, 0, 0.83066, 20.7411, 0, 1, 0, 0.15, -0.83066, 0, 0.55677, -14.4, 0.84242, 0, 0.53882, 20.9304, 0, 1, 0, 0.15, -0.53882, 0, 0.84242, -13.4)
 
-[sub_resource type="MultiMesh" id="MultiMesh_34"]
+[sub_resource type="MultiMesh" id="MultiMesh_35"]
 transform_format = 1
 instance_count = 2
 mesh = SubResource("CylinderMesh_bottom_radius0p025_height0p06_radial_segments4_rings1_top_radius0")
 buffer = PackedFloat32Array(-0.93969, 0, 0.34202, -2.64403, 0, 1, 0, 0.45, -0.34202, 0, -0.93969, -18.9222, -0.93969, 0, 0.34202, -2.72861, 0, 1, 0, 0.45, -0.34202, 0, -0.93969, -18.953)
 
-[sub_resource type="MultiMesh" id="MultiMesh_35"]
+[sub_resource type="MultiMesh" id="MultiMesh_36"]
 transform_format = 1
 instance_count = 2
 mesh = SubResource("CylinderMesh_bottom_radius0p022_height0p05_radial_segments4_rings1_top_radius0")
@@ -2861,6 +2887,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -31.1, 0.06, -15.1)
 material_override = SubResource("Material_flour")
 mesh = SubResource("CylinderMesh_bottom_radius0p8_height0p01_radial_segments9_rings1_top_radius0p8")
 
+[node name="BoxMesh_size_1p4_1p6_0p04_window_glow" type="MultiMeshInstance3D" parent="Shapes"]
+material_override = SubResource("Material_window_glow")
+multimesh = SubResource("MultiMesh_14")
+
+[node name="BoxMesh_size_0p04_1p6_1p4_window_glow" type="MultiMeshInstance3D" parent="Shapes"]
+material_override = SubResource("Material_window_glow")
+multimesh = SubResource("MultiMesh_15")
+
 [node name="PrismMesh_size_12p4_3p4_12p4_plaster" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9.7, -26)
 material_override = SubResource("Material_plaster")
@@ -2868,7 +2902,7 @@ mesh = SubResource("PrismMesh_size_12p4_3p4_12p4")
 
 [node name="BoxMesh_size_7p671067811865475_0p2_13p2_roof" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_roof")
-multimesh = SubResource("MultiMesh_14")
+multimesh = SubResource("MultiMesh_16")
 
 [node name="BoxMesh_size_0p4_0p3_13p3_roof" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11.45, -26)
@@ -2917,7 +2951,7 @@ mesh = SubResource("CylinderMesh_bottom_radius0p60181_height0p01_radial_segments
 
 [node name="CylinderMesh_bottom_radius1p56_height0p01_radial_segments14_rings1_top_radius1p56_ash" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_ash")
-multimesh = SubResource("MultiMesh_15")
+multimesh = SubResource("MultiMesh_17")
 
 [node name="CylinderMesh_bottom_radius0p86169_height0p01_radial_segments11_rings1_top_radius0p86169_soot" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(0.85001, 0, -0.52676, 0, 1, 0, 0.52676, 0, 0.85001, 1.83819, 0.016, 44.5639)
@@ -2936,7 +2970,7 @@ mesh = SubResource("CylinderMesh_bottom_radius0p81716_height0p01_radial_segments
 
 [node name="CylinderMesh_bottom_radius1p08_height0p01_radial_segments14_rings1_top_radius1p08_ash" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_ash")
-multimesh = SubResource("MultiMesh_16")
+multimesh = SubResource("MultiMesh_18")
 
 [node name="CylinderMesh_bottom_radius0p51032_height0p01_radial_segments11_rings1_top_radius0p51032_soot" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(-0.03021, 0, -0.99954, 0, 1, 0, 0.99954, 0, -0.03021, 6.88572, 0.016, 34.5763)
@@ -2990,27 +3024,27 @@ mesh = SubResource("CylinderMesh_bottom_radius0p13_height0p2_radial_segments8_ri
 
 [node name="SphereMesh_height0p16_is_hemisphereFalse_radial_segments10_radius0p08_rings5_crow" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_crow")
-multimesh = SubResource("MultiMesh_17")
+multimesh = SubResource("MultiMesh_19")
 
 [node name="SphereMesh_height0p11_is_hemisphereFalse_radial_segments10_radius0p055_rings5_crow" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_crow")
-multimesh = SubResource("MultiMesh_18")
+multimesh = SubResource("MultiMesh_20")
 
 [node name="CylinderMesh_bottom_radius0p018_height0p07_radial_segments5_rings1_top_radius0_beak" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_beak")
-multimesh = SubResource("MultiMesh_19")
+multimesh = SubResource("MultiMesh_21")
 
 [node name="BoxMesh_size_0p09_0p015_0p14_crow" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_crow")
-multimesh = SubResource("MultiMesh_20")
+multimesh = SubResource("MultiMesh_22")
 
 [node name="BoxMesh_size_0p012_0p06_0p012_beak" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_beak")
-multimesh = SubResource("MultiMesh_21")
+multimesh = SubResource("MultiMesh_23")
 
 [node name="BoxMesh_size_0p05_0p6_0p05_char" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_char")
-multimesh = SubResource("MultiMesh_22")
+multimesh = SubResource("MultiMesh_24")
 
 [node name="CylinderMesh_bottom_radius2p16_height0p01_radial_segments14_rings1_top_radius2p16_ash" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.6, 0.06, 34.4)
@@ -3079,7 +3113,7 @@ mesh = SubResource("CylinderMesh_bottom_radius0p86_height0p06_radial_segments14_
 
 [node name="BoxMesh_size_0p14_1p9_0p14_wood_dark" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_wood_dark")
-multimesh = SubResource("MultiMesh_23")
+multimesh = SubResource("MultiMesh_25")
 
 [node name="CylinderMesh_bottom_radius0p06_height1p7_radial_segments8_rings1_top_radius0p06_wood" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, -20, 1.9, 29)
@@ -3088,7 +3122,7 @@ mesh = SubResource("CylinderMesh_bottom_radius0p06_height1p7_radial_segments8_ri
 
 [node name="BoxMesh_size_1p95_0p06_0p72_wood" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_wood")
-multimesh = SubResource("MultiMesh_24")
+multimesh = SubResource("MultiMesh_26")
 
 [node name="BoxMesh_size_0p02_0p7_0p02_rope" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.9, 1.55, 29)
@@ -3107,11 +3141,11 @@ mesh = SubResource("SphereMesh_height0p16_is_hemisphereFalse_radial_segments10_r
 
 [node name="CylinderMesh_bottom_radius0p025_height0p06_radial_segments4_rings1_top_radius0_cat_grey" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_cat_grey")
-multimesh = SubResource("MultiMesh_25")
+multimesh = SubResource("MultiMesh_27")
 
 [node name="SphereMesh_height0p024_is_hemisphereFalse_radial_segments10_radius0p012_rings5_eye" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_eye")
-multimesh = SubResource("MultiMesh_26")
+multimesh = SubResource("MultiMesh_28")
 
 [node name="BoxMesh_size_0p04_0p04_0p24_cat_grey" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(-0.42262, 0, -0.90631, 0, 1, 0, 0.90631, 0, -0.42262, -20.4879, 0.98, 28.5143)
@@ -3120,7 +3154,7 @@ mesh = SubResource("BoxMesh_size_0p04_0p04_0p24")
 
 [node name="BoxMesh_size_0p1_2p3_0p1_wood_dark" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_wood_dark")
-multimesh = SubResource("MultiMesh_27")
+multimesh = SubResource("MultiMesh_29")
 
 [node name="BoxMesh_size_6p2_0p02_0p02_rope" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.5, 2.15, 36.4)
@@ -3214,11 +3248,11 @@ mesh = SubResource("BoxMesh_size_5p2_0p14_3p5")
 
 [node name="BoxMesh_size_0p6_0p55_1p8_wood" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_wood")
-multimesh = SubResource("MultiMesh_28")
+multimesh = SubResource("MultiMesh_30")
 
 [node name="BoxMesh_size_0p5_0p04_1p7_straw" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_straw")
-multimesh = SubResource("MultiMesh_29")
+multimesh = SubResource("MultiMesh_31")
 
 [node name="BoxMesh_size_0p5_0p12_0p6_leather" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 1.32, 28)
@@ -3227,7 +3261,7 @@ mesh = SubResource("BoxMesh_size_0p5_0p12_0p6")
 
 [node name="TorusMesh_inner_radius0p05_outer_radius0p08_ring_segments4_rings12_iron" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_iron")
-multimesh = SubResource("MultiMesh_30")
+multimesh = SubResource("MultiMesh_32")
 
 [node name="BoxMesh_size_2p0_0p6_0p7_wood" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 0.3, 20.6)
@@ -3261,56 +3295,57 @@ mesh = SubResource("CylinderMesh_bottom_radius2p0339_height0p01_radial_segments1
 
 [node name="BoxMesh_size_0p26_0p26_2p8_char" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_char")
-multimesh = SubResource("MultiMesh_31")
+multimesh = SubResource("MultiMesh_33")
 
-[node name="CylinderMesh_bottom_radius0p80627_height0p01_radial_segments11_rings1_top_radius0p80627_soot" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(0.32238, 0, 0.94661, 0, 1, 0, -0.94661, 0, 0.32238, 1.11235, 0.016, 25.9356)
+[node name="CylinderMesh_bottom_radius0p59581_height0p01_radial_segments11_rings1_top_radius0p59581_soot" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.99746, 0, 0.07121, 0, 1, 0, -0.07121, 0, -0.99746, 1.89758, 0.016, 26.395)
 material_override = SubResource("Material_soot")
-mesh = SubResource("CylinderMesh_bottom_radius0p80627_height0p01_radial_segments11_rings1_top_radius0p80627")
+mesh = SubResource("CylinderMesh_bottom_radius0p59581_height0p01_radial_segments11_rings1_top_radius0p59581")
 
-[node name="CylinderMesh_bottom_radius0p74889_height0p01_radial_segments11_rings1_top_radius0p74889_soot" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.7819, 0, -0.6234, 0, 1, 0, 0.6234, 0, -0.7819, 0.64294, 0.018, 26.1511)
+[node name="CylinderMesh_bottom_radius0p5886_height0p01_radial_segments11_rings1_top_radius0p5886_soot" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(0.40976, 0, 0.91219, 0, 1, 0, -0.91219, 0, 0.40976, 1.6044, 0.018, 26.7567)
 material_override = SubResource("Material_soot")
-mesh = SubResource("CylinderMesh_bottom_radius0p74889_height0p01_radial_segments11_rings1_top_radius0p74889")
+mesh = SubResource("CylinderMesh_bottom_radius0p5886_height0p01_radial_segments11_rings1_top_radius0p5886")
 
-[node name="CylinderMesh_bottom_radius0p86315_height0p01_radial_segments11_rings1_top_radius0p86315_soot" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(0.85893, 0, 0.5121, 0, 1, 0, -0.5121, 0, 0.85893, 0.76647, 0.02, 25.7324)
+[node name="CylinderMesh_bottom_radius0p45405_height0p01_radial_segments11_rings1_top_radius0p45405_soot" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.23111, 0, 0.97293, 0, 1, 0, -0.97293, 0, -0.23111, 1.59743, 0.02, 26.3825)
 material_override = SubResource("Material_soot")
-mesh = SubResource("CylinderMesh_bottom_radius0p86315_height0p01_radial_segments11_rings1_top_radius0p86315")
+mesh = SubResource("CylinderMesh_bottom_radius0p45405_height0p01_radial_segments11_rings1_top_radius0p45405")
 
-[node name="CylinderMesh_bottom_radius1p32_height0p01_radial_segments14_rings1_top_radius1p32_ash" type="MultiMeshInstance3D" parent="Shapes"]
+[node name="CylinderMesh_bottom_radius0p51452_height0p01_radial_segments11_rings1_top_radius0p51452_soot" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(0.025, 0, -0.99969, 0, 1, 0, 0.99969, 0, 0.025, -1.46213, 0.016, 14.6357)
+material_override = SubResource("Material_soot")
+mesh = SubResource("CylinderMesh_bottom_radius0p51452_height0p01_radial_segments11_rings1_top_radius0p51452")
+
+[node name="CylinderMesh_bottom_radius0p57067_height0p01_radial_segments11_rings1_top_radius0p57067_soot" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(0.37071, 0, -0.92875, 0, 1, 0, 0.92875, 0, 0.37071, -1.8556, 0.018, 14.7561)
+material_override = SubResource("Material_soot")
+mesh = SubResource("CylinderMesh_bottom_radius0p57067_height0p01_radial_segments11_rings1_top_radius0p57067")
+
+[node name="CylinderMesh_bottom_radius0p59559_height0p01_radial_segments11_rings1_top_radius0p59559_soot" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(0.88134, 0, -0.47248, 0, 1, 0, 0.47248, 0, 0.88134, -1.83154, 0.02, 14.4842)
+material_override = SubResource("Material_soot")
+mesh = SubResource("CylinderMesh_bottom_radius0p59559_height0p01_radial_segments11_rings1_top_radius0p59559")
+
+[node name="CylinderMesh_bottom_radius0p84_height0p01_radial_segments14_rings1_top_radius0p84_ash" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 0.012, -16.5)
 material_override = SubResource("Material_ash")
-multimesh = SubResource("MultiMesh_32")
+mesh = SubResource("CylinderMesh_bottom_radius0p84_height0p01_radial_segments14_rings1_top_radius0p84")
 
-[node name="CylinderMesh_bottom_radius0p7292_height0p01_radial_segments11_rings1_top_radius0p7292_soot" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.95562, 0, -0.29461, 0, 1, 0, 0.29461, 0, -0.95562, -0.78523, 0.016, 14.7016)
+[node name="CylinderMesh_bottom_radius0p40258_height0p01_radial_segments11_rings1_top_radius0p40258_soot" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(0.93758, 0, -0.34776, 0, 1, 0, 0.34776, 0, 0.93758, 1.70696, 0.016, -16.5146)
 material_override = SubResource("Material_soot")
-mesh = SubResource("CylinderMesh_bottom_radius0p7292_height0p01_radial_segments11_rings1_top_radius0p7292")
+mesh = SubResource("CylinderMesh_bottom_radius0p40258_height0p01_radial_segments11_rings1_top_radius0p40258")
 
-[node name="CylinderMesh_bottom_radius0p76919_height0p01_radial_segments11_rings1_top_radius0p76919_soot" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(0.3212, 0, -0.94701, 0, 1, 0, 0.94701, 0, 0.3212, -1.20193, 0.018, 14.7658)
+[node name="CylinderMesh_bottom_radius0p40156_height0p01_radial_segments11_rings1_top_radius0p40156_soot" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(0.89451, 0, 0.44705, 0, 1, 0, -0.44705, 0, 0.89451, 1.4436, 0.018, -16.3135)
 material_override = SubResource("Material_soot")
-mesh = SubResource("CylinderMesh_bottom_radius0p76919_height0p01_radial_segments11_rings1_top_radius0p76919")
+mesh = SubResource("CylinderMesh_bottom_radius0p40156_height0p01_radial_segments11_rings1_top_radius0p40156")
 
-[node name="CylinderMesh_bottom_radius0p70499_height0p01_radial_segments11_rings1_top_radius0p70499_soot" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.16623, 0, -0.98609, 0, 1, 0, 0.98609, 0, -0.16623, -1.08856, 0.02, 14.3955)
+[node name="CylinderMesh_bottom_radius0p44322_height0p01_radial_segments11_rings1_top_radius0p44322_soot" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(0.31976, 0, -0.9475, 0, 1, 0, 0.9475, 0, 0.31976, 1.54046, 0.02, -16.7235)
 material_override = SubResource("Material_soot")
-mesh = SubResource("CylinderMesh_bottom_radius0p70499_height0p01_radial_segments11_rings1_top_radius0p70499")
-
-[node name="CylinderMesh_bottom_radius0p54409_height0p01_radial_segments11_rings1_top_radius0p54409_soot" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(0.60916, 0, -0.79305, 0, 1, 0, 0.79305, 0, 0.60916, 1.39008, 0.016, -17.0192)
-material_override = SubResource("Material_soot")
-mesh = SubResource("CylinderMesh_bottom_radius0p54409_height0p01_radial_segments11_rings1_top_radius0p54409")
-
-[node name="CylinderMesh_bottom_radius0p56967_height0p01_radial_segments11_rings1_top_radius0p56967_soot" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.99472, 0, 0.1026, 0, 1, 0, -0.1026, 0, -0.99472, 1.02382, 0.018, -16.8317)
-material_override = SubResource("Material_soot")
-mesh = SubResource("CylinderMesh_bottom_radius0p56967_height0p01_radial_segments11_rings1_top_radius0p56967")
-
-[node name="CylinderMesh_bottom_radius0p57545_height0p01_radial_segments11_rings1_top_radius0p57545_soot" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(0.93892, 0, -0.34414, 0, 1, 0, 0.34414, 0, 0.93892, 1.19009, 0.02, -17.1841)
-material_override = SubResource("Material_soot")
-mesh = SubResource("CylinderMesh_bottom_radius0p57545_height0p01_radial_segments11_rings1_top_radius0p57545")
+mesh = SubResource("CylinderMesh_bottom_radius0p44322_height0p01_radial_segments11_rings1_top_radius0p44322")
 
 [node name="CylinderMesh_bottom_radius1p68_height0p01_radial_segments14_rings1_top_radius1p68_ash" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 0.012, 6.4)
@@ -3442,6 +3477,11 @@ transform = Transform3D(0.77663, 0, -0.62996, 0, 1, 0, 0.62996, 0, 0.77663, 0.27
 material_override = SubResource("Material_soot")
 mesh = SubResource("CylinderMesh_bottom_radius0p52968_height0p01_radial_segments11_rings1_top_radius0p52968")
 
+[node name="CylinderMesh_bottom_radius1p32_height0p01_radial_segments14_rings1_top_radius1p32_ash" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19, 0.012, -12.6)
+material_override = SubResource("Material_ash")
+mesh = SubResource("CylinderMesh_bottom_radius1p32_height0p01_radial_segments14_rings1_top_radius1p32")
+
 [node name="CylinderMesh_bottom_radius0p63607_height0p01_radial_segments11_rings1_top_radius0p63607_soot" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(0.66961, 0, -0.74272, 0, 1, 0, 0.74272, 0, 0.66961, -18.8186, 0.016, -12.5321)
 material_override = SubResource("Material_soot")
@@ -3459,7 +3499,7 @@ mesh = SubResource("CylinderMesh_bottom_radius0p72163_height0p01_radial_segments
 
 [node name="BoxMesh_size_0p6_0p3_0p5_char" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_char")
-multimesh = SubResource("MultiMesh_33")
+multimesh = SubResource("MultiMesh_34")
 
 [node name="CylinderMesh_bottom_radius2p64_height0p01_radial_segments14_rings1_top_radius2p64_ash" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.6, 0.012, -17.6)
@@ -3493,7 +3533,7 @@ mesh = SubResource("SphereMesh_height0p16_is_hemisphereFalse_radial_segments10_r
 
 [node name="CylinderMesh_bottom_radius0p025_height0p06_radial_segments4_rings1_top_radius0_cat_black" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_cat_black")
-multimesh = SubResource("MultiMesh_34")
+multimesh = SubResource("MultiMesh_35")
 
 [node name="BoxMesh_size_0p04_0p04_0p24_cat_black" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(-0.96593, 0, -0.25882, 0, 1, 0, 0.25882, 0, -0.96593, -2.81193, 0.03, -18.8556)
@@ -3512,7 +3552,7 @@ mesh = SubResource("SphereMesh_height0p15_is_hemisphereFalse_radial_segments10_r
 
 [node name="CylinderMesh_bottom_radius0p022_height0p05_radial_segments4_rings1_top_radius0_cat_ginger" type="MultiMeshInstance3D" parent="Shapes"]
 material_override = SubResource("Material_cat_ginger")
-multimesh = SubResource("MultiMesh_35")
+multimesh = SubResource("MultiMesh_36")
 
 [node name="BoxMesh_size_0p26_0p05_0p05_cat_ginger" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(0.17365, 0, 0.98481, 0, 1, 0, -0.98481, 0, 0.17365, 4.4049, 0.8, 26.5183)

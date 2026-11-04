@@ -1457,7 +1457,7 @@ def build_battle_scars(scene, rng):
         charred_beam(scene, (x, 0.15, z), 2.8, degrees)
     for x, z in ((30.0, -9.2), (24.0, 0.0), (29.8, 2.4)):
         lay(scene, "graveyard_kit/debris", (x, 0.0, z), rng.uniform(0, 360), 2.0)
-    for x, z, radius in ((0.8, 26.0, 1.3), (-1.0, 14.6, 1.1), (1.2, -17.0, 0.9), (-15.0, 6.4, 1.4), (-25.0, 5.4, 1.0),
+    for x, z, radius in ((1.7, 26.5, 0.8), (-1.7, 14.6, 0.8), (1.6, -16.5, 0.7), (-15.0, 6.4, 1.4), (-25.0, 5.4, 1.0),
                          (-4.2, 22.0, 0.8), (4.6, 12.0, 1.0), (14.6, 2.4, 1.2), (16.0, 22.0, 0.9), (-13.4, 12.0, 1.0),
                          (0.4, -24.0, 0.8), (-19.0, -12.6, 1.1)):
         scorch(scene, x, z, radius)
@@ -1507,6 +1507,13 @@ def build_town_hall(scene):
             block(scene, (x, WALL_HEIGHT, z), (0.7, WALL_HEIGHT * 2, 0.7), group="mairie", label="pilier", structure=True)
     for x in (-2.6, 2.6):
         scene.add("fantasy_town_kit/banner-red", (x, 4.8, cz + 6.2), -90.0, 3.4)
+    # Ses fenêtres luisent dans le soir : une lueur chaude derrière chaque vitre, côté intérieur.
+    for side, index, count, center, outward in edge_tiles(cx, cz, width, depth):
+        inward = (center[0] - outward[0] * 0.45, center[1] - outward[1] * 0.45)
+        size = (0.04, 1.6, 1.4) if outward[0] else (1.4, 1.6, 0.04)
+        floors = (1.9, 5.9) if index != 1 else (5.9,) if side == "south" else ()
+        for y in floors:
+            box(scene, "window_glow", (inward[0], y, inward[1]), size)
     # Toit à deux pans, pignon sur la place, et sa cheminée.
     top = WALL_HEIGHT * 2
     prism(scene, "plaster", (cx, top + 1.7, cz), (12.4, 3.4, 12.4))
@@ -1549,6 +1556,7 @@ def build_props():
     materials(scene)
     scene.material("plaster", (0.8, 0.74, 0.64), 1.0)
     scene.material("roof", (0.36, 0.2, 0.16), 0.9)
+    scene.material("window_glow", (0.9, 0.6, 0.32), 1.0, emission=(1.0, 0.6, 0.28), energy=1.6)
     # Passages à garder libres : la grande rue, le tour de la fontaine emprunté par le test, la rue du pont.
     LAYOUT.keep_clear("grande rue", -2.0, 2.0, 9.0, 62.0)
     LAYOUT.keep_clear("grande rue, au nord de la place", -2.0, 2.0, -19.5, -12.5)
