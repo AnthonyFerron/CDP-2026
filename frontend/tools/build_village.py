@@ -1666,9 +1666,10 @@ def build_hall_interior():
     for x in (-4.4, 2.4):
         # Le drap est décalé de 0,4 tuile de l'origine du modèle, vers le mur.
         scene.add("fantasy_town_kit/banner-red", (x, office + 0.6, -4.35), 90.0, 3.4)
-    # Collisions du garde-corps autour de la trémie de l'escalier, dessiné dans village.tscn.
-    scene.add_box((4.5, office + 0.6, -1.1), (0.3, 1.2, 6.2))
-    scene.add_box((6.2, office + 0.6, 2.1), (3.4, 1.2, 0.3))
+    # Collisions du garde-corps autour de la trémie de l'escalier, dessiné dans village.tscn : plus hautes que la
+    # rambarde, pour qu'on ne saute pas par-dessus dans la cage d'escalier.
+    scene.add_box((4.5, office + 1.2, -1.1), (0.3, 2.4, 6.2))
+    scene.add_box((6.2, office + 1.2, 2.1), (3.4, 2.4, 0.3))
 
     # Salle secrète, derrière la bibliothèque du bureau : intacte, un pupitre de pierre, des bougies et des bannières.
     room_walls(scene, -12.0, 0.0, 2, 2, OFFICE_WALLS, doors=set(), skip=("east",))
