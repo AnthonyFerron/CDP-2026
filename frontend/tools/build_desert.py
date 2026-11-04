@@ -866,9 +866,10 @@ def build_head(scene, rng):
     """Tête colossale d'une statue des bâtisseurs, à demi enfouie au nord-ouest de l'arche ; un obélisque brisé et
     les outils d'un pilleur mort à la tâche."""
     hx, hz, _ = REPLATS["tete"]
-    scene.add("nature_kit/statue_head", (hx, -2.6, hz), 125.0, 7.5, tilt=-8.0)
-    scene.add_box((hx, 2.3, hz), (4.8, 4.6, 3.8), 125.0)
-    mound(scene, hx + 0.6, hz + 1.6, 4.4, 1.3, 2.6, 125.0)
+    # Le visage (+X du modèle) regarde l'arche et le monument, la tête un peu renversée en arrière.
+    scene.add("nature_kit/statue_head", (hx, -1.8, hz), 33.0, 7.5, roll=10.0)
+    scene.add_box((hx, 2.6, hz), (4.6, 5.2, 3.8), 33.0)
+    mound(scene, hx - 1.4, hz + 0.9, 4.4, 1.3, 2.6, 33.0)
     mound(scene, hx - 2.4, hz - 1.2, 2.6, 0.9, 2.0, 30.0)
     mound(scene, hx + 2.6, hz - 1.4, 2.0, 0.6, 1.6, 80.0)
     obelisk(scene, hx + 5.0, hz - 3.6, rng, broken=True, fallen_towards=150.0)

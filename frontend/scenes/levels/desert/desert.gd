@@ -191,6 +191,8 @@ func _apply_location() -> void:
 	_environment.fog_enabled = not _inside
 	_sandstorm.emitting = not _inside
 	_dust.emitting = _inside
+	# Dans la cave, la lumière ambiante ne vient plus du ciel bleu mais d'une pénombre chaude.
+	_environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR if _inside else Environment.AMBIENT_SOURCE_SKY
 	_environment.ambient_light_energy = AMBIENT_INSIDE if _inside else AMBIENT_OUTSIDE
 	_player.footstep_sounds = stone_steps if _inside else sand_steps
 	_wind.volume_db = WIND_DB - 18.0 if _inside else WIND_DB
@@ -301,11 +303,11 @@ func _on_portal_crossed() -> void:
 
 
 ## Teinte les matériaux des modèles en grès, en partageant une copie par matériau d'origine. Les formes simples
-## (nœud Shapes) ont déjà leurs couleurs.
+## (nœud Shapes) ont déjà leurs couleurs, et les squelettes gardent la blancheur de leurs os.
 func _tint_stone(root: Node) -> void:
 	var tinted := {}
 	for mesh: MeshInstance3D in root.find_children("*", "MeshInstance3D", true, false):
-		if mesh.get_parent().name == &"Shapes":
+		if mesh.get_parent().name == &"Shapes" or _model_of(mesh).name.begins_with("character_skeleton"):
 			continue
 		for surface in mesh.get_surface_override_material_count():
 			var original := mesh.get_active_material(surface) as BaseMaterial3D
@@ -316,6 +318,13 @@ func _tint_stone(root: Node) -> void:
 				copy.albedo_color *= SANDSTONE
 				tinted[original] = copy
 			mesh.set_surface_override_material(surface, tinted[original])
+
+
+## Modèle du kit auquel appartient un maillage : l'enfant du nœud Models qui le contient.
+func _model_of(node: Node) -> Node:
+	while node.get_parent() and node.get_parent().name != &"Models":
+		node = node.get_parent()
+	return node
 
 
 ## Les petits modèles des ruines (jarres, crânes, bols) disparaissent en fondu au loin : moins de dessin pour le web.
@@ -368,8 +377,8 @@ func _create_dust() -> CPUParticles3D:
 	var gradient := Gradient.new()
 	gradient.set_color(0, Color(0.95, 0.82, 0.6, 0.0))
 	gradient.set_color(1, Color(0.95, 0.82, 0.6, 0.0))
-	gradient.add_point(0.3, Color(0.95, 0.85, 0.65, 0.45))
-	gradient.add_point(0.7, Color(0.95, 0.85, 0.65, 0.35))
+	gradient.add_point(0.3, Color(0.95, 0.85, 0.65, 0.3))
+	gradient.add_point(0.7, Color(0.95, 0.85, 0.65, 0.22))
 	var dust := CPUParticles3D.new()
 	dust.mesh = quad
 	dust.amount = 140
