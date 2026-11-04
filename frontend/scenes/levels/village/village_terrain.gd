@@ -21,6 +21,10 @@ const CELL_SIZE := 1.25
 const PLAY_RADIUS := 64.0
 const BORDER_WIDTH := 10.0
 const BORDER_HEIGHT := 10.0
+## Limite invisible que le joueur ne peut franchir, à mi-hauteur du talus qui ferme la zone : ni en marchant, ni en
+## sautant depuis un mur, un toit ou une charrette. Le portail, à 63 m du centre, reste en deçà.
+const LIMIT_RADIUS := 72.0
+const LIMIT_SEGMENTS := 72
 
 const COLOR_GRASS := Color(0.32, 0.36, 0.18)
 const COLOR_DRY := Color(0.42, 0.38, 0.22)
@@ -43,6 +47,7 @@ func _ready() -> void:
 	_relief.seed = 5815
 	_relief.frequency = 0.025
 	_build()
+	_build_limit()
 
 
 func height_at(x: float, z: float) -> float:
@@ -163,3 +168,18 @@ func _build() -> void:
 	var collision := CollisionShape3D.new()
 	collision.shape = shape
 	add_child(collision)
+
+
+## Anneau de murs invisibles, hauts et épais, tout autour du village.
+func _build_limit() -> void:
+	var length := TAU * LIMIT_RADIUS / LIMIT_SEGMENTS + 0.6
+	for index in LIMIT_SEGMENTS:
+		var angle := TAU * index / LIMIT_SEGMENTS
+		var shape := BoxShape3D.new()
+		shape.size = Vector3(length, 80.0, 1.5)
+		var collision := CollisionShape3D.new()
+		collision.name = "Limit%d" % index
+		collision.shape = shape
+		collision.position = Vector3(cos(angle) * LIMIT_RADIUS, 25.0, sin(angle) * LIMIT_RADIUS)
+		collision.rotation.y = -angle + PI * 0.5
+		add_child(collision)

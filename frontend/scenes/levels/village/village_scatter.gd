@@ -16,6 +16,10 @@ extends Node3D
 @export var rock_count := 40
 @export var detail_range := 55.0
 
+## Côté des cases de détails qui s'effacent au loin, et largeur du fondu, en mètres.
+const CHUNK_SIZE := 32.0
+const FADE_MARGIN := 6.0
+
 var _rng := RandomNumberGenerator.new()
 
 
@@ -113,7 +117,26 @@ func _add_border_trees() -> void:
 		_add_multimesh(_load_mesh(tree_models[index]), transforms, true)
 
 
-func _add_multimesh(mesh: Mesh, transforms: Array[Transform3D], always_visible: bool) -> MultiMeshInstance3D:
+## Pose des copies d'un maillage. Les détails qui s'effacent au loin sont découpés en cases de CHUNK_SIZE mètres :
+## Godot mesure la distance d'effacement jusqu'au centre de chaque MultiMesh, et un seul MultiMesh pour toute la
+## carte s'effacerait d'un coup, même sous les pieds du joueur, dès qu'il s'éloigne du centre.
+func _add_multimesh(mesh: Mesh, transforms: Array[Transform3D], always_visible: bool) -> void:
+	if always_visible:
+		_add_chunk(mesh, transforms, false)
+		return
+	var chunks := {}
+	for transform in transforms:
+		var key := Vector2i(floori(transform.origin.x / CHUNK_SIZE), floori(transform.origin.z / CHUNK_SIZE))
+		if not chunks.has(key):
+			chunks[key] = []
+		chunks[key].append(transform)
+	for key: Vector2i in chunks:
+		var chunk: Array[Transform3D] = []
+		chunk.assign(chunks[key])
+		_add_chunk(mesh, chunk, true)
+
+
+func _add_chunk(mesh: Mesh, transforms: Array[Transform3D], fades: bool) -> void:
 	var multimesh := MultiMesh.new()
 	multimesh.transform_format = MultiMesh.TRANSFORM_3D
 	multimesh.mesh = mesh
@@ -122,11 +145,11 @@ func _add_multimesh(mesh: Mesh, transforms: Array[Transform3D], always_visible: 
 		multimesh.set_instance_transform(index, transforms[index])
 	var instance := MultiMeshInstance3D.new()
 	instance.multimesh = multimesh
-	if not always_visible:
+	if fades:
 		instance.visibility_range_end = detail_range
+		instance.visibility_range_end_margin = FADE_MARGIN
 		instance.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 	add_child(instance)
-	return instance
 
 
 func _load_mesh(model: PackedScene) -> Mesh:

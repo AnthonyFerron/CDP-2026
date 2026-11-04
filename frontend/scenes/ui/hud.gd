@@ -12,6 +12,10 @@ signal reader_closed
 
 var _message_tween: Tween
 var _penalty_tween: Tween
+var _warning_tween: Tween
+## Avertissement d'une mauvaise réponse, au-dessus des panneaux d'énigme.
+var _warning: Control
+var _warning_text: Label
 
 @onready var _prompt: Label = %Prompt
 @onready var _message: Label = %Message
@@ -33,6 +37,7 @@ func _ready() -> void:
 	_game_over.hide()
 	_fade.modulate.a = 0.0
 	GameState.time_penalized.connect(_on_time_penalized)
+	_build_warning()
 	GameState.erupted.connect(_on_erupted)
 	# Retour à l'accueil depuis l'écran de fin, sous « Recommencer ».
 	var menu := %Restart.duplicate(Node.DUPLICATE_SCRIPTS) as Button
@@ -107,7 +112,47 @@ func _refresh_timer() -> void:
 	_timer.modulate = Color(1.0, 0.35, 0.25) if GameState.time_left < warning_time else Color.WHITE
 
 
+## Bandeau « Mauvaise réponse » : une couche à part, au-dessus des panneaux d'énigme où la réponse est validée,
+## et sous le menu pause.
+func _build_warning() -> void:
+	var layer := CanvasLayer.new()
+	layer.name = "Warning"
+	layer.layer = 35
+	add_child(layer)
+	_warning = Ornate.Frame.new()
+	_warning.name = "Banner"
+	_warning.bottom_diamond = false
+	_warning.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	Ornate.place(layer, _warning, Vector2(460, 770), Vector2(1000, 140))
+	var title := Ornate.label("Mauvaise réponse", 40, Color(1.0, 0.45, 0.3), true)
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	Ornate.place(_warning, title, Vector2(0, 16), Vector2(1000, 56))
+	_warning_text = Ornate.label("", 25)
+	_warning_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_warning_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	Ornate.place(_warning, _warning_text, Vector2(40, 76), Vector2(920, 44))
+	_warning.modulate.a = 0.0
+	_warning.hide()
+
+
+func show_penalty_warning(seconds: float) -> void:
+	var minutes := int(round(seconds / 60.0))
+	var remaining := int(ceil(GameState.time_left))
+	_warning_text.text = "Le Mont Sam Altan gronde : %d minute%s perdue%s, il reste %d:%02d." % [
+		minutes, "s" if minutes > 1 else "", "s" if minutes > 1 else "", remaining / 60, remaining % 60]
+	_warning.show()
+	if _warning_tween:
+		_warning_tween.kill()
+	_warning_tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	_warning_tween.tween_property(_warning, "modulate:a", 1.0, 0.2)
+	_warning_tween.tween_interval(3.5)
+	_warning_tween.tween_property(_warning, "modulate:a", 0.0, 0.6)
+	_warning_tween.tween_callback(_warning.hide)
+
+
 func _on_time_penalized(seconds: float) -> void:
+	if not GameState.has_erupted:
+		show_penalty_warning(seconds)
 	_penalty.text = "−%d:%02d" % [int(seconds) / 60, int(seconds) % 60]
 	_penalty.modulate.a = 1.0
 	_penalty.show()

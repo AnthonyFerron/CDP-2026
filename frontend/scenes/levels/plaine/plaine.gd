@@ -1,8 +1,9 @@
 class_name Plaine
 extends Node3D
-## Zone de la Plaine : la surface et sa bibliothèque, puis l'énigme de la discussion oubliée,
+## Les plaines d'Hexcole : le champ de bataille et l'ancienne bibliothèque, puis l'énigme des fragments du passé,
 ## qui libère le Projenomicon. Six fragments sont cachés dans les livres ; la tablette les remet en ordre.
-## Seule la partie où se trouve le joueur reste affichée.
+## Erreur : les inscriptions virent au rouge et le sol tremble. Réussite : elles passent au vert, la dalle glisse
+## et l'escalier oublié descend vers le pupitre de pierre. Seule la partie où se trouve le joueur reste affichée.
 
 signal book_collected(book_id: StringName)
 signal hub_requested
@@ -24,8 +25,14 @@ const FRAGMENTS: Array[String] = [
 
 @export var stone_travel := 3.4
 @export var stone_duration := 2.5
-## Calque de suie posé sur les ruines.
+## Calque de suie posé sur les ruines, et sa version plus légère pour les archives.
 @export var soot_material: Material
+@export var interior_soot_material: Material
+
+const INSCRIPTION_IDLE := Color(0.13, 0.1, 0.09)
+const INSCRIPTION_WRONG := Color(2.4, 0.25, 0.12)
+const INSCRIPTION_RIGHT := Color(0.35, 2.2, 0.55)
+const SLOTS_IDLE := Color(0.95, 0.4, 0.12)
 
 var _has_book := false
 var _inside := false
@@ -55,6 +62,11 @@ var _found := {}
 @onready var _stone: Node3D = $Interior/Stone
 @onready var _book: Node3D = $Interior/Book
 @onready var _book_pickup: Interactable = $Interior/Book/Interactable
+@onready var _inscription: Label3D = $Interior/Inscription/Text
+@onready var _slot_material: StandardMaterial3D = $Interior/Tablet/Top/Slot1.mesh.material
+@onready var _slab_sound: AudioStreamPlayer = $Interior/SlabSound
+@onready var _rumble: AudioStreamPlayer = $Interior/Rumble
+@onready var _camera: Camera3D = $Player/CameraPivot/SpringArm3D/Camera3D
 
 
 func _ready() -> void:
@@ -79,12 +91,14 @@ func _ready() -> void:
 
 	_book_pickup.enabled = false
 	_safe_position = _player.global_position
-	_apply_soot($Exterior/Ruins)
-	_apply_soot(_scatter.get_node("Lanterns"))
+	_apply_soot($Exterior/Ruins, soot_material)
+	_apply_soot($Exterior/Battlefield, soot_material)
+	_apply_soot(_scatter.get_node("Lanterns"), soot_material)
+	_apply_soot($Interior/Library/Models, interior_soot_material)
 	_ash = _create_ash()
 	_exterior.add_child(_ash)
 	_apply_location()
-	_hud.show_message("La Plaine")
+	# Le nom du lieu s'affiche déjà pendant la transition du portail.
 	if GameState.has_book(BOOK_ID):
 		_portal.is_open = true
 		_hud.show_message("Vous avez déjà trouvé le livre de cette zone : le portail est ouvert.")
@@ -183,25 +197,55 @@ func _on_puzzle_validated(correct: bool) -> void:
 	if correct:
 		_on_puzzle_solved()
 		return
-	# Mauvais ordre : la tablette rougit et le volcan se rapproche de l'éruption.
+	# Mauvais ordre : les inscriptions virent au rouge, le sol tremble et le volcan se rapproche de l'éruption.
 	GameState.penalize()
 	_set_tablet_glow(Color(1.0, 0.1, 0.05), 3.0)
+	_set_inscription(INSCRIPTION_WRONG)
+	_rumble.play()
+	_shake(0.9, 0.07)
 	var tween := create_tween()
-	tween.tween_interval(1.2)
-	tween.tween_callback(_set_tablet_glow.bind(Color(0.95, 0.3, 0.08), 0.8))
+	tween.tween_interval(1.4)
+	tween.tween_callback(_set_tablet_glow.bind(Color(0.95, 0.3, 0.08), 0.8, true))
+	tween.tween_callback(_set_inscription.bind(INSCRIPTION_IDLE))
 
 
-func _set_tablet_glow(color: Color, energy: float) -> void:
+## Lueur de la tablette et de ses six emplacements ; au repos, les emplacements gardent leur braise discrète.
+func _set_tablet_glow(color: Color, energy: float, resting := false) -> void:
 	var material := _tablet_top.get_active_material(0) as StandardMaterial3D
 	material.emission = color
 	material.emission_energy_multiplier = energy
+	_slot_material.emission = SLOTS_IDLE if resting else color
+	_slot_material.emission_energy_multiplier = 0.3 if resting else energy * 0.8
+
+
+## Couleur des lettres gravées près de la dalle : sombres au repos, lumineuses quand la tablette répond.
+func _set_inscription(color: Color) -> void:
+	_inscription.modulate = color
+	_inscription.shaded = color == INSCRIPTION_IDLE
+
+
+## Le sol tremble : la caméra du joueur vacille, de moins en moins.
+func _shake(duration: float, strength: float) -> void:
+	var tween := create_tween()
+	tween.tween_method(_shake_step.bind(strength), 0.0, 1.0, duration)
+	tween.tween_callback(_shake_step.bind(1.0, 0.0))
+
+
+func _shake_step(progress: float, strength: float) -> void:
+	var amount := strength * (1.0 - progress)
+	_camera.h_offset = randf_range(-amount, amount)
+	_camera.v_offset = randf_range(-amount, amount)
 
 
 func _on_puzzle_solved() -> void:
 	_close_panel()
-	_set_tablet_glow(Color(1.0, 0.85, 0.4), 3.0)
+	_set_tablet_glow(Color(0.3, 1.0, 0.45), 3.0)
+	_set_inscription(INSCRIPTION_RIGHT)
 	_tablet.enabled = false
-	_hud.show_message("Les inscriptions de la tablette s'illuminent. Une dalle de pierre glisse et révèle un passage…")
+	_hud.show_message("Les inscriptions s'illuminent de vert. Un grondement monte du sol : la dalle glisse et révèle un escalier oublié…")
+	_rumble.play()
+	_slab_sound.play()
+	_shake(stone_duration, 0.03)
 	var tween := create_tween()
 	tween.tween_property(_stone, "position:x", _stone.position.x - stone_travel, stone_duration)
 	tween.set_trans(Tween.TRANS_SINE)
@@ -216,13 +260,13 @@ func _on_book_taken() -> void:
 	_book.hide()
 	_book_pickup.enabled = false
 	_portal.is_open = true
-	_hud.show_message("Le Projenomicon est à vous. Rapportez-le au château du hub : le portail de la Plaine s'est rouvert.")
+	_hud.show_message("Le Projenomicon est à vous. Rapportez-le au château : le portail des plaines s'est rouvert.")
 	GameState.collect_book(BOOK_ID)
 	book_collected.emit(BOOK_ID)
 
 
 func _on_portal_refused() -> void:
-	_hud.show_message("Le portail reste éteint : trouvez le livre de la Plaine.")
+	_hud.show_message("Le portail reste éteint : trouvez le livre des plaines d'Hexcole.")
 
 
 func _on_portal_crossed() -> void:
@@ -230,11 +274,14 @@ func _on_portal_crossed() -> void:
 	GameState.return_to_hub(ZONE)
 
 
-func _apply_soot(root: Node) -> void:
-	if not soot_material:
+func _apply_soot(root: Node, material: Material) -> void:
+	if not material:
 		return
-	for mesh: MeshInstance3D in root.find_children("*", "MeshInstance3D", true, false):
-		mesh.material_overlay = soot_material
+	# Les MultiMesh des livres sont des enfants internes : on les parcourt aussi.
+	for child in root.get_children(true):
+		if child is GeometryInstance3D and not child is Label3D:
+			(child as GeometryInstance3D).material_overlay = material
+		_apply_soot(child, material)
 
 
 ## Cendres qui tombent autour du joueur, pour donner de la matière à l'air.

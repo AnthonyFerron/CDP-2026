@@ -68,7 +68,7 @@ func is_open() -> bool:
 func open(runes: Array[StringName]) -> void:
 	_runes = runes.duplicate()
 	_selected = &""
-	_feedback.text = "" if _runes.size() >= SOLUTION.size() else "Runes ramassées : %d. D'autres sont cachées dans les ruines et sous le sable." % _runes.size()
+	_feedback.text = "" if _runes.size() >= SOLUTION.size() else "Runes ramassées : %d. D'autres sont cachées dans les salles du monument, parmi les débris et sous le sable." % _runes.size()
 	_set_border(COLOR_IDLE)
 	_rebuild()
 	_root.show()
@@ -168,8 +168,16 @@ func _flash_wrong() -> void:
 		_flash.kill()
 	_set_border(COLOR_WRONG)
 	_flash = create_tween()
-	_flash.tween_interval(1.2)
+	# Une violente secousse ébranle le panneau, comme la cave.
+	_flash.tween_method(_shake_step, 0.0, 1.0, 0.6)
+	_flash.tween_callback(_shake_step.bind(1.0))
+	_flash.tween_interval(0.6)
 	_flash.tween_callback(_set_border.bind(COLOR_IDLE))
+
+
+func _shake_step(progress: float) -> void:
+	var amount := 18.0 * (1.0 - progress)
+	_root.position = Vector2(randf_range(-amount, amount), randf_range(-amount, amount))
 
 
 func _on_close_pressed() -> void:
