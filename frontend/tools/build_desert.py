@@ -866,7 +866,8 @@ def build_oasis(scene, rng):
 
 
 def build_cistern(scene, rng):
-    """Citerne des bâtisseurs, à l'ouest de la salle : une fosse aux murs épais (desert_terrain.gd la creuse),
+    """Citerne des bâtisseurs, à l'ouest de la salle : une fosse aux murs épais, des pans de muraille du kit comme
+    ceux de la salle, pas des boîtes unies (desert_terrain.gd la creuse),
     des colonnes qui portaient sa voûte, une poutre tombée en travers, et au fond, des jarres et un squelette."""
     x0, z0, x1, z1 = CISTERN_RECT
     ring = 1.25
@@ -878,16 +879,21 @@ def build_cistern(scene, rng):
     length_x = x1 - x0 + 2 * ring
     length_z = z1 - z0
     for z in (z0 - ring / 2, z1 + ring / 2):
-        scene.shape("box", {"size": (length_x, height, ring)}, "stone", (cx, center_y, z))
+        scene.add("mini_arena/wall", (cx, top - height, z), 0.0, (length_x, height, ring / 0.6))
         scene.shape("box", {"size": (length_x + 0.2, 0.16, ring + 0.2)}, "stone_dark", (cx, top + 0.08, z))
         scene.box_collider((cx, center_y + 0.75, z), (length_x, height + 1.5, ring))
     for x in (x0 - ring / 2, x1 + ring / 2):
-        scene.shape("box", {"size": (ring, height, length_z)}, "stone", (x, center_y, cz))
+        scene.add("mini_arena/wall", (x, top - height, cz), 90.0, (length_z, height, ring / 0.6))
         scene.shape("box", {"size": (ring + 0.2, 0.16, length_z)}, "stone_dark", (x, top + 0.08, cz))
         scene.box_collider((x, center_y + 0.75, cz), (ring, height + 1.5, length_z))
     for x in (x0 - ring / 2, x1 + ring / 2):
         for z in (z0 - ring / 2, z1 + ring / 2):
-            scene.shape("box", {"size": (1.5, 1.7, 1.5)}, "stone_dark", (x, 0.85, z))
+            scene.shape("box", {"size": (1.6, 0.35, 1.6)}, "stone_dark", (x, 0.175, z))
+            scene.shape("box", {"size": (1.3, 1.1, 1.3)}, "stone", (x, 0.9, z))
+            scene.shape("box", {"size": (1.55, 0.22, 1.55)}, "stone_dark", (x, 1.56, z))
+            scene.shape("box", {"size": (1.0, 0.15, 1.0)}, "stone", (x, 1.745, z))
+            scene.box_collider((x, 0.175, z), (1.6, 0.35, 1.6))
+            scene.box_collider((x, 1.6, z), (1.3, 2.5, 1.3))
     floor = -depth
     for x, z, damaged in ((x0 + 1.3, z0 + 1.2, False), (x1 - 1.3, z0 + 1.2, True), (x0 + 1.3, z1 - 1.2, True), (x1 - 1.3, z1 - 1.2, False)):
         if damaged:
@@ -895,7 +901,11 @@ def build_cistern(scene, rng):
         else:
             scene.add("mini_arena/column", (x, floor, z), 0.0, (1.6, 3.0, 1.6))
     beam = math.degrees(math.atan2(length_z + 2 * ring, length_x))
-    scene.shape("box", {"size": (0.6, 0.55, 9.4)}, "wood_dark", (cx, top + 0.45, cz), 90.0 - beam + 8.0, roll=4.0)
+    yaw = 90.0 - beam + 8.0
+    scene.shape("box", {"size": (0.6, 0.55, 9.4)}, "wood", (cx, top + 0.45, cz), yaw, roll=4.0)
+    for u in (-3.2, 2.6):
+        scene.shape("box", {"size": (0.66, 0.61, 0.14)}, "bronze",
+                    (cx + math.sin(math.radians(yaw)) * u, top + 0.45, cz + math.cos(math.radians(yaw)) * u), yaw, roll=4.0)
     for x, z in ((cx - 1.4, cz + 0.8), (cx + 1.6, cz - 1.0)):
         put(scene, "mini_dungeon/pot", (x, floor, z), rng.uniform(0, 360), 1.6, roll=90.0 if x > cx else 0.0)
     lying_skeleton(scene, cx + 0.4, cz + 1.2, 200.0, buried=False, y=floor)

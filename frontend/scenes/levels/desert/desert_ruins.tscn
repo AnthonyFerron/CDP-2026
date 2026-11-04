@@ -1800,64 +1800,76 @@ material = SubResource("Material_wood")
 size = Vector3(0.08, 0.08, 1.8)
 
 [sub_resource type="BoxMesh" id="Mesh_119"]
-material = SubResource("Material_stone")
-size = Vector3(10, 2.7, 1.25)
-
-[sub_resource type="BoxMesh" id="Mesh_120"]
 material = SubResource("Material_stone_dark")
 size = Vector3(10.2, 0.16, 1.45)
 
-[sub_resource type="BoxMesh" id="Mesh_121"]
-material = SubResource("Material_stone")
-size = Vector3(1.25, 2.7, 5)
-
-[sub_resource type="BoxMesh" id="Mesh_122"]
+[sub_resource type="BoxMesh" id="Mesh_120"]
 material = SubResource("Material_stone_dark")
 size = Vector3(1.45, 0.16, 5)
 
+[sub_resource type="BoxMesh" id="Mesh_121"]
+material = SubResource("Material_stone_dark")
+size = Vector3(1.6, 0.35, 1.6)
+
+[sub_resource type="MultiMesh" id="MultiMesh_121_0"]
+transform_format = 1
+instance_count = 4
+mesh = SubResource("Mesh_121")
+buffer = PackedFloat32Array(1, 0, 0, -34.375, 0, 1, 0, 0.175, 0, 0, 1, -5.625, 1, 0, 0, -34.375, 0, 1, 0, 0.175, 0, 0, 1, 0.625, 1, 0, 0, -25.625, 0, 1, 0, 0.175, 0, 0, 1, -5.625, 1, 0, 0, -25.625, 0, 1, 0, 0.175, 0, 0, 1, 0.625)
+
+[sub_resource type="BoxMesh" id="Mesh_122"]
+material = SubResource("Material_stone")
+size = Vector3(1.3, 1.1, 1.3)
+
+[sub_resource type="MultiMesh" id="MultiMesh_122_0"]
+transform_format = 1
+instance_count = 4
+mesh = SubResource("Mesh_122")
+buffer = PackedFloat32Array(1, 0, 0, -34.375, 0, 1, 0, 0.9, 0, 0, 1, -5.625, 1, 0, 0, -34.375, 0, 1, 0, 0.9, 0, 0, 1, 0.625, 1, 0, 0, -25.625, 0, 1, 0, 0.9, 0, 0, 1, -5.625, 1, 0, 0, -25.625, 0, 1, 0, 0.9, 0, 0, 1, 0.625)
+
 [sub_resource type="BoxMesh" id="Mesh_123"]
 material = SubResource("Material_stone_dark")
-size = Vector3(1.5, 1.7, 1.5)
+size = Vector3(1.55, 0.22, 1.55)
 
 [sub_resource type="MultiMesh" id="MultiMesh_123_0"]
 transform_format = 1
 instance_count = 4
 mesh = SubResource("Mesh_123")
-buffer = PackedFloat32Array(1, 0, 0, -34.375, 0, 1, 0, 0.85, 0, 0, 1, -5.625, 1, 0, 0, -34.375, 0, 1, 0, 0.85, 0, 0, 1, 0.625, 1, 0, 0, -25.625, 0, 1, 0, 0.85, 0, 0, 1, -5.625, 1, 0, 0, -25.625, 0, 1, 0, 0.85, 0, 0, 1, 0.625)
+buffer = PackedFloat32Array(1, 0, 0, -34.375, 0, 1, 0, 1.56, 0, 0, 1, -5.625, 1, 0, 0, -34.375, 0, 1, 0, 1.56, 0, 0, 1, 0.625, 1, 0, 0, -25.625, 0, 1, 0, 1.56, 0, 0, 1, -5.625, 1, 0, 0, -25.625, 0, 1, 0, 1.56, 0, 0, 1, 0.625)
 
 [sub_resource type="BoxMesh" id="Mesh_124"]
-material = SubResource("Material_wood_dark")
-size = Vector3(0.6, 0.55, 9.4)
+material = SubResource("Material_stone")
+size = Vector3(1, 0.15, 1)
+
+[sub_resource type="MultiMesh" id="MultiMesh_124_0"]
+transform_format = 1
+instance_count = 4
+mesh = SubResource("Mesh_124")
+buffer = PackedFloat32Array(1, 0, 0, -34.375, 0, 1, 0, 1.745, 0, 0, 1, -5.625, 1, 0, 0, -34.375, 0, 1, 0, 1.745, 0, 0, 1, 0.625, 1, 0, 0, -25.625, 0, 1, 0, 1.745, 0, 0, 1, -5.625, 1, 0, 0, -25.625, 0, 1, 0, 1.745, 0, 0, 1, 0.625)
 
 [sub_resource type="BoxMesh" id="Mesh_125"]
+material = SubResource("Material_wood")
+size = Vector3(0.6, 0.55, 9.4)
+
+[sub_resource type="BoxMesh" id="Mesh_126"]
+material = SubResource("Material_bronze")
+size = Vector3(0.66, 0.61, 0.14)
+
+[sub_resource type="BoxMesh" id="Mesh_127"]
 material = SubResource("Material_stone")
 size = Vector3(4.6, 0.6, 1.5)
 
-[sub_resource type="TorusMesh" id="Mesh_126"]
+[sub_resource type="TorusMesh" id="Mesh_128"]
 material = SubResource("Material_bone")
 inner_radius = 0.303
 outer_radius = 0.423
 rings = 14
 ring_segments = 5
 
-[sub_resource type="TorusMesh" id="Mesh_127"]
+[sub_resource type="TorusMesh" id="Mesh_129"]
 material = SubResource("Material_bone")
 inner_radius = 0.468
 outer_radius = 0.588
-rings = 14
-ring_segments = 5
-
-[sub_resource type="TorusMesh" id="Mesh_128"]
-material = SubResource("Material_bone")
-inner_radius = 0.567
-outer_radius = 0.687
-rings = 14
-ring_segments = 5
-
-[sub_resource type="TorusMesh" id="Mesh_129"]
-material = SubResource("Material_bone")
-inner_radius = 0.6
-outer_radius = 0.72
 rings = 14
 ring_segments = 5
 
@@ -1868,17 +1880,31 @@ outer_radius = 0.687
 rings = 14
 ring_segments = 5
 
-[sub_resource type="BoxMesh" id="Mesh_131"]
+[sub_resource type="TorusMesh" id="Mesh_131"]
+material = SubResource("Material_bone")
+inner_radius = 0.6
+outer_radius = 0.72
+rings = 14
+ring_segments = 5
+
+[sub_resource type="TorusMesh" id="Mesh_132"]
+material = SubResource("Material_bone")
+inner_radius = 0.567
+outer_radius = 0.687
+rings = 14
+ring_segments = 5
+
+[sub_resource type="BoxMesh" id="Mesh_133"]
 material = SubResource("Material_bone")
 size = Vector3(0.192, 0.144, 0.168)
 
-[sub_resource type="MultiMesh" id="MultiMesh_131_0"]
+[sub_resource type="MultiMesh" id="MultiMesh_133_0"]
 transform_format = 1
 instance_count = 13
-mesh = SubResource("Mesh_131")
+mesh = SubResource("Mesh_133")
 buffer = PackedFloat32Array(-0.32793, 0, 0.9447, -20.5312, 0, 1, 0, 0.30225, -0.9447, 0, -0.32793, -44.4907, -0.43248, 0, 0.90164, -20.3244, 0, 1, 0, 0.36413, -0.90164, 0, -0.43248, -44.566, -0.44525, 0, 0.8954, -20.1177, 0, 1, 0, 0.426, -0.8954, 0, -0.44525, -44.6412, -0.41536, 0, 0.90965, -19.911, 0, 1, 0, 0.46313, -0.90965, 0, -0.41536, -44.7165, -0.26791, 0, 0.96344, -19.7042, 0, 1, 0, 0.50025, -0.96344, 0, -0.26791, -44.7917, -0.24546, 0, 0.96941, -19.4975, 0, 1, 0, 0.51262, -0.96941, 0, -0.24546, -44.867, -0.30097, 0, 0.95363, -19.2908, 0, 1, 0, 0.525, -0.95363, 0, -0.30097, -44.9422, -0.27173, 0, 0.96237, -19.0841, 0, 1, 0, 0.51263, -0.96237, 0, -0.27173, -45.0174, -0.40748, 0, 0.91321, -18.8773, 0, 1, 0, 0.50025, -0.91321, 0, -0.40748, -45.0927, -0.44331, 0, 0.89637, -18.6706, 0, 1, 0, 0.46313, -0.89637, 0, -0.44331, -45.1679, -0.30085, 0, 0.95367, -18.4639, 0, 1, 0, 0.426, -0.95367, 0, -0.30085, -45.2432, -0.22384, 0, 0.97463, -18.2571, 0, 1, 0, 0.36413, -0.97463, 0, -0.22384, -45.3184, -0.28772, 0, 0.95772, -18.0504, 0, 1, 0, 0.30225, -0.95772, 0, -0.28772, -45.3937)
 
-[sub_resource type="CylinderMesh" id="Mesh_132"]
+[sub_resource type="CylinderMesh" id="Mesh_134"]
 material = SubResource("Material_bone")
 top_radius = 0.132
 bottom_radius = 0.264
@@ -1886,21 +1912,21 @@ height = 0.9
 radial_segments = 6
 rings = 1
 
-[sub_resource type="BoxMesh" id="Mesh_133"]
+[sub_resource type="BoxMesh" id="Mesh_135"]
 material = SubResource("Material_bone")
 size = Vector3(0.096, 0.072, 0.72)
 
-[sub_resource type="BoxMesh" id="Mesh_134"]
+[sub_resource type="BoxMesh" id="Mesh_136"]
 material = SubResource("Material_bone")
 size = Vector3(0.12, 0.096, 0.144)
 
-[sub_resource type="MultiMesh" id="MultiMesh_134_0"]
+[sub_resource type="MultiMesh" id="MultiMesh_136_0"]
 transform_format = 1
 instance_count = 4
-mesh = SubResource("Mesh_134")
+mesh = SubResource("Mesh_136")
 buffer = PackedFloat32Array(-0.69065, 0, 0.72319, -20.7567, 0, 1, 0, 0.048, -0.72319, 0, -0.69065, -44.4087, -0.7312, 0, 0.68216, -20.94, 0, 1, 0, 0.048, -0.68216, 0, -0.7312, -44.2807, -0.0679, 0, 0.99769, -21.1507, 0, 1, 0, 0.048, -0.99769, 0, -0.0679, -44.2281, -0.71843, 0, 0.6956, -21.3716, 0, 1, 0, 0.048, -0.6956, 0, -0.71843, -44.2033)
 
-[sub_resource type="CylinderMesh" id="Mesh_135"]
+[sub_resource type="CylinderMesh" id="Mesh_137"]
 material = SubResource("Material_bone")
 top_radius = 0.042
 bottom_radius = 0.042
@@ -1908,37 +1934,23 @@ height = 1.02
 radial_segments = 6
 rings = 1
 
-[sub_resource type="MultiMesh" id="MultiMesh_135_0"]
+[sub_resource type="MultiMesh" id="MultiMesh_137_0"]
 transform_format = 1
 instance_count = 4
-mesh = SubResource("Mesh_135")
+mesh = SubResource("Mesh_137")
 buffer = PackedFloat32Array(-0.99067, 0.13627, 0, -20.346, 0, 0, -1, 0.048, -0.13627, -0.99067, -0, -43.2101, -0.55314, -0.83309, -0, -17.7338, 0, 0, -1, 0.048, 0.83309, -0.55314, -0, -44.5237, -0.73878, -0.67395, -0, -21.1423, 0, 0, -1, 0.048, 0.67395, -0.73878, -0, -45.3978, -0.99461, 0.10366, 0, -18.3971, 0, 0, -1, 0.048, -0.10366, -0.99461, -0, -46.3462)
 
-[sub_resource type="TorusMesh" id="Mesh_136"]
+[sub_resource type="TorusMesh" id="Mesh_138"]
 material = SubResource("Material_bone")
 inner_radius = 1.313
 outer_radius = 1.833
 rings = 14
 ring_segments = 5
 
-[sub_resource type="TorusMesh" id="Mesh_137"]
+[sub_resource type="TorusMesh" id="Mesh_139"]
 material = SubResource("Material_bone")
 inner_radius = 2.028
 outer_radius = 2.548
-rings = 14
-ring_segments = 5
-
-[sub_resource type="TorusMesh" id="Mesh_138"]
-material = SubResource("Material_bone")
-inner_radius = 2.457
-outer_radius = 2.977
-rings = 14
-ring_segments = 5
-
-[sub_resource type="TorusMesh" id="Mesh_139"]
-material = SubResource("Material_bone")
-inner_radius = 2.6
-outer_radius = 3.12
 rings = 14
 ring_segments = 5
 
@@ -1949,17 +1961,31 @@ outer_radius = 2.977
 rings = 14
 ring_segments = 5
 
-[sub_resource type="BoxMesh" id="Mesh_141"]
+[sub_resource type="TorusMesh" id="Mesh_141"]
+material = SubResource("Material_bone")
+inner_radius = 2.6
+outer_radius = 3.12
+rings = 14
+ring_segments = 5
+
+[sub_resource type="TorusMesh" id="Mesh_142"]
+material = SubResource("Material_bone")
+inner_radius = 2.457
+outer_radius = 2.977
+rings = 14
+ring_segments = 5
+
+[sub_resource type="BoxMesh" id="Mesh_143"]
 material = SubResource("Material_bone")
 size = Vector3(0.832, 0.624, 0.728)
 
-[sub_resource type="MultiMesh" id="MultiMesh_141_0"]
+[sub_resource type="MultiMesh" id="MultiMesh_143_0"]
 transform_format = 1
 instance_count = 13
-mesh = SubResource("Mesh_141")
+mesh = SubResource("Mesh_143")
 buffer = PackedFloat32Array(-0.90109, 0, 0.43364, 23.5826, 0, 1, 0, 1.30975, -0.43364, 0, -0.90109, 55.1841, -0.95432, 0, 0.29878, 23.9855, 0, 1, 0, 1.57788, -0.29878, 0, -0.95432, 54.3201, -0.94335, 0, 0.33181, 24.3884, 0, 1, 0, 1.846, -0.33181, 0, -0.94335, 53.456, -0.89205, 0, 0.45194, 24.7913, 0, 1, 0, 2.00687, -0.45194, 0, -0.89205, 52.592, -0.86051, 0, 0.50943, 25.1942, 0, 1, 0, 2.16775, -0.50943, 0, -0.86051, 51.728, -0.94248, 0, 0.33427, 25.5971, 0, 1, 0, 2.22138, -0.33427, 0, -0.94248, 50.864, -0.88346, 0, 0.46851, 26, 0, 1, 0, 2.275, -0.46851, 0, -0.88346, 50, -0.84076, 0, 0.54141, 26.4029, 0, 1, 0, 2.22138, -0.54141, 0, -0.84076, 49.136, -0.84969, 0, 0.52728, 26.8058, 0, 1, 0, 2.16775, -0.52728, 0, -0.84969, 48.272, -0.91571, 0, 0.40184, 27.2087, 0, 1, 0, 2.00687, -0.40184, 0, -0.91571, 47.408, -0.92074, 0, 0.39017, 27.6116, 0, 1, 0, 1.846, -0.39017, 0, -0.92074, 46.544, -0.94062, 0, 0.33945, 28.0145, 0, 1, 0, 1.57788, -0.33945, 0, -0.94062, 45.6799, -0.83945, 0, 0.54344, 28.4174, 0, 1, 0, 1.30975, -0.54344, 0, -0.83945, 44.8159)
 
-[sub_resource type="CylinderMesh" id="Mesh_142"]
+[sub_resource type="CylinderMesh" id="Mesh_144"]
 material = SubResource("Material_bone")
 top_radius = 0.572
 bottom_radius = 1.144
@@ -1967,7 +1993,7 @@ height = 3.9
 radial_segments = 6
 rings = 1
 
-[sub_resource type="CylinderMesh" id="Mesh_143"]
+[sub_resource type="CylinderMesh" id="Mesh_145"]
 material = SubResource("Material_bone")
 top_radius = 0.078
 bottom_radius = 0.312
@@ -1975,21 +2001,21 @@ height = 3.64
 radial_segments = 6
 rings = 1
 
-[sub_resource type="BoxMesh" id="Mesh_144"]
+[sub_resource type="BoxMesh" id="Mesh_146"]
 material = SubResource("Material_bone")
 size = Vector3(0.416, 0.312, 3.12)
 
-[sub_resource type="BoxMesh" id="Mesh_145"]
+[sub_resource type="BoxMesh" id="Mesh_147"]
 material = SubResource("Material_bone")
 size = Vector3(0.52, 0.416, 0.624)
 
-[sub_resource type="MultiMesh" id="MultiMesh_145_0"]
+[sub_resource type="MultiMesh" id="MultiMesh_147_0"]
 transform_format = 1
 instance_count = 4
-mesh = SubResource("Mesh_145")
+mesh = SubResource("Mesh_147")
 buffer = PackedFloat32Array(-0.98564, 0, 0.16888, 23.3559, 0, 1, 0, 0.208, -0.16888, 0, -0.98564, 56.2259, -0.81781, 0, 0.57549, 22.8226, 0, 1, 0, 0.208, -0.57549, 0, -0.81781, 57.01, -0.99979, 0, -0.02028, 22.5325, 0, 1, 0, 0.208, 0.02028, 0, -0.99979, 57.9074, -0.99986, 0, -0.01692, 21.8875, 0, 1, 0, 0.208, 0.01692, 0, -0.99986, 58.6394)
 
-[sub_resource type="CylinderMesh" id="Mesh_146"]
+[sub_resource type="CylinderMesh" id="Mesh_148"]
 material = SubResource("Material_bone")
 top_radius = 0.182
 bottom_radius = 0.182
@@ -1997,10 +2023,10 @@ height = 4.42
 radial_segments = 6
 rings = 1
 
-[sub_resource type="MultiMesh" id="MultiMesh_146_0"]
+[sub_resource type="MultiMesh" id="MultiMesh_148_0"]
 transform_format = 1
 instance_count = 4
-mesh = SubResource("Mesh_146")
+mesh = SubResource("Mesh_148")
 buffer = PackedFloat32Array(-0.58284, -0.81259, -0, 27.5384, 0, 0, -1, 0.208, 0.81259, -0.58284, -0, 58.291, -0.28092, -0.95973, -0, 33.1733, 0, 0, -1, 0.208, 0.95973, -0.28092, -0, 47.0336, 0.4073, -0.91329, -0, 19.127, 0, 0, -1, 0.208, 0.91329, 0.4073, 0, 54.3686, 0.39885, -0.91701, -0, 23.3463, 0, 0, -1, 0.208, 0.91701, 0.39885, 0, 42.4512)
 
 [sub_resource type="CylinderShape3D" id="Shape_0"]
@@ -2147,48 +2173,72 @@ size = Vector3(1.25, 4.2, 5)
 [sub_resource type="BoxShape3D" id="Shape_41"]
 size = Vector3(1.25, 4.2, 5)
 
-[sub_resource type="ConvexPolygonShape3D" id="Shape_42"]
-points = PackedVector3Array(0, 1.3, 0, 4.4, 0, 0, 3.55967, 0, 1.52824, 1.35967, 0, 2.47275, -1.35967, 0, 2.47275, -3.55967, 0, 1.52824, -4.4, 0, 0, -3.55967, 0, -1.52824, -1.35967, 0, -2.47275, 1.35967, 0, -2.47275, 3.55967, 0, -1.52824, 3.3572, 0.65, 0, 2.71603, 0.65, 1.16605, 1.03743, 0.65, 1.88671, -1.03743, 0.65, 1.88671, -2.71603, 0.65, 1.16605, -3.3572, 0.65, 0, -2.71603, 0.65, -1.16605, -1.03743, 0.65, -1.88671, 1.03743, 0.65, -1.88671, 2.71603, 0.65, -1.16605, 2.2132, 1.04, 0, 1.79052, 1.04, 0.76871, 0.68392, 1.04, 1.24379, -0.68392, 1.04, 1.24379, -1.79052, 1.04, 0.76871, -2.2132, 1.04, 0, -1.79052, 1.04, -0.76871, -0.68392, 1.04, -1.24379, 0.68392, 1.04, -1.24379, 1.79052, 1.04, -0.76871)
+[sub_resource type="BoxShape3D" id="Shape_42"]
+size = Vector3(1.6, 0.35, 1.6)
 
-[sub_resource type="ConvexPolygonShape3D" id="Shape_43"]
-points = PackedVector3Array(0, 0.9, 0, 2.6, 0, 0, 2.10344, 0, 1.17557, 0.80344, 0, 1.90211, -0.80344, 0, 1.90211, -2.10344, 0, 1.17557, -2.6, 0, 0, -2.10344, 0, -1.17557, -0.80344, 0, -1.90211, 0.80344, 0, -1.90211, 2.10344, 0, -1.17557, 1.9838, 0.45, 0, 1.60493, 0.45, 0.89696, 0.61303, 0.45, 1.45131, -0.61303, 0.45, 1.45131, -1.60493, 0.45, 0.89696, -1.9838, 0.45, 0, -1.60493, 0.45, -0.89696, -0.61303, 0.45, -1.45131, 0.61303, 0.45, -1.45131, 1.60493, 0.45, -0.89696, 1.3078, 0.72, 0, 1.05803, 0.72, 0.59131, 0.40413, 0.72, 0.95676, -0.40413, 0.72, 0.95676, -1.05803, 0.72, 0.59131, -1.3078, 0.72, 0, -1.05803, 0.72, -0.59131, -0.40413, 0.72, -0.95676, 0.40413, 0.72, -0.95676, 1.05803, 0.72, -0.59131)
+[sub_resource type="BoxShape3D" id="Shape_43"]
+size = Vector3(1.3, 2.5, 1.3)
 
-[sub_resource type="ConvexPolygonShape3D" id="Shape_44"]
-points = PackedVector3Array(0, 0.6, 0, 2, 0, 0, 1.61803, 0, 0.94046, 0.61803, 0, 1.52169, -0.61803, 0, 1.52169, -1.61803, 0, 0.94046, -2, 0, 0, -1.61803, 0, -0.94046, -0.61803, 0, -1.52169, 0.61803, 0, -1.52169, 1.61803, 0, -0.94046, 1.526, 0.3, 0, 1.23456, 0.3, 0.71757, 0.47156, 0.3, 1.16105, -0.47156, 0.3, 1.16105, -1.23456, 0.3, 0.71757, -1.526, 0.3, 0, -1.23456, 0.3, -0.71757, -0.47156, 0.3, -1.16105, 0.47156, 0.3, -1.16105, 1.23456, 0.3, -0.71757, 1.006, 0.48, 0, 0.81387, 0.48, 0.47305, 0.31087, 0.48, 0.76541, -0.31087, 0.48, 0.76541, -0.81387, 0.48, 0.47305, -1.006, 0.48, 0, -0.81387, 0.48, -0.47305, -0.31087, 0.48, -0.76541, 0.31087, 0.48, -0.76541, 0.81387, 0.48, -0.47305)
+[sub_resource type="BoxShape3D" id="Shape_44"]
+size = Vector3(1.6, 0.35, 1.6)
 
 [sub_resource type="BoxShape3D" id="Shape_45"]
+size = Vector3(1.3, 2.5, 1.3)
+
+[sub_resource type="BoxShape3D" id="Shape_46"]
+size = Vector3(1.6, 0.35, 1.6)
+
+[sub_resource type="BoxShape3D" id="Shape_47"]
+size = Vector3(1.3, 2.5, 1.3)
+
+[sub_resource type="BoxShape3D" id="Shape_48"]
+size = Vector3(1.6, 0.35, 1.6)
+
+[sub_resource type="BoxShape3D" id="Shape_49"]
+size = Vector3(1.3, 2.5, 1.3)
+
+[sub_resource type="ConvexPolygonShape3D" id="Shape_50"]
+points = PackedVector3Array(0, 1.3, 0, 4.4, 0, 0, 3.55967, 0, 1.52824, 1.35967, 0, 2.47275, -1.35967, 0, 2.47275, -3.55967, 0, 1.52824, -4.4, 0, 0, -3.55967, 0, -1.52824, -1.35967, 0, -2.47275, 1.35967, 0, -2.47275, 3.55967, 0, -1.52824, 3.3572, 0.65, 0, 2.71603, 0.65, 1.16605, 1.03743, 0.65, 1.88671, -1.03743, 0.65, 1.88671, -2.71603, 0.65, 1.16605, -3.3572, 0.65, 0, -2.71603, 0.65, -1.16605, -1.03743, 0.65, -1.88671, 1.03743, 0.65, -1.88671, 2.71603, 0.65, -1.16605, 2.2132, 1.04, 0, 1.79052, 1.04, 0.76871, 0.68392, 1.04, 1.24379, -0.68392, 1.04, 1.24379, -1.79052, 1.04, 0.76871, -2.2132, 1.04, 0, -1.79052, 1.04, -0.76871, -0.68392, 1.04, -1.24379, 0.68392, 1.04, -1.24379, 1.79052, 1.04, -0.76871)
+
+[sub_resource type="ConvexPolygonShape3D" id="Shape_51"]
+points = PackedVector3Array(0, 0.9, 0, 2.6, 0, 0, 2.10344, 0, 1.17557, 0.80344, 0, 1.90211, -0.80344, 0, 1.90211, -2.10344, 0, 1.17557, -2.6, 0, 0, -2.10344, 0, -1.17557, -0.80344, 0, -1.90211, 0.80344, 0, -1.90211, 2.10344, 0, -1.17557, 1.9838, 0.45, 0, 1.60493, 0.45, 0.89696, 0.61303, 0.45, 1.45131, -0.61303, 0.45, 1.45131, -1.60493, 0.45, 0.89696, -1.9838, 0.45, 0, -1.60493, 0.45, -0.89696, -0.61303, 0.45, -1.45131, 0.61303, 0.45, -1.45131, 1.60493, 0.45, -0.89696, 1.3078, 0.72, 0, 1.05803, 0.72, 0.59131, 0.40413, 0.72, 0.95676, -0.40413, 0.72, 0.95676, -1.05803, 0.72, 0.59131, -1.3078, 0.72, 0, -1.05803, 0.72, -0.59131, -0.40413, 0.72, -0.95676, 0.40413, 0.72, -0.95676, 1.05803, 0.72, -0.59131)
+
+[sub_resource type="ConvexPolygonShape3D" id="Shape_52"]
+points = PackedVector3Array(0, 0.6, 0, 2, 0, 0, 1.61803, 0, 0.94046, 0.61803, 0, 1.52169, -0.61803, 0, 1.52169, -1.61803, 0, 0.94046, -2, 0, 0, -1.61803, 0, -0.94046, -0.61803, 0, -1.52169, 0.61803, 0, -1.52169, 1.61803, 0, -0.94046, 1.526, 0.3, 0, 1.23456, 0.3, 0.71757, 0.47156, 0.3, 1.16105, -0.47156, 0.3, 1.16105, -1.23456, 0.3, 0.71757, -1.526, 0.3, 0, -1.23456, 0.3, -0.71757, -0.47156, 0.3, -1.16105, 0.47156, 0.3, -1.16105, 1.23456, 0.3, -0.71757, 1.006, 0.48, 0, 0.81387, 0.48, 0.47305, 0.31087, 0.48, 0.76541, -0.31087, 0.48, 0.76541, -0.81387, 0.48, 0.47305, -1.006, 0.48, 0, -0.81387, 0.48, -0.47305, -0.31087, 0.48, -0.76541, 0.31087, 0.48, -0.76541, 0.81387, 0.48, -0.47305)
+
+[sub_resource type="BoxShape3D" id="Shape_53"]
 size = Vector3(0.8, 0.72, 2.9)
 
-[sub_resource type="CylinderShape3D" id="Shape_46"]
+[sub_resource type="CylinderShape3D" id="Shape_54"]
 radius = 0.31
 height = 0.9
 
-[sub_resource type="ConvexPolygonShape3D" id="Shape_47"]
+[sub_resource type="ConvexPolygonShape3D" id="Shape_55"]
 points = PackedVector3Array(0, 0.8, 0, 2.6, 0, 0, 2.10344, 0, 0.8229, 0.80344, 0, 1.33148, -0.80344, 0, 1.33148, -2.10344, 0, 0.8229, -2.6, 0, 0, -2.10344, 0, -0.8229, -0.80344, 0, -1.33148, 0.80344, 0, -1.33148, 2.10344, 0, -0.8229, 1.9838, 0.4, 0, 1.60493, 0.4, 0.62787, 0.61303, 0.4, 1.01592, -0.61303, 0.4, 1.01592, -1.60493, 0.4, 0.62787, -1.9838, 0.4, 0, -1.60493, 0.4, -0.62787, -0.61303, 0.4, -1.01592, 0.61303, 0.4, -1.01592, 1.60493, 0.4, -0.62787, 1.3078, 0.64, 0, 1.05803, 0.64, 0.41392, 0.40413, 0.64, 0.66973, -0.40413, 0.64, 0.66973, -1.05803, 0.64, 0.41392, -1.3078, 0.64, 0, -1.05803, 0.64, -0.41392, -0.40413, 0.64, -0.66973, 0.40413, 0.64, -0.66973, 1.05803, 0.64, -0.41392)
 
-[sub_resource type="CylinderShape3D" id="Shape_48"]
+[sub_resource type="CylinderShape3D" id="Shape_56"]
 radius = 0.5184
 height = 3.6
 
-[sub_resource type="CylinderShape3D" id="Shape_49"]
+[sub_resource type="CylinderShape3D" id="Shape_57"]
 radius = 0.5184
 height = 3.6
 
-[sub_resource type="CylinderShape3D" id="Shape_50"]
+[sub_resource type="CylinderShape3D" id="Shape_58"]
 radius = 0.5184
 height = 1.624
 
-[sub_resource type="CylinderShape3D" id="Shape_51"]
+[sub_resource type="CylinderShape3D" id="Shape_59"]
 radius = 0.5184
 height = 1.6
 
-[sub_resource type="ConvexPolygonShape3D" id="Shape_52"]
+[sub_resource type="ConvexPolygonShape3D" id="Shape_60"]
 points = PackedVector3Array(0, 1.2, 0, 5, 0, 0, 4.04508, 0, 1.05801, 1.54508, 0, 1.7119, -1.54508, 0, 1.7119, -4.04508, 0, 1.05801, -5, 0, 0, -4.04508, 0, -1.05801, -1.54508, 0, -1.7119, 1.54508, 0, -1.7119, 4.04508, 0, -1.05801, 3.815, 0.6, 0, 3.0864, 0.6, 0.80726, 1.1789, 0.6, 1.30618, -1.1789, 0.6, 1.30618, -3.0864, 0.6, 0.80726, -3.815, 0.6, 0, -3.0864, 0.6, -0.80726, -1.1789, 0.6, -1.30618, 1.1789, 0.6, -1.30618, 3.0864, 0.6, -0.80726, 2.515, 0.96, 0, 2.03468, 0.96, 0.53218, 0.77718, 0.96, 0.86109, -0.77718, 0.96, 0.86109, -2.03468, 0.96, 0.53218, -2.515, 0.96, 0, -2.03468, 0.96, -0.53218, -0.77718, 0.96, -0.86109, 0.77718, 0.96, -0.86109, 2.03468, 0.96, -0.53218)
 
-[sub_resource type="ConvexPolygonShape3D" id="Shape_53"]
+[sub_resource type="ConvexPolygonShape3D" id="Shape_61"]
 points = PackedVector3Array(0, 0.9, 0, 3.2, 0, 0, 2.58885, 0, 0.94046, 0.98885, 0, 1.52169, -0.98885, 0, 1.52169, -2.58885, 0, 0.94046, -3.2, 0, 0, -2.58885, 0, -0.94046, -0.98885, 0, -1.52169, 0.98885, 0, -1.52169, 2.58885, 0, -0.94046, 2.4416, 0.45, 0, 1.9753, 0.45, 0.71757, 0.7545, 0.45, 1.16105, -0.7545, 0.45, 1.16105, -1.9753, 0.45, 0.71757, -2.4416, 0.45, 0, -1.9753, 0.45, -0.71757, -0.7545, 0.45, -1.16105, 0.7545, 0.45, -1.16105, 1.9753, 0.45, -0.71757, 1.6096, 0.72, 0, 1.30219, 0.72, 0.47305, 0.49739, 0.72, 0.76541, -0.49739, 0.72, 0.76541, -1.30219, 0.72, 0.47305, -1.6096, 0.72, 0, -1.30219, 0.72, -0.47305, -0.49739, 0.72, -0.76541, 0.49739, 0.72, -0.76541, 1.30219, 0.72, -0.47305)
 
-[sub_resource type="CylinderShape3D" id="Shape_54"]
+[sub_resource type="CylinderShape3D" id="Shape_62"]
 radius = 0.62
 height = 0.5
 
@@ -2646,130 +2696,142 @@ transform = Transform3D(1.31112, 3.24514, 0, 0, 0, -3.5, -3.24514, 1.31112, 0, 3
 [node name="cactus_short_149" parent="Models" instance=ExtResource("50_model")]
 transform = Transform3D(2.59808, 0, 1.5, 0, 3, 0, -1.5, 0, 2.59808, 46.955, 0, 5.92206)
 
-[node name="column_150" parent="Models" instance=ExtResource("7_model")]
+[node name="wall_150" parent="Models" instance=ExtResource("2_model")]
+transform = Transform3D(10, 0, 0, 0, 2.7, 0, 0, 0, 2.08333, -30, -1.7, -5.625)
+
+[node name="wall_151" parent="Models" instance=ExtResource("2_model")]
+transform = Transform3D(10, 0, 0, 0, 2.7, 0, 0, 0, 2.08333, -30, -1.7, 0.625)
+
+[node name="wall_152" parent="Models" instance=ExtResource("2_model")]
+transform = Transform3D(0, 0, 2.08333, 0, 2.7, 0, -5, 0, 0, -34.375, -1.7, -2.5)
+
+[node name="wall_153" parent="Models" instance=ExtResource("2_model")]
+transform = Transform3D(0, 0, 2.08333, 0, 2.7, 0, -5, 0, 0, -25.625, -1.7, -2.5)
+
+[node name="column_154" parent="Models" instance=ExtResource("7_model")]
 transform = Transform3D(1.6, 0, 0, 0, 3, 0, 0, 0, 1.6, -32.45, -1.6, -3.8)
 
-[node name="column_damaged_151" parent="Models" instance=ExtResource("8_model")]
+[node name="column_damaged_155" parent="Models" instance=ExtResource("8_model")]
 transform = Transform3D(1.6, 0, 0, 0, 3.4, 0, 0, 0, 1.6, -27.55, -1.6, -3.8)
 
-[node name="column_damaged_152" parent="Models" instance=ExtResource("8_model")]
+[node name="column_damaged_156" parent="Models" instance=ExtResource("8_model")]
 transform = Transform3D(1.6, 0, 0, 0, 3.4, 0, 0, 0, 1.6, -32.45, -1.6, -1.2)
 
-[node name="column_153" parent="Models" instance=ExtResource("7_model")]
+[node name="column_157" parent="Models" instance=ExtResource("7_model")]
 transform = Transform3D(1.6, 0, 0, 0, 3, 0, 0, 0, 1.6, -27.55, -1.6, -1.2)
 
-[node name="pot_154" parent="Models" instance=ExtResource("14_model")]
+[node name="pot_158" parent="Models" instance=ExtResource("14_model")]
 transform = Transform3D(0.02076, 0, -1.59987, 0, 1.6, 0, 1.59987, 0, 0.02076, -31.392, -1.6, -1.7001)
 
-[node name="pot_155" parent="Models" instance=ExtResource("14_model")]
+[node name="pot_159" parent="Models" instance=ExtResource("14_model")]
 transform = Transform3D(-0, 1.44175, 0.69379, 1.6, 0, 0, -0, 0.69379, -1.44175, -28.7135, -1.12, -3.64196)
 
-[node name="character_skeleton_156" parent="Models" instance=ExtResource("35_model")]
+[node name="character_skeleton_160" parent="Models" instance=ExtResource("35_model")]
 transform = Transform3D(-3.00702, 1.09446, -0, 0, 0, 3.2, 1.09446, 3.00702, -0, -29.6588, -1.12, -1.41481)
 
-[node name="bucket_157" parent="Models" instance=ExtResource("48_model")]
+[node name="bucket_161" parent="Models" instance=ExtResource("48_model")]
 transform = Transform3D(2.68116, 2.24976, 0, 0, 0, -3.5, -2.24976, 2.68116, 0, -30.6, -1.4, -3.8)
 
-[node name="pot_158" parent="Models" instance=ExtResource("14_model")]
+[node name="pot_162" parent="Models" instance=ExtResource("14_model")]
 transform = Transform3D(1.89139, 0, -0.01165, 0, 1.89143, 0, 0.01165, 0, 1.89139, -23.9667, 0, 2.62448)
 
-[node name="urn_square_159" parent="Models" instance=ExtResource("49_model")]
+[node name="urn_square_163" parent="Models" instance=ExtResource("49_model")]
 transform = Transform3D(-1.63867, 0, -2.7302, 0, 3.18422, 0, 2.7302, 0, -1.63867, -23.1954, 0, 1.61617)
 
-[node name="plate_broken_160" parent="Models" instance=ExtResource("15_model")]
+[node name="plate_broken_164" parent="Models" instance=ExtResource("15_model")]
 transform = Transform3D(0.60051, 0, 1.48303, 0, 1.6, 0, -1.48303, 0, 0.60051, -22.8918, 0, 1.03033)
 
-[node name="plate_broken_161" parent="Models" instance=ExtResource("15_model")]
+[node name="plate_broken_165" parent="Models" instance=ExtResource("15_model")]
 transform = Transform3D(-1.59945, 0, -0.04213, 0, 1.6, 0, 0.04213, 0, -1.59945, -25.2532, 0, 2.27886)
 
-[node name="statue_head_162" parent="Models" instance=ExtResource("51_model")]
+[node name="statue_head_166" parent="Models" instance=ExtResource("51_model")]
 transform = Transform3D(4.19395, -1.07971, -6.12332, 0, 7.38606, -1.30236, 6.21778, 0.72827, 4.13023, -34, -1.8, 30)
 
-[node name="block_163" parent="Models" instance=ExtResource("18_model")]
+[node name="block_167" parent="Models" instance=ExtResource("18_model")]
 transform = Transform3D(1.40954, 0, 0.51303, 0, 1.5, 0, -0.51303, 0, 1.40954, -38.4, 0, 32.8)
 
-[node name="block_164" parent="Models" instance=ExtResource("18_model")]
+[node name="block_168" parent="Models" instance=ExtResource("18_model")]
 transform = Transform3D(0.63393, 0, 1.35946, 0, 1.5, 0, -1.35946, 0, 0.63393, -39.2, 0, 28.4)
 
-[node name="character_skeleton_165" parent="Models" instance=ExtResource("35_model")]
+[node name="character_skeleton_169" parent="Models" instance=ExtResource("35_model")]
 transform = Transform3D(-2.77128, 1.6, -0, 0, 0, 3.2, 1.6, 2.77128, -0, -30.8779, 0.48, 33.6972)
 
-[node name="tool_pickaxe_166" parent="Models" instance=ExtResource("52_model")]
+[node name="tool_pickaxe_170" parent="Models" instance=ExtResource("52_model")]
 transform = Transform3D(1.5, 2.59808, 0, 0, 0, -3, -2.59808, 1.5, 0, -29.9118, 0.06, 32.62)
 
-[node name="wall_167" parent="Models" instance=ExtResource("2_model")]
+[node name="wall_171" parent="Models" instance=ExtResource("2_model")]
 transform = Transform3D(3, 0, 0, 0, 2.4, 0, 0, 0, 2, 35.5, 0, 32.4)
 
-[node name="wall_168" parent="Models" instance=ExtResource("2_model")]
+[node name="wall_172" parent="Models" instance=ExtResource("2_model")]
 transform = Transform3D(0, 0, 2, 0, 1.8, 0, -3, 0, 0, 38.3, 0, 29.8)
 
-[node name="column_damaged_169" parent="Models" instance=ExtResource("8_model")]
+[node name="column_damaged_173" parent="Models" instance=ExtResource("8_model")]
 transform = Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, 40.6, 0, 33.4)
 
-[node name="bricks_170" parent="Models" instance=ExtResource("5_model")]
+[node name="bricks_174" parent="Models" instance=ExtResource("5_model")]
 transform = Transform3D(2.07846, 0, 1.2, 0, 2.4, 0, -1.2, 0, 2.07846, 36.6044, 0, 30.5836)
 
-[node name="character_skeleton_171" parent="Models" instance=ExtResource("35_model")]
+[node name="character_skeleton_175" parent="Models" instance=ExtResource("35_model")]
 transform = Transform3D(2.77128, -1.6, 0, 0, 0, 3.2, -1.6, -2.77128, 0, 36.0779, 0.48, 28.5028)
 
-[node name="shield_round_172" parent="Models" instance=ExtResource("53_model")]
+[node name="shield_round_176" parent="Models" instance=ExtResource("53_model")]
 transform = Transform3D(1.99172, 1.67125, 0, 0, 0, -2.6, -1.67125, 1.99172, 0, 34.8, 0.156, 27.6)
 
-[node name="weapon_sword_173" parent="Models" instance=ExtResource("54_model")]
+[node name="weapon_sword_177" parent="Models" instance=ExtResource("54_model")]
 transform = Transform3D(-0.88925, 2.4432, 0, 0, 0, -2.6, -2.4432, -0.88925, -0, 36.8901, 0.156, 27.4989)
 
-[node name="column_174" parent="Models" instance=ExtResource("7_model")]
+[node name="column_178" parent="Models" instance=ExtResource("7_model")]
 transform = Transform3D(2.25526, 0, 0.82085, 0, 5, 0, -0.82085, 0, 2.25526, -26.2286, -1.4, -46.4609)
 
-[node name="column_175" parent="Models" instance=ExtResource("7_model")]
+[node name="column_179" parent="Models" instance=ExtResource("7_model")]
 transform = Transform3D(2.25526, 0, 0.82085, 0, 5, 0, -0.82085, 0, 2.25526, -23.4095, -1.4, -47.487)
 
-[node name="column_damaged_176" parent="Models" instance=ExtResource("8_model")]
+[node name="column_damaged_180" parent="Models" instance=ExtResource("8_model")]
 transform = Transform3D(2.25526, 0, 0.82085, 0, 4.2, 0, -0.82085, 0, 2.25526, -20.5905, -1.4, -48.513)
 
-[node name="column_177" parent="Models" instance=ExtResource("7_model")]
+[node name="column_181" parent="Models" instance=ExtResource("7_model")]
 transform = Transform3D(2.25526, 0, 0.82085, 0, 3, 0, -0.82085, 0, 2.25526, -17.7714, -1.4, -49.5391)
 
-[node name="block_178" parent="Models" instance=ExtResource("18_model")]
+[node name="block_182" parent="Models" instance=ExtResource("18_model")]
 transform = Transform3D(0.83562, 0, 0.99586, 0, 1.3, 0, -0.99586, 0, 0.83562, -20.1711, 0, -45.8988)
 
-[node name="wall_gate_179" parent="Models" instance=ExtResource("1_model")]
+[node name="wall_gate_183" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(2.94895, 0, 2.06488, 0, 3.6, 0, -2.06488, 0, 2.94895, 24, -0.6, -44)
 
-[node name="column_damaged_180" parent="Models" instance=ExtResource("8_model")]
+[node name="column_damaged_184" parent="Models" instance=ExtResource("8_model")]
 transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, 0, 0, 2.4, 21.5425, 0, -42.2793)
 
-[node name="column_damaged_181" parent="Models" instance=ExtResource("8_model")]
+[node name="column_damaged_185" parent="Models" instance=ExtResource("8_model")]
 transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, 0, 0, 2.4, 26.4575, 0, -45.7207)
 
-[node name="character_skeleton_182" parent="Models" instance=ExtResource("35_model")]
+[node name="character_skeleton_186" parent="Models" instance=ExtResource("35_model")]
 transform = Transform3D(-1.6, -2.77128, 0, 0, 0, 3.2, -2.77128, 1.6, -0, 21.9029, 0.48, -41.4779)
 
-[node name="stones_183" parent="Models" instance=ExtResource("55_model")]
+[node name="stones_187" parent="Models" instance=ExtResource("55_model")]
 transform = Transform3D(1.47721, 0, 0.26047, 0, 1.5, 0, -0.26047, 0, 1.47721, -26.3926, 0, 46.9987)
 
-[node name="stones_184" parent="Models" instance=ExtResource("55_model")]
+[node name="stones_188" parent="Models" instance=ExtResource("55_model")]
 transform = Transform3D(0.75, 0, 1.29904, 0, 1.5, 0, -1.29904, 0, 0.75, -23.9962, 0, 48.3935)
 
-[node name="stones_185" parent="Models" instance=ExtResource("55_model")]
+[node name="stones_189" parent="Models" instance=ExtResource("55_model")]
 transform = Transform3D(-0.26047, 0, 1.47721, 0, 1.5, 0, -1.47721, 0, -0.26047, -21.6013, 0, 47.3926)
 
-[node name="stones_186" parent="Models" instance=ExtResource("55_model")]
+[node name="stones_190" parent="Models" instance=ExtResource("55_model")]
 transform = Transform3D(1.29904, 0, 0.75, 0, 1.5, 0, -0.75, 0, 1.29904, -24.9935, 0, 50.5962)
 
-[node name="character_skeleton_187" parent="Models" instance=ExtResource("35_model")]
+[node name="character_skeleton_191" parent="Models" instance=ExtResource("35_model")]
 transform = Transform3D(-1.09446, 3.00702, -0, 0, 0, 3.2, 3.00702, 1.09446, -0, -23.5257, 0.48, 44.9713)
 
-[node name="wheel_188" parent="Models" instance=ExtResource("33_model")]
+[node name="wheel_192" parent="Models" instance=ExtResource("33_model")]
 transform = Transform3D(0, -2.63114, 0.95766, 2.8, 0, 0, -0, 0.95766, 2.63114, -26.7733, -0.56, 44.957)
 
-[node name="urn_round_189" parent="Models" instance=ExtResource("36_model")]
+[node name="urn_round_193" parent="Models" instance=ExtResource("36_model")]
 transform = Transform3D(1.37115, 0, -2.33449, 0, 2.70738, 0, 2.33449, 0, 1.37115, 21.9963, 0, 46.5849)
 
-[node name="plate_broken_190" parent="Models" instance=ExtResource("15_model")]
+[node name="plate_broken_194" parent="Models" instance=ExtResource("15_model")]
 transform = Transform3D(1.30492, 0, 0.92584, 0, 1.6, 0, -0.92584, 0, 1.30492, 21.2656, 0, 45.9228)
 
-[node name="plate_broken_191" parent="Models" instance=ExtResource("15_model")]
+[node name="plate_broken_195" parent="Models" instance=ExtResource("15_model")]
 transform = Transform3D(-0.5615, 0, 1.49824, 0, 1.6, 0, -1.49824, 0, -0.5615, 23.4746, 0, 47.0286)
 
 [node name="Collision" type="StaticBody3D" parent="."]
@@ -4748,147 +4810,148 @@ transform = Transform3D(0.86603, 0, 0.5, 0, 1, 0, -0.5, 0, 0.86603, 37.5, 0.04, 
 mesh = SubResource("Mesh_118")
 
 [node name="box_119_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, -0.35, -5.625)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 1.08, -5.625)
 mesh = SubResource("Mesh_119")
 
 [node name="box_119_1" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, -0.35, 0.625)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 1.08, 0.625)
 mesh = SubResource("Mesh_119")
 
 [node name="box_120_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 1.08, -5.625)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.375, 1.08, -2.5)
 mesh = SubResource("Mesh_120")
 
 [node name="box_120_1" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 1.08, 0.625)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.625, 1.08, -2.5)
 mesh = SubResource("Mesh_120")
 
-[node name="box_121_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.375, -0.35, -2.5)
-mesh = SubResource("Mesh_121")
+[node name="box_121_0" type="MultiMeshInstance3D" parent="Shapes"]
+multimesh = SubResource("MultiMesh_121_0")
 
-[node name="box_121_1" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.625, -0.35, -2.5)
-mesh = SubResource("Mesh_121")
-
-[node name="box_122_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.375, 1.08, -2.5)
-mesh = SubResource("Mesh_122")
-
-[node name="box_122_1" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.625, 1.08, -2.5)
-mesh = SubResource("Mesh_122")
+[node name="box_122_0" type="MultiMeshInstance3D" parent="Shapes"]
+multimesh = SubResource("MultiMesh_122_0")
 
 [node name="box_123_0" type="MultiMeshInstance3D" parent="Shapes"]
 multimesh = SubResource("MultiMesh_123_0")
 
-[node name="box_124_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(0.48165, -0.03368, 0.87572, 0.06976, 0.99756, 0, -0.87359, 0.06109, 0.48282, -30, 1.45, -2.5)
-mesh = SubResource("Mesh_124")
+[node name="box_124_0" type="MultiMeshInstance3D" parent="Shapes"]
+multimesh = SubResource("MultiMesh_124_0")
 
 [node name="box_125_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(0.93969, 0, 0.34202, 0, 1, 0, -0.34202, 0, 0.93969, -24.8191, 3.9, -46.9739)
+transform = Transform3D(0.48165, -0.03368, 0.87572, 0.06976, 0.99756, 0, -0.87359, 0.06109, 0.48282, -30, 1.45, -2.5)
 mesh = SubResource("Mesh_125")
 
-[node name="torus_126_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.34202, 0.93969, 0, 0, 0, -1, -0.93969, -0.34202, -0, -20.5312, -0.09075, -44.4907)
+[node name="box_126_0" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(0.48165, -0.03368, 0.87572, 0.06976, 0.99756, 0, -0.87359, 0.06109, 0.48282, -32.8023, 1.45, -4.04503)
 mesh = SubResource("Mesh_126")
 
-[node name="torus_126_1" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.34202, 0.93969, 0, 0, 0, -1, -0.93969, -0.34202, -0, -18.0504, -0.09075, -45.3937)
+[node name="box_126_1" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(0.48165, -0.03368, 0.87572, 0.06976, 0.99756, 0, -0.87359, 0.06109, 0.48282, -27.7231, 1.45, -1.24466)
 mesh = SubResource("Mesh_126")
 
-[node name="torus_127_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.34202, 0.93969, 0, 0, 0, -1, -0.93969, -0.34202, -0, -20.1177, -0.132, -44.6412)
-mesh = SubResource("Mesh_127")
-
-[node name="torus_127_1" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.34202, 0.93969, 0, 0, 0, -1, -0.93969, -0.34202, -0, -18.4639, -0.132, -45.2432)
+[node name="box_127_0" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(0.93969, 0, 0.34202, 0, 1, 0, -0.34202, 0, 0.93969, -24.8191, 3.9, -46.9739)
 mesh = SubResource("Mesh_127")
 
 [node name="torus_128_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.34202, 0.93969, 0, 0, 0, -1, -0.93969, -0.34202, -0, -19.7042, -0.15675, -44.7917)
+transform = Transform3D(-0.34202, 0.93969, 0, 0, 0, -1, -0.93969, -0.34202, -0, -20.5312, -0.09075, -44.4907)
+mesh = SubResource("Mesh_128")
+
+[node name="torus_128_1" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.34202, 0.93969, 0, 0, 0, -1, -0.93969, -0.34202, -0, -18.0504, -0.09075, -45.3937)
 mesh = SubResource("Mesh_128")
 
 [node name="torus_129_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.34202, 0.93969, 0, 0, 0, -1, -0.93969, -0.34202, -0, -19.2908, -0.165, -44.9422)
+transform = Transform3D(-0.34202, 0.93969, 0, 0, 0, -1, -0.93969, -0.34202, -0, -20.1177, -0.132, -44.6412)
+mesh = SubResource("Mesh_129")
+
+[node name="torus_129_1" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.34202, 0.93969, 0, 0, 0, -1, -0.93969, -0.34202, -0, -18.4639, -0.132, -45.2432)
 mesh = SubResource("Mesh_129")
 
 [node name="torus_130_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.34202, 0.93969, 0, 0, 0, -1, -0.93969, -0.34202, -0, -18.8773, -0.15675, -45.0927)
+transform = Transform3D(-0.34202, 0.93969, 0, 0, 0, -1, -0.93969, -0.34202, -0, -19.7042, -0.15675, -44.7917)
 mesh = SubResource("Mesh_130")
 
-[node name="box_131_0" type="MultiMeshInstance3D" parent="Shapes"]
-multimesh = SubResource("MultiMesh_131_0")
+[node name="torus_131_0" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.34202, 0.93969, 0, 0, 0, -1, -0.93969, -0.34202, -0, -19.2908, -0.165, -44.9422)
+mesh = SubResource("Mesh_131")
 
-[node name="cyl_132_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.24709, 0.93454, -0.25608, 0.49726, -0.10453, -0.86128, -0.83167, -0.34015, -0.43889, -17.4302, 0.204, -45.6194)
+[node name="torus_132_0" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.34202, 0.93969, 0, 0, 0, -1, -0.93969, -0.34202, -0, -18.8773, -0.15675, -45.0927)
 mesh = SubResource("Mesh_132")
 
-[node name="box_133_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.61566, 0, 0.78801, 0, 1, 0, -0.78801, 0, -0.61566, -17.3349, 0.036, -45.8839)
-mesh = SubResource("Mesh_133")
+[node name="box_133_0" type="MultiMeshInstance3D" parent="Shapes"]
+multimesh = SubResource("MultiMesh_133_0")
 
-[node name="box_134_0" type="MultiMeshInstance3D" parent="Shapes"]
-multimesh = SubResource("MultiMesh_134_0")
+[node name="cyl_134_0" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.24709, 0.93454, -0.25608, 0.49726, -0.10453, -0.86128, -0.83167, -0.34015, -0.43889, -17.4302, 0.204, -45.6194)
+mesh = SubResource("Mesh_134")
+
+[node name="box_135_0" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.61566, 0, 0.78801, 0, 1, 0, -0.78801, 0, -0.61566, -17.3349, 0.036, -45.8839)
+mesh = SubResource("Mesh_135")
+
+[node name="box_136_0" type="MultiMeshInstance3D" parent="Shapes"]
+multimesh = SubResource("MultiMesh_136_0")
 cast_shadow = 0
 
-[node name="cyl_135_0" type="MultiMeshInstance3D" parent="Shapes"]
-multimesh = SubResource("MultiMesh_135_0")
-
-[node name="torus_136_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.90631, 0.42262, 0, 0, 0, -1, -0.42262, -0.90631, -0, 23.5826, -0.39325, 55.1841)
-mesh = SubResource("Mesh_136")
-
-[node name="torus_136_1" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.90631, 0.42262, 0, 0, 0, -1, -0.42262, -0.90631, -0, 28.4174, -0.39325, 44.8159)
-mesh = SubResource("Mesh_136")
-
-[node name="torus_137_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.90631, 0.42262, 0, 0, 0, -1, -0.42262, -0.90631, -0, 24.3884, -0.572, 53.456)
-mesh = SubResource("Mesh_137")
-
-[node name="torus_137_1" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.90631, 0.42262, 0, 0, 0, -1, -0.42262, -0.90631, -0, 27.6116, -0.572, 46.544)
-mesh = SubResource("Mesh_137")
+[node name="cyl_137_0" type="MultiMeshInstance3D" parent="Shapes"]
+multimesh = SubResource("MultiMesh_137_0")
 
 [node name="torus_138_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.90631, 0.42262, 0, 0, 0, -1, -0.42262, -0.90631, -0, 25.1942, -0.67925, 51.728)
+transform = Transform3D(-0.90631, 0.42262, 0, 0, 0, -1, -0.42262, -0.90631, -0, 23.5826, -0.39325, 55.1841)
+mesh = SubResource("Mesh_138")
+
+[node name="torus_138_1" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.90631, 0.42262, 0, 0, 0, -1, -0.42262, -0.90631, -0, 28.4174, -0.39325, 44.8159)
 mesh = SubResource("Mesh_138")
 
 [node name="torus_139_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.90631, 0.42262, 0, 0, 0, -1, -0.42262, -0.90631, -0, 26, -0.715, 50)
+transform = Transform3D(-0.90631, 0.42262, 0, 0, 0, -1, -0.42262, -0.90631, -0, 24.3884, -0.572, 53.456)
+mesh = SubResource("Mesh_139")
+
+[node name="torus_139_1" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.90631, 0.42262, 0, 0, 0, -1, -0.42262, -0.90631, -0, 27.6116, -0.572, 46.544)
 mesh = SubResource("Mesh_139")
 
 [node name="torus_140_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.90631, 0.42262, 0, 0, 0, -1, -0.42262, -0.90631, -0, 26.8058, -0.67925, 48.272)
+transform = Transform3D(-0.90631, 0.42262, 0, 0, 0, -1, -0.42262, -0.90631, -0, 25.1942, -0.67925, 51.728)
 mesh = SubResource("Mesh_140")
 
-[node name="box_141_0" type="MultiMeshInstance3D" parent="Shapes"]
-multimesh = SubResource("MultiMesh_141_0")
+[node name="torus_141_0" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.90631, 0.42262, 0, 0, 0, -1, -0.42262, -0.90631, -0, 26, -0.715, 50)
+mesh = SubResource("Mesh_141")
 
-[node name="cyl_142_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.7628, 0.4203, -0.49141, 0.49726, -0.10453, -0.86128, -0.41337, -0.90134, -0.12927, 29.6261, 0.884, 42.2239)
+[node name="torus_142_0" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.90631, 0.42262, 0, 0, 0, -1, -0.42262, -0.90631, -0, 26.8058, -0.67925, 48.272)
 mesh = SubResource("Mesh_142")
 
-[node name="cyl_143_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.9281, 0.25464, 0.27165, 0.36869, 0.52654, 0.76604, 0.05203, 0.81112, -0.58256, 30.0979, 2.184, 44.1651)
-mesh = SubResource("Mesh_143")
+[node name="box_143_0" type="MultiMeshInstance3D" parent="Shapes"]
+multimesh = SubResource("MultiMesh_143_0")
 
-[node name="cyl_143_1" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.55671, -0.78503, 0.27165, -0.36869, 0.52654, 0.76604, -0.74441, 0.32631, -0.58256, 27.8357, 2.184, 43.1103)
-mesh = SubResource("Mesh_143")
-
-[node name="box_144_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(-0.99255, 0, 0.12187, 0, 1, 0, -0.12187, 0, -0.99255, 29.1074, 0.156, 41.1214)
+[node name="cyl_144_0" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.7628, 0.4203, -0.49141, 0.49726, -0.10453, -0.86128, -0.41337, -0.90134, -0.12927, 29.6261, 0.884, 42.2239)
 mesh = SubResource("Mesh_144")
 
-[node name="box_145_0" type="MultiMeshInstance3D" parent="Shapes"]
-multimesh = SubResource("MultiMesh_145_0")
+[node name="cyl_145_0" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.9281, 0.25464, 0.27165, 0.36869, 0.52654, 0.76604, 0.05203, 0.81112, -0.58256, 30.0979, 2.184, 44.1651)
+mesh = SubResource("Mesh_145")
+
+[node name="cyl_145_1" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.55671, -0.78503, 0.27165, -0.36869, 0.52654, 0.76604, -0.74441, 0.32631, -0.58256, 27.8357, 2.184, 43.1103)
+mesh = SubResource("Mesh_145")
+
+[node name="box_146_0" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(-0.99255, 0, 0.12187, 0, 1, 0, -0.12187, 0, -0.99255, 29.1074, 0.156, 41.1214)
+mesh = SubResource("Mesh_146")
+
+[node name="box_147_0" type="MultiMeshInstance3D" parent="Shapes"]
+multimesh = SubResource("MultiMesh_147_0")
 cast_shadow = 0
 
-[node name="cyl_146_0" type="MultiMeshInstance3D" parent="Shapes"]
-multimesh = SubResource("MultiMesh_146_0")
+[node name="cyl_148_0" type="MultiMeshInstance3D" parent="Shapes"]
+multimesh = SubResource("MultiMesh_148_0")
 
 [node name="Shape0" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.8, 0.62, 20.8)
@@ -5059,53 +5122,85 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.625, 0.4, -2.5)
 shape = SubResource("Shape_41")
 
 [node name="Shape42" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.55919, 0, -0.82904, 0, 1, 0, 0.82904, 0, 0.55919, -35.4, 0, 31.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.375, 0.175, -5.625)
 shape = SubResource("Shape_42")
 
 [node name="Shape43" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.86603, 0, 0.5, 0, 1, 0, -0.5, 0, 0.86603, -36.4, 0, 28.8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.375, 1.6, -5.625)
 shape = SubResource("Shape_43")
 
 [node name="Shape44" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.17365, 0, 0.98481, 0, 1, 0, -0.98481, 0, 0.17365, -31.4, 0, 28.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.375, 0.175, 0.625)
 shape = SubResource("Shape_44")
 
 [node name="Shape45" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.86603, 0, 0.5, 0, 1, 0, -0.5, 0, -0.86603, -27.6, 0.36, 23.9751)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.375, 1.6, 0.625)
 shape = SubResource("Shape_45")
 
 [node name="Shape46" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 0.45, 27.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.625, 0.175, -5.625)
 shape = SubResource("Shape_46")
 
 [node name="Shape47" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 35.5, 0, 34)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.625, 1.6, -5.625)
 shape = SubResource("Shape_47")
 
 [node name="Shape48" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.2286, 1.8, -46.4609)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.625, 0.175, 0.625)
 shape = SubResource("Shape_48")
 
 [node name="Shape49" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23.4095, 1.8, -47.487)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.625, 1.6, 0.625)
 shape = SubResource("Shape_49")
 
 [node name="Shape50" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.5905, 0.812, -48.513)
+transform = Transform3D(0.55919, 0, -0.82904, 0, 1, 0, 0.82904, 0, 0.55919, -35.4, 0, 31.6)
 shape = SubResource("Shape_50")
 
 [node name="Shape51" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.7714, 0.8, -49.5391)
+transform = Transform3D(0.86603, 0, 0.5, 0, 1, 0, -0.5, 0, 0.86603, -36.4, 0, 28.8)
 shape = SubResource("Shape_51")
 
 [node name="Shape52" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.93969, 0, 0.34202, 0, 1, 0, -0.34202, 0, 0.93969, -22.7524, 0, -50.0673)
+transform = Transform3D(0.17365, 0, 0.98481, 0, 1, 0, -0.98481, 0, 0.17365, -31.4, 0, 28.6)
 shape = SubResource("Shape_52")
 
 [node name="Shape53" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.81915, 0, 0.57358, 0, 1, 0, -0.57358, 0, 0.81915, 25.2, 0, -42)
+transform = Transform3D(-0.86603, 0, 0.5, 0, 1, 0, -0.5, 0, -0.86603, -27.6, 0.36, 23.9751)
 shape = SubResource("Shape_53")
 
 [node name="Shape54" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.4, 0.25, 45.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 0.45, 27.4)
 shape = SubResource("Shape_54")
+
+[node name="Shape55" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 35.5, 0, 34)
+shape = SubResource("Shape_55")
+
+[node name="Shape56" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.2286, 1.8, -46.4609)
+shape = SubResource("Shape_56")
+
+[node name="Shape57" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23.4095, 1.8, -47.487)
+shape = SubResource("Shape_57")
+
+[node name="Shape58" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.5905, 0.812, -48.513)
+shape = SubResource("Shape_58")
+
+[node name="Shape59" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.7714, 0.8, -49.5391)
+shape = SubResource("Shape_59")
+
+[node name="Shape60" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.93969, 0, 0.34202, 0, 1, 0, -0.34202, 0, 0.93969, -22.7524, 0, -50.0673)
+shape = SubResource("Shape_60")
+
+[node name="Shape61" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.81915, 0, 0.57358, 0, 1, 0, -0.57358, 0, 0.81915, 25.2, 0, -42)
+shape = SubResource("Shape_61")
+
+[node name="Shape62" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.4, 0.25, 45.2)
+shape = SubResource("Shape_62")
