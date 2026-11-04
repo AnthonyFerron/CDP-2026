@@ -93,7 +93,7 @@ size = Vector3(6.4, 4.6, 0.2)
 material = SubResource("Material_wood_dark")
 size = Vector3(18.8, 0.35, 0.4)
 
-[sub_resource type="MultiMesh" id="MultiMesh_1"]
+[sub_resource type="MultiMesh" id="MultiMesh_1_0"]
 transform_format = 1
 instance_count = 3
 mesh = SubResource("Mesh_1")
@@ -111,7 +111,7 @@ size = Vector3(2.6, 2.7, 0.04)
 material = SubResource("Material_wood")
 size = Vector3(2.52, 0.05, 0.75)
 
-[sub_resource type="MultiMesh" id="MultiMesh_4"]
+[sub_resource type="MultiMesh" id="MultiMesh_4_0"]
 transform_format = 1
 instance_count = 5
 mesh = SubResource("Mesh_4")
@@ -121,7 +121,7 @@ buffer = PackedFloat32Array(1, 0, 0, -7, 0, 1, 0, 0.1, 0, 0, 1, -10.95, 1, 0, 0,
 material = SubResource("Material_tablet")
 size = Vector3(0.26, 0.36, 0.05)
 
-[sub_resource type="MultiMesh" id="MultiMesh_5"]
+[sub_resource type="MultiMesh" id="MultiMesh_5_0"]
 transform_format = 1
 instance_count = 22
 mesh = SubResource("Mesh_5")
@@ -131,7 +131,7 @@ buffer = PackedFloat32Array(0.99939, -0.00588, 0.03435, -8.05, 0, 0.98565, 0.168
 material = SubResource("Material_wood")
 size = Vector3(0.08, 2.2, 0.65)
 
-[sub_resource type="MultiMesh" id="MultiMesh_6"]
+[sub_resource type="MultiMesh" id="MultiMesh_6_0"]
 transform_format = 1
 instance_count = 4
 mesh = SubResource("Mesh_6")
@@ -145,7 +145,7 @@ size = Vector3(2.5, 2.2, 0.04)
 material = SubResource("Material_wood")
 size = Vector3(2.42, 0.05, 0.65)
 
-[sub_resource type="MultiMesh" id="MultiMesh_8"]
+[sub_resource type="MultiMesh" id="MultiMesh_8_0"]
 transform_format = 1
 instance_count = 10
 mesh = SubResource("Mesh_8")
@@ -159,7 +159,7 @@ height = 0.5525
 radial_segments = 6
 rings = 1
 
-[sub_resource type="MultiMesh" id="MultiMesh_9"]
+[sub_resource type="MultiMesh" id="MultiMesh_9_0"]
 transform_format = 1
 instance_count = 226
 mesh = SubResource("Mesh_9")
@@ -173,7 +173,7 @@ height = 0.6
 radial_segments = 6
 rings = 1
 
-[sub_resource type="MultiMesh" id="MultiMesh_10"]
+[sub_resource type="MultiMesh" id="MultiMesh_10_0"]
 transform_format = 1
 instance_count = 3
 mesh = SubResource("Mesh_10")
@@ -183,7 +183,7 @@ buffer = PackedFloat32Array(1, 0, 0, -8.86, 0, 0, -1, 0.7, 0, 1, 0, -9.6, 1, 0, 
 material = SubResource("Material_tablet")
 size = Vector3(0.42, 0.06, 0.3)
 
-[sub_resource type="MultiMesh" id="MultiMesh_11"]
+[sub_resource type="MultiMesh" id="MultiMesh_11_0"]
 transform_format = 1
 instance_count = 9
 mesh = SubResource("Mesh_11")
@@ -217,7 +217,7 @@ height = 0.55
 radial_segments = 6
 rings = 1
 
-[sub_resource type="MultiMesh" id="MultiMesh_15"]
+[sub_resource type="MultiMesh" id="MultiMesh_15_0"]
 transform_format = 1
 instance_count = 5
 mesh = SubResource("Mesh_15")
@@ -230,7 +230,7 @@ height = 2.0
 radial_segments = 14
 rings = 7
 
-[sub_resource type="MultiMesh" id="MultiMesh_16"]
+[sub_resource type="MultiMesh" id="MultiMesh_16_0"]
 transform_format = 1
 instance_count = 4
 mesh = SubResource("Mesh_16")
@@ -629,8 +629,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3, -12.85)
 mesh = SubResource("Mesh_0")
 cast_shadow = 0
 
-[node name="box_1" type="MultiMeshInstance3D" parent="Shapes"]
-multimesh = SubResource("MultiMesh_1")
+[node name="box_1_0" type="MultiMeshInstance3D" parent="Shapes"]
+multimesh = SubResource("MultiMesh_1_0")
 
 [node name="box_2_0" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.26, 1.35, -10.95)
@@ -644,15 +644,15 @@ mesh = SubResource("Mesh_2")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 1.35, -11.305)
 mesh = SubResource("Mesh_3")
 
-[node name="box_4" type="MultiMeshInstance3D" parent="Shapes"]
-multimesh = SubResource("MultiMesh_4")
+[node name="box_4_0" type="MultiMeshInstance3D" parent="Shapes"]
+multimesh = SubResource("MultiMesh_4_0")
 
-[node name="box_5" type="MultiMeshInstance3D" parent="Shapes"]
-multimesh = SubResource("MultiMesh_5")
+[node name="box_5_0" type="MultiMeshInstance3D" parent="Shapes"]
+multimesh = SubResource("MultiMesh_5_0")
 cast_shadow = 0
 
-[node name="box_6" type="MultiMeshInstance3D" parent="Shapes"]
-multimesh = SubResource("MultiMesh_6")
+[node name="box_6_0" type="MultiMeshInstance3D" parent="Shapes"]
+multimesh = SubResource("MultiMesh_6_0")
 
 [node name="box_7_0" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, -3.9, 1.1, -0.675)
@@ -662,19 +662,19 @@ mesh = SubResource("Mesh_7")
 transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, 3.9, 1.1, -0.675)
 mesh = SubResource("Mesh_7")
 
-[node name="box_8" type="MultiMeshInstance3D" parent="Shapes"]
-multimesh = SubResource("MultiMesh_8")
+[node name="box_8_0" type="MultiMeshInstance3D" parent="Shapes"]
+multimesh = SubResource("MultiMesh_8_0")
 
-[node name="cyl_9" type="MultiMeshInstance3D" parent="Shapes"]
-multimesh = SubResource("MultiMesh_9")
+[node name="cyl_9_0" type="MultiMeshInstance3D" parent="Shapes"]
+multimesh = SubResource("MultiMesh_9_0")
 cast_shadow = 0
 
-[node name="cyl_10" type="MultiMeshInstance3D" parent="Shapes"]
-multimesh = SubResource("MultiMesh_10")
+[node name="cyl_10_0" type="MultiMeshInstance3D" parent="Shapes"]
+multimesh = SubResource("MultiMesh_10_0")
 cast_shadow = 0
 
-[node name="box_11" type="MultiMeshInstance3D" parent="Shapes"]
-multimesh = SubResource("MultiMesh_11")
+[node name="box_11_0" type="MultiMeshInstance3D" parent="Shapes"]
+multimesh = SubResource("MultiMesh_11_0")
 cast_shadow = 0
 
 [node name="box_12_0" type="MeshInstance3D" parent="Shapes"]
@@ -697,9 +697,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.45, 0.66, -2.4)
 mesh = SubResource("Mesh_14")
 cast_shadow = 0
 
-[node name="cyl_15" type="MultiMeshInstance3D" parent="Shapes"]
-multimesh = SubResource("MultiMesh_15")
+[node name="cyl_15_0" type="MultiMeshInstance3D" parent="Shapes"]
+multimesh = SubResource("MultiMesh_15_0")
 cast_shadow = 0
 
-[node name="sphere_16" type="MultiMeshInstance3D" parent="Shapes"]
-multimesh = SubResource("MultiMesh_16")
+[node name="sphere_16_0" type="MultiMeshInstance3D" parent="Shapes"]
+multimesh = SubResource("MultiMesh_16_0")

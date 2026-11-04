@@ -22,7 +22,8 @@
 [ext_resource type="PackedScene" path="res://assets/models/kenney/mini_arena/column-damaged.glb" id="25_column"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/mini_arena/bricks.glb" id="26_bricks"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/siege-catapult-demolished.glb" id="27_catapult"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/siege-ram-demolished.glb" id="28_ram"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/siege-ballista-demolished.glb" id="28_ballista"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/siege-trebuchet-demolished.glb" id="36_trebuchet"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/weapon-spear.glb" id="29_spear"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/shield-round.glb" id="30_shield"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/weapon-sword.glb" id="31_sword"]
@@ -356,7 +357,7 @@ terrain = NodePath("../Terrain")
 cactus_models = Array[PackedScene]([ExtResource("20_cactus_tall"), ExtResource("21_cactus_short")])
 rock_models = Array[PackedScene]([ExtResource("22_rock_a"), ExtResource("23_rock_b"), ExtResource("24_rock_c")])
 ruin_models = Array[PackedScene]([ExtResource("25_column"), ExtResource("26_bricks")])
-wreck_models = Array[PackedScene]([ExtResource("27_catapult"), ExtResource("28_ram")])
+wreck_models = Array[PackedScene]([ExtResource("27_catapult"), ExtResource("28_ballista"), ExtResource("36_trebuchet")])
 prop_models = Array[PackedScene]([ExtResource("29_spear"), ExtResource("30_shield"), ExtResource("31_sword"), ExtResource("32_pot"), ExtResource("33_wheel"), ExtResource("34_barrel"), ExtResource("35_skeleton")])
 cactus_count = 34
 quicksand_material = SubResource("ShaderMaterial_quicksand")
