@@ -154,13 +154,14 @@ def build_crypt_underground(scene, rng):
         scene.add("mini_dungeon/banner", (x, 0.8, -21.2), 0.0, 3.0)
     for x, z in ((-4.2, -8.0), (4.2, -8.0), (-4.2, -16.0), (4.2, -16.0)):
         scene.add("graveyard_kit/candle-multiple", (x, 0.0, z), rng.uniform(0, 360), 3.0)
-    # Chambre de l'ouest : cercueils et urnes, pour le décor.
-    for x, z, degrees in ((-24.0, -9.0, 90.0), (-24.0, -15.0, 90.0), (-28.5, -12.0, 0.0)):
-        scene.add("graveyard_kit/coffin-old", (x, 0.0, z), degrees, 3.0)
-        scene.add_box((x, 0.3, z), (2.6, 0.6, 1.8) if degrees else (1.8, 0.6, 2.6))
-    for x, z in ((-20.8, -8.4), (-20.8, -15.6), (-29.0, -8.6)):
+    # Chambre de l'ouest : les tombeaux des rois Codeon I à IV, posés dans marais.tscn, bordent l'allée.
+    # Un vieux cercueil entre chaque paire de tombeaux, et des urnes dans les angles.
+    for z in (-7.6, -16.4):
+        scene.add("graveyard_kit/coffin-old", (-24.0, 0.0, z), 90.0, 3.0)
+        scene.add_box((-24.0, 0.3, z), (2.6, 0.6, 1.8))
+    for x, z in ((-29.0, -7.0), (-29.0, -17.0), (-19.0, -7.0), (-19.0, -17.0)):
         scene.add("graveyard_kit/urn-round", (x, 0.0, z), 0.0, 3.0)
-    # Chambre de l'est : les tombeaux des rois Codeon I à IV entourent celui du livre ; tous sont posés dans marais.tscn.
+    # Chambre de l'est : le tombeau du livre seul au centre, entre deux lanternes.
     for x, z in ((29.0, -9.0), (29.0, -15.0)):
         scene.add("graveyard_kit/lantern-candle", (x, 0.0, z), 0.0, 3.0)
 

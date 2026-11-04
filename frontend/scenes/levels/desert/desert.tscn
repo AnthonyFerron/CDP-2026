@@ -124,15 +124,29 @@ roughness = 1.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_ceiling"]
 material = SubResource("StandardMaterial3D_cave_stone")
-size = Vector3(20.5, 0.5, 12.5)
+size = Vector3(20.4, 0.3, 16.4)
 
-[sub_resource type="BoxMesh" id="BoxMesh_cave_wall_long"]
+[sub_resource type="BoxMesh" id="BoxMesh_cellar_step"]
 material = SubResource("StandardMaterial3D_cave_stone")
-size = Vector3(20.5, 4.6, 0.4)
+size = Vector3(2.8, 0.39, 0.36)
 
-[sub_resource type="BoxMesh" id="BoxMesh_cave_wall_side"]
-material = SubResource("StandardMaterial3D_cave_stone")
-size = Vector3(0.4, 4.6, 12.5)
+[sub_resource type="BoxShape3D" id="BoxShape3D_cellar_stairs"]
+size = Vector3(2.8, 3.9, 3.6)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sun_mark"]
+albedo_color = Color(0.55, 0.3, 0.1, 1)
+roughness = 1.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_sun_disc"]
+material = SubResource("StandardMaterial3D_sun_mark")
+top_radius = 0.2
+bottom_radius = 0.2
+height = 0.05
+radial_segments = 16
+
+[sub_resource type="BoxMesh" id="BoxMesh_sun_ray"]
+material = SubResource("StandardMaterial3D_sun_mark")
+size = Vector3(0.05, 0.14, 0.05)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_torch"]
 material = SubResource("StandardMaterial3D_wood")
@@ -189,14 +203,6 @@ bottom_radius = 1.5
 height = 1.3
 radial_segments = 12
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_shaft"]
-transparency = 1
-shading_mode = 0
-albedo_color = Color(1, 0.88, 0.6, 0.12)
-
-[sub_resource type="BoxMesh" id="BoxMesh_shaft"]
-material = SubResource("StandardMaterial3D_shaft")
-size = Vector3(1.8, 4.2, 1.8)
 
 [node name="Desert" type="Node3D"]
 script = ExtResource("1_desert")
@@ -303,12 +309,44 @@ radius = 2.8
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
 mesh = SubResource("BoxMesh_stele")
 
-[node name="Sun" type="Label3D" parent="Exterior/Clues/Levant"]
+[node name="Sun" type="Node3D" parent="Exterior/Clues/Levant"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0.26)
-pixel_size = 0.01
-modulate = Color(0.55, 0.3, 0.1, 1)
-text = "☼"
-font_size = 96
+
+[node name="Disc" type="MeshInstance3D" parent="Exterior/Clues/Levant/Sun"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0)
+mesh = SubResource("CylinderMesh_sun_disc")
+
+[node name="Ray0" type="MeshInstance3D" parent="Exterior/Clues/Levant/Sun"]
+transform = Transform3D(1, -0, 0, 0, 1, 0, 0, 0, 1, -0, 0.33, 0)
+mesh = SubResource("BoxMesh_sun_ray")
+
+[node name="Ray1" type="MeshInstance3D" parent="Exterior/Clues/Levant/Sun"]
+transform = Transform3D(0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, -0.2333, 0.2333, 0)
+mesh = SubResource("BoxMesh_sun_ray")
+
+[node name="Ray2" type="MeshInstance3D" parent="Exterior/Clues/Levant/Sun"]
+transform = Transform3D(6.12323e-17, -1, 0, 1, 6.12323e-17, 0, 0, 0, 1, -0.33, 2.021e-17, 0)
+mesh = SubResource("BoxMesh_sun_ray")
+
+[node name="Ray3" type="MeshInstance3D" parent="Exterior/Clues/Levant/Sun"]
+transform = Transform3D(-0.707107, -0.707107, 0, 0.707107, -0.707107, 0, 0, 0, 1, -0.2333, -0.2333, 0)
+mesh = SubResource("BoxMesh_sun_ray")
+
+[node name="Ray4" type="MeshInstance3D" parent="Exterior/Clues/Levant/Sun"]
+transform = Transform3D(-1, -1.22465e-16, 0, 1.22465e-16, -1, 0, 0, 0, 1, -4.041e-17, -0.33, 0)
+mesh = SubResource("BoxMesh_sun_ray")
+
+[node name="Ray5" type="MeshInstance3D" parent="Exterior/Clues/Levant/Sun"]
+transform = Transform3D(-0.707107, 0.707107, 0, -0.707107, -0.707107, 0, 0, 0, 1, 0.2333, -0.2333, 0)
+mesh = SubResource("BoxMesh_sun_ray")
+
+[node name="Ray6" type="MeshInstance3D" parent="Exterior/Clues/Levant/Sun"]
+transform = Transform3D(-1.83697e-16, 1, 0, -1, -1.83697e-16, 0, 0, 0, 1, 0.33, -6.062e-17, 0)
+mesh = SubResource("BoxMesh_sun_ray")
+
+[node name="Ray7" type="MeshInstance3D" parent="Exterior/Clues/Levant/Sun"]
+transform = Transform3D(0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0, 1, 0.2333, 0.2333, 0)
+mesh = SubResource("BoxMesh_sun_ray")
 
 [node name="Body" type="StaticBody3D" parent="Exterior/Clues/Levant"]
 
@@ -328,12 +366,44 @@ radius = 2.8
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
 mesh = SubResource("BoxMesh_stele")
 
-[node name="Sun" type="Label3D" parent="Exterior/Clues/Zenith"]
+[node name="Sun" type="Node3D" parent="Exterior/Clues/Zenith"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0.26)
-pixel_size = 0.01
-modulate = Color(0.55, 0.3, 0.1, 1)
-text = "☼"
-font_size = 96
+
+[node name="Disc" type="MeshInstance3D" parent="Exterior/Clues/Zenith/Sun"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0)
+mesh = SubResource("CylinderMesh_sun_disc")
+
+[node name="Ray0" type="MeshInstance3D" parent="Exterior/Clues/Zenith/Sun"]
+transform = Transform3D(1, -0, 0, 0, 1, 0, 0, 0, 1, -0, 0.33, 0)
+mesh = SubResource("BoxMesh_sun_ray")
+
+[node name="Ray1" type="MeshInstance3D" parent="Exterior/Clues/Zenith/Sun"]
+transform = Transform3D(0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, -0.2333, 0.2333, 0)
+mesh = SubResource("BoxMesh_sun_ray")
+
+[node name="Ray2" type="MeshInstance3D" parent="Exterior/Clues/Zenith/Sun"]
+transform = Transform3D(6.12323e-17, -1, 0, 1, 6.12323e-17, 0, 0, 0, 1, -0.33, 2.021e-17, 0)
+mesh = SubResource("BoxMesh_sun_ray")
+
+[node name="Ray3" type="MeshInstance3D" parent="Exterior/Clues/Zenith/Sun"]
+transform = Transform3D(-0.707107, -0.707107, 0, 0.707107, -0.707107, 0, 0, 0, 1, -0.2333, -0.2333, 0)
+mesh = SubResource("BoxMesh_sun_ray")
+
+[node name="Ray4" type="MeshInstance3D" parent="Exterior/Clues/Zenith/Sun"]
+transform = Transform3D(-1, -1.22465e-16, 0, 1.22465e-16, -1, 0, 0, 0, 1, -4.041e-17, -0.33, 0)
+mesh = SubResource("BoxMesh_sun_ray")
+
+[node name="Ray5" type="MeshInstance3D" parent="Exterior/Clues/Zenith/Sun"]
+transform = Transform3D(-0.707107, 0.707107, 0, -0.707107, -0.707107, 0, 0, 0, 1, 0.2333, -0.2333, 0)
+mesh = SubResource("BoxMesh_sun_ray")
+
+[node name="Ray6" type="MeshInstance3D" parent="Exterior/Clues/Zenith/Sun"]
+transform = Transform3D(-1.83697e-16, 1, 0, -1, -1.83697e-16, 0, 0, 0, 1, 0.33, -6.062e-17, 0)
+mesh = SubResource("BoxMesh_sun_ray")
+
+[node name="Ray7" type="MeshInstance3D" parent="Exterior/Clues/Zenith/Sun"]
+transform = Transform3D(0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0, 1, 0.2333, 0.2333, 0)
+mesh = SubResource("BoxMesh_sun_ray")
 
 [node name="Body" type="StaticBody3D" parent="Exterior/Clues/Zenith"]
 
@@ -353,12 +423,44 @@ radius = 2.8
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
 mesh = SubResource("BoxMesh_stele")
 
-[node name="Sun" type="Label3D" parent="Exterior/Clues/Couchant"]
+[node name="Sun" type="Node3D" parent="Exterior/Clues/Couchant"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0.26)
-pixel_size = 0.01
-modulate = Color(0.55, 0.3, 0.1, 1)
-text = "☼"
-font_size = 96
+
+[node name="Disc" type="MeshInstance3D" parent="Exterior/Clues/Couchant/Sun"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0)
+mesh = SubResource("CylinderMesh_sun_disc")
+
+[node name="Ray0" type="MeshInstance3D" parent="Exterior/Clues/Couchant/Sun"]
+transform = Transform3D(1, -0, 0, 0, 1, 0, 0, 0, 1, -0, 0.33, 0)
+mesh = SubResource("BoxMesh_sun_ray")
+
+[node name="Ray1" type="MeshInstance3D" parent="Exterior/Clues/Couchant/Sun"]
+transform = Transform3D(0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, -0.2333, 0.2333, 0)
+mesh = SubResource("BoxMesh_sun_ray")
+
+[node name="Ray2" type="MeshInstance3D" parent="Exterior/Clues/Couchant/Sun"]
+transform = Transform3D(6.12323e-17, -1, 0, 1, 6.12323e-17, 0, 0, 0, 1, -0.33, 2.021e-17, 0)
+mesh = SubResource("BoxMesh_sun_ray")
+
+[node name="Ray3" type="MeshInstance3D" parent="Exterior/Clues/Couchant/Sun"]
+transform = Transform3D(-0.707107, -0.707107, 0, 0.707107, -0.707107, 0, 0, 0, 1, -0.2333, -0.2333, 0)
+mesh = SubResource("BoxMesh_sun_ray")
+
+[node name="Ray4" type="MeshInstance3D" parent="Exterior/Clues/Couchant/Sun"]
+transform = Transform3D(-1, -1.22465e-16, 0, 1.22465e-16, -1, 0, 0, 0, 1, -4.041e-17, -0.33, 0)
+mesh = SubResource("BoxMesh_sun_ray")
+
+[node name="Ray5" type="MeshInstance3D" parent="Exterior/Clues/Couchant/Sun"]
+transform = Transform3D(-0.707107, 0.707107, 0, -0.707107, -0.707107, 0, 0, 0, 1, 0.2333, -0.2333, 0)
+mesh = SubResource("BoxMesh_sun_ray")
+
+[node name="Ray6" type="MeshInstance3D" parent="Exterior/Clues/Couchant/Sun"]
+transform = Transform3D(-1.83697e-16, 1, 0, -1, -1.83697e-16, 0, 0, 0, 1, 0.33, -6.062e-17, 0)
+mesh = SubResource("BoxMesh_sun_ray")
+
+[node name="Ray7" type="MeshInstance3D" parent="Exterior/Clues/Couchant/Sun"]
+transform = Transform3D(0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0, 1, 0.2333, 0.2333, 0)
+mesh = SubResource("BoxMesh_sun_ray")
 
 [node name="Body" type="StaticBody3D" parent="Exterior/Clues/Couchant"]
 
@@ -372,32 +474,63 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -40, 0)
 [node name="Cellar" parent="Interior" instance=ExtResource("7_cellar")]
 
 [node name="Ceiling" type="MeshInstance3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.45, -6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.3, -4)
 mesh = SubResource("BoxMesh_ceiling")
 
-[node name="WallBack" type="MeshInstance3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, -12.4)
-mesh = SubResource("BoxMesh_cave_wall_long")
+[node name="Stairs" type="StaticBody3D" parent="Interior"]
 
-[node name="WallFront" type="MeshInstance3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0.4)
-mesh = SubResource("BoxMesh_cave_wall_long")
+[node name="Step0" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.195, 0.58)
+mesh = SubResource("BoxMesh_cellar_step")
 
-[node name="WallWest" type="MeshInstance3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.4, 2.2, -6)
-mesh = SubResource("BoxMesh_cave_wall_side")
+[node name="Step1" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.585, 0.94)
+mesh = SubResource("BoxMesh_cellar_step")
 
-[node name="WallEast" type="MeshInstance3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.4, 2.2, -6)
-mesh = SubResource("BoxMesh_cave_wall_side")
+[node name="Step2" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.975, 1.3)
+mesh = SubResource("BoxMesh_cellar_step")
 
-[node name="LightShaft" type="MeshInstance3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1, -0.9)
-mesh = SubResource("BoxMesh_shaft")
-cast_shadow = 0
+[node name="Step3" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.365, 1.66)
+mesh = SubResource("BoxMesh_cellar_step")
+
+[node name="Step4" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.755, 2.02)
+mesh = SubResource("BoxMesh_cellar_step")
+
+[node name="Step5" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.145, 2.38)
+mesh = SubResource("BoxMesh_cellar_step")
+
+[node name="Step6" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.535, 2.74)
+mesh = SubResource("BoxMesh_cellar_step")
+
+[node name="Step7" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.925, 3.1)
+mesh = SubResource("BoxMesh_cellar_step")
+
+[node name="Step8" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.315, 3.46)
+mesh = SubResource("BoxMesh_cellar_step")
+
+[node name="Step9" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.705, 3.82)
+mesh = SubResource("BoxMesh_cellar_step")
+
+[node name="Shape" type="CollisionShape3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.95, 2.2)
+shape = SubResource("BoxShape3D_cellar_stairs")
+
+[node name="LightStairs" type="OmniLight3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 2.6)
+light_color = Color(1, 0.88, 0.62, 1)
+light_energy = 1.4
+omni_range = 6.0
 
 [node name="Torch0" type="Node3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.6, 2.2, -3.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.15, 2.2, -3)
 
 [node name="Stick" type="MeshInstance3D" parent="Interior/Torch0"]
 mesh = SubResource("CylinderMesh_torch")
@@ -412,7 +545,7 @@ crackle_sound = ExtResource("52_crackle")
 crackle_volume_db = -14.0
 
 [node name="Torch1" type="Node3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.6, 2.2, -3.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.15, 2.2, -3)
 
 [node name="Stick" type="MeshInstance3D" parent="Interior/Torch1"]
 mesh = SubResource("CylinderMesh_torch")
@@ -427,7 +560,7 @@ crackle_sound = ExtResource("52_crackle")
 crackle_volume_db = -14.0
 
 [node name="Torch2" type="Node3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.6, 2.2, -9)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.15, 2.2, -9)
 
 [node name="Stick" type="MeshInstance3D" parent="Interior/Torch2"]
 mesh = SubResource("CylinderMesh_torch")
@@ -442,7 +575,7 @@ crackle_sound = ExtResource("52_crackle")
 crackle_volume_db = -14.0
 
 [node name="Torch3" type="Node3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.6, 2.2, -9)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.15, 2.2, -9)
 
 [node name="Stick" type="MeshInstance3D" parent="Interior/Torch3"]
 mesh = SubResource("CylinderMesh_torch")
@@ -457,13 +590,13 @@ crackle_sound = ExtResource("52_crackle")
 crackle_volume_db = -14.0
 
 [node name="InsideSpawn" type="Marker3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, -1.8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, -1.0)
 
 [node name="Exit" type="Node3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -0.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0.6)
 script = ExtResource("11_interactable")
 prompt = "Remonter à la surface"
-radius = 2.0
+radius = 2.2
 
 [node name="Clues" type="Node3D" parent="Interior"]
 
@@ -476,7 +609,7 @@ prompt = "Lire le carnet"
 radius = 2.4
 
 [node name="Inscription" type="Node3D" parent="Interior/Clues"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, -11.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, -11.2)
 script = ExtResource("12_readable")
 title = "L'inscription de la table"
 body = "Les anciens bâtisseurs maîtrisaient l'art des instructions. Retrouve les fragments de leur savoir, rétablis leur ordre et les secrets enfouis te seront révélés."
@@ -522,7 +655,7 @@ prompt = "Examiner la table ronde"
 radius = 2.8
 
 [node name="AlgorithmWall" type="Node3D" parent="Interior/Clues"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.6, 1.6, -6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 1.6, -6)
 script = ExtResource("12_readable")
 title = "Le mur des algorithmes"
 body = "Algorithme 1 — Remplir la jarre sacrée\n1  Prendre une jarre vide\n2  [ ? ]\n3      [ ? ]\n4      Verser l'eau dans la jarre\n5  FIN TANT QUE\n6  [ ? ]"
@@ -548,7 +681,7 @@ outline_size = 10
 horizontal_alignment = 0
 
 [node name="AlgorithmWallEast" type="Node3D" parent="Interior/Clues"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.6, 1.6, -6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 1.6, -6)
 script = ExtResource("12_readable")
 title = "Le mur des algorithmes"
 body = "Algorithme 2 — Garder l'entrée du temple\n1  Demander le mot de passe au voyageur\n2  [ ? ]\n3      [ ? ]\n4  [ ? ]\n5      Sonner l'alarme\n6  FIN SI"
@@ -574,10 +707,10 @@ outline_size = 10
 horizontal_alignment = 0
 
 [node name="Chest" parent="Interior" instance=ExtResource("19_chest")]
-transform = Transform3D(-3, 0, 3.67394e-16, 0, 3, 0, -3.67394e-16, 0, -3, 6.2, 0, -10.4)
+transform = Transform3D(-3, 0, 3.67394e-16, 0, 3, 0, -3.67394e-16, 0, -3, 0, 0, -10)
 
 [node name="ChestSand" type="MeshInstance3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.2, 0.65, -10.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, -10.0)
 mesh = SubResource("CylinderMesh_chest_sand")
 
 [node name="Runes" type="Node3D" parent="."]
@@ -611,28 +744,28 @@ hidden_at_start = true
 radius = 2.2
 
 [node name="Si" type="Node3D" parent="Runes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.5, -39.05, -2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, -39.06, -1.9)
 script = ExtResource("16_rune")
 rune_id = &"si"
 hidden_at_start = false
 radius = 2.2
 
 [node name="Fermer" type="Node3D" parent="Runes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.6, -38.65, -10.8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, -39.06, -1.9)
 script = ExtResource("16_rune")
 rune_id = &"fermer"
 hidden_at_start = false
 radius = 2.2
 
 [node name="Ouvrir" type="Node3D" parent="Runes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, -40, -9.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, -40, -8.8)
 script = ExtResource("16_rune")
 rune_id = &"ouvrir"
 hidden_at_start = true
 radius = 2.2
 
 [node name="Sinon" type="Node3D" parent="Runes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, -40, -3.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, -40, -4.4)
 script = ExtResource("16_rune")
 rune_id = &"sinon"
 hidden_at_start = true
@@ -657,27 +790,27 @@ script = ExtResource("17_pile")
 radius = 2.2
 
 [node name="PileCaveWest" type="Node3D" parent="SandPiles"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, -40, -9.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, -40, -8.8)
 script = ExtResource("17_pile")
 radius = 2.2
 rune = NodePath("../../Runes/Ouvrir")
 
 [node name="PileCaveEast" type="Node3D" parent="SandPiles"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, -40, -3.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, -40, -4.4)
 script = ExtResource("17_pile")
 radius = 2.2
 rune = NodePath("../../Runes/Sinon")
 
 [node name="PileCaveCorner" type="Node3D" parent="SandPiles"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, -40, -4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, -40, -8.8)
 script = ExtResource("17_pile")
 radius = 2.2
 
 [node name="BookTarget" type="Marker3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.2, 1.9, -10.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9, -10.0)
 
 [node name="Book" type="Node3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.2, 1.9, -10.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9, -10.0)
 
 [node name="Mesh" type="MeshInstance3D" parent="Interior/Book"]
 mesh = SubResource("BoxMesh_book")

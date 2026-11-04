@@ -27,7 +27,7 @@ extends CharacterBody3D
 @export var footstep_sounds: Array[AudioStream]
 ## Distance parcourue entre deux pas, en marchant.
 @export var stride_length := 1.9
-@export var footstep_volume_db := -6.0
+@export var footstep_volume_db := -13.0
 
 ## Place du livre tenu en main, dans le repère de la caméra : en bas à droite de la vue.
 const HELD_BOOK_POSITION := Vector3(0.36, -0.3, -0.78)
@@ -47,6 +47,7 @@ var _footsteps: AudioStreamPlayer
 @onready var _camera_pivot: Node3D = $CameraPivot
 @onready var _spring_arm: SpringArm3D = $CameraPivot/SpringArm3D
 @onready var _visual: Node3D = $Visual
+@onready var _devlyn: Devlyn = $Visual/Devlyn
 
 
 func _ready() -> void:
@@ -117,9 +118,15 @@ func _physics_process(delta: float) -> void:
 	velocity.z = move_toward(velocity.z, target_velocity.z, acceleration * delta)
 	move_and_slide()
 	_update_footsteps(delta)
+	var ground_speed := Vector2(velocity.x, velocity.z).length()
+	_devlyn.animate(ground_speed, is_on_floor(), delta)
 
 	if first_person:
-		_visual.rotation.y = _camera_pivot.rotation.y
+		# Le corps, invisible mais dont l'ombre marche au sol, se tourne vers où il avance, et vers le regard à l'arrêt.
+		var body_yaw := _camera_pivot.rotation.y
+		if ground_speed > 0.5:
+			body_yaw = atan2(-velocity.x, -velocity.z)
+		_visual.rotation.y = lerp_angle(_visual.rotation.y, body_yaw, turn_speed * delta)
 	elif direction != Vector3.ZERO:
 		var target_yaw := atan2(-direction.x, -direction.z)
 		_visual.rotation.y = lerp_angle(_visual.rotation.y, target_yaw, turn_speed * delta)
@@ -248,7 +255,9 @@ func _update_footsteps(delta: float) -> void:
 	if _stride >= stride_length:
 		_stride = 0.0
 		_footsteps.stream = footstep_sounds.pick_random()
-		_footsteps.pitch_scale = randf_range(0.9, 1.1)
+		# Légères variations d'un pas à l'autre : la marche sonne naturelle, sans répétition mécanique.
+		_footsteps.pitch_scale = randf_range(0.94, 1.06)
+		_footsteps.volume_db = footstep_volume_db + randf_range(-1.5, 0.5)
 		_footsteps.play()
 
 

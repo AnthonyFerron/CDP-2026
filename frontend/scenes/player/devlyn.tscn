@@ -1,5 +1,7 @@
 [gd_scene format=3]
 
+[ext_resource type="Script" path="res://scenes/player/devlyn.gd" id="1_devlyn"]
+
 [sub_resource type="StandardMaterial3D" id="Material_skin"]
 albedo_color = Color(0.96, 0.78, 0.62, 1)
 roughness = 0.8
@@ -222,151 +224,167 @@ material = SubResource("Material_hair")
 size = Vector3(0.18, 0.12, 0.08)
 
 [node name="Devlyn" type="Node3D"]
+script = ExtResource("1_devlyn")
 
-[node name="LegLeft" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.13, 0.24, 0)
+[node name="HipLeft" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.13, 0.46, 0)
+
+[node name="HipRight" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.13, 0.46, 0)
+
+[node name="Upper" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.46, 0)
+
+[node name="ShoulderJointLeft" type="Node3D" parent="Upper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.34, 0.5, 0)
+
+[node name="ShoulderJointRight" type="Node3D" parent="Upper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.34, 0.5, 0)
+
+[node name="LegLeft" type="MeshInstance3D" parent="HipLeft"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.22, 0)
 mesh = SubResource("Mesh_LegLeft")
 
-[node name="LegRight" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.13, 0.24, 0)
+[node name="LegRight" type="MeshInstance3D" parent="HipRight"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.22, 0)
 mesh = SubResource("Mesh_LegRight")
 
-[node name="KneeLeft" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.13, 0.32, -0.12)
+[node name="KneeLeft" type="MeshInstance3D" parent="HipLeft"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.14, -0.12)
 mesh = SubResource("Mesh_KneeLeft")
 
-[node name="KneeRight" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.13, 0.32, -0.12)
+[node name="KneeRight" type="MeshInstance3D" parent="HipRight"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.14, -0.12)
 mesh = SubResource("Mesh_KneeRight")
 
-[node name="BootLeft" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.13, 0.05, -0.05)
+[node name="BootLeft" type="MeshInstance3D" parent="HipLeft"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.41, -0.05)
 mesh = SubResource("Mesh_BootLeft")
 
-[node name="BootRight" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.13, 0.05, -0.05)
+[node name="BootRight" type="MeshInstance3D" parent="HipRight"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.41, -0.05)
 mesh = SubResource("Mesh_BootRight")
 
-[node name="StrapLeft" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.13, 0.43, 0)
+[node name="StrapLeft" type="MeshInstance3D" parent="HipLeft"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.03, 0)
 mesh = SubResource("Mesh_StrapLeft")
 
-[node name="StrapRight" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.13, 0.43, 0)
+[node name="StrapRight" type="MeshInstance3D" parent="HipRight"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.03, 0)
 mesh = SubResource("Mesh_StrapRight")
 
-[node name="Shorts" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.53, 0)
+[node name="Shorts" type="MeshInstance3D" parent="Upper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07, 0)
 mesh = SubResource("Mesh_Shorts")
 
-[node name="Tasset" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.99027, 0.13917, 0, -0.13917, 0.99027, 0, 0.55, -0.15)
+[node name="Tasset" type="MeshInstance3D" parent="Upper"]
+transform = Transform3D(1, 0, 0, 0, 0.99027, 0.13917, 0, -0.13917, 0.99027, 0, 0.09, -0.15)
 mesh = SubResource("Mesh_Tasset")
 
-[node name="Chest" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.83, 0)
+[node name="Chest" type="MeshInstance3D" parent="Upper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.37, 0)
 mesh = SubResource("Mesh_Chest")
 
-[node name="ChestPlate" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.99452, -0.10453, 0, 0.10453, 0.99452, 0, 0.87, -0.19)
+[node name="ChestPlate" type="MeshInstance3D" parent="Upper"]
+transform = Transform3D(1, 0, 0, 0, 0.99452, -0.10453, 0, 0.10453, 0.99452, 0, 0.41, -0.19)
 mesh = SubResource("Mesh_ChestPlate")
 
-[node name="Belt" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.64, 0)
+[node name="Belt" type="MeshInstance3D" parent="Upper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.18, 0)
 mesh = SubResource("Mesh_Belt")
 
-[node name="Collar" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.06, 0)
+[node name="Collar" type="MeshInstance3D" parent="Upper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
 mesh = SubResource("Mesh_Collar")
 
-[node name="ShoulderLeft" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.33, 0.98, 0)
+[node name="ShoulderLeft" type="MeshInstance3D" parent="Upper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.33, 0.52, 0)
 mesh = SubResource("Mesh_ShoulderLeft")
 
-[node name="ShoulderRight" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.33, 0.98, 0)
+[node name="ShoulderRight" type="MeshInstance3D" parent="Upper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.33, 0.52, 0)
 mesh = SubResource("Mesh_ShoulderRight")
 
-[node name="ArmLeft" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.99452, 0.10453, 0, -0.10453, 0.99452, 0, 0, 0, 1, -0.35, 0.82, 0)
+[node name="ArmLeft" type="MeshInstance3D" parent="Upper/ShoulderJointLeft"]
+transform = Transform3D(0.99452, 0.10453, 0, -0.10453, 0.99452, 0, 0, 0, 1, -0.01, -0.14, 0)
 mesh = SubResource("Mesh_ArmLeft")
 
-[node name="ArmRight" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.99452, -0.10453, 0, 0.10453, 0.99452, 0, 0, 0, 1, 0.35, 0.82, 0)
+[node name="ArmRight" type="MeshInstance3D" parent="Upper/ShoulderJointRight"]
+transform = Transform3D(0.99452, -0.10453, 0, 0.10453, 0.99452, 0, 0, 0, 1, 0.01, -0.14, 0)
 mesh = SubResource("Mesh_ArmRight")
 
-[node name="GauntletLeft" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.99452, 0.10453, 0, -0.10453, 0.99452, 0, 0, 0, 1, -0.37, 0.64, 0)
+[node name="GauntletLeft" type="MeshInstance3D" parent="Upper/ShoulderJointLeft"]
+transform = Transform3D(0.99452, 0.10453, 0, -0.10453, 0.99452, 0, 0, 0, 1, -0.03, -0.32, 0)
 mesh = SubResource("Mesh_GauntletLeft")
 
-[node name="GauntletRight" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.99452, -0.10453, 0, 0.10453, 0.99452, 0, 0, 0, 1, 0.37, 0.64, 0)
+[node name="GauntletRight" type="MeshInstance3D" parent="Upper/ShoulderJointRight"]
+transform = Transform3D(0.99452, -0.10453, 0, 0.10453, 0.99452, 0, 0, 0, 1, 0.03, -0.32, 0)
 mesh = SubResource("Mesh_GauntletRight")
 
-[node name="HandLeft" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.38, 0.5, 0)
+[node name="HandLeft" type="MeshInstance3D" parent="Upper/ShoulderJointLeft"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.04, -0.46, 0)
 mesh = SubResource("Mesh_HandLeft")
 
-[node name="HandRight" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.38, 0.5, 0)
+[node name="HandRight" type="MeshInstance3D" parent="Upper/ShoulderJointRight"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.04, -0.46, 0)
 mesh = SubResource("Mesh_HandRight")
 
-[node name="Head" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.38, 0)
+[node name="Head" type="MeshInstance3D" parent="Upper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0)
 mesh = SubResource("Mesh_Head")
 
-[node name="EarLeft" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.32, 1.36, 0.02)
+[node name="EarLeft" type="MeshInstance3D" parent="Upper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.32, 0.9, 0.02)
 mesh = SubResource("Mesh_EarLeft")
 
-[node name="EarRight" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.32, 1.36, 0.02)
+[node name="EarRight" type="MeshInstance3D" parent="Upper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.32, 0.9, 0.02)
 mesh = SubResource("Mesh_EarRight")
 
-[node name="EyeWhiteLeft" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 1.36, -0.27)
+[node name="EyeWhiteLeft" type="MeshInstance3D" parent="Upper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 0.9, -0.27)
 mesh = SubResource("Mesh_EyeWhiteLeft")
 
-[node name="EyeWhiteRight" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 1.36, -0.27)
+[node name="EyeWhiteRight" type="MeshInstance3D" parent="Upper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 0.9, -0.27)
 mesh = SubResource("Mesh_EyeWhiteRight")
 
-[node name="EyeLeft" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 1.36, -0.32)
+[node name="EyeLeft" type="MeshInstance3D" parent="Upper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 0.9, -0.32)
 mesh = SubResource("Mesh_EyeLeft")
 
-[node name="EyeRight" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 1.36, -0.32)
+[node name="EyeRight" type="MeshInstance3D" parent="Upper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 0.9, -0.32)
 mesh = SubResource("Mesh_EyeRight")
 
-[node name="Smile" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.24, -0.315)
+[node name="Smile" type="MeshInstance3D" parent="Upper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.78, -0.315)
 mesh = SubResource("Mesh_Smile")
 
-[node name="HairCap" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.47, 0.03)
+[node name="HairCap" type="MeshInstance3D" parent="Upper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.01, 0.03)
 mesh = SubResource("Mesh_HairCap")
 
-[node name="HairBack" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, 0.17)
+[node name="HairBack" type="MeshInstance3D" parent="Upper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.84, 0.17)
 mesh = SubResource("Mesh_HairBack")
 
-[node name="HairSideLeft" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.99452, -0.10453, 0, 0.10453, 0.99452, 0, 0, 0, 1, -0.31, 1.3, 0.02)
+[node name="HairSideLeft" type="MeshInstance3D" parent="Upper"]
+transform = Transform3D(0.99452, -0.10453, 0, 0.10453, 0.99452, 0, 0, 0, 1, -0.31, 0.84, 0.02)
 mesh = SubResource("Mesh_HairSideLeft")
 
-[node name="HairSideRight" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.99027, 0.13917, 0, -0.13917, 0.99027, 0, 0, 0, 1, 0.31, 1.27, 0.05)
+[node name="HairSideRight" type="MeshInstance3D" parent="Upper"]
+transform = Transform3D(0.99027, 0.13917, 0, -0.13917, 0.99027, 0, 0, 0, 1, 0.31, 0.81, 0.05)
 mesh = SubResource("Mesh_HairSideRight")
 
-[node name="FringeLeft" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.95106, -0.29984, -0.07476, 0.30902, 0.92281, 0.23008, 0, -0.24192, 0.9703, -0.14, 1.55, -0.28)
+[node name="FringeLeft" type="MeshInstance3D" parent="Upper"]
+transform = Transform3D(0.95106, -0.29984, -0.07476, 0.30902, 0.92281, 0.23008, 0, -0.24192, 0.9703, -0.14, 1.09, -0.28)
 mesh = SubResource("Mesh_FringeLeft")
 
-[node name="FringeMiddle" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.98481, 0.16849, 0.04201, -0.17365, 0.95555, 0.23825, 0, -0.24192, 0.9703, 0.06, 1.56, -0.3)
+[node name="FringeMiddle" type="MeshInstance3D" parent="Upper"]
+transform = Transform3D(0.98481, 0.16849, 0.04201, -0.17365, 0.95555, 0.23825, 0, -0.24192, 0.9703, 0.06, 1.1, -0.3)
 mesh = SubResource("Mesh_FringeMiddle")
 
-[node name="FringeRight" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.91355, 0.39465, 0.0984, -0.40674, 0.88641, 0.22101, 0, -0.24192, 0.9703, 0.22, 1.52, -0.27)
+[node name="FringeRight" type="MeshInstance3D" parent="Upper"]
+transform = Transform3D(0.91355, 0.39465, 0.0984, -0.40674, 0.88641, 0.22101, 0, -0.24192, 0.9703, 0.22, 1.06, -0.27)
 mesh = SubResource("Mesh_FringeRight")

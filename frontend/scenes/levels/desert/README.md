@@ -8,7 +8,7 @@ La conception vient de l'ébauche du niveau 2 : une arche en grès devant un san
 
 1. Le joueur arrive devant le portail éteint, au sud, et suit le chemin jusqu'à l'arche.
 2. Des runes sont posées à la surface et dans la cave. D'autres sont enfouies sous des tas de sable : maintenir E devant un tas le dégage peu à peu, et la progression reste acquise si on relâche. Certains tas sont vides.
-3. La trappe au centre de l'esplanade mène à la cave des archives. Le mur ouest montre les deux algorithmes incomplets : remplir la jarre sacrée et garder l'entrée du temple.
+3. La trappe au centre de l'esplanade mène, par un escalier, à la cave des archives. Les murs ouest et est montrent chacun un algorithme incomplet : remplir la jarre sacrée et garder l'entrée du temple. Deux runes sont posées sur les tables de part et d'autre de l'escalier, deux autres sont sous des tas de sable, et le coffre attend devant la porte scellée du fond.
 4. La table ronde ouvre l'écran des runes. « Valider » reste grisé tant que les six emplacements ne sont pas remplis. Une mauvaise réponse coûte 5 minutes au chronomètre du volcan.
 5. Solution : TANT QUE, Puiser, Porter pour la jarre ; SI, Ouvrir, SINON pour la porte. Les runes « POUR » et « Fermer » sont des leurres.
 6. Le sable s'écarte devant la table, un coffre enfoui apparaît et l'Algonicon en sort. Le prendre rallume le portail.

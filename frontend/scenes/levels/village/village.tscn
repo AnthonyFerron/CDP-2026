@@ -569,11 +569,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.4, 4.25, 4.15)
 shape = SubResource("BoxShape3D_OfficeFloorSouth")
 
 [node name="OfficeCeiling" type="MeshInstance3D" parent="Interior/Slabs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.65, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.15, 0)
 mesh = SubResource("BoxMesh_OfficeCeiling")
 
 [node name="OfficeCeilingShape" type="CollisionShape3D" parent="Interior/Slabs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.65, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.15, 0)
 shape = SubResource("BoxShape3D_OfficeCeiling")
 
 [node name="SecretFloor" type="MeshInstance3D" parent="Interior/Slabs"]
@@ -585,11 +585,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.15, 4.25, 0)
 shape = SubResource("BoxShape3D_SecretFloor")
 
 [node name="SecretCeiling" type="MeshInstance3D" parent="Interior/Slabs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.15, 8.65, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.15, 8.15, 0)
 mesh = SubResource("BoxMesh_SecretCeiling")
 
 [node name="SecretCeilingShape" type="CollisionShape3D" parent="Interior/Slabs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.15, 8.65, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.15, 8.15, 0)
 shape = SubResource("BoxShape3D_SecretCeiling")
 
 [node name="RampShape" type="CollisionShape3D" parent="Interior/Slabs"]
@@ -747,7 +747,7 @@ omni_range = 11.0
 flicker = 0.1
 
 [node name="LightOffice" type="OmniLight3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 7.9, -1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 7.6, -1)
 script = ExtResource("12_flicker")
 light_color = Color(1, 0.75, 0.48, 1)
 light_energy = 2.2
@@ -755,7 +755,7 @@ omni_range = 11.0
 flicker = 0.1
 
 [node name="LightOfficeEast" type="OmniLight3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 7.9, 4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 7.6, 4)
 script = ExtResource("12_flicker")
 light_color = Color(1, 0.75, 0.48, 1)
 light_energy = 1.2

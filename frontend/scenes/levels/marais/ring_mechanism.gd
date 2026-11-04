@@ -100,13 +100,18 @@ func _build() -> void:
 			label.position = Vector3(sin(angle) * -radius, 0.2 + (RING_COUNT - ring) * 0.02, cos(angle) * -radius)
 			label.rotation = Vector3(-PI * 0.5, 0.0, -angle)
 			pivot.add_child(label)
-	# Repère fixe gravé dans la pierre, au nord du mécanisme.
-	var marker := Label3D.new()
-	marker.text = "▼"
-	marker.font_size = 96
-	marker.pixel_size = 0.006
-	marker.modulate = Color(0.9, 0.75, 0.3)
-	marker.rotation = Vector3(-PI * 0.5, 0.0, 0.0)
+	# Repère fixe gravé dans la pierre, au nord du mécanisme : un triangle doré couché, pointé vers le centre.
+	var arrow := PrismMesh.new()
+	arrow.size = Vector3(0.5, 0.55, 0.06)
+	var gold := StandardMaterial3D.new()
+	gold.albedo_color = Color(0.9, 0.75, 0.3)
+	gold.emission_enabled = true
+	gold.emission = Color(0.9, 0.7, 0.25)
+	gold.emission_energy_multiplier = 0.6
+	arrow.material = gold
+	var marker := MeshInstance3D.new()
+	marker.mesh = arrow
+	marker.rotation = Vector3(PI * 0.5, 0.0, 0.0)
 	marker.position = Vector3(0.0, 0.32, -(INNER_RADIUS + RING_COUNT * RING_WIDTH + 0.3))
 	add_child(marker)
 	var center := CylinderMesh.new()

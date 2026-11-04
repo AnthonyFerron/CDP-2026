@@ -98,19 +98,18 @@ def lava():
 
 
 def footstep(seed):
-    """Pas sur un sol de cendre et de cailloux."""
+    """Pas sur la pierre ou la cendre : un talon feutré suivi d'un léger frottement, sans craquement aigu."""
     rng = random.Random(seed)
-    count = int(RATE * 0.22)
-    crunch = highpass(lowpass(noise(count, rng), rng.uniform(2200, 3200)), 300)
-    thump_pitch = rng.uniform(65, 90)
+    count = int(RATE * 0.2)
+    scuff = lowpass(lowpass(highpass(noise(count, rng), 150), rng.uniform(900, 1200)), 1400)
+    thump_pitch = rng.uniform(70, 95)
     samples = []
     for i in range(count):
         t = i / RATE
-        envelope = (1 - math.exp(-t * 600)) * math.exp(-t * rng.uniform(22, 30))
-        grit = crunch[i] * (0.6 + 0.4 * (rng.random() > 0.7))
-        thump = math.sin(2 * math.pi * thump_pitch * t) * math.exp(-t * 40)
-        samples.append(envelope * grit + thump * 0.5)
-    return normalize(samples, 0.7)
+        envelope = (1 - math.exp(-t * 250)) * math.exp(-t * 28)
+        thump = math.sin(2 * math.pi * thump_pitch * t) * math.exp(-t * 45) * (1 - math.exp(-t * 400))
+        samples.append(scuff[i] * envelope * 0.8 + thump * 0.45)
+    return normalize(samples, 0.45)
 
 
 def add_event(samples, start, event):
@@ -156,26 +155,26 @@ def mud_step(seed):
     samples = []
     for i in range(count):
         t = i / RATE
-        envelope = (1 - math.exp(-t * 300)) * math.exp(-t * 16)
-        wobble = 1.0 + 0.5 * math.sin(2 * math.pi * rng.uniform(25, 35) * t)
+        envelope = (1 - math.exp(-t * 200)) * math.exp(-t * 16)
+        wobble = 1.0 + 0.35 * math.sin(2 * math.pi * rng.uniform(25, 35) * t)
         samples.append(squelch[i] * envelope * wobble + math.sin(2 * math.pi * 60 * t) * math.exp(-t * 30) * 0.4)
-    return normalize(samples, 0.65)
+    return normalize(samples, 0.42)
 
 
 def splash_step(seed):
     """Pas dans l'eau peu profonde : une gerbe, puis des gouttes."""
     rng = random.Random(seed)
     count = int(RATE * 0.4)
-    spray = highpass(noise(count, rng), 900)
-    samples = [spray[i] * (1 - math.exp(-i / RATE * 400)) * math.exp(-i / RATE * 14) for i in range(count)]
+    spray = lowpass(highpass(noise(count, rng), 700), 3000)
+    samples = [spray[i] * (1 - math.exp(-i / RATE * 200)) * math.exp(-i / RATE * 14) for i in range(count)]
     for _ in range(5):
         start = rng.randrange(int(RATE * 0.08), int(RATE * 0.3))
         pitch = rng.uniform(900, 1800)
         for i in range(int(RATE * 0.05)):
             t = i / RATE
             if start + i < count:
-                samples[start + i] += 0.3 * math.sin(2 * math.pi * pitch * (1 + t * 6) * t) * math.exp(-t * 70)
-    return normalize(samples, 0.6)
+                samples[start + i] += 0.2 * math.sin(2 * math.pi * pitch * (1 + t * 6) * t) * math.exp(-t * 70)
+    return normalize(samples, 0.4)
 
 
 def fire_crackle():
@@ -259,13 +258,13 @@ def sand_step(seed):
     """Pas dans le sable : un glissement doux et granuleux."""
     rng = random.Random(seed)
     count = int(RATE * 0.25)
-    grains = highpass(lowpass(noise(count, rng), rng.uniform(3500, 4500)), 600)
+    grains = highpass(lowpass(lowpass(noise(count, rng), rng.uniform(1800, 2400)), 2600), 250)
     samples = []
     for i in range(count):
         t = i / RATE
-        envelope = (1 - math.exp(-t * 120)) * math.exp(-t * 14)
-        samples.append(grains[i] * envelope)
-    return normalize(samples, 0.55)
+        envelope = (1 - math.exp(-t * 70)) * math.exp(-t * 15)
+        samples.append(grains[i] * envelope + math.sin(2 * math.pi * 80 * t) * math.exp(-t * 50) * 0.15)
+    return normalize(samples, 0.38)
 
 
 def tablet_chime(pitch):
@@ -334,13 +333,13 @@ def grass_step(seed):
     """Pas dans l'herbe : un froissement court et doux."""
     rng = random.Random(seed)
     count = int(RATE * 0.22)
-    rustle = highpass(lowpass(noise(count, rng), rng.uniform(1800, 2600)), 400)
+    rustle = highpass(lowpass(lowpass(noise(count, rng), rng.uniform(1200, 1600)), 1900), 250)
     samples = []
     for i in range(count):
         t = i / RATE
-        envelope = (1 - math.exp(-t * 200)) * math.exp(-t * 20)
-        samples.append(rustle[i] * envelope + math.sin(2 * math.pi * 75 * t) * math.exp(-t * 45) * 0.3)
-    return normalize(samples, 0.5)
+        envelope = (1 - math.exp(-t * 120)) * math.exp(-t * 22)
+        samples.append(rustle[i] * envelope + math.sin(2 * math.pi * 75 * t) * math.exp(-t * 45) * 0.35)
+    return normalize(samples, 0.38)
 
 
 def village():

@@ -24,12 +24,18 @@ func _ready() -> void:
 	mesh.mesh = slab
 	mesh.position.y = 0.05
 	add_child(mesh)
-	var glyph := Label3D.new()
-	glyph.text = "◆"
-	glyph.pixel_size = 0.004
-	glyph.font_size = 64
-	glyph.modulate = Color(0.6, 0.85, 1.0)
-	glyph.rotation.x = -PI * 0.5
+	# Losange lumineux gravé sur la dalle.
+	var glow := StandardMaterial3D.new()
+	glow.albedo_color = Color(0.6, 0.85, 1.0)
+	glow.emission_enabled = true
+	glow.emission = Color(0.6, 0.85, 1.0)
+	glow.emission_energy_multiplier = 2.0
+	var diamond := BoxMesh.new()
+	diamond.size = Vector3(0.17, 0.02, 0.17)
+	diamond.material = glow
+	var glyph := MeshInstance3D.new()
+	glyph.mesh = diamond
+	glyph.rotation.y = PI * 0.25
 	glyph.position.y = 0.1
 	add_child(glyph)
 	var light := OmniLight3D.new()

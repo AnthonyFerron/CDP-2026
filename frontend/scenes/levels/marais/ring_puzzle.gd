@@ -74,7 +74,7 @@ func _build_rows() -> void:
 		name.custom_minimum_size = Vector2(180, 0)
 		name.add_theme_font_size_override("font_size", 28)
 		row.add_child(name)
-		var left := _arrow("◀")
+		var left := _arrow(Vector2.LEFT)
 		left.pressed.connect(turn.bind(ring, -1))
 		row.add_child(left)
 		var letter := Label.new()
@@ -85,17 +85,18 @@ func _build_rows() -> void:
 		letter.add_theme_color_override("font_color", Color(0.95, 0.85, 0.5))
 		row.add_child(letter)
 		_labels.append(letter)
-		var right := _arrow("▶")
+		var right := _arrow(Vector2.RIGHT)
 		right.pressed.connect(turn.bind(ring, 1))
 		row.add_child(right)
 		_rows.add_child(row)
 
 
-func _arrow(text: String) -> Button:
+## Bouton fléché : l'icône est dessinée, la police n'a pas de flèches.
+func _arrow(direction: Vector2) -> Button:
 	var button := Button.new()
-	button.text = text
+	button.icon = UiIcons.arrow(direction, 28)
+	button.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	button.custom_minimum_size = Vector2(72, 60)
-	button.add_theme_font_size_override("font_size", 30)
 	return button
 
 

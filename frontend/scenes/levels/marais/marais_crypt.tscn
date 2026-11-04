@@ -24,9 +24,6 @@ size = Vector3(1.6, 4, 1.6)
 [sub_resource type="BoxShape3D" id="BoxShape3D_5"]
 size = Vector3(2.6, 0.6, 1.8)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_6"]
-size = Vector3(1.8, 0.6, 2.6)
-
 [node name="MaraisCrypt" type="Node3D"]
 
 [node name="Models" type="Node3D" parent="."]
@@ -512,22 +509,22 @@ transform = Transform3D(-2.66517, 0, 1.37726, 0, 3, 0, -1.37726, 0, -2.66517, -4
 transform = Transform3D(-2.62494, 0, -1.45247, 0, 3, 0, 1.45247, 0, -2.62494, 4.2, 0, -16)
 
 [node name="coffin_old_160" parent="Models" instance=ExtResource("6_model")]
-transform = Transform3D(0, 0, 3, 0, 3, 0, -3, 0, 0, -24, 0, -9)
+transform = Transform3D(0, 0, 3, 0, 3, 0, -3, 0, 0, -24, 0, -7.6)
 
 [node name="coffin_old_161" parent="Models" instance=ExtResource("6_model")]
-transform = Transform3D(0, 0, 3, 0, 3, 0, -3, 0, 0, -24, 0, -15)
+transform = Transform3D(0, 0, 3, 0, 3, 0, -3, 0, 0, -24, 0, -16.4)
 
-[node name="coffin_old_162" parent="Models" instance=ExtResource("6_model")]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -28.5, 0, -12)
+[node name="urn_round_162" parent="Models" instance=ExtResource("7_model")]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -29, 0, -7)
 
 [node name="urn_round_163" parent="Models" instance=ExtResource("7_model")]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -20.8, 0, -8.4)
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -29, 0, -17)
 
 [node name="urn_round_164" parent="Models" instance=ExtResource("7_model")]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -20.8, 0, -15.6)
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -19, 0, -7)
 
 [node name="urn_round_165" parent="Models" instance=ExtResource("7_model")]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -29, 0, -8.6)
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -19, 0, -17)
 
 [node name="lantern_candle_166" parent="Models" instance=ExtResource("8_model")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 29, 0, -9)
@@ -1154,13 +1151,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 7, 2, -19)
 shape = SubResource("BoxShape3D_4")
 
 [node name="Box154" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -24, 0.3, -9)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -24, 0.3, -7.6)
 shape = SubResource("BoxShape3D_5")
 
 [node name="Box155" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -24, 0.3, -15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -24, 0.3, -16.4)
 shape = SubResource("BoxShape3D_5")
-
-[node name="Box156" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -28.5, 0.3, -12)
-shape = SubResource("BoxShape3D_6")

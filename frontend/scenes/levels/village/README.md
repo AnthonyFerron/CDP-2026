@@ -19,7 +19,7 @@ L'ambiance est celle d'une fin de journée : un soleil bas et doré perce les nu
 
 ## Énigme : les cinq codes oubliés
 
-L'intérieur de la mairie est posé sous la carte (nœud `Interior`, à y = -40). La porte de la mairie y mène, avec un fondu.
+L'intérieur de la mairie est posé sous la carte (nœud `Interior`, à y = -40). La porte fermée de la mairie y mène, avec un fondu, et la porte fermée de l'accueil ramène dehors. Les murs du bureau reposent sur ceux du rez-de-chaussée ; leur pied est caché sous le plancher de l'étage.
 
 - **Rez-de-chaussée, l'accueil** : comptoir, armoires des archives, étagères, table d'attente, caisses et bancs. Un escalier monte le long du mur est.
 - **Étage, le bureau du maire** : bureau, armoire, commode, étagère, et contre le mur nord le dispositif aux cinq sections.

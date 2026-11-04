@@ -67,29 +67,48 @@ def build_sanctuary(scene):
     camp(scene, random.Random(9), -36.0, -30.0, 40.0)
 
 
+CELLAR_TILE = 4.0
+CELLAR_HEIGHT = 4.15
+# Cases de 4 m de la cave, par leur centre : la salle de 5 × 3 cases (x de -10 à 10, z de 0 à -12) et, au sud,
+# la case de l'escalier qui remonte vers la trappe. Les murs ont 0,6 m d'épaisseur, vers l'intérieur des cases.
+CELLAR_TILES = [(x, z) for x in (-8.0, -4.0, 0.0, 4.0, 8.0) for z in (-2.0, -6.0, -10.0)] + [(0.0, 2.0)]
+CELLAR_NEIGHBOURS = {(0, -1): 180.0, (0, 1): 0.0, (1, 0): 90.0, (-1, 0): -90.0}
+# Bord du fond où s'élève la porte scellée, sous l'inscription.
+SEALED_DOOR = (0.0, -12.0)
+
+
 def build_cellar(scene):
-    """Cave des archives : une salle de donjon, ses colonnes, ses tables et le coffre au fond."""
-    scene.add("modular_dungeon_kit/room-wide", (0.0, 0.0, -6.0), 0.0, 1.0)
-    scene.add_box((0.0, -0.25, -6.0), (20.0, 0.5, 12.0))
-    scene.add_box((0.0, 4.45, -6.0), (20.0, 0.5, 12.0))
-    for x, z, size in ((-10.25, -6.0, (0.5, 4.5, 12.0)), (10.25, -6.0, (0.5, 4.5, 12.0))):
-        scene.add_box((x, 2.25, z), size)
-    for z in (0.25, -12.25):
-        scene.add_box((0.0, 2.25, z), (20.0, 4.5, 0.5))
-    # Colonnes autour du coffre ; les murs est et ouest restent dégagés pour les deux algorithmes.
-    for x, z in ((-3.2, -9.8), (3.2, -9.8)):
-        scene.add("mini_dungeon/column", (x, 0.0, z), 0.0, 3.6)
-        scene.add_box((x, 2.0, z), (1.6, 4.0, 1.6))
-    for x, z, degrees in ((-8.5, -2.0, 90.0), (8.5, -2.0, -90.0)):
-        scene.add("mini_dungeon/table", (x, 0.0, z), degrees, 3.0)
-        scene.add_box((x, 0.5, z), (2.0, 1.0, 2.7))
-    for model, x, z in (("barrel", -8.8, -10.5), ("pot", -7.2, -11.0), ("barrel", 8.6, -10.8), ("pot", 8.8, -8.6)):
-        scene.add(f"mini_dungeon/{model}", (x, 0.0, z), 20.0, 2.8)
-        scene.add_box((x, 0.6, z), (1.4, 1.2, 1.4))
-    for x in (-6.0, 6.0):
-        scene.add("mini_dungeon/banner", (x, 0.6, -11.4), 180.0, 3.0)
-    # Porte scellée au fond de la salle, sous l'inscription.
-    scene.add("modular_dungeon_kit/gate-door", (0.0, 0.0, -12.0), 0.0, 1.0)
+    """Cave des archives : une salle de donjon fermée, sous un plafond de pierre posé dans desert.tscn, la table ronde au centre, le coffre devant la porte
+    scellée du fond, une table à rune de chaque côté de l'escalier et les deux algorithmes sur les murs."""
+    tiles = set(CELLAR_TILES)
+    for x, z in CELLAR_TILES:
+        scene.add("modular_dungeon_kit/template-floor", (x, 0.0, z), 0.0, 1.0)
+        scene.add_box((x, -0.25, z), (CELLAR_TILE, 0.5, CELLAR_TILE))
+        scene.add_box((x, CELLAR_HEIGHT + 0.25, z), (CELLAR_TILE, 0.5, CELLAR_TILE))
+        # Un mur sur chaque bord qui ne donne sur aucune case : son pied regarde l'intérieur de la case.
+        for (dx, dz), degrees in CELLAR_NEIGHBOURS.items():
+            if (x + dx * CELLAR_TILE, z + dz * CELLAR_TILE) in tiles:
+                continue
+            edge = (x + dx * CELLAR_TILE / 2, z + dz * CELLAR_TILE / 2)
+            model = "gate-door" if edge == SEALED_DOOR else "template-wall"
+            scene.add(f"modular_dungeon_kit/{model}", (edge[0], 0.0, edge[1]), degrees, 1.0)
+            size = (0.6, CELLAR_HEIGHT, CELLAR_TILE) if dx else (CELLAR_TILE, CELLAR_HEIGHT, 0.6)
+            scene.add_box((edge[0] - dx * 0.3, CELLAR_HEIGHT / 2, edge[1] - dz * 0.3), size)
+    # Colonnes de part et d'autre du coffre, devant la porte scellée.
+    for x in (-4.0, 4.0):
+        scene.add("mini_dungeon/column", (x, 0.0, -10.2), 0.0, 3.6)
+        scene.add_box((x, 2.0, -10.2), (1.6, 4.0, 1.6))
+    # Tables de part et d'autre de l'escalier : une rune est posée sur chacune, bien en vue (desert.tscn).
+    for x in (-7.0, 7.0):
+        furniture(scene, "mini_dungeon/table", (x, 0.0, -1.9), 0.0, 3.0, height=0.93)
+    # Réserves dans les coins du fond, loin des algorithmes et des tas de sable.
+    furniture(scene, "mini_dungeon/barrel", (-8.5, 0.0, -10.5), 0.0, 2.8, height=1.3)
+    furniture(scene, "mini_dungeon/barrel", (8.5, 0.0, -10.5), 90.0, 2.8, height=1.3)
+    scene.add("mini_dungeon/pot", (-7.0, 0.0, -10.8), 20.0, 2.8)
+    scene.add_box((-7.0, 0.6, -10.8), (1.0, 1.2, 1.0))
+    # Bannières accrochées au mur du fond, de part et d'autre des colonnes.
+    for x in (-6.6, 6.6):
+        scene.add("mini_dungeon/banner", (x, 0.8, -11.2), 0.0, 3.0)
 
 
 def main():

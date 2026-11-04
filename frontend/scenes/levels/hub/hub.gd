@@ -16,6 +16,10 @@ const ZONE_NAMES := {
 const RETURN_DISTANCE := 3.5
 ## Durée du plan large sur le village qui se reconstruit, en secondes.
 const REPAIR_SHOT := 4.0
+## Après la bonne fin, le joueur reprend la main devant le château, tourné vers le village.
+const VICTORY_SPAWN := Vector3(0.0, 0.3, -60.0)
+## Temps laissé au titre de la bonne fin avant de rendre la main, en secondes.
+const VICTORY_TITLE_HOLD := 3.5
 ## Les deux personnages à écouter avant de sortir du bunker la première fois.
 const INTRO_SPEAKERS: Array[StringName] = [&"Codeon", &"Merlon"]
 
@@ -101,9 +105,32 @@ func _play_ending(ending: StringName) -> void:
 		_release_survivors()
 		_set_repairs(GameState.BOOK_COUNT, false)
 		_apply_life(1.0)
-		_ending.play_victory()
+		await _ending.play_victory()
+		await get_tree().create_timer(VICTORY_TITLE_HOLD).timeout
+		_resume_after_victory()
 	else:
 		_ending.play_eruption()
+
+
+## Fin de la cinématique de victoire : le joueur reprend la main devant le château, et tous les portails
+## restent ouverts pour revisiter les zones.
+func _resume_after_victory() -> void:
+	_hud.visible = true
+	await _hud.fade(true)
+	_ending.stop()
+	_player_camera.current = true
+	var position := VICTORY_SPAWN
+	position.y = _terrain.surface_height(position.x, position.z) + 0.3
+	_player.global_position = position
+	_player.velocity = Vector3.ZERO
+	_player.get_node("CameraPivot").rotation.y = PI
+	for zone in ZONES:
+		_portal(zone).is_open = GameState.is_zone_unlocked(zone)
+	_hud.set_crosshair_visible(true)
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	_player.process_mode = Node.PROCESS_MODE_INHERIT
+	await _hud.fade(false)
+	_hud.show_message("Codia renaît. Les portails restent ouverts : explorez le royaume à votre guise.")
 
 
 func placed_count() -> int:

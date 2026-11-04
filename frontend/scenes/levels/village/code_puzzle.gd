@@ -48,6 +48,7 @@ var solved: Array[bool] = [false, false, false, false, false]
 var current := 0
 
 var _tabs: Array[Button] = []
+var _check_icon := UiIcons.check(26, COLOR_SOLVED)
 var _flash: Tween
 
 @onready var _root: Control = %Root
@@ -165,8 +166,10 @@ func _refresh_tabs() -> void:
 	for index in _tabs.size():
 		var tab := _tabs[index]
 		var code: Dictionary = CODES[index]
-		var state := "✔ résolu" if solved[index] else ("à résoudre" if is_unlocked(index) else "scellé")
+		var state := "résolu" if solved[index] else ("à résoudre" if is_unlocked(index) else "scellé")
 		tab.text = "%d · %s — %s" % [index + 1, code.language, state]
+		# Coche dessinée : la police n'a pas ce symbole, et la version web n'en a pas d'autre.
+		tab.icon = _check_icon if solved[index] else null
 		tab.disabled = not is_unlocked(index)
 		tab.button_pressed = index == current
 		tab.add_theme_color_override("font_color", COLOR_SOLVED if solved[index] else Color(0.92, 0.9, 0.85))

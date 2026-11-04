@@ -58,6 +58,17 @@ func play_victory() -> void:
 	finished.emit()
 
 
+## Rend la vue au jeu : la caméra de la cinématique et son texte disparaissent.
+func stop() -> void:
+	if _camera:
+		_camera.queue_free()
+		_camera = null
+	if _overlay:
+		_overlay.queue_free()
+		_overlay = null
+	_shake = 0.0
+
+
 func _volcano_top() -> Vector3:
 	return volcano.global_position + Vector3.UP * volcano.height * 0.7
 

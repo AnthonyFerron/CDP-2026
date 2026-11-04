@@ -28,6 +28,7 @@ Les touches suivent la position physique sur le clavier : ZQSD en AZERTY, WASD e
 | Relire les fragments (Village) | I ou Tab |
 | Libérer la souris | Échap |
 | Reprendre la souris | Clic |
+| Plein écran | F ou F11 |
 
 ## Debug
 
@@ -41,7 +42,7 @@ Le jeu démarre dans le hub, `frontend/scenes/levels/hub/hub.tscn`, à l'intéri
 - Un livre trouvé vole jusqu'à la main du joueur, qui le tient en bas de l'écran. Il faut le rapporter soi-même dans la salle des livres, au cœur du donjon du château, et le poser sur son piédestal, devant le trône du roi : il quitte alors la main pour s'y poser.
 - Chaque livre posé répare une partie du village : quatre maisons par livre, en commençant par les plus proches du camp, puis le marché, la cour du château, la fontaine, les drapeaux et les toits des tours du donjon. Un plan large montre le village qui se relève, et le ciel s'éclaircit.
 - Autour du cœur du village : la taverne et la forge (premier livre), l'école et la ferme avec ses champs (deuxième), la chapelle et le cimetière des soldats (troisième), et la mine d'argent effondrée au pied des montagnes, au nord-est. Chaque lieu a son panneau à lire, qui raconte un peu de l'histoire de Codia.
-- Tous les habitants, le roi, Merlon et le garde compris, restent au bunker pendant la partie. Le dernier livre posé, ils en sortent : Merlon et le roi rejoignent la salle du château, où Merlon accomplit le rituel, et les autres se rassemblent autour du feu de la place, puis la bonne fin se joue.
+- Tous les habitants, le roi, Merlon et le garde compris, restent au bunker pendant la partie. Le dernier livre posé, ils en sortent : Merlon et le roi rejoignent la salle du château, où Merlon accomplit le rituel, et les autres se rassemblent autour du feu de la place, puis la bonne fin se joue. Après la cinématique, le joueur reprend la main devant le château : tous les portails restent ouverts pour revisiter les zones.
 
 L'autoload `GameState` (`frontend/scripts/game_state.gd`) garde les livres trouvés, les livres posés et la dernière zone, et les sauvegarde dans `user://sauvegarde.cfg` à chaque changement. Pour ajouter une zone, renseigner sa scène dans `ZONE_SCENES`, sa place dans `ZONE_ORDER` et son livre dans `ZONE_BOOKS`, puis appeler `GameState.collect_book()` quand le livre est pris.
 
@@ -57,7 +58,7 @@ Le volcan entre en éruption au bout de 60 minutes (`GameState.TOTAL_TIME`). Le 
 | --- | --- | --- | --- |
 | Plaine | La discussion oubliée : six fragments cachés dans les livres de la bibliothèque, à remettre dans l'ordre sur la tablette | Projenomicon | Ordre de la conversation : restauration à organiser, objectifs, inventaire, planning, suivi, vérification et clôture |
 | Désert | Les runes de l'algorithme : runes à ramasser ou à dégager du sable en maintenant E, à poser sur la table ronde de la cave | Algonicon | Jarre : TANT QUE, Puiser, Porter. Porte : SI, Ouvrir, SINON. « POUR » et « Fermer » sont des leurres |
-| Marais | Le tombeau des lettres oubliées : mécanisme à cinq cercles dans la crypte souterraine ; les épitaphes des rois Codeon I à IV redonnent la règle | Logiconomicon | CODIA décalé de +3, −3, +3, −3, +3 : **FLGFD** |
+| Marais | Le tombeau des lettres oubliées : mécanisme à cinq cercles dans la crypte souterraine ; les épitaphes des rois Codeon I à IV, dans la chambre ouest, à l'opposé du tombeau du livre, redonnent la règle | Logiconomicon | CODIA décalé de +3, −3, +3, −3, +3 : **FLGFD** |
 | Village | Les cinq codes oubliés : dix fragments de papier cachés dans la mairie (touche I pour les relire), cinq extraits de code à résoudre dans l'ordre sur le dispositif du bureau du maire | Codonomicon | HTML : **3**. CSS : **green**. Python : **10**. PHP : **2**. TypeScript : **12** |
 
 ## Organisation du projet
@@ -86,6 +87,10 @@ Pour une mise à jour de Godot, changer `GODOT_VERSION` dans `frontend/Dockerfil
 ## Sons
 
 Les sons du jeu (vent, lave, marais, désert, cave, hub, village, ruisseau, pas, feu, porte, tablettes) sont synthétisés par `frontend/tools/generate_sounds.py`, sans dépendance externe. Pour en modifier un, changer sa fonction dans le script puis le relancer depuis `frontend` avec `python tools/generate_sounds.py`.
+
+Les symboles de l'interface (flèches du mécanisme, coche des codes résolus) sont dessinés par `frontend/scripts/ui_icons.gd`, et ceux des scènes (runes, soleils des stèles, repère du mécanisme) sont des maillages : Cinzel et Lora n'ont pas ces caractères, et la version web n'a pas de police système pour les remplacer. Ne pas écrire de symbole hors de l'alphabet latin dans un texte affiché.
+
+En vue à la première personne, le corps de Devlyn ne se voit pas mais projette son ombre : `frontend/scenes/player/devlyn.gd` balance ses jambes et ses bras à chaque pas, pour que l'ombre marche avec le joueur.
 
 ## Licences
 

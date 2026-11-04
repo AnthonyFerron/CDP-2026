@@ -158,7 +158,8 @@ def build_town_hall(scene):
     cx, cz, width, depth = 0.0, -26.0, 3, 3
     for side, index, count, center, outward in edge_tiles(cx, cz, width, depth):
         if side == "south" and index == 1:
-            doorway(scene, center, outward)
+            # Porte fermée : on entre par l'interaction, qui mène à l'intérieur, sous la carte.
+            wall(scene, "wall-door", center, outward)
         elif side == "north" and index == 2:
             wall(scene, "wall-broken", center, outward, height=3.0)
         else:
@@ -194,12 +195,17 @@ def build_mills(scene):
 # et la salle secrète derrière le mur ouest du bureau. Coordonnées locales au nœud Interior de village.tscn.
 HALL_OUTPUT = OUTPUT.parent / "village_hall.tscn"
 OFFICE_FLOOR = 4.5
-def room_walls(scene, cx, cz, width, depth, base, doors, skip=(), models=("wall", "wall-detail-cross", "wall", "wall-detail-horizontal")):
-    """Murs de pierre d'une pièce, sans fenêtres : elle est sous terre. Les portes sont des couples (côté, case)."""
+# Les murs de l'étage reposent sur ceux du rez-de-chaussée : leur pied est caché sous le plancher du bureau.
+OFFICE_WALLS = WALL_HEIGHT
+def room_walls(scene, cx, cz, width, depth, base, doors, skip=(), closed=(), models=("wall", "wall-detail-cross", "wall", "wall-detail-horizontal")):
+    """Murs de pierre d'une pièce, sans fenêtres : elle est sous terre. Les portes sont des couples (côté, case) :
+    celles de doors sont des passages voûtés, celles de closed des portes fermées qu'on franchit par interaction."""
     for side, index, count, center, outward in edge_tiles(cx, cz, width, depth):
         if side in skip:
             continue
-        if (side, index) in doors:
+        if (side, index) in closed:
+            wall(scene, "wall-door", center, outward, base=base)
+        elif (side, index) in doors:
             wall(scene, "wall-doorway-round", center, outward, base=base, solid=False)
             # Montants et linteau de la porte.
             along = (0, 1) if outward[0] else (1, 0)
@@ -219,7 +225,7 @@ def room_walls(scene, cx, cz, width, depth, base, doors, skip=(), models=("wall"
 def build_hall_interior():
     scene = Scene("VillageHall")
     # Rez-de-chaussée : l'accueil des habitants. Porte au sud, escalier le long du mur est.
-    room_walls(scene, 0.0, 0.0, 4, 3, 0.0, doors={("south", 1)})
+    room_walls(scene, 0.0, 0.0, 4, 3, 0.0, doors=set(), closed={("south", 1)})
     furniture(scene, "furniture_kit/desk", (-2.0, 0.0, -0.6), 180.0, 2.8, height=1.1)
     furniture(scene, "furniture_kit/chairDesk", (-2.0, 0.0, -2.2), 180.0, 2.6)
     furniture(scene, "furniture_kit/sideTableDrawers", (0.4, 0.0, -0.8), 180.0, 2.6, height=1.0)
@@ -241,7 +247,7 @@ def build_hall_interior():
     furniture(scene, "furniture_kit/coatRackStanding", (-3.6, 0.0, 5.3), 0.0, 2.6)
 
     # Étage : le bureau du maire, avec le dispositif des cinq codes contre le mur nord.
-    room_walls(scene, 0.0, 0.0, 4, 3, OFFICE_FLOOR, doors={("west", 1)})
+    room_walls(scene, 0.0, 0.0, 4, 3, OFFICE_WALLS, doors={("west", 1)})
     furniture(scene, "furniture_kit/desk", (-1.0, OFFICE_FLOOR, -0.6), 180.0, 2.8, height=1.1)
     furniture(scene, "furniture_kit/chairDesk", (-1.0, OFFICE_FLOOR, -2.2), 180.0, 2.6)
     furniture(scene, "furniture_kit/sideTableDrawers", (1.4, OFFICE_FLOOR, -0.8), 180.0, 2.6, height=1.0)
@@ -258,7 +264,7 @@ def build_hall_interior():
     scene.add_box((6.2, OFFICE_FLOOR + 0.6, 2.1), (3.4, 1.2, 0.3))
 
     # Salle secrète, derrière la bibliothèque du bureau : un pupitre de pierre et des bougies.
-    room_walls(scene, -12.0, 0.0, 2, 2, OFFICE_FLOOR, doors=set(), skip=("east",))
+    room_walls(scene, -12.0, 0.0, 2, 2, OFFICE_WALLS, doors=set(), skip=("east",))
     furniture(scene, "graveyard_kit/altar-stone", (-12.6, OFFICE_FLOOR, 0.0), 90.0, 2.0, height=1.0)
     for x, z in ((-14.8, -3.0), (-14.8, 3.0), (-9.6, -3.2), (-9.6, 3.2)):
         furniture(scene, "graveyard_kit/candle-multiple", (x, OFFICE_FLOOR, z), 0.0, 2.4)
