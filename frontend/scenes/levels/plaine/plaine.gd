@@ -16,6 +16,9 @@ const WIND_INSIDE_DB := -26.0
 ## Lumière ambiante du ciel, dehors et dans les archives.
 const AMBIENT_OUTSIDE := 0.75
 const AMBIENT_INSIDE := 0.5
+## Décor irrégulier posé par tools/build_plaine.py sans boîte : épaves, tas de pierres, rochers, tentes,
+## charrettes. Il reçoit ici l'enveloppe convexe de ses maillages, plus juste qu'une boîte.
+const HULL_PROPS: Array[String] = ["siege_", "rocks_", "rock_", "resource_stone", "tower_hexagon", "tent_", "cart_"]
 ## Conversation entre la bibliothécaire, cheffe de projet, et son employé, dans le bon ordre.
 const FRAGMENTS: Array[String] = [
 	"Bibliothécaire : « Nous devons organiser la restauration des archives avant la prochaine inspection. »",
@@ -100,6 +103,8 @@ func _ready() -> void:
 	_apply_soot($Exterior/Battlefield, soot_material)
 	_apply_soot(_scatter.get_node("Lanterns"), soot_material)
 	_apply_soot($Interior/Library/Models, interior_soot_material)
+	_add_hull_collisions($Exterior/Battlefield/Models, HULL_PROPS)
+	_add_hull_collisions($Exterior/Ruins/Models, HULL_PROPS)
 	_ash = _create_ash()
 	_exterior.add_child(_ash)
 	_dust = _create_dust()
@@ -287,6 +292,27 @@ func _on_portal_refused() -> void:
 func _on_portal_crossed() -> void:
 	hub_requested.emit()
 	GameState.return_to_hub(ZONE)
+
+
+## Collision de chaque modèle dont le nom commence par l'un des préfixes : l'enveloppe convexe de ses maillages.
+func _add_hull_collisions(models: Node3D, prefixes: Array[String]) -> void:
+	var body := StaticBody3D.new()
+	body.name = "Hulls"
+	models.get_parent().add_child(body)
+	for model: Node3D in models.get_children():
+		if not prefixes.any(func(prefix: String) -> bool: return String(model.name).begins_with(prefix)):
+			continue
+		var points := PackedVector3Array()
+		for part: MeshInstance3D in model.find_children("*", "MeshInstance3D", true, false):
+			var to_body := body.global_transform.affine_inverse() * part.global_transform
+			for vertex in part.mesh.get_faces():
+				points.append(to_body * vertex)
+		var shape := ConvexPolygonShape3D.new()
+		shape.points = points
+		var collision := CollisionShape3D.new()
+		collision.name = String(model.name)
+		collision.shape = shape
+		body.add_child(collision)
 
 
 func _apply_soot(root: Node, material: Material) -> void:

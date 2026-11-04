@@ -53,6 +53,8 @@ const CLEARINGS: Array[Vector3] = [
 
 ## Bassins de lave : centre de la surface et rayon.
 var lava_pools: Array[Dictionary] = []
+## Sommet du tronc de chaque modèle d'arbre mort, pour pencher sa collision comme lui.
+var _tree_tops: Array[Vector3] = []
 var _rng := RandomNumberGenerator.new()
 
 
@@ -96,8 +98,8 @@ func _scatter_grass() -> void:
 				glowing.append(item)
 			else:
 				burnt.append(item)
-		_add_chunked_multimesh(mesh, burnt, soot)
-		_add_chunked_multimesh(mesh, glowing, rust)
+		_add_chunked_multimesh(mesh, burnt, soot, "Grass")
+		_add_chunked_multimesh(mesh, glowing, rust, "Grass")
 
 
 func _scatter_small_rocks() -> void:
@@ -114,16 +116,10 @@ func _scatter_small_rocks() -> void:
 			var item := _ground_transform(_random_spot(0.3), _rng.randf_range(1.5, 4.0))
 			items.append(item)
 			# Les cailloux assez hauts pour gêner le pas ont une collision à leur taille ; les plus plats se franchissent.
-			var real := size * item.basis.get_scale()
-			if real.y < 0.25:
+			if (size * item.basis.get_scale()).y < 0.25:
 				continue
-			var shape := BoxShape3D.new()
-			shape.size = real * 0.85
-			var collision := CollisionShape3D.new()
-			collision.shape = shape
-			collision.transform = Transform3D(item.basis.orthonormalized(), item.origin + Vector3.UP * shape.size.y * 0.5)
-			body.add_child(collision)
-		_add_chunked_multimesh(_load_mesh(model), items, material)
+			body.add_child(_rock_collision(mesh, item, false))
+		_add_chunked_multimesh(mesh, items, material, "Pebbles")
 
 
 func _scatter_large_rocks() -> void:
@@ -134,20 +130,13 @@ func _scatter_large_rocks() -> void:
 	add_child(body)
 	for model in large_rock_models:
 		var mesh := _load_mesh(model)
-		var size := mesh.get_aabb().size
 		var items: Array[Transform3D] = []
 		for i in count:
 			var item := _ground_transform(_random_spot(1.1), _rng.randf_range(5.0, 9.0))
 			items.append(item)
-			var shape := BoxShape3D.new()
-			shape.size = size * item.basis.get_scale() * 0.8
-			var collision := CollisionShape3D.new()
-			collision.shape = shape
-			collision.transform = Transform3D(
-				item.basis.orthonormalized(), item.origin + Vector3.UP * shape.size.y * 0.5
-			)
-			body.add_child(collision)
+			body.add_child(_rock_collision(mesh, item, true))
 		var instance := _add_multimesh(mesh, items, material)
+		instance.name = "LargeRocksMesh%d" % get_child_count()
 		instance.visibility_range_end = 0.0
 
 
@@ -162,18 +151,44 @@ func _scatter_dead_trees() -> void:
 		var spot := _random_spot(1.0)
 		var item := _ground_transform(spot, _rng.randf_range(0.9, 1.5))
 		items[i % meshes.size()].append(item)
+		# Le tronc penche : sa collision le suit, à sa grosseur, jusqu'au-dessus de la tête.
+		var axis := (item.basis * _tree_tops[i % meshes.size()]).normalized()
 		var shape := CylinderShape3D.new()
-		shape.radius = 0.4
-		shape.height = 3.0
+		shape.radius = 0.44 * item.basis.get_scale().x
+		shape.height = 3.2
 		var collision := CollisionShape3D.new()
 		collision.shape = shape
-		collision.position = item.origin + Vector3.UP * 1.5
+		collision.transform = Transform3D(Basis(Quaternion(Vector3.UP, axis)), item.origin + axis * 1.6)
 		body.add_child(collision)
 	for index in meshes.size():
 		var transforms: Array[Transform3D] = []
 		transforms.assign(items[index])
 		var instance := _add_multimesh(meshes[index], transforms, material)
+		instance.name = "DeadTreesMesh%d" % index
 		instance.visibility_range_end = 0.0
+
+
+## Collision d'un rocher, à sa taille. Un caillou d'un seul bloc prend l'enveloppe convexe de son maillage ; un gros
+## rocher, fait de plusieurs blocs, prend son maillage même (exact) : une enveloppe comblait les creux entre les
+## blocs, des murs invisibles de plusieurs mètres une fois le rocher grossi.
+func _rock_collision(mesh: Mesh, item: Transform3D, exact: bool) -> CollisionShape3D:
+	var points := PackedVector3Array()
+	var scale := item.basis.get_scale()
+	for vertex in mesh.get_faces():
+		points.append(vertex * scale)
+	var shape: Shape3D
+	if exact:
+		var faces := ConcavePolygonShape3D.new()
+		faces.set_faces(points)
+		shape = faces
+	else:
+		var hull := ConvexPolygonShape3D.new()
+		hull.points = points
+		shape = hull
+	var collision := CollisionShape3D.new()
+	collision.shape = shape
+	collision.transform = Transform3D(item.basis.orthonormalized(), item.origin)
+	return collision
 
 
 ## Remparts : de hauts rochers sur le pourtour, pour que la zone ne s'arrête pas sur une pente nue.
@@ -190,10 +205,18 @@ func _add_border_rocks() -> void:
 		var item := _ground_transform(spot, _rng.randf_range(9.0, 16.0))
 		item.origin.y -= 0.6
 		items[i % items.size()].append(item)
+	# Les plus gros débordent en deçà de la limite : ils ont leur collision, comme les rochers de la plaine.
+	var body := StaticBody3D.new()
+	body.name = "BorderRocks"
+	add_child(body)
 	for index in large_rock_models.size():
 		var transforms: Array[Transform3D] = []
 		transforms.assign(items[index])
-		var instance := _add_multimesh(_load_mesh(large_rock_models[index]), transforms, material)
+		var border_mesh := _load_mesh(large_rock_models[index])
+		for item: Transform3D in transforms:
+			body.add_child(_rock_collision(border_mesh, item, true))
+		var instance := _add_multimesh(border_mesh, transforms, material)
+		instance.name = "BorderRocksMesh%d" % index
 		instance.visibility_range_end = 0.0
 
 
@@ -241,8 +264,9 @@ func _add_lanterns() -> void:
 			var tip := base + heading * Vector3(-POST_HEIGHT - 0.5, 0.0, 0.0)
 			lantern.basis = heading * Basis(Vector3.BACK, deg_to_rad(80.0)) * Basis.from_scale(lantern.scale)
 			lantern.position = tip + Vector3.UP * 0.2
-			shape.size = Vector3(POST_HEIGHT + 0.9, 0.5, 0.55)
-			collision.transform = Transform3D(heading, base + heading * Vector3(-(POST_HEIGHT + 0.9) * 0.5, 0.25, 0.0))
+			# Le poteau couché et sa lanterne, à leur taille : rien de plus large qu'eux.
+			shape.size = Vector3(POST_HEIGHT + 1.0, 0.36, 0.45)
+			collision.transform = Transform3D(heading, base + heading * Vector3(-(POST_HEIGHT + 1.0) * 0.5, 0.18, 0.0))
 		else:
 			post.position = base
 			var arm := MeshInstance3D.new()
@@ -606,7 +630,7 @@ func _add_multimesh(
 ## Petits détails qui s'effacent au loin : un MultiMesh par case de CHUNK_SIZE mètres. Godot mesure la distance
 ## d'effacement jusqu'au centre de la boîte de chaque MultiMesh : avec une seule boîte pour toute la carte, tout
 ## s'effaçait d'un coup, même sous les pieds du joueur, dès qu'il s'éloignait du centre.
-func _add_chunked_multimesh(mesh: Mesh, transforms: Array[Transform3D], material: Material) -> void:
+func _add_chunked_multimesh(mesh: Mesh, transforms: Array[Transform3D], material: Material, kind: String) -> void:
 	var cells := {}
 	for item in transforms:
 		var cell := Vector2i(floori(item.origin.x / CHUNK_SIZE), floori(item.origin.z / CHUNK_SIZE))
@@ -617,7 +641,7 @@ func _add_chunked_multimesh(mesh: Mesh, transforms: Array[Transform3D], material
 		var items: Array[Transform3D] = []
 		items.assign(cells[cell])
 		var instance := _add_multimesh(mesh, items, material)
-		instance.name = "Detail%d_%d_%d" % [get_child_count(), cell.x, cell.y]
+		instance.name = "%sDetail%d_%d_%d" % [kind, get_child_count(), cell.x, cell.y]
 		instance.visibility_range_end_margin = CHUNK_FADE
 
 
@@ -651,6 +675,7 @@ func _dead_tree_mesh() -> ArrayMesh:
 	var height := _rng.randf_range(5.0, 7.5)
 	var lean := Vector3(_rng.randf_range(-0.5, 0.5), 0.0, _rng.randf_range(-0.5, 0.5))
 	var top := Vector3.UP * height + lean
+	_tree_tops.append(top)
 	_add_limb(tool, Vector3.ZERO, top, 0.42, 0.1)
 	for i in _rng.randi_range(4, 6):
 		var start := top * _rng.randf_range(0.45, 0.95)
