@@ -11,7 +11,7 @@ const ZONE_HINTS := {
 		"La bibliothécaire ouvre la discussion en parlant d'organiser la restauration. L'employé la conclut : vérifier le travail, puis clôturer le projet.",
 	],
 	&"desert": [
-		"Des runes sont posées à la surface et dans la cave. D'autres sont enfouies : maintenez E devant un tas de sable pour le dégager. Certains tas sont vides.",
+		"Des runes sont posées dans les salles du monument, parmi les débris au-dehors et dans la cave. D'autres sont enfouies : maintenez E devant un tas de sable pour le dégager. Certains tas sont vides.",
 		"Dans la cave, chaque mur porte un algorithme incomplet. L'un répète une action tant que la jarre n'est pas pleine ; l'autre pose une question avant d'ouvrir la porte.",
 		"Deux runes ne servent à aucun des deux algorithmes : ce sont des leurres. Une boucle s'ouvre par « TANT QUE », une condition par « SI » et se poursuit par « SINON ».",
 	],
