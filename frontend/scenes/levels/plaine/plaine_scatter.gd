@@ -11,6 +11,9 @@ const LIT_CRATERS := 4
 const SMOKING_IMPACTS := 4
 ## Hauteur des poteaux des lanternes.
 const POST_HEIGHT := 2.7
+## Côté des cases des petits détails (herbes, cailloux), et longueur de leur fondu au loin.
+const CHUNK_SIZE := 32.0
+const CHUNK_FADE := 8.0
 ## Lanternes du chemin : position (x, z), et si elles sont renversées. Deux gardent les têtes du pont.
 const LANTERNS: Array[Vector3] = [
 	Vector3(-3.2, 16.5, 0.0),
@@ -88,8 +91,8 @@ func _scatter_grass() -> void:
 				glowing.append(item)
 			else:
 				burnt.append(item)
-		_add_multimesh(mesh, burnt, soot)
-		_add_multimesh(mesh, glowing, rust)
+		_add_chunked_multimesh(mesh, burnt, soot)
+		_add_chunked_multimesh(mesh, glowing, rust)
 
 
 func _scatter_small_rocks() -> void:
@@ -115,7 +118,7 @@ func _scatter_small_rocks() -> void:
 			collision.shape = shape
 			collision.transform = Transform3D(item.basis.orthonormalized(), item.origin + Vector3.UP * shape.size.y * 0.5)
 			body.add_child(collision)
-		_add_multimesh(_load_mesh(model), items, material)
+		_add_chunked_multimesh(_load_mesh(model), items, material)
 
 
 func _scatter_large_rocks() -> void:
@@ -555,6 +558,24 @@ func _add_multimesh(
 	instance.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 	add_child(instance)
 	return instance
+
+
+## Petits détails qui s'effacent au loin : un MultiMesh par case de CHUNK_SIZE mètres. Godot mesure la distance
+## d'effacement jusqu'au centre de la boîte de chaque MultiMesh : avec une seule boîte pour toute la carte, tout
+## s'effaçait d'un coup, même sous les pieds du joueur, dès qu'il s'éloignait du centre.
+func _add_chunked_multimesh(mesh: Mesh, transforms: Array[Transform3D], material: Material) -> void:
+	var cells := {}
+	for item in transforms:
+		var cell := Vector2i(floori(item.origin.x / CHUNK_SIZE), floori(item.origin.z / CHUNK_SIZE))
+		if not cells.has(cell):
+			cells[cell] = []
+		(cells[cell] as Array).append(item)
+	for cell: Vector2i in cells:
+		var items: Array[Transform3D] = []
+		items.assign(cells[cell])
+		var instance := _add_multimesh(mesh, items, material)
+		instance.name = "Detail%d_%d_%d" % [get_child_count(), cell.x, cell.y]
+		instance.visibility_range_end_margin = CHUNK_FADE
 
 
 func _flat_material(color: Color) -> StandardMaterial3D:
