@@ -1,0 +1,55 @@
+REPLACEMENTS = [
+('''        height = {"POSTS": 1.25, "WALL": 0.0, "HANGING": 2.2}[mount]''', '''        height = {"POSTS": 1.25, "WALL": 2.5, "HANGING": 2.2}[mount]'''),
+('''    ("MineSign", 77.6, -34.6, -45.0, "La mine d'argent",''', '''    ("MineSign", 76.2, -29.4, -15.0, "La mine d'argent",'''),
+('''     "Château de Codeon V", "STONE", "POSTS", (1.6, 0.6)),
+]''', '''     "Château de Codeon V", "STONE", "POSTS", (1.6, 0.6)),
+    # Lieux autour du village (tools/build_hub.py) : les enseignes des bâtiments sont fixées à leur façade.
+    ("LavoirSign", 48.0, 3.4, 180.0, "Le lavoir de la rivière",
+     "Ici, on lavait le linge dans l'eau claire qui descend des montagnes. Le jour où le roi fit sonner les cloches, en 5812, les draps sont restés sur la corde ; deux ans plus tard, le vent les avait emportés jusqu'au pont.",
+     "Lavoir", "WOOD", "POSTS", (1.1, 0.5)),
+    ("BakerySign", 47.7, 37.9, -90.0, "La boulangerie",
+     "Chaque matin, l'odeur du pain chaud montait jusqu'au château. La farine venait du moulin voisin, le blé de la ferme du roi. Pendant la guerre, le boulanger cuisait encore pour les soldats, jusqu'à la dernière poignée de farine.",
+     "Boulangerie", "WOOD", "WALL", (1.3, 0.5)),
+    ("MillSign", 56.7, 52.0, -90.0, "Le moulin de la rivière",
+     "La roue tournait jour et nuit dans le courant, et la meule réduisait le blé en farine pour tout Codia. Le meunier l'a arrêtée la veille du départ pour le bunker : elle ne repartira que si la rivière retrouve sa force.",
+     "Moulin", "WOOD", "WALL", (1.1, 0.5)),
+    ("StablesSign", -61.7, -46.1, 90.0, "Les écuries royales",
+     "Les chevaux de la garde y attendaient leurs cavaliers. Ils sont tous partis avec l'armée de Devlyn en 5804, contre Vibelandia ; aucun n'est revenu. Les stalles attendent des jours meilleurs.",
+     "Écuries royales", "WOOD", "WALL", (1.5, 0.5)),
+    ("BarracksSign", -50.3, -61.7, 0.0, "La caserne de la garde",
+     "Aldric y a fait ses classes, comme tous les gardes du roi. Sur le mur, la liste des volontaires partis défendre Codia contre Vibelandia couvre trois planches entières ; beaucoup de noms sont barrés.",
+     "Caserne de la garde", "STONE", "WALL", (1.7, 0.5)),
+    ("ApothecarySign", -55.7, 30.0, 90.0, "L'herboristerie",
+     "Onguents, tisanes et remèdes : l'herboriste soignait ici les blessés que l'on ramenait du front. Au jardin des simples, devant la porte, quelques pieds de sauge ont survécu à la guerre.",
+     "Herboristerie", "WOOD", "WALL", (1.4, 0.5)),
+    ("ScriptoriumSign", -69.7, -16.1, 90.0, "Le scriptorium",
+     "Les copistes de Codia y recopiaient, ligne après ligne, ce qui restait des écrits des anciens bâtisseurs. Les quatre livres originaux, disait-on, étaient perdus depuis des siècles ; on n'en gardait ici que des fragments, et des légendes.",
+     "Scriptorium", "STONE", "WALL", (1.3, 0.5)),
+    ("ObservatorySign", -66.2, 51.4, 132.0, "L'observatoire du Mont Sam Altan",
+     "Du haut de cette tour, les veilleurs du roi guettaient le volcan, endormi depuis des siècles. Leur registre s'arrête en 5812, la veille du départ pour le bunker : « Fumée légère au sommet. Rien à signaler. »",
+     "Observatoire", "STONE", "POSTS", (1.3, 0.5)),
+    ("MarketHallSign", -21.0, 60.4, 180.0, "La halle du marché",
+     "Les jours de marché, les paysans des plaines d'Hexcole et les marchands venus du désert de Pythania s'y retrouvaient à l'abri. Son toit s'est effondré pendant les combats ; les étals sont restés dessous.",
+     "Halle du marché", "WOOD", "POSTS", (1.4, 0.5)),
+    ("OrchardSign", 9.6, 71.6, 190.0, "Le verger du roi",
+     "Pommiers et poiriers en rangs serrés : le roi Codeon III les avait plantés pour les enfants du village, qui venaient y cueillir les fruits à l'automne. La guerre n'a laissé que des souches.",
+     "Verger du roi", "WOOD", "POSTS", (1.3, 0.5)),
+    ("ParkSign", 33.4, -50.4, 0.0, "Le jardin du roi",
+     "Allées de gravier, parterres et kiosque à musique : les habitants s'y promenaient le soir, au bord de la rivière. Au centre, la statue de Devlyn rappelle la victoire de l'an 5802 sur les Quatre Dragons du Chaos.",
+     "Jardin du roi", "STONE", "POSTS", (1.4, 0.5)),
+    ("KingsSign", 39.4, -53.4, 0.0, "L'allée des rois",
+     "Codeon I, le bâtisseur ; Codeon II, le sage ; Codeon III, le jardinier ; Codeon IV, le prudent. Les statues des anciens rois bordent l'allée qui mène à celle de Devlyn. Renversées pendant la guerre, elles attendent qu'on les relève.",
+     "Allée des rois", "STONE", "POSTS", (1.3, 0.45)),
+]
+
+# Statue de Devlyn, au rond-point du jardin : inscription gravée sur la face sud du socle, et son Readable devant.
+STATUE = ("Statue", 42.0, -67.4, 0.0, "La statue de Devlyn",
+          "« À Devlyn, vainqueur des Quatre Dragons du Chaos, an 5802. » Le royaume la fit dresser après la bataille, quand chacun croyait la paix revenue pour toujours. Deux ans plus tard, Vibelandia déclarait la guerre.")'''),
+('''    name, x, z, yaw, title, body = MEMORIAL''', '''    name, x, z, yaw, title, body = STATUE
+    node(lines, name, "Node3D", "Lore", props=[at(x, 0, z, 1.0, yaw), f'script = {ext("10_readable")}',
+         f"title = {quote(title)}", f"body = {quote(body)}", f"prompt = {quote('Lire : ' + title)}", "radius = 2.6"])
+    # Le socle (2,34 m de côté) est centré à 2,6 m derrière le Readable : sa face sud est à 1,43 m.
+    engraved(lines, "Text", f"Lore/{name}", "DEVLYN\\nVAINQUEUR DES QUATRE\\nDRAGONS DU CHAOS\\n5802",
+             "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, -1.418)", pixel=0.0032, color="Color(0.55, 0.43, 0.2, 1)")
+    name, x, z, yaw, title, body = MEMORIAL'''),
+]
