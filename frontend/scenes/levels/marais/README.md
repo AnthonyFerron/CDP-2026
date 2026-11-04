@@ -12,7 +12,7 @@ Ouvrir `marais.tscn` dans le projet `frontend/project.godot`, puis appuyer sur *
 4. Le mécanisme s'ouvre en vue rapprochée. Une mauvaise combinaison fait rougir les lettres, la crypte gronde et le chronomètre perd 5 minutes. Solution : CODIA décalé de +3, −3, +3, −3, +3, soit **FLGFD**.
 5. Les cercles s'illuminent de vert ; dans la chambre de l'est, le lourd couvercle du tombeau glisse et bascule. Prendre le Logiconomicon rallume le portail.
 
-Le long escalier se monte et se descend à pied ; on remonte à la surface d'en bas (« Remonter l'escalier ») comme d'en haut, sous la trappe (« Remonter à la surface »).
+Le long escalier se monte et se descend à pied ; on remonte à la surface d'en bas (« Remonter l'escalier ») comme d'en haut, sous la trappe (« Remonter à la surface »). Une lanterne pend à mi-escalier ; dans la crypte, la lumière d'ambiance est une faible lueur chaude (`CRYPT_AMBIENT` dans `marais.gd`), et non le ciel de nuit du dehors.
 
 Les eaux peu profondes ralentissent le joueur ; dans les eaux profondes, la vase le ramène à son dernier point sûr. Une limite invisible, au pied de la berge (`MaraisTerrain.LIMIT_RADIUS`), empêche de sortir de la carte.
 

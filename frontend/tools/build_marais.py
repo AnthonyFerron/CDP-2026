@@ -119,6 +119,40 @@ MODEL_BOXES.update({
     "nature_kit/flower_yellowA": ((-0.1, 0.0, -0.09), (0.16, 0.19, 0.18)),
     "modular_dungeon_kit/stairs": ((-2.2, 0.0, -6.2), (4.4, 8.55, 8.4)),
 })
+# Boîtes exactes, maillages imbriqués compris (mesurées par composition des transformations locales) : les
+# modèles du kit Nature descendent de 5 cm sous leur origine, le cercueil a un couvercle posé sur sa cuve, le
+# squelette a les bras écartés, les urnes ont un col. Elles remplacent les valeurs plus anciennes.
+MODEL_BOXES.update({
+    "graveyard_kit/character-skeleton": ((-0.38, 0.02, -0.15), (0.76, 0.7, 0.32)),
+    "graveyard_kit/coffin": ((-0.29, 0.0, -0.42), (0.57, 0.32, 0.84)),
+    "graveyard_kit/urn-round": ((-0.13, 0.0, -0.13), (0.26, 0.38, 0.26)),
+    "graveyard_kit/urn-square": ((-0.13, 0.0, -0.13), (0.26, 0.38, 0.26)),
+    "survival_kit/campfire-pit": ((-0.14, 0.0, -0.13), (0.28, 0.11, 0.27)),
+    "survival_kit/bedroll": ((-0.16, -0.05, -0.3), (0.31, 0.12, 0.61)),
+    "nature_kit/campfire_stones": ((-0.25, -0.05, -0.26), (0.54, 0.08, 0.52)),
+    "nature_kit/canoe": ((-0.15, -0.05, -0.57), (0.3, 0.18, 1.15)),
+    "nature_kit/canoe_paddle": ((-0.04, -0.05, -0.33), (0.08, 0.04, 0.59)),
+    "nature_kit/flower_purpleA": ((-0.1, -0.05, -0.09), (0.16, 0.24, 0.18)),
+    "nature_kit/flower_redA": ((-0.1, -0.05, -0.09), (0.16, 0.29, 0.18)),
+    "nature_kit/flower_yellowA": ((-0.1, -0.05, -0.09), (0.16, 0.19, 0.18)),
+    "nature_kit/grass_large": ((-0.2, -0.05, -0.21), (0.41, 0.25, 0.41)),
+    "nature_kit/hanging_moss": ((-0.08, -0.05, 0.47), (0.16, 0.48, 0.03)),
+    "nature_kit/log_large": ((-0.5, -0.05, -0.25), (1.0, 0.42, 0.55)),
+    "nature_kit/log_stack": ((-0.22, -0.05, -0.35), (0.42, 0.35, 0.71)),
+    "nature_kit/mushroom_redTall": ((-0.06, -0.05, -0.07), (0.12, 0.25, 0.14)),
+    "nature_kit/mushroom_tanGroup": ((-0.14, -0.05, -0.11), (0.27, 0.25, 0.25)),
+    "nature_kit/path_stone": ((-0.5, -0.05, -0.3), (1.0, 0.05, 0.58)),
+    "nature_kit/path_wood": ((-0.5, -0.05, -0.26), (1.0, 0.05, 0.51)),
+    "nature_kit/plant_bushDetailed": ((-0.3, -0.05, -0.3), (0.6, 0.36, 0.6)),
+    "nature_kit/plant_bushLarge": ((-0.19, -0.05, -0.17), (0.37, 0.24, 0.34)),
+    "nature_kit/plant_flatTall": ((-0.14, -0.05, -0.14), (0.27, 0.28, 0.27)),
+    "nature_kit/stone_tallA": ((-0.49, -0.05, -0.34), (0.98, 1.0, 0.68)),
+    "nature_kit/stone_tallB": ((-0.38, -0.05, -0.39), (0.76, 0.88, 0.77)),
+    "nature_kit/stone_tallC": ((-0.23, -0.05, -0.22), (0.46, 0.78, 0.44)),
+    "nature_kit/stone_tallD": ((-0.22, -0.05, -0.23), (0.44, 0.77, 0.46)),
+    "nature_kit/stone_tallG": ((-0.21, -0.05, -0.25), (0.42, 0.78, 0.49)),
+    "nature_kit/stump_oldTall": ((-0.16, -0.05, -0.19), (0.36, 0.67, 0.37)),
+})
 
 FOLDER = Path(__file__).resolve().parent.parent / "scenes" / "levels" / "marais"
 OUTPUT = FOLDER / "marais_props.tscn"
@@ -329,9 +363,10 @@ def build_hut(scene):
         ("mini_dungeon/barrel", (-24.9, GROUND, 24.8), 40.0, 1.6, True),
     ):
         scene.place(model, position, degrees, scale, height=height)
-    # Lanterne sur le coffre, pelle plantée contre la tente, bois coupé près du feu.
-    scene.place("graveyard_kit/lantern-candle", (-25.0, GROUND + 0.54, 22.8), 20.0, 2.0)
-    scene.place("graveyard_kit/shovel", (-24.0, GROUND, 26.4), 60.0, 3.0, tilt=10.0, height=True)
+    # Lanterne sur le coffre, pelle plantée près des bûches, bois coupé près du feu.
+    chest_top = bounds("mini_dungeon/chest", 15.0, 1.8)[1][1] - bounds("mini_dungeon/chest", 15.0, 1.8)[0][1]
+    scene.place("graveyard_kit/lantern-candle", (-25.0, GROUND + chest_top, 22.8), 20.0, 2.0)
+    scene.place("graveyard_kit/shovel", (-19.4, GROUND, 17.9), 60.0, 3.0, tilt=10.0, height=True)
     scene.place("survival_kit/resource-wood", (-19.8, GROUND, 19.8), 35.0, 4.0)
 
 
@@ -479,7 +514,7 @@ def build_arrival(scene, ground, rng):
     scene.place("fantasy_town_kit/lantern", (-5.65, GROUND, 53.6), 0.0, 1.5, height=True)
     ground.item(6.5, 54.6, footprint=0.5).place("mini_dungeon/barrel", degrees=20.0, scale=2.0, height=True)
     ground.item(6.9, 55.9, footprint=0.5).place("survival_kit/chest", degrees=-15.0, scale=3.4, height=True)
-    ground.item(-9.2, 60.4, footprint=2.0, sink=0.1).place("nature_kit/canoe", degrees=25.0, scale=3.5, roll=180.0, height=True, coat="moss")
+    ground.item(-6.4, 60.6, footprint=1.0, sink=0.08).place("nature_kit/canoe", degrees=25.0, scale=3.5, roll=180.0, height=True, coat="moss")
     dead_tree(ground, rng, -10.0, 51.0, height=4.8, lean=14.0)
     dead_tree(ground, rng, 9.6, 61.2, height=3.8, lean=-9.0, branches=2)
 
@@ -545,15 +580,15 @@ def build_last_house(scene, ground):
     scene.add("fantasy_town_kit/roof-gable", (x, LOW_GROUND + 2.6, z), yaw, 3.2, coat="moss")
     scene.add("fantasy_town_kit/chimney", (x, LOW_GROUND + 2.6, z), yaw + 180.0, 3.0)
     ground.item(32.4, 33.4, footprint=0.4).place("fantasy_town_kit/lantern", degrees=0.0, scale=1.5, height=True)
-    ground.item(39.6, 29.2, footprint=2.0, sink=0.1).place("nature_kit/canoe", degrees=120.0, scale=3.5, tilt=5.0, height=0.6, coat="moss")
+    ground.item(39.6, 29.2, footprint=1.0, sink=0.08).place("nature_kit/canoe", degrees=120.0, scale=3.5, tilt=5.0, height=0.6, coat="moss")
     ground.item(34.0, 34.6, footprint=0.5).place("mini_dungeon/barrel", degrees=0.0, scale=2.0, height=True)
     ground.item(38.4, 34.6, footprint=0.6).place("survival_kit/campfire-fishing-stand", degrees=20.0, scale=3.0, height=True)
 
 
 def build_landing(scene, ground, rng):
     """Le vieux débarcadère du sud-ouest : barques tirées sur la berge, ponton effondré, feu froid et grill à poissons."""
-    ground.item(-36.2, 43.6, footprint=2.0, sink=0.1).place("nature_kit/canoe", degrees=35.0, scale=3.6, tilt=6.0, height=0.6, coat="moss")
-    ground.item(-43.6, 36.6, footprint=2.0, sink=0.1).place("nature_kit/canoe", degrees=-25.0, scale=3.4, roll=180.0, height=0.6, coat="moss")
+    ground.item(-36.2, 43.6, footprint=1.0, sink=0.08).place("nature_kit/canoe", degrees=35.0, scale=3.6, tilt=6.0, height=0.6, coat="moss")
+    ground.item(-43.6, 36.6, footprint=1.0, sink=0.08).place("nature_kit/canoe", degrees=-25.0, scale=3.4, roll=180.0, height=0.6, coat="moss")
     ground.item(-41.0, 41.5, footprint=0.6).place("nature_kit/campfire_stones", degrees=0.0, scale=3.0)
     ground.items[-1].place("survival_kit/campfire-fishing-stand", (0.0, 0.0, 0.0), 40.0, 3.0, height=True)
     ground.item(-38.4, 37.8, footprint=0.5).place("mini_dungeon/barrel", degrees=0.0, scale=2.0, height=True)
@@ -699,7 +734,7 @@ def niche_contents(scene, rng, face, inward):
     along = (nz, -nx) if nz else (-nz, nx)
     yaw = 0.0 if nx else 90.0
     depth = NICHE_DEPTH / 2
-    scene.place("graveyard_kit/character-skeleton", (x + nx * depth, NICHE_FLOOR, z + nz * depth), yaw + rng.choice((0.0, 180.0)), 1.7, tilt=-90.0, coat="dust")
+    scene.place("graveyard_kit/character-skeleton", (x + nx * depth, NICHE_FLOOR, z + nz * depth), yaw + rng.choice((0.0, 180.0)), 1.15, tilt=-90.0, coat="dust")
     for offset, model in ((-0.6, "urn-round"), (0.0, "urn-square"), (0.6, "urn-round")):
         scene.place(f"graveyard_kit/{model}", (x + nx * depth + along[0] * offset, NICHE_SHELF, z + nz * depth + along[1] * offset),
                     rng.uniform(0, 90), 2.0, coat="dust")
@@ -753,13 +788,23 @@ def build_crypt_underground(scene, rng):
     tilt_c = math.degrees(math.atan2(rise_c, run_c))
     length_c = math.hypot(run_c, rise_c)
     middle = ((CRYPT_HEIGHT + top) / 2, (low_end + high_end) / 2)
-    scene.add("modular_dungeon_kit/template-floor", (0.0, middle[0], middle[1]), 0.0, (0.75, 1.0, length_c / 4.0), tilt=180.0 - tilt_c)
+    scene.add("modular_dungeon_kit/template-floor", (0.0, middle[0], middle[1]), 0.0, (1.0, 1.0, length_c / 4.0), tilt=180.0 - tilt_c)
     scene.add_box((0.0, middle[0] + 0.3 * math.cos(math.radians(tilt_c)), middle[1] - 0.3 * math.sin(math.radians(tilt_c))),
                   (3.6, 0.6, length_c + 0.3), 0.0, tilt=-tilt_c)
     flat_end = lz + 2.0
     flat_length = flat_end - high_end
-    scene.add("modular_dungeon_kit/template-floor", (0.0, top, (high_end + flat_end) / 2), 0.0, (0.75, 1.0, flat_length / 4.0), tilt=180.0)
+    scene.add("modular_dungeon_kit/template-floor", (0.0, top, (high_end + flat_end) / 2), 0.0, (1.0, 1.0, flat_length / 4.0), tilt=180.0)
     scene.add_box((0.0, top + 0.3, (high_end + flat_end) / 2), (3.6, 0.6, flat_length + 0.2))
+    # Raccords : le sol du modèle d'escalier commence 30 cm après le bord de l'entrée, sa dernière marche finit 10 cm
+    # avant le palier, et ses murs, bas à leur pied, laissent un jour au-dessus des murs de l'entrée : bandes de dalles
+    # et murs de doublure les referment. Ces murs sont des pans simples (template-wall-top : le mur ordinaire du kit
+    # porte une bande de sol de 2 m à son pied, qui flottait au milieu de la cage), montés depuis le sol en retrait
+    # derrière ceux de l'escalier : on ne voit d'eux que la pierre de leur face.
+    scene.add("modular_dungeon_kit/template-floor", (0.0, 0.0, 2.15), 0.0, (0.75, 1.0, 0.1))
+    scene.add("modular_dungeon_kit/template-floor", (0.0, rise, sz + 2.15), 0.0, (0.75, 1.0, 0.1))
+    for side, degrees in ((1, 90.0), (-1, -90.0)):
+        for base in (0.0, CRYPT_HEIGHT):
+            scene.add("modular_dungeon_kit/template-wall-top", (side * 2.25, base, 4.0), degrees, 1.0)
     # Palier du haut, sous la trappe : son sol (qui rejoint la dernière marche), ses murs.
     scene.add("modular_dungeon_kit/template-floor", (lx, ly, lz), 0.0, (0.75, 1.0, 1.0))
     scene.add_box((lx, ly - 0.25, lz - 0.3), (3.6, 0.5, 4.6))
@@ -784,7 +829,7 @@ def build_crypt_underground(scene, rng):
     # Sarcophages poussiéreux contre le mur de l'entrée.
     for x in (-4.3, 4.3):
         scene.place("graveyard_kit/coffin", (x, 0.0, -3.9), 90.0, 3.0, height=True, coat="dust")
-        scene.place("graveyard_kit/candle", (x + 0.6, 0.6, -3.9), 0.0, 2.0)
+        scene.place("graveyard_kit/candle", (x + 0.6, 0.32 * 3.0, -3.9), 0.0, 2.0)
     # Bannières des couloirs, contre leur mur sud.
     for x in (-14.0, 14.0):
         scene.place("mini_dungeon/banner", (x, 1.4, -14.0 + WALL_FACE + 0.17), 0.0, 3.0)
@@ -800,7 +845,7 @@ def build_crypt_underground(scene, rng):
     scene.place("graveyard_kit/altar-stone", (-28.35, 0.0, -12.0), 90.0, 2.0, height=True, coat="dust")
     scene.place("graveyard_kit/candle-multiple", (-28.4, 0.98, -12.75), 0.0, 2.0)
     scene.place("graveyard_kit/candle-multiple", (-28.4, 0.98, -11.25), 50.0, 2.0)
-    scene.place("graveyard_kit/detail-chalice", (-28.3, 0.98, -12.0), 0.0, 2.4)
+    scene.place("graveyard_kit/detail-chalice", (-28.3, 0.98, -12.0), 0.0, 1.3)
     for x, z in ((-28.7, -7.3), (-28.7, -16.7), (-19.3, -7.3), (-19.3, -16.7)):
         scene.place("graveyard_kit/urn-square", (x, 0.0, z), rng.uniform(0, 90), 2.4, height=True, coat="dust")
 
@@ -826,7 +871,7 @@ def build_crypt_underground(scene, rng):
         scene.place("graveyard_kit/coffin-old", (x, 0.0, 3.9), 0.0, 2.6, height=True, coat="dust")
         scene.place("mini_dungeon/shield-round", (x, 0.52, 3.9), 0.0, 1.8, tilt=-90.0)
     scene.place("graveyard_kit/coffin", (18.6, 0.0, 0.3), 90.0, 2.8, height=True, coat="dust")
-    scene.place("mini_dungeon/weapon-spear", (18.6, 0.56, 0.3), 90.0, 2.6, roll=90.0)
+    scene.place("mini_dungeon/weapon-spear", (18.6, 0.32 * 2.8, 0.3), 90.0, 2.6, roll=90.0)
     scene.place("graveyard_kit/candle-multiple", (16.0, 0.0, 0.6), 0.0, 2.4)
     scene.place("graveyard_kit/candle-multiple", (21.0, 0.0, 1.6), 30.0, 2.4)
     for face, inward in NICHES:
