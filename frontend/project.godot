@@ -17,13 +17,19 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+Api="*res://scripts/api.gd"
 GameState="*res://scripts/game_state.gd"
 Display="*res://scripts/display.gd"
 Account="*res://scripts/account.gd"
 PauseMenu="*res://scripts/pause_menu.gd"
 Hints="*res://scripts/hints.gd"
 Transition="*res://scripts/transition.gd"
+GameSync="*res://scripts/game_sync.gd"
 DebugMenu="*res://scenes/debug/debug_menu.tscn"
+
+[cdp]
+
+api/base_url=""
 
 [display]
 
