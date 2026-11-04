@@ -846,7 +846,7 @@ def build_ruins():
     # Campement des soldats envoyés défendre la bibliothèque, sur le replat au bord du chemin.
     camp(scene, random.Random(7), 14.0, 42.0, -30.0)
     for position, degrees in (((-3.0, 0.0, 12.5), 30.0), ((4.5, 0.0, 13.5), 200.0), ((-9.0, 0.0, 12.5), 80.0)):
-        scene.add("furniture_kit/books", position, degrees, 5.0)
+        furniture(scene, "furniture_kit/books", position, degrees, 5.0, height=0.5)
     return scene
 
 
@@ -951,7 +951,7 @@ def graves(scene, rng):
                 furniture(scene, "graveyard_kit/cross-wood", (x, 0.0, head), rng.uniform(-6, 6), 2.0, height=2.1,
                           tilt=rng.uniform(-5, 5))
                 furniture(scene, "mini_dungeon/shield-round", (x + 0.55, 0.0, head + 0.45), rng.uniform(0, 40), 2.6,
-                          tilt=-70.0)
+                          height=0.5, tilt=-70.0)
             else:
                 planted_sword(scene, rng, x, head)
     sheets(scene, rng, gx, gz + 0.2, 3, 2.0)
@@ -1013,7 +1013,7 @@ def library_front(scene, rng):
     """Devant la façade : la barricade des défenseurs, le bélier qui a enfoncé la porte, et les livres qu'on a voulu
     sauver."""
     # Barricade en deux ailes, laissant le chemin libre ; la charrette renversée en bouche l'aile est.
-    stake_line(scene, rng, (-4.2, 19.2), (-13.2, 16.6), broken=(2,), fallen=(4,))
+    stake_line(scene, rng, (-4.2, 20.2), (-12.8, 18.9), broken=(2,), fallen=(4,))
     stake_line(scene, rng, (8.2, 19.0), (14.6, 15.4), fallen=(1,))
     book_cart(scene, rng, 6.0, 19.8, 80.0, tipped=True)
     for position in ((3.9, 18.2), (4.3, 17.2)):
@@ -1028,12 +1028,13 @@ def library_front(scene, rng):
     for position in ((-6.0, 17.0), (-10.4, 15.3), (10.4, 16.0)):
         planted_sword(scene, rng, position[0], position[1])
     for position, degrees in (((-7.6, 18.6), 20.0), ((11.8, 18.0), 200.0)):
-        furniture(scene, "mini_dungeon/shield-round", (position[0], 0.0, position[1]), degrees, 2.6, tilt=-90.0)
-    furniture(scene, "mini_dungeon/shield-rectangle", (-12.0, 0.0, 14.2), 60.0, 3.0, tilt=-90.0)
-    arrows(scene, rng, -8.5, 20.5, 8, 1.2)
+        furniture(scene, "mini_dungeon/shield-round", (position[0], 0.0, position[1]), degrees, 2.6, height=0.3,
+                  tilt=-90.0)
+    furniture(scene, "mini_dungeon/shield-rectangle", (-12.0, 0.0, 14.2), 60.0, 3.0, height=0.4, tilt=-90.0)
+    arrows(scene, rng, -8.5, 21.2, 8, 1.2)
     arrows(scene, rng, 11.0, 20.0, 6, 1.0)
-    banner_pole(scene, rng, -3.8, 20.6, model="castle_kit/flag-banner-long", lean=-9.0, degrees=10.0)
-    banner_pole(scene, rng, 4.0, 21.4, model="castle_kit/flag-banner-long", lean=14.0, degrees=-20.0)
+    banner_pole(scene, rng, -5.2, 21.8, model="castle_kit/flag-banner-long", lean=-9.0, degrees=10.0)
+    banner_pole(scene, rng, 5.4, 22.6, model="castle_kit/flag-banner-long", lean=14.0, degrees=-20.0)
     # Livres brûlés et feuillets que le vent pousse vers le chemin.
     floor_books(scene, rng, -5.2, 13.2, 4, 0.8)
     floor_books(scene, rng, 4.6, 11.6, 3, 0.6)
@@ -1046,7 +1047,7 @@ def road(scene, rng):
     furniture(scene, "fantasy_town_kit/wheel", (-4.4, 0.0, 44.4), 70.0, 2.6, height=0.3, roll=90.0)
     sheets(scene, rng, -2.6, 40.0, 6, 1.4)
     banner_pole(scene, rng, 4.2, 26.0, model="castle_kit/flag-pennant", scale=3.0, lean=-30.0, degrees=80.0)
-    for position in ((4.4, 33.0), (-4.3, 25.0)):
+    for position in ((4.6, 34.2), (-4.3, 24.6)):
         planted_sword(scene, rng, position[0], position[1])
     arrows(scene, rng, 3.8, 12.0, 4, 0.8)
 
@@ -1243,7 +1244,7 @@ def build_interior():
     floor_books(scene, rng, -1.2, -9.5, 4, 0.6)
     floor_books(scene, rng, 0.2, -3.6, 3, 0.8)
     sheets(scene, rng, 0.0, -4.0, 10, 2.4, scrolls=3)
-    furniture(scene, "graveyard_kit/debris", (0.4, 0.0, -10.7), 30.0, 2.6)
+    furniture(scene, "graveyard_kit/debris", (0.4, 0.0, -10.7), 30.0, 2.6, height=0.4)
 
     # Scriptorium : pupitres de scribes, l'un renversé, la carte du royaume au mur.
     writing_desk(scene, rng, 1.9, -15.6, 180.0)
@@ -1254,7 +1255,7 @@ def build_interior():
     wall_map(scene, -1.45, -12.25, (0, -1), y=2.95, width=1.5, height=0.9)
     sheets(scene, rng, 0.5, -17.5, 14, 2.6, scrolls=4)
     floor_books(scene, rng, -0.6, -21.0, 4, 0.9)
-    furniture(scene, "graveyard_kit/debris-wood", (-0.8, 0.0, -21.8), 80.0, 2.8)
+    furniture(scene, "graveyard_kit/debris-wood", (-0.8, 0.0, -21.8), 80.0, 2.8, height=0.3)
 
     # Archives : coffres et caisses d'archives, un lustre tombé, des registres répandus autour de la tablette.
     for position, model, degrees, scale, height in (
@@ -1272,7 +1273,8 @@ def build_interior():
     # Petite salle du livre : bannières de Codia et bougies autour du pupitre de pierre.
     for side in (-1, 1):
         wall_banner(scene, side * 1.75, -41.6, (-side, 0), y=CRYPT_FLOOR + 1.3)
-        furniture(scene, "graveyard_kit/candle-multiple", (side * 1.2, CRYPT_FLOOR, -43.2), side * 30.0, 2.2)
+        furniture(scene, "graveyard_kit/candle-multiple", (side * 1.2, CRYPT_FLOOR, -43.2), side * 30.0, 2.2,
+                  height=0.45)
         furniture(scene, "graveyard_kit/urn-round", (side * 1.35, CRYPT_FLOOR, -39.0), 0.0, 2.4, height=0.9)
 
     for name in sorted(searched):
