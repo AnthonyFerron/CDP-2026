@@ -52,6 +52,9 @@ const COLOR_SOLVED := Color(0.35, 0.9, 0.45)
 const COLOR_WRONG := Color(0.95, 0.15, 0.1)
 const COLOR_BLUE := Color(0.4, 0.65, 1.0)
 const HINTS_SCRIPT := preload("res://scripts/hints.gd")
+## Place du cadre, en coordonnées de référence (1920 × 1080).
+const FRAME_ORIGIN := Vector2(60, 44)
+const FRAME_SIZE := Vector2(1800, 722)
 
 var solved: Array[bool] = [false, false, false, false, false]
 var current := 0
@@ -208,7 +211,7 @@ func _flash_wrong() -> void:
 	_set_border(COLOR_WRONG)
 	_tabs[current].flash = COLOR_WRONG
 	_tabs[current].queue_redraw()
-	var origin := Vector2(60, 50)
+	var origin := FRAME_ORIGIN
 	_flash = create_tween()
 	for step in 8:
 		var offset := Vector2(randf_range(-1.0, 1.0), randf_range(-0.5, 0.5)) * 14.0 * (1.0 - step / 8.0)
@@ -264,77 +267,91 @@ func _build() -> void:
 	shade.color = Color(0.04, 0.02, 0.06, 0.72)
 	shade.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_root.add_child(shade)
-	_glow = Ornate.place(_root, Glow.new(), Vector2(60, 50), Vector2(1800, 990)) as Glow
+	# Le panneau s'arrête au-dessus du bandeau « Mauvaise réponse » du HUD (y = 770 à 910, centré en bas) : une
+	# erreur ne cache ni la question, ni le champ, ni les boutons.
+	_glow = Ornate.place(_root, Glow.new(), FRAME_ORIGIN, FRAME_SIZE) as Glow
 	_glow.color = COLOR_IDLE
-	var frame := Ornate.place(_root, Ornate.Frame.new(), Vector2(60, 50), Vector2(1800, 990)) as Ornate.Frame
+	var frame := Ornate.place(_root, Ornate.Frame.new(), FRAME_ORIGIN, FRAME_SIZE) as Ornate.Frame
 	_frame = frame
 	frame.title = "Le dispositif des cinq codes"
-	frame.title_size = 44
-	frame.dividers = [136.0]
-	var inscription := Ornate.label(INSCRIPTION, 23, Color(0.86, 0.8, 0.68))
+	frame.title_size = 40
+	frame.dividers = [102.0]
+	var inscription := Ornate.label(INSCRIPTION, 20, Color(0.86, 0.8, 0.68))
 	inscription.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	inscription.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	inscription.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	Ornate.place(frame, inscription, Vector2(150, 52), Vector2(1500, 76))
+	Ornate.place(frame, inscription, Vector2(150, 40), Vector2(1500, 58))
 	# Cinq onglets, un par langage, au-dessus de la page.
 	for index in CODES.size():
 		var tab := LanguageTab.new()
 		tab.number = index + 1
 		tab.language_name = TAB_NAMES[index]
 		tab.level = CODES[index].level
-		Ornate.place(frame, tab, Vector2(50 + index * 228, 158), Vector2(218, 92))
+		Ornate.place(frame, tab, Vector2(50 + index * 228, 112), Vector2(218, 74))
 		tab.pressed.connect(select.bind(index))
 		_tabs.append(tab)
-	_page = Ornate.place(frame, ArchivePage.new(), Vector2(50, 250), Vector2(1130, 500)) as ArchivePage
-	_heading = Ornate.label("", 28, Ornate.INK, true)
-	Ornate.place(_page, _heading, Vector2(40, 22), Vector2(760, 44))
+	_page = Ornate.place(frame, ArchivePage.new(), Vector2(50, 186), Vector2(1130, 378)) as ArchivePage
+	_heading = Ornate.label("", 25, Ornate.INK, true)
+	Ornate.place(_page, _heading, Vector2(40, 12), Vector2(760, 40))
 	_own(_heading, "Heading")
-	_level = Ornate.label("", 22, Color(0.42, 0.26, 0.12))
+	_level = Ornate.label("", 20, Color(0.42, 0.26, 0.12))
 	_level.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	Ornate.place(_page, _level, Vector2(800, 26), Vector2(290, 40))
+	Ornate.place(_page, _level, Vector2(800, 16), Vector2(290, 34))
+	# Lignes serrées : les treize lignes de l'extrait le plus long tiennent dans la page.
 	_numbers = Ornate.label("", 20, Color(0.55, 0.42, 0.28))
 	_numbers.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	Ornate.place(_page, _numbers, Vector2(20, 82), Vector2(44, 410))
+	_numbers.add_theme_constant_override("line_spacing", -1)
+	Ornate.place(_page, _numbers, Vector2(20, 64), Vector2(44, 310))
 	_code = Ornate.label("", 20, Color(0.16, 0.09, 0.05))
-	Ornate.place(_page, _code, Vector2(86, 82), Vector2(1010, 410))
+	_code.add_theme_constant_override("line_spacing", -1)
+	Ornate.place(_page, _code, Vector2(86, 64), Vector2(1010, 310))
 	_own(_code, "Code")
-	_question = Ornate.label("", 26)
+	_question = Ornate.label("", 22)
 	_question.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_question.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	Ornate.place(frame, _question, Vector2(56, 760), Vector2(1120, 76))
+	Ornate.place(frame, _question, Vector2(56, 566), Vector2(1120, 40))
 	_own(_question, "Question")
 	var field := Ornate.Field.new()
 	field.icon_kind = "question_book"
 	field.placeholder = "Votre réponse"
-	Ornate.place(frame, field, Vector2(50, 846), Vector2(770, 82))
+	Ornate.place(frame, field, Vector2(50, 610), Vector2(770, 62))
 	_answer = field.line
 	_own(_answer, "Answer")
 	var validate := Ornate.HexButton.new()
 	validate.caption = "Valider"
 	validate.icon_kind = "check"
 	validate.highlighted = true
-	validate.font_size = 40
-	Ornate.place(frame, validate, Vector2(846, 838), Vector2(334, 98))
+	validate.font_size = 34
+	Ornate.place(frame, validate, Vector2(846, 604), Vector2(334, 74))
 	_validate = validate
 	_own(_validate, "Validate")
-	_feedback = Ornate.label("", 22)
+	_feedback = Ornate.label("", 19)
 	_feedback.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	Ornate.place(frame, _feedback, Vector2(50, 936), Vector2(1130, 34))
+	Ornate.place(frame, _feedback, Vector2(50, 676), Vector2(1130, 26))
 	_own(_feedback, "Feedback")
 	# Les fragments déjà retrouvés, à relire sans quitter le dispositif.
-	var notes := Ornate.place(frame, Ornate.Frame.new(), Vector2(1214, 170), Vector2(540, 770)) as Ornate.Frame
+	var notes := Ornate.place(frame, Ornate.Frame.new(), Vector2(1214, 130), Vector2(540, 560)) as Ornate.Frame
 	notes.title = "Fragments"
-	notes.title_size = 30
+	notes.title_size = 28
 	notes.bottom_diamond = false
 	var scroll := ScrollContainer.new()
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	Ornate.place(notes, scroll, Vector2(30, 56), Vector2(486, 690))
+	Ornate.place(notes, scroll, Vector2(30, 50), Vector2(486, 490))
 	_fragments = VBoxContainer.new()
 	_fragments.add_theme_constant_override("separation", 12)
 	scroll.add_child(_fragments)
 	_own(_fragments, "Fragments")
+	# Touches rappelées sous le bandeau du HUD.
+	var x := 720.0
+	for key: Array in [["Entrée", "valider"], ["Échap", "fermer"]]:
+		var cap := Ornate.KeyCap.new()
+		cap.text = key[0]
+		Ornate.place(_root, cap, Vector2(x, 950), Vector2(124, 56))
+		var hint := Ornate.label(key[1], 24, Ornate.MUTED)
+		Ornate.place(_root, hint, Vector2(x + 138, 960), Vector2(140, 40))
+		x += 300.0
 	var close := HINTS_SCRIPT.CloseButton.new() as Button
-	Ornate.place(frame, close, Vector2(1680, -34), Vector2(88, 88))
+	Ornate.place(frame, close, Vector2(1690, -30), Vector2(80, 80))
 	_close = close
 	_own(_close, "Close")
 	# Lumière bleutée de la réussite : hors du panneau, elle reste à l'écran quand il se ferme.
@@ -436,13 +453,13 @@ class ArchivePage:
 		draw_colored_polygon(inner, Color(0.92, 0.85, 0.69))
 		draw_polyline(Ornate.closed(shape), border, 5.0)
 		draw_polyline(Ornate.closed(inner), Color(border, 0.45), 2.0)
-		draw_line(Vector2(30, 72), Vector2(size.x - 30, 72), Color(0.5, 0.33, 0.16, 0.7), 2.0)
-		draw_line(Vector2(74, 84), Vector2(74, size.y - 18), Color(0.7, 0.3, 0.2, 0.45), 2.0)
+		draw_line(Vector2(30, 56), Vector2(size.x - 30, 56), Color(0.5, 0.33, 0.16, 0.7), 2.0)
+		draw_line(Vector2(74, 64), Vector2(74, size.y - 16), Color(0.7, 0.3, 0.2, 0.45), 2.0)
 		# Taches d'encre et d'humidité, pour l'usure.
 		for spot: Vector3 in [Vector3(size.x - 120, size.y - 70, 34), Vector3(150, size.y - 40, 18), Vector3(size.x - 260, 120, 12)]:
 			draw_circle(Vector2(spot.x, spot.y), spot.z, Color(0.62, 0.5, 0.32, 0.18))
 		if solved:
-			var seal := Vector2(size.x - 110, size.y - 96)
+			var seal := Vector2(size.x - 100, size.y - 86)
 			draw_circle(seal, 62, Color(0.25, 0.55, 0.3, 0.2))
 			draw_arc(seal, 62, 0.0, TAU, 40, Color(0.2, 0.5, 0.25, 0.85), 4.0)
 			draw_arc(seal, 52, 0.0, TAU, 40, Color(0.2, 0.5, 0.25, 0.6), 2.0)
