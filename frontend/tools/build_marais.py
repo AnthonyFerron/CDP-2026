@@ -475,6 +475,8 @@ def build_arrival(scene, ground, rng):
     scene.place("nature_kit/canoe", (x, -0.22, z), yaw + 6.0, 3.5, roll=4.0, coat="moss")
     x, z = at(2.2, 0.4)
     scene.place("nature_kit/canoe_paddle", (x, 0.37, z), yaw + 70.0, 3.0)
+    # La lanterne du panneau d'accueil (sa lumière est posée dans marais.tscn).
+    scene.place("fantasy_town_kit/lantern", (-5.65, GROUND, 53.6), 0.0, 1.5, height=True)
     ground.item(6.5, 54.6, footprint=0.5).place("mini_dungeon/barrel", degrees=20.0, scale=2.0, height=True)
     ground.item(6.9, 55.9, footprint=0.5).place("survival_kit/chest", degrees=-15.0, scale=3.4, height=True)
     ground.item(-9.2, 60.4, footprint=2.0, sink=0.1).place("nature_kit/canoe", degrees=25.0, scale=3.5, roll=180.0, height=True, coat="moss")

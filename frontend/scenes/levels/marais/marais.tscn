@@ -301,6 +301,14 @@ light_energy = 1.2
 omni_range = 9.0
 flicker = 0.1
 
+[node name="SignLight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3, 2.5, 54.0)
+script = ExtResource("14_flicker")
+light_color = Color(1, 0.78, 0.45, 1)
+light_energy = 1.4
+omni_range = 5.5
+flicker = 0.15
+
 [node name="ChapelLight" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -37.8, 2.2, -4)
 script = ExtResource("14_flicker")
