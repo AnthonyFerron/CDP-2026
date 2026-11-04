@@ -3,7 +3,10 @@ alembic==1.20.1
 annotated-doc==0.0.5
 annotated-types==0.8.0
 anyio==4.16.0
+argon2-cffi==25.1.0
+argon2-cffi-bindings==26.1.0
 certifi==2026.10.23
+cffi==2.1.1
 charset-normalizer==3.5.2
 click==8.5.0
 detect-installer==0.2.1
@@ -37,6 +40,7 @@ opentelemetry-semantic-conventions==0.66b2
 protobuf==7.36.2
 psycopg==3.3.6
 psycopg-binary==3.3.6
+pycparser==3.12
 pydantic==2.14.2
 pydantic-extra-types==2.11.1
 pydantic-settings==2.16.2

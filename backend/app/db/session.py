@@ -1,12 +1,11 @@
-import os
+from collections.abc import Iterator
 
-from dotenv import load_dotenv
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import Session, sessionmaker
 
-load_dotenv()
+from app.core.config import get_settings
 
-DATABASE_URL = os.environ["DATABASE_URL"]
+DATABASE_URL = get_settings().database_url
 
 engine = create_engine(
     DATABASE_URL,
@@ -15,5 +14,12 @@ engine = create_engine(
 
 SessionLocal = sessionmaker(
     bind=engine,
-    autoflush=False
+    autoflush=False,
+    expire_on_commit=False
 )
+
+
+def get_db() -> Iterator[Session]:
+    """Session SQLAlchemy d'une requête : toute écriture non validée est annulée à la fermeture."""
+    with SessionLocal() as db:
+        yield db
