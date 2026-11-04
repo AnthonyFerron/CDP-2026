@@ -788,13 +788,20 @@ def build_crypt_underground(scene, rng):
     tilt_c = math.degrees(math.atan2(rise_c, run_c))
     length_c = math.hypot(run_c, rise_c)
     middle = ((CRYPT_HEIGHT + top) / 2, (low_end + high_end) / 2)
-    scene.add("modular_dungeon_kit/template-floor", (0.0, middle[0], middle[1]), 0.0, (0.75, 1.0, length_c / 4.0), tilt=180.0 - tilt_c)
+    scene.add("modular_dungeon_kit/template-floor", (0.0, middle[0], middle[1]), 0.0, (1.0, 1.0, length_c / 4.0), tilt=180.0 - tilt_c)
     scene.add_box((0.0, middle[0] + 0.3 * math.cos(math.radians(tilt_c)), middle[1] - 0.3 * math.sin(math.radians(tilt_c))),
                   (3.6, 0.6, length_c + 0.3), 0.0, tilt=-tilt_c)
     flat_end = lz + 2.0
     flat_length = flat_end - high_end
-    scene.add("modular_dungeon_kit/template-floor", (0.0, top, (high_end + flat_end) / 2), 0.0, (0.75, 1.0, flat_length / 4.0), tilt=180.0)
+    scene.add("modular_dungeon_kit/template-floor", (0.0, top, (high_end + flat_end) / 2), 0.0, (1.0, 1.0, flat_length / 4.0), tilt=180.0)
     scene.add_box((0.0, top + 0.3, (high_end + flat_end) / 2), (3.6, 0.6, flat_length + 0.2))
+    # Raccords : le sol du modèle d'escalier commence 30 cm après le bord de l'entrée, sa dernière marche finit 10 cm
+    # avant le palier, et ses murs, bas à leur pied, laissent un jour au-dessus des murs de l'entrée : bandes de dalles
+    # et murs de doublure les referment.
+    scene.add("modular_dungeon_kit/template-floor", (0.0, 0.0, 2.15), 0.0, (0.75, 1.0, 0.1))
+    scene.add("modular_dungeon_kit/template-floor", (0.0, rise, sz + 2.15), 0.0, (0.75, 1.0, 0.1))
+    for side, degrees in ((1, 90.0), (-1, -90.0)):
+        scene.add("modular_dungeon_kit/template-wall", (side * 2.0, CRYPT_HEIGHT, 4.0), degrees, 1.0)
     # Palier du haut, sous la trappe : son sol (qui rejoint la dernière marche), ses murs.
     scene.add("modular_dungeon_kit/template-floor", (lx, ly, lz), 0.0, (0.75, 1.0, 1.0))
     scene.add_box((lx, ly - 0.25, lz - 0.3), (3.6, 0.5, 4.6))
@@ -835,7 +842,7 @@ def build_crypt_underground(scene, rng):
     scene.place("graveyard_kit/altar-stone", (-28.35, 0.0, -12.0), 90.0, 2.0, height=True, coat="dust")
     scene.place("graveyard_kit/candle-multiple", (-28.4, 0.98, -12.75), 0.0, 2.0)
     scene.place("graveyard_kit/candle-multiple", (-28.4, 0.98, -11.25), 50.0, 2.0)
-    scene.place("graveyard_kit/detail-chalice", (-28.3, 0.98, -12.0), 0.0, 2.4)
+    scene.place("graveyard_kit/detail-chalice", (-28.3, 0.98, -12.0), 0.0, 1.3)
     for x, z in ((-28.7, -7.3), (-28.7, -16.7), (-19.3, -7.3), (-19.3, -16.7)):
         scene.place("graveyard_kit/urn-square", (x, 0.0, z), rng.uniform(0, 90), 2.4, height=True, coat="dust")
 
