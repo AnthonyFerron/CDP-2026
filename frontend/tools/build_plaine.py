@@ -593,7 +593,8 @@ def bookcase(scene, rng, model, wall_point, inward, fill=0.85, gaps=(), searched
                    for offset in reserved):
                 u += step
                 continue
-            choice = rng.random()
+            # Une rangée pleine autour d'un livre à fouiller : il s'en distingue en dépassant d'elle.
+            choice = rng.random() * (0.8 if reserved else 1.0)
             # Le dessus du meuble n'a que quelques piles.
             if shelf == len(SHELVES[model]) - 1 and choice < 0.6:
                 u += step
@@ -644,6 +645,16 @@ def candle(scene, x, y, z, height=0.22, radius=0.035):
     """Bougie de cire et sa flamme."""
     scene.add_shape("cylinder", (radius, height), WAX, (x, y + height / 2, z))
     scene.add_shape("sphere", (radius * 0.9,), FLAME, (x, y + height + radius * 0.8, z), emission=4.0)
+
+
+def candle_stand(scene, x, z, y=0.0):
+    """Chandelier sur pied : un socle, un fût de fer, une coupelle et un cierge allumé."""
+    scene.add_shape("cylinder", (0.17, 0.05), IRON, (x, y + 0.025, z), roughness=0.5)
+    scene.add_shape("cone", (0.09, 0.03, 0.22), IRON, (x, y + 0.16, z), roughness=0.5)
+    scene.add_shape("cylinder", (0.025, 1.3), IRON, (x, y + 0.92, z), roughness=0.5)
+    scene.add_shape("cylinder", (0.12, 0.03), IRON, (x, y + 1.585, z), roughness=0.5)
+    candle(scene, x, y + 1.6, z, 0.26, 0.045)
+    scene.add_box((x, y + 0.85, z), (0.4, 1.7, 0.4))
 
 
 def chandelier(scene, x, z, ceiling=WALL_HEIGHT, drop=0.9, radius=0.75):
@@ -787,6 +798,26 @@ def wall_banner(scene, x, z, inward, y=1.0, color="red"):
               degrees, scale)
 
 
+def soldiers_camp(scene, rng, cx, cz, heading):
+    """Campement des soldats, comme camp() mais espacé pour que rien ne se traverse : feu éteint, deux tentes, bois,
+    coffre (le journal du soldat y est posé, dans plaine.tscn), tonneaux, caisse et charrette couchée."""
+
+    def at(u, v):
+        c, s = math.cos(math.radians(heading)), math.sin(math.radians(heading))
+        return (cx + c * u + s * v, 0.0, cz - s * u + c * v)
+
+    furniture(scene, "nature_kit/campfire_stones", at(0.0, 0.0), heading, 3.0)
+    for u, yaw in ((-3.6, 60.0), (3.4, -50.0)):
+        furniture(scene, "nature_kit/tent_detailedOpen", at(u, -2.6), heading + yaw, 3.6, height=2.0)
+    for u, v in ((-1.6, 2.6), (1.2, 3.4)):
+        furniture(scene, "nature_kit/log_stack", at(u, v), heading + rng.uniform(60, 120), 2.6, height=0.9)
+    furniture(scene, "survival_kit/chest", at(2.6, 1.2), heading + 20.0, 3.4, height=0.8)
+    for u, v in ((-4.0, 0.9), (-5.0, 2.4)):
+        furniture(scene, "mini_dungeon/barrel", at(u, v), rng.uniform(0, 360), 2.6, height=1.2)
+    furniture(scene, "survival_kit/box-large", at(5.6, 1.4), heading + 70.0, 3.6, height=0.9)
+    furniture(scene, "fantasy_town_kit/cart", at(-1.0, -6.4), heading + 100.0, 2.8, height=1.5, roll=90.0)
+
+
 def build_ruins():
     """Ruines de la bibliothèque, à la surface : la façade regarde le portail, vers +Z."""
     scene = Scene("PlaineRuins")
@@ -826,9 +857,9 @@ def build_ruins():
 
     # Gravats, à l'intérieur comme devant le bâtiment : la collision suit la boîte du modèle.
     for model, position, degrees, scale in (
-        ("rock-large", (-11.5, 0.0, 4.0), 30.0, 2.2),
+        ("rock-large", (-12.6, 0.0, 3.6), 30.0, 2.2),
         ("rock-wide", (12.0, 0.0, 2.0), 110.0, 2.4),
-        ("rock-large", (6.5, 0.0, -11.0), 200.0, 1.8),
+        ("rock-large", (6.5, 0.0, -9.4), 200.0, 1.8),
         ("rock-wide", (-3.0, 0.0, -2.0), 70.0, 1.6),
         ("rock-large", (5.0, 0.0, 3.0), 160.0, 1.4),
     ):
@@ -844,7 +875,7 @@ def build_ruins():
     ):
         furniture(scene, "furniture_kit/bookcaseClosedWide", position, degrees, 3.2, height=2.5, tilt=tilt)
     # Campement des soldats envoyés défendre la bibliothèque, sur le replat au bord du chemin.
-    camp(scene, random.Random(7), 14.0, 42.0, -30.0)
+    soldiers_camp(scene, random.Random(7), 14.0, 42.0, -30.0)
     for position, degrees in (((-3.0, 0.0, 12.5), 30.0), ((4.5, 0.0, 13.5), 200.0), ((-9.0, 0.0, 12.5), 80.0)):
         furniture(scene, "furniture_kit/books", position, degrees, 5.0, height=0.5)
     return scene
@@ -965,10 +996,10 @@ def watchtower(scene, rng):
     scene.add("castle_kit/tower-square-base", (bx, 0.0, bz), 8.0, scale)
     scene.add("castle_kit/tower-square-mid-open", (bx, 1.01 * scale, bz), 8.0, scale, tilt=4.0)
     scene.add_box((bx, 1.01 * scale, bz), (3.3, 2.02 * scale, 3.3), 8.0)
-    # Le sommet est tombé du côté du chemin, le toit de bois un peu plus loin.
-    furniture(scene, "castle_kit/tower-square-top", (tx + 3.2, 0.0, tz - 2.0), 30.0, scale, height=1.0, tilt=-75.0)
-    furniture(scene, "castle_kit/tower-hexagon-top-wood", (tx - 3.4, 0.0, tz - 2.6), 140.0, 3.0, height=1.5,
-              roll=100.0)
+    # Le crénelage du sommet gît à plat du côté du chemin, la guérite de bois un peu plus loin, de travers.
+    furniture(scene, "castle_kit/tower-square-top", (tx + 3.6, 0.0, tz - 1.6), 30.0, 3.0, height=1.0, roll=6.0)
+    furniture(scene, "castle_kit/tower-hexagon-top-wood", (tx - 3.0, 0.0, tz - 2.8), 140.0, 3.0, height=1.4,
+              roll=14.0)
     for position, model, degrees, scale_rock in (((tx + 2.4, tz + 1.6), "rocks-large", 20.0, 2.4),
                                                  ((tx - 2.8, tz + 2.6), "rocks-small", 70.0, 2.2),
                                                  ((tx + 0.8, tz - 2.8), "rocks-small", 150.0, 1.8)):
@@ -1130,18 +1161,18 @@ def passage(scene):
 # Livres à fouiller, nœuds de plaine.tscn : rayonnage (mur, salle, place), tablette et décalage le long du meuble.
 # Leur position est imprimée par le script, pour la reporter dans la scène.
 SEARCHABLE_BOOKS = {
-    "West03": ("west", 0, 0, 1, 0.5),
-    "West09": ("west", 0, 2, 2, -0.4),
-    "West15": ("west", 1, 0, 1, 0.55),
-    "West21": ("west", 1, 2, 2, 0.45),
-    "West27": ("west", 2, 0, 2, -0.5),
-    "West33": ("west", 2, 2, 1, 0.3),
-    "East06": ("east", 0, 1, 1, 0.4),
-    "East09": ("east", 0, 2, 2, -0.3),
-    "East18": ("east", 1, 1, 1, -0.35),
-    "East21": ("east", 1, 2, 2, 0.4),
-    "East30": ("east", 2, 1, 2, -0.4),
-    "East33": ("east", 2, 2, 1, 0.35),
+    "West03": ("west", 0, 0, 1, 0.3),
+    "West09": ("west", 0, 2, 2, -0.3),
+    "West15": ("west", 1, 0, 1, 0.35),
+    "West21": ("west", 1, 2, 2, 0.25),
+    "West27": ("west", 2, 0, 2, -0.35),
+    "West33": ("west", 2, 2, 1, 0.2),
+    "East06": ("east", 0, 1, 1, 0.3),
+    "East09": ("east", 0, 2, 2, -0.2),
+    "East18": ("east", 1, 1, 1, -0.3),
+    "East21": ("east", 1, 2, 2, 0.3),
+    "East30": ("east", 2, 1, 2, -0.3),
+    "East33": ("east", 2, 2, 1, 0.25),
 }
 
 
@@ -1215,11 +1246,9 @@ def build_interior():
                 bookcase(scene, rng, wide, (x, z), inward, fill=rng.uniform(0.7, 0.92), gaps=gaps, searched=found)
                 for name, slot in zip(names, found):
                     searched[name] = slot
-            # Entre deux rayonnages, une lanterne posée sur un pied de fer.
+            # Entre deux rayonnages, un chandelier de fer sur pied.
             for between in (-4.25, -7.75):
-                z = -room_length * room + between
-                px = x + inward[0] * 0.45
-                furniture(scene, "graveyard_kit/lightpost-single", (px, 0.0, z), facing(inward), 1.5, height=1.9)
+                candle_stand(scene, x + inward[0] * 0.4, -room_length * room + between)
 
     # Rayonnages des murs de travers, de part et d'autre des passages.
     for x, z, inward in ((3.2, -0.25, (0, -1)), (-3.2, -0.25, (0, -1)),
