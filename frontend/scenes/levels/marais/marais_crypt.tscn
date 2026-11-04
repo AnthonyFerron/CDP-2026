@@ -3,25 +3,26 @@
 [ext_resource type="PackedScene" path="res://assets/models/kenney/modular_dungeon_kit/template-floor.glb" id="1_model"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/modular_dungeon_kit/template-wall.glb" id="2_model"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/modular_dungeon_kit/stairs.glb" id="3_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/column.glb" id="4_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/banner.glb" id="5_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/candle-multiple.glb" id="6_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/fire-basket.glb" id="7_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/coffin.glb" id="8_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/candle.glb" id="9_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/flag-banner-long.glb" id="10_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/altar-stone.glb" id="11_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/detail-chalice.glb" id="12_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/urn-square.glb" id="13_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_arena/statue.glb" id="14_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/lantern-candle.glb" id="15_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/coffin-old.glb" id="16_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/gravestone-debris.glb" id="17_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/stones.glb" id="18_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/urn-round.glb" id="19_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/shield-round.glb" id="20_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/weapon-spear.glb" id="21_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/character-skeleton.glb" id="22_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/modular_dungeon_kit/template-wall-top.glb" id="4_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/column.glb" id="5_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/banner.glb" id="6_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/candle-multiple.glb" id="7_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/fire-basket.glb" id="8_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/coffin.glb" id="9_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/candle.glb" id="10_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/castle_kit/flag-banner-long.glb" id="11_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/altar-stone.glb" id="12_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/detail-chalice.glb" id="13_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/urn-square.glb" id="14_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_arena/statue.glb" id="15_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/lantern-candle.glb" id="16_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/coffin-old.glb" id="17_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/gravestone-debris.glb" id="18_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/stones.glb" id="19_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/urn-round.glb" id="20_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/shield-round.glb" id="21_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/weapon-spear.glb" id="22_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/character-skeleton.glb" id="23_model"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
 size = Vector3(4, 0.5, 4)
@@ -672,265 +673,271 @@ transform = Transform3D(0.75, 0, 0, 0, 1, 0, 0, 0, 0.1, 0, 0, 2.15)
 [node name="template_floor_193" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(0.75, 0, 0, 0, 1, 0, 0, 0, 0.1, 0, 4.05, 10.35)
 
-[node name="template_wall_194" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 2, 4.15, 4)
+[node name="template_wall_top_194" parent="Models" instance=ExtResource("4_model")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 2.25, 0, 4)
 
-[node name="template_wall_195" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -2, 4.15, 4)
+[node name="template_wall_top_195" parent="Models" instance=ExtResource("4_model")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 2.25, 4.15, 4)
 
-[node name="template_floor_196" parent="Models" instance=ExtResource("1_model")]
+[node name="template_wall_top_196" parent="Models" instance=ExtResource("4_model")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -2.25, 0, 4)
+
+[node name="template_wall_top_197" parent="Models" instance=ExtResource("4_model")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -2.25, 4.15, 4)
+
+[node name="template_floor_198" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(0.75, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.05, 12.4)
 
-[node name="template_wall_197" parent="Models" instance=ExtResource("2_model")]
+[node name="template_wall_199" parent="Models" instance=ExtResource("2_model")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 1.9, 4.05, 12.4)
 
-[node name="template_wall_198" parent="Models" instance=ExtResource("2_model")]
+[node name="template_wall_200" parent="Models" instance=ExtResource("2_model")]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -1.9, 4.05, 12.4)
 
-[node name="template_wall_199" parent="Models" instance=ExtResource("2_model")]
+[node name="template_wall_201" parent="Models" instance=ExtResource("2_model")]
 transform = Transform3D(0.95, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.05, 14.4)
 
-[node name="dust_column_200" parent="Models" instance=ExtResource("4_model")]
+[node name="dust_column_202" parent="Models" instance=ExtResource("5_model")]
 transform = Transform3D(3.6, 0, 0, 0, 3.6, 0, 0, 0, 3.6, -7, 0, -5)
 
-[node name="dust_column_201" parent="Models" instance=ExtResource("4_model")]
+[node name="dust_column_203" parent="Models" instance=ExtResource("5_model")]
 transform = Transform3D(3.6, 0, 0, 0, 3.6, 0, 0, 0, 3.6, -7, 0, -19)
 
-[node name="dust_column_202" parent="Models" instance=ExtResource("4_model")]
+[node name="dust_column_204" parent="Models" instance=ExtResource("5_model")]
 transform = Transform3D(3.6, 0, 0, 0, 3.6, 0, 0, 0, 3.6, 7, 0, -5)
 
-[node name="dust_column_203" parent="Models" instance=ExtResource("4_model")]
+[node name="dust_column_205" parent="Models" instance=ExtResource("5_model")]
 transform = Transform3D(3.6, 0, 0, 0, 3.6, 0, 0, 0, 3.6, 7, 0, -19)
 
-[node name="banner_204" parent="Models" instance=ExtResource("5_model")]
+[node name="banner_206" parent="Models" instance=ExtResource("6_model")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -5, 0.71, -19.94)
 
-[node name="banner_205" parent="Models" instance=ExtResource("5_model")]
+[node name="banner_207" parent="Models" instance=ExtResource("6_model")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 5, 0.71, -19.94)
 
-[node name="candle_multiple_206" parent="Models" instance=ExtResource("6_model")]
+[node name="candle_multiple_208" parent="Models" instance=ExtResource("7_model")]
 transform = Transform3D(2.96796, 0, -0.43726, 0, 3, 0, 0.43726, 0, 2.96796, -4.22749, 0, -8.01921)
 
-[node name="candle_multiple_207" parent="Models" instance=ExtResource("6_model")]
+[node name="candle_multiple_209" parent="Models" instance=ExtResource("7_model")]
 transform = Transform3D(2.93308, 0, -0.63012, 0, 3, 0, 0.63012, 0, 2.93308, 4.17382, 0, -8.02097)
 
-[node name="candle_multiple_208" parent="Models" instance=ExtResource("6_model")]
+[node name="candle_multiple_210" parent="Models" instance=ExtResource("7_model")]
 transform = Transform3D(2.18556, 0, 2.05507, 0, 3, 0, -2.05507, 0, 2.18556, -4.23213, 0, -15.9904)
 
-[node name="candle_multiple_209" parent="Models" instance=ExtResource("6_model")]
+[node name="candle_multiple_211" parent="Models" instance=ExtResource("7_model")]
 transform = Transform3D(2.35933, 0, 1.85298, 0, 3, 0, -1.85298, 0, 2.35933, 4.16714, 0, -15.9933)
 
-[node name="fire_basket_210" parent="Models" instance=ExtResource("7_model")]
+[node name="fire_basket_212" parent="Models" instance=ExtResource("8_model")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -8.4, 0, -20.6)
 
-[node name="fire_basket_211" parent="Models" instance=ExtResource("7_model")]
+[node name="fire_basket_213" parent="Models" instance=ExtResource("8_model")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 8.4, 0, -20.6)
 
-[node name="dust_coffin_212" parent="Models" instance=ExtResource("8_model")]
+[node name="dust_coffin_214" parent="Models" instance=ExtResource("9_model")]
 transform = Transform3D(0, 0, 3, 0, 3, 0, -3, 0, 0, -4.3, 0, -3.915)
 
-[node name="candle_213" parent="Models" instance=ExtResource("9_model")]
+[node name="candle_215" parent="Models" instance=ExtResource("10_model")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -3.7, 0.96, -3.9)
 
-[node name="dust_coffin_214" parent="Models" instance=ExtResource("8_model")]
+[node name="dust_coffin_216" parent="Models" instance=ExtResource("9_model")]
 transform = Transform3D(0, 0, 3, 0, 3, 0, -3, 0, 0, 4.3, 0, -3.915)
 
-[node name="candle_215" parent="Models" instance=ExtResource("9_model")]
+[node name="candle_217" parent="Models" instance=ExtResource("10_model")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 4.9, 0.96, -3.9)
 
-[node name="banner_216" parent="Models" instance=ExtResource("5_model")]
+[node name="banner_218" parent="Models" instance=ExtResource("6_model")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -14, 0.71, -11.94)
 
-[node name="banner_217" parent="Models" instance=ExtResource("5_model")]
+[node name="banner_219" parent="Models" instance=ExtResource("6_model")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 14, 0.71, -11.94)
 
-[node name="candle_multiple_218" parent="Models" instance=ExtResource("6_model")]
+[node name="candle_multiple_220" parent="Models" instance=ExtResource("7_model")]
 transform = Transform3D(-0.49906, 0, -2.14265, 0, 2.2, 0, 2.14265, 0, -0.49906, -1.0343, 0, 1.53107)
 
-[node name="candle_multiple_219" parent="Models" instance=ExtResource("6_model")]
+[node name="candle_multiple_221" parent="Models" instance=ExtResource("7_model")]
 transform = Transform3D(-1.8621, 0, -1.17158, 0, 2.2, 0, 1.17158, 0, -1.8621, 1.07448, 0, 1.54759)
 
-[node name="flag_banner_long_220" parent="Models" instance=ExtResource("10_model")]
+[node name="flag_banner_long_222" parent="Models" instance=ExtResource("11_model")]
 transform = Transform3D(0, 0, 1.25, 0, 1.25, 0, -1.25, 0, 0, -21.2, 0.95, -6.46)
 
-[node name="flag_banner_long_221" parent="Models" instance=ExtResource("10_model")]
+[node name="flag_banner_long_223" parent="Models" instance=ExtResource("11_model")]
 transform = Transform3D(0, 0, -1.25, 0, 1.25, 0, 1.25, 0, 0, -21.2, 0.95, -17.54)
 
-[node name="flag_banner_long_222" parent="Models" instance=ExtResource("10_model")]
+[node name="flag_banner_long_224" parent="Models" instance=ExtResource("11_model")]
 transform = Transform3D(0, 0, 1.25, 0, 1.25, 0, -1.25, 0, 0, -26.8, 0.95, -6.46)
 
-[node name="flag_banner_long_223" parent="Models" instance=ExtResource("10_model")]
+[node name="flag_banner_long_225" parent="Models" instance=ExtResource("11_model")]
 transform = Transform3D(0, 0, -1.25, 0, 1.25, 0, 1.25, 0, 0, -26.8, 0.95, -17.54)
 
-[node name="dust_altar_stone_224" parent="Models" instance=ExtResource("11_model")]
+[node name="dust_altar_stone_226" parent="Models" instance=ExtResource("12_model")]
 transform = Transform3D(0, 0, 2, 0, 2, 0, -2, 0, 0, -28.34, 0, -12)
 
-[node name="candle_multiple_225" parent="Models" instance=ExtResource("6_model")]
+[node name="candle_multiple_227" parent="Models" instance=ExtResource("7_model")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -28.42, 0.98, -12.76)
 
-[node name="candle_multiple_226" parent="Models" instance=ExtResource("6_model")]
+[node name="candle_multiple_228" parent="Models" instance=ExtResource("7_model")]
 transform = Transform3D(1.28558, 0, 1.53209, 0, 2, 0, -1.53209, 0, 1.28558, -28.4205, 0.98, -11.2411)
 
-[node name="detail_chalice_227" parent="Models" instance=ExtResource("12_model")]
+[node name="detail_chalice_229" parent="Models" instance=ExtResource("13_model")]
 transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, -28.3, 0.98, -12)
 
-[node name="dust_urn_square_228" parent="Models" instance=ExtResource("13_model")]
+[node name="dust_urn_square_230" parent="Models" instance=ExtResource("14_model")]
 transform = Transform3D(0.39082, 0, 2.36797, 0, 2.4, 0, -2.36797, 0, 0.39082, -28.7, 0, -7.3)
 
-[node name="dust_urn_square_229" parent="Models" instance=ExtResource("13_model")]
+[node name="dust_urn_square_231" parent="Models" instance=ExtResource("14_model")]
 transform = Transform3D(1.66437, 0, 1.72912, 0, 2.4, 0, -1.72912, 0, 1.66437, -28.7, 0, -16.7)
 
-[node name="dust_urn_square_230" parent="Models" instance=ExtResource("13_model")]
+[node name="dust_urn_square_232" parent="Models" instance=ExtResource("14_model")]
 transform = Transform3D(0.82489, 0, 2.25379, 0, 2.4, 0, -2.25379, 0, 0.82489, -19.3, 0, -7.3)
 
-[node name="dust_urn_square_231" parent="Models" instance=ExtResource("13_model")]
+[node name="dust_urn_square_233" parent="Models" instance=ExtResource("14_model")]
 transform = Transform3D(2.16293, 0, 1.04006, 0, 2.4, 0, -1.04006, 0, 2.16293, -19.3, 0, -16.7)
 
-[node name="dust_statue_232" parent="Models" instance=ExtResource("14_model")]
+[node name="dust_statue_234" parent="Models" instance=ExtResource("15_model")]
 transform = Transform3D(0, 0, -2.1, 0, 2.1, 0, 2.1, 0, 0, 28.2, 0, -12)
 
-[node name="lantern_candle_233" parent="Models" instance=ExtResource("15_model")]
+[node name="lantern_candle_235" parent="Models" instance=ExtResource("16_model")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 28.4, 0, -8.6)
 
-[node name="lantern_candle_234" parent="Models" instance=ExtResource("15_model")]
+[node name="lantern_candle_236" parent="Models" instance=ExtResource("16_model")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 28.4, 0, -15.4)
 
-[node name="candle_multiple_235" parent="Models" instance=ExtResource("6_model")]
+[node name="candle_multiple_237" parent="Models" instance=ExtResource("7_model")]
 transform = Transform3D(2.42678, 0, -0.93314, 0, 2.6, 0, 0.93314, 0, 2.42678, 21.5804, 0, -9.02147)
 
-[node name="candle_multiple_236" parent="Models" instance=ExtResource("6_model")]
+[node name="candle_multiple_238" parent="Models" instance=ExtResource("7_model")]
 transform = Transform3D(-0.2548, 0, -2.58748, 0, 2.6, 0, 2.58748, 0, -0.2548, 21.6155, 0, -15.0246)
 
-[node name="candle_multiple_237" parent="Models" instance=ExtResource("6_model")]
+[node name="candle_multiple_239" parent="Models" instance=ExtResource("7_model")]
 transform = Transform3D(-2.59518, 0, -0.15831, 0, 2.6, 0, 0.15831, 0, -2.59518, 26.2267, 0, -8.58861)
 
-[node name="candle_multiple_238" parent="Models" instance=ExtResource("6_model")]
+[node name="candle_multiple_240" parent="Models" instance=ExtResource("7_model")]
 transform = Transform3D(-1.70441, 0, 1.96341, 0, 2.6, 0, -1.96341, 0, -1.70441, 26.2072, 0, -15.3718)
 
-[node name="flag_banner_long_239" parent="Models" instance=ExtResource("10_model")]
+[node name="flag_banner_long_241" parent="Models" instance=ExtResource("11_model")]
 transform = Transform3D(0, 0, 1.2, 0, 1.2, 0, -1.2, 0, 0, 21, 0.95, -6.46)
 
-[node name="flag_banner_long_240" parent="Models" instance=ExtResource("10_model")]
+[node name="flag_banner_long_242" parent="Models" instance=ExtResource("11_model")]
 transform = Transform3D(0, 0, -1.2, 0, 1.2, 0, 1.2, 0, 0, 21, 0.95, -17.54)
 
-[node name="flag_banner_long_241" parent="Models" instance=ExtResource("10_model")]
+[node name="flag_banner_long_243" parent="Models" instance=ExtResource("11_model")]
 transform = Transform3D(0, 0, 1.2, 0, 1.2, 0, -1.2, 0, 0, 27, 0.95, -6.46)
 
-[node name="flag_banner_long_242" parent="Models" instance=ExtResource("10_model")]
+[node name="flag_banner_long_244" parent="Models" instance=ExtResource("11_model")]
 transform = Transform3D(0, 0, -1.2, 0, 1.2, 0, 1.2, 0, 0, 27, 0.95, -17.54)
 
-[node name="dust_coffin_old_243" parent="Models" instance=ExtResource("16_model")]
+[node name="dust_coffin_old_245" parent="Models" instance=ExtResource("17_model")]
 transform = Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, -20.187, 0, 0.6)
 
-[node name="dust_coffin_old_244" parent="Models" instance=ExtResource("16_model")]
+[node name="dust_coffin_old_246" parent="Models" instance=ExtResource("17_model")]
 transform = Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, -20.187, 0, 3.6)
 
-[node name="dust_gravestone_debris_245" parent="Models" instance=ExtResource("17_model")]
+[node name="dust_gravestone_debris_247" parent="Models" instance=ExtResource("18_model")]
 transform = Transform3D(2.25167, 0, 1.3, 0, 2.6, 0, -1.3, 0, 2.25167, -17.095, 0.13, 0.02433)
 
-[node name="dust_stones_246" parent="Models" instance=ExtResource("18_model")]
+[node name="dust_stones_248" parent="Models" instance=ExtResource("19_model")]
 transform = Transform3D(1.69145, 0, 0.61564, 0, 1.8, 0, -0.61564, 0, 1.69145, -16.1915, 0, 3.39692)
 
-[node name="dust_urn_round_247" parent="Models" instance=ExtResource("19_model")]
+[node name="dust_urn_round_249" parent="Models" instance=ExtResource("20_model")]
 transform = Transform3D(1.83851, 1.54269, 0, 0, 0, -2.4, -1.54269, 1.83851, 0, -15.4931, 0.312, 4.35068)
 
-[node name="candle_multiple_248" parent="Models" instance=ExtResource("6_model")]
+[node name="candle_multiple_250" parent="Models" instance=ExtResource("7_model")]
 transform = Transform3D(2.36354, 0, 0.41676, 0, 2.4, 0, -0.41676, 0, 2.36354, -18.2257, 0, 2.19235)
 
-[node name="dust_coffin_old_249" parent="Models" instance=ExtResource("16_model")]
+[node name="dust_coffin_old_251" parent="Models" instance=ExtResource("17_model")]
 transform = Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, 15.613, 0, 3.9)
 
-[node name="shield_round_250" parent="Models" instance=ExtResource("20_model")]
+[node name="shield_round_252" parent="Models" instance=ExtResource("21_model")]
 transform = Transform3D(1.8, 0, 0, 0, 0, 1.8, 0, -1.8, 0, 15.6, 0.61, 3.9)
 
-[node name="dust_coffin_old_251" parent="Models" instance=ExtResource("16_model")]
+[node name="dust_coffin_old_253" parent="Models" instance=ExtResource("17_model")]
 transform = Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, 20.413, 0, 3.9)
 
-[node name="shield_round_252" parent="Models" instance=ExtResource("20_model")]
+[node name="shield_round_254" parent="Models" instance=ExtResource("21_model")]
 transform = Transform3D(1.8, 0, 0, 0, 0, 1.8, 0, -1.8, 0, 20.4, 0.61, 3.9)
 
-[node name="dust_coffin_253" parent="Models" instance=ExtResource("8_model")]
+[node name="dust_coffin_255" parent="Models" instance=ExtResource("9_model")]
 transform = Transform3D(0, 0, 2.8, 0, 2.8, 0, -2.8, 0, 0, 18.6, 0, 0.286)
 
-[node name="weapon_spear_254" parent="Models" instance=ExtResource("21_model")]
+[node name="weapon_spear_256" parent="Models" instance=ExtResource("22_model")]
 transform = Transform3D(0, -0, 2.6, 2.6, 0, 0, -0, 2.6, 0, 18.6, 1.078, -0.48)
 
-[node name="candle_multiple_255" parent="Models" instance=ExtResource("6_model")]
+[node name="candle_multiple_257" parent="Models" instance=ExtResource("7_model")]
 transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, 0, 0, 2.4, 15.976, 0, 0.588)
 
-[node name="candle_multiple_256" parent="Models" instance=ExtResource("6_model")]
+[node name="candle_multiple_258" parent="Models" instance=ExtResource("7_model")]
 transform = Transform3D(2.07846, 0, 1.2, 0, 2.4, 0, -1.2, 0, 2.07846, 20.9732, 0, 1.60161)
 
-[node name="dust_character_skeleton_257" parent="Models" instance=ExtResource("22_model")]
+[node name="dust_character_skeleton_259" parent="Models" instance=ExtResource("23_model")]
 transform = Transform3D(-1.15, -0, 0, 0, 0, 1.15, -0, 1.15, -0, -9.1, 0.7225, -8.4255)
 
-[node name="dust_urn_round_258" parent="Models" instance=ExtResource("19_model")]
+[node name="dust_urn_round_260" parent="Models" instance=ExtResource("20_model")]
 transform = Transform3D(1.68813, 0, 1.07249, 0, 2, 0, -1.07249, 0, 1.68813, -9.1, 1.56, -8.6)
 
-[node name="dust_urn_square_259" parent="Models" instance=ExtResource("13_model")]
+[node name="dust_urn_square_261" parent="Models" instance=ExtResource("14_model")]
 transform = Transform3D(0.55431, 0, 1.92165, 0, 2, 0, -1.92165, 0, 0.55431, -9.1, 1.56, -8)
 
-[node name="dust_urn_round_260" parent="Models" instance=ExtResource("19_model")]
+[node name="dust_urn_round_262" parent="Models" instance=ExtResource("20_model")]
 transform = Transform3D(1.30136, 0, 1.5187, 0, 2, 0, -1.5187, 0, 1.30136, -9.1, 1.56, -7.4)
 
-[node name="dust_character_skeleton_261" parent="Models" instance=ExtResource("22_model")]
+[node name="dust_character_skeleton_263" parent="Models" instance=ExtResource("23_model")]
 transform = Transform3D(-1.15, -0, 0, 0, 0, 1.15, -0, 1.15, -0, -9.1, 0.7225, -16.4255)
 
-[node name="dust_urn_round_262" parent="Models" instance=ExtResource("19_model")]
+[node name="dust_urn_round_264" parent="Models" instance=ExtResource("20_model")]
 transform = Transform3D(0.81586, 0, 1.82602, 0, 2, 0, -1.82602, 0, 0.81586, -9.1, 1.56, -16.6)
 
-[node name="dust_urn_square_263" parent="Models" instance=ExtResource("13_model")]
+[node name="dust_urn_square_265" parent="Models" instance=ExtResource("14_model")]
 transform = Transform3D(0.07689, 0, 1.99852, 0, 2, 0, -1.99852, 0, 0.07689, -9.1, 1.56, -16)
 
-[node name="dust_urn_round_264" parent="Models" instance=ExtResource("19_model")]
+[node name="dust_urn_round_266" parent="Models" instance=ExtResource("20_model")]
 transform = Transform3D(1.36396, 0, 1.46274, 0, 2, 0, -1.46274, 0, 1.36396, -9.1, 1.56, -15.4)
 
-[node name="dust_character_skeleton_265" parent="Models" instance=ExtResource("22_model")]
+[node name="dust_character_skeleton_267" parent="Models" instance=ExtResource("23_model")]
 transform = Transform3D(1.15, 0, 0, 0, 0, 1.15, 0, -1.15, 0, 9.1, 0.7225, -7.5745)
 
-[node name="dust_urn_round_266" parent="Models" instance=ExtResource("19_model")]
+[node name="dust_urn_round_268" parent="Models" instance=ExtResource("20_model")]
 transform = Transform3D(1.88798, 0, 0.65995, 0, 2, 0, -0.65995, 0, 1.88798, 9.1, 1.56, -7.4)
 
-[node name="dust_urn_square_267" parent="Models" instance=ExtResource("13_model")]
+[node name="dust_urn_square_269" parent="Models" instance=ExtResource("14_model")]
 transform = Transform3D(1.99835, 0, 0.08126, 0, 2, 0, -0.08126, 0, 1.99835, 9.1, 1.56, -8)
 
-[node name="dust_urn_round_268" parent="Models" instance=ExtResource("19_model")]
+[node name="dust_urn_round_270" parent="Models" instance=ExtResource("20_model")]
 transform = Transform3D(1.12012, 0, 1.6569, 0, 2, 0, -1.6569, 0, 1.12012, 9.1, 1.56, -8.6)
 
-[node name="dust_character_skeleton_269" parent="Models" instance=ExtResource("22_model")]
+[node name="dust_character_skeleton_271" parent="Models" instance=ExtResource("23_model")]
 transform = Transform3D(-1.15, -0, 0, 0, 0, 1.15, -0, 1.15, -0, 9.1, 0.7225, -16.4255)
 
-[node name="dust_urn_round_270" parent="Models" instance=ExtResource("19_model")]
+[node name="dust_urn_round_272" parent="Models" instance=ExtResource("20_model")]
 transform = Transform3D(0.83011, 0, 1.81959, 0, 2, 0, -1.81959, 0, 0.83011, 9.1, 1.56, -15.4)
 
-[node name="dust_urn_square_271" parent="Models" instance=ExtResource("13_model")]
+[node name="dust_urn_square_273" parent="Models" instance=ExtResource("14_model")]
 transform = Transform3D(1.02969, 0, 1.71457, 0, 2, 0, -1.71457, 0, 1.02969, 9.1, 1.56, -16)
 
-[node name="dust_urn_round_272" parent="Models" instance=ExtResource("19_model")]
+[node name="dust_urn_round_274" parent="Models" instance=ExtResource("20_model")]
 transform = Transform3D(1.01292, 0, 1.72453, 0, 2, 0, -1.72453, 0, 1.01292, 9.1, 1.56, -16.6)
 
-[node name="dust_character_skeleton_273" parent="Models" instance=ExtResource("22_model")]
+[node name="dust_character_skeleton_275" parent="Models" instance=ExtResource("23_model")]
 transform = Transform3D(0, -1.15, 0, 0, 0, 1.15, -1.15, -0, 0, -17.5745, 0.7225, 5.1)
 
-[node name="dust_urn_round_274" parent="Models" instance=ExtResource("19_model")]
+[node name="dust_urn_round_276" parent="Models" instance=ExtResource("20_model")]
 transform = Transform3D(1.99191, 0, 0.1797, 0, 2, 0, -0.1797, 0, 1.99191, -17.4, 1.56, 5.1)
 
-[node name="dust_urn_square_275" parent="Models" instance=ExtResource("13_model")]
+[node name="dust_urn_square_277" parent="Models" instance=ExtResource("14_model")]
 transform = Transform3D(1.9264, 0, 0.53759, 0, 2, 0, -0.53759, 0, 1.9264, -18, 1.56, 5.1)
 
-[node name="dust_urn_round_276" parent="Models" instance=ExtResource("19_model")]
+[node name="dust_urn_round_278" parent="Models" instance=ExtResource("20_model")]
 transform = Transform3D(1.91228, 0, 0.58583, 0, 2, 0, -0.58583, 0, 1.91228, -18.6, 1.56, 5.1)
 
-[node name="dust_character_skeleton_277" parent="Models" instance=ExtResource("22_model")]
+[node name="dust_character_skeleton_279" parent="Models" instance=ExtResource("23_model")]
 transform = Transform3D(0, -1.15, 0, 0, 0, 1.15, -1.15, -0, 0, 18.4255, 0.7225, 5.1)
 
-[node name="dust_urn_round_278" parent="Models" instance=ExtResource("19_model")]
+[node name="dust_urn_round_280" parent="Models" instance=ExtResource("20_model")]
 transform = Transform3D(1.09492, 0, 1.67366, 0, 2, 0, -1.67366, 0, 1.09492, 18.6, 1.56, 5.1)
 
-[node name="dust_urn_square_279" parent="Models" instance=ExtResource("13_model")]
+[node name="dust_urn_square_281" parent="Models" instance=ExtResource("14_model")]
 transform = Transform3D(1.2356, 0, 1.57267, 0, 2, 0, -1.57267, 0, 1.2356, 18, 1.56, 5.1)
 
-[node name="dust_urn_round_280" parent="Models" instance=ExtResource("19_model")]
+[node name="dust_urn_round_282" parent="Models" instance=ExtResource("20_model")]
 transform = Transform3D(1.05069, 0, 1.70178, 0, 2, 0, -1.70178, 0, 1.05069, 17.4, 1.56, 5.1)
 
 [node name="Collision" type="StaticBody3D" parent="."]

@@ -15,10 +15,10 @@ const COLOR_IDLE := Color(1.0, 0.82, 0.45)
 const COLOR_WRONG := Color(1.0, 0.25, 0.15)
 const COLOR_RIGHT := Color(0.45, 1.0, 0.55)
 ## Panneau, en coordonnées de référence (1920 × 1080), à droite : le mécanisme en 3D reste visible à gauche.
-const FRAME_RECT := Rect2(1010, 96, 860, 960)
-const DIAL_CENTER := Vector2(430, 590)
+const FRAME_RECT := Rect2(1010, 140, 860, 916)
+const DIAL_CENTER := Vector2(430, 565)
 const DIAL_INNER := 62.0
-const DIAL_RING := 30.0
+const DIAL_RING := 25.0
 const NUMERALS := ["I", "II", "III", "IV", "V"]
 const COLUMN_LEFT := 55.0
 const COLUMN_STEP := 150.0
@@ -150,20 +150,20 @@ func _build() -> void:
 	_feedback.name = "Feedback"
 	_feedback.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_feedback.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	Ornate.place(_frame, _feedback, Vector2(50, 826), Vector2(FRAME_RECT.size.x - 100, 38))
+	Ornate.place(_frame, _feedback, Vector2(50, 782), Vector2(FRAME_RECT.size.x - 100, 38))
 	_own(_feedback)
 	_validate = Ornate.HexButton.new()
 	_validate.name = "Validate"
 	_validate.caption = "Valider"
 	_validate.highlighted = true
 	_validate.font_size = 38
-	Ornate.place(_frame, _validate, Vector2(70, 866), Vector2(340, 80))
+	Ornate.place(_frame, _validate, Vector2(70, 822), Vector2(340, 80))
 	_own(_validate)
 	_close = Ornate.HexButton.new()
 	_close.name = "Close"
 	_close.caption = "Se relever"
 	_close.font_size = 34
-	Ornate.place(_frame, _close, Vector2(450, 866), Vector2(340, 80))
+	Ornate.place(_frame, _close, Vector2(450, 822), Vector2(340, 80))
 	_own(_close)
 
 

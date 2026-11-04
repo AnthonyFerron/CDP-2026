@@ -20,6 +20,9 @@ const AMBIENCE_DB := -6.0
 ## Teinte des dalles de la crypte, et le shader qui la leur donne.
 const CRYPT_STONE := Color(0.6, 0.63, 0.64)
 const STONE_SHADER := preload("res://scenes/levels/marais/crypt_stone.gdshader")
+## Lumière d'ambiance de la crypte : sous terre, elle vient des cierges et non du ciel de nuit. Une faible lueur
+## chaude, pour qu'aucune face tournée à l'opposé des lumières ne reste d'un noir d'encre.
+const CRYPT_AMBIENT := Color(0.36, 0.3, 0.25)
 ## Direction d'où vient la lumière de la lune (axe +Z du nœud Moon).
 const MOON_DIRECTION := Vector3(-0.5, 0.7071, 0.5)
 
@@ -52,6 +55,7 @@ var _rumble: AudioStreamPlayer3D
 @onready var _ghost: Node3D = $Ghost
 @onready var _moon: DirectionalLight3D = $Moon
 @onready var _environment: Environment = $WorldEnvironment.environment
+@onready var _sky_ambient: Color = _environment.ambient_light_color
 @onready var _ambience: AudioStreamPlayer = $Ambience
 @onready var _crypt_ambience: AudioStreamPlayer = $CryptAmbience
 @onready var _door: Node3D = $CryptDoor
@@ -212,6 +216,8 @@ func _travel(inside: bool) -> void:
 func _apply_location() -> void:
 	_moon.visible = not _inside
 	_environment.fog_enabled = not _inside
+	_environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR if _inside else Environment.AMBIENT_SOURCE_SKY
+	_environment.ambient_light_color = CRYPT_AMBIENT if _inside else _sky_ambient
 	_fireflies.emitting = not _inside
 	_mist.emitting = not _inside
 	for bank in _mist_banks:
@@ -271,7 +277,9 @@ func _on_mechanism_validated(correct: bool) -> void:
 	_mechanism.set_glow(Color(0.35, 1.0, 0.5), 3.0)
 	_mechanism_interactable.enabled = false
 	_close_mechanism()
-	_hud.show_message("Les cercles s'illuminent de vert. Un grondement : dans la chambre de l'est, le lourd couvercle d'un tombeau glisse…")
+	# Le message attend que le panneau des cercles se soit effacé (1,5 s) : il ne passe pas sur son titre.
+	get_tree().create_timer(1.5).timeout.connect(_hud.show_message.bind(
+		"Les cercles s'illuminent de vert. Un grondement : dans la chambre de l'est, le lourd couvercle d'un tombeau glisse…"))
 	_tomb_sound.stream = door_sound
 	_tomb_sound.position = Vector3.UP
 	_tomb_sound.play()

@@ -797,11 +797,14 @@ def build_crypt_underground(scene, rng):
     scene.add_box((0.0, top + 0.3, (high_end + flat_end) / 2), (3.6, 0.6, flat_length + 0.2))
     # Raccords : le sol du modèle d'escalier commence 30 cm après le bord de l'entrée, sa dernière marche finit 10 cm
     # avant le palier, et ses murs, bas à leur pied, laissent un jour au-dessus des murs de l'entrée : bandes de dalles
-    # et murs de doublure les referment.
+    # et murs de doublure les referment. Ces murs sont des pans simples (template-wall-top : le mur ordinaire du kit
+    # porte une bande de sol de 2 m à son pied, qui flottait au milieu de la cage), montés depuis le sol en retrait
+    # derrière ceux de l'escalier : on ne voit d'eux que la pierre de leur face.
     scene.add("modular_dungeon_kit/template-floor", (0.0, 0.0, 2.15), 0.0, (0.75, 1.0, 0.1))
     scene.add("modular_dungeon_kit/template-floor", (0.0, rise, sz + 2.15), 0.0, (0.75, 1.0, 0.1))
     for side, degrees in ((1, 90.0), (-1, -90.0)):
-        scene.add("modular_dungeon_kit/template-wall", (side * 2.0, CRYPT_HEIGHT, 4.0), degrees, 1.0)
+        for base in (0.0, CRYPT_HEIGHT):
+            scene.add("modular_dungeon_kit/template-wall-top", (side * 2.25, base, 4.0), degrees, 1.0)
     # Palier du haut, sous la trappe : son sol (qui rejoint la dernière marche), ses murs.
     scene.add("modular_dungeon_kit/template-floor", (lx, ly, lz), 0.0, (0.75, 1.0, 1.0))
     scene.add_box((lx, ly - 0.25, lz - 0.3), (3.6, 0.5, 4.6))
