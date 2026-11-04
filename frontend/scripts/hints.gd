@@ -12,7 +12,7 @@ const ZONE_HINTS := {
 	],
 	&"desert": [
 		"Des runes sont posées dans les salles du monument, parmi les débris au-dehors et dans la cave. D'autres sont enfouies : maintenez E devant un tas de sable pour le dégager. Certains tas sont vides.",
-		"Dans la cave, chaque mur porte un algorithme incomplet. L'un répète une action tant que la jarre n'est pas pleine ; l'autre pose une question avant d'ouvrir la porte.",
+		"Dans la cave, chaque mur porte un algorithme incomplet. L'un répète une action tant que la jarre n'est pas pleine ; l'autre pose une question avant d'ouvrir la porte. Les écrits laissés au monument, à l'oasis, aux tombes et sur le pupitre de la cave aident à les compléter.",
 		"Deux runes ne servent à aucun des deux algorithmes : ce sont des leurres. Une boucle s'ouvre par « TANT QUE », une condition par « SI » et se poursuit par « SINON ».",
 	],
 	&"marais": [

@@ -348,7 +348,8 @@ transform = Transform3D(0.819152, -0.32899, 0.469846, 0, 0.819152, 0.573576, -0.
 light_color = Color(1, 0.84, 0.6, 1)
 light_energy = 1.35
 shadow_enabled = true
-directional_shadow_max_distance = 80.0
+directional_shadow_mode = 1
+directional_shadow_max_distance = 55.0
 
 [node name="Exterior" type="Node3D" parent="."]
 
@@ -805,6 +806,82 @@ board_size = Vector2(2.1, 1.1)
 board_height = 1.95
 line_height = 0.11
 serif = false
+
+[node name="MonumentPlaque" type="Node3D" parent="Exterior/Clues"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -10.5, 0, 6)
+script = ExtResource("12_readable")
+title = "Plaque du monument"
+body = "Monument des anciens bâtisseurs de Codia. Ici, les maîtres enseignaient l'art des instructions : décomposer un ouvrage en gestes simples, les écrire dans l'ordre où ils s'accomplissent, répéter un geste tant que l'ouvrage l'exige, et choisir un geste selon la réponse à une question. Leurs leçons furent gravées sur des runes et gardées dans les archives, sous la salle des colonnes."
+prompt = "Lire la plaque"
+radius = 2.6
+
+[node name="Board" type="Node3D" parent="Exterior/Clues/MonumentPlaque"]
+script = ExtResource("14_sign")
+text = "MONUMENT DES ANCIENS BÂTISSEURS
+Ici l'on enseignait l'art des instructions"
+style = 1
+mount = 1
+board_size = Vector2(1.8, 0.95)
+board_height = 1.45
+
+[node name="EliasJournal" type="Node3D" parent="Exterior/Clues"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 34.2, 0.555, 4.75)
+script = ExtResource("12_readable")
+title = "Le journal d'Elias"
+body = "Journal d'Elias, marchand d'étoffes. Nous avons quitté Vibelandia à la nuit tombée : ses soldats prenaient les chariots pour la guerre contre Codia, et nous ne voulions que vendre notre drap. Trois jours de piste dans le désert de Pythania. À l'oasis, le puits donne encore un peu d'eau, seau après seau. Le vieux puisatier nous a montré la jarre sacrée : on recommence le même geste aussi longtemps qu'elle n'est pas pleine, et l'on ne porte au temple qu'une jarre pleine. Nous repartons demain vers le monument."
+prompt = "Lire le journal"
+radius = 2.4
+
+[node name="Board" type="Node3D" parent="Exterior/Clues/EliasJournal"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0)
+script = ExtResource("14_sign")
+text = "Journal d'Elias"
+style = 2
+mount = 1
+board_size = Vector2(0.8, 0.5)
+board_height = 0
+serif = false
+
+[node name="JoranLetter" type="Node3D" parent="Exterior/Clues"]
+transform = Transform3D(6.12323e-17, 0, 1, 0, 1, 0, -1, 0, 6.12323e-17, -20, 0, 46.5)
+script = ExtResource("12_readable")
+title = "La lettre de Joran"
+body = "Lettre glissée sous la planche. « Ma petite Lise, si cette lettre te parvient, sache que nous avons fui Vibelandia avant que la guerre ne nous prenne tout. La tempête nous a surpris près du monument ; trois des nôtres reposent ici. Le guide a ramassé les runes qui brillaient dans le sable, mais il en a mis deux de côté : elles ne répondaient à aucun des murs de la cave, disait-il, et les anciens ne gravaient rien d'inutile. Garde courage. Ton père, Joran. »"
+prompt = "Lire la lettre"
+radius = 2.4
+
+[node name="Board" type="Node3D" parent="Exterior/Clues/JoranLetter"]
+script = ExtResource("14_sign")
+text = "Caravane de Joran
+Qu'ils reposent en paix"
+style = 0
+mount = 0
+board_size = Vector2(1.3, 0.75)
+board_height = 1.1
+
+[node name="ApprenticeTablet" type="Node3D" parent="Exterior/Clues"]
+transform = Transform3D(6.12323e-17, 0, -1, 0, 1, 0, 1, 0, 6.12323e-17, 14.6, 0, -13.6)
+script = ExtResource("12_readable")
+title = "La tablette de l'apprenti"
+body = "Tablette d'argile d'un apprenti bâtisseur. L'élève avait gravé : « Pour chaque grain de sable, compter un. Fermer la porte à clé. » Le maître a rayé les deux lignes et gravé dessous : « Compter les grains ne remplit aucune jarre, et une porte que l'on ferme ne répond à personne. Ne grave que ce que l'ouvrage demande. »"
+prompt = "Lire la tablette"
+radius = 2.2
+
+[node name="Board" type="Node3D" parent="Exterior/Clues/ApprenticeTablet"]
+script = ExtResource("14_sign")
+text = "Tablette d'un apprenti"
+style = 1
+mount = 0
+board_size = Vector2(0.95, 0.62)
+board_height = 0.85
+
+[node name="ArchivistScroll" type="Node3D" parent="Interior/Clues"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 3.75, 0.64, -2.65)
+script = ExtResource("12_readable")
+title = "Le rouleau de l'archiviste"
+body = "Rouleau resté ouvert sur le pupitre. « Avant d'ouvrir la porte du temple, le gardien pose une question au voyageur. Si la réponse est la bonne, il agit d'une façon ; sinon, il agit d'une autre, et la cité entière l'entend. Une condition commence par sa question et s'achève quand ses deux chemins se rejoignent. » En marge, d'une autre main : « Les runes rangées ici ont été mêlées à celles du dehors. Remettez-les dans l'ordre des murs. »"
+prompt = "Lire le rouleau"
+radius = 2
 
 [node name="RoundTable" type="Node3D" parent="Interior"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6)

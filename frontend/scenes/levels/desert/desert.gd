@@ -22,6 +22,8 @@ const AMBIENT_INSIDE := 0.22
 ## Au-delà de cette distance, les petits modèles des ruines disparaissent en fondu.
 const SMALL_PROP_RANGE := 70.0
 const SMALL_PROP_SIZE := 1.6
+## Côté des cases où les maillages fixes des ruines sont regroupés par matériau.
+const MERGE_CHUNK := 32.0
 
 @export var sand_steps: Array[AudioStream]
 @export var stone_steps: Array[AudioStream]
@@ -97,6 +99,7 @@ func _ready() -> void:
 	_table_glow.visible = false
 	_safe_position = _player.global_position
 	_tint_stone($Exterior/Ruins)
+	_merge_static($Exterior/Ruins)
 	_fade_small_props($Exterior/Ruins)
 	_sandstorm = _create_sandstorm()
 	_exterior.add_child(_sandstorm)
@@ -338,6 +341,53 @@ func _model_of(node: Node) -> Node:
 	while node.get_parent() and node.get_parent().name != &"Models":
 		node = node.get_parent()
 	return node
+
+
+## Regroupe les maillages fixes des ruines, modèles du kit et formes simples, par matériau et par case de 32 m :
+## quelques dizaines d'appels de dessin au lieu de plusieurs centaines, ombres comprises. Les petits objets forment
+## des groupes à part, sans ombre, qui s'effacent au loin case par case. Les MultiMesh restent tels quels.
+func _merge_static(root: Node3D) -> void:
+	var tools := {}
+	var materials := {}
+	var sources: Array[MeshInstance3D] = []
+	var inverse := root.global_transform.affine_inverse()
+	for mesh: MeshInstance3D in root.find_children("*", "MeshInstance3D", true, false):
+		if not mesh.mesh or not mesh.visible:
+			continue
+		var xform := inverse * mesh.global_transform
+		if xform.basis.determinant() <= 0.0:
+			continue
+		var box := mesh.global_transform * mesh.get_aabb()
+		var small := maxf(box.size.x, maxf(box.size.y, box.size.z)) < SMALL_PROP_SIZE
+		var center := box.get_center()
+		var cell := Vector2i(floori(center.x / MERGE_CHUNK), floori(center.z / MERGE_CHUNK))
+		for surface in mesh.mesh.get_surface_count():
+			var material := mesh.get_active_material(surface)
+			if not material:
+				continue
+			var key := "%d_%d_%d_%d" % [material.get_instance_id(), cell.x, cell.y, int(small)]
+			if not tools.has(key):
+				var tool := SurfaceTool.new()
+				tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+				tools[key] = tool
+				materials[key] = [material, small]
+			(tools[key] as SurfaceTool).append_from(mesh.mesh, surface, xform)
+		sources.append(mesh)
+	var merged := Node3D.new()
+	merged.name = "Merged"
+	root.add_child(merged)
+	for key: String in tools:
+		var instance := MeshInstance3D.new()
+		instance.mesh = (tools[key] as SurfaceTool).commit()
+		instance.material_override = materials[key][0]
+		if materials[key][1]:
+			instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			instance.visibility_range_end = SMALL_PROP_RANGE
+			instance.visibility_range_end_margin = 10.0
+			instance.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
+		merged.add_child(instance)
+	for mesh in sources:
+		mesh.queue_free()
 
 
 ## Les petits modèles des ruines (jarres, crânes, bols) disparaissent en fondu au loin : moins de dessin pour le web.
