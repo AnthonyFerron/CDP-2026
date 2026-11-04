@@ -54,7 +54,7 @@ size = Vector3(0.864, 5.4, 0.864)
 size = Vector3(1.04, 0.96, 1.04)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_9"]
-size = Vector3(0.884, 0.714, 1.326)
+size = Vector3(0.884, 0.884, 0.918)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_10"]
 size = Vector3(2.653, 0.63, 4.092)
@@ -81,7 +81,7 @@ size = Vector3(3.285, 0.6, 4.048)
 size = Vector3(2.577, 0.6, 3.975)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_18"]
-size = Vector3(0.936, 0.756, 1.404)
+size = Vector3(0.936, 0.936, 0.972)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_19"]
 size = Vector3(0.864, 5.6, 0.864)
@@ -601,12 +601,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.9, -0.05, 55.9)
 metadata/footprint = 0.5
 
 [node name="chest_0" parent="Item31" instance=ExtResource("8_model")]
-transform = Transform3D(3.28415, 0, -0.87998, 0, 3.4, 0, 0.87998, 0, 3.28415, 0.0484, 0.136, -0.18063)
+transform = Transform3D(3.28415, 0, -0.87998, 0, 3.4, 0, 0.87998, 0, 3.28415, -0.0044, 0, 0.01642)
 
 [node name="Body" type="StaticBody3D" parent="Item31"]
 
 [node name="Shape0" type="CollisionShape3D" parent="Item31/Body"]
-transform = Transform3D(0.96593, 0, -0.25882, 0, 1, 0, 0.25882, 0, 0.96593, 0, 0.357, 0)
+transform = Transform3D(0.96593, 0, -0.25882, 0, 1, 0, 0.25882, 0, 0.96593, 0, 0.442, 0)
 shape = SubResource("BoxShape3D_9")
 
 [node name="Item32" type="Node3D" parent="."]
@@ -805,12 +805,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -39.3, -0.05, 37)
 metadata/footprint = 0.5
 
 [node name="chest_0" parent="Item43" instance=ExtResource("8_model")]
-transform = Transform3D(3.26271, 0, 1.52143, 0, 3.6, 0, -1.52143, 0, 3.26271, -0.08368, 0.144, -0.17945)
+transform = Transform3D(3.26271, 0, 1.52143, 0, 3.6, 0, -1.52143, 0, 3.26271, 0.00761, 0, 0.01631)
 
 [node name="Body" type="StaticBody3D" parent="Item43"]
 
 [node name="Shape0" type="CollisionShape3D" parent="Item43/Body"]
-transform = Transform3D(0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, 0.90631, 0, 0.378, 0)
+transform = Transform3D(0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, 0.90631, 0, 0.468, 0)
 shape = SubResource("BoxShape3D_18")
 
 [node name="Item44" type="Node3D" parent="."]

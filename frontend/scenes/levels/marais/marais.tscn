@@ -54,6 +54,13 @@
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_splash_2.wav" id="47_splash2"]
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_splash_3.wav" id="48_splash3"]
 [ext_resource type="Script" path="res://scenes/levels/hub/volcano.gd" id="90_volcano"]
+[ext_resource type="Shader" path="res://scenes/levels/marais/swamp_fog.gdshader" id="37_fog"]
+[ext_resource type="AudioStream" path="res://assets/audio/stream.wav" id="38_lapping"]
+[ext_resource type="AudioStream" path="res://assets/audio/plaine_wind.wav" id="39_wind"]
+[ext_resource type="Shader" path="res://scenes/levels/marais/reeds_sway.gdshader" id="58_reeds"]
+[ext_resource type="Script" path="res://scenes/levels/marais/marais_life.gd" id="59_life"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/fish-large.glb" id="60_fish"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/lantern-candle.glb" id="61_hanging_lantern"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_night"]
 sky_top_color = Color(0.03, 0.045, 0.07, 1)
@@ -187,6 +194,59 @@ size = Vector3(0.6, 0.14, 0.8)
 material = SubResource("StandardMaterial3D_journal")
 size = Vector3(0.36, 0.07, 0.5)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fog_low"]
+render_priority = 0
+shader = ExtResource("37_fog")
+shader_parameter/noise_tex = SubResource("NoiseTexture2D_ripples")
+shader_parameter/density = 0.34
+shader_parameter/scale = 0.022
+shader_parameter/drift = Vector2(0.009, 0.004)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fog_high"]
+render_priority = 0
+shader = ExtResource("37_fog")
+shader_parameter/noise_tex = SubResource("NoiseTexture2D_ripples")
+shader_parameter/fog_color = Color(0.6, 0.68, 0.68, 1)
+shader_parameter/density = 0.16
+shader_parameter/scale = 0.016
+shader_parameter/drift = Vector2(-0.006, 0.007)
+shader_parameter/near_fade = 7.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_fog_low"]
+material = SubResource("ShaderMaterial_fog_low")
+size = Vector2(150, 150)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_fog_high"]
+material = SubResource("ShaderMaterial_fog_high")
+size = Vector2(150, 150)
+
+[sub_resource type="Gradient" id="Gradient_moon"]
+offsets = PackedFloat32Array(0, 0.42, 0.5, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.95, 0.97, 1, 1, 0.7, 0.8, 0.95, 0.25, 0.6, 0.72, 0.9, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_moon"]
+gradient = SubResource("Gradient_moon")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_moon"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+disable_fog = true
+billboard_mode = 1
+albedo_color = Color(1.25, 1.35, 1.5, 1)
+albedo_texture = SubResource("GradientTexture2D_moon")
+
+[sub_resource type="QuadMesh" id="QuadMesh_moon"]
+material = SubResource("StandardMaterial3D_moon")
+size = Vector2(38, 38)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_reeds"]
+render_priority = 0
+shader = ExtResource("58_reeds")
+
 [sub_resource type="BoxMesh" id="BoxMesh_n1"]
 material = SubResource("StandardMaterial3D_niche_back")
 size = Vector3(2.3, 2.6, 0.04)
@@ -226,8 +286,9 @@ environment = SubResource("Environment_marais")
 
 [node name="Moon" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.7071068, 0.5, -0.5, 0, 0.7071068, 0.7071068, 0.7071068, -0.5, 0.5, 0, 40, 0)
-light_color = Color(0.62, 0.72, 0.9, 1)
-light_energy = 0.45
+light_color = Color(0.58, 0.7, 0.95, 1)
+light_energy = 0.5
+light_specular = 1.4
 shadow_enabled = true
 directional_shadow_max_distance = 60.0
 
@@ -239,11 +300,130 @@ ground_material = SubResource("ShaderMaterial_ground")
 mesh = SubResource("PlaneMesh_water")
 cast_shadow = 0
 
+[node name="GroundFog" type="Node3D" parent="."]
+
+[node name="Low" type="MeshInstance3D" parent="GroundFog"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.16, 0)
+mesh = SubResource("PlaneMesh_fog_low")
+cast_shadow = 0
+
+[node name="High" type="MeshInstance3D" parent="GroundFog"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+mesh = SubResource("PlaneMesh_fog_high")
+cast_shadow = 0
+
+[node name="MoonDisc" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -210, 297, 210)
+mesh = SubResource("QuadMesh_moon")
+cast_shadow = 0
+
+[node name="Sounds" type="Node3D" parent="."]
+
+[node name="LapWalk1" type="AudioStreamPlayer3D" parent="Sounds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.5, 0.1, 37.5)
+stream = ExtResource("38_lapping")
+volume_db = -16
+pitch_scale = 0.7
+unit_size = 3
+max_distance = 16
+autoplay = true
+
+[node name="LapWalk2" type="AudioStreamPlayer3D" parent="Sounds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0.1, 11.5)
+stream = ExtResource("38_lapping")
+volume_db = -16
+pitch_scale = 0.62
+unit_size = 3
+max_distance = 16
+autoplay = true
+
+[node name="LapWalk3" type="AudioStreamPlayer3D" parent="Sounds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.8, 0.1, -19)
+stream = ExtResource("38_lapping")
+volume_db = -16
+pitch_scale = 0.78
+unit_size = 3
+max_distance = 16
+autoplay = true
+
+[node name="LapJetty" type="AudioStreamPlayer3D" parent="Sounds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, 0.1, 50)
+stream = ExtResource("38_lapping")
+volume_db = -18
+pitch_scale = 0.66
+unit_size = 2.5
+max_distance = 12
+autoplay = true
+
+[node name="FrogsVillage" type="AudioStreamPlayer3D" parent="Sounds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0.3, 30)
+stream = ExtResource("40_ambience")
+volume_db = -9
+pitch_scale = 1.08
+unit_size = 6
+max_distance = 30
+autoplay = true
+
+[node name="FrogsWest" type="AudioStreamPlayer3D" parent="Sounds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 0.3, 14)
+stream = ExtResource("40_ambience")
+volume_db = -10
+pitch_scale = 0.94
+unit_size = 6
+max_distance = 30
+autoplay = true
+
+[node name="FrogsNorth" type="AudioStreamPlayer3D" parent="Sounds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0.3, -24)
+stream = ExtResource("40_ambience")
+volume_db = -11
+pitch_scale = 1.15
+unit_size = 5
+max_distance = 26
+autoplay = true
+
+[node name="ChapelWind" type="AudioStreamPlayer3D" parent="Sounds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, 3, -4)
+stream = ExtResource("39_wind")
+volume_db = -9
+pitch_scale = 0.85
+unit_size = 6
+max_distance = 30
+autoplay = true
+
+[node name="DripOssuary" type="AudioStreamPlayer3D" parent="Sounds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, -38, 2)
+stream = ExtResource("53_crypt_sound")
+volume_db = -12
+pitch_scale = 1.25
+unit_size = 3
+max_distance = 14
+autoplay = true
+
+[node name="DripGuards" type="AudioStreamPlayer3D" parent="Sounds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, -38, 2)
+stream = ExtResource("53_crypt_sound")
+volume_db = -12
+pitch_scale = 1.1
+unit_size = 3
+max_distance = 14
+autoplay = true
+
+[node name="DripHall" type="AudioStreamPlayer3D" parent="Sounds"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, -37, -20)
+stream = ExtResource("53_crypt_sound")
+volume_db = -13
+pitch_scale = 1.35
+unit_size = 3
+max_distance = 14
+autoplay = true
+
 [node name="Scatter" type="Node3D" parent="." node_paths=PackedStringArray("terrain", "grounded", "props_root", "crypt_root")]
 script = ExtResource("3_scatter")
 terrain = NodePath("../Terrain")
 tree_models = Array[PackedScene]([ExtResource("20_pine_crooked"), ExtResource("21_pine"), ExtResource("22_tree_thin"), ExtResource("23_tree_default")])
 reed_model = ExtResource("24_reed")
+reed_material = SubResource("ShaderMaterial_reeds")
 lily_models = Array[PackedScene]([ExtResource("25_lily_large"), ExtResource("26_lily_small")])
 flower_models = Array[PackedScene]([ExtResource("33_flower_purple"), ExtResource("34_flower_red"), ExtResource("35_flower_yellow")])
 bush_model = ExtResource("27_bush")
@@ -454,10 +634,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -40, 0)
 [node name="Crypt" parent="Interior" instance=ExtResource("50_crypt")]
 
 [node name="InsideSpawn" type="Marker3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.35, 11.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.35, 11.0)
 
 [node name="Hatch" type="MeshInstance3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.13, 13.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.13, 12.4)
 mesh = SubResource("BoxMesh_hatch")
 
 [node name="Exit" type="Node3D" parent="Interior"]
@@ -467,10 +647,10 @@ prompt = "Remonter l'escalier"
 radius = 2.2
 
 [node name="ExitTop" type="Node3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.25, 13.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.25, 12.4)
 script = ExtResource("11_interactable")
 prompt = "Remonter à la surface"
-radius = 2.0
+radius = 2.9
 
 [node name="LightEntry" type="OmniLight3D" parent="Interior"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.3, 1)
@@ -1080,6 +1260,18 @@ material_overlay = SubResource("ShaderMaterial_dust")
 [node name="Shape5" type="CollisionShape3D" parent="Interior/Niches"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 1.35, 5.1)
 shape = SubResource("BoxShape3D_n2")
+
+[node name="Life" type="Node3D" parent="." node_paths=PackedStringArray("terrain", "player")]
+script = ExtResource("59_life")
+terrain = NodePath("../Terrain")
+player = NodePath("../Player")
+fish_model = ExtResource("60_fish")
+lantern_model = ExtResource("61_hanging_lantern")
+frog_islands = Array[Vector3]([Vector3(0, 56, 8.5), Vector3(-20, 22, 5.8), Vector3(16, 0, 12.3), Vector3(0, -36, 10.4)])
+crow_perches = Array[Vector3]([Vector3(-27.42, 0, -43.20), Vector3(-31.35, 0, -41.66), Vector3(-29.80, 0, -46.69), Vector3(33, 0, -27.2), Vector3(11.5, 0, -9.0), Vector3(22.2, 0, -5.3)])
+shy_crows = PackedInt32Array(4, 5)
+bat_roosts = Array[Vector3]([Vector3(-18.5, -36.15, 3), Vector3(-17, -36.15, 1.5), Vector3(18.5, -36.15, 3), Vector3(3.5, -36.15, -3.8), Vector3(-3.5, -36.15, -18.5), Vector3(-24, -36.15, -12), Vector3(21.5, -36.15, -15)])
+gallows = Array[Vector4]([Vector4(7.2, 52.2, 0, 90), Vector4(-16, 25.6, 0, 90), Vector4(4.4, -31.2, 0, -90)])
 
 [node name="Volcano" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, -6, -215)
