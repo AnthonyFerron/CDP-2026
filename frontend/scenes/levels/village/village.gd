@@ -69,6 +69,10 @@ func _ready() -> void:
 	_exit.interacted.connect(_travel.bind(false))
 	for fragment: PaperFragment in _fragments.get_children():
 		fragment.interacted.connect(_on_fragment_taken.bind(fragment))
+		# Fragment déjà ramassé lors d'une visite ou d'une session précédente : il reste dans le carnet.
+		if GameState.has_fragment(fragment.fragment):
+			fragment.collect()
+			_found[fragment.fragment] = FRAGMENTS[fragment.fragment]
 	for storage: Storage in _storages.get_children():
 		storage.opened.connect(_on_storage_opened.bind(storage))
 	_device.interacted.connect(_open_device)
@@ -138,6 +142,8 @@ func _apply_location() -> void:
 func _on_fragment_taken(fragment: PaperFragment) -> void:
 	fragment.collect()
 	_found[fragment.fragment] = FRAGMENTS[fragment.fragment]
+	# Sauvegardé ici et, pour un joueur connecté, sur le serveur : il reste acquis à la reprise.
+	GameState.collect_fragment(fragment.fragment)
 	$ChimeSound.play()
 	_hud.show_message("Fragment de papier trouvé : %d / %d. [I] pour relire vos fragments." % [_found.size(), FRAGMENTS.size()])
 

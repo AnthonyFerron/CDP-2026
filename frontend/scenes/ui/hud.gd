@@ -34,6 +34,8 @@ func _ready() -> void:
 	_fade.modulate.a = 0.0
 	GameState.time_penalized.connect(_on_time_penalized)
 	GameState.erupted.connect(_on_erupted)
+	# Avis de la synchronisation avec le serveur : connexion perdue ou rétablie, refus.
+	GameSync.notice.connect(show_message)
 	# Retour à l'accueil depuis l'écran de fin, sous « Recommencer ».
 	var menu := %Restart.duplicate(Node.DUPLICATE_SCRIPTS) as Button
 	menu.name = "MainMenu"

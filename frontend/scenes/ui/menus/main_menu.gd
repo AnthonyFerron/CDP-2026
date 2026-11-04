@@ -2,10 +2,12 @@ class_name MainMenu
 extends Control
 ## Menus de CodeQuest, d'après les maquettes : accueil (invité ou connecté), connexion, création de compte,
 ## vérification en deux étapes, classement et introduction d'une nouvelle partie.
-## Le compte passe par l'autoload Account, dont les réponses sont simulées en attendant l'API.
+## Le compte passe par l'autoload Account, la partie connectée par GameSync, tous deux branchés sur l'API.
 ##
-## Accueil invité : jouer en tant qu'invité, se connecter ou créer un compte ; charger et classement grisés.
-## Accueil connecté : nouvelle partie, charger la partie en cours, classement, se déconnecter.
+## Accueil invité : jouer en tant qu'invité, reprendre la partie invitée de cet appareil, se connecter ou
+## créer un compte ; classement grisé.
+## Accueil connecté : nouvelle partie, charger la partie en cours (lue sur le serveur, donc reprise possible
+## sur un autre appareil), classement, se déconnecter.
 ## Nouvelle partie et partie invitée passent par l'introduction, puis le jeu commence dans le bunker du hub.
 
 const SCENE := "res://scenes/ui/menus/main_menu.tscn"
@@ -20,6 +22,15 @@ var _current := &""
 ## Écran d'où vient la vérification en deux étapes, pour que « Retour » y ramène.
 var _verify_origin := &"login"
 var _busy := false
+## Message à afficher à l'ouverture du menu (session expirée en pleine partie) : il ouvre la connexion.
+static var pending_notice := ""
+## La partie du compte a été lue sur le serveur depuis l'ouverture de la session.
+var _synced := false
+var _syncing := false
+## Proposer de rattacher la partie invitée une fois la partie du compte connue.
+var _offer_import := false
+var _home_notice := ""
+var _login_notice := ""
 
 
 func _ready() -> void:
@@ -28,7 +39,13 @@ func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	add_child(Ornate.Backdrop.new())
 	GameState.use_profile(Account.profile_id())
-	show_screen(&"home")
+	Account.session_changed.connect(func() -> void: _synced = false)
+	if not pending_notice.is_empty():
+		_login_notice = pending_notice
+		pending_notice = ""
+		show_screen(&"login")
+	else:
+		show_screen(&"home")
 
 
 ## Remplace l'écran affiché : home, login, register, verify, leaderboard ou intro.
@@ -132,7 +149,7 @@ func _build_home() -> void:
 	first.pressed.connect(_on_new_game)
 	var load_button := _hex("Charger partie", Vector2(632, 632), Vector2(656, 116))
 	load_button.name = "LoadGame"
-	load_button.disabled = not logged or not GameState.can_continue()
+	load_button.disabled = _syncing or not GameState.can_continue()
 	load_button.pressed.connect(_on_load_game)
 	var ranking := _hex("Classement", Vector2(632, 772), Vector2(656, 116))
 	ranking.name = "Leaderboard"
@@ -147,10 +164,63 @@ func _build_home() -> void:
 	var shortcuts := Ornate.label(Ornate.SHORTCUTS, 22, Ornate.MUTED)
 	shortcuts.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	Ornate.place(_screen, shortcuts, Vector2(560, 1012), Vector2(800, 34))
-	if not logged:
-		var note := Ornate.label("Connectez-vous pour reprendre une partie et figurer au classement.", 22, Ornate.MUTED)
-		note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		Ornate.place(_screen, note, Vector2(560, 920), Vector2(800, 34))
+	var text := _home_notice
+	if text.is_empty() and _syncing:
+		text = "Lecture de votre partie sur le serveur…"
+	elif text.is_empty() and not GameSync.last_error.is_empty() and Account.is_online():
+		text = "Serveur injoignable : %s" % GameSync.last_error
+	elif text.is_empty() and not logged:
+		text = "Connectez-vous pour retrouver votre partie sur tous vos appareils et figurer au classement."
+	var note := Ornate.label(text, 22, Ornate.MUTED)
+	note.name = "Notice"
+	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	Ornate.place(_screen, note, Vector2(460, 916), Vector2(1000, 60))
+	if Account.is_online() and not _synced and not _syncing:
+		_sync_account.call_deferred()
+
+
+## Lit la partie du compte sur le serveur, puis redessine l'accueil.
+func _sync_account() -> void:
+	_syncing = true
+	_home_notice = ""
+	if _current == &"home":
+		show_screen(&"home")
+	var result: Dictionary = await GameSync.sync_with_server()
+	_syncing = false
+	_synced = result.ok
+	# Jeton refusé pendant la lecture : la session est fermée, retour à la connexion.
+	if not pending_notice.is_empty():
+		_login_notice = pending_notice
+		pending_notice = ""
+		show_screen(&"login")
+		return
+	if _current == &"home":
+		show_screen(&"home")
+	if _offer_import and result.ok:
+		_offer_import = false
+		_offer_guest_import()
+
+
+## Une partie invitée est en cours sur cet appareil : proposer de la rattacher au compte qui vient de se connecter.
+func _offer_guest_import() -> void:
+	if GameSync.guest_import_candidate().is_empty() or _current != &"home":
+		return
+	if GameState.can_continue():
+		_home_notice = "Votre compte a déjà une partie en cours : la partie invitée reste sur cet appareil."
+		show_screen(&"home")
+		return
+	_confirm("Une partie invitée est en cours sur cet appareil.\nLa rattacher à votre compte ? Elle ne comptera pas pour le classement.",
+		"Rattacher", _import_guest_game)
+
+
+func _import_guest_game() -> void:
+	_home_notice = "Rattachement de la partie invitée…"
+	show_screen(&"home")
+	var result: Dictionary = await GameSync.import_guest_game()
+	_home_notice = "La partie invitée est rattachée à votre compte." if result.ok else result.error
+	if _current == &"home":
+		show_screen(&"home")
 
 
 ## Carte du joueur, à droite : portrait et déconnexion, ou silhouette et boutons de connexion.
@@ -180,7 +250,8 @@ func _build_profile(logged: bool) -> void:
 
 
 func _on_new_game() -> void:
-	if Account.is_logged_in() and GameState.can_continue():
+	_home_notice = ""
+	if GameState.can_continue():
 		_confirm("Une partie est déjà en cours.\nEn commencer une nouvelle effacera sa progression.", "Nouvelle partie", show_screen.bind(&"intro"))
 	else:
 		show_screen(&"intro")
@@ -193,6 +264,7 @@ func _on_load_game() -> void:
 func _on_logout() -> void:
 	Account.logout()
 	GameState.use_profile(Account.profile_id())
+	_home_notice = ""
 	show_screen(&"home")
 
 
@@ -236,6 +308,9 @@ func _build_login() -> void:
 	var password := _field(frame, "lock", "Mot de passe", Vector2(120, 226), 760, true)
 	password.name = "Password"
 	var status := _status(frame, Vector2(120, 330), 480)
+	if not _login_notice.is_empty():
+		_show_status(status, _login_notice)
+		_login_notice = ""
 	var forgot := Ornate.TextLink.new()
 	forgot.caption = "Mot de passe oublié ?"
 	forgot.name = "Forgot"
@@ -341,7 +416,8 @@ func _build_verify() -> void:
 		view.line_width = 3.5
 		Ornate.place(frame, view, item[1], Vector2(item[2], item[2]))
 	_centered(frame, "Entrez le code de vérification", 214, 40, true)
-	_centered(frame, "Nous avons envoyé un code à votre adresse e-mail.", 280, 26)
+	var sent_to := Account.pending_address()
+	_centered(frame, "Nous avons envoyé un code à %s." % sent_to if not sent_to.is_empty() else "Nous avons envoyé un code à votre adresse e-mail.", 280, 26)
 	var boxes := Ornate.CodeBoxes.new()
 	boxes.name = "Code"
 	Ornate.place(frame, boxes, Vector2(160, 340), Vector2(740, 96))
@@ -373,6 +449,9 @@ func _build_verify() -> void:
 			return
 		if result.ok:
 			GameState.use_profile(Account.profile_id())
+			_synced = false
+			_offer_import = true
+			_home_notice = ""
 			show_screen(&"home")
 		else:
 			_show_status(status, result.error)
@@ -398,39 +477,91 @@ func _build_leaderboard() -> void:
 		laurel.kind = item[0]
 		laurel.color = Ornate.GOLD
 		Ornate.place(frame, laurel, item[1], Vector2(110, 110))
-	var subtitle := _centered(frame, "Les meilleurs explorateurs de Codia", 70, 30, true)
+	var subtitle := _centered(frame, "Les meilleurs explorateurs de Codia", 56, 30, true)
 	subtitle.name = "Subtitle"
-	var header := Ornate.place(frame, LeaderboardHeader.new(), Vector2(70, 130), Vector2(1080, 80))
+	# Onglets : classement général, puis une énigme par zone (temps de résolution mesuré par le serveur).
+	var boards: Array = [["Général", &""]]
+	for zone in GameState.ZONE_ORDER:
+		boards.append([_zone_short(zone), zone])
+	for index in boards.size():
+		var tab := _pill(frame, boards[index][0], "stopwatch" if index == 0 else "book", Vector2(78 + index * 216, 104), Vector2(200, 52), 22)
+		tab.name = "Board%d" % index
+		tab.pressed.connect(_show_board.bind(frame, boards[index][1]))
+	var header := Ornate.place(frame, LeaderboardHeader.new(), Vector2(70, 170), Vector2(1080, 72))
 	header.name = "Header"
 	var scroll := ScrollContainer.new()
 	scroll.name = "Rows"
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	Ornate.place(frame, scroll, Vector2(76, 226), Vector2(1068, 520))
+	Ornate.place(frame, scroll, Vector2(76, 256), Vector2(1068, 480))
 	var rows := VBoxContainer.new()
+	rows.name = "List"
 	rows.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	rows.add_theme_constant_override("separation", 8)
 	scroll.add_child(rows)
 	var status := _centered(frame, "Chargement du classement…", 420, 28)
 	status.name = "Status"
+	status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	var more := _pill(frame, "Afficher plus", "", Vector2(460, 752), Vector2(300, 60), 22)
+	more.name = "More"
+	more.visible = false
 	_hex("Retour", Vector2(750, 932), Vector2(420, 96), "arrow_left", false, 40).pressed.connect(show_screen.bind(&"home"))
-	var result: Dictionary = await Account.fetch_leaderboard()
+	_show_board(frame, &"")
+
+
+func _zone_short(zone: StringName) -> String:
+	return {&"plaine": "Plaine", &"desert": "Désert", &"marais": "Marais", &"village": "Village"}.get(zone, String(zone))
+
+
+## Affiche un classement : général si `zone` est vide, sinon celui de l'énigme de la zone.
+func _show_board(frame: Control, zone: StringName) -> void:
+	var subtitle := frame.get_node("Subtitle") as Label
+	var status := frame.get_node("Status") as Label
+	var rows := frame.get_node("Rows/List") as VBoxContainer
+	var more := frame.get_node("More") as Control
+	for child in rows.get_children():
+		child.queue_free()
+	more.visible = false
+	subtitle.text = "Les meilleurs explorateurs de Codia" if zone == &"" else GameState.ZONE_TITLES[zone][2]
+	status.text = "Chargement du classement…"
+	var puzzle_id := 0
+	if zone != &"":
+		var puzzles: Dictionary = await GameSync.load_puzzles()
+		if not is_instance_valid(status):
+			return
+		if not puzzles.ok:
+			status.text = puzzles.error
+			return
+		puzzle_id = GameSync.puzzle_ids.get(zone, 0)
+	await _append_board_page(frame, puzzle_id, 0)
+
+
+func _append_board_page(frame: Control, puzzle_id: int, offset: int) -> void:
+	var status := frame.get_node("Status") as Label
+	var rows := frame.get_node("Rows/List") as VBoxContainer
+	var more := frame.get_node("More") as Ornate.PillButton
+	var result: Dictionary = await Account.fetch_leaderboard(puzzle_id, offset)
 	if not is_instance_valid(status):
 		return
 	if not result.ok:
 		status.text = result.get("error", "Le classement est indisponible pour l'instant.")
 		return
 	var entries: Array = result.get("entries", [])
-	status.text = "" if not entries.is_empty() else "Aucun temps enregistré pour l'instant.\nRéunissez les quatre livres pour ouvrir le classement."
-	if entries.is_empty():
-		status.size.y = 100
-	for index in entries.size():
+	if offset == 0:
+		status.text = "" if not entries.is_empty() else "Aucun temps enregistré pour l'instant.\nRéunissez les quatre livres pour ouvrir le classement."
+	for entry: Dictionary in entries:
 		var row := LeaderboardRow.new()
-		row.rank = index + 1
-		row.pseudo = entries[index].get("pseudo", "?")
-		row.seconds = float(entries[index].get("seconds", 0.0))
+		row.rank = int(entry.get("rank", rows.get_child_count() + 1))
+		row.pseudo = entry.get("pseudo", "?")
+		row.seconds = float(entry.get("seconds", 0.0))
+		row.time_text = str(entry.get("time", ""))
 		row.mine = row.pseudo == Account.pseudo
-		row.custom_minimum_size = Vector2(1040, 76 if index < 3 else 62)
+		row.custom_minimum_size = Vector2(1040, 76 if row.rank <= 3 else 62)
 		rows.add_child(row)
+	var loaded := offset + entries.size()
+	more.visible = loaded < int(result.get("total", 0))
+	for connection in more.pressed.get_connections():
+		more.pressed.disconnect(connection.callable)
+	more.pressed.connect(_append_board_page.bind(frame, puzzle_id, loaded))
 
 
 ## Temps au format minutes:secondes, comme le chronomètre.
@@ -465,6 +596,8 @@ class LeaderboardRow:
 	var rank := 1
 	var pseudo := ""
 	var seconds := 0.0
+	## Temps tel que l'API le formate (« 42:07 », « 03:12.480 ») ; à défaut, `seconds` au format MM:SS.
+	var time_text := ""
 	var mine := false
 
 	func _draw() -> void:
@@ -487,7 +620,7 @@ class LeaderboardRow:
 		Ornate.centered_text(self, Ornate.SERIF, Vector2(94, size.y / 2), str(rank), font_size, Ornate.CREAM)
 		draw_texture_rect(Ornate.PORTRAIT, Rect2(Vector2(196, size.y / 2 - 26), Vector2(50, 52)), false)
 		draw_string(Ornate.SERIF, Vector2(276, size.y / 2 + font_size * 0.36), pseudo, HORIZONTAL_ALIGNMENT_LEFT, 420, font_size, Ornate.CREAM)
-		Ornate.centered_text(self, Ornate.SERIF, Vector2(800, size.y / 2), MainMenu.format_time(seconds), font_size, Ornate.CREAM)
+		Ornate.centered_text(self, Ornate.SERIF, Vector2(800, size.y / 2), time_text if not time_text.is_empty() else MainMenu.format_time(seconds), font_size, Ornate.CREAM)
 
 
 # --- Introduction ------------------------------------------------------------------------------------------
@@ -525,6 +658,18 @@ func _build_intro() -> void:
 
 
 func _on_begin() -> void:
+	if _busy:
+		return
+	if Account.is_online():
+		# Une seule partie en cours par compte : l'ancienne est abandonnée sur le serveur, comme annoncé.
+		_busy = true
+		var result: Dictionary = await GameSync.abandon_current()
+		_busy = false
+		if not result.ok:
+			if _current == &"intro":
+				var status := _status(_screen, Vector2(560, 860), 800)
+				_show_status(status, "Impossible de commencer une nouvelle partie : %s" % result.error)
+			return
 	GameState.reset()
 	Hints.revealed.clear()
 	Transition.change_scene(GameState.HUB_SCENE, GameState.hub_title())

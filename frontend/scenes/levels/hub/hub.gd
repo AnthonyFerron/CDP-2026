@@ -90,6 +90,8 @@ func _ready() -> void:
 		return
 	if not GameState.intro_done:
 		_hud.show_message("Le bunker des survivants. Le roi et Merlon vous attendent.")
+	elif GameState.is_victory_pending():
+		_hud.show_message("Les quatre livres sont posés, mais la victoire n'est pas encore validée : approchez-vous d'un piédestal du château.")
 	else:
 		_hud.show_message(_arrival_message())
 
@@ -289,16 +291,26 @@ func _refresh_pedestals() -> void:
 ## Merlon accomplit le rituel.
 func _on_pedestal(zone: StringName) -> void:
 	var book: StringName = GameState.ZONE_BOOKS[zone]
+	if _busy:
+		return
+	# Livres posés, mais la victoire n'a pas encore pu être validée par le serveur : nouvel essai.
+	if GameState.is_victory_pending():
+		_ritual()
+		return
 	if GameState.has_placed(book):
 		_hud.show_message("%s repose sur son piédestal." % _book_name(zone).capitalize())
 		return
 	if not GameState.has_book(book):
 		_hud.show_message("Ce piédestal attend %s, caché dans %s." % [_book_name(zone), ZONE_NAMES[zone]])
 		return
-	if _busy:
-		return
 	_busy = true
-	GameState.place_book(book)
+	# Partie connectée : le livre n'est posé qu'une fois le dépôt enregistré par le serveur.
+	var placed: Dictionary = await GameState.request_place_book(book)
+	if not placed.ok:
+		_busy = false
+		if not placed.get("stale", false):
+			_hud.show_message("Le livre n'a pas pu être posé : %s" % placed.get("error", "réessayez."))
+		return
 	_refresh_pedestals()
 	var shown := _pedestal_book(zone)
 	await _player.give_book(book, shown.global_position)
@@ -338,9 +350,21 @@ func _show_repairs() -> void:
 
 ## Le rituel, dans la salle du château : les habitants sortent du bunker, Merlon lève son bâton, puis la bonne fin se joue.
 func _ritual() -> void:
+	_busy = true
 	_player.process_mode = Node.PROCESS_MODE_DISABLED
-	# Temps réalisé, envoyé au classement si le joueur est connecté.
-	Account.submit_run(GameState.elapsed_time())
+	# Partie connectée : la victoire n'est jouée qu'une fois validée par le serveur, qui vérifie les quatre
+	# dépôts et le temps restant, et fige le temps du classement.
+	if GameSync.is_tracking():
+		_hud.show_message("Validation de la victoire…")
+	var victory: Dictionary = await GameState.request_victory()
+	if not victory.ok:
+		_busy = false
+		if GameState.has_erupted:
+			return
+		_player.process_mode = Node.PROCESS_MODE_INHERIT
+		_hud.show_message("La victoire n'a pas pu être validée : %s Approchez-vous d'un piédestal pour réessayer." % victory.get("error", ""))
+		return
+	_busy = false
 	await _hud.fade(true)
 	_release_survivors()
 	await _hud.fade(false)

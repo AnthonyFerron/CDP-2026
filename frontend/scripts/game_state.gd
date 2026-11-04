@@ -1,7 +1,11 @@
 extends Node
-## État de la partie, chargé au démarrage : livres retrouvés et posés au château, dernière zone visitée
-## et chronomètre du volcan.
+## État de la partie, chargé au démarrage : livres retrouvés et posés au château, fragments de papier du
+## Village, dernière zone visitée, position du joueur et chronomètre du volcan.
 ## Il est sauvegardé à chaque changement, ce qui fait une sauvegarde entre chaque énigme.
+##
+## Pour un joueur connecté, GameSync relaie chaque changement à l'API, et le serveur fait foi : le temps
+## affiché est recalé sur le sien, un livre n'est posé et la victoire n'est acquise qu'après sa confirmation
+## (request_place_book, request_victory), et l'éruption n'a lieu que lorsqu'il la déclare.
 
 signal book_collected(book_id: StringName)
 ## Un livre vient d'être posé sur son piédestal, au château du hub.
@@ -10,6 +14,10 @@ signal book_placed(book_id: StringName)
 signal time_penalized(seconds: float)
 ## Le chronomètre est tombé à zéro : le volcan entre en éruption et la partie est perdue.
 signal erupted
+## Un fragment de papier de la mairie vient d'être ramassé.
+signal fragment_collected(index: int)
+## La partie vient d'être remplacée par celle du serveur (reprise, autre appareil, import).
+signal state_restored
 
 ## Sauvegarde de l'invité ; un compte a la sienne, nommée d'après son profil (use_profile).
 const SAVE_PATH := "user://sauvegarde.cfg"
@@ -44,6 +52,8 @@ const BOOK_COLORS := {
 	&"codonomicon": Color(0.3, 0.15, 0.5),
 }
 const BOOK_COUNT := 4
+## Fragments de papier cachés dans la mairie du Village, numérotés de 0 à 9 (PaperFragment.fragment).
+const PAPER_FRAGMENT_COUNT := 10
 ## Lignes de la transition à l'entrée de chaque lieu, d'après le scénario : chapitre, nom du lieu, énigme.
 ## Les chapitres du jeu partent de I : le réveil du volcan, au bunker, ouvre la partie.
 const ZONE_TITLES := {
@@ -71,6 +81,15 @@ var intro_done := false
 var has_erupted := false
 ## Fin à jouer au prochain chargement du hub : &"eruption", &"victory", ou rien. Elle n'est pas sauvegardée.
 var ending: StringName = &""
+## Fragments de papier ramassés dans la mairie, conservés d'une visite et d'une session à l'autre.
+var fragments: Array[int] = []
+## Niveau et position du joueur à la dernière sauvegarde, envoyés à l'API. La reprise d'une partie ramène
+## toujours au hub, devant le portail de la dernière zone : les zones ne gardent pas l'état de leurs énigmes.
+var current_level: StringName = &"hub"
+var player_position := Vector3.ZERO
+var player_rotation := 0.0
+## Partie du serveur à laquelle correspond cette sauvegarde (compte connecté), 0 sinon.
+var server_game_id := 0
 
 var _since_save := 0.0
 var _save_path := SAVE_PATH
@@ -86,14 +105,22 @@ func _process(delta: float) -> void:
 	time_left = maxf(time_left - delta, 0.0)
 	_since_save += delta
 	if time_left <= 0.0:
-		_erupt()
+		_on_time_out()
 	elif _since_save >= SAVE_INTERVAL:
 		save_game()
 
 
-## Le chronomètre tourne pendant la partie, sauf en pause, après l'éruption ou une fois les livres posés.
+## Le chronomètre tourne pendant la partie, dans un niveau, sauf en pause, après l'éruption ou une fois les
+## livres posés. Il est arrêté dans les menus, comme celui du serveur.
 func is_timer_running() -> bool:
-	return intro_done and not has_erupted and not get_tree().paused and placed_books.size() < BOOK_COUNT 		and get_tree().current_scene != null
+	return intro_done and not has_erupted and not get_tree().paused and placed_books.size() < BOOK_COUNT \
+		and is_in_level()
+
+
+## Un niveau jouable (hub ou zone) est affiché.
+func is_in_level() -> bool:
+	var scene := get_tree().current_scene
+	return scene != null and scene.has_node("Player")
 
 
 func penalize() -> void:
@@ -101,10 +128,31 @@ func penalize() -> void:
 		return
 	time_left = maxf(time_left - PENALTY, 0.0)
 	time_penalized.emit(PENALTY)
+	GameSync.on_penalty()
 	if time_left <= 0.0:
-		_erupt()
+		_on_time_out()
 	else:
 		save_game()
+
+
+## Temps écoulé : pour une partie connectée, c'est le serveur qui déclare l'éruption.
+func _on_time_out() -> void:
+	if GameSync.is_tracking():
+		GameSync.confirm_time_up()
+	else:
+		_erupt()
+
+
+## Éruption déclarée par le serveur (ou confirmée sans réponse de sa part).
+func erupt() -> void:
+	if not has_erupted:
+		_erupt()
+
+
+## Temps officiel du serveur, pour une partie connectée.
+func set_server_time(remaining: float) -> void:
+	if not has_erupted:
+		time_left = clampf(remaining, 0.0, TOTAL_TIME)
 
 
 func has_book(book_id: StringName) -> bool:
@@ -117,6 +165,7 @@ func collect_book(book_id: StringName) -> void:
 	books.append(book_id)
 	save_game()
 	book_collected.emit(book_id)
+	GameSync.on_book_collected(book_id)
 
 
 ## Livres trouvés que le joueur porte encore, en attendant de les poser au château.
@@ -128,12 +177,61 @@ func has_placed(book_id: StringName) -> bool:
 	return book_id in placed_books
 
 
+## Pose le livre sans attendre le serveur, à qui le dépôt est tout de même envoyé (menu de debug).
 func place_book(book_id: StringName) -> void:
 	if not has_book(book_id) or has_placed(book_id):
 		return
+	_apply_place(book_id)
+	GameSync.on_book_placed(book_id)
+
+
+## Pose le livre au château. Pour une partie connectée, il n'est posé qu'une fois le dépôt accepté par le
+## serveur : `{"ok": false, "error": …}` sinon, et rien ne change ici.
+func request_place_book(book_id: StringName) -> Dictionary:
+	if not has_book(book_id) or has_placed(book_id):
+		return {"ok": false, "error": ""}
+	if GameSync.is_tracking():
+		var result: Dictionary = await GameSync.place_book(book_id)
+		if not result.ok:
+			return result
+		if has_placed(book_id):
+			return {"ok": true}
+	_apply_place(book_id)
+	return {"ok": true}
+
+
+func _apply_place(book_id: StringName) -> void:
 	placed_books.append(book_id)
 	save_game()
 	book_placed.emit(book_id)
+
+
+## Les quatre livres sont posés : la victoire est validée par le serveur pour une partie connectée.
+func request_victory() -> Dictionary:
+	if placed_books.size() < BOOK_COUNT:
+		return {"ok": false, "error": "Les quatre livres doivent être posés au château."}
+	if not GameSync.is_tracking():
+		return {"ok": true}
+	return await GameSync.complete()
+
+
+## Victoire en attente de validation : livres posés, mais le serveur n'a pas encore enregistré la victoire.
+func is_victory_pending() -> bool:
+	return placed_books.size() >= BOOK_COUNT and GameSync.is_tracking()
+
+
+func has_fragment(index: int) -> bool:
+	return index in fragments
+
+
+func collect_fragment(index: int) -> void:
+	if index < 0 or index >= PAPER_FRAGMENT_COUNT or has_fragment(index):
+		return
+	fragments.append(index)
+	fragments.sort()
+	save_game()
+	fragment_collected.emit(index)
+	GameSync.on_fragment_collected(index)
 
 
 func is_zone_built(zone: StringName) -> bool:
@@ -154,6 +252,7 @@ func begin_mission() -> void:
 		return
 	intro_done = true
 	save_game()
+	GameSync.on_mission_started()
 
 
 ## Zone à terminer avant celle-ci, ou rien pour la première.
@@ -166,13 +265,17 @@ func enter_zone(zone: StringName) -> void:
 	if not is_zone_built(zone):
 		return
 	last_zone = zone
+	current_level = zone
 	save_game()
+	GameSync.on_level_changed(zone)
 	Transition.change_scene(ZONE_SCENES[zone], ZONE_TITLES[zone])
 
 
 func return_to_hub(zone: StringName) -> void:
 	last_zone = zone
+	current_level = &"hub"
 	save_game()
+	GameSync.on_level_changed(&"hub")
 	Transition.change_scene(HUB_SCENE, hub_title())
 
 
@@ -188,16 +291,23 @@ func hub_title() -> Array:
 	return ["Codia", "Les ruines du château", "%d livre%s sur quatre" % [count, "s" if count > 1 else ""]]
 
 
-## Repart d'une partie neuve : aucun livre, chronomètre plein.
-func reset() -> void:
+## Repart d'une partie neuve : aucun livre, chronomètre plein. La partie suivie sur le serveur est oubliée.
+func reset(forget_server_game := true) -> void:
 	_clear()
 	save_game()
+	if forget_server_game:
+		GameSync.forget_game()
 
 
 func _clear() -> void:
 	books.clear()
 	placed_books.clear()
+	fragments.clear()
 	last_zone = &""
+	current_level = &"hub"
+	player_position = Vector3.ZERO
+	player_rotation = 0.0
+	server_game_id = 0
 	intro_done = false
 	time_left = TOTAL_TIME
 	has_erupted = false
@@ -209,7 +319,42 @@ func use_profile(profile: String) -> void:
 	if path == _save_path:
 		return
 	_save_path = path
+	GameSync.forget_game()
 	load_game()
+
+
+func save_path() -> String:
+	return _save_path
+
+
+## Remplace la partie par celle du serveur : `game` est une GameSessionRead, `progress` une GameProgressRead,
+## `zones` associe chaque id_puzzles à sa zone. Les livres posés et les fragments sont restaurés, la reprise
+## ramène au hub devant le portail de la dernière zone visitée.
+func apply_server_state(game: Dictionary, progress: Dictionary, zones: Dictionary) -> void:
+	books.clear()
+	placed_books.clear()
+	for state: Dictionary in progress.get("puzzles", []):
+		var zone: StringName = zones.get(int(state.get("id_puzzles", 0)), &"")
+		if zone == &"":
+			continue
+		if state.get("is_solved", false):
+			books.append(ZONE_BOOKS[zone])
+		if state.get("is_placed", false):
+			placed_books.append(ZONE_BOOKS[zone])
+	fragments.clear()
+	for index in progress.get("collected_fragments", []):
+		fragments.append(int(index))
+	fragments.sort()
+	intro_done = true
+	has_erupted = str(game.get("status", "")) == "game_over"
+	time_left = clampf(float(game.get("remaining_seconds", progress.get("remaining_seconds", TOTAL_TIME))), 0.0, TOTAL_TIME)
+	current_level = StringName(str(game.get("current_level", "hub")))
+	last_zone = current_level if current_level in ZONE_ORDER else last_zone
+	player_position = Vector3(float(game.get("position_x", 0.0)), float(game.get("position_y", 0.0)), float(game.get("position_z", 0.0)))
+	player_rotation = float(game.get("rotation_y", 0.0))
+	server_game_id = int(game.get("id_game_sessions", 0))
+	save_game()
+	state_restored.emit()
 
 
 ## Une partie commencée, et pas encore perdue, peut être reprise depuis le menu.
@@ -224,6 +369,7 @@ func elapsed_time() -> float:
 
 func save_game() -> void:
 	_since_save = 0.0
+	_capture_player()
 	var file := ConfigFile.new()
 	file.set_value("partie", "livres", books.map(func(book: StringName) -> String: return String(book)))
 	file.set_value("partie", "livres_poses", placed_books.map(func(book: StringName) -> String: return String(book)))
@@ -231,24 +377,77 @@ func save_game() -> void:
 	file.set_value("partie", "temps_restant", time_left)
 	file.set_value("partie", "eruption", has_erupted)
 	file.set_value("partie", "introduction", intro_done)
+	file.set_value("partie", "fragments", fragments)
+	file.set_value("partie", "niveau", String(current_level))
+	file.set_value("partie", "position", player_position)
+	file.set_value("partie", "orientation", player_rotation)
+	file.set_value("partie", "partie_serveur", server_game_id)
 	file.save(_save_path)
 
 
 func load_game() -> void:
-	var file := ConfigFile.new()
-	if file.load(_save_path) != OK:
-		_clear()
+	_clear()
+	var save := read_save(_save_path)
+	if save.is_empty():
 		return
-	books.clear()
+	books.assign(save.books)
+	placed_books.assign(save.placed_books)
+	fragments.assign(save.fragments)
+	last_zone = save.last_zone
+	time_left = save.time_left
+	has_erupted = save.has_erupted
+	intro_done = save.intro_done
+	current_level = save.current_level
+	player_position = save.player_position
+	player_rotation = save.player_rotation
+	server_game_id = save.server_game_id
+
+
+## Contenu d'une sauvegarde, sans la charger (import de la partie invitée) ; vide si elle n'existe pas.
+## Les sauvegardes antérieures aux fragments et à la position se lisent avec des valeurs par défaut.
+static func read_save(path: String) -> Dictionary:
+	var file := ConfigFile.new()
+	if file.load(path) != OK:
+		return {}
+	var save := {"books": [], "placed_books": [], "fragments": []}
 	for book: String in file.get_value("partie", "livres", []):
-		books.append(StringName(book))
-	placed_books.clear()
+		save.books.append(StringName(book))
 	for book: String in file.get_value("partie", "livres_poses", []):
-		placed_books.append(StringName(book))
-	last_zone = StringName(file.get_value("partie", "derniere_zone", ""))
-	time_left = float(file.get_value("partie", "temps_restant", TOTAL_TIME))
-	has_erupted = bool(file.get_value("partie", "eruption", false))
-	intro_done = bool(file.get_value("partie", "introduction", false))
+		save.placed_books.append(StringName(book))
+	for index in file.get_value("partie", "fragments", []):
+		if int(index) >= 0 and int(index) < PAPER_FRAGMENT_COUNT and not int(index) in save.fragments:
+			save.fragments.append(int(index))
+	save.last_zone = StringName(file.get_value("partie", "derniere_zone", ""))
+	save.time_left = clampf(float(file.get_value("partie", "temps_restant", TOTAL_TIME)), 0.0, TOTAL_TIME)
+	save.has_erupted = bool(file.get_value("partie", "eruption", false))
+	save.intro_done = bool(file.get_value("partie", "introduction", false))
+	save.current_level = StringName(file.get_value("partie", "niveau", "hub"))
+	var position: Variant = file.get_value("partie", "position", Vector3.ZERO)
+	save.player_position = position if position is Vector3 else Vector3.ZERO
+	save.player_rotation = float(file.get_value("partie", "orientation", 0.0))
+	save.server_game_id = int(file.get_value("partie", "partie_serveur", 0))
+	return save
+
+
+## Efface une sauvegarde (la partie invitée, une fois rattachée à un compte).
+func clear_save(path: String) -> void:
+	if path == _save_path:
+		reset()
+	else:
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+
+
+## Position et orientation du joueur, s'il est dans un niveau.
+func _capture_player() -> void:
+	var scene := get_tree().current_scene if is_inside_tree() else null
+	if not scene or not scene.has_node("Player"):
+		return
+	var player := scene.get_node("Player") as Node3D
+	if not player:
+		return
+	player_position = player.global_position
+	var pivot := player.get_node_or_null("CameraPivot") as Node3D
+	player_rotation = pivot.rotation.y if pivot else player.rotation.y
 
 
 func _erupt() -> void:
