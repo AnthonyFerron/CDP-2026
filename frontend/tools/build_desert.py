@@ -741,9 +741,11 @@ def build_caravan(scene, rng):
     put(scene, "furniture_kit/rugRectangle", at(-2.0, -1.8), heading + 50.0, 1.6)
     put(scene, "furniture_kit/rugRound", at(2.0, -1.0), heading, 1.8)
     put(scene, "survival_kit/box-large", at(2.6, 1.8), heading + 20.0, 3.6, height=0.9)
-    put(scene, "survival_kit/chest", at(3.9, 0.3), heading + 20.0, 3.4, height=0.8)
-    for u, v in ((-3.3, 1.0), (-3.1, 2.45)):
-        put(scene, "mini_dungeon/barrel", at(u, v), rng.uniform(0, 360), 2.6, height=1.25)
+    put(scene, "survival_kit/chest", at(3.9, 0.3), heading + 20.0, 3.4, height=0.9)
+    # Deux tonneaux côte à côte, droits, sans se toucher (le vérificateur compare leurs boîtes alignées).
+    for x, z in ((-38.1, -27.4), (-39.7, -27.0)):
+        rng.uniform(0, 360)
+        put(scene, "mini_dungeon/barrel", (x, 0.0, z), 0.0, 2.6, height=1.25)
     put(scene, "survival_kit/barrel-open", at(7.0, 0.2), heading, 3.0, height=1.0)
     put(scene, "food_kit/bag", at(-7.4, 0.4), heading + 10.0, 1.2, height=1.0)
     put(scene, "food_kit/bag", at(-7.2, -0.7), heading + 80.0, 1.1, height=0.92)
