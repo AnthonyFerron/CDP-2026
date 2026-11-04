@@ -40,7 +40,8 @@ TAGS = [
     },
     {
         "name": "Énigmes",
-        "description": "Définition des énigmes et progression d'une partie. Une énigme résolue donne son livre.",
+        "description": "Définition des énigmes et progression d'une partie : une énigme résolue donne son "
+        "livre, à poser ensuite au château. Les fragments de papier du Village sont sauvegardés un par un.",
     },
     {
         "name": "Classements",

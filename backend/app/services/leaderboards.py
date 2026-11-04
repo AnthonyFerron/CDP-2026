@@ -94,7 +94,6 @@ def puzzle_leaderboard(db: Session, puzzle: Puzzle, limit: int, offset: int) -> 
         select(
             PuzzleProgress.id_puzzle_progress,
             PuzzleProgress.completion_time_ms,
-            PuzzleProgress.hints_used,
             PuzzleProgress.solved_at,
             GameSession.id_users,
             func.row_number()
@@ -121,7 +120,6 @@ def puzzle_leaderboard(db: Session, puzzle: Puzzle, limit: int, offset: int) -> 
         select(
             best.c.id_puzzle_progress,
             best.c.completion_time_ms,
-            best.c.hints_used,
             best.c.solved_at,
             User.username,
             func.rank().over(order_by=best.c.completion_time_ms).label("rank"),
@@ -144,7 +142,6 @@ def puzzle_leaderboard(db: Session, puzzle: Puzzle, limit: int, offset: int) -> 
             username=row.username,
             completion_time_ms=row.completion_time_ms,
             time_formatted=format_ms(row.completion_time_ms),
-            hints_used=row.hints_used,
             solved_at=row.solved_at,
         )
         for row in rows

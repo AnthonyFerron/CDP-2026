@@ -19,7 +19,6 @@ class PuzzleLeaderboardEntry(BaseModel):
     username: str
     completion_time_ms: int
     time_formatted: str = Field(examples=["03:12.480"], description="Temps au format MM:SS.mmm.")
-    hints_used: int
     solved_at: datetime
 
 

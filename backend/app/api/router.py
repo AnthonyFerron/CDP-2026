@@ -6,6 +6,7 @@ from app.api.routes import (
     game_sessions,
     health,
     leaderboards,
+    paper_fragments,
     puzzle_progress,
     puzzles,
     users,
@@ -20,6 +21,7 @@ for module in (
     auth_sessions,
     game_sessions,
     puzzle_progress,
+    paper_fragments,
     puzzles,
     leaderboards,
 ):

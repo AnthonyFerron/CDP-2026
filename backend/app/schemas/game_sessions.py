@@ -4,6 +4,7 @@ from typing import Annotated, Literal
 
 from pydantic import AfterValidator, BaseModel, ConfigDict, Field, field_validator, model_validator
 
+from app.models.paper_fragment import PAPER_FRAGMENT_COUNT
 from app.schemas.common import DbId
 
 Level = Literal["hub", "plaine", "desert", "marais", "village"]
@@ -74,23 +75,6 @@ class GameSessionUpdate(BaseModel):
         return self
 
 
-class CompletionRequest(BaseModel):
-    model_config = ConfigDict(extra="forbid", json_schema_extra={"examples": [{"placed_puzzle_ids": [1, 2, 3, 4]}]})
-
-    placed_puzzle_ids: list[DbId] = Field(
-        min_length=1,
-        max_length=50,
-        description="Identifiants des énigmes dont le livre a été posé sur son piédestal, au château.",
-    )
-
-    @field_validator("placed_puzzle_ids")
-    @classmethod
-    def _unique(cls, value: list[int]) -> list[int]:
-        if len(set(value)) != len(value):
-            raise ValueError("Un même livre ne peut pas être posé deux fois.")
-        return value
-
-
 class GameSessionRead(BaseModel):
     id_game_sessions: int
     status: GameStatus
@@ -116,7 +100,7 @@ class ImportedPuzzle(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     id_puzzles: DbId
-    hints_used: int = Field(default=0, ge=0, le=100)
+    is_placed: bool = Field(default=False, description="Vrai si le livre de l'énigme est posé au château.")
 
 
 class GameImportRequest(PlayerState):
@@ -134,7 +118,8 @@ class GameImportRequest(PlayerState):
                     "position_y": 1.0,
                     "position_z": 4.5,
                     "rotation_y": 0.0,
-                    "solved_puzzles": [{"id_puzzles": 1, "hints_used": 1}, {"id_puzzles": 2, "hints_used": 0}],
+                    "solved_puzzles": [{"id_puzzles": 1, "is_placed": True}, {"id_puzzles": 2, "is_placed": False}],
+                    "collected_fragments": [],
                 }
             ]
         },
@@ -143,6 +128,11 @@ class GameImportRequest(PlayerState):
     status: Literal["in_progress", "completed", "game_over"]
     elapsed_seconds: float = Field(ge=0, le=86_400, allow_inf_nan=False, description="Temps consommé, en secondes.")
     solved_puzzles: list[ImportedPuzzle] = Field(default_factory=list, max_length=50)
+    collected_fragments: list[Annotated[int, Field(ge=0, lt=PAPER_FRAGMENT_COUNT)]] = Field(
+        default_factory=list,
+        max_length=PAPER_FRAGMENT_COUNT,
+        description="Numéros (0 à 9) des fragments de papier ramassés dans la mairie du Village.",
+    )
 
     @field_validator("solved_puzzles")
     @classmethod
@@ -151,3 +141,10 @@ class GameImportRequest(PlayerState):
         if len(set(ids)) != len(ids):
             raise ValueError("Une énigme ne peut apparaître qu'une fois.")
         return value
+
+    @field_validator("collected_fragments")
+    @classmethod
+    def _unique_fragments(cls, value: list[int]) -> list[int]:
+        if len(set(value)) != len(value):
+            raise ValueError("Un fragment ne peut apparaître qu'une fois.")
+        return sorted(value)

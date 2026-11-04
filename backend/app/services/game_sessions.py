@@ -20,6 +20,7 @@ from sqlalchemy.orm import Session
 from app.core.config import get_settings
 from app.core.errors import ConflictError, NotFoundError, UnprocessableError
 from app.models.game_session import GameSession
+from app.models.paper_fragment import PAPER_FRAGMENT_PUZZLE_ORDER, PaperFragment
 from app.models.puzzle import Puzzle
 from app.models.puzzle_progress import PuzzleProgress
 from app.models.user import User
@@ -272,34 +273,24 @@ def abandon_game(db: Session, user: User, game_id: int, now: datetime) -> GameSe
     return game
 
 
-def complete_game(db: Session, user: User, game_id: int, placed_puzzle_ids: list[int], now: datetime) -> GameSession:
-    """Victoire : toutes les énigmes résolues côté serveur et tous les livres déclarés posés."""
+def complete_game(db: Session, user: User, game_id: int, now: datetime) -> GameSession:
+    """Victoire : les livres de toutes les énigmes sont posés au château, avant la fin du temps."""
     game = load_active_game(db, user, game_id, now, require_running=True)
 
-    all_ids = set(db.scalars(select(Puzzle.id_puzzles)))
-    if not all_ids:
+    total = db.scalar(select(func.count()).select_from(Puzzle))
+    if not total:
         raise ConflictError("Aucune énigme n'est configurée sur le serveur.")
-    unknown = set(placed_puzzle_ids) - all_ids
-    if unknown:
-        raise UnprocessableError(f"Énigmes inconnues : {sorted(unknown)}.")
-
-    solved_ids = set(
-        db.scalars(
-            select(PuzzleProgress.id_puzzles).where(
-                PuzzleProgress.id_game_sessions == game.id_game_sessions,
-                PuzzleProgress.solved_at.is_not(None),
-            )
+    rows = db.execute(
+        select(PuzzleProgress.solved_at, PuzzleProgress.placed_at).where(
+            PuzzleProgress.id_game_sessions == game.id_game_sessions
         )
-    )
-    if solved_ids != all_ids:
-        raise ConflictError(
-            f"Toutes les énigmes doivent être résolues avant la victoire ({len(solved_ids)}/{len(all_ids)})."
-        )
-    if set(placed_puzzle_ids) != all_ids:
-        raise ConflictError(
-            f"Les {len(all_ids)} livres doivent être posés au château "
-            f"({len(placed_puzzle_ids)}/{len(all_ids)} indiqués)."
-        )
+    ).all()
+    solved = sum(row.solved_at is not None for row in rows)
+    placed = sum(row.placed_at is not None for row in rows)
+    if solved < total:
+        raise ConflictError(f"Toutes les énigmes doivent être résolues avant la victoire ({solved}/{total}).")
+    if placed < total:
+        raise ConflictError(f"Les {total} livres doivent être posés au château ({placed}/{total} posés).")
 
     _stop_timer(game, now)
     game.status = COMPLETED
@@ -309,7 +300,8 @@ def complete_game(db: Session, user: User, game_id: int, placed_puzzle_ids: list
 
 
 def import_game(db: Session, user: User, data: GameImportRequest, now: datetime) -> GameSession:
-    """Rattache au compte la progression d'un invité, jouée hors du contrôle du serveur.
+    """Rattache au compte la progression d'un invité (énigmes, livres posés, fragments), jouée hors du
+    contrôle du serveur.
 
     Les données sont vérifiées pour leur cohérence, mais rien ne prouve qu'elles sont authentiques :
     les résolutions importées n'ont pas de temps (`completion_time_ms` NULL), si bien que la partie
@@ -321,16 +313,17 @@ def import_game(db: Session, user: User, data: GameImportRequest, now: datetime)
     by_id = {puzzle.id_puzzles: puzzle for puzzle in puzzles}
 
     for item in data.solved_puzzles:
-        puzzle = by_id.get(item.id_puzzles)
-        if puzzle is None:
+        if item.id_puzzles not in by_id:
             raise UnprocessableError(f"Énigme inconnue : {item.id_puzzles}.")
-        if item.hints_used > puzzle.hint_count:
-            raise UnprocessableError(
-                f"Trop d'indices pour l'énigme {item.id_puzzles} ({item.hints_used}/{puzzle.hint_count})."
-            )
     solved_ids = {item.id_puzzles for item in data.solved_puzzles}
     if solved_ids != {puzzle.id_puzzles for puzzle in puzzles[: len(solved_ids)]}:
         raise UnprocessableError("Les énigmes se résolvent dans l'ordre : la progression importée est incohérente.")
+    placed_count = sum(item.is_placed for item in data.solved_puzzles)
+    if data.collected_fragments:
+        # Les fragments sont dans la mairie du Village : la zone doit être ouverte.
+        previous = [p for p in puzzles if p.order_index < PAPER_FRAGMENT_PUZZLE_ORDER]
+        if not previous or previous[-1].id_puzzles not in solved_ids:
+            raise UnprocessableError("Des fragments ont été ramassés alors que le Village n'est pas encore ouvert.")
 
     elapsed = data.elapsed_seconds
     if elapsed > duration:
@@ -340,8 +333,8 @@ def import_game(db: Session, user: User, data: GameImportRequest, now: datetime)
     if data.status == GAME_OVER and elapsed < duration:
         raise UnprocessableError("Une partie perdue a forcément consommé tout son temps.")
     if data.status == COMPLETED:
-        if not puzzles or len(solved_ids) != len(puzzles):
-            raise UnprocessableError("Une partie gagnée doit avoir toutes ses énigmes résolues.")
+        if not puzzles or len(solved_ids) != len(puzzles) or placed_count != len(puzzles):
+            raise UnprocessableError("Une partie gagnée doit avoir toutes ses énigmes résolues et tous ses livres posés.")
         if elapsed < len(puzzles) * settings.puzzle_min_solve_seconds:
             raise UnprocessableError("Temps total invraisemblable pour une partie gagnée.")
 
@@ -371,8 +364,10 @@ def import_game(db: Session, user: User, data: GameImportRequest, now: datetime)
                 id_puzzles=item.id_puzzles,
                 solved_at=now,
                 completion_time_ms=None,
-                hints_used=item.hints_used,
+                placed_at=now if item.is_placed else None,
             )
         )
+    for fragment_index in data.collected_fragments:
+        db.add(PaperFragment(id_game_sessions=game.id_game_sessions, fragment_index=fragment_index, collected_at=now))
     db.commit()
     return game

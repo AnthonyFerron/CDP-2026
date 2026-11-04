@@ -9,19 +9,19 @@ from app.services import puzzle_progress as progress_service
 router = APIRouter(prefix="/game-sessions/{game_id}/puzzle-progress", tags=["Énigmes"])
 
 AUTH = "\n\n**Authentification** : requise. La partie doit appartenir au joueur connecté."
-PLAY_CONFLICTS = "Partie en pause, terminée, ou temps écoulé."
 
 
 @router.get(
     "",
     response_model=list[PuzzleProgressRead],
     summary="Lister la progression des énigmes",
-    description="Une ligne par énigme commencée. `is_solved` indique que le livre est obtenu." + AUTH,
+    description="Une ligne par énigme commencée. `is_solved` indique que le livre est obtenu, `is_placed` "
+    "qu'il est posé au château." + AUTH,
     responses=GAME_ERRORS,
 )
 def list_puzzle_progress(game_id: GameId, user: CurrentUser, db: DbSession) -> list[PuzzleProgressRead]:
     rows = progress_service.list_progress(db, user, game_id, clock.utcnow())
-    return [PuzzleProgressRead.from_model(row, puzzle) for row, puzzle in rows]
+    return [PuzzleProgressRead.from_model(row) for row in rows]
 
 
 @router.post(
@@ -29,8 +29,8 @@ def list_puzzle_progress(game_id: GameId, user: CurrentUser, db: DbSession) -> l
     status_code=status.HTTP_201_CREATED,
     response_model=PuzzleProgressRead,
     summary="Commencer une énigme",
-    description="Crée la progression d'une énigme, à l'entrée dans sa zone. Nécessaire avant d'utiliser un "
-    "indice ou d'enregistrer la résolution.\n\n"
+    description="Crée la progression d'une énigme, à l'entrée dans sa zone. Nécessaire avant d'enregistrer "
+    "la résolution, qui se fait sur cette progression.\n\n"
     "Idempotent : si l'énigme est déjà commencée, renvoie la progression existante avec le code 200. Les "
     "énigmes se commencent dans l'ordre (`order_index`) : la précédente doit être résolue." + AUTH,
     responses={
@@ -42,10 +42,10 @@ def list_puzzle_progress(game_id: GameId, user: CurrentUser, db: DbSession) -> l
 def start_puzzle(
     game_id: GameId, data: PuzzleProgressStart, user: CurrentUser, db: DbSession, response: Response
 ) -> PuzzleProgressRead:
-    progress, puzzle, created = progress_service.start_puzzle(db, user, game_id, data.id_puzzles, clock.utcnow())
+    progress, _, created = progress_service.start_puzzle(db, user, game_id, data.id_puzzles, clock.utcnow())
     if not created:
         response.status_code = status.HTTP_200_OK
-    return PuzzleProgressRead.from_model(progress, puzzle)
+    return PuzzleProgressRead.from_model(progress)
 
 
 @router.patch(
@@ -55,8 +55,8 @@ def start_puzzle(
     description="Seul changement autorisé : `{\"solved\": true}`. Le serveur date la résolution et mesure "
     "`completion_time_ms` avec son propre chronomètre ; le joueur obtient le livre de l'énigme.\n\n"
     "Limite : le serveur ne peut pas vérifier que l'énigme a réellement été résolue dans Godot. Il garantit "
-    "l'ordre, l'unicité et la mesure du temps ; une résolution plus rapide que le minimum plausible est "
-    "acceptée mais sort la partie du classement." + AUTH,
+    "l'ordre, l'unicité et la mesure du temps ; une résolution en moins de 30 secondes est acceptée mais "
+    "sort la partie du classement." + AUTH,
     responses={
         **GAME_ERRORS,
         **errors({409: "Énigme déjà résolue ou verrouillée, partie en pause ou terminée, ou temps écoulé."}),
@@ -65,21 +65,24 @@ def start_puzzle(
 def solve_puzzle(
     game_id: GameId, progress_id: ProgressId, data: PuzzleProgressUpdate, user: CurrentUser, db: DbSession
 ) -> PuzzleProgressRead:
-    progress, puzzle = progress_service.solve_puzzle(db, user, game_id, progress_id, clock.utcnow())
-    return PuzzleProgressRead.from_model(progress, puzzle)
+    progress = progress_service.solve_puzzle(db, user, game_id, progress_id, clock.utcnow())
+    return PuzzleProgressRead.from_model(progress)
 
 
 @router.post(
-    "/{progress_id}/hints",
+    "/{progress_id}/placements",
     response_model=PuzzleProgressRead,
-    summary="Utiliser un indice",
-    description="Consomme un indice de l'énigme, dans la limite de `hints_count`. Le texte des indices "
-    "reste dans Godot." + AUTH,
+    summary="Poser un livre au château",
+    description="Pose le livre de cette énigme sur son piédestal, dans la salle des livres du château "
+    "(`GameState.place_book()` dans Godot). Le dépôt est conservé : il survit à la reprise de la partie, "
+    "y compris sur un autre appareil.\n\n"
+    "Le livre doit être obtenu (énigme résolue) et ne se pose qu'une fois. Comme toute action de jeu, le "
+    "dépôt est refusé en pause, après la fin de la partie ou quand le temps est écoulé." + AUTH,
     responses={
         **GAME_ERRORS,
-        **errors({409: "Plus d'indice disponible, énigme déjà résolue, ou " + PLAY_CONFLICTS.lower()}),
+        **errors({409: "Livre non obtenu ou déjà posé, partie en pause ou terminée, ou temps écoulé."}),
     },
 )
-def use_hint(game_id: GameId, progress_id: ProgressId, user: CurrentUser, db: DbSession) -> PuzzleProgressRead:
-    progress, puzzle = progress_service.use_hint(db, user, game_id, progress_id, clock.utcnow())
-    return PuzzleProgressRead.from_model(progress, puzzle)
+def place_book(game_id: GameId, progress_id: ProgressId, user: CurrentUser, db: DbSession) -> PuzzleProgressRead:
+    progress = progress_service.place_book(db, user, game_id, progress_id, clock.utcnow())
+    return PuzzleProgressRead.from_model(progress)

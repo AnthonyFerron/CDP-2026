@@ -7,7 +7,6 @@ from app.api.docs import GAME_ERRORS, errors
 from app.core import clock
 from app.schemas.common import Page
 from app.schemas.game_sessions import (
-    CompletionRequest,
     GameImportRequest,
     GameSessionCreate,
     GameSessionRead,
@@ -66,10 +65,11 @@ def list_game_sessions(
     response_model=GameSessionRead,
     summary="Importer la progression d'un invité",
     description="Rattache au compte connecté une partie jouée en invité, lue dans la sauvegarde locale de Godot.\n\n"
-    "Le serveur vérifie la cohérence des données (énigmes existantes et résolues dans l'ordre, indices dans "
-    "la limite, temps compris entre 0 et la durée de la partie, état compatible avec le temps), mais ne peut "
-    "pas prouver qu'elles sont authentiques. La partie importée n'entre donc **jamais** dans les classements "
-    "(`is_rankable: false` dès qu'une énigme importée est résolue).\n\n"
+    "Le serveur vérifie la cohérence des données (énigmes existantes et résolues dans l'ordre, livres posés "
+    "seulement s'ils sont obtenus, fragments seulement si le Village est ouvert, temps compris entre 0 et la "
+    "durée de la partie, état compatible avec le temps), mais ne peut pas prouver qu'elles sont authentiques. La partie importée n'entre donc **jamais** dans les classements "
+    "(`is_rankable: false` dès qu'une énigme importée est résolue). Livres posés et fragments ramassés "
+    "sont conservés.\n\n"
     "Une partie `in_progress` est importée **en pause** : appeler `/resumptions` quand le joueur reprend. "
     "Elle est refusée (409) si une autre partie est déjà en cours." + AUTH,
     responses=errors({401: None, 409: "Une partie est déjà en cours pour ce joueur."}),
@@ -148,21 +148,19 @@ def penalize_game_session(game_id: GameId, user: CurrentUser, db: DbSession) -> 
     "/{game_id}/completions",
     response_model=GameSessionRead,
     summary="Valider la victoire",
-    description="Termine la partie en victoire si, avant la fin du temps :\n"
-    "- toutes les énigmes sont résolues côté serveur ;\n"
-    "- `placed_puzzle_ids` liste exactement les livres de toutes les énigmes, posés au château.\n\n"
-    "Le serveur ne garde pas trace des livres posés (aucune colonne dédiée) : cette liste est une "
-    "déclaration du client, vérifiée seulement contre les énigmes résolues. Le temps total est figé." + AUTH,
+    description="Termine la partie en victoire si les livres de toutes les énigmes sont posés au château "
+    "(`POST /puzzle-progress/{progress_id}/placements`), avant la fin du temps et hors pause. Récupérer "
+    "les livres ne suffit pas. Aucun corps de requête : le serveur vérifie les dépôts qu'il a enregistrés. "
+    "Le temps total est figé.\n\n"
+    "À appeler dès que le quatrième livre est posé." + AUTH,
     responses={
         **GAME_ERRORS,
-        **errors({409: "Énigmes non résolues, livres manquants, partie en pause ou terminée, ou temps écoulé."}),
+        **errors({409: "Énigme non résolue, livre non posé, partie en pause ou terminée, ou temps écoulé."}),
     },
 )
-def complete_game_session(
-    game_id: GameId, data: CompletionRequest, user: CurrentUser, db: DbSession
-) -> GameSessionRead:
+def complete_game_session(game_id: GameId, user: CurrentUser, db: DbSession) -> GameSessionRead:
     now = clock.utcnow()
-    return games.read_game(db, games.complete_game(db, user, game_id, data.placed_puzzle_ids, now), now)
+    return games.read_game(db, games.complete_game(db, user, game_id, now), now)
 
 
 @router.post(
@@ -181,8 +179,9 @@ def abandon_game_session(game_id: GameId, user: CurrentUser, db: DbSession) -> G
     "/{game_id}/progress",
     response_model=GameProgressRead,
     summary="Récupérer la progression",
-    description="Vue d'ensemble pour Godot : chronomètre, livres obtenus et état de chaque énigme "
-    "(verrouillée, commencée, résolue, indices). Un livre est obtenu quand son énigme est résolue." + AUTH,
+    description="Vue d'ensemble pour reconstruire l'état du jeu, à la reprise d'une partie : chronomètre, "
+    "état de chaque énigme (verrouillée, commencée, résolue), livres obtenus (`is_solved`) et posés au "
+    "château (`is_placed`), fragments de papier ramassés (`collected_fragments`)." + AUTH,
     responses=GAME_ERRORS,
 )
 def read_game_progress(game_id: GameId, user: CurrentUser, db: DbSession) -> GameProgressRead:
