@@ -85,7 +85,7 @@ size = Vector3(0.56, 0.76, 0.56)
 size = Vector3(1.936, 0.682, 1.43)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_6"]
-size = Vector3(0.9, 0.54, 1.26)
+size = Vector3(0.9, 0.81, 0.9)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7"]
 size = Vector3(1.092, 0.91, 1.846)
@@ -302,7 +302,7 @@ transform = Transform3D(3.8637, 0, 1.03528, 0, 4, 0, -1.03528, 0, 3.8637, -23.2,
 transform = Transform3D(1.99388, 0, 0.92976, 0, 2.2, 0, -0.92976, 0, 1.99388, -19.8046, 0.4, 25.89)
 
 [node name="chest_6" parent="Models" instance=ExtResource("7_model")]
-transform = Transform3D(1.73867, 0, 0.46587, 0, 1.8, 0, -0.46587, 0, 1.73867, -25.0466, 0.49, 22.6261)
+transform = Transform3D(1.73867, 0, 0.46587, 0, 1.8, 0, -0.46587, 0, 1.73867, -25, 0.4, 22.8)
 
 [node name="bedroll_7" parent="Models" instance=ExtResource("8_model")]
 transform = Transform3D(3.03109, 0, 1.75, 0, 3.5, 0, -1.75, 0, 3.03109, -21.1936, 0.4, 22.1761)
@@ -773,7 +773,7 @@ transform = Transform3D(-0.4872, -0.04434, 0.11199, 0, 2.25425, 0.04358, -0.1124
 transform = Transform3D(0, -1.64545, 0.95, 1.9, 0, 0, -0, 0.95, 1.64545, 20.9949, -0.006, 27.172)
 
 [node name="moss_chest_163" parent="Models" instance=ExtResource("7_model")]
-transform = Transform3D(1.68589, -0.54778, 0.31257, 0.55623, 1.7119, 0, -0.29727, 0.09659, 1.77265, 27.6235, -0.17535, 25.6131)
+transform = Transform3D(1.68589, -0.54778, 0.31257, 0.55623, 1.7119, 0, -0.29727, 0.09659, 1.77265, 27.7233, -0.26094, 25.7783)
 
 [node name="moss_path_wood_164" parent="Models" instance=ExtResource("45_model")]
 transform = Transform3D(1.68119, -0.11756, 1.41413, 0.15346, 2.19464, 0, -1.41069, 0.09864, 1.6853, 15.21, 0.04673, 33.606)
@@ -785,7 +785,7 @@ transform = Transform3D(0, -0.49176, 1.83526, 1.9, 0, 0, -0, 1.83526, 0.49176, 3
 transform = Transform3D(-0.6831, -0.0358, 1.87939, -0.10467, 1.99726, 0, -1.87681, -0.09836, -0.68404, 23.0103, 0.02234, 35.199)
 
 [node name="moss_chest_167" parent="Models" instance=ExtResource("57_model")]
-transform = Transform3D(2.13772, -0.45439, 2.60455, 0.7069, 3.3257, 0, -2.54764, 0.54152, 2.18548, 14.6863, -0.22507, 21.4446)
+transform = Transform3D(2.13772, -0.45439, 2.60455, 0.7069, 3.3257, 0, -2.54764, 0.54152, 2.18548, 14.8721, -0.3581, 21.5405)
 
 [node name="fence_broken_168" parent="Models" instance=ExtResource("58_model")]
 transform = Transform3D(2.1298, 0.20755, 1.47679, 0, 2.5747, -0.36185, -1.4913, 0.29641, 2.10907, 15.5619, -0.71907, 27.7029)
@@ -903,7 +903,7 @@ transform = Transform3D(0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, 0.90631, -19.
 shape = SubResource("BoxShape3D_5")
 
 [node name="Box5" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.96593, 0, 0.25882, 0, 1, 0, -0.25882, 0, 0.96593, -25, 0.67, 22.8)
+transform = Transform3D(0.96593, 0, 0.25882, 0, 1, 0, -0.25882, 0, 0.96593, -25, 0.805, 22.8)
 shape = SubResource("BoxShape3D_6")
 
 [node name="Box6" type="CollisionShape3D" parent="Collision"]
