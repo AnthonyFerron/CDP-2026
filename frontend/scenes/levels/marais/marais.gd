@@ -1,8 +1,9 @@
 class_name Marais
 extends Node3D
-## Zone du Marais : le tombeau des lettres oubliées. Le joueur descend dans la crypte, déchiffre
-## l'inscription et aligne cinq cercles de lettres pour ouvrir le tombeau du Logiconomicon.
-## Les eaux peu profondes ralentissent le joueur ; les eaux profondes le ramènent sur la rive.
+## Les marais de Kernel Swamp : le tombeau du chiffrement. Le joueur suit les pontons dans la brume jusqu'à la
+## crypte du gardien, descend son long escalier, déchiffre l'inscription gravée face au mécanisme et les épitaphes
+## des rois, puis aligne cinq cercles de lettres pour ouvrir le tombeau du Logiconomicon, le livre de la logique
+## et du chiffrement. Les eaux peu profondes ralentissent le joueur ; les eaux profondes le ramènent sur la rive.
 
 signal book_collected(book_id: StringName)
 signal hub_requested
@@ -16,6 +17,9 @@ const WADE_SPEED := 0.55
 ## Images passées au sol, hors de l'eau, avant de retenir la position comme sûre.
 const SAFE_FRAMES := 15
 const AMBIENCE_DB := -6.0
+## Teinte des dalles de la crypte, et le shader qui la leur donne.
+const CRYPT_STONE := Color(0.6, 0.63, 0.64)
+const STONE_SHADER := preload("res://scenes/levels/marais/crypt_stone.gdshader")
 
 @export var ground_steps: Array[AudioStream]
 @export var water_steps: Array[AudioStream]
@@ -33,6 +37,9 @@ var _time := 0.0
 var _ghost_base := 0.0
 var _fireflies: CPUParticles3D
 var _mist: CPUParticles3D
+## Nappes de brume fixes, au-dessus du village englouti, de la chapelle et des eaux de la crypte.
+var _mist_banks: Array[CPUParticles3D] = []
+var _rumble: AudioStreamPlayer3D
 
 @onready var _player: Player = $Player
 @onready var _player_camera: Camera3D = $Player/CameraPivot/SpringArm3D/Camera3D
@@ -50,6 +57,8 @@ var _mist: CPUParticles3D
 @onready var _outside_spawn: Marker3D = $OutsideSpawn
 @onready var _inside_spawn: Marker3D = $Interior/InsideSpawn
 @onready var _exit: Interactable = $Interior/Exit
+@onready var _exit_top: Interactable = $Interior/ExitTop
+@onready var _wisps: Node3D = $Wisps
 @onready var _inscription: Readable = $Interior/Inscription
 @onready var _mechanism: RingMechanism = $Interior/Mechanism
 @onready var _mechanism_interactable: Interactable = $Interior/MechanismInteractable
@@ -65,13 +74,13 @@ func _ready() -> void:
 	var interaction: InteractionController = _player.get_node("Interaction")
 	interaction.prompt_changed.connect(_hud.set_prompt)
 	_hud.reader_closed.connect(_close_panel)
-	for clue: Readable in _clues.get_children():
-		clue.interacted.connect(_read.bind(clue))
-	_inscription.interacted.connect(_read.bind(_inscription))
-	for epitaph: Readable in $Interior/Kings.find_children("Epitaph", "Node3D", true, false):
-		epitaph.interacted.connect(_read.bind(epitaph))
+	# Tous les textes à lire : indices du dehors, inscription, épitaphes, hommage aux rois.
+	for node in get_tree().get_nodes_in_group(&"interactable"):
+		if node is Readable and is_ancestor_of(node):
+			node.interacted.connect(_read.bind(node))
 	_door_interactable.interacted.connect(_travel.bind(true))
 	_exit.interacted.connect(_travel.bind(false))
+	_exit_top.interacted.connect(_travel.bind(false))
 	_mechanism_interactable.interacted.connect(_open_mechanism)
 	_puzzle.validated.connect(_on_mechanism_validated)
 	_puzzle.closed.connect(_close_mechanism)
@@ -81,6 +90,13 @@ func _ready() -> void:
 
 	_door_sound.stream = door_sound
 	_tomb_sound.stream = door_sound
+	# Grondement sourd de la crypte quand le mécanisme refuse une combinaison.
+	_rumble = AudioStreamPlayer3D.new()
+	_rumble.stream = door_sound
+	_rumble.pitch_scale = 0.55
+	_rumble.unit_size = 8.0
+	_rumble.position = Vector3(0.0, 3.0, -12.0)
+	$Interior.add_child(_rumble)
 	_book_pickup.enabled = false
 	_book.hide()
 	_ghost_base = _ghost.position.y
@@ -89,8 +105,15 @@ func _ready() -> void:
 	_mist = _create_mist()
 	add_child(_fireflies)
 	add_child(_mist)
+	for bank: Vector4 in [Vector4(24.0, 30.0, 13.0, 16), Vector4(-35.0, -4.0, 9.0, 10), Vector4(-12.0, -28.0, 9.0, 10),
+			Vector4(30.0, -26.0, 8.0, 8), Vector4(-30.0, 38.0, 9.0, 9)]:
+		var mist := _create_mist(Vector3(bank.z, 0.2, bank.z), int(bank.w))
+		mist.position = Vector3(bank.x, 0.3, bank.y)
+		_mist_banks.append(mist)
+		add_child(mist)
+	_tint_crypt()
 	_apply_location()
-	_hud.show_message("Le Marais")
+	# Le nom du lieu s'affiche déjà pendant la transition du portail.
 	if GameState.has_book(BOOK_ID):
 		_portal.is_open = true
 		_hud.show_message("Vous avez déjà trouvé le livre de cette zone : le portail est ouvert.")
@@ -176,6 +199,9 @@ func _apply_location() -> void:
 	_environment.fog_enabled = not _inside
 	_fireflies.emitting = not _inside
 	_mist.emitting = not _inside
+	for bank in _mist_banks:
+		bank.emitting = not _inside
+	_wisps.visible = not _inside
 	_player.footstep_sounds = stone_steps if _inside else ground_steps
 	_ambience.volume_db = AMBIENCE_DB - 24.0 if _inside else AMBIENCE_DB
 	if _inside:
@@ -213,11 +239,13 @@ func _close_mechanism() -> void:
 
 func _on_mechanism_validated(correct: bool) -> void:
 	if not correct:
-		# Les inscriptions rougissent, un bruit sourd résonne et le volcan se rapproche de l'éruption.
+		# Les inscriptions rougissent, un grondement roule dans la crypte et le volcan se rapproche de l'éruption.
 		GameState.penalize()
 		_tomb_sound.stream = reject_sound
 		_tomb_sound.global_position = _mechanism.global_position
 		_tomb_sound.play()
+		_rumble.play()
+		_shake(_mechanism_camera, 0.9)
 		_mechanism.set_glow(Color(1.0, 0.15, 0.1), 3.0)
 		var flash := create_tween()
 		flash.tween_interval(1.2)
@@ -226,13 +254,14 @@ func _on_mechanism_validated(correct: bool) -> void:
 	_mechanism.set_glow(Color(0.35, 1.0, 0.5), 3.0)
 	_mechanism_interactable.enabled = false
 	_close_mechanism()
-	_hud.show_message("Les inscriptions s'illuminent de vert. Un grondement : dans la chambre de l'est, un tombeau s'ouvre…")
+	_hud.show_message("Les cercles s'illuminent de vert. Un grondement : dans la chambre de l'est, le lourd couvercle d'un tombeau glisse…")
 	_tomb_sound.stream = door_sound
 	_tomb_sound.position = Vector3.UP
 	_tomb_sound.play()
+	# Le couvercle glisse vers l'est et bascule : un bord sur la cuve, l'autre au sol.
 	var tween := create_tween()
-	tween.tween_property(_tomb_lid, "position", _tomb_lid.position + Vector3(1.7, -0.2, 0.0), 2.4).set_trans(Tween.TRANS_SINE)
-	tween.parallel().tween_property(_tomb_lid, "rotation:z", deg_to_rad(-12.0), 2.4)
+	tween.tween_property(_tomb_lid, "position", _tomb_lid.position + Vector3(1.82, -0.51, 0.0), 2.6).set_trans(Tween.TRANS_SINE)
+	tween.parallel().tween_property(_tomb_lid, "rotation:z", deg_to_rad(-30.0), 2.6).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	await tween.finished
 	_book.show()
 	_book_pickup.enabled = true
@@ -244,13 +273,45 @@ func _on_book_taken() -> void:
 	_book.hide()
 	_book_pickup.enabled = false
 	_portal.is_open = true
-	_hud.show_message("Le Logiconomicon est à vous. Rapportez-le au château du hub : le portail du Marais s'est rouvert.")
+	_hud.show_message("Le Logiconomicon, le livre de la logique et du chiffrement, est à vous. Rapportez-le au château : le portail s'est rouvert.")
 	GameState.collect_book(BOOK_ID)
 	book_collected.emit(BOOK_ID)
 
 
+## Les dalles du kit de donjon sont orangées : sous le marais, le sol, le plafond et l'escalier deviennent de pierre
+## froide et humide. La texture reste, seule sa teinte change.
+func _tint_crypt() -> void:
+	var tinted := {}
+	for model: Node in $Interior/Crypt/Models.get_children():
+		if not (model.name.contains("template_floor") or model.name.contains("stairs")):
+			continue
+		for mesh: MeshInstance3D in model.find_children("*", "MeshInstance3D", true, false):
+			var source := mesh.get_active_material(0)
+			if not source is BaseMaterial3D:
+				continue
+			if not tinted.has(source):
+				var stone := ShaderMaterial.new()
+				stone.shader = STONE_SHADER
+				stone.set_shader_parameter(&"albedo_texture", (source as BaseMaterial3D).albedo_texture)
+				stone.set_shader_parameter(&"tint", CRYPT_STONE)
+				tinted[source] = stone
+			mesh.material_override = tinted[source]
+
+
+## Secoue une caméra quelques instants : le sol de la crypte gronde.
+func _shake(camera: Camera3D, duration: float) -> void:
+	var tween := create_tween()
+	var steps := int(duration / 0.05)
+	for step in steps:
+		var strength := 0.06 * (1.0 - float(step) / steps)
+		tween.tween_property(camera, "h_offset", randf_range(-strength, strength), 0.05)
+		tween.parallel().tween_property(camera, "v_offset", randf_range(-strength, strength), 0.05)
+	tween.tween_property(camera, "h_offset", 0.0, 0.05)
+	tween.parallel().tween_property(camera, "v_offset", 0.0, 0.05)
+
+
 func _on_portal_refused() -> void:
-	_hud.show_message("Le portail reste éteint : trouvez le livre du Marais.")
+	_hud.show_message("Le portail reste éteint : trouvez le livre des marais.")
 
 
 func _on_portal_crossed() -> void:
@@ -291,8 +352,8 @@ func _create_fireflies() -> CPUParticles3D:
 	return fireflies
 
 
-## Nappes de brume au ras de l'eau autour du joueur.
-func _create_mist() -> CPUParticles3D:
+## Nappes de brume au ras de l'eau : autour du joueur, ou fixes au-dessus d'une étendue d'eau.
+func _create_mist(extents := Vector3(26.0, 0.2, 26.0), amount := 40) -> CPUParticles3D:
 	var gradient := Gradient.new()
 	gradient.set_color(0, Color(1.0, 1.0, 1.0, 1.0))
 	gradient.set_color(1, Color(1.0, 1.0, 1.0, 0.0))
@@ -317,12 +378,12 @@ func _create_mist() -> CPUParticles3D:
 
 	var mist := CPUParticles3D.new()
 	mist.mesh = quad
-	mist.amount = 40
+	mist.amount = amount
 	mist.lifetime = 14.0
 	mist.preprocess = 14.0
 	mist.local_coords = false
 	mist.emission_shape = CPUParticles3D.EMISSION_SHAPE_BOX
-	mist.emission_box_extents = Vector3(26.0, 0.2, 26.0)
+	mist.emission_box_extents = extents
 	mist.direction = Vector3(1.0, 0.0, 0.2)
 	mist.spread = 40.0
 	mist.gravity = Vector3.ZERO

@@ -16,7 +16,7 @@ const ZONE_HINTS := {
 		"Deux runes ne servent à aucun des deux algorithmes : ce sont des leurres. Une boucle s'ouvre par « TANT QUE », une condition par « SI » et se poursuit par « SINON ».",
 	],
 	&"marais": [
-		"Descendez dans la crypte, au nord. Lisez l'inscription du mur, derrière le mécanisme, puis les épitaphes des rois, dans la chambre ouest.",
+		"Suivez les pontons et leurs lanternes jusqu'à la crypte, au nord. En bas du long escalier, lisez l'inscription gravée sur le mur face au mécanisme, puis les épitaphes des rois, dans la chambre funéraire de l'ouest.",
 		"Le mot à inscrire part du nom du royaume. Chaque lettre se décale dans l'alphabet : trois en avant, puis trois en arrière, et ainsi de suite.",
 		"Le royaume s'appelle Codia. Sa première lettre, C, avance de trois ; la deuxième, O, recule de trois. Réglez les cercles du centre vers l'extérieur.",
 	],
