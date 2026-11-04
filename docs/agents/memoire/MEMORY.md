@@ -1,0 +1,4 @@
+- [Commit convention](commit-convention.md) — team prefixes `features :`/`fix :`/`refactor :`/`docs :`, dev→feature→dev→main
+- [Assets Kenney only](assets-kenney-only.md) — new assets only from kenney.nl, nowhere else
+- [Game context](game-context.md) — official scenario (Vibelandia war, Mont Sam Altan, Hexcole/Pythania/Kernel Swamp/village), timer kept at 60 min
+- [Audit every centimetre](audit-every-centimetre.md) — exhaustive walk/screenshot grids per level, every stair, exit and liquid joint
