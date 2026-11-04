@@ -535,15 +535,15 @@ extents = Vector3(0.3, 0.15, 0.3)
 [node name="Crows" type="Node3D" parent="."]
 
 [node name="Crow0" type="Node3D" parent="Crows"]
-transform = Transform3D(-0.939693, 0, 0.34202, 0, 1, 0, -0.34202, 0, -0.939693, -22.4, 5.24, 41)
+transform = Transform3D(-0.939693, 0, 0.34202, 0, 1, 0, -0.34202, 0, -0.939693, -22.4, 5.24, 43)
 script = ExtResource("64_crow")
 
 [node name="Crow1" type="Node3D" parent="Crows"]
-transform = Transform3D(-0.939693, 0, -0.34202, 0, 1, 0, 0.34202, 0, -0.939693, 13.4, 5.24, 41.1)
+transform = Transform3D(-0.939693, 0, -0.34202, 0, 1, 0, 0.34202, 0, -0.939693, 13.4, 5.24, 43.1)
 script = ExtResource("64_crow")
 
 [node name="Crow2" type="Node3D" parent="Crows"]
-transform = Transform3D(-0.5, 0, 0.866025, 0, 1, 0, -0.866025, 0, -0.5, 14.3, 5.24, 40.8)
+transform = Transform3D(-0.5, 0, 0.866025, 0, 1, 0, -0.866025, 0, -0.5, 14.3, 5.24, 42.8)
 script = ExtResource("64_crow")
 
 [node name="Crow3" type="Node3D" parent="Crows"]

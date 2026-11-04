@@ -29,7 +29,8 @@ func _ready() -> void:
 		await terrain.ready
 	_rng.seed = 5815
 	_scatter(grass_models, grass_count, Vector2(2.5, 4.5), 0.0, false)
-	_scatter(rubble_models, rubble_count, Vector2(1.5, 3.0), 0.0, false)
+	# Sans collision, les gravats restent sous la cheville (0,3 m au plus) : on marche dessus sans les traverser.
+	_scatter(rubble_models, rubble_count, Vector2(0.45, 0.6), 0.0, false)
 	# Collision au tronc des arbres et au corps des rochers, à l'échelle 1.
 	_scatter(tree_models, tree_count, Vector2(3.5, 5.5), 0.08, true)
 	_scatter(rock_models, rock_count, Vector2(2.0, 4.0), 0.4, true)
