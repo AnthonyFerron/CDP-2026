@@ -1,110 +1,147 @@
-# Licences
+## Titre et équipe
 
-Liste de tout ce que le projet utilise et qui n'a pas été créé pour lui. À mettre à jour dès qu'un élément externe est ajouté.
+Nom du jeu : CodeQuest
 
-## Jeu
+Code et nom de l'équipe : Equipe 3 - Ruminate Studio
 
-### Contenu du projet
+Campus : Lyon
 
-| Élément | Origine | Licence |
+Membre et rôles :
+
+| Membre   |      Rôle     |
+|----------|:-------------:|
+| FERRON Anthony |  Lead dev |
+| KHASHIMOV Sherzod |    Chef de projet   |
+| MARCHESSE Clement | Assistant chef de projet |
+|DALIGAND Dorian|Développeur back/Responsable technique|
+|ROBIN FAYET Mathéo|Développeur front/Game designer|
+|SMATTI Abdelaziz|Designer|
+
+
+
+## Jouer en 2 minutes
+Lien pour jouer au jeu : https://codequest.anthonyferron.com/
+
+## Comment jouer
+Commandes : Se déplacer avec ZQSD,sauter avec ESPACE, et interagir avec E.
+
+But du jeu : Rassembler les quatres livres légendaires
+
+Fonctionnement des indices : Les indices sont récupérables dans l'environnement autour du lieu de l'énigme.
+
+Chronometre : Le chronometre est descendant et part de 60 minutes. Lorsque le chronometre arrive à zero, la partie est finie et perdante.
+
+## Solution complète
+
+<u>Enigme 1 (La plaine) : </u>
+| Ordre | Locuteur | Fragment de dialogue |
 | --- | --- | --- |
-| Code GDScript, scènes, `icon.svg` | Créés pour le projet | Aucune licence choisie : tous droits réservés par défaut |
-| Modèles 3D et leurs textures | Kits Kenney, listés ci-dessous | CC0 1.0 |
-| Sons du jeu (vent, lave, marais, désert, cave, hub, village, ruisseau, pas, feu, porte, tablettes) | Générés pour le projet par `frontend/tools/generate_sounds.py` | Comme le code du projet |
-| Polices : Cinzel (titres et boutons), Lora (textes) | [Google Fonts](https://github.com/google/fonts), dans `frontend/assets/fonts/` avec leur licence | SIL Open Font License 1.1 |
+| 1 | Bibliothécaire | « Nous devons organiser la restauration des archives avant la prochaine inspection. » |
+| 2 | Employé | « Quels sont les objectifs prioritaires de cette restauration ? » |
+| 3 | Bibliothécaire | « Nous devons d'abord inventorier les ouvrages endommagés et identifier les ressources nécessaires. » |
+| 4 | Employé | « Une fois l'inventaire terminé, nous pourrons établir un planning et répartir les tâches. » |
+| 5 | Bibliothécaire | « Exactement. Nous devrons également suivre l'avancement des travaux et anticiper les éventuels retards. » |
+| 6 | Employé | « Lorsque les travaux seront terminés, nous vérifierons leur conformité avant de clôturer le projet. » |
 
-Pour chaque modèle, texture, son ou police venant de l'extérieur, ajouter une ligne ici avec son auteur, sa source et sa licence.
+<u>Enigme 2 (Le désert) : </u>
+| Ligne | Algorithme 1 (Jarre sacrée) | Algorithme 2 (Entrée du temple) |
+| --- | --- | --- |
+| 1 | Prendre une jarre vide | Demander le mot de passe au voyageur |
+| 2 | TANT QUE la jarre n'est pas pleine ⚠️ | SI le mot de passe est « Soleil » ⚠️ |
+| 3 | Puiser de l'eau au puits ⚠️ | Ouvrir la porte du temple ⚠️ |
+| 4 | Verser l'eau dans la jarre | SINON ⚠️ |
+| 5 | FIN TANT QUE | Sonner l'alarme |
+| 6 | Porter la jarre au temple ⚠️ | FIN SI |
 
-| Fichier | Auteur | Source | Licence |
+⚠️ = rune manquante à récupérer (algorithme 1 : lignes 2, 3, 6 ; algorithme 2 : lignes 2, 3, 4)
+
+<u>Enigme 3 (Le marais) : </u>
+
+| Cercle | Lettre | Règle | Décomposition | Résultat |
+| --- | --- | --- | --- | --- |
+| 1 | C | +3 | C → D → E → F | F |
+| 2 | O | −3 | O → N → M → L | L |
+| 3 | D | +3 | D → E → F → G | G |
+| 4 | I | −3 | I → H → G → F | F |
+| 5 | A | +3 | A → B → C → D | D |
+
+Code final : **FLGFD**
+
+<u>Enigme 4 (Le village détruit) : </u>
+
+| Code | Langage | Réponse | Explication |
 | --- | --- | --- | --- |
-| `frontend/assets/models/kenney/3d_road_tiles/` : 3D Road Tiles | Kenney Vleugels pour Kenney | [kenney.nl](https://kenney.nl/assets) | CC0 1.0 |
-| `frontend/assets/models/kenney/castle_kit/` : Castle Kit 2.0 | Kenney | [kenney.nl](https://kenney.nl/assets) | CC0 1.0 |
-| `frontend/assets/models/kenney/fantasy_town_kit/` : Fantasy Town Kit 2.0 | Kenney | [kenney.nl](https://kenney.nl/assets) | CC0 1.0 |
-| `frontend/assets/models/kenney/food_kit/` : Food Kit 2.0 | Kenney | [kenney.nl](https://kenney.nl/assets) | CC0 1.0 |
-| `frontend/assets/models/kenney/furniture_kit/` : Furniture Kit 2.0 | Kenney | [kenney.nl](https://kenney.nl/assets) | CC0 1.0 |
-| `frontend/assets/models/kenney/graveyard_kit/` : Graveyard Kit 5.0 | Kenney | [kenney.nl](https://kenney.nl/assets) | CC0 1.0 |
-| `frontend/assets/models/kenney/mini_arena/` : Mini Arena 1.1 | Kenney, Tony Schär | [kenney.nl](https://kenney.nl/assets) | CC0 1.0 |
-| `frontend/assets/models/kenney/mini_dungeon/` : Mini Dungeon 2.0 | Kenney | [kenney.nl](https://kenney.nl/assets) | CC0 1.0 |
-| `frontend/assets/models/kenney/mini_forest/` : Mini Forest 1.0 | Kenney | [kenney.nl](https://kenney.nl/assets) | CC0 1.0 |
-| `frontend/assets/models/kenney/modular_dungeon_kit/` : Modular Dungeon Kit 2.1 | Kenney | [kenney.nl](https://kenney.nl/assets) | CC0 1.0 |
-| `frontend/assets/models/kenney/nature_kit/` : Nature Kit 2.1 | Kenney | [kenney.nl](https://kenney.nl/assets) | CC0 1.0 |
-| `frontend/assets/models/kenney/survival_kit/` : Survival Kit 2.0 | Kenney | [kenney.nl](https://kenney.nl/assets) | CC0 1.0 |
+| 1 | HTML | 3 | « Tour de garde » est dans un commentaire (`<!-- ... -->`) : seuls Forge, Moulin et Puits s'affichent |
+| 2 | CSS | green | Le sélecteur `#maire` (id) est le plus spécifique ; il l'emporte sur la classe et la balise |
+| 3 | Python | 10 | `recolte = 12 > 10` → `greniers = 3 + 2 = 5` ; `print(greniers * 2)` affiche 10 |
+| 4 | PHP | 2 | `$pieces = 7 + 5 = 12` ; `12 % 5` renvoie le reste 2 |
+| 5 | JS/TS | 12 | Valeurs paires additionnées, impaires −1 ; réponse officielle du jeu : 12 (l'extrait affiché produirait 16) |
 
-Le fichier `License.txt` de chaque kit est conservé dans son dossier. Le créditer n'est pas obligatoire, mais Kenney le demande à titre de soutien.
+Séquence de validation : 3 — green — 10 — 2 — 12 (chaque erreur coûte 5 minutes sur le chronomètre global)
 
-### Moteur
+## Comptes de test
+Jouable sans compte, création de compte possible pour acces au classement
 
-| Composant | Version | Licence |
-| --- | --- | --- |
-| [Godot Engine](https://godotengine.org/license/) | 4.7.2 | MIT |
+## Technologies
 
-Le jeu exporté contient le moteur et les bibliothèques ci-dessous. Voici les principales :
+Moteur : Godot
 
-| Bibliothèque | Rôle | Licence |
-| --- | --- | --- |
-| Jolt Physics | Physique | MIT |
-| FreeType | Rendu des polices | FreeType License |
-| HarfBuzz | Mise en forme du texte | Licence HarfBuzz (MIT ancienne) |
-| ICU | Données Unicode | Licence Unicode |
-| Graphite | Mise en forme du texte | MIT |
-| Open Sans, Noto Sans | Polices du moteur | SIL OFL 1.1 |
-| ENet | Réseau | MIT |
+Bibliothèques :
+
+| Bibliothèque | Rôle |
+|---|---|
+| Jolt Physics | Physique |
+| FreeType | Rendu des polices |
+| HarfBuzz | Mise en forme du texte |
+| ICU | Données Unicode |
+| Graphite | Mise en forme du texte |
+| Open Sans, Noto Sans | Polices du moteur |
+| ENet | Réseau |
 | Mbed TLS | Chiffrement | Apache 2.0 |
-| Recast | Navigation | zlib |
-| OggVorbis | Audio | BSD 3-Clause |
-| Quite OK Audio | Audio | MIT |
-| Basis Universal | Textures | Apache 2.0 |
-| Brotli | Compression | MIT |
-| WebP | Images | BSD 3-Clause |
+| Recast | Navigation |
+| OggVorbis | Audio |
+| Quite OK Audio | Audio |
+| Basis Universal | Textures |
+| Brotli | Compression |
+| WebP | Images |
 
-La liste complète, avec les auteurs et le texte de chaque licence, se trouve dans [COPYRIGHT.txt](https://github.com/godotengine/godot/blob/4.7.2-stable/COPYRIGHT.txt). Elle est aussi publiée avec le jeu web, dans `GODOT_LICENSE.txt` et `GODOT_COPYRIGHT.txt`.
+## Structure du dépot
 
-Portions of this software are copyright © 1996-2025 The FreeType Project (www.freetype.org). All rights reserved.
+Voici le tableau en Markdown :
 
-### Licence de Godot Engine
+| Dossier | Contenu |
+|---|---|
+| frontend/ | Projet Godot |
+| frontend/assets/ | Modèles, textures, matériaux, audio et polices |
+| frontend/assets/models/kenney/ | Kits de modèles Kenney, par kit (voir docs/assets.md) |
+| frontend/scenes/levels/ | Niveaux |
+| frontend/scenes/player/ | Personnage joueur (scène et script) |
+| frontend/scenes/ui/ | Interfaces |
+| frontend/scripts/ | Scripts partagés qui n'appartiennent à aucune scène |
+| backend/ | API Python |
+| docs/ | Documentation technique |
+| infrastructure/ | Base de données locale et production avec Docker |
 
-```text
-Copyright (c) 2014-present Godot Engine contributors (see AUTHORS.md).
-Copyright (c) 2007-2014 Juan Linietsky, Ariel Manzur.
+## Lancer en développement
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Installation :
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+- Installer Godot 4.7 en GDScript
+- Activer Git LFS, une seule fois par machine, **avant de cloner**
+    - `git lfs install`
+- Clôner le dépot, puis importer `fronted/project.godot` depuis le gestionnaire de projet de Godot.
+- Lancer le jeu avec `F5`
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
+## Crédits et liscences
 
-## Backend
+[Lien](https://github.com/AnthonyFerron/CDP-2026/blob/main/LICENCES.md)
 
-Ces éléments servent au backend et ne sont pas inclus dans le jeu exporté. Les versions sont fixées dans `backend/requirements.txt`, et les licences viennent des métadonnées PyPI de ces versions.
+## IA
 
-| Licence | Paquets Python |
-| --- | --- |
-| MIT | agent-detector, annotated-doc, annotated-types, anyio, charset-normalizer, fastapi, fastapi-cli, fastapi-cloud-cli, fastar, h11, httptools, markdown-it-py, mdurl, pydantic, pydantic-extra-types, pydantic-settings, pydantic_core, PyYAML, rich, rich-toolkit, rignore, sentry-sdk, SQLAlchemy, truststore, typer, typing-inspection, urllib3, watchfiles |
-| BSD 3-Clause | click, httpcore, httpcore2, httpx, httpx2, idna, Jinja2, MarkupSafe, protobuf, python-dotenv, starlette, uvicorn, websockets |
-| BSD 2-Clause | Pygments |
-| Apache 2.0 | googleapis-common-protos, opentelemetry-api, opentelemetry-exporter-http-transport, opentelemetry-exporter-otlp-common, opentelemetry-exporter-otlp-proto-common, opentelemetry-exporter-otlp-proto-http, opentelemetry-proto, opentelemetry-sdk, opentelemetry-semantic-conventions, python-multipart, requests |
-| MIT ou Apache 2.0 | uvloop |
-| ISC | dnspython, shellingham |
-| 0BSD | detect-installer |
-| MPL 2.0 | certifi |
-| LGPL 3.0 | psycopg, psycopg-binary |
-| PSF 2.0 | typing_extensions |
-| Unlicense | email-validator |
+[Lien]()
 
-| Service | Version | Licence |
-| --- | --- | --- |
-| PostgreSQL (`infrastructure/docker-compose.yml`) | 17 | PostgreSQL License |
-| Caddy (`frontend/Dockerfile`) | 2 | Apache 2.0 |
+## Limites connues
+
+Pas de limite
+
+# A FAIRE
