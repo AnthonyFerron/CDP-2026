@@ -29,33 +29,19 @@ if [ ! -f "$BASE/.env" ]; then
   chown deploy:deploy "$BASE/.env"
 fi
 
-cat > /usr/local/bin/cdp-deploy <<'EOF'
-#!/bin/bash
-set -euo pipefail
+# Sauvegardes prises avant chaque migration, hors du dépôt cloné
+install -d -o deploy -g deploy -m 700 "$BASE/backups"
 
-BASE=/opt/cdp-2026
+# Script de déploiement versionné : relancer ce script après l'avoir modifié
+install -m 755 "$(dirname "$(readlink -f "$0")")/cdp-deploy" /usr/local/bin/cdp-deploy
 
-exec 9>"$BASE/.deploy.lock"
-flock 9
-
-if [ ! -d "$BASE/app/.git" ]; then
-  git clone --depth 1 --branch main https://github.com/AnthonyFerron/CDP-2026.git "$BASE/app"
+# Clé SSH limitée à cdp-deploy : elle ne peut lancer aucune autre commande.
+# Une clé déjà installée est conservée, pour que relancer ce script n'invalide pas les secrets GitHub.
+if [ -s /home/deploy/.ssh/authorized_keys ]; then
+  echo "Clé de déploiement existante conservée : les secrets GitHub restent valables."
+  exit 0
 fi
 
-cd "$BASE/app"
-git fetch --depth 1 origin main
-git reset --hard FETCH_HEAD
-git lfs install --local >/dev/null
-git lfs pull
-echo "Déploiement de $(git rev-parse --short HEAD)"
-
-docker compose -f infrastructure/docker-compose.prod.yml --env-file "$BASE/.env" \
-  up --detach --build --wait --wait-timeout 120 --remove-orphans
-docker image prune --force
-EOF
-chmod 755 /usr/local/bin/cdp-deploy
-
-# Clé SSH limitée à cdp-deploy : elle ne peut lancer aucune autre commande
 KEYDIR=$(mktemp -d)
 trap 'rm -rf "$KEYDIR"' EXIT
 ssh-keygen -q -t ed25519 -N '' -C github-actions-deploy@cdp-2026 -f "$KEYDIR/key"

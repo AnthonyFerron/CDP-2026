@@ -51,7 +51,7 @@ Toutes les demandes au serveur passent par l'autoload `Account` (`frontend/scrip
 
 ## Debug
 
-En version de debug, `F1` ouvre un menu temporaire qui permet de passer d'un niveau à l'autre. Le site est pour l'instant exporté en version de debug (`--export-debug` dans `frontend/Dockerfile`), le menu y est donc disponible ; repasser à `--export-release` pour le retirer. Il liste les scènes de `frontend/scenes/levels/`, et les sous-dossiers qui contiennent une scène du même nom, comme `plaine/plaine.tscn` : nommer ainsi la scène principale de chaque niveau pour qu'elle y apparaisse. Le bouton « Réinitialiser la partie » efface la sauvegarde.
+En version de debug, `F1` ouvre un menu de test sur toute la page : aller dans chaque niveau ou au menu principal ; trouver ou **poser chaque livre** (« Poser » amène au château, met le livre en main et joue la vraie pose, avec le plan large sur la reconstruction et le rituel au quatrième livre ; « Tout poser d'un coup » saute les animations) ; régler le chronomètre, passer l'introduction du bunker, lancer les deux fins ; se connecter avec un compte de test simulé. Le site est pour l'instant exporté en version de debug (`--export-debug` dans `frontend/Dockerfile`), le menu y est donc disponible ; repasser à `--export-release` pour le retirer. Il liste les scènes de `frontend/scenes/levels/`, et les sous-dossiers qui contiennent une scène du même nom, comme `plaine/plaine.tscn` : nommer ainsi la scène principale de chaque niveau pour qu'elle y apparaisse. Le bouton « Réinitialiser la partie » efface la sauvegarde.
 
 ## Progression
 
@@ -101,7 +101,7 @@ Un script propre à une scène se range à côté de celle-ci. Les fichiers et d
 
 L'API FastAPI de `backend/` gère les comptes avec double authentification par e-mail, les parties et leur chronomètre, les énigmes et les classements. Sa documentation interactive est servie sur `/api/docs`. Les routes et les règles sont dans `docs/api-contract.md`, et le branchement côté Godot dans `docs/api-godot.md`.
 
-Les tests de l'API demandent une base PostgreSQL dédiée, indiquée par `TEST_DATABASE_URL` (voir la section Tests de `docs/api-contract.md`). Le déploiement n'applique pas les migrations Alembic : après en avoir ajouté une, lancer `alembic upgrade head` dans le conteneur `api` du serveur.
+Les tests de l'API demandent une base PostgreSQL dédiée, indiquée par `TEST_DATABASE_URL` (voir la section Tests de `docs/api-contract.md`). Ils tournent sur chaque pull request vers `dev` ou `main`. Une migration Alembic doit rester compatible avec la version précédente de l'API : voir `docs/deploiement.md`.
 
 ## Hébergement
 
@@ -125,9 +125,11 @@ En vue à la première personne, le corps de Devlyn ne se voit pas mais projette
 
 ## Déploiement
 
-Chaque push sur `main` qui modifie `backend/`, `frontend/` ou `infrastructure/` lance les tests de l'API, puis déploie le jeu et l'API sur le serveur de production avec Docker Compose (voir `.github/workflows/deploy.yml`). Si les tests échouent, rien n'est déployé.
+Chaque push sur `main` qui modifie `backend/`, `frontend/` ou `infrastructure/` lance les tests de l'API, puis déploie le jeu et l'API sur le serveur de production (voir `.github/workflows/deploy.yml`). Si les tests échouent, rien n'est déployé. Une pull request ne déploie jamais rien : elle lance seulement les tests (`.github/workflows/tests.yml`).
 
-Le serveur se prépare une seule fois avec `sudo bash infrastructure/setup-server.sh`, qui affiche les secrets à créer dans GitHub. Les secrets de production se trouvent dans `/opt/cdp-2026/.env` et ne sont jamais versionnés. Après avoir modifié ce fichier, relancer `cdp-deploy` en tant qu'utilisateur `deploy`.
+Sur le serveur, `cdp-deploy` récupère `main` et lance `infrastructure/deploy.sh`, qui sauvegarde la base dans `/opt/cdp-2026/backups`, applique les migrations Alembic, puis met les conteneurs à jour. Si la sauvegarde ou une migration échoue, le déploiement s'arrête et l'API en service n'est pas touchée. Le détail, la restauration d'une sauvegarde et les règles d'écriture des migrations sont dans `docs/deploiement.md`.
+
+Le serveur se prépare une seule fois avec `sudo bash infrastructure/setup-server.sh`, qui installe `cdp-deploy` et affiche les secrets à créer dans GitHub. Le relancer met `cdp-deploy` à jour sans changer la clé de déploiement. Les secrets de production se trouvent dans `/opt/cdp-2026/.env` et ne sont jamais versionnés. Après avoir modifié ce fichier, relancer `cdp-deploy` en tant qu'utilisateur `deploy`.
 
 Le domaine est défini par `SITE_ADDRESS` dans ce fichier. Il pointe vers le serveur avec un enregistrement DNS sans proxy Cloudflare, et Caddy obtient le certificat HTTPS tout seul.
 
