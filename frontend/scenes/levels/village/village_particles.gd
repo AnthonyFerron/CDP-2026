@@ -4,7 +4,7 @@ extends CPUParticles3D
 ## Particules d'ambiance du Village : braises qui montent des feux et des cratères en tourbillonnant, ou poussière qui
 ## flotte dans la lumière de la mairie. Tout est réglé ici : la scène ne garde que le genre et la taille de la zone.
 
-enum Kind { EMBERS, DUST }
+enum Kind { EMBERS, DUST, SPLASH }
 
 @export var kind := Kind.EMBERS
 ## Demi-dimensions de la zone d'émission.
@@ -25,7 +25,8 @@ func _ready() -> void:
 	dot.height = 32
 	var material := StandardMaterial3D.new()
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+	if kind != Kind.SPLASH:
+		material.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
 	material.vertex_color_use_as_albedo = true
@@ -53,6 +54,19 @@ func _ready() -> void:
 		fade.set_color(0, Color(tint.lightened(0.3), 1.0))
 		fade.set_color(1, Color(tint.darkened(0.4), 0.0))
 		fade.add_point(0.6, Color(tint, 0.85))
+	elif kind == Kind.SPLASH:
+		# Gouttes soulevées par les pales de la roue, qui retombent dans le ruisseau.
+		quad.size = Vector2.ONE * 0.07
+		amount = 26
+		lifetime = 0.9
+		preprocess = 1.0
+		direction = Vector3(0, 1, 0.4)
+		spread = 35.0
+		gravity = Vector3(0, -9.0, 0)
+		initial_velocity_min = 1.6
+		initial_velocity_max = 3.0
+		fade.set_color(0, Color(tint, 0.9))
+		fade.set_color(1, Color(tint, 0.0))
 	else:
 		quad.size = Vector2.ONE * 0.045
 		amount = 70

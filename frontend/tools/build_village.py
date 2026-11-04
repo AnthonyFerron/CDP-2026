@@ -257,7 +257,7 @@ class VillageScene(Scene):
                 lines += [f'[sub_resource type="CylinderShape3D" id="{cylinder_ids[key]}"]',
                           f"height = {key[1]:g}", f"radius = {key[0]:g}", ""]
         for key, (color, roughness, emission, energy, metallic) in self.materials.items():
-            lines += [f'[sub_resource type="StandardMaterial3D" id="Material_{key}"]',
+            lines += [f'[sub_resource type="StandardMaterial3D" id="Material_{key}"]', f'resource_name = "{key}"',
                       "albedo_color = Color(%s, 1)" % ", ".join(fmt(c) for c in color), f"roughness = {fmt(roughness)}"]
             if metallic:
                 lines.append(f"metallic = {fmt(metallic)}")
@@ -1319,7 +1319,6 @@ def build_gardens(scene, rng):
     cylinder(scene, "straw", (sx, 1.97, sz), 0.26, 0.03, sides=10)
     cylinder(scene, "straw", (sx, 2.07, sz), 0.13, 0.2, top=0.05, sides=8)
     post(scene, sx, sz, 0.14, 1.9, label="épouvantail")
-    crow(scene, sx + 0.55, 1.49, sz, 100.0)
     # Le second potager a brûlé : quelques tiges de maïs noircies dans des sillons gris.
     for z in (32.6, 34.2, 35.8, 37.4):
         for x in (-30.2, -28.6, -27.0, -25.4):
@@ -1443,8 +1442,6 @@ def build_stables(scene, rng):
     box(scene, "water", (25.0, 0.58, 20.6), (1.8, 0.02, 0.5))
     block(scene, (25.0, 0.3, 20.6), (2.0, 0.6, 0.7), label="abreuvoir")
     lay(scene, "graveyard_kit/hay-bale", (27.6, 0.0, 21.8), 40.0, 1.8)
-    crow(scene, 21.7, top_of("nature_kit/fence_simple", 2.4), 17.6, 30.0)
-    crow(scene, 26.2, top_of("nature_kit/fence_simple", 2.4), 17.6, 250.0)
 
 
 # --- Traces de l'attaque -------------------------------------------------------------------------------------------
@@ -1471,18 +1468,12 @@ def build_battle_scars(scene, rng):
             lay(scene, "nature_kit/crops_wheatStageB", (x, 0.0, z), rng.uniform(0, 360), 2.0)
     block(scene, (19.25, 0.5, -17.4), (4.4, 1.0, 9.0), label="champ de blé")
     scorch(scene, 20.6, -17.6, 2.2)
-    # Corbeaux sur le rempart, la tour de la porte et la place.
-    for x, y, z, degrees, pecking in ((-22.4, 5.24, 41.0, 160.0, False), (13.4, 5.24, 41.1, 200.0, False),
-                                      (14.3, 5.24, 40.8, 120.0, False), (6.6, 9.2, 42.6, 10.0, False),
-                                      (-6.2, 0.0, -6.4, 40.0, True), (-5.5, 0.0, -7.3, 300.0, True),
-                                      (7.4, 0.0, 5.2, 200.0, True), (-25.6, 0.0, 30.6, 90.0, True),
-                                      (-1.6, 0.0, 37.6, 120.0, True), (30.2, 5.24, -21.6, 250.0, False)):
-        crow(scene, x, y, z, degrees, pecking)
+    # Les corbeaux, qui s'envolent quand on approche, sont posés dans village.tscn (village_crow.gd).
 
 
 def build_wildlife(scene):
-    """Les chats restés au village : l'un garde la porte de la mairie, l'autre dort sur une caisse de la rue."""
-    cat(scene, -2.7, 0.0, -18.9, 160.0, "cat_black")
+    """Les chats restés au village : l'un dort sur une caisse de la rue (le gris du puits est posé avec le puits ; ceux
+    qui se promènent sont dans village.tscn, village_cat.gd)."""
     place(scene, "survival_kit/box-large", (4.3, 0.0, 26.6), 0.0, 3.0, height=0.75, label="caisse devant la boulangerie")
     cat(scene, 4.3, 0.75, 26.4, 60.0, "cat_ginger", lying=True)
 

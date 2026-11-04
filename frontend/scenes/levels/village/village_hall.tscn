@@ -103,18 +103,22 @@ height = 0.9
 radius = 0.38
 
 [sub_resource type="StandardMaterial3D" id="Material_soot"]
+resource_name = "soot"
 albedo_color = Color(0.15, 0.125, 0.105, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_ash"]
+resource_name = "ash"
 albedo_color = Color(0.27, 0.24, 0.21, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_char"]
+resource_name = "char"
 albedo_color = Color(0.1, 0.075, 0.06, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_ember"]
+resource_name = "ember"
 albedo_color = Color(0.35, 0.08, 0.02, 1)
 roughness = 0.8
 emission_enabled = true
@@ -122,71 +126,88 @@ emission = Color(1, 0.32, 0.06, 1)
 emission_energy_multiplier = 2.2
 
 [sub_resource type="StandardMaterial3D" id="Material_stone"]
+resource_name = "stone"
 albedo_color = Color(0.42, 0.4, 0.38, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_stone_dark"]
+resource_name = "stone_dark"
 albedo_color = Color(0.3, 0.29, 0.29, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_brick"]
+resource_name = "brick"
 albedo_color = Color(0.5, 0.27, 0.18, 1)
 roughness = 0.95
 
 [sub_resource type="StandardMaterial3D" id="Material_wood"]
+resource_name = "wood"
 albedo_color = Color(0.42, 0.28, 0.17, 1)
 roughness = 0.9
 
 [sub_resource type="StandardMaterial3D" id="Material_wood_dark"]
+resource_name = "wood_dark"
 albedo_color = Color(0.26, 0.17, 0.1, 1)
 roughness = 0.9
 
 [sub_resource type="StandardMaterial3D" id="Material_rope"]
+resource_name = "rope"
 albedo_color = Color(0.55, 0.47, 0.33, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_iron"]
+resource_name = "iron"
 albedo_color = Color(0.2, 0.2, 0.22, 1)
 roughness = 0.5
 metallic = 0.6
 
 [sub_resource type="StandardMaterial3D" id="Material_water"]
+resource_name = "water"
 albedo_color = Color(0.08, 0.13, 0.16, 1)
 roughness = 0.15
 
 [sub_resource type="StandardMaterial3D" id="Material_flour"]
+resource_name = "flour"
 albedo_color = Color(0.86, 0.83, 0.76, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_burlap"]
+resource_name = "burlap"
 albedo_color = Color(0.62, 0.5, 0.32, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_straw"]
+resource_name = "straw"
 albedo_color = Color(0.78, 0.65, 0.33, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_crow"]
+resource_name = "crow"
 albedo_color = Color(0.05, 0.05, 0.07, 1)
 roughness = 0.6
 
 [sub_resource type="StandardMaterial3D" id="Material_beak"]
+resource_name = "beak"
 albedo_color = Color(0.16, 0.15, 0.14, 1)
 roughness = 0.6
 
 [sub_resource type="StandardMaterial3D" id="Material_cat_grey"]
+resource_name = "cat_grey"
 albedo_color = Color(0.36, 0.35, 0.36, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_cat_ginger"]
+resource_name = "cat_ginger"
 albedo_color = Color(0.72, 0.42, 0.18, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_cat_black"]
+resource_name = "cat_black"
 albedo_color = Color(0.07, 0.07, 0.08, 1)
 roughness = 0.9
 
 [sub_resource type="StandardMaterial3D" id="Material_eye"]
+resource_name = "eye"
 albedo_color = Color(0.6, 0.55, 0.12, 1)
 roughness = 0.4
 emission_enabled = true
@@ -194,42 +215,52 @@ emission = Color(0.4, 0.36, 0.05, 1)
 emission_energy_multiplier = 0.6
 
 [sub_resource type="StandardMaterial3D" id="Material_linen"]
+resource_name = "linen"
 albedo_color = Color(0.86, 0.83, 0.74, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_linen_blue"]
+resource_name = "linen_blue"
 albedo_color = Color(0.45, 0.55, 0.68, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_linen_red"]
+resource_name = "linen_red"
 albedo_color = Color(0.62, 0.28, 0.22, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_linen_green"]
+resource_name = "linen_green"
 albedo_color = Color(0.4, 0.5, 0.33, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_linen_burnt"]
+resource_name = "linen_burnt"
 albedo_color = Color(0.25, 0.2, 0.16, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_herb"]
+resource_name = "herb"
 albedo_color = Color(0.32, 0.42, 0.2, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_herb_dry"]
+resource_name = "herb_dry"
 albedo_color = Color(0.48, 0.45, 0.24, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_parchment"]
+resource_name = "parchment"
 albedo_color = Color(0.86, 0.78, 0.6, 1)
 roughness = 1
 
 [sub_resource type="StandardMaterial3D" id="Material_leather"]
+resource_name = "leather"
 albedo_color = Color(0.36, 0.2, 0.11, 1)
 roughness = 0.8
 
 [sub_resource type="StandardMaterial3D" id="Material_cloth_red"]
+resource_name = "cloth_red"
 albedo_color = Color(0.55, 0.12, 0.1, 1)
 roughness = 1
 
