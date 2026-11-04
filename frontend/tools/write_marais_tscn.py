@@ -480,7 +480,7 @@ def main():
     node(lines, "Moon", "DirectionalLight3D", props=[
         "transform = Transform3D(0.7071068, 0.5, -0.5, 0, 0.7071068, 0.7071068, 0.7071068, -0.5, 0.5, 0, 40, 0)",
         "light_color = Color(0.58, 0.7, 0.95, 1)", "light_energy = 0.5", "light_specular = 1.4", "shadow_enabled = true",
-        "directional_shadow_max_distance = 60.0"])
+        "directional_shadow_mode = 1", "directional_shadow_max_distance = 50.0"])
     node(lines, "Terrain", "StaticBody3D", props=[
         'script = ExtResource("2_terrain")', 'ground_material = SubResource("ShaderMaterial_ground")'])
     node(lines, "Water", "MeshInstance3D", props=['mesh = SubResource("PlaneMesh_water")', "cast_shadow = 0"])
@@ -532,18 +532,18 @@ def main():
         node(lines, name, "OmniLight3D", props=[
             f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {x:g}, 3.8, {z:g})",
             'script = ExtResource("14_flicker")', "light_color = Color(1, 0.75, 0.4, 1)", "light_energy = 1.6",
-            "omni_range = 7.0", "flicker = 0.2"])
+            "omni_range = 7.0", "flicker = 0.2", "distance_fade_enabled = true", "distance_fade_begin = 38.0", "distance_fade_length = 8.0"])
     node(lines, "CryptLight", "OmniLight3D", props=[
         "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, -32)", 'script = ExtResource("14_flicker")',
-        "light_color = Color(0.5, 0.9, 0.7, 1)", "light_energy = 1.2", "omni_range = 9.0", "flicker = 0.1"])
+        "light_color = Color(0.5, 0.9, 0.7, 1)", "light_energy = 1.2", "omni_range = 9.0", "flicker = 0.1", "distance_fade_enabled = true", "distance_fade_begin = 38.0", "distance_fade_length = 8.0"])
     # La lanterne du panneau d'accueil éclaire son texte.
     node(lines, "SignLight", "OmniLight3D", props=[
         "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3, 2.5, 54.0)", 'script = ExtResource("14_flicker")',
-        "light_color = Color(1, 0.78, 0.45, 1)", "light_energy = 1.4", "omni_range = 5.5", "flicker = 0.15"])
+        "light_color = Color(1, 0.78, 0.45, 1)", "light_energy = 1.4", "omni_range = 5.5", "flicker = 0.15", "distance_fade_enabled = true", "distance_fade_begin = 38.0", "distance_fade_length = 8.0"])
     # Une lueur froide persiste sur l'autel de la chapelle en ruine.
     node(lines, "ChapelLight", "OmniLight3D", props=[
         "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -37.8, 2.2, -4)", 'script = ExtResource("14_flicker")',
-        "light_color = Color(0.55, 0.95, 0.85, 1)", "light_energy = 1.3", "omni_range = 8.0", "flicker = 0.25"])
+        "light_color = Color(0.55, 0.95, 0.85, 1)", "light_energy = 1.3", "omni_range = 8.0", "flicker = 0.25", "distance_fade_enabled = true", "distance_fade_begin = 38.0", "distance_fade_length = 8.0"])
 
     node(lines, "Clues", "Node3D")
     for name, x, y, z, title, text, prompt, radius in CLUES:
@@ -600,14 +600,17 @@ def main():
     node(lines, "Chain", "MeshInstance3D", "Interior/StairLantern", props=[
         "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.2, 0)", 'mesh = SubResource("BoxMesh_chain")'])
     node(lines, "Lantern", parent="Interior/StairLantern", instance="61_hanging_lantern", props=[at(0.0, -2.4 - 0.39 * 1.6, 0.0, 1.6)])
-    for name, x, y, z, energy, color in (("LightEntry", 0, 3.3, 1.0, 1.2, warm), ("LightStairs", 0, 7.4, 11.4, 0.7, cold),
-                                         ("LightStairsMid", 0, 5.0, 6.4, 0.9, warm),
-                                         ("LightHall", 0, 3.3, -12, 2.2, warm), ("LightEast", 24, 3.3, -12, 1.6, warm), ("LightEastTomb", 20.6, 1.5, -12, 0.5, warm),
-                                         ("LightWest", -24, 3.3, -12, 1.4, warm), ("LightOssuary", -18, 3.3, 2, 0.9, warm),
-                                         ("LightGuards", 18, 3.3, 2, 0.9, warm)):
+    # Pour le web, chaque lumière ne porte que sur sa pièce : dans le rendu Compatibility, chaque lumière qui touche
+    # un objet le redessine une fois de plus.
+    for name, x, y, z, energy, color, reach in (
+            ("LightEntry", 0, 3.3, 1.0, 1.2, warm, 7.0), ("LightStairs", 0, 7.4, 11.4, 0.7, cold, 6.5),
+            ("LightStairsMid", 0, 5.0, 6.4, 0.9, warm, 6.5), ("LightHall", 0, 3.3, -12, 2.2, warm, 12.0),
+            ("LightEast", 24, 3.3, -12, 1.6, warm, 9.5), ("LightEastTomb", 20.6, 1.5, -12, 0.5, warm, 4.5),
+            ("LightWest", -24, 3.3, -12, 1.4, warm, 9.5), ("LightOssuary", -18, 3.3, 2, 0.9, warm, 7.5),
+            ("LightGuards", 18, 3.3, 2, 0.9, warm, 7.5)):
         node(lines, name, "OmniLight3D", "Interior", props=[
             f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {x:g}, {y:g}, {z:g})", 'script = ExtResource("14_flicker")',
-            f"light_color = {color}", f"light_energy = {energy:g}", "omni_range = 12.0", "flicker = 0.15"])
+            f"light_color = {color}", f"light_energy = {energy:g}", f"omni_range = {reach:g}", "flicker = 0.15"])
     for index, x in enumerate((-8.4, 8.4)):
         node(lines, f"Brazier{index}", "Node3D", "Interior", props=[
             f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {x:g}, 0.55, -20.6)", 'script = ExtResource("13_fire")',
