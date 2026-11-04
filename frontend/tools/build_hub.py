@@ -62,8 +62,17 @@ MODEL_BOXES.update({
 })
 
 
+# Meubles toujours solides, même posés sans hauteur : chaises, tabourets, bancs, roues, plantes. On bute dessus au lieu
+# de les traverser.
+SOLID = ("furniture_kit/chair", "furniture_kit/stoolBar", "fantasy_town_kit/stall-stool", "furniture_kit/bench",
+         "fantasy_town_kit/wheel", "graveyard_kit/bench-damaged", "furniture_kit/pottedPlant")
+
+
 def furniture(scene, model, center, degrees=0.0, scale=2.6, height=None, tilt=0.0, roll=0.0):
     """Comme furniture() de build_plaine, avec en plus une échelle par axe du modèle (x, y, z)."""
+    if height is None and model in SOLID:
+        # Hauteur de la boîte du meuble tel qu'il est posé, debout ou renversé.
+        height = MODEL_BOXES[MEDIEVAL.get(model, model)][1][1] * (scale if not isinstance(scale, tuple) else scale[1])
     if not isinstance(scale, tuple):
         return _furniture(scene, model, center, degrees, scale, height, tilt, roll)
     model = MEDIEVAL.get(model, model)
@@ -224,16 +233,24 @@ def wall_models(style):
 
 
 def roof(scene, cx, cz, width, depth, base):
-    """Toit à deux pans : les tuiles se rejoignent au faîte, au milieu de la largeur."""
+    """Toit à deux pans : les tuiles montent des gouttières jusqu'au faîte, au milieu. Le faîte court dans la longueur
+    paire de la maison (le long de z, sauf si seule la profondeur est paire), pour que les deux pans se rejoignent sur
+    un joint de tuiles. La tuile « roof » est basse du côté de son x négatif, avec le débord de la gouttière : on la
+    tourne pour que ce côté regarde au-dehors."""
+    ridge_along_x = width % 2 == 1 and depth % 2 == 0
     for column in range(width):
         x = cx - (width - 1) * TILE / 2 + column * TILE
-        outward = (1, 0) if x > cx else (-1, 0)
         for row in range(depth):
             z = cz - (depth - 1) * TILE / 2 + row * TILE
-            if abs(x - cx) < 0.1:
-                scene.add("fantasy_town_kit/roof-flat", (x, base + 0.1, z), 0.0, TILE)
+            if ridge_along_x:
+                outward = (0, 1) if z > cz else (0, -1)
             else:
-                scene.add("fantasy_town_kit/roof", (x, base, z), OUTWARD_ANGLES[outward], TILE)
+                outward = (1, 0) if x > cx else (-1, 0)
+            if abs((z - cz) if ridge_along_x else (x - cx)) < 0.1:
+                # Case du milieu d'un côté impair : un toit plat au niveau du faîte.
+                scene.add("fantasy_town_kit/roof-flat", (x, base + 0.5 * TILE, z), 0.0, TILE)
+            else:
+                scene.add("fantasy_town_kit/roof", (x, base, z), OUTWARD_ANGLES[(-outward[0], -outward[1])], TILE)
 
 
 class HouseFrame:
@@ -303,6 +320,19 @@ def house_floor(scene, rng, house, ruined):
     """Plancher de bois sur toutes les cases, enfoncé pour affleurer le sol : il ne gêne pas les pas.
     Dans les ruines, des lattes manquent ou sont arrachées. Les maisons à étage ont aussi le plancher de l'étage."""
     cx, cz, width, depth, _, _, floors = house
+    if not ruined:
+        # Couches croisées d'une seule pièce sous chaque plancher et au-dessus du plafond : entre les lattes et aux
+        # joints des cases, on voit du bois, et non l'herbe du terrain ou le dessous du toit. Tournée d'un quart de
+        # tour, la pièce prend la profondeur de la maison sur son axe x.
+        span = (depth * TILE * 0.98, TILE, width * TILE * 0.98)
+        for level in [-0.215] + [floor * WALL_HEIGHT - 0.215 for floor in range(1, floors)]:
+            scene.add("fantasy_town_kit/planks", (cx, level, cz), 90.0, span)
+        # Au-dessus du plafond, un panneau de bois plein (un mur de planches couché, d'une seule pièce) : par les
+        # fentes des lattes, on voit du bois et non le dessous des tuiles du toit. Couché d'un quart de tour, le mur
+        # prend son épaisseur (x de 0,4 à 0,5) sur la hauteur et sa hauteur sur la largeur de la maison.
+        ceiling = floors * WALL_HEIGHT - 0.2
+        full_width, full_depth = width * TILE * 0.98, depth * TILE * 0.98
+        scene.add("fantasy_town_kit/wall-wood", (cx + full_width / 2, ceiling - 0.03, cz), 0.0, (0.5, full_width, full_depth), roll=90.0)
     for column in range(width):
         for row in range(depth):
             x = cx - (width - 1) * TILE / 2 + column * TILE
@@ -311,6 +341,8 @@ def house_floor(scene, rng, house, ruined):
                 scene.add("fantasy_town_kit/planks", (x, -0.2, z), 0.0, TILE)
                 for floor in range(1, floors):
                     scene.add("fantasy_town_kit/planks", (x, floor * WALL_HEIGHT - 0.2, z), 0.0, TILE)
+                # Plafond sous le toit : vues d'en dessous, les tuiles du toit laisseraient voir le ciel.
+                scene.add("fantasy_town_kit/planks", (x, floors * WALL_HEIGHT - 0.2, z), 0.0, TILE)
                 continue
             roll = rng.random()
             if roll < 0.55:
@@ -328,7 +360,7 @@ def ruined_house(scene, rng, house, furnisher=None):
             continue
         roll = rng.random()
         if roll < 0.2:
-            scene.add("castle_kit/rocks-small", (center[0], 0.0, center[1]), rng.uniform(0, 360), 1.6)
+            scene.add("castle_kit/rocks-small", (center[0], -0.08, center[1]), rng.uniform(0, 360), 1.6)
             scene.add_box((center[0], 0.4, center[1]), (1.6, 0.8, 1.6))
             continue
         if roll < 0.55:
@@ -340,10 +372,12 @@ def ruined_house(scene, rng, house, furnisher=None):
     for sx in (-1, 1):
         for sz in (-1, 1):
             scene.add(pillar, (cx + sx * half_w, 0.0, cz + sz * half_d), 0.0, WALL_SCALE)
-    # Poutres de la charpente tombées au sol, en travers de la pièce.
+            # Le pilier d'angle tient même quand les murs voisins sont tombés : il garde sa collision.
+            scene.add_box((cx + sx * half_w, WALL_HEIGHT / 2, cz + sz * half_d), (0.6, WALL_HEIGHT, 0.6))
+    # Poutres de la charpente tombées au sol, couchées en travers de la pièce.
     for beam in range(rng.randint(1, 2)):
         point = (cx + rng.uniform(-half_w + 1.8, half_w - 1.8), 0.0, cz + rng.uniform(-half_d + 1.8, half_d - 1.8))
-        furniture(scene, "fantasy_town_kit/poles-horizontal", point, rng.uniform(0, 180), 3.0, tilt=90.0)
+        furniture(scene, "fantasy_town_kit/poles-horizontal", point, rng.uniform(0, 180), 3.0, roll=90.0)
     house_floor(scene, rng, house, True)
     (furnisher or furnish)(scene, house, True, rng)
 
@@ -355,8 +389,9 @@ def rebuilt_house(scene, rng, house, furnisher=None):
         if side == door_side and index == count // 2:
             doorway(scene, center, outward)
             along = (outward[1], outward[0])
-            scene.add("fantasy_town_kit/lantern", (center[0] + outward[0] * 0.5 + along[0] * 1.6, 0.0,
-                                                   center[1] + outward[1] * 0.5 + along[1] * 1.6), 0.0, 2.2)
+            lantern = (center[0] + outward[0] * 0.5 + along[0] * 1.6, center[1] + outward[1] * 0.5 + along[1] * 1.6)
+            scene.add("fantasy_town_kit/lantern", (lantern[0], 0.0, lantern[1]), 0.0, 2.2)
+            scene.add_box((lantern[0], 1.0, lantern[1]), (0.45, 2.0, 0.45))
         else:
             wall(scene, rng.choice((plain, window, window_small, window)), center, outward)
         if floors > 1:
@@ -368,6 +403,7 @@ def rebuilt_house(scene, rng, house, furnisher=None):
         for sz in (-1, 1):
             for floor in range(floors):
                 scene.add(pillar, (cx + sx * half_w, floor * WALL_HEIGHT, cz + sz * half_d), 0.0, WALL_SCALE)
+            scene.add_box((cx + sx * half_w, WALL_HEIGHT / 2, cz + sz * half_d), (0.6, WALL_HEIGHT, 0.6))
     roof(scene, cx, cz, width, depth, WALL_HEIGHT * floors)
     scene.add("fantasy_town_kit/chimney", (cx - half_w + 1.2, WALL_HEIGHT * floors, cz), 0.0, 3.0)
     house_floor(scene, rng, house, False)
@@ -439,7 +475,8 @@ def build_village(scene, rng):
     scene.rebuilt("Market")
     for x, z, degrees, model in ((-15.0, -4.0, 90.0, "stall-red"), (-15.0, 4.0, 90.0, "stall-green"), (15.0, -10.0, -90.0, "stall")):
         scene.add(f"fantasy_town_kit/{model}", (x, 0.0, z), degrees, 3.0)
-        scene.add_box((x, 1.5, z), (3.0, 3.0, 3.0), degrees)
+        # L'étal simple est un banc d'1,1 m : sa collision suit sa forme, pas celle des étals à auvent.
+        scene.add_box((x, 0.55, z) if model == "stall" else (x, 1.5, z), (1.95, 1.1, 3.0) if model == "stall" else (3.0, 3.0, 3.0), degrees)
     for model, x, z in (("apple", -14.2, -4.4), ("carrot", -14.4, 4.2), ("bread", 14.6, -10.2)):
         scene.add(f"food_kit/{model}", (x, 1.1, z), rng.uniform(0, 360), 2.5)
     # Fontaine de la place est, au bord du chemin du bunker, à la rue circulaire ; sèche, puis remise en eau au troisième livre.
@@ -655,8 +692,9 @@ def build_castle(scene, rng):
     for z in (-62.0, -66.0):
         scene.add("fantasy_town_kit/fence", (14.0, 0.0, z), 0.0, 4.0)
         scene.add_box((15.7, 0.8, z), (0.3, 1.6, 4.0))
-    scene.add("fantasy_town_kit/fence", (18.0, 0.0, -68.0), 90.0, 4.0)
-    scene.add_box((18.0, 0.8, -66.3), (4.0, 1.6, 0.3))
+    # Le modèle de barrière est décalé de 0,42 tuile de son origine : tourné, il ferme l'enclos à z = -68.
+    scene.add("fantasy_town_kit/fence", (18.0, 0.0, -66.3), 90.0, 4.0)
+    scene.add_box((18.0, 0.8, -68.0), (4.0, 1.6, 0.3))
     for model, x, z, degrees, height in (
         ("graveyard_kit/hay-bale", 18.9, -62.5, 10.0, 1.0), ("graveyard_kit/hay-bale-bundled", 18.4, -65.0, -20.0, 1.1),
         ("fantasy_town_kit/cart-high", 13.5, -56.4, 90.0, 2.4), ("mini_dungeon/barrel", -9.0, -56.5, 0.0, 1.2),
@@ -716,7 +754,7 @@ def build_bunker(scene, rng):
             scene.add("fantasy_town_kit/roof-flat", (bx - TILE / 2 + column * TILE, WALL_HEIGHT, bz - TILE + row * TILE), 0.0, TILE)
     scene.add("castle_kit/metal-gate", (bx - TILE - 0.1, 0.0, bz), 0.0, 4.2)
     for dz in (-2.6, 2.6):
-        scene.add("survival_kit/metal-panel", (bx - TILE - 0.3, 0.6, bz + dz), 90.0, 3.4)
+        scene.add("survival_kit/metal-panel", (bx - TILE - 0.3, 0.0, bz + dz), 90.0, 3.4)
     # Rochers entassés sur les flancs et le toit : de loin, un tertre.
     for index in range(14):
         angle = math.radians(-80 + index * (160 / 13))
@@ -752,13 +790,10 @@ def build_shelter():
     scene.add_box((cx, -0.2, cz), (width * TILE, 0.48, depth * TILE))
     # Plafond plein, de mur à mur et au-delà : même en sautant depuis un lit superposé, on ne sort pas de l'abri.
     scene.add_box((cx, WALL_HEIGHT + 0.5, cz), (width * TILE + 2.0, 1.0, depth * TILE + 2.0))
-    # Dalle de terre au-dessus du plafond : l'abri est enterré, aucun jour ne passe entre les planches.
-    scene.add("fantasy_town_kit/roof-flat", (cx, WALL_HEIGHT + 0.3, cz), 0.0, 1.0)
-    for column in range(width):
-        for row in range(depth):
-            x = cx - (width - 1) * TILE / 2 + column * TILE
-            z = cz - (depth - 1) * TILE / 2 + row * TILE
-            scene.add("fantasy_town_kit/roof-flat", (x, WALL_HEIGHT + 0.3, z), 0.0, TILE)
+    # Panneau de bois plein au-dessus du plafond (un mur de planches couché, d'une seule pièce) : l'abri est enterré,
+    # et entre les planches on voit du bois, non le vert des tuiles d'un toit.
+    full_width, full_depth = width * TILE * 0.99, depth * TILE * 0.99
+    scene.add("fantasy_town_kit/wall-wood", (cx + full_width / 2, WALL_HEIGHT + 0.05, cz), 0.0, (0.5, full_width, full_depth), roll=90.0)
     # Dortoir au nord : lits superposés à l'ouest, couchages à même le sol à l'est.
     for x in (-8.2, -5.4):
         furniture(scene, "furniture_kit/bedBunk", (x, 0.0, -3.9), 0.0, 2.0, height=2.0)
@@ -959,8 +994,10 @@ def furnish_bakery(scene, house, ruined, rng):
     table = frame.at(0.9, -hv + 1.0)
     furniture(scene, "mini_dungeon/table", table, frame.turn(0.0), 3.2, height=1.0, roll=90.0 if ruined else 0.0)
     for index in range(3):
-        furniture(scene, "food_kit/bag", frame.at(hu - 0.6, -hv + 0.8 + index * 1.0), frame.turn(rng.uniform(-20, 20)), 1.6,
-                  height=1.3, tilt=90.0 if ruined and index == 1 else 0.0)
+        # Un sac couché ne remplit pas sa boîte : on l'abaisse d'autant pour qu'il touche le sol.
+        tipped = ruined and index == 1
+        furniture(scene, "food_kit/bag", frame.at(hu - 0.6, -hv + 0.8 + index * 1.0, -0.14 if tipped else 0.0), frame.turn(rng.uniform(-20, 20)), 1.6,
+                  height=1.3, tilt=90.0 if tipped else 0.0)
     furniture(scene, "mini_dungeon/barrel", frame.at(hu - 0.7, 1.4), frame.turn(0.0), 2.6, height=1.2)
     if ruined:
         furniture(scene, "food_kit/bag-flat", frame.at(-0.5, 0.5), frame.turn(rng.uniform(0, 90)), 1.6)
@@ -986,11 +1023,14 @@ def furnish_mill(scene, house, ruined, rng):
     hu, hv = frame.half_u, frame.half_v
     furniture(scene, "survival_kit/workbench-grind", frame.at(0.8, -0.6), frame.turn(0.0), 6.0, height=1.8, roll=90.0 if ruined else 0.0)
     for index in range(4):
-        furniture(scene, "food_kit/bag", frame.at(-hu + 0.6 + index * 0.9, -hv + 0.6), frame.turn(rng.uniform(-25, 25)), 1.6,
-                  height=1.3, tilt=90.0 if ruined and index % 2 else 0.0)
+        tipped = ruined and index % 2 == 1
+        furniture(scene, "food_kit/bag", frame.at(-hu + 0.6 + index * 0.9, -hv + 0.6, -0.15 if tipped else 0.0), frame.turn(rng.uniform(-25, 25)), 1.6,
+                  height=1.3, tilt=90.0 if tipped else 0.0)
     for index in range(2):
         furniture(scene, "survival_kit/box-large", frame.at(hu - 0.8, -hv + 1.0 + index * 1.6), frame.turn(90.0), 3.4, height=0.9)
-    furniture(scene, "mini_forest/ladder", frame.at(-hu + 0.9 if not ruined else 0.4, 0.8), frame.turn(90.0), 3.8, tilt=-12.0 if not ruined else 90.0)
+    furniture(scene, "mini_forest/ladder", frame.at(-hu + 0.9 if not ruined else 0.4, 0.8, 0.0 if not ruined else -0.05), frame.turn(90.0), 3.8,
+              height=3.6 if not ruined else 0.5,
+              tilt=-12.0 if not ruined else 90.0)
     if not ruined:
         furniture(scene, "mini_dungeon/barrel", frame.at(hu - 0.7, 1.8), frame.turn(0.0), 2.6, height=1.2)
         # Charrette de sacs devant la porte, du côté opposé.
@@ -1036,8 +1076,9 @@ def furnish_barracks(scene, house, ruined, rng):
     furniture(scene, "mini_dungeon/table", table, frame.turn(0.0), 3.4, height=1.0, roll=90.0 if ruined else 0.0)
     furniture(scene, "furniture_kit/bench", frame.at(-3.0, 0.3), frame.turn(0.0), 3.0, tilt=90.0 if ruined else 0.0)
     for index, v in enumerate((-0.6, 1.6)):
-        furniture(scene, "mini_arena/weapon-rack", frame.at(hu - 0.7, v), frame.turn(-90.0), 3.0, height=1.4,
-                  tilt=90.0 if ruined and index == 0 else 0.0)
+        tipped = ruined and index == 0
+        furniture(scene, "mini_arena/weapon-rack", frame.at(hu - 0.7, v, -0.45 if tipped else 0.0), frame.turn(-90.0), 3.0, height=1.4,
+                  tilt=90.0 if tipped else 0.0)
     if not ruined:
         for u in (-4.2, -1.3, 1.6):
             furniture(scene, "mini_dungeon/shield-rectangle", frame.at(u, -hv + 0.25, 2.4), frame.turn(0.0), 3.0)
@@ -1047,7 +1088,7 @@ def furnish_barracks(scene, house, ruined, rng):
             furniture(scene, "mini_forest/target", (x, 0.0, z), 0.0, 3.0, height=1.6)
         for x in (cx + 10.5, cx + 14.5):
             furniture(scene, "graveyard_kit/hay-bale-bundled", (x, 0.0, cz + 4.5), 90.0, 2.6, height=1.0)
-            furniture(scene, "graveyard_kit/hay-bale-bundled", (x, 1.0, cz + 4.5), 0.0, 2.2)
+            furniture(scene, "graveyard_kit/hay-bale-bundled", (x, 1.0, cz + 4.5), 0.0, 2.2, height=0.8)
         furniture(scene, "mini_arena/weapon-rack", (cx + 18.0, 0.0, cz + 1.0), -90.0, 3.0, height=1.4)
 
 
@@ -1172,7 +1213,7 @@ def build_lavoir(scene, rng):
         scene.add_box((cx + 5.6, 1.2, z), (0.3, 2.4, 0.3))
     for index, z in enumerate((cz - 1.4, cz + 0.2, cz + 1.6)):
         scene.add("fantasy_town_kit/banner-green" if index % 2 else "fantasy_town_kit/banner-red", (cx + 5.6 - 1.5, 1.0, z), 0.0, (1.2, 1.4, 1.2))
-    for index, (x, z) in enumerate(((cx - 2.6, cz - 3.0), (cx + 2.6, cz - 3.0))):
+    for index, (x, z) in enumerate(((cx - 2.6, cz - 3.0), (cx + 2.0, cz - 3.0))):
         furniture(scene, "survival_kit/barrel-open", (x, 0.0, z), 0.0, 3.0, height=1.0)
     furniture(scene, "survival_kit/bucket", (cx - 1.0, 0.0, cz - 3.0), 0.0, 3.4)
     scene.group = "Fixed"
@@ -1256,7 +1297,7 @@ def build_orchard(scene, rng):
     scene.rebuilt("Orchard")
     for index, (x, z) in enumerate(spots):
         model = ("nature_kit/tree_default", "nature_kit/tree_fat", "nature_kit/tree_oak")[index % 3]
-        furniture(scene, model, (x, 0.0, z), rng.uniform(0, 360), 2.4, height=3.0)
+        furniture(scene, model, (x, 0.0, z), rng.uniform(0, 360), 3.6, height=3.0)
         for offset in range(2):
             scene.add("food_kit/apple", (x + rng.uniform(-1.2, 1.2), 0.0, z + rng.uniform(1.0, 1.8)), rng.uniform(0, 360), 1.5)
     furniture(scene, "mini_forest/ladder", (cx - 8.0 + 0.9, 0.0, cz - 6.0 + 0.4), 30.0, 3.4, tilt=-14.0)
@@ -1297,8 +1338,8 @@ def build_park(scene, rng):
     hedge_line(scene, (cx - 2.4, z1), (x0 + 5.0, z1))
     # Arbres plantés le long des haies.
     for index, z in enumerate((-61.0, -56.0)):
-        furniture(scene, "nature_kit/tree_oak" if index % 2 else "nature_kit/tree_default", (x1 - 2.2, 0.0, z), rng.uniform(0, 360), 3.2, height=4.0)
-    furniture(scene, "nature_kit/tree_default", (35.0, 0.0, -75.6), rng.uniform(0, 360), 3.0, height=4.0)
+        furniture(scene, "nature_kit/tree_oak" if index % 2 else "nature_kit/tree_default", (x1 - 2.2, 0.0, z), rng.uniform(0, 360), 4.4, height=4.0)
+    furniture(scene, "nature_kit/tree_default", (35.0, 0.0, -75.6), rng.uniform(0, 360), 4.2, height=4.0)
     # Lanternes au bord des allées.
     for x, z in ((40.4, -55.0), (43.6, -64.0), (40.4, -77.0), (40.4, -87.0), (32.6, -60.0), (32.6, -79.0), (49.0, -67.8)):
         scene.add("fantasy_town_kit/lantern", (x, 0.0, z), 0.0, 2.2)
@@ -1314,18 +1355,19 @@ def build_park(scene, rng):
     scene.rebuilt("ParkBeds")
     for x, z in beds:
         for side in (-1, 1):
-            furniture(scene, "fantasy_town_kit/hedge", (x + side * 1.9, 0.0, z), 0.0, (1.0, 1.6, 3.6))
-            furniture(scene, "fantasy_town_kit/hedge", (x, 0.0, z + side * 1.9), 90.0, (1.0, 1.6, 3.6))
+            furniture(scene, "fantasy_town_kit/hedge", (x + side * 1.9, 0.0, z), 0.0, (1.0, 1.6, 3.6), height=0.4)
+            furniture(scene, "fantasy_town_kit/hedge", (x, 0.0, z + side * 1.9), 90.0, (1.0, 1.6, 3.6), height=0.4)
         for index in range(9):
             model = ("nature_kit/flower_redA", "nature_kit/flower_yellowA", "nature_kit/flower_purpleA")[(index + int(x)) % 3]
             scene.add(model, (x - 1.1 + (index % 3) * 1.1, 0.0, z - 1.1 + (index // 3) * 1.1), rng.uniform(0, 360), 2.6)
     scene.group = "Fixed"
 
     # Bancs le long des allées : brisés jusqu'au premier livre.
-    benches = [(39.8, -60.0, 90.0), (44.2, -60.0, -90.0), (39.8, -82.0, 90.0), (44.4, -79.4, -90.0), (33.2, -67.6, 90.0), (50.4, -72.6, 180.0)]
+    benches = [(39.8, -60.0, 90.0), (44.2, -60.0, -90.0), (39.8, -82.0, 90.0), (43.6, -78.4, -90.0), (33.2, -67.6, 90.0), (50.4, -72.6, 180.0)]
     scene.repair("ParkBenches", 1)
     for x, z, degrees in benches:
-        furniture(scene, "graveyard_kit/bench-damaged", (x, 0.0, z), degrees + rng.uniform(-15, 15), 2.2, height=0.9, roll=90.0 if x > 44 else 0.0)
+        furniture(scene, "graveyard_kit/bench-damaged", (x, -0.12 if x > 44 else 0.0, z), degrees + rng.uniform(-15, 15), 2.2, height=0.9,
+                  roll=90.0 if x > 44 else 0.0)
     scene.rebuilt("ParkBenches")
     for x, z, degrees in benches:
         furniture(scene, "graveyard_kit/bench", (x, 0.0, z), degrees, 2.2, height=1.0)
@@ -1342,7 +1384,7 @@ def build_park(scene, rng):
     scene.rebuilt("ParkKings")
     for x, z in kings:
         furniture(scene, "nature_kit/statue_block", (x, 0.0, z), 0.0, 2.4, height=0.95)
-        furniture(scene, "mini_arena/statue", (x, 0.94, z), 90.0 if x < cx else -90.0, 1.6)
+        furniture(scene, "mini_arena/statue", (x, 0.94, z), 90.0 if x < cx else -90.0, 1.6, height=2.1)
     scene.group = "Fixed"
 
     # Statue de Devlyn, vainqueur des Quatre Dragons du Chaos, au milieu du rond-point : un socle à degrés, le héros,
@@ -1382,7 +1424,7 @@ def build_park(scene, rng):
         px, pz = kx + math.cos(angle) * 2.3, kz + math.sin(angle) * 2.0
         if index == 1:
             continue
-        furniture(scene, "nature_kit/statue_column", (px, 0.26, pz), 0.0, (2.2, 3.4, 2.2), height=3.4)
+        furniture(scene, "nature_kit/statue_column", (px, 0.17, pz), 0.0, (2.2, 3.4, 2.2), height=3.4)
     scene.add("castle_kit/tower-hexagon-roof", (kx, 3.66, kz), 0.0, (5.6, 2.6, 5.6))
     scene.group = "Fixed"
 
@@ -1422,8 +1464,9 @@ def build_bridges(scene, rng):
     # Avant le premier livre : un pont de fortune, des planches jetées sur les piles du pont effondré.
     scene.repair("GreatBridge", 1)
     scene.add("nature_kit/bridge_wood", (x, DECK_TOP - 0.15 * 6.0, z), degrees, (length / 1.04, 6.0, width / 1.04))
-    for dx, dz in ((-4.5, 2.6), (3.0, -2.7), (5.5, 2.4)):
-        scene.add("castle_kit/rocks-small", (x + dx, -1.3, z + dz * 1.4), rng.uniform(0, 360), 1.6)
+    # Blocs du pont effondré, tombés dans le lit de la rivière : ils affleurent de l'eau, de part et d'autre du tablier.
+    for dx, dz, y in ((-1.6, 3.6, -1.95), (1.4, -3.8, -2.05), (0.2, 4.2, -2.3)):
+        scene.add("castle_kit/rocks-small", (x + dx, y, z + dz), rng.uniform(0, 360), 1.6)
     scene.rebuilt("GreatBridge")
     scene.add("nature_kit/bridge_stoneRound", (x, DECK_TOP - 0.15 * 6.0, z), degrees, (length / 1.04, 6.0, width / 1.04))
     for end in (-1, 1):

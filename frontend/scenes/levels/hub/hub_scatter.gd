@@ -10,8 +10,9 @@ extends Node3D
 @export var bush_models: Array[PackedScene]
 @export var rock_models: Array[PackedScene]
 @export var flower_models: Array[PackedScene]
-## Rayon du tronc de chaque arbre, et de chaque rocher, à l'échelle 1 : leur collision.
-@export var tree_radii: Array[float] = [0.07, 0.07, 0.08, 0.06, 0.06]
+## Rayon de la collision de chaque arbre, et de chaque rocher, à l'échelle 1 : le tronc, ou les branches basses des
+## arbres touffus (tree_fat, le sapin de mini_forest), dont le feuillage descend sous la hauteur des yeux.
+@export var tree_radii: Array[float] = [0.07, 0.07, 0.27, 0.36, 0.06]
 @export var rock_radii: Array[float] = [0.34, 0.52]
 @export var tree_count := 240
 @export var forest_tree_count := 420
@@ -32,7 +33,7 @@ func _ready() -> void:
 	if not terrain.is_node_ready():
 		await terrain.ready
 	_rng.seed = 5800
-	_scatter(tree_models, tree_count, Vector2(3.2, 5.0), tree_radii, 0.45, 0.12)
+	_scatter(tree_models, tree_count, Vector2(4.0, 5.4), tree_radii, 0.45, 0.12)
 	_add_forest()
 	_scatter(bush_models, bush_count, Vector2(3.0, 5.0), [], 0.7, 0.05)
 	_scatter(rock_models, rock_count, Vector2(2.0, 4.0), rock_radii, 0.7, 0.1)
@@ -77,8 +78,11 @@ func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, radi
 		body = StaticBody3D.new()
 		add_child(body)
 	var groups: Array[Array] = []
+	# Hauteur de chaque modèle : la collision d'un rocher s'arrête à son sommet (celle d'un arbre, à 3 m).
+	var heights: Array[float] = []
 	for model in models:
 		groups.append([])
+		heights.append(_load_mesh(model).get_aabb().size.y if body else 0.0)
 	var placed := 0
 	for attempt in count * 12:
 		if placed >= count:
@@ -99,10 +103,10 @@ func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, radi
 		if body:
 			var shape := CylinderShape3D.new()
 			shape.radius = float(radii[model % radii.size()]) * scale_factor
-			shape.height = 3.0
+			shape.height = clampf(heights[model] * scale_factor, 0.6, 3.0)
 			var collision := CollisionShape3D.new()
 			collision.shape = shape
-			collision.position = Vector3(spot.x, ground + 1.5, spot.y)
+			collision.position = Vector3(spot.x, ground + shape.height * 0.5, spot.y)
 			body.add_child(collision)
 		placed += 1
 	var multimeshes: Array[MultiMesh] = []
