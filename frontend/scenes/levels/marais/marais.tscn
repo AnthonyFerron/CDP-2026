@@ -634,10 +634,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -40, 0)
 [node name="Crypt" parent="Interior" instance=ExtResource("50_crypt")]
 
 [node name="InsideSpawn" type="Marker3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.35, 11.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.35, 11.0)
 
 [node name="Hatch" type="MeshInstance3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.13, 13.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.13, 12.4)
 mesh = SubResource("BoxMesh_hatch")
 
 [node name="Exit" type="Node3D" parent="Interior"]
@@ -647,10 +647,10 @@ prompt = "Remonter l'escalier"
 radius = 2.2
 
 [node name="ExitTop" type="Node3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.25, 13.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.25, 12.4)
 script = ExtResource("11_interactable")
 prompt = "Remonter à la surface"
-radius = 2.0
+radius = 2.9
 
 [node name="LightEntry" type="OmniLight3D" parent="Interior"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.3, 1)
