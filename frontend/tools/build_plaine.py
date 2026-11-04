@@ -238,6 +238,8 @@ MODEL_BOXES = {
     "graveyard_kit/lantern-candle": ((-0.12, 0.0, -0.12), (0.24, 0.39, 0.24)),
     "survival_kit/bedroll": ((-0.16, 0.0, -0.3), (0.31, 0.13, 0.61)),
     "survival_kit/workbench": ((-0.15, 0.0, -0.15), (0.3, 0.24, 0.3)),
+    "fantasy_town_kit/stall-stool": ((-0.13, 0.0, -0.13), (0.26, 0.23, 0.26)),
+    "survival_kit/barrel-open": ((-0.12, 0.0, -0.12), (0.24, 0.34, 0.24)),
     # Plaine : champ de bataille et bibliothèque.
     "castle_kit/siege-catapult-demolished": ((-0.64, 0.0, -0.87), (1.68, 0.32, 1.67)),
     "castle_kit/siege-ballista-demolished": ((-0.91, 0.0, -0.79), (1.75, 0.51, 1.55)),
@@ -264,7 +266,6 @@ MODEL_BOXES = {
     "survival_kit/resource-planks": ((-0.19, 0.0, -0.31), (0.37, 0.09, 0.63)),
     "survival_kit/box-large-open": ((-0.13, 0.0, -0.25), (0.25, 0.31, 0.5)),
     "survival_kit/box-open": ((-0.13, 0.0, -0.13), (0.25, 0.31, 0.25)),
-    "survival_kit/barrel-open": ((-0.12, 0.0, -0.12), (0.24, 0.34, 0.24)),
     "graveyard_kit/grave": ((-0.38, 0.0, -0.61), (0.72, 0.11, 1.24)),
     "graveyard_kit/cross-wood": ((-0.22, 0.0, -0.22), (0.43, 1.04, 0.43)),
     "graveyard_kit/gravestone-broken": ((-0.22, 0.0, -0.13), (0.51, 0.34, 0.39)),
@@ -285,7 +286,6 @@ MODEL_BOXES = {
     "mini_arena/banner": ((-0.3, 0.0, -0.1), (0.6, 1.02, 0.22)),
     "mini_arena/statue": ((-0.35, 0.0, -0.35), (0.7, 1.34, 0.7)),
     "mini_forest/weapon-arrow": ((-0.06, -0.06, -0.23), (0.12, 0.12, 0.46)),
-    "fantasy_town_kit/stall-stool": ((-0.13, 0.0, -0.13), (0.26, 0.23, 0.26)),
     "fantasy_town_kit/rock-large": ((-0.87, 0.0, -0.72), (1.67, 1.16, 1.55)),
     "fantasy_town_kit/rock-wide": ((-0.55, 0.0, -0.78), (1.09, 1.02, 1.57)),
     "fantasy_town_kit/banner-red": ((0.38, 0.16, -0.25), (0.05, 0.84, 0.5)),
@@ -295,9 +295,28 @@ MODEL_BOXES = {
 }
 
 
+# Meubles modernes du kit Furniture, sans place dans Codia : où qu'ils soient demandés, ils sont remplacés par
+# leur équivalent médiéval (brasero de cuisine, tonneaux, coffres, tabouret de marché, chaise de bois).
+MEDIEVAL = {
+    "furniture_kit/kitchenStove": "graveyard_kit/fire-basket",
+    "furniture_kit/kitchenSink": "survival_kit/barrel-open",
+    "furniture_kit/kitchenCabinet": "survival_kit/chest",
+    "furniture_kit/kitchenCabinetDrawer": "survival_kit/chest",
+    "furniture_kit/kitchenBar": "survival_kit/barrel",
+    "furniture_kit/stoolBar": "fantasy_town_kit/stall-stool",
+    "furniture_kit/chairDesk": "furniture_kit/chair",
+}
+
+
 def furniture(scene, model, center, degrees=0.0, scale=2.6, height=None, tilt=0.0, roll=0.0):
     """Pose un modèle centré sur le point donné et posé au sol, même renversé : sa boîte tournée touche le sol
     par son point le plus bas. Une hauteur donne une collision de la taille de la boîte tournée."""
+    replaced = MEDIEVAL.get(model)
+    if replaced:
+        model = replaced
+        # La collision suit la taille du remplaçant, plus petit que le meuble moderne.
+        if height:
+            height = min(height, MODEL_BOXES[model][1][1] * scale)
     (px, py, pz), (sx, sy, sz) = MODEL_BOXES[model]
     basis = multiply(multiply(rotation_y(degrees), rotation_x(tilt)), rotation_z(roll))
     corners = []
