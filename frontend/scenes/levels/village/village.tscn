@@ -14,7 +14,7 @@
 [ext_resource type="Script" path="res://scripts/flickering_light.gd" id="12_flicker"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/windmill.glb" id="13_windmill"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/watermill.glb" id="14_watermill"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/signpost.glb" id="15_signpost"]
+[ext_resource type="Script" path="res://scripts/sign_board.gd" id="15_sign"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/grass_large.glb" id="20_grass"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/grass_leafsLarge.glb" id="21_grass_leafs"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/plant_bush.glb" id="22_bush"]
@@ -44,6 +44,7 @@
 [ext_resource type="PackedScene" path="res://scenes/levels/village/paper_notebook.tscn" id="55_notebook"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/furniture_kit/bookcaseClosedWide.glb" id="56_shelf"]
 [ext_resource type="Script" path="res://scripts/readable.gd" id="57_readable"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/furniture_kit/books.glb" id="58_books"]
 [ext_resource type="Script" path="res://scenes/levels/hub/volcano.gd" id="90_volcano"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_dusk"]
@@ -117,23 +118,30 @@ roughness = 1.0
 albedo_color = Color(0.35, 0.34, 0.36, 1)
 roughness = 1.0
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_post"]
-height = 2.0
-radius = 0.35
+[sub_resource type="BoxMesh" id="BoxMesh_plinth"]
+material = SubResource("Material_stone")
+size = Vector3(2.0, 0.4, 0.9)
+
+[sub_resource type="BoxMesh" id="BoxMesh_stele"]
+material = SubResource("Material_stone")
+size = Vector3(1.7, 1.5, 0.3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_memorial"]
+size = Vector3(2.0, 1.9, 0.9)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ramp"]
 size = Vector3(3, 0.3, 10.06)
 
 [sub_resource type="BoxMesh" id="BoxMesh_console"]
 material = SubResource("Material_wood_dark")
-size = Vector3(5.8, 1.1, 0.8)
+size = Vector3(5.8, 1.0, 0.8)
 
 [sub_resource type="BoxMesh" id="BoxMesh_backboard"]
 material = SubResource("Material_stone")
-size = Vector3(5.8, 2.4, 0.2)
+size = Vector3(5.8, 1.4, 0.2)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_console"]
-size = Vector3(5.8, 3.6, 1.0)
+size = Vector3(5.8, 2.5, 1.0)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_shelf"]
 size = Vector3(0.95, 3.0, 3.04)
@@ -278,7 +286,7 @@ emission_energy_multiplier = 0.6
 
 [sub_resource type="BoxMesh" id="BoxMesh_section0"]
 material = SubResource("Material_section0")
-size = Vector3(0.95, 0.95, 0.06)
+size = Vector3(0.8, 0.8, 0.06)
 
 [sub_resource type="StandardMaterial3D" id="Material_section1"]
 resource_local_to_scene = true
@@ -289,7 +297,7 @@ emission_energy_multiplier = 0.6
 
 [sub_resource type="BoxMesh" id="BoxMesh_section1"]
 material = SubResource("Material_section1")
-size = Vector3(0.95, 0.95, 0.06)
+size = Vector3(0.8, 0.8, 0.06)
 
 [sub_resource type="StandardMaterial3D" id="Material_section2"]
 resource_local_to_scene = true
@@ -300,7 +308,7 @@ emission_energy_multiplier = 0.6
 
 [sub_resource type="BoxMesh" id="BoxMesh_section2"]
 material = SubResource("Material_section2")
-size = Vector3(0.95, 0.95, 0.06)
+size = Vector3(0.8, 0.8, 0.06)
 
 [sub_resource type="StandardMaterial3D" id="Material_section3"]
 resource_local_to_scene = true
@@ -311,7 +319,7 @@ emission_energy_multiplier = 0.6
 
 [sub_resource type="BoxMesh" id="BoxMesh_section3"]
 material = SubResource("Material_section3")
-size = Vector3(0.95, 0.95, 0.06)
+size = Vector3(0.8, 0.8, 0.06)
 
 [sub_resource type="StandardMaterial3D" id="Material_section4"]
 resource_local_to_scene = true
@@ -322,7 +330,7 @@ emission_energy_multiplier = 0.6
 
 [sub_resource type="BoxMesh" id="BoxMesh_section4"]
 material = SubResource("Material_section4")
-size = Vector3(0.95, 0.95, 0.06)
+size = Vector3(0.8, 0.8, 0.06)
 
 [node name="Village" type="Node3D"]
 script = ExtResource("1_village")
@@ -363,7 +371,7 @@ transform = Transform3D(6.12323e-17, 0, 1, 0, 1, 0, -1, 0, 6.12323e-17, 30, 11, 
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
 
 [node name="WaterWheel" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35.6, 1.0, -14)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36.5, 1.0, -14)
 
 [node name="Model" parent="WaterWheel" instance=ExtResource("14_watermill")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
@@ -387,16 +395,25 @@ autoplay = true
 [node name="Fires" type="Node3D" parent="."]
 
 [node name="Fire0" type="Node3D" parent="Fires"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 0.25, 20.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 0.25, 35.6)
 script = ExtResource("10_fire")
-size = 1.2
+size = 0.9
 light_energy = 2.4
 light_range = 8.0
 crackle_sound = ExtResource("42_crackle")
 crackle_volume_db = -10.0
 
 [node name="Fire1" type="Node3D" parent="Fires"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0.25, -4.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 0.25, -0.7)
+script = ExtResource("10_fire")
+size = 0.7
+light_energy = 2.4
+light_range = 8.0
+crackle_sound = ExtResource("42_crackle")
+crackle_volume_db = -10.0
+
+[node name="Fire2" type="Node3D" parent="Fires"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0.25, -2.2)
 script = ExtResource("10_fire")
 size = 1
 light_energy = 2.4
@@ -404,7 +421,7 @@ light_range = 8.0
 crackle_sound = ExtResource("42_crackle")
 crackle_volume_db = -10.0
 
-[node name="Fire2" type="Node3D" parent="Fires"]
+[node name="Fire3" type="Node3D" parent="Fires"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27, 0.25, -1)
 script = ExtResource("10_fire")
 size = 0.9
@@ -413,8 +430,8 @@ light_range = 8.0
 crackle_sound = ExtResource("42_crackle")
 crackle_volume_db = -10.0
 
-[node name="Fire3" type="Node3D" parent="Fires"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0.25, 7)
+[node name="Fire4" type="Node3D" parent="Fires"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.4, 0.25, 34.6)
 script = ExtResource("10_fire")
 size = 0.8
 light_energy = 2.4
@@ -425,32 +442,32 @@ crackle_volume_db = -10.0
 [node name="Smokes" type="Node3D" parent="."]
 
 [node name="Smoke0" type="CPUParticles3D" parent="Smokes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 3.5, 20)
-script = ExtResource("11_smoke")
-radius = 1.5
-
-[node name="Smoke1" type="CPUParticles3D" parent="Smokes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 3.5, -6)
-script = ExtResource("11_smoke")
-radius = 1.2
-
-[node name="Smoke2" type="CPUParticles3D" parent="Smokes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 3.5, 12)
-script = ExtResource("11_smoke")
-radius = 1
-
-[node name="Smoke3" type="CPUParticles3D" parent="Smokes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 3.5, -28)
-script = ExtResource("11_smoke")
-radius = 1.4
-
-[node name="Smoke4" type="CPUParticles3D" parent="Smokes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 3.5, -2)
 script = ExtResource("11_smoke")
 radius = 1
 
+[node name="Smoke1" type="CPUParticles3D" parent="Smokes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27, 3.5, -3.5)
+script = ExtResource("11_smoke")
+radius = 1.4
+
+[node name="Smoke2" type="CPUParticles3D" parent="Smokes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.6, 3.5, -1.6)
+script = ExtResource("11_smoke")
+radius = 1
+
+[node name="Smoke3" type="CPUParticles3D" parent="Smokes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.6, 3.5, 34)
+script = ExtResource("11_smoke")
+radius = 1.1
+
+[node name="Smoke4" type="CPUParticles3D" parent="Smokes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 3.5, 20)
+script = ExtResource("11_smoke")
+radius = 1
+
 [node name="LanternLight0" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4, 3.0, 30)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4, 3, 30)
 script = ExtResource("12_flicker")
 light_color = Color(1, 0.7, 0.35, 1)
 light_energy = 1.4
@@ -458,7 +475,15 @@ omni_range = 7.0
 flicker = 0.2
 
 [node name="LanternLight1" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4, 3.0, -14)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4, 3, -14)
+script = ExtResource("12_flicker")
+light_color = Color(1, 0.7, 0.35, 1)
+light_energy = 1.4
+omni_range = 7.0
+flicker = 0.2
+
+[node name="LanternLight2" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, -18.9)
 script = ExtResource("12_flicker")
 light_color = Color(1, 0.7, 0.35, 1)
 light_energy = 1.4
@@ -472,56 +497,109 @@ open_prompt = "Retourner au hub"
 inner_color = Color(0.85, 0.7, 1, 1)
 outer_color = Color(0.45, 0.2, 0.8, 1)
 
-[node name="Sign" parent="." instance=ExtResource("15_signpost")]
-transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, -0, 0, 2.5, -4.5, 0, 55)
-
-[node name="SignText" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 3.8, 55)
-pixel_size = 0.007
-billboard = 1
-modulate = Color(1, 0.88, 0.75, 1)
-text = "Le Village détruit"
-font_size = 64
-outline_size = 16
+[node name="EntranceSign" type="Node3D" parent="."]
+transform = Transform3D(0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, -4.5, 0, 55)
+script = ExtResource("15_sign")
+text = "Codia
+Le village détruit"
+board_size = Vector2(1.9, 0.95)
+board_height = 1.55
+line_height = 0.26
 
 [node name="Lore" type="Node3D" parent="."]
 
 [node name="Notice" type="Node3D" parent="Lore"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6, 0, 13)
+transform = Transform3D(6.12323e-17, 0, 1, 0, 1, 0, -1, 0, 6.12323e-17, -4.6, 0, 13)
 script = ExtResource("57_readable")
 title = "L'avis du maire"
-body = "Proclamation du maire : les registres de la mairie ont été mis à l'abri dans le bureau, à l'étage. Seul celui qui comprendra les cinq langages des anciens bâtisseurs pourra ouvrir la salle des archives."
+body = "Proclamation du maire de Codia : la mairie reste ouverte tant que le village tient debout. Les registres et les savoirs des anciens bâtisseurs sont à l'abri dans le bureau du maire, à l'étage. Seul celui qui comprendra leurs cinq langages pourra en percer le dernier secret."
 prompt = "Lire : L'avis du maire"
 radius = 2.6
 
-[node name="Post" parent="Lore/Notice" instance=ExtResource("15_signpost")]
-transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, -0, 0, 2.4, 0, 0, 0)
+[node name="Board" type="Node3D" parent="Lore/Notice"]
+script = ExtResource("15_sign")
+text = "Avis du maire
+à la population de Codia"
+style = 2
+mount = 0
+roof = true
+board_size = Vector2(1.3, 0.85)
+board_height = 1.45
+line_height = 0.13
 
-[node name="Body" type="StaticBody3D" parent="Lore/Notice"]
+[node name="Order" type="Node3D" parent="Lore"]
+transform = Transform3D(6.12323e-17, 0, 1, 0, 1, 0, -1, 0, 6.12323e-17, -4.2, 0, 35.2)
+script = ExtResource("57_readable")
+title = "L'ordre du capitaine"
+body = "Ordre du capitaine de la garde, an 5812 : tenez la porte tant que les habitants ne sont pas à l'abri. Les catapultes de Vibelandia ont ouvert une brèche dans le rempart de l'est. Quand le cor sonnera trois fois, abandonnez la barricade et rejoignez le bunker du roi, près du château."
+prompt = "Lire : L'ordre du capitaine"
+radius = 2.6
 
-[node name="Shape" type="CollisionShape3D" parent="Lore/Notice/Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-shape = SubResource("CylinderShape3D_post")
+[node name="Board" type="Node3D" parent="Lore/Order"]
+script = ExtResource("15_sign")
+text = "Ordre du capitaine
+de la garde"
+style = 2
+mount = 0
+board_size = Vector2(1, 0.7)
+board_height = 1.35
+line_height = 0.12
+
+[node name="Slate" type="Node3D" parent="Lore"]
+transform = Transform3D(6.12323e-17, 0, -1, 0, 1, 0, 1, 0, 6.12323e-17, 4.9, 0, 28.6)
+script = ExtResource("57_readable")
+title = "L'ardoise de la boulangère"
+body = "Pain de seigle : deux sous. Pain blanc : trois sous. Plus de farine depuis que le meunier a fui. La dernière fournée est pour les gardes du rempart : qu'ils tiennent jusqu'au soir."
+prompt = "Lire : L'ardoise de la boulangère"
+radius = 2.6
+
+[node name="Board" type="Node3D" parent="Lore/Slate"]
+script = ExtResource("15_sign")
+text = "Pain de seigle : 2 sous
+Pain blanc : 3 sous"
+style = 3
+mount = 0
+board_size = Vector2(0.85, 0.62)
+board_height = 1.2
+line_height = 0.1
+serif = false
 
 [node name="Memorial" type="Node3D" parent="Lore"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.0, 0, 37.5)
+transform = Transform3D(6.12323e-17, 0, -1, 0, 1, 0, 1, 0, 6.12323e-17, 12, 0, 37.5)
 script = ExtResource("57_readable")
 title = "Le mémorial des gardes"
-body = "Ici, les gardes de Codia ont tenu la porte trois jours et trois nuits face aux Dragons du Chaos. Quand elle a cédé, ils ont mis les habitants à l'abri dans le bunker du roi."
+body = "Ici, les gardes de Codia ont tenu la porte trois jours et trois nuits face aux guerriers de Vibelandia. Quand elle a cédé, ils ont couvert la fuite des habitants jusqu'au bunker du roi. Leurs noms restent gravés dans la mémoire du village."
 prompt = "Lire : Le mémorial des gardes"
 radius = 2.6
 
-[node name="Post" parent="Lore/Memorial" instance=ExtResource("15_signpost")]
-transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, -0, 0, 2.4, 0, 0, 0)
+[node name="Plinth" type="MeshInstance3D" parent="Lore/Memorial"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -0.3)
+mesh = SubResource("BoxMesh_plinth")
+
+[node name="Stele" type="MeshInstance3D" parent="Lore/Memorial"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.15, -0.3)
+mesh = SubResource("BoxMesh_stele")
 
 [node name="Body" type="StaticBody3D" parent="Lore/Memorial"]
 
 [node name="Shape" type="CollisionShape3D" parent="Lore/Memorial/Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-shape = SubResource("CylinderShape3D_post")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, -0.3)
+shape = SubResource("BoxShape3D_memorial")
+
+[node name="Board" type="Node3D" parent="Lore/Memorial"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.15)
+script = ExtResource("15_sign")
+text = "Aux gardes de Codia
+qui ont tenu la porte"
+style = 1
+mount = 1
+board_size = Vector2(1.45, 0.8)
+board_height = 1.2
+line_height = 0.13
+collision = false
 
 [node name="HallDoor" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, -20.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, -19.45)
 script = ExtResource("53_interactable")
 prompt = "Entrer dans la mairie"
 radius = 3.2
@@ -725,7 +803,7 @@ mesh = SubResource("BoxMesh_post")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.3, 4.3)
 
 [node name="Exit" type="Node3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1.2, 5.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1.2, 5.55)
 script = ExtResource("53_interactable")
 prompt = "Sortir de la mairie"
 radius = 2.0
@@ -797,10 +875,11 @@ radius = 2.2
 fragment = 7
 
 [node name="Fragment8" type="Node3D" parent="Interior/Fragments"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.15, 0.03, 5.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6, 1.075, -3)
 script = ExtResource("51_fragment")
 radius = 2.2
 fragment = 8
+hidden_at_start = true
 
 [node name="Fragment5" type="Node3D" parent="Interior/Fragments"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 5.575, -0.4)
@@ -822,7 +901,7 @@ radius = 2.2
 fragment = 9
 
 [node name="Fragment6" type="Node3D" parent="Interior/Fragments"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 4.53, 4.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 4.53, 4.45)
 script = ExtResource("51_fragment")
 radius = 2.2
 fragment = 6
@@ -831,53 +910,66 @@ hidden_at_start = true
 [node name="Storages" type="Node3D" parent="Interior"]
 
 [node name="ReceptionDrawer" type="Node3D" parent="Interior/Storages"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0.7, -0.8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0.7, -0.15)
 script = ExtResource("52_storage")
 radius = 2.2
 furniture_name = "le tiroir de l'accueil"
 fragment = NodePath("../../Fragments/Fragment3")
 
 [node name="ArchiveCabinet" type="Node3D" parent="Interior/Storages"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 1.3, -1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.72, 1.3, -1)
 script = ExtResource("52_storage")
 radius = 2.2
 furniture_name = "l'armoire des archives"
 fragment = NodePath("../../Fragments/Fragment4")
 
 [node name="ArchiveCabinetNorth" type="Node3D" parent="Interior/Storages"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 1.3, -3.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.72, 1.3, -3.5)
 script = ExtResource("52_storage")
 radius = 2.2
 furniture_name = "l'armoire aux registres"
 
 [node name="ArchiveCabinetSouth" type="Node3D" parent="Interior/Storages"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 1.3, 1.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.72, 1.3, 1.5)
 script = ExtResource("52_storage")
 radius = 2.2
 furniture_name = "l'armoire aux actes"
 
+[node name="ArchivistDesk" type="Node3D" parent="Interior/Storages"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.8, 1.12, -4.35)
+script = ExtResource("52_storage")
+radius = 2.2
+furniture_name = "le tiroir de l'archiviste"
+fragment = NodePath("../../Fragments/Fragment8")
+
+[node name="ComplaintsDesk" type="Node3D" parent="Interior/Storages"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.12, -2.45)
+script = ExtResource("52_storage")
+radius = 2.2
+furniture_name = "le tiroir du bureau des doléances"
+
 [node name="Dresser" type="Node3D" parent="Interior/Storages"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.7, -5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.7, -4.35)
 script = ExtResource("52_storage")
 radius = 2.2
 furniture_name = "le meuble à tiroirs"
 
 [node name="MayorDrawer" type="Node3D" parent="Interior/Storages"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 5.2, -0.8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 5.2, -1.42)
 script = ExtResource("52_storage")
 radius = 2.2
 furniture_name = "le tiroir du bureau"
 fragment = NodePath("../../Fragments/Fragment1")
 
 [node name="MayorCabinet" type="Node3D" parent="Interior/Storages"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 5.8, 5.1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 5.8, 4.75)
 script = ExtResource("52_storage")
 radius = 2.2
 furniture_name = "l'armoire du maire"
 fragment = NodePath("../../Fragments/Fragment6")
 
 [node name="OfficeDresser" type="Node3D" parent="Interior/Storages"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.6, 5.2, -5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.6, 5.2, -4.35)
 script = ExtResource("52_storage")
 radius = 2.2
 furniture_name = "la commode"
@@ -886,88 +978,107 @@ furniture_name = "la commode"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 4.5, -5.4)
 
 [node name="Console" type="MeshInstance3D" parent="Interior/Device"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0.1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0.1)
 mesh = SubResource("BoxMesh_console")
 
 [node name="Backboard" type="MeshInstance3D" parent="Interior/Device"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3, -0.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, -0.25)
 mesh = SubResource("BoxMesh_backboard")
 
 [node name="Body" type="StaticBody3D" parent="Interior/Device"]
 
 [node name="Shape" type="CollisionShape3D" parent="Interior/Device/Body"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
 shape = SubResource("BoxShape3D_console")
 
 [node name="Sections" type="Node3D" parent="Interior/Device"]
 
 [node name="Section0" type="MeshInstance3D" parent="Interior/Device/Sections"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2, 2.45, -0.12)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2, 1.87, -0.12)
 mesh = SubResource("BoxMesh_section0")
 
 [node name="Language0" type="Label3D" parent="Interior/Device"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2, 1.7, -0.13)
-pixel_size = 0.0028
-modulate = Color(0.85, 0.88, 1, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2, 1.24, -0.13)
+pixel_size = 0.0026
+shaded = true
+alpha_cut = 1
+modulate = Color(0.86, 0.7, 0.4, 1)
 text = "HTML"
 font_size = 64
-outline_size = 10
+outline_size = 0
 
 [node name="Section1" type="MeshInstance3D" parent="Interior/Device/Sections"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 2.45, -0.12)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 1.87, -0.12)
 mesh = SubResource("BoxMesh_section1")
 
 [node name="Language1" type="Label3D" parent="Interior/Device"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 1.7, -0.13)
-pixel_size = 0.0028
-modulate = Color(0.85, 0.88, 1, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 1.24, -0.13)
+pixel_size = 0.0026
+shaded = true
+alpha_cut = 1
+modulate = Color(0.86, 0.7, 0.4, 1)
 text = "CSS"
 font_size = 64
-outline_size = 10
+outline_size = 0
 
 [node name="Section2" type="MeshInstance3D" parent="Interior/Device/Sections"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.45, -0.12)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.87, -0.12)
 mesh = SubResource("BoxMesh_section2")
 
 [node name="Language2" type="Label3D" parent="Interior/Device"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, -0.13)
-pixel_size = 0.0028
-modulate = Color(0.85, 0.88, 1, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.24, -0.13)
+pixel_size = 0.0026
+shaded = true
+alpha_cut = 1
+modulate = Color(0.86, 0.7, 0.4, 1)
 text = "Python"
 font_size = 64
-outline_size = 10
+outline_size = 0
 
 [node name="Section3" type="MeshInstance3D" parent="Interior/Device/Sections"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 2.45, -0.12)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 1.87, -0.12)
 mesh = SubResource("BoxMesh_section3")
 
 [node name="Language3" type="Label3D" parent="Interior/Device"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 1.7, -0.13)
-pixel_size = 0.0028
-modulate = Color(0.85, 0.88, 1, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 1.24, -0.13)
+pixel_size = 0.0026
+shaded = true
+alpha_cut = 1
+modulate = Color(0.86, 0.7, 0.4, 1)
 text = "PHP"
 font_size = 64
-outline_size = 10
+outline_size = 0
 
 [node name="Section4" type="MeshInstance3D" parent="Interior/Device/Sections"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 2.45, -0.12)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 1.87, -0.12)
 mesh = SubResource("BoxMesh_section4")
 
 [node name="Language4" type="Label3D" parent="Interior/Device"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 1.7, -0.13)
-pixel_size = 0.0028
-modulate = Color(0.85, 0.88, 1, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 1.24, -0.13)
+pixel_size = 0.0026
+shaded = true
+alpha_cut = 1
+modulate = Color(0.86, 0.7, 0.4, 1)
 text = "JS / TS"
 font_size = 64
-outline_size = 10
+outline_size = 0
 
-[node name="Inscription" type="Label3D" parent="Interior/Device"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.25, -0.13)
-pixel_size = 0.0026
-modulate = Color(1, 0.88, 0.6, 1)
-text = "CINQ LANGAGES, CINQ ÉPREUVES, UN SEUL SAVOIR"
-font_size = 64
-outline_size = 10
+[node name="Inscription" type="Node3D" parent="Interior/Device"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.93, -0.35)
+script = ExtResource("15_sign")
+text = "Cinq langages, cinq épreuves, un seul savoir. Comprends les instructions des anciens bâtisseurs et le dernier secret du village te sera révélé."
+style = 1
+mount = 1
+board_size = Vector2(5.6, 0.9)
+board_height = 0
+line_height = 0.15
+collision = false
+
+[node name="DeviceLight" type="OmniLight3D" parent="Interior/Device"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0, 1.0)
+light_color = Color(0.45, 0.65, 1, 1)
+light_energy = 0.0
+omni_range = 9.0
 
 [node name="Interactable" type="Node3D" parent="Interior/Device"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0.6)
@@ -980,6 +1091,48 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.25, 4.5, 0)
 
 [node name="Model" parent="Interior/SecretShelf" instance=ExtResource("56_shelf")]
 transform = Transform3D(2.32683e-16, 0, 3.8, 0, 3.8, 0, -3.8, 0, 2.32683e-16, 0.475, 0, 1.52)
+
+[node name="Books0_1" parent="Interior/SecretShelf" instance=ExtResource("58_books")]
+transform = Transform3D(2.11252e-16, 0, -3.45, 0, 3.45, 0, 3.45, 0, 2.11252e-16, 0.05, 0.13, -0.54)
+
+[node name="Books0_2" parent="Interior/SecretShelf" instance=ExtResource("58_books")]
+transform = Transform3D(2.2656e-16, 0, 3.7, 0, 3.7, 0, -3.7, 0, 2.2656e-16, 0.05, 0.13, -0.08)
+
+[node name="Books0_3" parent="Interior/SecretShelf" instance=ExtResource("58_books")]
+transform = Transform3D(1.95943e-16, 0, -3.2, 0, 3.2, 0, 3.2, 0, 1.95943e-16, 0.05, 0.13, 0.38)
+
+[node name="Books0_4" parent="Interior/SecretShelf" instance=ExtResource("58_books")]
+transform = Transform3D(2.11252e-16, 0, 3.45, 0, 3.45, 0, -3.45, 0, 2.11252e-16, 0.05, 0.13, 0.84)
+
+[node name="Books1_0" parent="Interior/SecretShelf" instance=ExtResource("58_books")]
+transform = Transform3D(1.95943e-16, 0, -3.2, 0, 3.2, 0, 3.2, 0, 1.95943e-16, 0.05, 1.07, -1)
+
+[node name="Books1_2" parent="Interior/SecretShelf" instance=ExtResource("58_books")]
+transform = Transform3D(2.2656e-16, 0, -3.7, 0, 3.7, 0, 3.7, 0, 2.2656e-16, 0.05, 1.07, -0.08)
+
+[node name="Books1_3" parent="Interior/SecretShelf" instance=ExtResource("58_books")]
+transform = Transform3D(1.95943e-16, 0, 3.2, 0, 3.2, 0, -3.2, 0, 1.95943e-16, 0.05, 1.07, 0.38)
+
+[node name="Books1_4" parent="Interior/SecretShelf" instance=ExtResource("58_books")]
+transform = Transform3D(2.11252e-16, 0, -3.45, 0, 3.45, 0, 3.45, 0, 2.11252e-16, 0.05, 1.07, 0.84)
+
+[node name="Books1_5" parent="Interior/SecretShelf" instance=ExtResource("58_books")]
+transform = Transform3D(2.2656e-16, 0, 3.7, 0, 3.7, 0, -3.7, 0, 2.2656e-16, 0.05, 1.07, 1.3)
+
+[node name="Books2_0" parent="Interior/SecretShelf" instance=ExtResource("58_books")]
+transform = Transform3D(1.95943e-16, 0, 3.2, 0, 3.2, 0, -3.2, 0, 1.95943e-16, 0.05, 1.98, -1)
+
+[node name="Books2_1" parent="Interior/SecretShelf" instance=ExtResource("58_books")]
+transform = Transform3D(2.11252e-16, 0, -3.45, 0, 3.45, 0, 3.45, 0, 2.11252e-16, 0.05, 1.98, -0.54)
+
+[node name="Books2_3" parent="Interior/SecretShelf" instance=ExtResource("58_books")]
+transform = Transform3D(1.95943e-16, 0, -3.2, 0, 3.2, 0, 3.2, 0, 1.95943e-16, 0.05, 1.98, 0.38)
+
+[node name="Books2_4" parent="Interior/SecretShelf" instance=ExtResource("58_books")]
+transform = Transform3D(2.11252e-16, 0, 3.45, 0, 3.45, 0, -3.45, 0, 2.11252e-16, 0.05, 1.98, 0.84)
+
+[node name="Books2_5" parent="Interior/SecretShelf" instance=ExtResource("58_books")]
+transform = Transform3D(2.2656e-16, 0, -3.7, 0, 3.7, 0, 3.7, 0, 2.2656e-16, 0.05, 1.98, 1.3)
 
 [node name="Body" type="StaticBody3D" parent="Interior/SecretShelf"]
 
@@ -994,7 +1147,7 @@ light_energy = 2.4
 omni_range = 9.0
 
 [node name="Book" type="Node3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.6, 5.6, 0)
+transform = Transform3D(0.96593, 0.25882, 0, -0.25882, 0.96593, 0, 0, 0, 1, -12.6, 5.7, 0)
 
 [node name="Mesh" type="MeshInstance3D" parent="Interior/Book"]
 mesh = SubResource("BoxMesh_codonomicon")
