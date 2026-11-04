@@ -9,7 +9,7 @@ Référence des routes et des règles appliquées par le backend. Pour les appel
 - Routes protégées : en-tête `Authorization: Bearer <token>`.
 - Erreurs : `{"detail": "message en français"}`. Les erreurs de validation (422) renvoient une liste, un élément par champ fautif.
 - Dates en UTC, au format ISO 8601. Durées en secondes (`elapsed_seconds`) ou en millisecondes (`completion_time_ms`).
-- Les identifiants gardent le nom des colonnes : `id_users`, `id_game_sessions`, `id_puzzles`, `id_puzzle_progress`.
+- Les identifiants gardent le nom des colonnes : `id_users`, `id_game_sessions`, `id_puzzles`, `id_puzzle_progress`. Les fragments de papier sont identifiés par leur numéro, `fragment_index`.
 
 ## Routes
 
@@ -30,16 +30,18 @@ Référence des routes et des règles appliquées par le backend. Pour les appel
 | POST | `/game-sessions/{id}/pauses` | oui | 200 | Mettre en pause |
 | POST | `/game-sessions/{id}/resumptions` | oui | 200 | Reprendre |
 | POST | `/game-sessions/{id}/penalties` | oui | 200 | Pénalité de 5 minutes |
-| POST | `/game-sessions/{id}/completions` | oui | 200 | Valider la victoire |
+| POST | `/game-sessions/{id}/completions` | oui | 200 | Valider la victoire (sans corps) |
 | POST | `/game-sessions/{id}/abandonments` | oui | 200 | Abandonner |
-| GET | `/game-sessions/{id}/progress` | oui | 200 | Chronomètre, livres et état de chaque énigme |
+| GET | `/game-sessions/{id}/progress` | oui | 200 | Chronomètre, énigmes, livres obtenus et posés, fragments |
 | POST | `/game-sessions/imports` | oui | 201 | Importer une partie jouée en invité |
 | GET | `/puzzles` | non | 200 | Lister les énigmes |
 | GET | `/puzzles/{id}` | non | 200 | Détail d'une énigme |
 | GET | `/game-sessions/{id}/puzzle-progress` | oui | 200 | Progression des énigmes de la partie |
 | POST | `/game-sessions/{id}/puzzle-progress` | oui | 201 / 200 | Commencer une énigme (200 si déjà commencée) |
 | PATCH | `/game-sessions/{id}/puzzle-progress/{progress_id}` | oui | 200 | Enregistrer la résolution : `{"solved": true}` |
-| POST | `/game-sessions/{id}/puzzle-progress/{progress_id}/hints` | oui | 200 | Utiliser un indice |
+| POST | `/game-sessions/{id}/puzzle-progress/{progress_id}/placements` | oui | 200 | Poser le livre au château |
+| GET | `/game-sessions/{id}/paper-fragments` | oui | 200 | Fragments de papier ramassés |
+| POST | `/game-sessions/{id}/paper-fragments` | oui | 201 | Ramasser un fragment de papier |
 | GET | `/leaderboards` | non | 200 | Classement général |
 | GET | `/puzzles/{id}/leaderboards` | non | 200 | Classement d'une énigme |
 
@@ -47,7 +49,9 @@ Référence des routes et des règles appliquées par le backend. Pour les appel
 
 - **Pas de `/auth-challenges/verifications`** : `POST /auth-sessions` vérifie le code et ouvre la session dans la même requête. Une route de vérification séparée obligerait le client à déclarer qu'un code a été validé.
 - **`/penalties` ajoutée**, pour suivre `GameState.penalize()` de Godot.
-- **`POST /puzzle-progress` commence l'énigme** et `PATCH` enregistre sa résolution : la ligne de progression doit exister avant la résolution pour qu'on puisse y consommer des indices.
+- **`POST /puzzle-progress` commence l'énigme** et `PATCH` enregistre sa résolution.
+- **Pas de route d'indices** : les indices des énigmes 1 à 3 sont visuels et restent dans Godot. Les colonnes `puzzles.hint_count` et `puzzle_progress.hints_used` sont conservées en base, mais ne sont plus lues ni exposées par l'API.
+- **`/placements` et `/paper-fragments` ajoutées** : les livres posés et les fragments de papier sont sauvegardés, pour survivre à la reprise d'une partie sur un autre appareil.
 
 ### Codes d'erreur
 
@@ -55,7 +59,7 @@ Référence des routes et des règles appliquées par le backend. Pour les appel
 | --- | --- |
 | 401 | Token absent, inconnu, expiré ou révoqué ; mot de passe ou code 2FA incorrect, expiré ou déjà utilisé |
 | 404 | Ressource inexistante, **ou appartenant à un autre joueur** : l'API ne révèle pas son existence |
-| 409 | Transition impossible : partie terminée, en pause, temps écoulé, énigme verrouillée ou déjà résolue, plus d'indice, partie déjà en cours, e-mail déjà utilisé |
+| 409 | Transition impossible : partie terminée, en pause, temps écoulé, énigme verrouillée ou déjà résolue, livre non obtenu ou déjà posé, fragment déjà ramassé, partie déjà en cours, e-mail déjà utilisé |
 | 422 | Données invalides, champ inconnu ou interdit, incohérence dans un import |
 | 429 | Trop de tentatives ou de codes demandés ; l'en-tête `Retry-After` donne l'attente en secondes |
 | 503 | Base de données injoignable, ou e-mail impossible à envoyer |
@@ -86,7 +90,7 @@ Avant toute lecture ou écriture d'une partie, le serveur vérifie le temps : s'
 
 Une pénalité ajoute 300 secondes (`PENALTY_SECONDS`) au temps consommé. Elle est permise même en pause, puisqu'elle ne fait que coûter du temps.
 
-Pendant une pause, on peut sauvegarder la position, appliquer une pénalité ou abandonner. Commencer ou résoudre une énigme, utiliser un indice et valider la victoire exigent un chronomètre en marche.
+Pendant une pause, on peut sauvegarder la position, appliquer une pénalité ou abandonner. Commencer ou résoudre une énigme, poser un livre, ramasser un fragment et valider la victoire exigent un chronomètre en marche, et sont refusés une fois le temps écoulé.
 
 ### Énigmes et livres
 
@@ -101,20 +105,31 @@ Quatre énigmes, communes à tous les joueurs, insérées par la migration Alemb
 
 Les identifiants (`id_puzzles`) peuvent différer d'une base à l'autre : le jeu doit les lire dans `GET /puzzles`, jamais les écrire en dur.
 
-- Un livre est obtenu quand son énigme est résolue : `puzzle_progress.solved_at IS NOT NULL`. Aucune table d'inventaire.
-- Les énigmes se commencent et se résolvent dans l'ordre : la précédente doit être résolue.
+Chaque énigme donne un livre, qui suit deux étapes, sans table d'inventaire :
+
+| État du livre | En base | Route |
+| --- | --- | --- |
+| Obtenu (énigme résolue) | `puzzle_progress.solved_at IS NOT NULL` | `PATCH /puzzle-progress/{progress_id}` avec `{"solved": true}` |
+| Posé au château | `puzzle_progress.placed_at IS NOT NULL` | `POST /puzzle-progress/{progress_id}/placements` |
+
+- Les énigmes se commencent et se résolvent dans l'ordre : la précédente doit être résolue. Godot est plus strict (une zone s'ouvre quand le livre précédent est *posé*) ; le serveur s'en tient à la résolution, pour ne pas dépendre de l'ordre d'arrivée des requêtes.
 - Une énigme ne se résout qu'une fois.
-- Chaque énigme a 3 indices (`hint_count` en base, exposé sous le nom `hints_count`). Godot n'a pas encore de mécanique d'indices : la valeur se change par une nouvelle migration.
-- `completion_time_ms` est mesuré par le serveur : temps de jeu (pauses exclues, pénalités incluses) depuis la résolution précédente, ou depuis le début de la partie pour la première énigme. Il comprend donc le trajet depuis le hub et le dépôt du livre précédent, qui sont les mêmes pour tous les joueurs.
+- Un livre ne se pose que s'il est obtenu, et une seule fois. La base le garantit aussi : la contrainte `ck_puzzle_progress_placed_after_solved` interdit un `placed_at` sans `solved_at`, ou antérieur à lui.
+- `completion_time_ms` est mesuré par le serveur : temps de jeu (pauses exclues, pénalités incluses) depuis la résolution précédente, ou depuis le début de la partie pour la première énigme. Il comprend donc le trajet depuis le hub et le dépôt du livre précédent, qui sont les mêmes pour tous les joueurs. Le dépôt d'un livre ne le modifie pas.
+- Les indices des énigmes 1 à 3 sont visuels, dans Godot : l'API ne les suit pas.
+
+### Fragments de papier
+
+L'énigme du Village (`order_index` 4) cache 10 fragments de papier dans la mairie. Ce sont des objets à ramasser, pas des indices consommés : ils ne changent ni le temps ni le classement.
+
+- Un fragment est identifié par son numéro `fragment_index`, de 0 à 9 : la valeur de `PaperFragment.fragment` dans Godot, qui est aussi l'index du texte dans `Village.FRAGMENTS`.
+- Table `paper_fragments`, liée à la partie : un fragment ne se ramasse qu'une fois par partie (contrainte unique `uq_paper_fragments_game_fragment`), et seuls les numéros 0 à 9 existent (contrainte `ck_paper_fragments_fragment_index`, et 422 côté API).
+- Le Village doit être ouvert : l'énigme du Marais doit être résolue.
+- Les fragments ramassés restent acquis à la reprise de la partie, sur n'importe quel appareil : `GET /paper-fragments`, ou `collected_fragments` dans `GET /progress`.
 
 ### Victoire
 
-`POST /completions` avec `{"placed_puzzle_ids": [...]}` réussit si, avant la fin du temps et hors pause :
-
-1. toutes les énigmes sont résolues côté serveur ;
-2. `placed_puzzle_ids` contient exactement les identifiants de toutes les énigmes.
-
-Le schéma n'a pas de colonne pour les livres posés au château. La liste des livres posés est donc une déclaration du client, contrôlée seulement contre les énigmes résolues. Conséquence : en reprenant une partie sur un autre appareil, les livres résolus reviennent « en main » et doivent être reposés au château. Pour les conserver, il faudrait une colonne `puzzle_progress.placed_at`, écartée pour l'instant afin de ne pas modifier le schéma de production.
+`POST /completions`, sans corps, réussit si les livres de toutes les énigmes sont **posés** (`placed_at` renseigné), avant la fin du temps et hors pause. Récupérer les livres ne suffit pas. Le serveur s'appuie sur les dépôts qu'il a lui-même enregistrés : le client ne déclare plus rien au moment de la victoire. Le temps total est figé à cet instant ; Godot doit donc appeler cette route dès que le quatrième livre est posé.
 
 ### Classements
 
@@ -134,12 +149,13 @@ Un invité joue sans compte : sa progression reste dans la sauvegarde locale de 
 Contrôles appliqués à l'import, qui répondent 422 en cas d'échec :
 
 - énigmes existantes, sans doublon, résolues dans l'ordre (les N premières) ;
-- indices utilisés entre 0 et `hints_count` ;
+- livres posés seulement parmi les énigmes résolues (`is_placed` sur chaque énigme) ;
+- fragments numérotés de 0 à 9, sans doublon, et seulement si le Village est ouvert (énigme du Marais résolue) ;
 - temps consommé entre 0 et la durée de la partie ;
-- état cohérent avec le temps : `in_progress` avec du temps restant, `game_over` avec tout le temps consommé, `completed` avec toutes les énigmes résolues et un temps total plausible ;
+- état cohérent avec le temps : `in_progress` avec du temps restant, `game_over` avec tout le temps consommé, `completed` avec toutes les énigmes résolues, tous les livres posés et un temps total plausible ;
 - niveau et position valides, aucun champ inconnu (par exemple `completion_time_ms`).
 
-Les résolutions importées sont enregistrées sans `completion_time_ms`, ce qui exclut la partie des classements, même si le joueur la termine ensuite en ligne. Une partie `in_progress` est importée en pause : le chronomètre repart avec `POST /resumptions`.
+Les résolutions importées sont enregistrées sans `completion_time_ms`, ce qui exclut la partie des classements, même si le joueur la termine ensuite en ligne. Livres posés et fragments sont conservés. Une partie `in_progress` est importée en pause : le chronomètre repart avec `POST /resumptions`.
 
 Un import `in_progress` sans aucune énigme résolue reste classable : il équivaut à une partie neuve, puisque tout ce qui suit est chronométré par le serveur et qu'un temps déclaré plus faible ne donne aucun avantage par rapport à une nouvelle partie.
 
@@ -154,7 +170,7 @@ Un import `in_progress` sans aucune énigme résolue reste classable : il équiv
 | Mots de passe erronés | 10 échecs en 15 minutes sur une adresse bloquent la connexion temporairement (429) |
 | Sessions | Token de 256 bits stocké en SHA-256, valable 7 jours, révocable ; une session par appareil |
 | Autorisations | Chaque partie et chaque progression sont filtrées par propriétaire ; celles d'un autre joueur répondent 404 |
-| Concurrence | Verrous de ligne (`SELECT … FOR UPDATE`) sur la partie, la progression et le code 2FA, pour éviter les doubles résolutions ou les doubles validations |
+| Concurrence | Verrous de ligne (`SELECT … FOR UPDATE`) sur la partie, la progression et le code 2FA, contraintes uniques sur les progressions et les fragments : pas de double résolution, de double dépôt ni de double ramassage |
 | Intégrité | Statut, temps et dates calculés par le serveur ; positions bornées à ±10 000 ; identifiants bornés à la taille d'un `INTEGER` |
 | CORS | Désactivé par défaut : le jeu et l'API partagent le domaine de Caddy. `CORS_ALLOWED_ORIGINS` liste explicitement les origines autorisées en développement, sans cookies |
 | Secrets | Variables d'environnement uniquement ; aucun secret dans le dépôt ni dans les logs, sauf le code 2FA avec `EMAIL_BACKEND=console`, réservé au développement |
@@ -162,7 +178,7 @@ Un import `in_progress` sans aucune énigme résolue reste classable : il équiv
 ### Ce que le serveur ne peut pas garantir
 
 - **Qu'une énigme a vraiment été résolue.** La logique des énigmes s'exécute dans Godot et leurs solutions sont publiques (README, code du jeu). `{"solved": true}` reste une déclaration du client. Le serveur garantit l'ordre, l'unicité, la mesure du temps et le respect du chronomètre. Une résolution plus rapide que `PUZZLE_MIN_SOLVE_SECONDS` (30 s) est acceptée pour ne pas bloquer le jeu, mais elle fait sortir la partie du classement. Un tricheur qui scripte des appels réalistes peut toutefois obtenir un temps classé.
-- **Que les livres ont été posés**, faute de colonne : voir la section Victoire.
+- **Que le joueur a vraiment marché jusqu'au château pour poser un livre**, ni ramassé un fragment : ce sont aussi des déclarations du client, contrôlées pour leur cohérence (livre obtenu, Village ouvert, unicité, chronomètre).
 - **Que la position envoyée est réelle** : le serveur ne connaît pas la géométrie des niveaux.
 - **La limitation des échecs de mot de passe est gardée en mémoire** : elle est remise à zéro au redémarrage de l'API, et suppose un seul conteneur. Elle permet aussi à un tiers de bloquer temporairement la connexion d'une adresse qu'il connaît.
 
@@ -179,18 +195,25 @@ Toutes les variables sont décrites dans `backend/.env.example` (développement)
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USERNAME`, `SMTP_PASSWORD`, `SMTP_SECURITY`, `EMAIL_FROM` | Fournisseur d'e-mails |
 | `CORS_ALLOWED_ORIGINS` | Vide en production |
 
+## Migrations
+
+| Révision | Contenu | Données existantes |
+| --- | --- | --- |
+| `4644fb211f12` | Création des six tables | Déjà en production |
+| `28803cd8c266` | `game_sessions.timer_started_at` | Déjà en production |
+| `7b2f4c9e1a35` | Les quatre énigmes (`ON CONFLICT DO NOTHING`) | Une énigme déjà présente à un `order_index` est gardée telle quelle |
+| `e3a91d5c7f20` | `puzzle_progress.placed_at`, nullable, et la contrainte `ck_puzzle_progress_placed_after_solved` | Aucune ligne modifiée : aucun livre n'est considéré comme posé |
+| `5d8c2b6e4a17` | Table `paper_fragments` | Nouvelle table, rien d'autre n'est touché |
+
+Les trois dernières sont additives et n'ont été appliquées qu'à des bases de test. Le seed des énigmes renseigne encore `hint_count = 3`, une valeur que l'API n'utilise plus.
+
 ## Déploiement
 
-Le déploiement automatique (`cdp-deploy`) reconstruit les images mais **n'exécute pas les migrations**. Avant le premier déploiement de cette version :
+Le déploiement automatique (`cdp-deploy`) reconstruit les images mais **n'exécute pas les migrations**. Or ce code lit `puzzle_progress.placed_at` et la table `paper_fragments` : déployé sans elles, les routes de parties et d'énigmes répondraient 500, alors que `/health/database` resterait vert. Ordre à respecter :
 
 1. Ajouter `SECRET_KEY` et la configuration SMTP dans `/opt/cdp-2026/.env` sur le serveur.
-2. Déployer, puis appliquer la migration des énigmes :
-
-   ```sh
-   docker compose -f infrastructure/docker-compose.prod.yml --env-file /opt/cdp-2026/.env exec api alembic upgrade head
-   ```
-
-   Elle ne fait qu'insérer les quatre énigmes (`ON CONFLICT DO NOTHING`), sans changer le schéma : sans elle, l'API fonctionne, mais la liste des énigmes est vide.
+2. **Appliquer les migrations avant de déployer** ce code, avec un conteneur temporaire construit depuis cette version et branché sur le réseau `cdp2026_default`, qui lance `alembic upgrade head`. L'API actuellement en production reste compatible avec le nouveau schéma, puisque les changements sont additifs.
+3. Déployer.
 
 Les routes `/api/v1/health` et `/api/v1/health/database` gardent leur comportement : les healthchecks Docker ne changent pas.
 

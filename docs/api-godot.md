@@ -5,8 +5,8 @@ Ce guide montre comment le jeu appelle l'API, étape par étape, en partant des 
 ## Principes
 
 - Le serveur est la référence pour le temps : Godot affiche `remaining_seconds` reçu de l'API et décompte localement entre deux réponses, mais n'envoie jamais de durée.
-- Le serveur ne connaît que ce que Godot lui dit : il faut l'appeler à chaque étape clé (début de mission, énigme commencée, énigme résolue, pénalité, victoire).
-- La sauvegarde locale (`user://sauvegarde.cfg`) reste utile : elle sert au mode invité et garde les livres posés, que le serveur ne stocke pas.
+- Le serveur ne connaît que ce que Godot lui dit : il faut l'appeler à chaque étape clé (début de mission, énigme commencée, énigme résolue, livre posé, fragment ramassé, pénalité, victoire).
+- Pour un joueur connecté, le serveur garde tout l'état utile à la reprise : livres obtenus et posés, fragments de papier, temps, niveau et position. La sauvegarde locale (`user://sauvegarde.cfg`) sert au mode invité.
 
 ## Client HTTP
 
@@ -130,6 +130,7 @@ Au lancement, lire les énigmes et faire le lien avec les zones par `order_index
 
 ```gdscript
 var puzzle_ids := {}  # zone -> id_puzzles
+var progress_ids := {}  # zone -> id_puzzle_progress, rempli par POST /puzzle-progress ou GET /progress
 
 func load_puzzles() -> void:
 	var r := await Api.request(HTTPClient.METHOD_GET, "/puzzles")
@@ -149,7 +150,9 @@ Ne jamais écrire les `id_puzzles` en dur : ils peuvent changer d'une base à l'
 | Sauvegarde périodique (`SAVE_INTERVAL`) | `PATCH /game-sessions/{id}` avec la position, pas plus d'une fois toutes les 15 à 30 secondes |
 | `penalize()` | `POST /game-sessions/{id}/penalties` ; si `status` vaut `game_over`, lancer l'éruption |
 | `collect_book(book)` | `PATCH /game-sessions/{id}/puzzle-progress/{id_puzzle_progress}` avec `{"solved": true}` |
-| `place_book(book)` du quatrième livre | `POST /game-sessions/{id}/completions` |
+| `Village._on_fragment_taken(fragment)` | `POST /game-sessions/{id}/paper-fragments` avec `{"fragment_index": fragment.fragment}` |
+| `place_book(book)` | `POST /game-sessions/{id}/puzzle-progress/{id_puzzle_progress}/placements` |
+| Quatrième livre posé (`placed_books.size() == BOOK_COUNT`) | Après la réponse du dépôt : `POST /game-sessions/{id}/completions` |
 | Menu pause | `POST /game-sessions/{id}/pauses`, puis `POST /game-sessions/{id}/resumptions` |
 | `_erupt()` | `GET /game-sessions/{id}` pour confirmer `game_over` |
 | « Recommencer » | Si la partie est encore `in_progress` : `POST /game-sessions/{id}/abandonments`, puis nouvelle partie au prochain `begin_mission()` |
@@ -184,7 +187,7 @@ Chaque réponse sur une partie contient :
 }
 ```
 
-Recaler `GameState.time_left = remaining_seconds` à chaque réponse, et continuer à décompter localement entre deux appels. Le temps continue de courir quand le navigateur est fermé : seule une pause demandée par le joueur l'arrête. Pendant une pause, résoudre une énigme, utiliser un indice ou valider la victoire répond 409.
+Recaler `GameState.time_left = remaining_seconds` à chaque réponse, et continuer à décompter localement entre deux appels. Le temps continue de courir quand le navigateur est fermé : seule une pause demandée par le joueur l'arrête. Pendant une pause, commencer ou résoudre une énigme, poser un livre, ramasser un fragment ou valider la victoire répond 409.
 
 ### Reprendre une partie (même ou autre appareil)
 
@@ -202,8 +205,23 @@ Puis remplir `GameState` :
 
 - `intro_done = true`, `time_left = game.remaining_seconds`, `last_zone` selon `game.current_level` ;
 - `books` : le livre de chaque énigme où `is_solved` est vrai dans `progress.data.puzzles` ;
-- `placed_books` : à reprendre de la sauvegarde locale si elle porte le même `id_game_sessions`. Sinon (autre appareil), laisser vide : le serveur ne garde pas les livres posés, et le joueur devra reposer au château les livres qu'il a déjà trouvés ;
+- `placed_books` : le livre de chaque énigme où `is_placed` est vrai. Les livres obtenus mais pas posés reviennent dans la main du joueur ;
+- `id_puzzle_progress` de chaque énigme commencée, pour les appels suivants ;
+- les fragments de papier : `progress.data.collected_fragments` (voir plus bas) ;
 - si `game.is_paused` est vrai, appeler `/resumptions` quand le joueur reprend la main.
+
+```gdscript
+GameState.books.clear()
+GameState.placed_books.clear()
+for state: Dictionary in progress.data.puzzles:
+	var zone: StringName = GameState.ZONE_ORDER[int(state.order_index) - 1]
+	if state.is_solved:
+		GameState.books.append(GameState.ZONE_BOOKS[zone])
+	if state.is_placed:
+		GameState.placed_books.append(GameState.ZONE_BOOKS[zone])
+	if state.id_puzzle_progress != null:
+		progress_ids[zone] = int(state.id_puzzle_progress)
+```
 
 ## Énigmes et livres
 
@@ -212,38 +230,77 @@ Puis remplir `GameState` :
 ```json
 {
   "books_obtained": 2,
+  "books_placed": 1,
   "total_books": 4,
   "can_complete": false,
+  "collected_fragments": [],
+  "total_fragments": 10,
   "puzzles": [
     {"id_puzzles": 1, "order_index": 1, "is_unlocked": true, "is_started": true, "is_solved": true,
-     "id_puzzle_progress": 7, "completion_time_ms": 312400, "hints_used": 1, "hints_remaining": 2},
-    {"id_puzzles": 2, "order_index": 2, "is_unlocked": true, "is_started": false, "is_solved": false,
-     "id_puzzle_progress": null, "completion_time_ms": null, "hints_used": 0, "hints_remaining": 3}
+     "is_placed": true, "id_puzzle_progress": 7, "completion_time_ms": 312400},
+    {"id_puzzles": 2, "order_index": 2, "is_unlocked": true, "is_started": true, "is_solved": true,
+     "is_placed": false, "id_puzzle_progress": 8, "completion_time_ms": 254100},
+    {"id_puzzles": 3, "order_index": 3, "is_unlocked": true, "is_started": false, "is_solved": false,
+     "is_placed": false, "id_puzzle_progress": null, "completion_time_ms": null}
   ]
 }
 ```
 
-- Un livre est obtenu quand son énigme est résolue (`is_solved`).
+- Un livre est obtenu quand son énigme est résolue (`is_solved`), puis posé au château (`is_placed`).
 - Commencer une énigme (`POST /puzzle-progress`) peut être rappelé sans risque : la deuxième fois, l'API renvoie la même progression avec le code 200.
 - Les énigmes se commencent dans l'ordre : sinon 409 « Énigme verrouillée ».
-- Indice : `POST /game-sessions/{id}/puzzle-progress/{id_puzzle_progress}/hints`, 3 par énigme ; au-delà, 409. Le texte des indices reste dans Godot.
 - Le serveur mesure lui-même `completion_time_ms`.
+- Les indices des énigmes 1 à 3 restent entièrement dans Godot : aucun appel.
+
+### Poser un livre
+
+Dans `place_book(book)`, avant ou pendant l'animation :
+
+```gdscript
+var r := await Api.request(HTTPClient.METHOD_POST,
+	"/game-sessions/%d/puzzle-progress/%d/placements" % [game_id, progress_ids[zone]])
+# 200 : r.data.is_placed vaut true. 409 : livre non obtenu, déjà posé, partie en pause, ou temps écoulé.
+```
+
+Un livre posé le reste : il réapparaît sur son piédestal à la reprise, sur n'importe quel appareil.
+
+### Fragments de papier du Village
+
+Les dix fragments de la mairie sont identifiés par `PaperFragment.fragment`, de 0 à 9 : c'est directement le `fragment_index` de l'API. Dans `Village._on_fragment_taken(fragment)` :
+
+```gdscript
+var r := await Api.request(HTTPClient.METHOD_POST, "/game-sessions/%d/paper-fragments" % game_id,
+	{"fragment_index": fragment.fragment})
+# 201 : fragment enregistré. 409 : déjà ramassé (sans gravité), Village pas encore ouvert, pause ou temps écoulé.
+# 422 : numéro hors de 0 à 9.
+```
+
+À l'entrée dans le Village, remettre les fragments déjà ramassés dans le carnet et les retirer de la mairie :
+
+```gdscript
+var r := await Api.request(HTTPClient.METHOD_GET, "/game-sessions/%d/paper-fragments" % game_id)
+var collected := {}
+for item: Dictionary in r.data:
+	collected[int(item.fragment_index)] = true
+for fragment: PaperFragment in _fragments.get_children():
+	if collected.has(fragment.fragment):
+		fragment.collect()
+		_found[fragment.fragment] = FRAGMENTS[fragment.fragment]
+```
+
+La même liste est dans `progress.data.collected_fragments`. Aujourd'hui `_found` n'est pas sauvegardé localement : pour que le mode invité conserve aussi les fragments, il faudra le garder dans `GameState`.
 
 ## Victoire
 
-Quand le quatrième livre est posé (`placed_books.size() == BOOK_COUNT`) :
+Dès que le quatrième livre est posé, après la réponse de son dépôt :
 
 ```gdscript
-var placed := []
-for book: StringName in GameState.placed_books:
-	for zone: StringName in GameState.ZONE_BOOKS:
-		if GameState.ZONE_BOOKS[zone] == book:
-			placed.append(puzzle_ids[zone])
-var r := await Api.request(HTTPClient.METHOD_POST, "/game-sessions/%d/completions" % game_id,
-	{"placed_puzzle_ids": placed})
+var r := await Api.request(HTTPClient.METHOD_POST, "/game-sessions/%d/completions" % game_id)
 # 200 : status vaut "completed", elapsed_seconds est le temps final.
-# 409 : une énigme n'est pas résolue côté serveur, un livre manque, la partie est en pause, ou le temps est écoulé.
+# 409 : un livre n'est pas posé côté serveur, la partie est en pause, ou le temps est écoulé.
 ```
+
+Aucun corps : le serveur vérifie les dépôts qu'il a enregistrés. Récupérer les quatre livres ne suffit pas, il faut les avoir posés. Le temps est figé à cet appel : ne pas attendre la fin de la cinématique.
 
 ## Classements
 
@@ -273,13 +330,15 @@ func guest_import_payload() -> Dictionary:
 		status = "completed"
 	var solved := []
 	for zone: StringName in GameState.ZONE_ORDER:
-		if GameState.has_book(GameState.ZONE_BOOKS[zone]):
-			solved.append({"id_puzzles": puzzle_ids[zone], "hints_used": 0})
+		var book: StringName = GameState.ZONE_BOOKS[zone]
+		if GameState.has_book(book):
+			solved.append({"id_puzzles": puzzle_ids[zone], "is_placed": GameState.has_placed(book)})
 	return {
 		"status": status,
 		"elapsed_seconds": GameState.TOTAL_TIME - GameState.time_left,
 		"current_level": "hub",
 		"solved_puzzles": solved,
+		"collected_fragments": [],  # numéros des fragments ramassés, une fois `_found` sauvegardé
 	}
 
 var r := await Api.request(HTTPClient.METHOD_POST, "/game-sessions/imports", guest_import_payload())
@@ -287,7 +346,7 @@ var r := await Api.request(HTTPClient.METHOD_POST, "/game-sessions/imports", gue
 
 - 201 : la partie appartient au compte. Une partie `in_progress` arrive en pause : appeler `/resumptions` quand le joueur reprend.
 - 409 : le compte a déjà une partie en cours.
-- 422 : sauvegarde incohérente (temps négatif ou supérieur à 60 minutes, énigmes dans le désordre…).
+- 422 : sauvegarde incohérente (temps négatif ou supérieur à 60 minutes, énigmes dans le désordre, partie gagnée sans ses quatre livres posés, fragments sans Village ouvert…).
 - N'importer que si `intro_done` est vrai : avant la mission, il n'y a rien à transférer.
 - Une partie importée n'entre jamais dans les classements (`is_rankable: false`) : le serveur n'a pas vu comment elle a été jouée. Le dire au joueur.
 
