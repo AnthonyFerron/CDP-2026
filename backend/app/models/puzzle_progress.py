@@ -30,6 +30,11 @@ class PuzzleProgress(Base):
             "completion_time_ms > 0",
             name="ck_puzzle_progress_completion_time"
         ),
+        # Un livre ne se pose au château qu'une fois son énigme résolue.
+        CheckConstraint(
+            "placed_at IS NULL OR (solved_at IS NOT NULL AND placed_at >= solved_at)",
+            name="ck_puzzle_progress_placed_after_solved"
+        ),
     )
 
     id_puzzle_progress: Mapped[int] = mapped_column(
@@ -60,8 +65,15 @@ class PuzzleProgress(Base):
         nullable=True
     )
 
+    # Colonne conservée sans être utilisée : les indices des énigmes sont gérés dans Godot.
     hints_used: Mapped[int] = mapped_column(
         Integer,
         default=0,
         nullable=False
+    )
+
+    # Date à laquelle le livre de l'énigme a été posé sur son piédestal, au château.
+    placed_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True
     )
