@@ -63,7 +63,7 @@ func set_glow(color: Color, energy: float) -> void:
 	for material in _glow_materials:
 		material.emission_enabled = glowing
 		material.emission = color
-		material.emission_energy_multiplier = 0.35 * energy
+		material.emission_energy_multiplier = 0.12 * energy
 
 
 ## Hauteur du dessus d'un cercle : l'intérieur est le plus haut.

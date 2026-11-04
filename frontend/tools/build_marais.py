@@ -728,13 +728,19 @@ def build_crypt_underground(scene, rng):
     # Le long escalier de pierre : le modèle du kit, sa rampe de collision, ses murs et son plafond en pente.
     sx, sy, sz = STAIRS_ORIGIN
     scene.add("modular_dungeon_kit/stairs", STAIRS_ORIGIN, 0.0, 1.0, coat="dust")
-    scene.add_box((0.0, -0.25, sz - 5.2), (3.0, 0.5, 2.1))
-    run, rise = 5.2, 4.05
+    scene.add_box((0.0, -0.25, sz - 5.0), (3.0, 0.5, 2.5))
+    # Rampe de collision sur le nez des marches : sept marches de 0,58 m, la première à z local -3,25, la
+    # dernière à 1,45 (mesurées sur le modèle). Elle part du sol à z local -4,03 et arrive au palier à 4,05 m :
+    # chaque marche porte le joueur, sans ressaut ni marche à franchir.
+    bottom, top_nose = -4.03, 1.45
+    run, rise = top_nose - bottom, 4.05
     slope = math.degrees(math.atan2(rise, run))
     length = math.hypot(run, rise)
     normal = (math.cos(math.radians(slope)), math.sin(math.radians(slope)))
-    mid_z, mid_y = sz - 3.5 + run / 2, rise / 2
+    mid_z, mid_y = sz + bottom + run / 2, rise / 2
     scene.add_box((0.0, mid_y - normal[0] * 0.3, mid_z + normal[1] * 0.3), (3.0, 0.6, length), 0.0, tilt=-slope)
+    # Dernière marche, plate, jusqu'au palier.
+    scene.add_box((0.0, rise - 0.25, sz + top_nose + 0.4), (3.0, 0.5, 0.8))
     for side in (-1.0, 1.0):
         scene.add_box((side * 1.8, 4.3, sz - 2.0), (0.7, 8.6, 8.4))
     # Plafond : en pente au-dessus du pied de l'escalier, en suivant le haut de ses murs, puis plat à 4,15 m au-dessus

@@ -12,6 +12,8 @@ Ouvrir `marais.tscn` dans le projet `frontend/project.godot`, puis appuyer sur *
 4. Le mécanisme s'ouvre en vue rapprochée. Une mauvaise combinaison fait rougir les lettres, la crypte gronde et le chronomètre perd 5 minutes. Solution : CODIA décalé de +3, −3, +3, −3, +3, soit **FLGFD**.
 5. Les cercles s'illuminent de vert ; dans la chambre de l'est, le lourd couvercle du tombeau glisse et bascule. Prendre le Logiconomicon rallume le portail.
 
+Le long escalier se monte et se descend à pied ; on remonte à la surface d'en bas (« Remonter l'escalier ») comme d'en haut, sous la trappe (« Remonter à la surface »).
+
 Les eaux peu profondes ralentissent le joueur ; dans les eaux profondes, la vase le ramène à son dernier point sûr. Une limite invisible, au pied de la berge (`MaraisTerrain.LIMIT_RADIUS`), empêche de sortir de la carte.
 
 ## Fichiers
@@ -22,8 +24,10 @@ Les eaux peu profondes ralentissent le joueur ; dans les eaux profondes, la vase
 | `marais_terrain.gd` | Îlots, fond de vase, berges et limite invisible |
 | `marais_scatter.gd` | Pontons et lanternes, arbres, roseaux, nénuphars en fleur (par cases de 32 m), mousse et poussière ; pose au sol maillé le décor des berges |
 | `marais_props.tscn`, `marais_grounded.tscn`, `marais_crypt.tscn` | Décor fixe, généré par `tools/build_marais.py` (à relancer après modification) |
-| `ring_mechanism.gd`, `ring_puzzle.tscn`, `ring_puzzle.gd` | Mécanisme à cinq cercles et son écran |
+| `ring_mechanism.gd`, `ring_puzzle.tscn`, `ring_puzzle.gd` | Mécanisme à cinq cercles et son écran dans le style des menus : cadran des cinq anneaux gravés, une colonne par cercle avec sa lettre et ses flèches ; rouge à l'erreur, vert à la réussite |
 | `will_o_wisps.gd` | Feux follets |
+| `marais_life.gd` | Grenouilles qui sautent à l'eau, poissons et ronds dans l'eau, corbeaux, chauves-souris de la crypte, lanternes pendues qui se balancent |
+| `swamp_fog.gdshader`, `reeds_sway.gdshader` | Brume qui roule au ras de l'eau, roseaux qui ondulent |
 | `moss_overlay.gdshader`, `crypt_stone.gdshader` | Mousse et poussière en surcouche, dalles de pierre froide de la crypte |
 | `marais_ground.gdshader`, `swamp_water.gdshader` | Sol et eau stagnante |
 
