@@ -217,64 +217,106 @@ size = Vector3(8.3, 0.3, 8.6)
 size = Vector3(8.3, 0.3, 8.6)
 
 [sub_resource type="BoxMesh" id="BoxMesh_step0"]
-material = SubResource("Material_wood")
+material = SubResource("Material_wood_dark")
 size = Vector3(3, 0.3, 0.6)
 
 [sub_resource type="BoxMesh" id="BoxMesh_step1"]
-material = SubResource("Material_wood")
+material = SubResource("Material_wood_dark")
 size = Vector3(3, 0.6, 0.6)
 
 [sub_resource type="BoxMesh" id="BoxMesh_step2"]
-material = SubResource("Material_wood")
+material = SubResource("Material_wood_dark")
 size = Vector3(3, 0.9, 0.6)
 
 [sub_resource type="BoxMesh" id="BoxMesh_step3"]
-material = SubResource("Material_wood")
+material = SubResource("Material_wood_dark")
 size = Vector3(3, 1.2, 0.6)
 
 [sub_resource type="BoxMesh" id="BoxMesh_step4"]
-material = SubResource("Material_wood")
+material = SubResource("Material_wood_dark")
 size = Vector3(3, 1.5, 0.6)
 
 [sub_resource type="BoxMesh" id="BoxMesh_step5"]
-material = SubResource("Material_wood")
+material = SubResource("Material_wood_dark")
 size = Vector3(3, 1.8, 0.6)
 
 [sub_resource type="BoxMesh" id="BoxMesh_step6"]
-material = SubResource("Material_wood")
+material = SubResource("Material_wood_dark")
 size = Vector3(3, 2.1, 0.6)
 
 [sub_resource type="BoxMesh" id="BoxMesh_step7"]
-material = SubResource("Material_wood")
+material = SubResource("Material_wood_dark")
 size = Vector3(3, 2.4, 0.6)
 
 [sub_resource type="BoxMesh" id="BoxMesh_step8"]
-material = SubResource("Material_wood")
+material = SubResource("Material_wood_dark")
 size = Vector3(3, 2.7, 0.6)
 
 [sub_resource type="BoxMesh" id="BoxMesh_step9"]
-material = SubResource("Material_wood")
+material = SubResource("Material_wood_dark")
 size = Vector3(3, 3, 0.6)
 
 [sub_resource type="BoxMesh" id="BoxMesh_step10"]
-material = SubResource("Material_wood")
+material = SubResource("Material_wood_dark")
 size = Vector3(3, 3.3, 0.6)
 
 [sub_resource type="BoxMesh" id="BoxMesh_step11"]
-material = SubResource("Material_wood")
+material = SubResource("Material_wood_dark")
 size = Vector3(3, 3.6, 0.6)
 
 [sub_resource type="BoxMesh" id="BoxMesh_step12"]
-material = SubResource("Material_wood")
+material = SubResource("Material_wood_dark")
 size = Vector3(3, 3.9, 0.6)
 
 [sub_resource type="BoxMesh" id="BoxMesh_step13"]
-material = SubResource("Material_wood")
+material = SubResource("Material_wood_dark")
 size = Vector3(3, 4.2, 0.6)
 
 [sub_resource type="BoxMesh" id="BoxMesh_step14"]
-material = SubResource("Material_wood")
+material = SubResource("Material_wood_dark")
 size = Vector3(3, 4.5, 0.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tread"]
+material = SubResource("Material_wood")
+size = Vector3(3.04, 0.06, 0.65)
+
+[sub_resource type="BoxMesh" id="BoxMesh_stringer"]
+material = SubResource("Material_wood")
+size = Vector3(0.1, 0.42, 8.38525)
+
+[sub_resource type="BoxMesh" id="BoxMesh_handrail"]
+material = SubResource("Material_wood")
+size = Vector3(0.09, 0.09, 9.86231)
+
+[sub_resource type="BoxMesh" id="BoxMesh_baluster"]
+material = SubResource("Material_wood_dark")
+size = Vector3(0.05, 0.9, 0.05)
+
+[sub_resource type="BoxMesh" id="BoxMesh_batten0"]
+material = SubResource("Material_wood")
+size = Vector3(0.03, 0.2, 0.12)
+
+[sub_resource type="BoxMesh" id="BoxMesh_batten3"]
+material = SubResource("Material_wood")
+size = Vector3(0.03, 1.1, 0.12)
+
+[sub_resource type="BoxMesh" id="BoxMesh_batten6"]
+material = SubResource("Material_wood")
+size = Vector3(0.03, 2, 0.12)
+
+[sub_resource type="BoxMesh" id="BoxMesh_batten9"]
+material = SubResource("Material_wood")
+size = Vector3(0.03, 2.9, 0.12)
+
+[sub_resource type="BoxMesh" id="BoxMesh_batten12"]
+material = SubResource("Material_wood")
+size = Vector3(0.03, 3.8, 0.12)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_handrail"]
+size = Vector3(0.14, 1.1, 9.16231)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sail"]
+size = Vector3(0.6, 2.9, 2)
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_stairs"]
 points = PackedVector3Array(4.55, 0, 5, 4.55, 0, -4, 4.55, 4.5, -4, 7.55, 0, 5, 7.55, 0, -4, 7.55, 4.5, -4)
@@ -391,6 +433,24 @@ transform = Transform3D(6.12323e-17, 0, 1, 0, 1, 0, -1, 0, 6.12323e-17, 30, 11, 
 
 [node name="Model" parent="WindmillRotor" instance=ExtResource("13_windmill")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
+
+[node name="Sails" type="StaticBody3D" parent="WindmillRotor"]
+
+[node name="Sail0" type="CollisionShape3D" parent="WindmillRotor/Sails"]
+transform = Transform3D(1, 0, 0, 0, 0.544639, -0.838671, 0, 0.838671, 0.544639, 0, 1.7428, 2.6837)
+shape = SubResource("BoxShape3D_sail")
+
+[node name="Sail1" type="CollisionShape3D" parent="WindmillRotor/Sails"]
+transform = Transform3D(1, 0, 0, 0, -0.838671, -0.544639, 0, 0.544639, -0.838671, 0, -2.6837, 1.7428)
+shape = SubResource("BoxShape3D_sail")
+
+[node name="Sail2" type="CollisionShape3D" parent="WindmillRotor/Sails"]
+transform = Transform3D(1, 0, 0, 0, -0.544639, 0.838671, 0, -0.838671, -0.544639, 0, -1.7428, -2.6837)
+shape = SubResource("BoxShape3D_sail")
+
+[node name="Sail3" type="CollisionShape3D" parent="WindmillRotor/Sails"]
+transform = Transform3D(1, 0, 0, 0, 0.838671, 0.544639, 0, -0.544639, 0.838671, 0, 2.6837, -1.7428)
+shape = SubResource("BoxShape3D_sail")
 
 [node name="WaterWheel" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36.5, 1.0, -14)
@@ -900,67 +960,187 @@ shape = SubResource("BoxShape3D_ramp")
 [node name="StairsShape" type="CollisionShape3D" parent="Interior/Slabs"]
 shape = SubResource("ConvexPolygonShape3D_stairs")
 
+[node name="HandrailShape" type="CollisionShape3D" parent="Interior/Slabs"]
+transform = Transform3D(1, 0, 0, 0, 0.894427, -0.447214, 0, 0.447214, 0.894427, 4.68, 3.2500, 0)
+shape = SubResource("BoxShape3D_handrail")
+
 [node name="Stairs" type="Node3D" parent="Interior"]
 
 [node name="Step0" type="MeshInstance3D" parent="Interior/Stairs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 0.15, 4.7)
 mesh = SubResource("BoxMesh_step0")
 
+[node name="Tread0" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 0.274, 4.725)
+mesh = SubResource("BoxMesh_tread")
+
+[node name="Batten0" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.535, 0.1, 4.7)
+mesh = SubResource("BoxMesh_batten0")
+
 [node name="Step1" type="MeshInstance3D" parent="Interior/Stairs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 0.3, 4.1)
 mesh = SubResource("BoxMesh_step1")
+
+[node name="Tread1" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 0.574, 4.125)
+mesh = SubResource("BoxMesh_tread")
+
+[node name="Baluster1" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.68, 1.05, 4.1)
+mesh = SubResource("BoxMesh_baluster")
 
 [node name="Step2" type="MeshInstance3D" parent="Interior/Stairs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 0.45, 3.5)
 mesh = SubResource("BoxMesh_step2")
 
+[node name="Tread2" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 0.874, 3.525)
+mesh = SubResource("BoxMesh_tread")
+
 [node name="Step3" type="MeshInstance3D" parent="Interior/Stairs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 0.6, 2.9)
 mesh = SubResource("BoxMesh_step3")
+
+[node name="Tread3" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 1.174, 2.925)
+mesh = SubResource("BoxMesh_tread")
+
+[node name="Batten3" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.535, 0.55, 2.9)
+mesh = SubResource("BoxMesh_batten3")
+
+[node name="Baluster3" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.68, 1.65, 2.9)
+mesh = SubResource("BoxMesh_baluster")
 
 [node name="Step4" type="MeshInstance3D" parent="Interior/Stairs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 0.75, 2.3)
 mesh = SubResource("BoxMesh_step4")
 
+[node name="Tread4" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 1.474, 2.325)
+mesh = SubResource("BoxMesh_tread")
+
 [node name="Step5" type="MeshInstance3D" parent="Interior/Stairs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 0.9, 1.7)
 mesh = SubResource("BoxMesh_step5")
+
+[node name="Tread5" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 1.774, 1.725)
+mesh = SubResource("BoxMesh_tread")
+
+[node name="Baluster5" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.68, 2.25, 1.7)
+mesh = SubResource("BoxMesh_baluster")
 
 [node name="Step6" type="MeshInstance3D" parent="Interior/Stairs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 1.05, 1.1)
 mesh = SubResource("BoxMesh_step6")
 
+[node name="Tread6" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 2.074, 1.125)
+mesh = SubResource("BoxMesh_tread")
+
+[node name="Batten6" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.535, 1, 1.1)
+mesh = SubResource("BoxMesh_batten6")
+
 [node name="Step7" type="MeshInstance3D" parent="Interior/Stairs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 1.2, 0.5)
 mesh = SubResource("BoxMesh_step7")
+
+[node name="Tread7" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 2.374, 0.525)
+mesh = SubResource("BoxMesh_tread")
+
+[node name="Baluster7" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.68, 2.85, 0.5)
+mesh = SubResource("BoxMesh_baluster")
 
 [node name="Step8" type="MeshInstance3D" parent="Interior/Stairs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 1.35, -0.1)
 mesh = SubResource("BoxMesh_step8")
 
+[node name="Tread8" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 2.674, -0.075)
+mesh = SubResource("BoxMesh_tread")
+
 [node name="Step9" type="MeshInstance3D" parent="Interior/Stairs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 1.5, -0.7)
 mesh = SubResource("BoxMesh_step9")
+
+[node name="Tread9" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 2.974, -0.675)
+mesh = SubResource("BoxMesh_tread")
+
+[node name="Batten9" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.535, 1.45, -0.7)
+mesh = SubResource("BoxMesh_batten9")
+
+[node name="Baluster9" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.68, 3.45, -0.7)
+mesh = SubResource("BoxMesh_baluster")
 
 [node name="Step10" type="MeshInstance3D" parent="Interior/Stairs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 1.65, -1.3)
 mesh = SubResource("BoxMesh_step10")
 
+[node name="Tread10" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 3.274, -1.275)
+mesh = SubResource("BoxMesh_tread")
+
 [node name="Step11" type="MeshInstance3D" parent="Interior/Stairs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 1.8, -1.9)
 mesh = SubResource("BoxMesh_step11")
+
+[node name="Tread11" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 3.574, -1.875)
+mesh = SubResource("BoxMesh_tread")
+
+[node name="Baluster11" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.68, 4.05, -1.9)
+mesh = SubResource("BoxMesh_baluster")
 
 [node name="Step12" type="MeshInstance3D" parent="Interior/Stairs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 1.95, -2.5)
 mesh = SubResource("BoxMesh_step12")
 
+[node name="Tread12" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 3.874, -2.475)
+mesh = SubResource("BoxMesh_tread")
+
+[node name="Batten12" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.535, 1.9, -2.5)
+mesh = SubResource("BoxMesh_batten12")
+
 [node name="Step13" type="MeshInstance3D" parent="Interior/Stairs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 2.1, -3.1)
 mesh = SubResource("BoxMesh_step13")
 
+[node name="Tread13" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 4.174, -3.075)
+mesh = SubResource("BoxMesh_tread")
+
+[node name="Baluster13" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.68, 4.65, -3.1)
+mesh = SubResource("BoxMesh_baluster")
+
 [node name="Step14" type="MeshInstance3D" parent="Interior/Stairs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 2.25, -3.7)
 mesh = SubResource("BoxMesh_step14")
+
+[node name="Tread14" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, 4.474, -3.675)
+mesh = SubResource("BoxMesh_tread")
+
+[node name="Stringer" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 0.894427, -0.447214, 0, 0.447214, 0.894427, 4.56, 2.4450, 0.35)
+mesh = SubResource("BoxMesh_stringer")
+
+[node name="Handrail" type="MeshInstance3D" parent="Interior/Stairs"]
+transform = Transform3D(1, 0, 0, 0, 0.894427, -0.447214, 0, 0.447214, 0.894427, 4.68, 3.5200, 0.4)
+mesh = SubResource("BoxMesh_handrail")
 
 [node name="Railing" type="Node3D" parent="Interior"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.5, 0)

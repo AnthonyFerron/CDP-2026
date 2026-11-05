@@ -296,7 +296,19 @@ STEP_RUN = 9.0 / STEPS
 STEP_RISE = OFFICE / STEPS
 # Rambarde autour de la trémie : centre (x, z), longueur, le long de z ou non.
 RAILS = [((4.5, -1.1), 6.2, True), ((6.15, 2.0), 3.3, False)]
+## Longueur de la pente de l'escalier, et hauteur de la ligne des nez de marches en z (0,3 m au nez de la première).
+STAIR_LENGTH = math.hypot(9.0, OFFICE)
+
+
+def nose_height(z):
+    return STEP_RISE + (5.0 - z) * OFFICE / 9.0
 SHELF_SCALE = 3.8
+# Ailes du moulin à vent (modèle windmill à l'échelle 3, axe x du rotor) : chaque aile occupe de 40 à 80 degrés autour
+# de son axe dans le plan (y, z) du rotor, de 1,8 à 4,7 m du moyeu. Une boîte par aile, enfant du rotor : elle tourne
+# avec lui. Sans elles, on traversait les ailes en sautant au pied de la tour.
+SAIL_ANGLES = (57.0, 147.0, 237.0, 327.0)
+SAIL_RADIUS = 3.2
+SAIL_SIZE = (0.6, 2.9, 2.0)
 
 
 def ext(identifier):
@@ -347,8 +359,17 @@ def main():
                   f"size = Vector3({x1 - x0:g}, {y1 - y0:g}, {z1 - z0:g})", "",
                   f'[sub_resource type="BoxShape3D" id="BoxShape3D_{name}"]', f"size = Vector3({x1 - x0:g}, {y1 - y0:g}, {z1 - z0:g})", ""]
     for step in range(STEPS):
-        lines += [f'[sub_resource type="BoxMesh" id="BoxMesh_step{step}"]', 'material = SubResource("Material_wood")',
+        lines += [f'[sub_resource type="BoxMesh" id="BoxMesh_step{step}"]', 'material = SubResource("Material_wood_dark")',
                   f"size = Vector3(3, {STEP_RISE * (step + 1):g}, {STEP_RUN:g})", ""]
+    for name, size, material in (("tread", (3.04, 0.06, STEP_RUN + 0.05), "wood"), ("stringer", (0.1, 0.42, 7.5 / math.cos(math.atan2(OFFICE, 9.0))), "wood"),
+                                 ("handrail", (0.09, 0.09, STAIR_LENGTH - 0.2), "wood"), ("baluster", (0.05, 0.9, 0.05), "wood_dark")):
+        lines += [f'[sub_resource type="BoxMesh" id="BoxMesh_{name}"]', f'material = SubResource("Material_{material}")',
+                  "size = Vector3(%s)" % ", ".join(f"{v:g}" for v in size), ""]
+    for step in range(0, STEPS, 3):
+        lines += [f'[sub_resource type="BoxMesh" id="BoxMesh_batten{step}"]', 'material = SubResource("Material_wood")',
+                  f"size = Vector3(0.03, {STEP_RISE * (step + 1) - 0.1:g}, 0.12)", ""]
+    lines += ['[sub_resource type="BoxShape3D" id="BoxShape3D_handrail"]', f"size = Vector3(0.14, 1.1, {STAIR_LENGTH - 0.9:g})", ""]
+    lines += ['[sub_resource type="BoxShape3D" id="BoxShape3D_sail"]', "size = Vector3(%g, %g, %g)" % SAIL_SIZE, ""]
     # Le volume plein de l'escalier, sous sa rampe : ses marches sont des blocs pleins depuis le sol, et sous la rampe
     # seule on entrait dans l'escalier par son flanc. Le coin a pour dessus la rampe elle-même.
     x0, x1 = 6.05 - 1.5, 6.05 + 1.5
@@ -399,6 +420,12 @@ def main():
     node(lines, "Props", instance="6_props")
     node(lines, "WindmillRotor", "Node3D", props=[at(30, 11, -28.3, 1.0, 90)])
     node(lines, "Model", parent="WindmillRotor", instance="13_windmill", props=["transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)"])
+    node(lines, "Sails", "StaticBody3D", "WindmillRotor")
+    for index, degrees in enumerate(SAIL_ANGLES):
+        c, s = math.cos(math.radians(degrees)), math.sin(math.radians(degrees))
+        node(lines, f"Sail{index}", "CollisionShape3D", "WindmillRotor/Sails", props=[
+            f"transform = Transform3D(1, 0, 0, 0, {c:.6f}, {-s:.6f}, 0, {s:.6f}, {c:.6f}, 0, {SAIL_RADIUS * c:.4f}, {SAIL_RADIUS * s:.4f})",
+            'shape = SubResource("BoxShape3D_sail")'])
     node(lines, "WaterWheel", "Node3D", props=["transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36.5, 1.0, -14)"])
     node(lines, "Model", parent="WaterWheel", instance="14_watermill", props=["transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)"])
     for index, (x, z) in enumerate(((-38.0, 6.0), (-38.0, -22.0))):
@@ -501,12 +528,32 @@ def main():
         f"transform = Transform3D(1, 0, 0, 0, {c:.6f}, {-s_:.6f}, 0, {s_:.6f}, {c:.6f}, 6.05, {OFFICE / 2 - 0.15 * c:.4f}, {0.5 - 0.15 * s_:.4f})",
         'shape = SubResource("BoxShape3D_ramp")'])
     node(lines, "StairsShape", "CollisionShape3D", "Interior/Slabs", props=['shape = SubResource("ConvexPolygonShape3D_stairs")'])
+    # La main courante a sa collision, au-dessus des marches, le long du flanc ouvert.
+    node(lines, "HandrailShape", "CollisionShape3D", "Interior/Slabs", props=[
+        f"transform = Transform3D(1, 0, 0, 0, {c:.6f}, {-s_:.6f}, 0, {s_:.6f}, {c:.6f}, 4.68, {nose_height(0.0) + 0.45:.4f}, 0)",
+        'shape = SubResource("BoxShape3D_handrail")'])
     node(lines, "Stairs", "Node3D", "Interior")
     for step in range(STEPS):
         height = STEP_RISE * (step + 1)
         z = 5.0 - STEP_RUN * (step + 0.5)
         node(lines, f"Step{step}", "MeshInstance3D", "Interior/Stairs", props=[
             f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, {height / 2:g}, {z:g})", f'mesh = SubResource("BoxMesh_step{step}")'])
+        node(lines, f"Tread{step}", "MeshInstance3D", "Interior/Stairs", props=[
+            f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.05, {height - 0.03 + 0.004:g}, {z + 0.025:g})", 'mesh = SubResource("BoxMesh_tread")'])
+        if step % 3 == 0:
+            node(lines, f"Batten{step}", "MeshInstance3D", "Interior/Stairs", props=[
+                f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.535, {(height - 0.1) / 2:g}, {z:g})", f'mesh = SubResource("BoxMesh_batten{step}")'])
+        if step % 2 == 1 and step < STEPS - 1:
+            node(lines, f"Baluster{step}", "MeshInstance3D", "Interior/Stairs", props=[
+                f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.68, {height + 0.45:g}, {z:g})", 'mesh = SubResource("BoxMesh_baluster")'])
+    # Le limon et la main courante suivent la pente des nez de marches (le même angle que la rampe).
+    for name, mesh, x, lift in (("Stringer", "stringer", 4.56, -0.18), ("Handrail", "handrail", 4.68, 0.92)):
+        # Le limon va de la deuxième marche (z = 4,1, où commence la collision de la main courante : on ne s'y frotte
+        # pas en montant) au nez de la dernière (z = -3,4), sous le niveau du bureau.
+        mid = 0.35 if name == "Stringer" else 0.4
+        node(lines, name, "MeshInstance3D", "Interior/Stairs", props=[
+            f"transform = Transform3D(1, 0, 0, 0, {c:.6f}, {-s_:.6f}, 0, {s_:.6f}, {c:.6f}, {x:g}, {nose_height(mid) + lift:.4f}, {mid:g})",
+            f'mesh = SubResource("BoxMesh_{mesh}")'])
     node(lines, "Railing", "Node3D", "Interior", props=[f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, {OFFICE:g}, 0)"])
     for index, ((x, z), length, along_z) in enumerate(RAILS):
         for height in (0.5, 1.05):
