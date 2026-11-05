@@ -60,6 +60,22 @@ func _run() -> void:
 	var player: Node3D = level.get_node("Player")
 	player.process_mode = Node.PROCESS_MODE_DISABLED
 	print("PERF %s chargement %.0f ms" % [label, load_ms])
+	# --sun=mode,distance[,split1] : réglage des ombres du soleil essayé sans toucher à la scène (mode 1 : 2 tranches,
+	# 2 : 4 tranches).
+	for argument in OS.get_cmdline_user_args():
+		if argument.begins_with("--sun="):
+			var values := argument.substr(6).split(",")
+			var sun: DirectionalLight3D = level.get_node("Sun")
+			sun.directional_shadow_mode = int(values[0]) as DirectionalLight3D.ShadowMode
+			sun.directional_shadow_max_distance = float(values[1])
+			if values.size() > 2:
+				sun.directional_shadow_split_1 = float(values[2])
+			if values.size() > 4:
+				sun.shadow_bias = float(values[3])
+				sun.shadow_normal_bias = float(values[4])
+			print("PERF %s soleil : mode %d, %.0f m, première tranche %.2f, biais %.2f, biais normal %.2f" % [label,
+				sun.directional_shadow_mode, sun.directional_shadow_max_distance, sun.directional_shadow_split_1,
+				sun.shadow_bias, sun.shadow_normal_bias])
 	_count(level, label)
 	var camera := Camera3D.new()
 	camera.fov = 75.0
