@@ -25,6 +25,8 @@ const FADE_MARGIN := 6.0
 const ANKLE := 0.3
 const TOUCH_HEIGHT := 2.2
 const SOLID_TOP := 3.2
+## Distance au milieu du ruisseau (m) en deçà de laquelle un rocher, qu'on gravit, n'est pas posé.
+const ROCK_STREAM_CLEARANCE := 5.5
 
 var _rng := RandomNumberGenerator.new()
 var _vertices := {}
@@ -82,8 +84,13 @@ func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, soli
 		var scale_factor := _rng.randf_range(scale_range.x, scale_range.y)
 		var origin := Vector3(spot.x, terrain.footing_height(spot.x, spot.y) - 0.05, spot.y)
 		var basis := Basis(Vector3.UP, _rng.randf() * TAU).scaled(Vector3.ONE * scale_factor)
-		groups[placed % groups.size()].append(Transform3D(basis, origin))
-		if solid:
+		# Un rocher dont l'emprise mord sur la berge du ruisseau n'est pas posé : au nord du pont, celui de la berge
+		# ouest faisait une corniche d'où le joueur tombait de 1,2 m au fond du lit. Il garde sa place dans le tirage,
+		# pour que les rochers suivants ne bougent pas.
+		var kept := not climbable or absf(spot.x - VillageTerrain.STREAM_X) >= ROCK_STREAM_CLEARANCE
+		if kept:
+			groups[placed % groups.size()].append(Transform3D(basis, origin))
+		if solid and kept:
 			_add_solid(body, meshes[placed % meshes.size()], Transform3D(basis, origin), climbable)
 		placed += 1
 	for index in models.size():
