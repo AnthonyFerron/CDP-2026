@@ -1565,7 +1565,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 8.13, 12.85)
 mesh = SubResource("BoxMesh_hatch")
 
 [node name="Ladder" type="Node3D" parent="Interior/Niches"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 4.05, 13.67)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 4.05, 13.55)
 
 [node name="Rail0" type="MeshInstance3D" parent="Interior/Niches/Ladder"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.47, 2.04, 0)

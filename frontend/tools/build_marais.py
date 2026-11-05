@@ -826,10 +826,10 @@ def build_crypt_underground(scene, rng):
         scene.add("modular_dungeon_kit/template-wall", (edge[0], ly, edge[1]), degrees, (0.95 if dz else 1.0, WALL_RISE, 1.0))
         size = (0.6, CRYPT_HEIGHT + 0.2, 4.0) if dx else (3.8, CRYPT_HEIGHT + 0.2, 0.6)
         scene.add_box((edge[0] - dx * 0.3, ly + CRYPT_HEIGHT / 2, edge[1] - dz * 0.3), size)
-    # Collision de l'échelle de fer qui monte du palier à la trappe (Ladder dans marais.tscn), devant le panneau central
-    # du mur du fond, qui avance jusqu'à 0,63 m du bord (PANEL_FACE dans write_marais_tscn.py).
-    face = lz + 2.0 - 0.63
-    scene.add_box((lx + LADDER_X, ly + CRYPT_HEIGHT / 2, face - 0.13), (1.1, CRYPT_HEIGHT, 0.24))
+    # Collision de l'échelle de fer qui monte du palier à la trappe (Ladder dans marais.tscn, à 0,85 m du bord de la
+    # case, devant le socle du mur du fond), jusqu'à la collision du mur.
+    face = lz + 2.0 - 0.6
+    scene.add_box((lx + LADDER_X, ly + CRYPT_HEIGHT / 2, face - 0.17), (1.1, CRYPT_HEIGHT, 0.34))
 
     # Salle du mécanisme : colonnes aux angles, bannières et cierges autour du mécanisme, braseros au fond.
     for x in (-7.0, 7.0):

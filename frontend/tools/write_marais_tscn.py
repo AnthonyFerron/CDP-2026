@@ -368,8 +368,10 @@ NICHE_WIDTH, NICHE_HEIGHT, NICHE_DEPTH = 2.4, 2.7, 0.9
 NICHE_FLOOR, NICHE_SHELF = 0.55, 1.56
 # Palier du haut du long escalier, sous la trappe (LANDING dans build_marais.py).
 LANDING_Y = 4.05
-# La trappe et son échelle, un peu à l'est de l'axe du palier (LADDER_X dans build_marais.py).
+# La trappe et son échelle, un peu à l'est de l'axe du palier (LADDER_X dans build_marais.py). L'échelle se tient à
+# 0,85 m du bord de la case : le socle du mur du fond avance jusqu'à 0,8 m (jusqu'à 1 m de haut), son panneau à 0,63 m.
 LADDER_X = 0.5
+LADDER_FACE = 0.85
 
 INSCRIPTION = ("Pour ouvrir le tombeau, inscris le nom du royaume dans lequel tu te trouves. Puis, pour chaque lettre, "
                "alterne entre trois lettres en avant et trois lettres en arrière dans l'alphabet. Seul le nom ainsi "
@@ -774,14 +776,14 @@ def main():
         sign(lines, "Board", f"Interior/{name}", (-facing * 0.37, -1.6, 0.0), 90.0 * facing, board, style, 1,
              (1.3, 0.7), 1.75, 0.15)
     write_niches(lines)
-    # La trappe et l'échelle de fer qui y monte, scellée devant le panneau central du mur du fond du palier (sa
+    # La trappe et l'échelle de fer qui y monte, devant le socle et le panneau central du mur du fond du palier (sa
     # collision est dans marais_crypt.tscn). Rangées avec les niches, de la même pierre sombre : le regroupement du
     # décor les fond en un seul maillage, sans appel de dessin de plus. Barreaux d'un mètre, pour qu'ils ne comptent
     # pas parmi les petits objets (un lot à part). L'une et l'autre à 0,5 m à l'est de l'axe : toutes leurs pièces
     # restent dans la même case de 12 m que la trappe (la limite des cases passe par l'axe, x = 0).
     node(lines, "Hatch", "MeshInstance3D", "Interior/Niches", props=[
         f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {LADDER_X:g}, {LANDING_Y + 4.15 - 0.07:g}, 12.85)", 'mesh = SubResource("BoxMesh_hatch")'])
-    node(lines, "Ladder", "Node3D", "Interior/Niches", props=[f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {LADDER_X:g}, {LANDING_Y:g}, {14.4 - PANEL_FACE - 0.1:g})"])
+    node(lines, "Ladder", "Node3D", "Interior/Niches", props=[f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {LADDER_X:g}, {LANDING_Y:g}, {14.4 - LADDER_FACE:g})"])
     for side in (-1, 1):
         box_mesh(lines, f"Rail{side + 1}", "Interior/Niches/Ladder", (side * 0.47, (4.15 - 0.07) / 2, 0.0), (0.06, 4.15 - 0.07, 0.06), "StandardMaterial3D_tomb_dark")
     for rung in range(13):
