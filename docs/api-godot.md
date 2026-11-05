@@ -7,7 +7,7 @@ Comment le jeu Godot utilise l'API FastAPI : architecture, parcours du joueur, r
 | Autoload | Fichier | Rôle |
 | --- | --- | --- |
 | `Api` | `frontend/scripts/api.gd` | Seul point d'envoi des requêtes : adresse du serveur, jeton, JSON, délai de 15 s, messages d'erreur en français |
-| `Account` | `frontend/scripts/account.gd` | Compte pour les menus : inscription, connexion en deux étapes, renvoi du code, déconnexion, classements |
+| `Account` | `frontend/scripts/account.gd` | Compte pour les menus : inscription, connexion en deux étapes, renvoi du code, mot de passe oublié, déconnexion, classements |
 | `GameSync` | `frontend/scripts/game_sync.gd` | Partie d'un joueur connecté : création, reprise, énigmes, livres, fragments, pénalités, pauses, position, victoire, import |
 | `GameState` | `frontend/scripts/game_state.gd` | Modèle local lu par les scènes, et sauvegarde sur l'appareil |
 
@@ -33,11 +33,12 @@ Pour un export Web servi sur une autre origine (le serveur de l'éditeur, `http:
 | Valider le code | `POST /auth-sessions` : vérifie le code et ouvre la session dans la même requête |
 | Renvoyer le code | `POST /auth-challenges/resends` (un toutes les 60 s) |
 | Se déconnecter | `DELETE /auth-sessions/current`, sans attendre la réponse, puis oubli local |
-| Mot de passe oublié | Aucune route côté API : le lien répond que la fonction n'est pas encore disponible |
+| Mot de passe oublié | `POST /password-resets` avec l'adresse saisie : le serveur envoie un lien vers la page web `/reinitialisation`, où le joueur choisit son nouveau mot de passe |
 
 - Les règles de saisie sont vérifiées avant l'envoi, comme sur le serveur : pseudo de 3 à 20 caractères (lettres, chiffres, espaces, `_ - . '`), mot de passe de 8 à 128 caractères avec au moins une lettre et un chiffre.
 - Les messages du serveur, rédigés en français, s'affichent tels quels : code incorrect avec le nombre d'essais restants, code expiré, trop d'essais, adresse déjà utilisée, envoi d'e-mail impossible (503 tant que le SMTP n'est pas configuré).
 - Le mot de passe n'est jamais gardé : il ne sert qu'à la requête en cours.
+- **Mot de passe oublié** : le lien « Mot de passe oublié ? » de l'écran de connexion envoie l'adresse saisie (`Account.request_password_reset`). Le serveur répond de la même façon que le compte existe ou non, et le jeu affiche « Si le compte existe, un e-mail vient de partir : lien valable 30 minutes. ». Le nouveau mot de passe se choisit hors du jeu, sur la page web `https://codequest.anthonyferron.com/reinitialisation`, ouverte par le lien : elle appelle `POST /password-resets/confirmations`. Une seconde demande dans la minute répond 429, affiché tel quel. Après le changement, le serveur ferme toutes les sessions du compte : un appareil encore connecté reçoit un 401 et revient à l'écran de connexion.
 - Le jeton, l'identifiant et le pseudo sont gardés dans `user://session.cfg`, avec l'expiration de la session (7 jours). Sur le web, `user://` est l'IndexedDB du site : tout script de la page peut le lire. Le jeu n'en charge aucun d'un autre domaine, mais une faille XSS exposerait le jeton jusqu'à son expiration ou à la déconnexion. Le jeton n'est jamais écrit dans les logs.
 - Un 401 sur une requête authentifiée ferme la session. Pendant une partie, le jeu revient à l'écran de connexion avec le message « Votre session a expiré » ; dans le menu, l'écran de connexion s'ouvre aussitôt.
 
@@ -117,7 +118,7 @@ La position est sauvegardée, sur le serveur comme sur l'appareil, mais la repri
 | 401 | Session fermée, retour à l'écran de connexion |
 | 403, 404, 422 | Message du serveur, ou message générique en français ; une erreur de validation est traduite en nom de champ |
 | 409 | L'état du serveur est relu : une action déjà faite (livre déjà posé, fragment déjà ramassé) compte comme réussie, sinon le refus s'affiche |
-| 503 (SMTP non configuré) | Message du serveur : le code n'a pas pu être envoyé |
+| 503 (SMTP non configuré) | Message du serveur : le code n'a pas pu être envoyé. Une demande de lien de réinitialisation répond toujours 202 : un échec d'envoi n'est que journalisé côté serveur |
 | JSON invalide | « Réponse inattendue du serveur. » |
 
 Les avertissements techniques (`[API]`, `[Partie]`, `[Compte]`) indiquent la méthode, le chemin et le code HTTP, jamais de jeton, de mot de passe ni de code.
@@ -135,7 +136,7 @@ godot --headless --path frontend res://tests/run_tests.tscn -- --api=http://loca
 ```
 
 - **Statique** : tous les scripts compilent, toutes les scènes se chargent, autoloads et signaux présents, plus aucune référence aux routes ou champs abandonnés.
-- **Unitaire** : sauvegarde et lecture des anciennes sauvegardes, chronomètre, fragments, dépôt et victoire en invité, pénalités, validation des formulaires, messages d'erreur, corps de l'import, restauration des fragments dans le Village et des livres dans le hub.
+- **Unitaire** : sauvegarde et lecture des anciennes sauvegardes, chronomètre, fragments, dépôt et victoire en invité, pénalités, validation des formulaires, mot de passe oublié (adresse refusée avant envoi, route branchée, réponse simulée), messages d'erreur, corps de l'import, restauration des fragments dans le Village et des livres dans le hub.
 - **Fonctionnel** :
   - inscription et code reçu par SMTP ;
   - code faux, renvoi trop tôt, adresse déjà utilisée, mauvais mot de passe ;

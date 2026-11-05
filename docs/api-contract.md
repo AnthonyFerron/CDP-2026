@@ -23,6 +23,8 @@ Référence des routes et des règles appliquées par le backend. Pour les appel
 | POST | `/auth-challenges/resends` | non | 201 | Renvoyer un code |
 | POST | `/auth-sessions` | non | 201 | Valider le code et ouvrir une session (renvoie le token) |
 | DELETE | `/auth-sessions/current` | oui | 204 | Se déconnecter |
+| POST | `/password-resets` | non | 202 | Mot de passe oublié : envoyer un lien par e-mail (même réponse que le compte existe ou non) |
+| POST | `/password-resets/confirmations` | non | 200 | Choisir un nouveau mot de passe avec le jeton du lien |
 | POST | `/game-sessions` | oui | 201 | Créer une partie (démarre le chronomètre) |
 | GET | `/game-sessions` | oui | 200 | Lister ses parties (`status`, `limit`, `offset`) |
 | GET | `/game-sessions/{id}` | oui | 200 | Récupérer une partie |
@@ -52,16 +54,18 @@ Référence des routes et des règles appliquées par le backend. Pour les appel
 - **`POST /puzzle-progress` commence l'énigme** et `PATCH` enregistre sa résolution.
 - **Pas de route d'indices** : les indices des énigmes 1 à 3 sont visuels et restent dans Godot. Les colonnes `puzzles.hint_count` et `puzzle_progress.hints_used` sont conservées en base, mais ne sont plus lues ni exposées par l'API.
 - **`/placements` et `/paper-fragments` ajoutées** : les livres posés et les fragments de papier sont sauvegardés, pour survivre à la reprise d'une partie sur un autre appareil.
+- **`/password-resets` ajoutée** (retour des testeurs du 5 novembre) : réinitialisation du mot de passe par un lien envoyé par e-mail, voir plus bas.
 
 ### Codes d'erreur
 
 | Code | Cas |
 | --- | --- |
+| 400 | Lien de réinitialisation du mot de passe invalide, expiré ou déjà utilisé |
 | 401 | Token absent, inconnu, expiré ou révoqué ; mot de passe ou code 2FA incorrect, expiré ou déjà utilisé |
 | 404 | Ressource inexistante, **ou appartenant à un autre joueur** : l'API ne révèle pas son existence |
 | 409 | Transition impossible : partie terminée, en pause, temps écoulé, énigme verrouillée ou déjà résolue, livre non obtenu ou déjà posé, fragment déjà ramassé, partie déjà en cours, e-mail déjà utilisé |
 | 422 | Données invalides, champ inconnu ou interdit, incohérence dans un import |
-| 429 | Trop de tentatives ou de codes demandés ; l'en-tête `Retry-After` donne l'attente en secondes |
+| 429 | Trop de tentatives, de codes ou de liens de réinitialisation demandés ; l'en-tête `Retry-After` donne l'attente en secondes |
 | 503 | Base de données injoignable, ou e-mail impossible à envoyer |
 
 ## Règles du jeu
@@ -140,6 +144,31 @@ L'énigme du Village (`order_index` 4) cache 10 fragments de papier dans la mair
 - Pagination `limit` (1 à 100, 20 par défaut) et `offset`. Les rangs restent globaux d'une page à l'autre.
 - Champs exposés : rang, nom du joueur, temps, temps formaté, date. Ni e-mail ni identifiant.
 
+## Mot de passe oublié
+
+Deux routes, sans session :
+
+1. `POST /password-resets` avec `{"email": "..."}` répond **toujours** 202 avec le même corps, `{"message": "...", "expires_in_minutes": 30}`, que l'adresse corresponde à un compte ou non. Si elle correspond à un compte, un e-mail part **après** la réponse (tâche de fond) avec le lien `https://codequest.anthonyferron.com/reinitialisation?token=<jeton>` (réglage `PASSWORD_RESET_URL`). Ni le corps, ni le code HTTP, ni le temps de réponse, ni un échec d'envoi (seulement journalisé, sans adresse ni jeton) ne révèlent l'existence du compte.
+2. `POST /password-resets/confirmations` avec `{"token": "...", "password": "..."}` vérifie le jeton, puis remplace le hash du mot de passe. Le nouveau mot de passe suit les règles de l'inscription (422 sinon, sans consommer le lien). Réponse 200 `{"message": "..."}`.
+
+Le jeton est un **JWT signé en HS256** (PyJWT, `backend/app/core/reset_tokens.py`) :
+
+| Élément | Valeur |
+| --- | --- |
+| Clé | HMAC-SHA256 de `SECRET_KEY` avec une étiquette propre à cet usage : elle ne sert à rien d'autre (ni aux codes 2FA) |
+| `sub` | Identifiant du compte, et rien d'autre de personnel : ni adresse ni hash (le contenu d'un JWT est lisible) |
+| `iss`, `aud` | `codequest-api`, `codequest:password-reset` : un JWT fait pour un autre usage est refusé |
+| `iat`, `exp` | 30 minutes (`PASSWORD_RESET_TTL_SECONDS`), vérifiées avec l'horloge du serveur |
+| `pwd` | Empreinte HMAC du hash actuel du mot de passe. Argon2 tire un nouveau sel à chaque hachage : dès que le mot de passe change, l'empreinte ne correspond plus. Le lien ne sert donc qu'une fois, et tous les liens envoyés avant lui deviennent invalides, sans table de jetons |
+
+Seul `HS256` est accepté (pas de `none`). Lien invalide, expiré ou déjà utilisé : 400, avec un message qui invite à demander un nouveau lien. Un verrou de ligne sur le compte empêche deux confirmations simultanées du même lien de réussir toutes les deux.
+
+Après le changement : **toutes les sessions du compte sont révoquées** et les codes de connexion en attente annulés. Le joueur se reconnecte avec le nouveau mot de passe, et le blocage après des mots de passe erronés est levé pour son adresse.
+
+Limitation, par adresse e-mail, que le compte existe ou non (un 429 ne révèle donc rien) : une demande par minute (`PASSWORD_RESET_COOLDOWN_SECONDS`) et cinq par heure (`PASSWORD_RESET_MAX_PER_HOUR`), avec `Retry-After`. Comme la limitation des échecs de connexion, elle est gardée en mémoire.
+
+La page web `/reinitialisation` (`infrastructure/web/reinitialisation/`, servie par Caddy) lit le jeton dans l'adresse, l'en retire aussitôt (`history.replaceState`), demande le nouveau mot de passe deux fois et appelle la confirmation. Caddy l'envoie avec `Referrer-Policy: no-referrer`, `Cache-Control: no-store` et une CSP qui n'autorise que le domaine lui-même ; aucun journal d'accès n'enregistre l'adresse, et l'API ne reçoit le jeton que dans le corps d'un POST.
+
 ## Mode invité
 
 Un invité joue sans compte : sa progression reste dans la sauvegarde locale de Godot, et rien n'est créé en base. En créant un compte, il peut la rattacher à ce compte avec `POST /game-sessions/imports`, qui exige une session.
@@ -166,6 +195,7 @@ Un import `in_progress` sans aucune énigme résolue reste classable : il équiv
 | Mots de passe | Argon2id (argon2-cffi), 8 à 128 caractères avec au moins une lettre et un chiffre ; le hash n'est jamais renvoyé |
 | E-mails | Uniques, comparés sans tenir compte de la casse, enregistrés en minuscules |
 | Codes 2FA | 6 chiffres tirés avec `secrets`, stockés en HMAC-SHA256 avec `SECRET_KEY`, valables 10 minutes, à usage unique, 5 essais ; un nouveau code invalide le précédent |
+| Mot de passe oublié | Lien avec un JWT HS256 signé par une clé dérivée de `SECRET_KEY`, valable 30 minutes, invalide dès que le mot de passe change ; même réponse que le compte existe ou non ; 1 demande par minute et 5 par heure par adresse ; sessions révoquées après le changement |
 | Renvoi de code | 60 secondes entre deux envois, 5 codes par heure et par compte |
 | Mots de passe erronés | 10 échecs en 15 minutes sur une adresse bloquent la connexion temporairement (429) |
 | Sessions | Token de 256 bits stocké en SHA-256, valable 7 jours, révocable ; une session par appareil |
@@ -173,14 +203,15 @@ Un import `in_progress` sans aucune énigme résolue reste classable : il équiv
 | Concurrence | Verrous de ligne (`SELECT … FOR UPDATE`) sur la partie, la progression et le code 2FA, contraintes uniques sur les progressions et les fragments : pas de double résolution, de double dépôt ni de double ramassage |
 | Intégrité | Statut, temps et dates calculés par le serveur ; positions bornées à ±10 000 ; identifiants bornés à la taille d'un `INTEGER` |
 | CORS | Désactivé par défaut : le jeu et l'API partagent le domaine de Caddy. `CORS_ALLOWED_ORIGINS` liste explicitement les origines autorisées en développement, sans cookies |
-| Secrets | Variables d'environnement uniquement ; aucun secret dans le dépôt ni dans les logs, sauf le code 2FA avec `EMAIL_BACKEND=console`, réservé au développement |
+| Secrets | Variables d'environnement uniquement ; aucun secret dans le dépôt ni dans les logs, sauf le code 2FA et le lien de réinitialisation avec `EMAIL_BACKEND=console`, réservé au développement |
 
 ### Ce que le serveur ne peut pas garantir
 
 - **Qu'une énigme a vraiment été résolue.** La logique des énigmes s'exécute dans Godot et leurs solutions sont publiques (README, code du jeu). `{"solved": true}` reste une déclaration du client. Le serveur garantit l'ordre, l'unicité, la mesure du temps et le respect du chronomètre. Une résolution plus rapide que `PUZZLE_MIN_SOLVE_SECONDS` (30 s) est acceptée pour ne pas bloquer le jeu, mais elle fait sortir la partie du classement. Un tricheur qui scripte des appels réalistes peut toutefois obtenir un temps classé.
 - **Que le joueur a vraiment marché jusqu'au château pour poser un livre**, ni ramassé un fragment : ce sont aussi des déclarations du client, contrôlées pour leur cohérence (livre obtenu, Village ouvert, unicité, chronomètre).
 - **Que la position envoyée est réelle** : le serveur ne connaît pas la géométrie des niveaux.
-- **La limitation des échecs de mot de passe est gardée en mémoire** : elle est remise à zéro au redémarrage de l'API, et suppose un seul conteneur. Elle permet aussi à un tiers de bloquer temporairement la connexion d'une adresse qu'il connaît.
+- **La limitation des échecs de mot de passe et des demandes de réinitialisation est gardée en mémoire** : elle est remise à zéro au redémarrage de l'API, et suppose un seul conteneur. Elle permet aussi à un tiers de bloquer temporairement la connexion d'une adresse qu'il connaît, ou ses demandes de lien. Elle compte par adresse : quelqu'un qui connaît plusieurs adresses peut faire envoyer un lien à chacune (au plus cinq par heure), sans pouvoir s'en servir.
+- **Un lien de réinitialisation non utilisé reste valable 30 minutes**, même si un autre lien est demandé ensuite : seul un changement du mot de passe les invalide tous. Qui lit la boîte e-mail du joueur peut changer son mot de passe ; c'est le principe d'une réinitialisation par e-mail.
 
 Une validation plus solide demanderait d'envoyer la réponse de chaque énigme au serveur, avec des solutions qui ne figurent plus dans le dépôt public. C'est un chantier à arbitrer avec l'équipe Godot.
 
@@ -190,10 +221,12 @@ Toutes les variables sont décrites dans `backend/.env.example` (développement)
 
 | Variable | Rôle |
 | --- | --- |
-| `SECRET_KEY` | Clé HMAC des codes 2FA. Sans elle, une clé temporaire est tirée à chaque démarrage |
+| `SECRET_KEY` | Clé HMAC des codes 2FA, dont est dérivée la clé de signature des liens de réinitialisation. Sans elle, une clé temporaire est tirée à chaque démarrage, et les codes et liens en attente sont perdus |
 | `EMAIL_BACKEND` | `smtp` par défaut en production. Sans `SMTP_HOST`, la connexion répond 503 |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USERNAME`, `SMTP_PASSWORD`, `SMTP_SECURITY`, `EMAIL_FROM` | Fournisseur d'e-mails |
 | `CORS_ALLOWED_ORIGINS` | Vide en production |
+| `PASSWORD_RESET_URL` | Page du lien de réinitialisation, `https://codequest.anthonyferron.com/reinitialisation` par défaut ; `?token=<jeton>` y est ajouté |
+| `PASSWORD_RESET_TTL_SECONDS`, `PASSWORD_RESET_COOLDOWN_SECONDS`, `PASSWORD_RESET_MAX_PER_HOUR` | 1800, 60 et 5 par défaut |
 
 ## Migrations
 
@@ -223,5 +256,7 @@ cd backend
 pip install -r requirements.txt -r requirements-dev.txt
 TEST_DATABASE_URL=postgresql+psycopg://escape_user:escape_dev_password@localhost:5433/escape_game_test python -m pytest
 ```
+
+`tests/test_password_reset.py` couvre le mot de passe oublié : lien envoyé (MemoryEmailSender, aucun envoi réel), même réponse pour un compte inconnu, limitation, échec d'envoi invisible, jeton valide, expiré, signé avec une autre clé, fait pour un autre usage ou modifié, réutilisé après le changement, mot de passe trop faible.
 
 Sans `TEST_DATABASE_URL`, les tests d'API sont ignorés en local. En CI, le workflow démarre un service `postgres:17` jetable, et une variable manquante fait échouer les tests.
