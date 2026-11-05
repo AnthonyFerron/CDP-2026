@@ -388,31 +388,31 @@ transform = Transform3D(0.45149, 0, 2.5605, 0, 2.6, 0, -2.5605, 0, 0.45149, -4.1
 transform = Transform3D(3.2, 0, 0, 0, 3.2, 0, 0, 0, 3.2, -3.64, 0, -4.88)
 
 [node name="books_11" parent="Models" instance=ExtResource("4_model")]
-transform = Transform3D(-2.29866, 0, 0, 0, 2.29866, 0, -0, 0, -2.29866, -3.1776, 0.06, -5.38344)
+transform = Transform3D(-2.29866, 0, 0, 0, 2.29866, 0, -0, 0, -2.29866, -3.0476, 0.421, -5.38344)
 
 [node name="books_12" parent="Models" instance=ExtResource("4_model")]
-transform = Transform3D(-2.43812, 0, 0, 0, 2.43812, 0, -0, 0, -2.43812, -3.16714, 0.98, -5.38972)
+transform = Transform3D(-2.43812, 0, 0, 0, 2.43812, 0, -0, 0, -2.43812, -3.03714, 1.189, -5.38972)
 
 [node name="books_13" parent="Models" instance=ExtResource("4_model")]
-transform = Transform3D(2.27274, 0, 0, 0, 2.27274, 0, 0, 0, 2.27274, -3.10046, 0.98, -5.17773)
+transform = Transform3D(2.27274, 0, 0, 0, 2.27274, 0, 0, 0, 2.27274, -2.95046, 1.189, -5.17773)
 
 [node name="books_14" parent="Models" instance=ExtResource("4_model")]
-transform = Transform3D(2.62556, 0, 0, 0, 2.62556, 0, 0, 0, 2.62556, -3.54692, 1.9, -5.16185)
+transform = Transform3D(2.62556, 0, 0, 0, 2.62556, 0, 0, 0, 2.62556, -3.41692, 1.957, -5.16185)
 
 [node name="bookcaseOpen_15" parent="Models" instance=ExtResource("6_model")]
 transform = Transform3D(3.2, 0, 0, 0, 3.2, 0, 0, 0, 3.2, -2.24, 0, -4.88)
 
 [node name="books_16" parent="Models" instance=ExtResource("4_model")]
-transform = Transform3D(2.59622, 0, 0, 0, 2.59622, 0, 0, 0, 2.59622, -2.14472, 0.06, -5.16317)
+transform = Transform3D(2.59622, 0, 0, 0, 2.59622, 0, 0, 0, 2.59622, -2.01472, 0.421, -5.16317)
 
 [node name="books_17" parent="Models" instance=ExtResource("4_model")]
-transform = Transform3D(-2.29144, 0, 0, 0, 2.29144, 0, -0, 0, -2.29144, -1.77814, 0.98, -5.38311)
+transform = Transform3D(-2.29144, 0, 0, 0, 2.29144, 0, -0, 0, -2.29144, -1.64814, 1.189, -5.38311)
 
 [node name="books_18" parent="Models" instance=ExtResource("4_model")]
-transform = Transform3D(2.47549, 0, 0, 0, 2.47549, 0, 0, 0, 2.47549, -1.71566, 0.98, -5.1686)
+transform = Transform3D(2.47549, 0, 0, 0, 2.47549, 0, 0, 0, 2.47549, -1.56566, 1.189, -5.1686)
 
 [node name="books_19" parent="Models" instance=ExtResource("4_model")]
-transform = Transform3D(-2.30249, 0, 0, 0, 2.30249, 0, -0, 0, -2.30249, -1.77731, 1.9, -5.38361)
+transform = Transform3D(-2.30249, 0, 0, 0, 2.30249, 0, -0, 0, -2.30249, -1.64731, 1.957, -5.38361)
 
 [node name="sideTable_20" parent="Models" instance=ExtResource("7_model")]
 transform = Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, 0.937, 0, -5.14)
@@ -460,16 +460,16 @@ transform = Transform3D(-2.6, 0, 0, 0, 2.6, 0, -0, 0, -2.6, 2.063, 4.5, -1.06)
 transform = Transform3D(-3.2, 0, 0, 0, 3.2, 0, -0, 0, -3.2, -4.36, 4.5, 4.88)
 
 [node name="books_35" parent="Models" instance=ExtResource("4_model")]
-transform = Transform3D(2.49766, 0, -0, 0, 2.49766, 0, 0, 0, 2.49766, -4.83732, 5.48, 5.39239)
+transform = Transform3D(2.49766, 0, -0, 0, 2.49766, 0, 0, 0, 2.49766, -4.96732, 5.689, 5.39239)
 
 [node name="books_36" parent="Models" instance=ExtResource("4_model")]
-transform = Transform3D(-2.61974, 0, 0, 0, 2.61974, 0, -0, 0, -2.61974, -4.87352, 5.48, 5.16211)
+transform = Transform3D(-2.61974, 0, 0, 0, 2.61974, 0, -0, 0, -2.61974, -5.02352, 5.689, 5.16211)
 
 [node name="books_37" parent="Models" instance=ExtResource("4_model")]
-transform = Transform3D(-2.57157, 0, 0, 0, 2.57157, 0, -0, 0, -2.57157, -4.45713, 6.4, 5.16428)
+transform = Transform3D(-2.57157, 0, 0, 0, 2.57157, 0, -0, 0, -2.57157, -4.58713, 6.457, 5.16428)
 
 [node name="books_38" parent="Models" instance=ExtResource("4_model")]
-transform = Transform3D(-2.48844, 0, 0, 0, 2.48844, 0, -0, 0, -2.48844, -4.88337, 6.4, 5.16802)
+transform = Transform3D(-2.48844, 0, 0, 0, 2.48844, 0, -0, 0, -2.48844, -5.03337, 6.457, 5.16802)
 
 [node name="bookcaseClosedDoors_39" parent="Models" instance=ExtResource("5_model")]
 transform = Transform3D(-3.2, 0, 0, 0, 3.2, 0, -0, 0, -3.2, 2.24, 4.5, 4.9)
