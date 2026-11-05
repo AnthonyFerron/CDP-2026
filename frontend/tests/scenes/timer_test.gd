@@ -36,12 +36,24 @@ func _run() -> void:
 	check("eruption", state.has_erupted)
 	await _check_eruption_ending("au hub")
 
-	# Dans un lieu, une validation fausse qui epuise le temps mene a la meme fin, au hub.
+	# Dans un lieu, une validation fausse qui epuise le temps, tablette ouverte, mene a la meme fin, au hub : la
+	# tablette se ferme avant.
 	await start_level("res://scenes/levels/plaine/plaine.tscn")
+	level._open_tablet()
+	var tablet: CanvasLayer = level.get_node("TabletPuzzle")
+	await wait(5)
+	check("tablette ouverte", tablet.is_open() and tablet.visible)
+	var seen := {}
+	var on_erupted := func() -> void:
+		seen.tablet_hidden = not tablet.visible
+		seen.warning_hidden = not level.get_node("Hud/Warning/Banner").visible
+	state.erupted.connect(on_erupted, CONNECT_ONE_SHOT)
 	state.time_left = 100.0
 	state.penalize()
 	await wait(10)
 	check("eruption depuis la Plaine", state.has_erupted)
+	check("tablette fermee avant la fin", seen.get("tablet_hidden", false))
+	check("bandeau de mauvaise reponse ferme avant la fin", seen.get("warning_hidden", false))
 	await _check_eruption_ending("depuis la Plaine")
 	finish()
 

@@ -173,7 +173,24 @@ func _on_time_penalized(seconds: float) -> void:
 ## Le chronomètre est à zéro, dans un lieu comme au hub : retour au hub, qui joue l'éruption du volcan. Une transition
 ## déjà en cours ignore celle-ci ; le HUD du lieu d'arrivée la relance (_ready).
 func _on_erupted() -> void:
+	_close_panels()
 	_crosshair.hide()
 	set_prompt("")
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	Transition.change_scene(GameState.HUB_SCENE)
+
+
+## Partie perdue : tout ce qui est ouvert se ferme avant la fin, quel que soit le lieu. Les panneaux d'énigme et le
+## carnet sont des CanvasLayer du niveau (tablette, runes, cercles, dispositif des codes…) ; s'y ajoutent le texte en
+## lecture, le bandeau « Mauvaise réponse » et l'indice. Le joueur ne reprend pas la main : la fin suit.
+func _close_panels() -> void:
+	_reader.hide()
+	_message.hide()
+	if _warning_tween:
+		_warning_tween.kill()
+	_warning.hide()
+	for layer: CanvasLayer in get_parent().find_children("*", "CanvasLayer", true, false):
+		if layer != self and not is_ancestor_of(layer):
+			layer.hide()
+	if Hints.is_open():
+		Hints.close()
