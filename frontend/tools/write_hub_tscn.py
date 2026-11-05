@@ -835,9 +835,16 @@ def lore(lines):
     name, x, z, yaw, title, body = MEMORIAL
     node(lines, name, "Node3D", "Lore", props=[at(x, 0, z, 1.0, yaw), f'script = {ext("10_readable")}',
          f"title = {quote(title)}", f"body = {quote(body)}", f"prompt = {quote('Lire : ' + title)}", "radius = 2.6"])
-    # L'obélisque (0,31 x 3,4 = 1,05 m de côté) est centré à 1 m derrière le Readable : sa face est à 0,47 m.
+    # L'obélisque (échelle 3,4) est centré à 1 m derrière le Readable. Son socle n'a que 0,32 m de haut ; au-dessus, le
+    # fût s'amincit de 0,309 m (demi-côté) à 0,248 m à 1,51 m de haut : sa face penche de 2,96 degrés vers le centre.
+    # Le texte est collé à 1,2 cm de la face, penché comme elle, et tient dans sa largeur (0,57 m à 0,8 m de haut).
+    # Posé à 0,54 m du centre et droit, il flottait 25 cm devant la face et en dépassait sur le côté.
+    height = 0.8
+    half = 0.3094 - (height - 0.3196) * 0.0614 / 1.1866
+    lean = math.atan(0.0614 / 1.1866)
     engraved(lines, "Text", f"Lore/{name}", "AUX SOLDATS\nDE CODIA\n5804 - 5812",
-             "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -0.462)", pixel=0.0014, color="Color(0.14, 0.13, 0.12, 1)")
+             f"transform = Transform3D(1, 0, 0, 0, {math.cos(lean):.5f}, {math.sin(lean):.5f}, 0, {-math.sin(lean):.5f}, "
+             f"{math.cos(lean):.5f}, 0, {height:g}, {-(1.0 - half) + 0.012:.4f})", pixel=0.001, color="Color(0.14, 0.13, 0.12, 1)")
 
 
 def portal_signs(lines):

@@ -27,6 +27,10 @@ const LANDMARKS: Array[Vector3] = [
 	# Halle du marché, verger.
 	Vector3(-24.0, 66.0, 8.0), Vector3(14.0, 82.0, 12.0),
 ]
+## Enclos autour des bâtiments, où le sol reste plat comme sous un lieu, sans en écarter les arbres : (x, z, rayon).
+## L'enclos des écuries royales (tools/build_hub.py : furnish_stables) court jusqu'à 12,7 m du centre des écuries,
+## dans la pente qui suivait leur replat : ses barrières traversaient le sol.
+const YARDS: Array[Vector3] = [Vector3(-74.5, -45.0, 9.0)]
 ## Chemins qui mènent à l'école et à la taverne.
 const LANES: Array[Vector2] = [Vector2(0.0, 55.0), Vector2(-53.0, 0.0)]
 ## Ruelles qui partent d'un chemin vers les lieux du pourtour : chaque tracé est une suite de points.
@@ -119,6 +123,8 @@ const BUILDING_FLOORS: Array[Rect2] = [
 	Rect2(-40.1, -17.7, 8, 12), Rect2(-6, 56, 12, 8), Rect2(-66, -4, 12, 8), Rect2(-60, -36, 8, 12), Rect2(51, 14, 8, 8),
 	Rect2(40, 60, 8, 8), Rect2(48, 30, 8, 8), Rect2(57, 44, 8, 8), Rect2(-74, -50, 12, 8), Rect2(-54, -70, 12, 8),
 	Rect2(-64, 26, 8, 8), Rect2(-78, -20, 8, 8),
+	# Halle du marché (build_market_hall) : sous son plancher, de la terre et non l'herbe aux joints des lattes.
+	Rect2(-30, 62, 12, 8),
 	# Salle de l'observatoire, tour tournée de 45 degrés : une croix sur les cinq sommets du terrain (tous les 2 m) qui
 	# sont sous son plancher, jusqu'aux coins de la salle.
 	Rect2(-72.3, 57.7, 4.6, 0.6), Rect2(-70.3, 55.7, 0.6, 4.6),
@@ -295,6 +301,8 @@ func flat_mask(x: float, z: float) -> float:
 	mask = maxf(mask, 1.0 - smoothstep(3.0, 10.0, castle_distance(point)))
 	for landmark in LANDMARKS:
 		mask = maxf(mask, 1.0 - smoothstep(landmark.z, landmark.z + 6.0, point.distance_to(Vector2(landmark.x, landmark.y))))
+	for yard in YARDS:
+		mask = maxf(mask, 1.0 - smoothstep(yard.z, yard.z + 6.0, point.distance_to(Vector2(yard.x, yard.y))))
 	for target: Vector2 in destinations():
 		mask = maxf(mask, 1.0 - smoothstep(5.0, 11.0, point.distance_to(target)))
 		var along := Geometry2D.get_closest_point_to_segment(point, Vector2.ZERO, target)
@@ -344,8 +352,11 @@ func _face_color(x: float, z: float, height: float, shore: float) -> Color:
 		color = COLOR_LAWN.lerp(COLOR_GRASS, _relief.get_noise_2d(z * 3.0, x * 3.0) * 0.25 + 0.25)
 		color = color.lerp(COLOR_GRAVEL, gravel_mask(x, z))
 	color = color.lerp(COLOR_PATH, path_mask(x, z))
+	# Terre sombre seulement sur les cases du maillage (2 m) entièrement sous un bâtiment, murs compris : une case
+	# à cheval sur un mur gardait sa terre sombre au-dehors, en bande noire de 0,8 m le long de la façade.
+	var cell := Rect2(point - Vector2.ONE * CELL_SIZE * 0.5, Vector2.ONE * CELL_SIZE)
 	for floor_area in BUILDING_FLOORS:
-		if floor_area.grow(-0.2).has_point(point):
+		if floor_area.grow(0.3).encloses(cell):
 			color = COLOR_FLOOR
 			break
 	var play := play_radius(point.angle())

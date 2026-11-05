@@ -81,7 +81,7 @@ MODEL_BOXES.update({
     "nature_kit/plant_bush": ((-0.2, 0.0, -0.2), (0.4, 0.24, 0.4)),
     "nature_kit/plant_flatShort": ((-0.14, 0.0, -0.14), (0.28, 0.24, 0.28)),
     "nature_kit/mushroom_red": ((-0.09, 0.0, -0.1), (0.17, 0.2, 0.2)),
-    "fantasy_town_kit/chimney": ((0.21, 0.0, -0.17), (0.21, 1.0, 0.34)),
+    "fantasy_town_kit/chimney-top": ((0.21, 0.0, -0.17), (0.25, 0.63, 0.34)),
     "survival_kit/tool-hammer": ((-0.04, 0.0, -0.02), (0.09, 0.15, 0.04)),
     "nature_kit/campfire_logs": ((-0.15, 0.0, -0.15), (0.29, 0.06, 0.29)),
     "survival_kit/bedroll-packed": ((-0.13, 0.0, -0.04), (0.26, 0.09, 0.09)),
@@ -397,6 +397,55 @@ def roof(scene, cx, cz, width, depth, base):
                 scene.add("fantasy_town_kit/roof", (x, base, z), OUTWARD_ANGLES[(-outward[0], -outward[1])], TILE)
 
 
+# Dessus de la tuile « roof », dans le repère du modèle : une droite qui monte de la gouttière (x = -0,57, y = 0,02)
+# au faîte (x = 0,5, y = 0,63). Le dessus de la tuile « roof-flat » est à 0,126.
+ROOF_SURFACE = (0.343, 0.566)
+# Cheminée du toit : chimney-top, un conduit coiffé de son chapeau, plus large, en haut. Le modèle « chimney » a sa
+# bague à mi-hauteur : posé sur le toit, son haut semblait au milieu du conduit, comme une cheminée à l'envers.
+# Le conduit est centré à 0,339 de l'origine du modèle sur x, et large de 0,172 (x) sur 0,26 (z).
+CHIMNEY_SCALE = 3.0
+CHIMNEY_AXIS = 0.339
+CHIMNEY_HALF = 0.086
+
+
+def roof_ridge_along_x(width, depth):
+    """Même règle que roof() : le faîte court le long de x seulement si la largeur est impaire et la profondeur paire."""
+    return width % 2 == 1 and depth % 2 == 0
+
+
+def roof_surface(house, x, z):
+    """Hauteur du dessus du toit à deux pans d'une maison (roof()) au point (x, z)."""
+    cx, cz, width, depth, _, _, floors = house
+    base = WALL_HEIGHT * floors
+    along_x = roof_ridge_along_x(width, depth)
+    count, distance = (depth, abs(z - cz)) if along_x else (width, abs(x - cx))
+    # Rangée de tuiles sous le point : distance de son centre au faîte.
+    centers = [abs(-(count - 1) * TILE / 2 + index * TILE) for index in range(count)]
+    center = min(centers, key=lambda c: abs(c - distance))
+    if center < 0.1:
+        return base + (0.5 + 0.126) * TILE
+    low, rise = ROOF_SURFACE
+    return base + TILE * (low + rise * (center - distance) / TILE)
+
+
+def chimney(scene, house, x, z):
+    """Cheminée qui sort du toit au point (x, z), son côté long le long du faîte. Le bas du conduit s'arrête juste
+    sous le toit, du côté de la gouttière où le pan est le plus bas : on ne voit que le conduit et son chapeau."""
+    cx, cz, width, depth, *_ = house
+    along_x = roof_ridge_along_x(width, depth)
+    # Tourné d'un quart de tour, le x du modèle (la largeur du conduit) suit la pente, vers -z.
+    degrees = 90.0 if along_x else 0.0
+    axis = CHIMNEY_AXIS * CHIMNEY_SCALE
+    half = CHIMNEY_HALF * CHIMNEY_SCALE
+    if along_x:
+        origin = (x, z + axis)
+        low = roof_surface(house, x, z + math.copysign(half, z - cz))
+    else:
+        origin = (x - axis, z)
+        low = roof_surface(house, x + math.copysign(half, x - cx), z)
+    scene.add("fantasy_town_kit/chimney-top", (origin[0], low - 0.08, origin[1]), degrees, CHIMNEY_SCALE)
+
+
 class HouseFrame:
     """Repère d'une maison tourné vers sa porte : u le long de la façade, v vers la porte."""
 
@@ -672,12 +721,11 @@ def rebuilt_house(scene, rng, house, furnisher=None, kind=None):
     roof(scene, cx, cz, width, depth, WALL_HEIGHT * floors)
     hearth = HEARTHS.get(kind, "default")
     if hearth == "default":
-        scene.add("fantasy_town_kit/chimney", (cx - half_w + 1.2, WALL_HEIGHT * floors, cz), 0.0, 3.0)
+        chimney(scene, house, cx - half_w + 1.6, cz)
     elif hearth:
         # La cheminée sort du toit au-dessus du foyer de la pièce.
         x, _, z = frame.at(*hearth(frame))
-        (px, py, pz), (sx, sy, sz) = MODEL_BOXES["fantasy_town_kit/chimney"]
-        scene.add("fantasy_town_kit/chimney", (x - (px + sx / 2) * 3.0, WALL_HEIGHT * floors, z - (pz + sz / 2) * 3.0), 0.0, 3.0)
+        chimney(scene, house, x, z)
     house_floor(scene, rng, house, False)
     (furnisher or furnish)(scene, house, False, rng)
 
@@ -789,9 +837,17 @@ def build_camp(scene):
     scene.add("food_kit/bread", (9.6, 1.0, -5.6), 15.0, 2.5)
 
 
+# Bloc « wall » du kit du château : entre sa plinthe et sa corniche, ses faces x sont en retrait (0,465 au lieu de
+# 0,5), ses faces z pleines. Ses faces z joignent donc les blocs voisins (un mur le long de x est tourné d'un quart
+# de tour), et le retrait orne le dedans et le dehors du mur. Tournées l'une vers l'autre, deux faces en retrait
+# laissaient entre les blocs une fente sur toute l'épaisseur du mur : des traits de jour et d'ombre.
+def castle_wall_degrees(along_x):
+    return 90.0 if along_x else 0.0
+
+
 def curtain_wall(scene, x, z, along_x, height_scale=1.0):
     """Pan de l'enceinte ; éventré, il n'a plus qu'une partie de sa hauteur, et sa collision le suit."""
-    scene.add("castle_kit/wall", (x, 0.0, z), 0.0 if along_x else 90.0, (CURTAIN_SCALE, CURTAIN_SCALE * height_scale, CURTAIN_SCALE))
+    scene.add("castle_kit/wall", (x, 0.0, z), castle_wall_degrees(along_x), (CURTAIN_SCALE, CURTAIN_SCALE * height_scale, CURTAIN_SCALE))
     height = 6.6 * height_scale
     scene.add_box((x, height / 2, z), (CURTAIN_SCALE, height, CURTAIN_SCALE))
 
@@ -928,7 +984,7 @@ def build_castle(scene, rng):
     scene.rebuilt("CastleGate")
     for x in (-7.5, 7.5):
         tops.append((x, square_tower(scene, x, gate_z, CURTAIN_SCALE, 4) + 2.01 * CURTAIN_SCALE - 0.3, gate_z))
-    scene.add("castle_kit/wall", (0.0, 10.4, gate_z), 0.0, CURTAIN_SCALE)
+    scene.add("castle_kit/wall", (0.0, 10.4, gate_z), castle_wall_degrees(True), CURTAIN_SCALE)
     scene.add_box((0.0, 11.0, gate_z), (5.0, 7.2, 9.8))
     for x in (-4.4, 4.4):
         scene.add("castle_kit/flag-banner-long", (x, 4.0, gate_z + 4.95), 90.0, 3.0)
@@ -942,17 +998,17 @@ def build_castle(scene, rng):
     keep_half = KEEP_SCALE / 2
     for layer in range(2):
         y = layer * KEEP_LAYER
-        # La rangée du haut recouvre les créneaux de celle du bas : un peu plus épaisse, ses faces passent devant
-        # au lieu de se confondre avec celles du bas, qui scintilleraient.
-        scale = KEEP_SCALE if layer == 0 else (KEEP_SCALE, KEEP_SCALE, KEEP_SCALE * 1.03)
+        # La rangée du haut recouvre les créneaux de celle du bas : un peu plus épaisse (x du bloc, son épaisseur
+        # une fois tourné), ses faces passent devant au lieu de se confondre avec celles du bas, qui scintilleraient.
+        scale = KEEP_SCALE if layer == 0 else (KEEP_SCALE * 1.03, KEEP_SCALE, KEEP_SCALE)
         for x in range(int(-KEEP_X), int(KEEP_X) + 1, int(KEEP_SCALE)):
             for z in (KEEP_BACK, KEEP_FRONT):
                 if z == KEEP_FRONT and x == 0 and layer == 0:
                     continue
-                scene.add("castle_kit/wall", (x, y, z), 0.0, scale)
+                scene.add("castle_kit/wall", (x, y, z), castle_wall_degrees(True), scale)
         for z in range(int(KEEP_BACK + KEEP_SCALE), int(KEEP_FRONT), int(KEEP_SCALE)):
             for x in (-KEEP_X, KEEP_X):
-                scene.add("castle_kit/wall", (x, y, z), 90.0, scale)
+                scene.add("castle_kit/wall", (x, y, z), castle_wall_degrees(False), scale)
     height = KEEP_LAYER + 1.31 * KEEP_SCALE
     for x in range(int(-KEEP_X), int(KEEP_X) + 1, int(KEEP_SCALE)):
         scene.add_box((x, height / 2, KEEP_BACK), (KEEP_SCALE, height, KEEP_SCALE))
@@ -1421,7 +1477,9 @@ def furnish_forge(scene, house, ruined, rng):
     if ruined:
         r.add("survival_kit/tool-hammer", -1.0, 0.3, 30.0, 4.0, tilt=90.0)
         return
-    top = 0.87
+    # Dessus de l'établi : 0,2366 de son modèle (sa boîte monte à 0,29 avec le marteau et la feuille posés dessus),
+    # à l'échelle 3 sur sa hauteur. Posés à 0,87, les outils et le carnet flottaient de 16 cm.
+    top = 0.2366 * 3.0
     r.put("survival_kit/tool-hammer", -3.3, 0.65, 90.0, 3.4, y=top, tilt=90.0)
     r.put("survival_kit/tool-axe", -3.3, 1.85, 90.0, 3.4, y=top, tilt=90.0)
     for v in (-2.0, -0.4):
@@ -1477,15 +1535,19 @@ def furnish_farm(scene, house, ruined, rng):
         r.lamp([(0.0, 0.0, 3.0)])
         r.hearth_glow(hu_ - 1.5, hv_)
     cx, cz = house[0], house[1]
-    # Champ à l'est de la ferme : rangées de terre et de cultures, qui repoussent avec le village.
+    # Champ à l'est de la ferme : rangées de terre et de cultures, qui repoussent avec le village. Une rangée du
+    # modèle est une bande de terre plate entre deux petits sillons : posée à y = 0, sa bande se confondait avec le
+    # sol et scintillait en rayures, à demi cachée par l'herbe. Elle est relevée de 5 cm, ses sillons montés à 15 cm,
+    # et les cultures sont plantées sur la bande.
+    lift, ridge = 0.05, 0.15
     for row in range(5):
         z = cz - 5.0 + row * 2.4
         for column in range(4):
             x = cx + 8.0 + column * 2.4
-            scene.add("nature_kit/crops_dirtRow", (x, 0.0, z), 0.0, 2.4)
+            scene.add("nature_kit/crops_dirtRow", (x, lift, z), 0.0, (2.4, ridge / 0.05, 2.4))
             if not ruined:
                 crop = ("nature_kit/crops_wheatStageB", "nature_kit/crops_cornStageD", "nature_kit/crop_pumpkin")[row % 3]
-                scene.add(crop, (x, 0.0, z), rng.uniform(0, 360), 2.4)
+                scene.add(crop, (x, lift, z), rng.uniform(0, 360), 2.4)
     # Enclos et foin au sud de la ferme.
     for index in range(4):
         x = cx - 4.0 + index * 2.8
@@ -1869,6 +1931,11 @@ def build_lavoir(scene, rng):
     """Lavoir au bord du grand pont : un bassin de pierre sous un toit de tuiles posé sur quatre poteaux. Au premier
     livre, l'eau revient dans le bassin et le linge sèche sur une corde."""
     cx, cz = 54.0, 6.5
+    # Dallage de pierre sous le toit, de pilier à pilier (deux dalles de 4 m du kit des donjons, celles de la crypte
+    # du marais), à 3 cm au-dessus du sol : en ruine comme rebâti, le bassin et les baquets ne sont plus dans l'herbe.
+    # La dalle « road » du kit de la ville, essayée d'abord, est bleue : on aurait dit de l'eau répandue.
+    for x in (cx - TILE / 2, cx + TILE / 2):
+        scene.add("modular_dungeon_kit/template-floor", (x, 0.03, cz), 0.0, 1.0)
     scene.repair("Lavoir", 1)
     furniture(scene, "fantasy_town_kit/fountain-square", (cx, 0.0, cz), 0.0, 2.0, height=0.9)
     scene.add("castle_kit/rocks-small", (cx + 1.0, 0.3, cz - 0.5), rng.uniform(0, 360), 1.4)
@@ -1879,17 +1946,27 @@ def build_lavoir(scene, rng):
     scene.add("survival_kit/resource-planks", (cx - 2.0, 0.0, cz + 3.6), 20.0, 3.0)
     scene.rebuilt("Lavoir")
     furniture(scene, "fantasy_town_kit/fountain-square-detail", (cx, 0.0, cz), 0.0, 2.0, height=0.9)
+    # Les piliers côté rivière (x = 58) sont au haut de la berge, qui descend déjà de 0,1 à 0,25 m sous leur pied :
+    # ils s'enfoncent de 0,3 m pour ne pas laisser de jour sous leur base, et gardent leur haut sous le toit.
     for x in (cx - 4.0, cx + 4.0):
+        sink = 0.3 if x > cx else 0.0
         for z in (cz - 2.0, cz + 2.0):
-            scene.add("fantasy_town_kit/pillar-wood", (x, 0.0, z), 0.0, 4.0)
+            scene.add("fantasy_town_kit/pillar-wood", (x, -sink, z), 0.0, (4.0, 4.0 + sink, 4.0))
             scene.add_box((x, 2.0, z), (0.5, 4.0, 0.5))
     roof(scene, cx, cz, 2, 1, WALL_HEIGHT)
-    # Corde à linge entre deux perches, au bord de l'eau ; draps et bannières à sécher.
+    # Séchoir à l'ouest du lavoir, sur le plat : deux perches, une barre de bois en travers de leur tête, et les
+    # draps et bannières pendus à la barre par leur tringle. Il était au bord de la rivière, ses perches sur la pente
+    # de la berge, 0,6 à 0,9 m au-dessus du sol, et les bannières flottaient à 1,5 m de la ligne des perches.
+    line_x, line_y = cx - 5.4, 2.3
     for z in (cz - 2.6, cz + 2.6):
-        scene.add("fantasy_town_kit/pillar-wood", (cx + 5.6, 0.0, z), 0.0, (1.0, 2.4, 1.0))
-        scene.add_box((cx + 5.6, 1.2, z), (0.3, 2.4, 0.3))
+        scene.add("fantasy_town_kit/pillar-wood", (line_x, 0.0, z), 0.0, (1.0, 2.4, 1.0))
+        scene.add_box((line_x, 1.2, z), (0.3, 2.4, 0.3))
+    # Barre : un poteau couché le long de z, de 6 cm d'épaisseur, d'une perche à l'autre.
+    scene.add("fantasy_town_kit/pillar-wood", (line_x, line_y, cz - 2.65), 0.0, (0.6, 5.3, 0.6), tilt=90.0)
+    # Bannière (échelle 1,2 sur 1,4) : son drap est à x = 0,4 de son origine, le haut de sa tringle à 1,0.
     for index, z in enumerate((cz - 1.4, cz + 0.2, cz + 1.6)):
-        scene.add("fantasy_town_kit/banner-green" if index % 2 else "fantasy_town_kit/banner-red", (cx + 5.6 - 1.5, 1.0, z), 0.0, (1.2, 1.4, 1.2))
+        scene.add("fantasy_town_kit/banner-green" if index % 2 else "fantasy_town_kit/banner-red",
+                  (line_x - 0.4 * 1.2, line_y - 0.03 - 1.4, z), 0.0, (1.2, 1.4, 1.2))
     for index, (x, z) in enumerate(((cx - 2.6, cz - 3.0), (cx + 2.0, cz - 3.0))):
         furniture(scene, "survival_kit/barrel-open", (x, 0.0, z), 0.0, 3.0, height=1.0)
     furniture(scene, "survival_kit/bucket", (cx - 1.0, 0.0, cz - 3.0), 0.0, 3.4)
@@ -1905,6 +1982,13 @@ def build_market_hall(scene, rng):
     cx, cz, width, depth = -24.0, 66.0, 3, 2
     half_w, half_d = width * TILE / 2, depth * TILE / 2
     pillars = [(cx + sx * half_w, cz + sz * half_d) for sx in (-1, 1) for sz in (-1, 0, 1)]
+    # Plancher de la halle, comme celui des maisons (house_floor) : des lattes sur chaque case, affleurantes, et une
+    # couche d'une seule pièce dessous, croisée, pour qu'on ne voie pas l'herbe entre les lattes. Les étals et les
+    # tonneaux ne sont plus posés dans l'herbe ; il reste sous le toit effondré.
+    scene.add("fantasy_town_kit/planks", (cx, -0.215, cz), 90.0, (depth * TILE * 0.98, TILE, width * TILE * 0.98))
+    for column in range(width):
+        for row in range(depth):
+            scene.add("fantasy_town_kit/planks", (cx - (width - 1) * TILE / 2 + column * TILE, -0.2, cz - (depth - 1) * TILE / 2 + row * TILE), 0.0, TILE)
     scene.repair("MarketHall", 2)
     for index, (x, z) in enumerate(pillars):
         if index in (1, 4):
@@ -2199,13 +2283,21 @@ def build_park(scene, rng):
     scene.rebuilt("ParkKiosk")
     scene.add("castle_kit/tower-hexagon-top", (kx, 0.0, kz), 0.0, (6.0, 2.0, 6.0))
     scene.add_box((kx, 0.13, kz), (5.0, 0.26, 4.4))
+    # Le dessous du toit est un hexagone régulier de 2,42 m de rayon (0,432 x 5,6), ses sommets sur l'axe x, sous
+    # un débord plus large qui commence 0,39 m plus haut. Posés sur une ellipse (2,3 m sur x, 2 m sur z), les
+    # piliers du milieu des côtés dépassaient du dessous du toit : on voyait le jour entre eux et le débord. Ils sont
+    # maintenant au milieu de chaque côté, à 1,7 m du centre (le côté est à 2,1 m), tournés vers le centre, et
+    # montent jusque dans le plateau du toit.
+    roof_y = 3.66
     for index in range(6):
-        angle = math.radians(30 + index * 60)
-        px, pz = kx + math.cos(angle) * 2.3, kz + math.sin(angle) * 2.0
+        degrees = 30 + index * 60
+        angle = math.radians(degrees)
+        px, pz = kx + math.cos(angle) * 1.7, kz + math.sin(angle) * 1.7
         if index == 1:
             continue
-        furniture(scene, "nature_kit/statue_column", (px, 0.17, pz), 0.0, (2.2, 3.4, 2.2), height=3.4)
-    scene.add("castle_kit/tower-hexagon-roof", (kx, 3.66, kz), 0.0, (5.6, 2.6, 5.6))
+        height = roof_y + 0.04 - 0.17
+        furniture(scene, "nature_kit/statue_column", (px, 0.17, pz), 90.0 - degrees, (2.2, height, 2.2), height=height)
+    scene.add("castle_kit/tower-hexagon-roof", (kx, roof_y, kz), 0.0, (5.6, 2.6, 5.6))
     scene.group = "Fixed"
 
     # Étang : une barque échouée sur la rive.
