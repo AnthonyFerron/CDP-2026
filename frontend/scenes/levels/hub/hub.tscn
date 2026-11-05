@@ -178,20 +178,21 @@ bottom_radius = 0.61
 height = 0.1
 radial_segments = 10
 
-[sub_resource type="SphereMesh" id="SphereMesh_beard"]
+[sub_resource type="BoxMesh" id="BoxMesh_beard_jaw"]
 material = SubResource("Material_beard")
-radius = 0.5
-height = 1.0
-radial_segments = 12
-rings = 6
+size = Vector3(0.88, 0.27, 0.62)
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_beard"]
+[sub_resource type="BoxMesh" id="BoxMesh_beard_tail1"]
 material = SubResource("Material_beard")
-top_radius = 0.34
-bottom_radius = 0.05
-height = 0.5
-radial_segments = 10
-rings = 2
+size = Vector3(0.7, 0.22, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_beard_tail2"]
+material = SubResource("Material_beard")
+size = Vector3(0.5, 0.2, 0.18)
+
+[sub_resource type="BoxMesh" id="BoxMesh_beard_tail3"]
+material = SubResource("Material_beard")
+size = Vector3(0.28, 0.18, 0.16)
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_mustache"]
 material = SubResource("Material_beard")
@@ -331,10 +332,10 @@ roughness = 1.0
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_crown"]
 material = SubResource("Material_crown")
-top_radius = 0.44
-bottom_radius = 0.42
+top_radius = 0.63
+bottom_radius = 0.594
 height = 0.24
-radial_segments = 10
+radial_segments = 4
 cap_top = false
 cap_bottom = false
 
@@ -1540,20 +1541,28 @@ mesh = SubResource("CylinderMesh_band")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.155, 0.05)
 mesh = SubResource("CylinderMesh_hat")
 
-[node name="BeardChin" type="MeshInstance3D" parent="Characters/Merlon/Model/character-human/Skeleton3D/Head/Gear"]
-transform = Transform3D(0.84, 0, 0, 0, 0.32, 0, 0, 0, 0.26, 0, 0.88, 0.5)
-mesh = SubResource("SphereMesh_beard")
+[node name="BeardJaw" type="MeshInstance3D" parent="Characters/Merlon/Model/character-human/Skeleton3D/Head/Gear"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.925, 0.21)
+mesh = SubResource("BoxMesh_beard_jaw")
 
-[node name="BeardTail" type="MeshInstance3D" parent="Characters/Merlon/Model/character-human/Skeleton3D/Head/Gear"]
-transform = Transform3D(1, 0, 0, 0, 0.98163, 0.08014, 0, -0.19081, 0.41228, 0, 0.62, 0.53)
-mesh = SubResource("CylinderMesh_beard")
+[node name="BeardTail1" type="MeshInstance3D" parent="Characters/Merlon/Model/character-human/Skeleton3D/Head/Gear"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0.55)
+mesh = SubResource("BoxMesh_beard_tail1")
+
+[node name="BeardTail2" type="MeshInstance3D" parent="Characters/Merlon/Model/character-human/Skeleton3D/Head/Gear"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.52, 0.575)
+mesh = SubResource("BoxMesh_beard_tail2")
+
+[node name="BeardTail3" type="MeshInstance3D" parent="Characters/Merlon/Model/character-human/Skeleton3D/Head/Gear"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.36, 0.6)
+mesh = SubResource("BoxMesh_beard_tail3")
 
 [node name="MustacheRight" type="MeshInstance3D" parent="Characters/Merlon/Model/character-human/Skeleton3D/Head/Gear"]
-transform = Transform3D(-0.25113, -0.93723, -0.24192, 0.96593, -0.25882, 0, -0.06261, -0.23368, 0.9703, -0.15, 1.03, 0.56)
+transform = Transform3D(-0.25113, -0.93723, -0.24192, 0.96593, -0.25882, 0, -0.06261, -0.23368, 0.9703, -0.15, 1.07, 0.55)
 mesh = SubResource("CapsuleMesh_mustache")
 
 [node name="MustacheLeft" type="MeshInstance3D" parent="Characters/Merlon/Model/character-human/Skeleton3D/Head/Gear"]
-transform = Transform3D(-0.25113, 0.93723, 0.24192, -0.96593, -0.25882, 0, 0.06261, -0.23368, 0.9703, 0.15, 1.03, 0.56)
+transform = Transform3D(-0.25113, 0.93723, 0.24192, -0.96593, -0.25882, 0, 0.06261, -0.23368, 0.9703, 0.15, 1.07, 0.55)
 mesh = SubResource("CapsuleMesh_mustache")
 
 [node name="Hand" type="BoneAttachment3D" parent="Characters/Merlon/Model/character-human/Skeleton3D"]
@@ -1591,31 +1600,59 @@ bone_idx = 6
 transform = Transform3D(0.41667, 0, -0, 0, 0.41667, 0, 0, 0, 0.41667, -0, -0.343, -0.003)
 
 [node name="Crown" type="MeshInstance3D" parent="Characters/Codeon/Model/character-human/Skeleton3D/Head/Gear"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.584, 0.05)
+transform = Transform3D(0.70711, 0, 0.70711, 0, 1, 0, -0.70711, 0, 0.70711, 0, 1.45, 0)
 mesh = SubResource("CylinderMesh_crown")
 
 [node name="Spike0" type="MeshInstance3D" parent="Characters/Codeon/Model/character-human/Skeleton3D/Head/Gear"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 1.81, 0.47)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -0.27, 1.66, 0.42)
 mesh = SubResource("PrismMesh_crown_spike")
 
 [node name="Spike1" type="MeshInstance3D" parent="Characters/Codeon/Model/character-human/Skeleton3D/Head/Gear"]
-transform = Transform3D(0.30902, 0, -0.95106, 0, 1, 0, 0.95106, 0, 0.30902, -0.39944, 1.81, 0.17979)
+transform = Transform3D(1, 0, 0, 0, 1.3, 0, -0, 0, 1, 0, 1.693, 0.42)
 mesh = SubResource("PrismMesh_crown_spike")
 
 [node name="Spike2" type="MeshInstance3D" parent="Characters/Codeon/Model/character-human/Skeleton3D/Head/Gear"]
-transform = Transform3D(-0.80902, 0, -0.58779, 0, 1, 0, 0.58779, 0, -0.80902, -0.24687, 1.81, -0.28979)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0.27, 1.66, 0.42)
 mesh = SubResource("PrismMesh_crown_spike")
 
 [node name="Spike3" type="MeshInstance3D" parent="Characters/Codeon/Model/character-human/Skeleton3D/Head/Gear"]
-transform = Transform3D(-0.80902, 0, 0.58779, 0, 1, 0, -0.58779, 0, -0.80902, 0.24687, 1.81, -0.28979)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0.42, 1.66, 0.27)
 mesh = SubResource("PrismMesh_crown_spike")
 
 [node name="Spike4" type="MeshInstance3D" parent="Characters/Codeon/Model/character-human/Skeleton3D/Head/Gear"]
-transform = Transform3D(0.30902, 0, 0.95106, 0, 1, 0, -0.95106, 0, 0.30902, 0.39944, 1.81, 0.17979)
+transform = Transform3D(0, 0, 1, 0, 1.3, 0, -1, 0, 0, 0.42, 1.693, 0)
+mesh = SubResource("PrismMesh_crown_spike")
+
+[node name="Spike5" type="MeshInstance3D" parent="Characters/Codeon/Model/character-human/Skeleton3D/Head/Gear"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0.42, 1.66, -0.27)
+mesh = SubResource("PrismMesh_crown_spike")
+
+[node name="Spike6" type="MeshInstance3D" parent="Characters/Codeon/Model/character-human/Skeleton3D/Head/Gear"]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, 0.27, 1.66, -0.42)
+mesh = SubResource("PrismMesh_crown_spike")
+
+[node name="Spike7" type="MeshInstance3D" parent="Characters/Codeon/Model/character-human/Skeleton3D/Head/Gear"]
+transform = Transform3D(-1, 0, 0, 0, 1.3, 0, -0, 0, -1, 0, 1.693, -0.42)
+mesh = SubResource("PrismMesh_crown_spike")
+
+[node name="Spike8" type="MeshInstance3D" parent="Characters/Codeon/Model/character-human/Skeleton3D/Head/Gear"]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, -0.27, 1.66, -0.42)
+mesh = SubResource("PrismMesh_crown_spike")
+
+[node name="Spike9" type="MeshInstance3D" parent="Characters/Codeon/Model/character-human/Skeleton3D/Head/Gear"]
+transform = Transform3D(-0, 0, -1, 0, 1, 0, 1, 0, -0, -0.42, 1.66, -0.27)
+mesh = SubResource("PrismMesh_crown_spike")
+
+[node name="Spike10" type="MeshInstance3D" parent="Characters/Codeon/Model/character-human/Skeleton3D/Head/Gear"]
+transform = Transform3D(-0, 0, -1, 0, 1.3, 0, 1, 0, -0, -0.42, 1.693, -0)
+mesh = SubResource("PrismMesh_crown_spike")
+
+[node name="Spike11" type="MeshInstance3D" parent="Characters/Codeon/Model/character-human/Skeleton3D/Head/Gear"]
+transform = Transform3D(-0, 0, -1, 0, 1, 0, 1, 0, -0, -0.42, 1.66, 0.27)
 mesh = SubResource("PrismMesh_crown_spike")
 
 [node name="Jewel" type="MeshInstance3D" parent="Characters/Codeon/Model/character-human/Skeleton3D/Head/Gear"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0.51)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0.45)
 mesh = SubResource("SphereMesh_jewel")
 
 [node name="Torso" type="BoneAttachment3D" parent="Characters/Codeon/Model/character-human/Skeleton3D"]
