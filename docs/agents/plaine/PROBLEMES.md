@@ -50,6 +50,17 @@ mode `all`, l'invite de chacun des autres interactables du lieu, pour vérifier 
 
 Résultat : `lore_test all` 160 OK, 0 échec (les 6 textes et les 20 autres interactables du lieu gardent leur invite) ; `plaine_puzzle_test` 34 OK ; `signboard_test` 8 OK ; les trois indices (fenêtre H) tiennent dans leur cadre ; captures rapprochées de chaque texte (face, profil, depuis le chemin), toutes regardées.
 
+## Dos sombres à contre-jour (nuit du 4 au 5 novembre 2026, relevé dans RESTE_A_FAIRE.md)
+
+| # | Où (x, z) | Vu par | Cause | Correction |
+| --- | --- | --- | --- | --- |
+| 19 | Panneaux sur poteaux : entrée (-4,6 ; 46), fête des foins (3,3 ; 47,8), arpenteur (-4,3 ; 35), ordre d'évacuation (7,7 ; 44,5) | captures de dos, depuis le chemin du retour et le camp | Planche nue et sombre au dos, face au soleil de l'autre côté | `double_sided` (texte et cadre au dos) ; faible lueur chaude derrière l'entrée et l'affiche de la fête, vues de dos en revenant au portail (0,6, portée 2,5 m, éteinte entre 38 et 46 m), comme au Marais |
+| 20 | Rayonnages debout des ruines (-7 ; -7) et (7 ; -4) | captures de dos, côté brèches | Dos presque noir, tourné vers le mur, à l'ombre | Faible lueur chaude entre chaque dos et son mur (0,6, portée 2,6 m, éteinte entre 38 et 46 m) |
+
+Les rayonnages des archives sous la carte sont tous adossés à un mur : leur dos ne se voit pas.
+Captures avant et après aux mêmes points : `dos/avant`, `dos/apres`, `dos/apres2` du dossier de travail.
+`plaine_puzzle_test` (34 OK) et `signboard_test` (8 OK) : 0 échec.
+
 ## Restent, signalés
 
 - `scripts/smoke_effect.gd` (interdit) : le préchauffage ne prend pas quand la fumée est chargée avec une scène. Contourné dans la Plaine ; le Village et le volcan du hub ont le même défaut.
