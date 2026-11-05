@@ -28,6 +28,7 @@ La lave des cratères et de la coulée renvoie le joueur à son dernier point s�
 | `plaine_scatter.gd` | Herbe, rochers, arbres morts, lanternes du chemin, lave des cratères et de la coulée, fumées |
 | `plaine_ruins.tscn`, `plaine_battlefield.tscn`, `library_interior.tscn` | Ruines, champ de bataille et archives, générés par `tools/build_plaine.py` |
 | `model_multimesh.gd` | Répète un modèle (livres des rayonnages, feuillets) en un seul MultiMesh |
+| `plaine_batch.gd` | Pour le web : fond au chargement le décor fixe (ruines, champ de bataille, archives) par matériau et par case, sans rien changer à l'écran ni aux collisions ; les bannières animées restent à part |
 | `searchable_book.gd` | Livre à fouiller, et sa mise en valeur |
 | `tablet_puzzle.tscn`, `tablet_puzzle.gd` | Écran de la tablette, dans le style des menus (`Ornate`) : cases de pierre gravées, fragments de parchemin, rouge à l'erreur, vert à la réussite ; vérification de l'ordre |
 | `plaine_life.gd` | Corbeaux qui tournent au-dessus des engins de siège ou guettent sur la tour, les croix et la stèle (ils s'envolent à l'approche), bannières qui ondulent |
