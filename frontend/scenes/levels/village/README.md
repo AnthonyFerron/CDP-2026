@@ -18,13 +18,13 @@ Le lieu le plus marqué par la guerre : les attaques de Vibelandia ont forcé la
 | Écuries | (24, 30) | Stalles, foin, charrette, enclos à la clôture brisée, toit à moitié effondré |
 | Brèche de l'est | (27, -4) | Cratère, boulet, charrette brûlée, poutres calcinées |
 | Champ de blé | (19, -17) | À moitié brûlé, au pied de la colline du moulin |
-| Rue du pont | z = 6 | Mène au pont du ruisseau, à l'ouest, par la porte de l'ouest |
+| Rue du pont | z = 6 | Mène au pont du ruisseau, à l'ouest, par la porte de l'ouest ; le pont, en travers du ruisseau, prolonge la rue sans marche |
 | Moulin à eau | (-31, -14) | Maison du meunier sur son soubassement de pierre, roue qui tourne dans le ruisseau, tas de bois et poulailler |
 | Moulin à vent | (30, -30) | Sur sa colline, ses ailes tournent lentement ; sacs de grain et meule à son pied |
 
 Chaque maison a son métier, meublé et pillé : auberge du Chaudron, boulangerie et son four de briques, forge et son foyer, épicerie, herboristerie, corps de garde, tonnellerie, maison du meunier, logis (dont celui d'une famille, avec la poupée et la charrette de bois de l'enfant), et une maison brûlée de fond en comble. Les boutiques ont leur enseigne pendue à une potence (`SignBoard`). Corbeaux et chats sont restés au village.
 
-L'ambiance est celle d'une fin de journée : un soleil bas et doré perce les nuages, une lumière froide du ciel éclaire le côté des murs à l'ombre, des fumées montent encore des ruines et des cheminées de la boulangerie et de la forge, quelques feux couvent et lâchent leurs braises (barricade, cratères, maison brûlée, écuries). Les fenêtres de la mairie luisent dans le soir. On entend le ruisseau, la roue du moulin qui éclabousse, le vent dans la brèche, la porte et le moulin à vent, le four et la forge qui crépitent ; dans la mairie, la poussière flotte dans la lumière.
+L'ambiance est celle d'une fin de journée : un soleil bas et doré perce les nuages, une lumière froide du ciel éclaire le côté des murs à l'ombre, le sol renvoie un peu de lueur chaude sous les planchers effondrés et les auvents, des fumées montent encore des ruines et des cheminées de la boulangerie et de la forge, quelques feux couvent et lâchent leurs braises (barricade, cratères, maison brûlée, écuries). Les fenêtres de la mairie luisent dans le soir. On entend le ruisseau, la roue du moulin qui éclabousse, le vent dans la brèche, la porte et le moulin à vent, le four et la forge qui crépitent ; dans la mairie, la poussière flotte dans la lumière.
 
 Le village vit encore un peu : les corbeaux picorent ou guettent et s'envolent quand on approche, puis reviennent quand on est loin ; deux chats se promènent devant la mairie et autour du puits ; le linge et les bannières ondulent au vent.
 
@@ -67,7 +67,7 @@ Les extraits, les questions et les indices ont été écrits pour cette version,
 | --- | --- |
 | `village.tscn`, `village.gd` | Scène du niveau, moulins animés, panneaux de lore, mairie et déroulé de l'énigme |
 | `village_terrain.gd` | Replat du bourg, rues pavées, ruisseau, colline du moulin et limite invisible |
-| `village_scatter.gd` | Herbe folle, gravats, arbres et rochers |
+| `village_scatter.gd` | Herbe folle, gravats, arbres et rochers ; la collision des arbres et des rochers suit leur emprise réelle (branches basses des pins, feuillage des arbres grêles) |
 | `village_props.tscn` | Enceinte, maisons et leur mobilier, place, mairie, moulins, abords, générés par `tools/build_village.py` |
 | `village_hall.tscn` | Murs et meubles de l'intérieur de la mairie, générés par `tools/build_village.py` |
 | `village_instances.gd` | Copies répétées d'un même modèle dessinées en une fois (MultiMesh), pour la version web |

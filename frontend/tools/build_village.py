@@ -467,6 +467,11 @@ def block(scene, center, size, degrees=0.0, group=None, label="bloc", structure=
                center[1] + size[1] / 2, structure)
 
 
+def add_tilted_box(scene, center, size, roll):
+    """Collision inclinée autour de l'axe z (une rampe qui monte selon x) : Scene.add_box ne tourne que selon y."""
+    scene.colliders.append((transform_text(rotation_z(roll), center), scene._box_id(size)))
+
+
 def post(scene, x, z, radius, height, y=0.0, group=None, label="poteau"):
     """Collision cylindrique d'un poteau, d'un tonneau ou d'un tronc."""
     if hasattr(scene, "add_cylinder"):
@@ -506,6 +511,9 @@ def materials(scene):
     scene.material("soot", (0.15, 0.125, 0.105), 1.0)
     scene.material("ash", (0.27, 0.24, 0.21), 1.0)
     scene.material("char", (0.1, 0.075, 0.06), 1.0)
+    # Planches brûlées : les grands pans (plancher qui pend, toit effondré) restent lisibles comme du bois, vus d'en
+    # dessous dans l'ombre ; en charbon pur, ils faisaient des trous noirs dans l'image.
+    scene.material("char_wood", (0.27, 0.18, 0.12), 1.0)
     scene.material("ember", (0.35, 0.08, 0.02), 0.8, emission=(1.0, 0.32, 0.06), energy=2.2)
     scene.material("stone", (0.42, 0.4, 0.38), 1.0)
     scene.material("stone_dark", (0.3, 0.29, 0.29), 1.0)
@@ -666,7 +674,7 @@ def sheet(scene, material, center, width, drop, degrees, sway=0.0):
 # Côté ouest, la maison du meunier (z de -18 à -10) fait partie de l'enceinte, et la porte de l'ouest (z = 6) laisse
 # passer la rue du pont : pas de rempart à ces endroits.
 WEST_OPENINGS = (6, -10, -14, -18)
-# Côté est, la brèche ouverte par un dragon, face au cratère.
+# Côté est, la brèche ouverte par les catapultes de Vibelandia, face au cratère.
 EAST_BREACH = (-6,)
 
 
@@ -697,9 +705,10 @@ def build_rampart(scene, rng):
             scene.add("castle_kit/rocks-large", (x, 0.0, south), rng.uniform(0, 360), 2.6)
             block(scene, (x, 0.65, south), (3.3, 1.3, 3.3), label="éboulis du rempart", structure=True)
             continue
-        # Le mur étroit n'occupe que la moitié de sa case, côté village : sa collision le suit.
+        # Le mur étroit, tourné d'un quart de tour, n'occupe que la moitié extérieure de sa case (z de 42 à 44) : sa
+        # collision le suit, sans mur invisible côté village.
         depth = 0.5 * RAMPART if model == "wall-narrow" else RAMPART
-        rampart_piece(scene, x, south, model, 90.0, (x, south - (RAMPART - depth) / 2), (RAMPART, 5.2, depth))
+        rampart_piece(scene, x, south, model, 90.0, (x, south + (RAMPART - depth) / 2), (RAMPART, 5.2, depth))
     for sign in (-1, 1):
         for z in range(38, -27, -4):
             if rng.random() < 0.35:
@@ -732,16 +741,19 @@ def build_rampart(scene, rng):
 
 def build_streets(scene, rng):
     """Place du marché autour de la fontaine : les pavés des rues sont peints par le terrain. Les étals ont été
-    renversés, les vivres piétinés, et la statue du roi fondateur gît au bord du bassin."""
+    renversés, les vivres piétinés ; la statue du roi fondateur tient encore debout au bord du bassin, noircie."""
     scene.add("fantasy_town_kit/fountain-round", (0.0, 0.0, -2.0), 0.0, 3.6)
     # Bassin rond : quatre boîtes tournées épousent mieux le cercle qu'un seul carré.
     for degrees in (0.0, 45.0):
         scene.add_box((0.0, 0.5, -2.0), (6.9, 1.0, 2.9), degrees)
         scene.add_box((0.0, 0.5, -2.0), (2.9, 1.0, 6.9), degrees)
     LAYOUT.add("fontaine", "fontaine", (0.0, 0, -2.0), (6.9, 1.0, 6.9), 0.0, 0.0, 1.0)
-    # Le socle de la statue, resté au milieu de l'eau, et la statue tombée sur le pavé.
+    # La colonne brisée de la fontaine, au milieu de l'eau, et la statue du roi fondateur, debout sur son socle :
+    # couchée, son socle à gradins se dressait comme une planche plantée de travers.
     add_single(scene, "nature_kit/statue_columnDamaged", (0.0, 0.0, -2.0), 20.0, 3.0)
-    place(scene, "mini_arena/statue", (-4.9, 0.0, -7.2), 120.0, 1.7, height=1.0, tilt=90.0, label="statue renversée")
+    place(scene, "mini_arena/statue", (-4.4, 0.0, -6.5), 35.0, 1.7, height=top_of("mini_arena/statue", 1.7),
+          label="statue du roi fondateur")
+    scorch(scene, -4.6, -6.2, 1.1)
     for x, z, degrees, model in ((-7.0, -9.0, 20.0, "stall-red"), (7.5, -9.5, -15.0, "stall-green"), (8.5, 4.0, 200.0, "stall")):
         place(scene, f"fantasy_town_kit/{model}", (x, 0.0, z), degrees, 3.0, height=1.1 if model == "stall" else 3.6,
               label=f"étal {model}")
@@ -751,7 +763,7 @@ def build_streets(scene, rng):
     place(scene, "fantasy_town_kit/stall-bench", (-9.6, 0.0, -4.4), 75.0, 3.0, height=0.7, roll=90.0, label="banc d'étal")
     place(scene, "fantasy_town_kit/stall-stool", (6.4, 0.0, -6.0), 30.0, 2.0, height=0.5, label="tabouret")
     place(scene, "fantasy_town_kit/stall-stool", (9.8, 0.0, 6.4), 0.0, 2.0, height=0.5, tilt=90.0, label="tabouret couché")
-    place(scene, "survival_kit/box-open", (-9.6, 0.0, -11.2), 15.0, 2.6, height=0.8, label="caisse de pommes")
+    place(scene, "survival_kit/box-open", (-9.7, 0.0, -9.9), 15.0, 2.6, height=0.8, label="caisse de pommes")
     place(scene, "survival_kit/box-large-open", (10.0, 0.0, -8.3), 70.0, 2.6, height=0.8, label="caisse de carottes")
     place(scene, "survival_kit/box", (10.8, 0.0, 1.6), 40.0, 2.4, height=0.6, tilt=90.0, label="caisse renversée")
     place(scene, "food_kit/barrel", (-10.4, 0.0, -8.6), 0.0, 1.4, height=0.95, label="tonneau de l'étal")
@@ -789,7 +801,7 @@ def crater(scene, rng, x, z, radius, ring=True):
         distance = radius * rng.uniform(0.75, 0.95)
         px, pz = x + math.cos(angle) * distance, z + math.sin(angle) * distance
         lay(scene, "mini_arena/bricks" if index % 2 else "graveyard_kit/debris", (px, 0.0, pz), rng.uniform(0, 360),
-            0.6 if index % 2 else 1.4)
+            0.6 if index % 2 else 1.25)
 
 
 # --- Maisons --------------------------------------------------------------------------------------------------------
@@ -958,7 +970,7 @@ def upper_floor(scene, frame):
         box(scene, "wood_dark", frame.p(a, 0.0, WALL_HEIGHT - 0.2), (0.3, 0.3, frame.depth * 2 - 0.55), frame.yaw())
     box(scene, "wood", frame.p(-frame.far * half * 0.5, -frame.depth * 0.45, WALL_HEIGHT - 0.02),
         (frame.side * 0.9, 0.08, frame.depth * 0.8), frame.yaw())
-    box(scene, "char", frame.p(frame.far * half * 0.6, -frame.depth * 0.3, WALL_HEIGHT - 0.9),
+    box(scene, "char_wood", frame.p(frame.far * half * 0.6, -frame.depth * 0.3, WALL_HEIGHT - 0.9),
         (frame.side * 0.5, 0.08, 1.8), frame.yaw(), tilt=35.0)
 
 
@@ -974,7 +986,7 @@ def home(scene, rng, frame, child=False):
     else:
         fp(scene, frame, "mini_dungeon/chair", -far * 2.4, -2.5, 160.0, 2.2, height=1.0, label="chaise")
         fp(scene, frame, "survival_kit/barrel-open", -far * 2.8, -0.6, 0.0, 2.6, height=0.9, label="tonneau")
-        fl(scene, frame, "mini_dungeon/pot", -far * 1.6, -2.9, 30.0, 1.1, y=FLOOR)
+        fp(scene, frame, "mini_dungeon/pot", -far * 1.2, -3.0, 30.0, 1.1, height=0.47, y=FLOOR, label="marmite")
     fp(scene, frame, "mini_dungeon/table", -far * 0.4, -0.4, 25.0, 2.4, height=0.75, roll=90.0, label="table renversée")
     fp(scene, frame, "mini_dungeon/chair", far * 0.9, 1.0, 0.0, 2.2, height=0.5, tilt=90.0, label="chaise couchée")
     deep = 0.7 * 1.6
@@ -1023,7 +1035,7 @@ def bakery(scene, rng, frame):
     # Four : un socle de pierre, une voûte de briques, la bouche noire où rougeoient encore des braises.
     b0 = frame.back_b(2.0)
     base = frame.p(far * 1.3, b0)
-    block(scene, (base[0], 0.55, base[2]), (2.3, 1.1, 2.0), frame.yaw(), label="four")
+    block(scene, (base[0], 0.95, base[2]), (2.3, 1.9, 2.0), frame.yaw(), label="four")
     box(scene, "stone", (base[0], 0.55, base[2]), (2.3, 1.1, 2.0), frame.yaw())
     sphere(scene, "brick", (base[0], 1.1, base[2]), 0.95, (1.1, 0.85, 1.0), frame.yaw(), hemisphere=True)
     mouth = frame.p(far * 1.3, b0 + 0.97)
@@ -1184,7 +1196,7 @@ def miller(scene, rng, frame):
     x, z = frame.xz(-far * 1.2, -1.2)
     for y, radius in ((0.25, 1.0), (0.72, 0.95)):
         cylinder(scene, "stone", (x, y, z), radius, 0.45, sides=14)
-    post(scene, x, z, 1.0, 0.95, label="meules")
+    post(scene, x, z, 1.0, 1.85, label="meules et trémie")
     box(scene, "wood", (x, 1.4, z), (0.9, 0.9, 0.9), frame.yaw(45.0))
     for a, b, local in ((far * 2.6, -2.6, 0.0), (far * 1.9, -2.7, 40.0), (far * 2.6, -1.8, 80.0), (far * 2.6, 0.4, 10.0)):
         fp(scene, frame, "food_kit/bag", a, b, local, 1.05, height=0.88, label="sac de farine")
@@ -1255,12 +1267,12 @@ def build_gate_defense(scene, rng):
                                ("mini_dungeon/shield-round", -11.4, 36.6, 1.9), ("mini_dungeon/shield-rectangle", 3.4, 35.8, 2.8)):
         lay(scene, model, (x, 0.0, z), rng.uniform(0, 360), scale, tilt=90.0)
     # Bannière de Codia arrachée, couchée au pied de la tour.
-    lay(scene, "castle_kit/flag-banner-long", (-4.4, 0.0, 34.2), 100.0, 1.4, roll=90.0)
+    lay(scene, "castle_kit/flag-banner-long", (-11.5, 0.0, 35.0), 0.0, 1.4, roll=90.0)
     # Flèches de Vibelandia fichées dans le sol et dans les charrettes.
     for x, z, degrees, lean in ((-3.3, 33.0, 20.0, 35.0), (3.1, 31.4, 200.0, 40.0), (-3.6, 27.5, 150.0, 30.0),
                                 (3.4, 41.2, 10.0, 45.0), (-1.9, 44.0, 0.0, 50.0), (5.0, 36.1, 260.0, 30.0)):
         decor(scene, "mini_forest/weapon-arrow", (x, 0.12, z), degrees, 3.0, tilt=lean)
-    scene.add("fantasy_town_kit/lantern", (-1.0, 0.0, 33.2), 30.0, 2.2, tilt=0.0, roll=88.0)
+    place(scene, "fantasy_town_kit/lantern", (-3.3, 0.0, 27.4), 0.0, 2.2, height=0.5, tilt=90.0, label="lanterne fauchée")
     # Autour du mémorial des gardes (posé dans village.tscn, en (12, 37,5)) : leurs lances plantées, leurs boucliers
     # appuyés au socle, des bougies et des fleurs déposées par les survivants.
     for z in (36.0, 39.0):
@@ -1293,7 +1305,6 @@ def build_gardens(scene, rng):
                         continue
                     uprooted = rng.random() < 0.15
                     lay(scene, model, (x + dx, 0.04, z + dz), rng.uniform(0, 360), scale, tilt=80.0 if uprooted else 0.0)
-        block(scene, (-27.8, 0.35, z), (6.4, 0.7, 1.4), label="planche du potager")
     # Clôture du potager, avec sa barrière ouverte à l'est et des pans renversés.
     fence = "nature_kit/fence_simple"
     for x in (-30.6, -28.6, -26.6, -24.6):
@@ -1316,7 +1327,8 @@ def build_gardens(scene, rng):
     sphere(scene, "burlap", (sx, 1.78, sz), 0.16)
     cylinder(scene, "straw", (sx, 1.97, sz), 0.26, 0.03, sides=10)
     cylinder(scene, "straw", (sx, 2.07, sz), 0.13, 0.2, top=0.05, sides=8)
-    post(scene, sx, sz, 0.14, 1.9, label="épouvantail")
+    # Ses bras et son corps de paille sont à hauteur de poitrine : on s'y heurte, on ne passe pas au travers.
+    block(scene, (sx, 1.0, sz), (1.45, 2.0, 0.3), label="épouvantail")
     # Le second potager a brûlé : quelques tiges de maïs noircies dans des sillons gris.
     for z in (32.6, 34.2, 35.8, 37.4):
         for x in (-30.2, -28.6, -27.0, -25.4):
@@ -1325,7 +1337,6 @@ def build_gardens(scene, rng):
                 lay(scene, "nature_kit/crops_cornStageB", (x + rng.uniform(-0.4, 0.4), 0.03, z), rng.uniform(0, 360), 1.3)
             elif rng.random() < 0.5:
                 box(scene, "char", (x + rng.uniform(-0.5, 0.5), 0.3, z), (0.05, 0.6, 0.05), rng.uniform(0, 90), tilt=rng.uniform(-25, 25))
-        block(scene, (-27.8, 0.35, z), (6.4, 0.7, 1.0), label="sillons brûlés")
     for x, z, radius in ((-28.6, 34.4, 1.8), (-26.0, 36.6, 1.3), (-30.4, 37.2, 1.0)):
         scorch(scene, x, z, radius, y=0.06)
     # Le puits du quartier.
@@ -1403,14 +1414,14 @@ def build_stables(scene, rng):
     box(scene, "wood_dark", (26.1, 4.65, 30.0), (run, 0.14, 12.8), roll=-slope)
     box(scene, "wood_dark", (21.9, 4.65, 27.0), (run, 0.14, 6.6), roll=slope)
     box(scene, "wood_dark", (24.0, 5.22, 30.0), (0.3, 0.3, 12.8))
-    box(scene, "char", (21.7, 2.1, 34.0), (5.2, 0.14, 3.5), roll=42.0)
+    box(scene, "char_wood", (21.7, 2.1, 34.0), (5.2, 0.14, 3.5), roll=42.0)
     block(scene, (20.6, 0.6, 34.0), (2.2, 1.2, 3.3), label="toit effondré")
-    for z in (30.6, 33.0):
-        charred_beam(scene, (18.0, 0.15, z), 2.4, 70.0)
+    # Poutres tombées du toit, à l'écart de l'entrée de l'écurie.
+    for x, z, degrees in ((21.6, 37.6, 85.0), (24.6, 38.4, 100.0)):
+        charred_beam(scene, (x, 0.15, z), 2.4, degrees)
     # Stalles : cloisons de planches entre le mur du fond et l'allée.
     for z in (28.0, 32.0):
-        scene.add("nature_kit/fence_planks", (26.25, 0.0, z + 0.48), 0.0, (2.9, 3.6, 2.0))
-        block(scene, (26.25, 0.65, z), (2.9, 1.3, 0.25), label="cloison de stalle")
+        place(scene, "nature_kit/fence_planks", (26.25, 0.0, z), 0.0, (2.9, 3.6, 2.0), height=1.26, label="cloison de stalle")
     for z in (25.6, 29.6, 33.6):
         box(scene, "wood", (27.2, 0.3, z + 0.4), (0.6, 0.55, 1.8))
         box(scene, "straw", (27.2, 0.56, z + 0.4), (0.5, 0.04, 1.7))
@@ -1439,7 +1450,7 @@ def build_stables(scene, rng):
     box(scene, "wood", (25.0, 0.3, 20.6), (2.0, 0.6, 0.7))
     box(scene, "water", (25.0, 0.58, 20.6), (1.8, 0.02, 0.5))
     block(scene, (25.0, 0.3, 20.6), (2.0, 0.6, 0.7), label="abreuvoir")
-    lay(scene, "graveyard_kit/hay-bale", (27.6, 0.0, 21.8), 40.0, 1.8)
+    place(scene, "graveyard_kit/hay-bale", (27.6, 0.0, 21.8), 40.0, 1.8, height=0.63, label="botte de foin")
 
 
 # --- Traces de l'attaque -------------------------------------------------------------------------------------------
@@ -1451,7 +1462,7 @@ def build_battle_scars(scene, rng):
     for x, z, degrees in ((23.6, -6.4, 20.0), (29.6, 0.2, 110.0), (25.2, -9.4, 75.0)):
         charred_beam(scene, (x, 0.15, z), 2.8, degrees)
     for x, z in ((30.0, -9.2), (24.0, 0.0), (29.8, 2.4)):
-        lay(scene, "graveyard_kit/debris", (x, 0.0, z), rng.uniform(0, 360), 2.0)
+        lay(scene, "graveyard_kit/debris", (x, 0.0, z), rng.uniform(0, 360), 1.6)
     for x, z, radius in ((1.7, 26.5, 0.8), (-1.7, 14.6, 0.8), (1.6, -16.5, 0.7), (-15.0, 6.4, 1.4), (-25.0, 5.4, 1.0),
                          (-4.2, 22.0, 0.8), (4.6, 12.0, 1.0), (14.6, 2.4, 1.2), (16.0, 22.0, 0.9), (-13.4, 12.0, 1.0),
                          (0.4, -24.0, 0.8), (-19.0, -12.6, 1.1)):
@@ -1461,10 +1472,9 @@ def build_battle_scars(scene, rng):
         for k in range(9):
             z = -21.4 + k * 1.0
             if i >= 2 and (k + i) % 3:
-                box(scene, "char", (x + rng.uniform(-0.2, 0.2), 0.15, z), (0.6, 0.3, 0.5), rng.uniform(0, 90))
+                box(scene, "char", (x + rng.uniform(-0.2, 0.2), 0.12, z), (0.6, 0.24, 0.5), rng.uniform(0, 90))
                 continue
             lay(scene, "nature_kit/crops_wheatStageB", (x, 0.0, z), rng.uniform(0, 360), 2.0)
-    block(scene, (19.25, 0.5, -17.4), (4.4, 1.0, 9.0), label="champ de blé")
     scorch(scene, 20.6, -17.6, 2.2)
     # Les corbeaux, qui s'envolent quand on approche, sont posés dans village.tscn (village_crow.gd).
 
@@ -1524,15 +1534,47 @@ def build_town_hall(scene):
 
 def build_mills(scene, rng):
     """Moulin à eau au bord du ruisseau, avec son pont, et tour du moulin à vent sur sa colline."""
-    scene.add("nature_kit/bridge_wood", (-38.0, -0.3, 6.0), 90.0, 6.5)
-    scene.add_box((-38.0, 0.1, 6.0), (6.8, 0.4, 6.8))
-    # La roue du moulin à eau tourne : elle est posée dans village.tscn, contre la maison du meunier.
+    # Pont de bois en travers du ruisseau, le long de la rue du pont (son tablier va selon x) : tablier à 0,98 m
+    # au-dessus de son origine, marches à 0,33 m à ses bouts, garde-corps sur ses côtés. Il est posé assez bas pour
+    # que son tablier prolonge la rue, et des rampes de collision montent des berges jusqu'à lui.
+    bridge_y = -0.84
+    deck = bridge_y + 0.98
+    scene.add("nature_kit/bridge_wood", (-38.0, bridge_y, 6.0), 0.0, 6.5)
+    # Le tablier va d'un flanc à l'autre ; les flancs pleins (z de ±2,28 à ±3,38 du centre) descendent dans l'eau.
+    block(scene, (-38.0, deck - 0.1, 6.0), (5.4, 0.2, 4.56), label="tablier du pont", structure=True)
+    street = -0.11
+    for side in (-1, 1):
+        # Rampe du bord du tablier (x0, en haut) à la rue (x1, en bas) : elle descend en s'éloignant du pont.
+        x0, x1 = -38.0 + side * 2.7, -38.0 + side * 4.0
+        run, rise = abs(x1 - x0), deck - street
+        roll = -math.degrees(math.atan2(rise, run)) * side
+        top = ((x0 + x1) / 2, (deck + street) / 2)
+        r = math.radians(roll)
+        center = (top[0] + math.sin(r) * 0.1, top[1] - math.cos(r) * 0.1, 6.0)
+        add_tilted_box(scene, center, (math.hypot(run, rise) + 0.1, 0.2, 5.2), roll)
+    for side in (-1, 1):
+        # Flancs du pont, du lit du ruisseau au haut du garde-corps : ni on n'y entre depuis l'eau, ni on ne s'y
+        # enfonce depuis le tablier.
+        bottom, top = -1.4, deck + 0.66
+        block(scene, (-38.0, (bottom + top) / 2, 6.0 + side * 2.83), (6.76, top - bottom, 1.1), label="flanc du pont",
+              structure=True)
+        # Ses quatre piles d'angle montent plus haut que le garde-corps (1,44 m) : à l'ouest, elles sortent de la berge.
+        for end in (-1, 1):
+            block(scene, (-38.0 + end * 2.925, (bottom + 1.44) / 2, 6.0 + side * 2.83), (0.91, 1.44 - bottom, 1.1),
+                  label="pile du pont", structure=True)
+    # La roue du moulin à eau tourne : elle est posée dans village.tscn, contre la maison du meunier (centre
+    # (-36.5, 1.0, -14), rayon 2,7 m, épaisse de 2,6 m). Sa collision, ici : on la longe dans le lit du ruisseau
+    # sans passer au travers. À hauteur de poitrine, la roue est presque aussi large que son diamètre.
+    block(scene, (-36.5, 0.85, -14.0), (2.6, 5.7, 5.4), label="roue du moulin à eau", structure=True)
     for model, y in (("tower-square-base", 0.0), ("tower-square-mid-windows", 3.0), ("tower-square-mid", 6.0), ("tower-square-top", 9.0)):
         scene.add(f"castle_kit/{model}", (30.0, 4.0 + y, -30.0), 0.0, 3.0)
     scene.add("castle_kit/tower-square-roof", (30.0, 4.0 + 9.9, -30.0), 0.0, 3.0)
     scene.add_box((30.0, 4.0 + 5.0, -30.0), (3.0, 10.0, 3.0))
     # Porte du moulin, sacs de grain et meule de rechange au pied de la tour.
-    scene.add("castle_kit/door", (28.48, 4.0, -30.0), -90.0, 3.0)
+    # La porte est dans le mur ouest de la tour (son modèle est mince selon x) : tournée d'un quart de tour, elle en
+    # sortait de travers comme une planche.
+    scene.add("castle_kit/door", (28.48, 4.0, -30.0), 0.0, 3.0)
+    block(scene, (28.38, 4.0 + 0.92, -30.0), (0.3, 1.84, 1.1), label="porte du moulin", structure=True)
     for x, z, degrees in ((27.8, -28.4, 20.0), (27.6, -27.6, 80.0), (28.4, -27.4, 140.0)):
         place(scene, "food_kit/bag", (x, 4.0, z), degrees, 1.05, height=0.88, label="sac de grain")
     cylinder(scene, "stone", (31.0, 4.2, -26.9), 0.8, 0.35, sides=14)
@@ -1600,6 +1642,11 @@ def room_walls(scene, cx, cz, width, depth, base, doors, skip=(), closed=(), mod
     half_w, half_d = width * TILE / 2, depth * TILE / 2
     for sx in (-1, 1):
         for sz in (-1, 1):
+            # Pas de pilier d'angle du côté laissé ouvert : le mur voisin y tient lieu de mur, et le pilier en sortait
+            # (salle secrète : une colonne pâle plantée dans le mur ouest du bureau, qui se battait avec lui à l'angle).
+            if ("east" in skip and sx > 0) or ("west" in skip and sx < 0) or ("north" in skip and sz < 0) \
+                    or ("south" in skip and sz > 0):
+                continue
             scene.add("fantasy_town_kit/pillar-stone", (cx + sx * half_w, base, cz + sz * half_d), 0.0, WALL_SCALE)
 
 

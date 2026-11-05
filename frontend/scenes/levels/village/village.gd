@@ -47,6 +47,7 @@ var _found := {}
 @onready var _wheel: Node3D = $WaterWheel
 @onready var _sun: DirectionalLight3D = $Sun
 @onready var _sky_fill: DirectionalLight3D = $SkyFill
+@onready var _ground_bounce: DirectionalLight3D = $GroundBounce
 @onready var _environment: Environment = $WorldEnvironment.environment
 @onready var _hall_door: Interactable = $HallDoor
 @onready var _outside_spawn: Marker3D = $OutsideSpawn
@@ -144,6 +145,7 @@ func _travel(inside: bool) -> void:
 func _apply_location() -> void:
 	_sun.visible = not _inside
 	_sky_fill.visible = not _inside
+	_ground_bounce.visible = not _inside
 	_environment.fog_enabled = not _inside
 	_interior.visible = _inside
 

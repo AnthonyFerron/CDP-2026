@@ -19,8 +19,15 @@ extends Node3D
 ## Côté des cases de détails qui s'effacent au loin, et largeur du fondu, en mètres.
 const CHUNK_SIZE := 32.0
 const FADE_MARGIN := 6.0
+## Ce que le joueur peut toucher d'un arbre ou d'un rocher : sa forme entre ANKLE et TOUCH_HEIGHT au-dessus du sol.
+## Son emprise devient une colonne de collision, de sous le sol à SOLID_TOP au-dessus, qu'on ne traverse pas et où
+## l'on ne grimpe pas.
+const ANKLE := 0.3
+const TOUCH_HEIGHT := 2.2
+const SOLID_TOP := 3.2
 
 var _rng := RandomNumberGenerator.new()
+var _vertices := {}
 
 
 func _ready() -> void:
@@ -29,10 +36,12 @@ func _ready() -> void:
 		await terrain.ready
 	_rng.seed = 5815
 	_scatter(grass_models, grass_count, Vector2(2.5, 4.5), 0.0, false)
-	_scatter(rubble_models, rubble_count, Vector2(1.5, 3.0), 0.0, false)
-	# Collision au tronc des arbres et au corps des rochers, à l'échelle 1.
-	_scatter(tree_models, tree_count, Vector2(3.5, 5.5), 0.08, true)
-	_scatter(rock_models, rock_count, Vector2(2.0, 4.0), 0.4, true)
+	# Sans collision, les gravats restent sous la cheville (0,3 m au plus) : on marche dessus sans les traverser.
+	_scatter(rubble_models, rubble_count, Vector2(0.45, 0.6), 0.0, false)
+	# Les arbres et les rochers ont la collision de ce qu'on en touche : le tronc, mais aussi les branches basses des
+	# pins et le feuillage des arbres grêles, à hauteur de tête.
+	_scatter(tree_models, tree_count, Vector2(3.5, 5.5), true, true)
+	_scatter(rock_models, rock_count, Vector2(2.0, 4.0), true, true, true)
 	_add_border_trees()
 
 
@@ -51,15 +60,17 @@ func _is_free(spot: Vector2, outside_town: bool) -> bool:
 	return true
 
 
-## Disperse des modèles ; un rayon non nul leur donne une collision de ce rayon, à l'échelle 1.
-func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, radius: float, outside_town: bool) -> void:
-	var solid := radius > 0.0
+## Disperse des modèles, avec ou sans collision.
+func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, solid: bool, outside_town: bool,
+		climbable := false) -> void:
 	var body: StaticBody3D
 	if solid:
 		body = StaticBody3D.new()
 		add_child(body)
+	var meshes: Array[Mesh] = []
 	var groups: Array[Array] = []
 	for model in models:
+		meshes.append(_load_mesh(model))
 		groups.append([])
 	var placed := 0
 	for attempt in count * 12:
@@ -73,18 +84,12 @@ func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, radi
 		var basis := Basis(Vector3.UP, _rng.randf() * TAU).scaled(Vector3.ONE * scale_factor)
 		groups[placed % groups.size()].append(Transform3D(basis, origin))
 		if solid:
-			var shape := CylinderShape3D.new()
-			shape.radius = radius * scale_factor
-			shape.height = 3.0
-			var collision := CollisionShape3D.new()
-			collision.shape = shape
-			collision.position = origin + Vector3.UP * 1.5
-			body.add_child(collision)
+			_add_solid(body, meshes[placed % meshes.size()], Transform3D(basis, origin), climbable)
 		placed += 1
 	for index in models.size():
 		var transforms: Array[Transform3D] = []
 		transforms.assign(groups[index])
-		_add_multimesh(_load_mesh(models[index]), transforms, solid)
+		_add_multimesh(meshes[index], transforms, solid)
 
 
 func _add_border_trees() -> void:
@@ -92,8 +97,10 @@ func _add_border_trees() -> void:
 	var body := StaticBody3D.new()
 	body.name = "BorderTrees"
 	add_child(body)
+	var meshes: Array[Mesh] = []
 	var groups: Array[Array] = []
 	for model in tree_models:
+		meshes.append(_load_mesh(model))
 		groups.append([])
 	for i in border_tree_count:
 		var angle := TAU * i / border_tree_count + _rng.randf_range(-0.05, 0.05)
@@ -104,17 +111,82 @@ func _add_border_trees() -> void:
 		var basis := Basis(Vector3.UP, yaw).scaled(Vector3.ONE * scale_factor)
 		var origin := Vector3(spot.x, terrain.footing_height(spot.x, spot.y) - 0.1, spot.y)
 		groups[i % groups.size()].append(Transform3D(basis, origin))
-		var shape := CylinderShape3D.new()
-		shape.radius = 0.08 * scale_factor
-		shape.height = 4.0
-		var collision := CollisionShape3D.new()
-		collision.shape = shape
-		collision.position = origin + Vector3.UP * 2.0
-		body.add_child(collision)
+		_add_solid(body, meshes[i % meshes.size()], Transform3D(basis, origin))
 	for index in tree_models.size():
 		var transforms: Array[Transform3D] = []
 		transforms.assign(groups[index])
-		_add_multimesh(_load_mesh(tree_models[index]), transforms, true)
+		_add_multimesh(meshes[index], transforms, true)
+
+
+## Collision d'un arbre ou d'un rocher posé par placement : l'emprise de sa forme entre ANKLE et TOUCH_HEIGHT au-dessus
+## du sol (ses triangles coupés à ces deux hauteurs), dressée en colonne. Un cylindre au tronc laissait entrer dans les
+## branches basses des pins, qui tombent jusqu'au sol, et dans le feuillage des arbres grêles ; plus large, il aurait
+## fait des murs invisibles. Les hauteurs se mesurent au-dessus du sol sous chaque sommet : sur le talus, la couronne
+## d'un grand arbre passe haut au-dessus du joueur qui descend, et les branches basses tournées vers le replat restent
+## à hauteur d'homme. Un rocher (climbable) garde sa forme au-dessus de la cheville, sans colonne : on y grimpe.
+func _add_solid(body: StaticBody3D, mesh: Mesh, placement: Transform3D, climbable := false) -> void:
+	if not _vertices.has(mesh):
+		_vertices[mesh] = mesh.get_faces()
+	var faces: PackedVector3Array = _vertices[mesh]
+	var o := placement.origin
+	# Écart du sol autour du pied : il borne les triangles à examiner (une couronne haute est vite écartée).
+	var spread := 0.0
+	var around := placement.basis.get_scale().x * 0.7
+	for step in 8:
+		var spot := o + Vector3.RIGHT.rotated(Vector3.UP, TAU * step / 8.0) * around
+		spread = maxf(spread, absf(terrain.surface_height(spot.x, spot.z) - o.y))
+	spread += 0.5
+	var points := PackedVector3Array()
+	for index in range(0, faces.size(), 3):
+		var corners: Array[Vector3] = [placement.basis * faces[index], placement.basis * faces[index + 1],
+			placement.basis * faces[index + 2]]
+		var lowest := minf(corners[0].y, minf(corners[1].y, corners[2].y))
+		var highest := maxf(corners[0].y, maxf(corners[1].y, corners[2].y))
+		if (lowest - spread > TOUCH_HEIGHT and not climbable) or highest + spread < ANKLE:
+			continue
+		var grounds: Array[float] = []
+		for corner in corners:
+			grounds.append(terrain.surface_height(o.x + corner.x, o.z + corner.z) - o.y)
+		for side in 3:
+			var next := (side + 1) % 3
+			var a := corners[side]
+			var b := corners[next]
+			var ha := a.y - grounds[side]
+			var hb := b.y - grounds[next]
+			if climbable:
+				if ha >= ANKLE:
+					_add_footing(points, a, grounds[side])
+				if (ha - ANKLE) * (hb - ANKLE) < 0.0:
+					var cut := (ANKLE - ha) / (hb - ha)
+					_add_footing(points, a.lerp(b, cut), lerpf(grounds[side], grounds[next], cut))
+				continue
+			if ha >= ANKLE and ha <= TOUCH_HEIGHT:
+				_add_column(points, a, grounds[side])
+			# Là où le côté traverse la cheville ou le haut de la tranche.
+			for level: float in [ANKLE, TOUCH_HEIGHT]:
+				if (ha - level) * (hb - level) < 0.0:
+					var weight := (level - ha) / (hb - ha)
+					_add_column(points, a.lerp(b, weight), lerpf(grounds[side], grounds[next], weight))
+	if points.size() < 8:
+		return
+	var shape := ConvexPolygonShape3D.new()
+	shape.points = points
+	var collision := CollisionShape3D.new()
+	collision.shape = shape
+	collision.position = placement.origin
+	body.add_child(collision)
+
+
+## Point d'un rocher et son aplomb sous le sol.
+func _add_footing(points: PackedVector3Array, point: Vector3, ground: float) -> void:
+	points.append(point)
+	points.append(Vector3(point.x, ground - 1.0, point.z))
+
+
+## Colonne sous un point de l'emprise, du dessous du sol à SOLID_TOP au-dessus.
+func _add_column(points: PackedVector3Array, point: Vector3, ground: float) -> void:
+	points.append(Vector3(point.x, ground - 1.0, point.z))
+	points.append(Vector3(point.x, ground + SOLID_TOP, point.z))
 
 
 ## Pose des copies d'un maillage. Les détails qui s'effacent au loin sont découpés en cases de CHUNK_SIZE mètres :
