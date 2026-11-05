@@ -924,6 +924,8 @@ def build_ruins():
         wall(scene, "wall", (side, z), (1, 0))
     for x in (-4, 0, 4):
         wall(scene, "wall", (x, back), (0, -1))
+    # Plafond au haut des murs, comme dans les archives : le bâtiment est fermé, on n'entre que par la porte.
+    scene.add_box((0.0, WALL_HEIGHT + 0.15, (front + back) / 2), (side * 2 + 0.5, 0.3, front - back + 0.5))
 
     # Toit à deux pans, faîte dans la longueur : un pan par case de 4 m, les deux bouts en croupe.
     roof_scale = (WALL_SCALE / 1.1, ROOF_RISE, (side + 0.4) / 0.535)
