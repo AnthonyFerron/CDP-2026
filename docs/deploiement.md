@@ -149,6 +149,15 @@ docker exec cdp2026-api-1 alembic upgrade 28803cd8c266:head --sql   # relire le 
 docker exec -e PGOPTIONS=-clock_timeout=10s cdp2026-api-1 alembic upgrade head
 ```
 
+## Nom du jeu et sauvegardes des joueurs
+
+`application/config/name` (`frontend/project.godot`) vaut « CodeQuest - La Recherche des livres oubliés » : c'est le titre de l'onglet (le `<title>` de `index.html`, écrit par l'export) et celui de la fenêtre.
+
+Ce nom ne déplace aucune sauvegarde :
+
+- **Sur le web**, `user://` est `/userfs`, monté dans IndexedDB par `index.js` (`persistentPaths: ['/userfs']`). Le chemin ne dépend pas du nom du projet, et la base IndexedDB est propre au domaine : `sauvegarde.cfg` et `session.cfg` des joueurs restent en place.
+- **En natif**, le dossier `user://` suit d'ordinaire le nom du projet. `config/use_custom_user_dir` et `config/custom_user_dir_name="godot/app_userdata/CDP-2026"` le gardent à son ancien chemin, `~/.local/share/godot/app_userdata/CDP-2026` sous Linux : les captures des outils (`user://captures/`) et les sauvegardes isolées des tests (`user://tests/`) n'ont pas bougé.
+
 ## Limites
 
 - Pendant l'étape 5, l'API est coupée quelques secondes si son image change : il n'y a qu'un conteneur.
