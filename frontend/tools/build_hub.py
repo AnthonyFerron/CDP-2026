@@ -847,6 +847,33 @@ def rubble(scene, rng, x, z, along_x, count=3, spread=1.6):
         scene.add_box((px, 0.25 * scale, pz), (1.15 * scale, 0.5 * scale, 1.2 * scale))
 
 
+# Emprise réelle des engins de siège reconstruits, par tranche de hauteur (sommets de leurs maillages, en x et z du
+# modèle ; hauteur de chaque boîte en mètres). La boîte de MODEL_BOXES de la baliste débordait de 0,33 unité d'un
+# côté ; celle de la catapulte montait à 2,6 m au-dessus de son bras, qui traîne bas vers l'arrière : un mur
+# invisible (grille de marche de la cour). Le bras a sa boîte basse (sous la hauteur d'un pas), le bâti sa boîte haute ; les roues gardent
+# leur largeur (±0,6).
+ENGINE_FOOTPRINTS = {
+    "castle_kit/siege-ballista": [(-0.664, 0.664, -0.599, 0.599, 2.2)],
+    "castle_kit/siege-catapult": [(-0.734, 0.734, -0.6, 0.6, 2.6), (-1.42, -0.734, -0.472, 0.472, 0.26)],
+}
+
+
+def engine_box(scene, model, center, degrees, scale):
+    """Collision d'un engin de siège à son emprise réelle : le modèle est posé par furniture(), centré sur la boîte de
+    MODEL_BOXES ; on retrouve son origine, puis on pose une boîte tournée comme lui sur ses sommets."""
+    (px, _, pz), (sx, _, sz) = MODEL_BOXES[model]
+    c, s = math.cos(math.radians(degrees)), math.sin(math.radians(degrees))
+
+    def turned(x, z):
+        return c * x + s * z, -s * x + c * z
+
+    bx, bz = turned((px + sx / 2) * scale, (pz + sz / 2) * scale)
+    origin = (center[0] - bx, center[2] - bz)
+    for x0, x1, z0, z1, height in ENGINE_FOOTPRINTS[model]:
+        gx, gz = turned((x0 + x1) / 2 * scale, (z0 + z1) / 2 * scale)
+        scene.add_box((origin[0] + gx, center[1] + height / 2, origin[1] + gz), ((x1 - x0) * scale, height, (z1 - z0) * scale), degrees)
+
+
 def build_castle(scene, rng):
     """Château du roi, en ruine au début de la partie : pans d'enceinte éventrés, tours d'angle et porterie
     décapitées, cour encombrée des engins de siège brisés. Il se relève livre après livre : la porterie au premier,
@@ -988,8 +1015,10 @@ def build_castle(scene, rng):
         scene.add("castle_kit/rocks-large", (x, 0.0, z), rng.uniform(0, 360), 2.0)
         scene.add_box((x, 0.5, z), (2.3, 1.0, 2.4))
     scene.rebuilt("CastleCourt")
-    furniture(scene, "castle_kit/siege-catapult", (-9.0, 0.0, -68.3), 0.0, 2.6, height=2.6)
-    furniture(scene, "castle_kit/siege-ballista", (10.0, 0.0, -68.4), -30.0, 2.6, height=2.2)
+    for model, point, degrees in (("castle_kit/siege-catapult", (-9.0, 0.0, -68.3), 0.0),
+                                  ("castle_kit/siege-ballista", (10.0, 0.0, -68.4), -30.0)):
+        furniture(scene, model, point, degrees, 2.6)
+        engine_box(scene, model, point, degrees, 2.6)
     for x, z in ((-8.0, -61.0), (8.0, -61.0)):
         scene.add("nature_kit/plant_bushLarge", (x, 0.0, z), rng.uniform(0, 360), 3.0)
     # Drapeaux hissés au troisième livre.

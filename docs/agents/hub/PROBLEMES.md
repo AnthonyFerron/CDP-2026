@@ -43,7 +43,6 @@ Les chemins des captures sont relatifs à `$S/agents/hub/`.
   - les blocs extérieurs du bunker, inaccessibles ;
   - le bâton de Merlon ;
   - un sac plat de 30 cm à la boulangerie en ruine (51,5, 33,5).
-- **Engins de siège de la cour reconstruite** : leurs boîtes sont un peu plus grandes que le modèle, et le joueur s'y arrête quelques centimètres avant.
 - **Source de la rivière** (vue `montagnes_*/nord_est`) : la rivière sort de sous un gros rocher, au fond de la gorge.
 - **Escaliers** : il n'y en a aucun dans le hub.
 
@@ -97,6 +96,8 @@ Outils et captures : `~/cdp-work/hub/` (`tools/`, `shots/`, `grid/`).
 | 32 | Lits | `float_check` : traversins à 4 cm au-dessus de la collision du lit | Collision plus basse que la paillasse | Collision jusqu'au dessus de la paillasse |
 | 33 | Observatoire | `rooms_4.log` : au point d'arrivée, E proposait de ressortir au lieu de lire le registre | Arrivée à moins d'un mètre de la porte (invite sans regard) | Arrivée à 1,1 m de la porte |
 | 34 | École, ferme, forge, scriptorium | grille au quart de mètre : coins et allées de 0,85 à 1 m sans une case libre | Passages tout juste plus larges que le joueur | Rangées, établi, marmite et pupitres décalés : passages d'un mètre au moins |
+| 35 | Ferme | grille au quart de mètre après le recul de la marmite (80a9351) | — | Contrôlée : 1 case de 25 cm au pied de l'arche de la porte (artefact), 0 trou, 0 mur invisible ; rien à corriger |
+| 36 | Cour du château (reconstruite) | grille de la cour : 3 à 4 murs invisibles derrière la catapulte | La boîte de la catapulte montait à 2,6 m sur toute sa longueur, au-dessus de son bras qui traîne bas ; celle de la baliste débordait de 0,86 m d'un côté | Boîtes à l'emprise des sommets mesurés (`ENGINE_FOOTPRINTS`, `engine_box`) : bâti haut, bras bas sous la hauteur d'un pas, baliste à sa taille ; grille de la cour à 0 mur invisible et 0 objet sans collision |
 
 ### Résultats (tour c4, puis c5 pour la ferme)
 - Tests : `hub_test` 0 échec ; `hub_walk_test` 0 et 4 : seuls les 2 échecs voulus « limite infranchissable (doit echouer) » ; `rooms_walk` 0 et 4 livres : 0 échec (12 bâtiments entrés et quittés, porte de l'observatoire dans les deux sens, 13 textes lus).
