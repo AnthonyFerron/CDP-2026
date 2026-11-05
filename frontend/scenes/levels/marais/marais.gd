@@ -112,6 +112,10 @@ func _ready() -> void:
 	_book_pickup.enabled = false
 	_book.hide()
 	_ghost_base = _ghost.position.y
+	# Le fantôme du gardien respire dans sa pose de repos : sans animation jouée, le modèle restait bras en croix.
+	var ghost_animation := _ghost.get_node("Model/AnimationPlayer") as AnimationPlayer
+	ghost_animation.get_animation(&"idle").loop_mode = Animation.LOOP_LINEAR
+	ghost_animation.play(&"idle")
 	_safe_position = _player.global_position
 	_fireflies = _create_fireflies()
 	_mist = _create_mist()
