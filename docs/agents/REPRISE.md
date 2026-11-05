@@ -38,11 +38,11 @@ Ne jamais travailler dans `/opt/cdp-2026`, le dossier que `cdp-deploy` déploie.
 sudo apt-get install -y git git-lfs python3 tmux unzip curl xvfb libgl1-mesa-dri libglu1-mesa fontconfig \
 	libxcursor1 libxinerama1 libxrandr2 libxi6 libxkbcommon0 libasound2
 
-# Godot 4.7.2 pour Linux (vérifier le nom exact du fichier sur la page de la version)
+# Godot 4.7.2 pour Linux. Le serveur de production est en aarch64 : prendre linux.arm64 (linux.x86_64 sur un PC).
 mkdir -p ~/godot && cd ~/godot
-curl -LO https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
-unzip Godot_v4.7.2-stable_linux.x86_64.zip
-echo 'export GODOT=~/godot/Godot_v4.7.2-stable_linux.x86_64' >> ~/.bashrc
+curl -LO https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.arm64.zip
+unzip Godot_v4.7.2-stable_linux.arm64.zip
+echo 'export GODOT=$HOME/godot/Godot_v4.7.2-stable_linux.arm64' >> ~/.bashrc
 
 # Le dépôt, avec ses modèles 3D (Git LFS avant le clone)
 git lfs install
