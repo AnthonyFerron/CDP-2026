@@ -1,7 +1,8 @@
 extends CanvasLayer
 ## Indices, d'après la maquette : H ouvre la fenêtre « Indice » pendant le jeu, et la partie se fige le temps
 ## de la lire. Chaque zone a trois indices, de plus en plus précis sans jamais donner la solution : chaque
-## nouvelle ouverture en révèle un de plus. Au hub, l'indice dit simplement où aller.
+## nouvelle ouverture en révèle un de plus. Au hub, l'indice dit simplement où aller. À partir du troisième,
+## des flèches (souris, flèches du clavier, Q et D) font relire les précédents, sans rien révéler de plus.
 
 ## Indices de chaque zone, du plus vague au plus précis.
 const ZONE_HINTS := {
@@ -30,12 +31,21 @@ const ZONE_HINTS := {
 const PORTAL_DIRECTIONS := {&"plaine": "nord-ouest", &"desert": "nord-est", &"marais": "sud-est", &"village": "sud-ouest"}
 const ZONE_NAMES := {&"plaine": "les plaines d'Hexcole", &"desert": "le désert de Pythania", &"marais": "les marais de Kernel Swamp", &"village": "le village détruit"}
 
+## Nombre d'indices donnés à partir duquel les flèches permettent de relire les précédents.
+const BROWSE_FROM := 3
+
 ## Indices déjà révélés dans chaque zone, pour la partie en cours.
 var revealed := {}
 
 var _root: Control
 var _body: Label
 var _counter: Label
+var _previous: ArrowButton
+var _next: ArrowButton
+## Indices révélés à cette ouverture, et celui qui est affiché : les flèches le changent sans rien révéler.
+var _shown: Array[String] = []
+var _index := 0
+var _total := 0
 
 
 func _ready() -> void:
@@ -72,6 +82,17 @@ func _ready() -> void:
 	_counter = Ornate.label("", 22, Ornate.MUTED)
 	_counter.name = "Counter"
 	Ornate.place(frame, _counter, Vector2(460, 462), Vector2(740, 34))
+	# Flèches « précédent » et « suivant », au bout de la ligne du compteur.
+	_previous = ArrowButton.new()
+	_previous.name = "Previous"
+	_previous.kind = "arrow_left"
+	Ornate.place(frame, _previous, Vector2(1066, 450), Vector2(64, 50))
+	_previous.pressed.connect(browse.bind(-1))
+	_next = ArrowButton.new()
+	_next.name = "Next"
+	_next.kind = "arrow_right"
+	Ornate.place(frame, _next, Vector2(1138, 450), Vector2(64, 50))
+	_next.pressed.connect(browse.bind(1))
 	var close_button := CloseButton.new()
 	close_button.name = "Close"
 	Ornate.place(frame, close_button, Vector2(1196, -36), Vector2(92, 92))
@@ -90,6 +111,12 @@ func _unhandled_input(event: InputEvent) -> void:
 	if _root.visible and (event.is_action_pressed("hint") or event.is_action_pressed("ui_cancel") or event.is_action_pressed("pause")):
 		get_viewport().set_input_as_handled()
 		close()
+	elif _root.visible and _previous.visible and (event.is_action_pressed("ui_left") or event.is_action_pressed("move_left")):
+		get_viewport().set_input_as_handled()
+		browse(-1)
+	elif _root.visible and _previous.visible and (event.is_action_pressed("ui_right") or event.is_action_pressed("move_right")):
+		get_viewport().set_input_as_handled()
+		browse(1)
 	elif not _root.visible and event.is_action_pressed("hint") and PauseMenu.active_player(get_tree()) != null:
 		get_viewport().set_input_as_handled()
 		open()
@@ -124,17 +151,33 @@ func next_hints(zone: StringName) -> Array[String]:
 
 func open() -> void:
 	var zone := current_zone()
-	var hints := next_hints(zone)
-	# Seul le dernier indice révélé s'affiche : il précise les précédents.
-	_body.text = hints.back()
-	if zone == &"hub":
-		_counter.text = ""
-	else:
-		var total: int = ZONE_HINTS[zone].size()
-		_counter.text = "Indice %d sur %d" % [hints.size(), total] + ("  ·  rouvrez avec H pour un indice plus précis" if hints.size() < total else "")
+	_shown = next_hints(zone)
+	_total = 0 if zone == &"hub" else ZONE_HINTS[zone].size()
+	# Le dernier indice révélé s'affiche d'abord : il précise les précédents. À partir du troisième, les
+	# flèches permettent de relire les précédents, sans en révéler de nouveau.
+	_previous.visible = _total > 0 and _shown.size() >= BROWSE_FROM
+	_next.visible = _previous.visible
+	_show(_shown.size() - 1)
 	_root.show()
 	get_tree().paused = true
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+
+## Affiche l'indice précédent (-1) ou le suivant (+1) parmi ceux déjà révélés.
+func browse(step: int) -> void:
+	if _root.visible and _previous.visible:
+		_show(clampi(_index + step, 0, _shown.size() - 1))
+
+
+func _show(index: int) -> void:
+	_index = index
+	_body.text = _shown[index]
+	_counter.text = "" if _total == 0 else "Indice %d sur %d" % [index + 1, _total] \
+		+ ("  ·  rouvrez avec H pour un indice plus précis" if _shown.size() < _total else "")
+	_previous.disabled = index <= 0
+	_next.disabled = index >= _shown.size() - 1
+	_previous.queue_redraw()
+	_next.queue_redraw()
 
 
 func close() -> void:
@@ -173,3 +216,26 @@ class CloseButton:
 		draw_colored_polygon(shape, Color(0.36, 0.2, 0.09) if is_hovered() else Color(0.22, 0.12, 0.08))
 		draw_polyline(Ornate.closed(shape), Ornate.GOLD_LIGHT if is_hovered() else Ornate.GOLD, 5.0)
 		Ornate.icon(self, "close", size / 2, size.x * 0.3, Ornate.CREAM, 3.5)
+
+
+class ArrowButton:
+	extends Button
+	## Flèche dessinée pour parcourir les indices, dans le style du bouton de fermeture ; grise au bout de la liste.
+
+	var kind := "arrow_left"
+
+	func _ready() -> void:
+		flat = true
+		focus_mode = Control.FOCUS_NONE
+		mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		mouse_entered.connect(queue_redraw)
+		mouse_exited.connect(queue_redraw)
+
+	func _draw() -> void:
+		var shape := Ornate.chamfered(Rect2(Vector2.ZERO, size), size.y * 0.28)
+		var lit := is_hovered() and not disabled
+		var fill := Color(0.24, 0.22, 0.24) if disabled else (Color(0.36, 0.2, 0.09) if lit else Color(0.22, 0.12, 0.08))
+		var border := Color(0.62, 0.62, 0.64) if disabled else (Ornate.GOLD_LIGHT if lit else Ornate.GOLD)
+		draw_colored_polygon(shape, fill)
+		draw_polyline(Ornate.closed(shape), border, 3.0)
+		Ornate.icon(self, kind, size / 2, size.y * 0.36, Color(0.6, 0.58, 0.58) if disabled else Ornate.CREAM, 3.0)

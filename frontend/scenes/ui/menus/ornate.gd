@@ -167,6 +167,9 @@ static func icon(item: CanvasItem, kind: String, c: Vector2, s: float, color := 
 		"arrow_left":
 			item.draw_line(c + Vector2(0.9 * s, 0.0), c + Vector2(-0.82 * s, 0.0), color, w * 1.2)
 			item.draw_polyline(PackedVector2Array([c + Vector2(-0.3 * s, -0.5 * s), c + Vector2(-0.88 * s, 0.0), c + Vector2(-0.3 * s, 0.5 * s)]), color, w * 1.2)
+		"arrow_right":
+			item.draw_line(c + Vector2(-0.9 * s, 0.0), c + Vector2(0.82 * s, 0.0), color, w * 1.2)
+			item.draw_polyline(PackedVector2Array([c + Vector2(0.3 * s, -0.5 * s), c + Vector2(0.88 * s, 0.0), c + Vector2(0.3 * s, 0.5 * s)]), color, w * 1.2)
 		"close":
 			item.draw_line(c + Vector2(-0.6 * s, -0.6 * s), c + Vector2(0.6 * s, 0.6 * s), color, w * 1.5)
 			item.draw_line(c + Vector2(0.6 * s, -0.6 * s), c + Vector2(-0.6 * s, 0.6 * s), color, w * 1.5)
