@@ -821,7 +821,8 @@ HOUSES = (
     (-28.0, -2.0, 2, 2, "south", "stone", 1),
     (21.0, 12.0, 2, 2, "west", "stone", 1),
     (-12.0, -18.0, 2, 2, "south", "wood", 1),
-    (12.0, -18.0, 2, 2, "south", "stone", 2),
+    # Le tonnelier ouvre vers la place, à l'ouest : au sud, sa porte donnait à 2 m sur le mur nord de l'herboristerie.
+    (12.0, -18.0, 2, 2, "west", "stone", 2),
     (-31.0, -14.0, 2, 2, "east", "wood", 1),
 )
 OUTWARDS = {"north": (0, -1), "south": (0, 1), "east": (1, 0), "west": (-1, 0)}

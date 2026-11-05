@@ -24,13 +24,13 @@ Chaque ligne est vérifiée à l'étape 4 de la passe (colonne Vérification : t
 | 18 | Maison 7 : burnt | (-28, -2), 2×2 cases | porte south en (-26, 2), stone, 1 étage(s) | portes et passages, grille de marche, captures |
 | 19 | Maison 8 : guard | (21, 12), 2×2 cases | porte west en (17, 14), stone, 1 étage(s), enseigne « Corps de garde » | portes et passages, grille de marche, captures |
 | 20 | Maison 9 : family | (-12, -18), 2×2 cases | porte south en (-10, -14), wood, 1 étage(s) | portes et passages, grille de marche, captures |
-| 21 | Maison 10 : cooper | (12, -18), 2×2 cases | porte south en (14, -14), stone, 2 étage(s), enseigne « Tonnelier » | portes et passages, grille de marche, captures |
+| 21 | Maison 10 : cooper | (12, -18), 2×2 cases | porte west en (8, -16), stone, 2 étage(s), enseigne « Tonnelier » | portes et passages, grille de marche, captures |
 | 22 | Maison 11 : miller | (-31, -14), 2×2 cases | porte east en (-27, -12), wood, 1 étage(s), enseigne « Moulin » | portes et passages, grille de marche, captures |
 | 23 | Grande rue | x de -2.6 à 2.6, z de -20 à 64 | pavés, lanternes, traces de brûlure | grille de marche, captures |
 | 24 | Place du marché | (0, -2), rayon 11 | fontaine, colonne brisée, statue du roi fondateur, étals, cratère | grille de marche, captures |
 | 25 | Fontaine | (0, -2) | bassin rond, collision en 4 boîtes | grille de marche |
 | 26 | Rue du pont | z = 6, x de -44 à 0 | jusqu'au pont du ruisseau | portes et passages |
-| 27 | Ruisseau | x = -38, z de -85 à 85 | lit creusé, eau à y = -0.45, sans collision d'eau | liquides |
+| 27 | Ruisseau | x = -38, z de -85 à 85 | lit creusé au fond d'un vallon hors du bourg, eau à y = -0.45 jusqu'au talus aux deux bouts, sans collision d'eau | liquides |
 | 28 | Pont de bois | (-38, 6) | traverse le ruisseau ; flancs et piles pleins jusqu'au lit | portes et passages, liquides, entrées dans les maillages, `passe/pont_flanc_apres.png` |
 | 29 | Moulin à eau | (-31, -14), roue en (-36.5, 1, -14) | roue qui tourne (avec collision), éclaboussures | liquides, captures, entrées dans les maillages, `passe/roue_apres.png` |
 | 30 | Moulin à vent | (30, 4, -30) | tour sur la colline, ailes, porte dans le mur ouest, sacs, meule | grille de marche, entrées dans les maillages, `passe/porte_moulin_apres.png` |

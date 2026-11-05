@@ -394,10 +394,10 @@ size = Vector3(0.936, 0.86, 0.936)
 size = Vector3(0.78, 0.72, 0.78)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_88"]
-size = Vector3(0.99, 0.87, 0.9)
+size = Vector3(0.9, 0.87, 0.99)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_89"]
-size = Vector3(0.884, 0.624, 0.624)
+size = Vector3(0.624, 0.624, 0.884)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_90"]
 size = Vector3(0.7, 1.5, 8.9)
@@ -1824,19 +1824,19 @@ buffer = PackedFloat32Array(-0.99619, 0, 0.08716, -7.5, 0, 1, 0, 0.15, -0.08716,
 transform_format = 1
 instance_count = 8
 mesh = SubResource("BoxMesh_size_0p3_0p3_7p45")
-buffer = PackedFloat32Array(0, 0, 1, -10, 0, 1, 0, 3.8, -1, 0, 0, 18.2, 0, 0, 1, -10, 0, 1, 0, 3.8, -1, 0, 0, 21.8, 0, 0, -1, 10, 0, 1, 0, 3.8, 1, 0, 0, 21.8, 0, 0, -1, 10, 0, 1, 0, 3.8, 1, 0, 0, 18.2, 0, 0, 1, -17, 0, 1, 0, 3.8, -1, 0, 0, -8.8, 0, 0, 1, -17, 0, 1, 0, 3.8, -1, 0, 0, -3.2, 1, 0, 0, 13.8, 0, 1, 0, 3.8, 0, 0, 1, -18, 1, 0, 0, 10.2, 0, 1, 0, 3.8, 0, 0, 1, -18)
+buffer = PackedFloat32Array(0, 0, 1, -10, 0, 1, 0, 3.8, -1, 0, 0, 18.2, 0, 0, 1, -10, 0, 1, 0, 3.8, -1, 0, 0, 21.8, 0, 0, -1, 10, 0, 1, 0, 3.8, 1, 0, 0, 21.8, 0, 0, -1, 10, 0, 1, 0, 3.8, 1, 0, 0, 18.2, 0, 0, 1, -17, 0, 1, 0, 3.8, -1, 0, 0, -8.8, 0, 0, 1, -17, 0, 1, 0, 3.8, -1, 0, 0, -3.2, 0, 0, -1, 12, 0, 1, 0, 3.8, 1, 0, 0, -16.2, 0, 0, -1, 12, 0, 1, 0, 3.8, 1, 0, 0, -19.8)
 
 [sub_resource type="MultiMesh" id="MultiMesh_6"]
 transform_format = 1
 instance_count = 3
 mesh = SubResource("BoxMesh_size_3p6_0p08_3p2")
-buffer = PackedFloat32Array(0, 0, 1, -11.8, 0, 1, 0, 3.98, -1, 0, 0, 21.8, 0, 0, -1, 11.8, 0, 1, 0, 3.98, 1, 0, 0, 21.8, 1, 0, 0, 13.8, 0, 1, 0, 3.98, 0, 0, 1, -19.8)
+buffer = PackedFloat32Array(0, 0, 1, -11.8, 0, 1, 0, 3.98, -1, 0, 0, 21.8, 0, 0, -1, 11.8, 0, 1, 0, 3.98, 1, 0, 0, 21.8, 0, 0, -1, 13.8, 0, 1, 0, 3.98, 1, 0, 0, -16.2)
 
 [sub_resource type="MultiMesh" id="MultiMesh_7"]
 transform_format = 1
 instance_count = 3
 mesh = SubResource("BoxMesh_size_2p0_0p08_1p8")
-buffer = PackedFloat32Array(0, 0.57358, 0.81915, -11.2, 0, 0.81915, -0.57358, 3.1, -1, 0, 0, 17.84, 0, -0.57358, -0.81915, 11.2, 0, 0.81915, -0.57358, 3.1, 1, 0, 0, 17.84, 1, 0, 0, 9.84, 0, 0.81915, -0.57358, 3.1, 0, 0.57358, 0.81915, -19.2)
+buffer = PackedFloat32Array(0, 0.57358, 0.81915, -11.2, 0, 0.81915, -0.57358, 3.1, -1, 0, 0, 17.84, 0, -0.57358, -0.81915, 11.2, 0, 0.81915, -0.57358, 3.1, 1, 0, 0, 17.84, 0, -0.57358, -0.81915, 13.2, 0, 0.81915, -0.57358, 3.1, 1, 0, 0, -20.16)
 
 [sub_resource type="MultiMesh" id="MultiMesh_8"]
 transform_format = 1
@@ -1878,7 +1878,7 @@ buffer = PackedFloat32Array(-0.93969, 0, -0.34202, -10.9949, 0, 1, 0, 0.08, 0.34
 transform_format = 1
 instance_count = 2
 mesh = SubResource("TorusMesh_inner_radius0p36_outer_radius0p42_ring_segments4_rings12")
-buffer = PackedFloat32Array(0.93969, 0, 0.34202, 11.4, 0, 1, 0, 0.08, -0.34202, 0, 0.93969, -17.2, 0.93969, 0, 0.34202, 12.4, 0, 1, 0, 0.08, -0.34202, 0, 0.93969, -18.6)
+buffer = PackedFloat32Array(0.34202, 0, -0.93969, 11.2, 0, 1, 0, 0.08, 0.93969, 0, 0.34202, -18.6, 0.34202, 0, -0.93969, 12.6, 0, 1, 0, 0.08, 0.93969, 0, 0.34202, -17.6)
 
 [sub_resource type="MultiMesh" id="MultiMesh_15"]
 transform_format = 1
@@ -2197,7 +2197,7 @@ transform = Transform3D(0.95766, 0, -2.63114, 0, 2.8, 0, 2.63114, 0, 0.95766, 10
 transform = Transform3D(2.06732, -0.75244, -0, 0, 0, -2.2, 0.75244, 2.06732, 0, 10.2461, 0.996, 19.5412)
 
 [node name="tool_hammer_70" parent="Models" instance=ExtResource("41_model")]
-transform = Transform3D(1.90526, 1.1, 0, 0, 0, -2.2, -1.1, 1.90526, 0, 13.408, 0.914, -20.5374)
+transform = Transform3D(1.1, -1.90526, -0, 0, 0, -2.2, 1.90526, 1.1, 0, 14.5374, 0.914, -16.592)
 
 [node name="workbench_grind_71" parent="Models" instance=ExtResource("42_model")]
 transform = Transform3D(0, 0, -2.8, 0, 2.8, 0, 2.8, 0, 0, 12.686, 0, 21)
@@ -2233,13 +2233,13 @@ transform = Transform3D(2.20983, 0, 0.93629, 0, 2.4, 0, -0.93629, 0, 2.20983, -3
 transform = Transform3D(0.88306, 0, 2.23164, 0, 2.4, 0, -2.23164, 0, 0.88306, -25.5, 0.05, -4.6)
 
 [node name="workbench_82" parent="Models" instance=ExtResource("50_model")]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 13.455, 0, -20.4)
+transform = Transform3D(0, 0, -3, 0, 3, 0, 3, 0, 0, 14.4, 0, -16.545)
 
 [node name="resource_planks_83" parent="Models" instance=ExtResource("51_model")]
-transform = Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, 14.513, 0.05, -17.813)
+transform = Transform3D(0, 0, -2.6, 0, 2.6, 0, 2.6, 0, 0, 11.813, 0.05, -15.487)
 
 [node name="resource_planks_84" parent="Models" instance=ExtResource("51_model")]
-transform = Transform3D(1.99172, 0, 1.67125, 0, 2.6, 0, -1.67125, 0, 1.99172, 14.2016, 0.05, -16.7183)
+transform = Transform3D(1.67125, 0, -1.99172, 0, 2.6, 0, 1.99172, 0, 1.67125, 10.7183, 0.05, -15.7984)
 
 [node name="wall_door_85" parent="Models" instance=ExtResource("52_model")]
 transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 0, 0, -21.8)
@@ -2383,27 +2383,27 @@ transforms = Array[Transform3D]([Transform3D(-0.51588, 0, 0.30637, 0, 0.6, 0, -0
 [node name="fantasy_town_kit_wall_window_shutters" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
 model = ExtResource("80_model")
-transforms = Array[Transform3D]([Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -12, 0, 27.8), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -8, 0, 32.2), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 12, 0, 17.8), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -19, 0, -10.2), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -30.2, 0, -4), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 10, 0, -20.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 14.2, 0, -20), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -4, 0, -30.2), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 4, 0, -30.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -4, 0, -21.8), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 4, 0, -21.8), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 4.2, 0, -30), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 4.2, 0, -22), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -4.2, 0, -30), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -4.2, 0, -22)])
+transforms = Array[Transform3D]([Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -12, 0, 27.8), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -8, 0, 32.2), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 12, 0, 17.8), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -19, 0, -10.2), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -30.2, 0, -4), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 10, 0, -20.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 14, 0, -15.8), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -4, 0, -30.2), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 4, 0, -30.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -4, 0, -21.8), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 4, 0, -21.8), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 4.2, 0, -30), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 4.2, 0, -22), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -4.2, 0, -30), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -4.2, 0, -22)])
 
 [node name="castle_kit_rocks_small" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
 model = ExtResource("81_model")
-transforms = Array[Transform3D]([Transform3D(1.34698, 0, -0.86351, 0, 1.6, 0, 0.86351, 0, 1.34698, -8, 0, 26), Transform3D(-0.60227, 0, 1.48232, 0, 1.6, 0, -1.48232, 0, -0.60227, -12, 0, 16), Transform3D(-1.57519, 0, -0.28066, 0, 1.6, 0, 0.28066, 0, -1.57519, -8, 0, 24), Transform3D(-1.57642, 0, -0.27369, 0, 1.6, 0, 0.27369, 0, -1.57642, 8, 0, 26), Transform3D(-1.06322, 0, -1.19565, 0, 1.6, 0, 1.19565, 0, -1.06322, 8, 0, 34), Transform3D(0.62724, 0, -1.47193, 0, 1.6, 0, 1.47193, 0, 0.62724, 12, 0, 24), Transform3D(1.02625, 0, -1.22752, 0, 1.6, 0, 1.22752, 0, 1.02625, -24, 0, 16), Transform3D(-1.54597, 0, -0.4123, 0, 1.6, 0, 0.4123, 0, -1.54597, -32, 0, 0), Transform3D(-1.49403, 0, 0.57261, 0, 1.6, 0, -0.57261, 0, -1.49403, -16, 0, -16), Transform3D(1.37092, 0, -0.82497, 0, 1.6, 0, 0.82497, 0, 1.37092, 8, 0, -20), Transform3D(1.54206, 0, 0.42667, 0, 1.6, 0, -0.42667, 0, 1.54206, -35, 0, -12)])
+transforms = Array[Transform3D]([Transform3D(1.34698, 0, -0.86351, 0, 1.6, 0, 0.86351, 0, 1.34698, -8, 0, 26), Transform3D(-0.60227, 0, 1.48232, 0, 1.6, 0, -1.48232, 0, -0.60227, -12, 0, 16), Transform3D(-1.57519, 0, -0.28066, 0, 1.6, 0, 0.28066, 0, -1.57519, -8, 0, 24), Transform3D(-1.57642, 0, -0.27369, 0, 1.6, 0, 0.27369, 0, -1.57642, 8, 0, 26), Transform3D(-1.06322, 0, -1.19565, 0, 1.6, 0, 1.19565, 0, -1.06322, 8, 0, 34), Transform3D(0.62724, 0, -1.47193, 0, 1.6, 0, 1.47193, 0, 0.62724, 12, 0, 24), Transform3D(1.02625, 0, -1.22752, 0, 1.6, 0, 1.22752, 0, 1.02625, -24, 0, 16), Transform3D(-1.54597, 0, -0.4123, 0, 1.6, 0, 0.4123, 0, -1.54597, -32, 0, 0), Transform3D(-1.49403, 0, 0.57261, 0, 1.6, 0, -0.57261, 0, -1.49403, -16, 0, -16), Transform3D(1.37092, 0, -0.82497, 0, 1.6, 0, 0.82497, 0, 1.37092, 16, 0, -16), Transform3D(1.54206, 0, 0.42667, 0, 1.6, 0, -0.42667, 0, 1.54206, -35, 0, -12)])
 
 [node name="fantasy_town_kit_wall" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
 model = ExtResource("82_model")
-transforms = Array[Transform3D]([Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -12, 0, 32.2), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -12.2, 0, 32), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 8, 0, 22.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -14.8, 0, -2), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -19.2, 0, -10), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -19.2, 0, -6), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -19.2, 0, -2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -30, 0, 0.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -25.8, 0, -4), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 19, 0, 9.8), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 14, 0, -20.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 14.2, 0, -16), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 0, 0, -30.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 4.2, 0, -26), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -4.2, 0, -26)])
+transforms = Array[Transform3D]([Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -12, 0, 32.2), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -12.2, 0, 32), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 8, 0, 22.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -14.8, 0, -2), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -19.2, 0, -10), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -19.2, 0, -6), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -19.2, 0, -2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -30, 0, 0.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -25.8, 0, -4), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 19, 0, 9.8), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 14, 0, -20.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 14.2, 0, -20), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 0, 0, -30.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 4.2, 0, -26), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -4.2, 0, -26)])
 
 [node name="fantasy_town_kit_wall_broken" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
 model = ExtResource("83_model")
-transforms = Array[Transform3D]([Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -7.8, 0, 28), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 7.8, 0, 18), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -19, 0, -1.8), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -15, 0, -1.8), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -14.8, 0, -10), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -26, 0, -4.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 19, 0, 14.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 23.2, 0, 10), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 9.8, 0, -16)])
+transforms = Array[Transform3D]([Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -7.8, 0, 28), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 7.8, 0, 18), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -19, 0, -1.8), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -15, 0, -1.8), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -14.8, 0, -10), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -26, 0, -4.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 19, 0, 14.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 23.2, 0, 10), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 9.8, 0, -20)])
 
 [node name="fantasy_town_kit_wall_doorway_round" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
 model = ExtResource("84_model")
-transforms = Array[Transform3D]([Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -7.8, 0, 32), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -7.8, 0, 22), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 7.8, 0, 32), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 7.8, 0, 22), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -14.8, 0, -6), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 14.8, 0, -6), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -18, 0, 16.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -26, 0, 0.2), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 18.8, 0, 14), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -10, 0, -15.8), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 14, 0, -15.8), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -28.8, 0, -12)])
+transforms = Array[Transform3D]([Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -7.8, 0, 32), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -7.8, 0, 22), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 7.8, 0, 32), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 7.8, 0, 22), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -14.8, 0, -6), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 14.8, 0, -6), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -18, 0, 16.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -26, 0, 0.2), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 18.8, 0, 14), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -10, 0, -15.8), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 9.8, 0, -16), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -28.8, 0, -12)])
 
 [node name="fantasy_town_kit_wall_window_stone" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
@@ -2423,7 +2423,7 @@ transforms = Array[Transform3D]([Transform3D(-0.75244, 0, -2.06732, 0, 2.2, 0, 2
 [node name="survival_kit_barrel_open" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
 model = ExtResource("88_model")
-transforms = Array[Transform3D]([Transform3D(0, 0, 2.6, 0, 2.6, 0, -2.6, 0, 0, -10.6, 0, 32.8), Transform3D(0, 0, -2.6, 0, 2.6, 0, 2.6, 0, 0, 10.1, 0, 17.2), Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, -17.2, 0, 13.4), Transform3D(0, -2.6, 0, 2.6, 0, 0, 0, 0, 2.6, 11.542, 0.312, -18.8), Transform3D(0, 0, 2.6, 0, 2.6, 0, -2.6, 0, 0, -29.6, 0, -11.3)])
+transforms = Array[Transform3D]([Transform3D(0, 0, 2.6, 0, 2.6, 0, -2.6, 0, 0, -10.6, 0, 32.8), Transform3D(0, 0, -2.6, 0, 2.6, 0, 2.6, 0, 0, 10.1, 0, 17.2), Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, -17.2, 0, 13.4), Transform3D(0, -0, -2.6, 2.6, 0, 0, 0, -2.6, 0, 12.8, 0.312, -18.458), Transform3D(0, 0, 2.6, 0, 2.6, 0, -2.6, 0, 0, -29.6, 0, -11.3)])
 
 [node name="mini_dungeon_pot" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
@@ -2449,7 +2449,7 @@ visibility_end = 45
 [node name="fantasy_town_kit_wall_wood" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
 model = ExtResource("93_model")
-transforms = Array[Transform3D]([Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -8, 0, 17.8), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -12, 0, 22.2), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -12.2, 0, 18), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 12, 0, 27.8), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 7.8, 0, 28), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 12.2, 4, 18), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 19, 0, -10.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 19.2, 0, -10), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -22, 0, 11.8), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -18, 0, 11.8), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -22, 0, 16.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -17.8, 0, 16), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -10, 0, -20.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -14, 0, -15.8), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -14.2, 0, -20), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 10, 4, -15.8), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 14.2, 4, -20), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -33, 0, -16.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -29, 0, -11.8), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -33.2, 0, -16), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 26.2, 0, 26), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 26.2, 0, 30), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 26.2, 0, 34), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 26, 0, 25.8)])
+transforms = Array[Transform3D]([Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -8, 0, 17.8), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -12, 0, 22.2), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -12.2, 0, 18), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 12, 0, 27.8), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, 7.8, 0, 28), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 12.2, 4, 18), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 19, 0, -10.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 19.2, 0, -10), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -22, 0, 11.8), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -18, 0, 11.8), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -22, 0, 16.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -17.8, 0, 16), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -10, 0, -20.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -14, 0, -15.8), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -14.2, 0, -20), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 10, 4, -15.8), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 14, 4, -15.8), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -33, 0, -16.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -29, 0, -11.8), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -33.2, 0, -16), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 26.2, 0, 26), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 26.2, 0, 30), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 26.2, 0, 34), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 26, 0, 25.8)])
 
 [node name="fantasy_town_kit_wall_wood_window_shutters" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
@@ -2550,7 +2550,7 @@ transforms = Array[Transform3D]([Transform3D(3.00702, -1.09446, -0, 0, 0, -3.2, 
 [node name="mini_dungeon_barrel" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
 model = ExtResource("112_model")
-transforms = Array[Transform3D]([Transform3D(-1.74946, 0, 0.42353, 0, 1.8, 0, -0.42353, 0, -1.74946, 9.6, 0, -20.4), Transform3D(-0.50416, 0, -1.72795, 0, 1.8, 0, 1.72795, 0, -0.50416, 10.7, 0, -20.45), Transform3D(-1.35201, 0, 1.18831, 0, 1.8, 0, -1.18831, 0, -1.35201, 9.55, 0, -19.2), Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 10, 0.86, -20), Transform3D(-1.40843, 0, -1.69007, 0, 2.2, 0, 1.69007, 0, -1.40843, -3.5, 0, 38.9), Transform3D(2.17289, 0, 0.3443, 0, 2.2, 0, -0.3443, 0, 2.17289, 3.6, 0, 39.1), Transform3D(0, -1.90526, 1.1, 2.2, 0, 0, -0, 1.1, 1.90526, -8.94274, 0.572, 35.736)])
+transforms = Array[Transform3D]([Transform3D(0.42353, 0, 1.74946, 0, 1.8, 0, -1.74946, 0, 0.42353, 14.4, 0, -20.4), Transform3D(-1.72795, 0, 0.50416, 0, 1.8, 0, -0.50416, 0, -1.72795, 14.45, 0, -19.3), Transform3D(1.18831, 0, 1.35201, 0, 1.8, 0, -1.35201, 0, 1.18831, 13.2, 0, -20.45), Transform3D(0, 0, -1.5, 0, 1.5, 0, 1.5, 0, 0, 14, 0.86, -20), Transform3D(-1.40843, 0, -1.69007, 0, 2.2, 0, 1.69007, 0, -1.40843, -3.5, 0, 38.9), Transform3D(2.17289, 0, 0.3443, 0, 2.2, 0, -0.3443, 0, 2.17289, 3.6, 0, 39.1), Transform3D(0, -1.90526, 1.1, 2.2, 0, 0, -0, 1.1, 1.90526, -8.94274, 0.572, 35.736)])
 
 [node name="fantasy_town_kit_wall_detail_cross" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
@@ -3633,7 +3633,7 @@ line_height = 0.16
 double_sided = true
 
 [node name="Enseigne_cooper" type="Node3D" parent="Signs"]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 12, 0, -12.73)
+transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, 6.73, 0, -18)
 script = ExtResource("sign")
 text = "Tonnelier"
 mount = 2
@@ -5014,56 +5014,56 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 10, 2, -14)
 shape = SubResource("BoxShape3D_32")
 
 [node name="Box337" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 12.525, 2, -14)
-shape = SubResource("BoxShape3D_76")
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 14, 2, -14)
+shape = SubResource("BoxShape3D_32")
 
 [node name="Box338" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 15.475, 2, -14)
-shape = SubResource("BoxShape3D_76")
-
-[node name="Box339" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 14, 3.45, -14)
-shape = SubResource("BoxShape3D_77")
-
-[node name="Box340" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 13.125, 1.45, -14)
-shape = SubResource("BoxShape3D_78")
-
-[node name="Box341" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 13.35, 2.6, -14)
-shape = SubResource("BoxShape3D_79")
-
-[node name="Box342" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 13.675, 2.8, -14)
-shape = SubResource("BoxShape3D_80")
-
-[node name="Box343" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 14.875, 1.45, -14)
-shape = SubResource("BoxShape3D_78")
-
-[node name="Box344" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 14.65, 2.6, -14)
-shape = SubResource("BoxShape3D_79")
-
-[node name="Box345" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 14.325, 2.8, -14)
-shape = SubResource("BoxShape3D_80")
-
-[node name="Box346" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 16, 2, -20)
 shape = SubResource("BoxShape3D_40")
 
-[node name="Box347" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 16, 2, -16)
-shape = SubResource("BoxShape3D_40")
-
-[node name="Box348" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 8, 0.4, -20)
+[node name="Box339" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 16, 0.4, -16)
 shape = SubResource("BoxShape3D_33")
 
-[node name="Box349" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 8, 1.5, -16)
+[node name="Box340" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 8, 1.5, -20)
 shape = SubResource("BoxShape3D_34")
+
+[node name="Box341" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 8, 2, -17.475)
+shape = SubResource("BoxShape3D_35")
+
+[node name="Box342" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 8, 2, -14.525)
+shape = SubResource("BoxShape3D_35")
+
+[node name="Box343" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 8, 3.45, -16)
+shape = SubResource("BoxShape3D_36")
+
+[node name="Box344" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 8, 1.45, -16.875)
+shape = SubResource("BoxShape3D_37")
+
+[node name="Box345" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 8, 2.6, -16.65)
+shape = SubResource("BoxShape3D_38")
+
+[node name="Box346" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 8, 2.8, -16.325)
+shape = SubResource("BoxShape3D_39")
+
+[node name="Box347" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 8, 1.45, -15.125)
+shape = SubResource("BoxShape3D_37")
+
+[node name="Box348" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 8, 2.6, -15.35)
+shape = SubResource("BoxShape3D_38")
+
+[node name="Box349" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 8, 2.8, -15.675)
+shape = SubResource("BoxShape3D_39")
 
 [node name="Box350" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 8, 4, -22)
@@ -5082,27 +5082,27 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 16, 4, -14)
 shape = SubResource("BoxShape3D_50")
 
 [node name="Box354" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.97192, 0, 0.2353, 0, 1, 0, -0.2353, 0, -0.97192, 9.6, 0.43, -20.4)
+transform = Transform3D(0.2353, 0, 0.97192, 0, 1, 0, -0.97192, 0, 0.2353, 14.4, 0.43, -20.4)
 shape = SubResource("BoxShape3D_86")
 
 [node name="Box355" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.28009, 0, -0.95997, 0, 1, 0, 0.95997, 0, -0.28009, 10.7, 0.43, -20.45)
+transform = Transform3D(-0.95997, 0, 0.28009, 0, 1, 0, -0.28009, 0, -0.95997, 14.45, 0.43, -19.3)
 shape = SubResource("BoxShape3D_86")
 
 [node name="Box356" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.75112, 0, 0.66017, 0, 1, 0, -0.66017, 0, -0.75112, 9.55, 0.43, -19.2)
+transform = Transform3D(0.66017, 0, 0.75112, 0, 1, 0, -0.75112, 0, 0.66017, 13.2, 0.43, -20.45)
 shape = SubResource("BoxShape3D_86")
 
 [node name="Box357" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 10, 1.22, -20)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 14, 1.22, -20)
 shape = SubResource("BoxShape3D_87")
 
 [node name="Box358" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 13.5, 0.435, -20.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 14.4, 0.435, -16.5)
 shape = SubResource("BoxShape3D_88")
 
 [node name="Box359" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 11.1, 0.312, -18.8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 12.8, 0.312, -18.9)
 shape = SubResource("BoxShape3D_89")
 
 [node name="Box360" type="CollisionShape3D" parent="Collision"]
