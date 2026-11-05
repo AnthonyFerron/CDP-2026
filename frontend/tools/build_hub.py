@@ -2163,8 +2163,8 @@ def build_park(scene, rng):
         furniture(scene, "mini_arena/statue", (x + side * 1.6, 0.0, z + 0.3), rng.uniform(-30, 30) + 90.0, 1.6, height=0.9, tilt=90.0)
     scene.rebuilt("ParkKings")
     for x, z in kings:
-        furniture(scene, "nature_kit/statue_block", (x, 0.0, z), 0.0, 2.4, height=0.95)
-        furniture(scene, "mini_arena/statue", (x, 0.94, z), 90.0 if x < cx else -90.0, 1.6, height=2.1)
+        furniture(scene, "nature_kit/statue_block", (x, 0.0, z), 0.0, 3.2, height=1.25)
+        furniture(scene, "mini_arena/statue", (x, 0.39 * 3.2, z), 90.0 if x < cx else -90.0, 1.6, height=2.1)
     scene.group = "Fixed"
 
     # Statue de Devlyn, vainqueur des Quatre Dragons du Chaos, au milieu du rond-point : un socle à degrés, le héros,
