@@ -2106,8 +2106,8 @@ prompt = "Lire : Le mémorial des soldats"
 radius = 2.6
 
 [node name="Text" type="Label3D" parent="Lore/Memorial"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -0.462)
-pixel_size = 0.0014
+transform = Transform3D(1, 0, 0, 0, 0.99866, 0.05168, 0, -0.05168, 0.99866, 0, 0.8, -0.7035)
+pixel_size = 0.001
 shaded = true
 double_sided = false
 alpha_cut = 1
