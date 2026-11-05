@@ -135,9 +135,10 @@ func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, soli
 	for model in models:
 		groups.append([])
 	var hulls: Array[PackedVector3Array] = []
-	if not tilted and not heights.is_empty():
+	if solid and (tilted or not heights.is_empty()):
 		for model in models:
-			var hull := _load_mesh(model).create_convex_shape(true, true) as ConvexPolygonShape3D
+			# Ruines couchées et tas de briques : l'enveloppe entière, sans simplification, qui colle à leurs bords.
+			var hull := _load_mesh(model).create_convex_shape(true, not tilted) as ConvexPolygonShape3D
 			hulls.append(hull.points if hull else PackedVector3Array())
 	var placed := 0
 	for attempt in count * 10:
@@ -160,8 +161,9 @@ func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, soli
 		groups[group].append(Transform3D(basis.scaled(Vector3.ONE * scale_factor), origin))
 		if solid:
 			var collision := CollisionShape3D.new()
-			if tilted and group < RUIN_BOXES.size():
-				# Une boîte tournée comme la ruine, sur toute sa longueur.
+			if tilted and group < RUIN_BOXES.size() and (group > 0 or group >= hulls.size() or hulls[group].is_empty()):
+				# Tas de briques : une boîte tournée comme eux (leur enveloppe laissait une marche de 0,42 m sur la
+				# pente d'une dune) ; les colonnes couchées ont leur enveloppe.
 				var box := BoxShape3D.new()
 				box.size = RUIN_BOXES[group] * scale_factor
 				collision.shape = box
