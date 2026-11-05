@@ -774,7 +774,8 @@ def main():
              (1.3, 0.7), 1.75, 0.15)
     write_niches(lines)
 
-    # Volcan en éveil au nord, au-delà des reliefs : il domine la zone comme le hub.
+    # Volcan en éveil au nord, au-delà des reliefs : il domine la zone comme le hub, vu de loin (fumée et lueur,
+    # sans lumière dynamique ni éruption).
     # La vie des marais : grenouilles des berges, poissons, corbeaux, chauves-souris de la crypte, lanternes pendues.
     crows = [f"Vector3({x:.2f}, 0, {z:.2f})" for x, z in STONE_TOPS] + ["Vector3(33, 0, -27.2)", "Vector3(11.5, 0, -9.0)", "Vector3(22.2, 0, -5.3)"]
     lines += [
@@ -794,7 +795,8 @@ def main():
         "",
     ]
     node(lines, "Volcano", "Node3D", ".", props=[
-        "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, -6, -215)", 'script = ExtResource("90_volcano")'])
+        "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, -6, -215)", 'script = ExtResource("90_volcano")',
+        "distant = true"])
     node(lines, "Player", instance="9_player", props=[at(0, 0.6, 57), "respawn_height = -80.0", "first_person = true"])
     node(lines, "Ambience", "AudioStreamPlayer", props=[
         'stream = ExtResource("40_ambience")', "volume_db = -6.0", "autoplay = true"])

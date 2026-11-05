@@ -881,9 +881,11 @@ def main():
         node(lines, name, "AudioStreamPlayer3D", "Exterior/Sounds", props=[
             f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {x:g}, {y:g}, {z:g})", f'stream = ExtResource("{stream}")',
             f"pitch_scale = {pitch:g}", f"volume_db = {volume:g}", "unit_size = 7.0", "max_distance = 30.0", "autoplay = true"])
-    # Volcan en éveil au nord, au-delà des reliefs : il domine la zone comme le hub.
+    # Volcan en éveil au nord, au-delà des reliefs : il domine la zone comme le hub, vu de loin (fumée et lueur,
+    # sans lumière dynamique ni éruption).
     node(lines, "Volcano", "Node3D", "Exterior", props=[
-        "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, -6, -215)", 'script = ExtResource("90_volcano")'])
+        "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, -6, -215)", 'script = ExtResource("90_volcano")',
+        "distant = true"])
     node(lines, "Player", instance="9_player", props=[at(0, 0.3, 48), "respawn_height = -80.0", "first_person = true"])
     node(lines, "Wind", "AudioStreamPlayer", props=['stream = ExtResource("40_wind")', "volume_db = -8.0", "autoplay = true"])
     node(lines, "CaveAmbience", "AudioStreamPlayer", props=['stream = ExtResource("41_cave")', "volume_db = -6.0"])

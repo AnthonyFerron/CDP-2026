@@ -654,9 +654,11 @@ def main():
     node(lines, "Glow", "OmniLight3D", "Interior/Book", props=["light_color = Color(0.7, 0.45, 1, 1)", "light_energy = 1.2", "omni_range = 3.0"])
     node(lines, "Interactable", "Node3D", "Interior/Book", props=[
         'script = ExtResource("53_interactable")', 'prompt = "Prendre le Codonomicon"', "radius = 2.6"])
-    # Volcan en éveil au nord, au-delà des reliefs : il domine la zone comme le hub.
+    # Volcan en éveil au nord, au-delà des reliefs : il domine la zone comme le hub, vu de loin (fumée et lueur,
+    # sans lumière dynamique ni éruption).
     node(lines, "Volcano", "Node3D", ".", props=[
-        "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, -6, -215)", 'script = ExtResource("90_volcano")'])
+        "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, -6, -215)", 'script = ExtResource("90_volcano")',
+        "distant = true"])
     node(lines, "Player", instance="8_player", props=[
         at(0, 0.3, 57), "respawn_height = -80.0", "first_person = true",
         'footstep_sounds = Array[AudioStream]([ExtResource("43_step1"), ExtResource("44_step2"), ExtResource("45_step3")])'])
