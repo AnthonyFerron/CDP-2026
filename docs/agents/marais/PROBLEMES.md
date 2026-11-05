@@ -57,3 +57,17 @@ Tests : `marais_walkgrid_test.gd` (dehors, crypte, maillages), `marais_holes_tes
   trou à contre-jour. Éclairci en pierre sombre (0,18), plus foncé que le cadre (0,40) et la tablette (0,27) : la niche
   garde sa profondeur.
 
+
+## Retours des testeurs (5 novembre)
+
+Captures avant et après : `.claude/captures/marais-retours/avant/` et `apres/` (outil `tools/shots.gd` de la nuit).
+
+| Retour | Constat sur place | Correction |
+| --- | --- | --- |
+| Arbre dans le passage du cimetière à la crypte | Déjà retiré le 4 novembre (8d36e24) : ponton et îlot dégagés (o11_ponton3, c_haut), le test de l'énigme passe du cimetière à la porte | Aucune |
+| Quatre petits tombeaux, textes des rois, hommage au mur | Déjà fait le 4 novembre (8d36e24, ca2dcf7) : quatre tombeaux de 2,2 × 3,4 m, nom gravé « Roi Codeon I » à « IV », épitaphe à lire, dalle « Nos bons rois et protecteurs du Royaume de Codia ! » au mur du fond, au-dessus de l'autel (i05_rois) | Aucune |
+| Échelle ou escalier qui manque | Le long escalier existe ; il manquait l'échelle de la trappe : on arrive au palier sous une trappe à 4 m, sans rien pour y monter | Échelle de bois (mini_forest/ladder, trois pans empilés) contre le panneau central du mur du fond du palier, avec sa collision ; trappe au-dessus (i17_palier_trappe, i19_echelle_face) |
+| On voit l'extérieur depuis la crypte | Les murs du kit font 4,15 m, la hauteur exacte du plafond : leur haut affleurait le plafond | Murs (pièces et palier) montés de 40 cm dans l'épaisseur du plafond (`WALL_RISE`) |
+| Rocher et tombe détruite sans collision (crypte) | Ossuaire : stèle brisée (0,7 m), tas de pierres (0,8 m) et urne couchée (0,6 m) posés sans collision | Collision à leur boîte, tournée avec eux |
+| Collision bizarre, 1re île, près d'un arbre, à gauche du portail | Barque renversée (-6.4, 60.6), près du grand sapin : retournée (roll 180), elle recevait la boîte alignée sur les axes de sa boîte tournée de 25°, 2,65 × 4,09 m pour une barque de 1,05 × 4,0 m | Boîte tournée avec le modèle quand il est seulement retourné (`upright_or_flipped`) ; même correction pour la barque du vieux débarcadère |
+| Un tombeau pas au bon endroit | Interprétation : à l'entrée de la chambre des rois, Codeon I faisait face à Codeon III, Codeon II était au fond | Tombeaux dans l'ordre de la visite : I et II à l'entrée, III et IV au fond (i18_rois_entree) |
