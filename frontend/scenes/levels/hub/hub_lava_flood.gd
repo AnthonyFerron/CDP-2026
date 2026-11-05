@@ -105,6 +105,14 @@ func _arrivals(heights: PackedFloat32Array) -> PackedFloat32Array:
 			var z := _z(row * STRIDE)
 			# Lobes : la lave avance plus vite par endroits ; et elle préfère les creux, comme le lit de la rivière.
 			resistance[index] = (0.55 + 0.9 * (lobes.get_noise_2d(x, z) * 0.5 + 0.5)) * (1.0 + clampf(coarse[index], 0.0, 4.0) * 0.12)
+	# Pente locale de chaque nœud : dans une pente raide, la lave descend droit et ne s'étale guère de côté.
+	var steepness := PackedFloat32Array()
+	steepness.resize(columns * rows)
+	for row in rows:
+		for column in columns:
+			var east := coarse[row * columns + mini(column + 1, columns - 1)] - coarse[row * columns + maxi(column - 1, 0)]
+			var south := coarse[mini(row + 1, rows - 1) * columns + column] - coarse[maxi(row - 1, 0) * columns + column]
+			steepness[row * columns + column] = Vector2(east, south).length() / (2.0 * step)
 	var time := PackedFloat32Array()
 	time.resize(columns * rows)
 	time.fill(INF)
@@ -135,9 +143,11 @@ func _arrivals(heights: PackedFloat32Array) -> PackedFloat32Array:
 			var next := next_row * columns + next_column
 			var distance := step * (1.41421 if offset.x != 0 and offset.y != 0 else 1.0)
 			var slope := (coarse[next] - coarse[index]) / distance
-			# Elle dévale les pentes, et chaque mètre de montée la freine beaucoup.
+			# Elle dévale les pentes, et chaque mètre de montée la freine beaucoup. Dans une pente raide, s'écarter de
+			# la ligne de plus grande pente la freine aussi : la coulée s'y resserre en langues qui suivent les ravines.
 			var speed := (1.0 + clampf(-slope, 0.0, 1.5) * 0.8) / (1.0 + maxf(slope, 0.0) * 14.0)
-			var cost := distance * resistance[next] / speed
+			var astray := maxf(steepness[index] - maxf(-slope, 0.0), 0.0)
+			var cost := distance * resistance[next] * (1.0 + astray * 5.0) / speed
 			if time[index] + cost < time[next]:
 				time[next] = time[index] + cost
 				heap.push(time[next], next)

@@ -26,11 +26,13 @@ void vertex() {
 	world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 }
 
-// Veine fine là où le bruit passe par 0,5, d'une largeur constante à l'écran.
+// Veine fine là où le bruit passe par 0,5. Au loin, quand un pixel couvre plus que la veine, elle s'estompe à la
+// part du pixel qu'elle couvre, au lieu de s'élargir jusqu'à tout couvrir.
 float vein(float value, float width) {
 	float distance = abs(value - 0.5);
-	float pixel = fwidth(value);
-	return 1.0 - smoothstep(width, width + pixel * 1.5, distance);
+	float pixel = max(fwidth(value), 0.0001);
+	float line = 1.0 - smoothstep(max(width - pixel, 0.0), width + pixel, distance);
+	return line * min(1.0, width * 2.0 / pixel);
 }
 
 void fragment() {
@@ -42,21 +44,22 @@ void fragment() {
 	// La croûte dérive lentement vers le sud, l'aval de la coulée.
 	vec2 drift = vec2(0.002, -0.012) * TIME;
 	float plates = texture(flow_noise, world_pos.xz * 0.028 + drift).r;
-	float detail = texture(flow_noise, world_pos.xz * 0.085 + drift * 1.6).r;
-	float veins = max(vein(plates, 0.035), vein(detail, 0.02) * 0.7);
+	float detail = texture(flow_noise, world_pos.xz * 0.06 + drift * 1.6).r;
+	// Veines incandescentes entre les plaques de croûte sombre.
+	float veins = max(vein(plates, 0.03), vein(detail, 0.018) * 0.55);
 
-	// Lave fraîche : vive au front qui avance ; elle se couvre de croûte en quelques secondes.
-	float fresh = 1.0 - smoothstep(0.3, 5.0, age);
+	// Lave fraîche : vive juste derrière le front qui avance ; elle se couvre de croûte en deux ou trois secondes.
+	float fresh = 1.0 - smoothstep(0.2, 2.8, age);
 	// Le bord tout juste arrivé reste sombre : un bourrelet de croûte qui roule devant la coulée.
-	float rim = 1.0 - smoothstep(0.0, 0.35, age);
-	float open = smoothstep(0.42, 0.62, detail * 0.5 + plates * 0.5) * fresh;
-	float heat = clamp(max(veins, open) * (1.0 - rim * 0.8), 0.0, 1.0);
-	float pulse = 0.88 + 0.12 * sin(TIME * 1.7 + plates * 18.0);
-	vec3 glow = mix(hot_color, core_color, heat * (0.4 + 0.6 * fresh));
+	float rim = 1.0 - smoothstep(0.0, 0.3, age);
+	float open = smoothstep(0.4, 0.6, detail * 0.4 + plates * 0.6) * fresh;
+	float heat = clamp(max(veins * (0.55 + 0.45 * fresh), open) * (1.0 - rim * 0.85), 0.0, 1.0);
+	float pulse = 0.85 + 0.15 * sin(TIME * 1.7 + plates * 18.0);
+	vec3 glow = mix(hot_color, core_color, open * 0.8);
 
 	ALBEDO = mix(crust_color, glow * 0.3, heat);
 	// La croûte garde un rougeoiement sourd : la nappe se lit de loin, même refroidie.
-	EMISSION = (glow * heat * pulse + hot_color * 0.08 * (1.0 - rim)) * emission_strength;
+	EMISSION = (glow * heat * pulse + hot_color * 0.07 * (1.0 - rim)) * emission_strength;
 	ROUGHNESS = mix(0.95, 0.4, heat);
 	SPECULAR = 0.15;
 }
