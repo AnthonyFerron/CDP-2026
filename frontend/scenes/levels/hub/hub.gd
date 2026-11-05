@@ -121,6 +121,7 @@ func _ready() -> void:
 	if GameState.ending != &"":
 		_play_ending(GameState.ending)
 		return
+	Music.play(_music())
 	if not GameState.intro_done:
 		_hud.show_message("Le bunker des survivants. Le roi et Merlon vous attendent.")
 	elif GameState.is_victory_pending():
@@ -157,6 +158,8 @@ func _play_ending(ending: StringName) -> void:
 	_hud.visible = false
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	_set_location(false)
+	# La victoire continue après la fin, pendant l'épilogue ; la défaite ne joue qu'une fois, jusqu'au menu principal.
+	Music.play(&"victoire" if ending == &"victory" else &"defaite")
 	if ending == &"victory":
 		_release_survivors()
 		_set_repairs(GameState.BOOK_COUNT, false)
@@ -348,9 +351,21 @@ func _on_bunker_exit() -> void:
 				missing.append("au roi" if speaker == &"Codeon" else "à Merlon")
 		_hud.show_message("Avant de partir, parlez %s." % " et ".join(missing))
 		return
+	# La musique de l'introduction s'arrête à la première sortie : le thème du village prend le relais.
+	Music.play(_music())
 	await _travel(false)
 	if GameState.books.is_empty():
 		_hud.show_message("Le portail des plaines d'Hexcole vous attend au nord-ouest du village, non loin des ruines du château.")
+
+
+## Musique du hub hors des fins : l'introduction jusqu'à la première sortie du bunker, la victoire pendant l'épilogue
+## (quatre livres posés, victoire validée), et sinon le thème du village.
+func _music() -> StringName:
+	if not GameState.intro_done:
+		return &"intro"
+	if placed_count() >= GameState.BOOK_COUNT and not GameState.is_victory_pending():
+		return &"victoire"
+	return &"hub"
 
 
 ## Cendres : le ciel s'assombrit et rougeoit quand le quatrième livre est trouvé, jusqu'au rituel.
@@ -512,6 +527,8 @@ func _ritual() -> void:
 		_hud.show_message("La victoire n'a pas pu être validée : %s Approchez-vous d'un piédestal pour réessayer." % victory.get("error", ""))
 		return
 	_busy = false
+	# La victoire part avec le rituel et continue pendant la bonne fin.
+	Music.play(&"victoire")
 	await _hud.fade(true)
 	_release_survivors()
 	var camera := Camera3D.new()

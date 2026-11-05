@@ -31,3 +31,32 @@ Le dossier `Textures/` d'un kit garde sa majuscule et sa place à côté des mod
 Les fichiers `variation-*.png` sont les variantes de couleur fournies par certains kits.
 
 Les noms des modèles restent ceux de Kenney, pour les retrouver facilement dans les aperçus et les kits d'origine.
+
+## Musiques
+
+Les musiques sont dans `frontend/assets/audio/music/`, en OGG Vorbis réencodé en qualité 4 (`oggdec`, puis `oggenc -q 4`), à leur fréquence d'échantillonnage et avec leurs canaux d'origine. Leurs auteurs et leurs licences sont dans `LICENCES.md`. Elles bouclent à l'import (`loop=true` dans leur `.import`), sauf `defaite.ogg`.
+
+| Fichier | Où elle joue |
+| --- | --- |
+| `menu.ogg` | Menu principal |
+| `intro.ogg` | Bunker en début de partie, jusqu'à la première sortie, une fois la mission confiée |
+| `hub.ogg` | Hub, dehors comme au bunker, une fois sorti |
+| `plaine.ogg`, `desert.ogg`, `marais.ogg`, `village.ogg` | Chaque lieu |
+| `victoire.ogg` | Rituel et bonne fin, puis en boucle pendant l'épilogue au hub |
+| `defaite.ogg` | Éruption, une seule fois, sans autre musique jusqu'au retour au menu |
+
+Un seul lecteur les joue, l'autoload `Music` (`frontend/scripts/music.gd`), sur le bus « Music » qu'il crée, sous l'ambiance et les effets. Il passe d'une piste à l'autre par un fondu enchaîné de 1,5 s et ne relance pas la piste en cours. Le menu et les lieux ont leur piste dans `music.gd`. Le hub choisit la sienne (`Hub._music()` et les fins).
+
+Sur le web :
+
+- la musique attend le premier clic ou la première touche du joueur, car le navigateur bloque le son avant ;
+- elle passe par le mélangeur de Godot (`PLAYBACK_TYPE_STREAM`), et non par le mode « sample » du web, qui décoderait chaque piste en entier en mémoire ;
+- `audio/driver/output_latency.web` vaut 200 ms, pour qu'une image lente ne la coupe pas.
+
+Pour ajouter une piste :
+
+1. Pose le fichier dans `frontend/assets/audio/music/`.
+2. Ajoute son gain dans `Music.TRACKS`.
+3. Appelle `Music.play(&"<nom>")`.
+
+Le motif `assets/audio/music/*.ogg` du filtre d'export (`export_presets.cfg`) l'inclut dans le paquet web. `frontend/tests/scenes/music_test.gd` vérifie la piste de chaque scène.

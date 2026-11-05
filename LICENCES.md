@@ -11,6 +11,7 @@ Liste de tout ce que le projet utilise et qui n'a pas été créé pour lui. À 
 | Code GDScript, scènes, `icon.svg` | Créés pour le projet | Aucune licence choisie : tous droits réservés par défaut |
 | Modèles 3D et leurs textures | Kits Kenney, listés ci-dessous | CC0 1.0 |
 | Sons du jeu (vent, lave, marais, désert, cave, hub, village, ruisseau, pas, feu, porte, tablettes) | Générés pour le projet par `frontend/tools/generate_sounds.py` | Comme le code du projet |
+| Musiques, dans `frontend/assets/audio/music/` | Pixabay Music, NullRights, OpenGameArt, et une piste sans auteur tiers, listées dans la section Musiques ci-dessous | Voir la section Musiques |
 | Polices : Cinzel (titres et boutons), Lora (textes) | [Google Fonts](https://github.com/google/fonts), dans `frontend/assets/fonts/` avec leur licence | SIL Open Font License 1.1 |
 
 Pour chaque modèle, texture, son ou police venant de l'extérieur, ajouter une ligne ici avec son auteur, sa source et sa licence.
@@ -31,6 +32,27 @@ Pour chaque modèle, texture, son ou police venant de l'extérieur, ajouter une 
 | `frontend/assets/models/kenney/survival_kit/` : Survival Kit 2.0 | Kenney | [kenney.nl](https://kenney.nl/assets) | CC0 1.0 |
 
 Le fichier `License.txt` de chaque kit est conservé dans son dossier. Le créditer n'est pas obligatoire, mais Kenney le demande à titre de soutien.
+
+### Musiques
+
+Les fichiers de `frontend/assets/audio/music/` sont réencodés en OGG Vorbis (qualité 4) pour alléger le jeu web, à leur fréquence d'échantillonnage et avec leurs canaux d'origine.
+
+| Fichier | Titre | Auteur | Source | Licence |
+| --- | --- | --- | --- | --- |
+| `menu.ogg` | Epic Medieval | Kulakovka | [Pixabay Music](https://pixabay.com/music/adventure-epic-medieval-614879/) | Licence de contenu Pixabay |
+| `intro.ogg` | Main Menu 2 | Kresiek The Furry | [NullRights](https://nullrights.com/track/m7yv9dk218) | CC0 1.0 |
+| `hub.ogg` | Medieval 5 | Tozan | [OpenGameArt](https://opengameart.org/content/medieval-5) | licence OpenGameArt à confirmer |
+| `plaine.ogg` | Volkano Part I | Nestor Dionis | [Pixabay Music](https://pixabay.com/music/dubstep-volkano-part-l-124659/) | Licence de contenu Pixabay |
+| `desert.ogg` | — | Musique générée par IA, sans auteur tiers | — | — |
+| `marais.ogg` | Cool Scary Background Track | Brolefilmer | [Pixabay Music](https://pixabay.com/music/horror-scene-cool-scary-background-track-by-brolefilmer-13959/) | Licence de contenu Pixabay |
+| `village.ogg` | Village Countryside Harvest Morning | Alex Morgan | [Pixabay Music](https://pixabay.com/fr/music/pays-moderne-village-countryside-harvest-morning-578488/) | Licence de contenu Pixabay |
+| `victoire.ogg` | Victory | Alex Morgan | [Pixabay Music](https://pixabay.com/music/marching-band-victory-591331/) | Licence de contenu Pixabay |
+| `defaite.ogg` | KL Peach Game Over II | Lightyeartraxx | [Pixabay Music](https://pixabay.com/music/video-games-kl-peach-game-over-ii-135684/) | Licence de contenu Pixabay |
+
+Licences :
+
+- **Pixabay Music**, https://pixabay.com/music/ : licence de contenu Pixabay, https://pixabay.com/service/license-summary/ (texte complet : https://pixabay.com/service/terms/). Utilisation gratuite, commerciale ou non, sans attribution obligatoire. La revente ou la redistribution d'une piste seule est interdite.
+- **NullRights**, https://nullrights.com/ : CC0 1.0 universel (domaine public), https://creativecommons.org/publicdomain/zero/1.0/ (présentation : https://nullrights.com/about).
 
 ### Moteur
 
