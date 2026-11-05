@@ -12,7 +12,7 @@ config_version=5
 
 config/name="CDP-2026"
 run/main_scene="res://scenes/ui/menus/main_menu.tscn"
-config/features=PackedStringArray("4.7", "Forward Plus")
+config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [audio]
@@ -31,6 +31,7 @@ Transition="*res://scripts/transition.gd"
 GameSync="*res://scripts/game_sync.gd"
 DebugMenu="*res://scenes/debug/debug_menu.tscn"
 Music="*res://scripts/music.gd"
+RenderQuality="*res://scripts/render_quality.gd"
 
 [cdp]
 
