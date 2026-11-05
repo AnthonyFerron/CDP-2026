@@ -92,6 +92,19 @@ Outils et captures : `~/cdp-work/hub/` (`tools/`, `shots/`, `grid/`).
 | 27 | Tous les intérieurs | `c2_4/Tavern_plafond.png` : taches éblouissantes au plafond | Lampes à 0,5 m sous le plafond | Lampes à 3 m, énergie 1,45 |
 | 28 | Écuries (ruine) | `rooms_0.log` : entrée bloquée à 1 m de la porte | Roue tombée à plat dans le passage de la porte | Roue tombée au milieu de l'allée |
 | 29 | Taverne, chapelle, écuries (ruines) | grille : coupe des dragons, lutrins couchés et foin tombé sans collision | — | Collisions à leur taille |
+| 30 | Forge et caserne (ruines) | `float_check` : râteliers couchés à 0,36-0,39 m du sol | Boîte du modèle plus profonde que lui | Abaissés de 0,15 m par unité d'échelle (`RACK_SINK`) |
+| 31 | Chapelle et herboristerie (ruines) | `float_check` : chandelier et fioles enfoncés de 0,16 à 0,27 m | Posés par leur origine, couchés | Posés au sol par leur boîte, à l'écart des meubles |
+| 32 | Lits | `float_check` : traversins à 4 cm au-dessus de la collision du lit | Collision plus basse que la paillasse | Collision jusqu'au dessus de la paillasse |
+| 33 | Observatoire | `rooms_4.log` : au point d'arrivée, E proposait de ressortir au lieu de lire le registre | Arrivée à moins d'un mètre de la porte (invite sans regard) | Arrivée à 1,1 m de la porte |
+| 34 | École, ferme, forge, scriptorium | grille au quart de mètre : coins et allées de 0,85 à 1 m sans une case libre | Passages tout juste plus larges que le joueur | Rangées, établi, marmite et pupitres décalés : passages d'un mètre au moins |
+
+### Résultats (tour c4, puis c5 pour la ferme)
+- Tests : `hub_test` 0 échec ; `hub_walk_test` 0 et 4 : seuls les 2 échecs voulus « limite infranchissable (doit echouer) » ; `rooms_walk` 0 et 4 livres : 0 échec (12 bâtiments entrés et quittés, porte de l'observatoire dans les deux sens, 13 textes lus).
+- `overlaps.py` : plus aucun chevauchement, sauf les contacts voulus (sac dans la charrette du moulin, linge dans la caisse du lavoir, échelle contre l'arbre du verger, épées dans le tonneau de la forge, tapis sous les tables).
+- `lamps.py` : 0 fuite (chaque lumière s'arrête avant le sol du dehors).
+- `float_check` : 0 enfoncé ; restent des faux positifs, les paillasses posées sur le cadre de planches du lit (le rayon part du dedans de la collision du lit) et le rouleau posé sur la planche à pain (sans collision).
+- Grilles (0,5 et 0,25 m) : 0 trou, 0 ressaut, 0 chute, 0 glissade, 0 sortie, 0 plafond ouvert dans les bâtiments reconstruits, 0 plafond bas ; murs invisibles : seulement les berges de la rivière (voulus), dans les zones de la forge et du moulin ; « sans collision » : un sac aplati de la boulangerie (0,3 m). Poches restantes : coins derrière un meuble (caserne 0,7 m², moulin 0,8 m²) et, dans les ruines, des recoins encombrés de meubles renversés (taverne).
+- Captures : `~/cdp-work/hub/shots/` (`c2_4`, `c2_0`, `c3_4` en vues complètes, `c4_4`, `c4_0`), copies regardées dans `/home/ubuntu/cdp-dev/.claude/captures/hub/`.
 
 ### Outils de la nuit (`docs/agents/hub/interieurs/`, chemins du serveur)
 - `overlaps.py` : meuble contre mur et meuble contre meuble, dans chaque ruine et chaque reconstruction ; `lamps.py` : portée de chaque lumière contre la distance au sol du dehors ; `plan.py` : plans de marche au décimètre (collisions, cases atteintes depuis le dehors de la porte, poches), sans Godot.
