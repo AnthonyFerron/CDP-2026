@@ -14,7 +14,7 @@ Le `README.md` à la racine et le README de chaque lieu décrivent tout le reste
 ## Outils
 
 - **Variables utilisées ci-dessous :**
-  - `$GODOT` : le binaire de Godot 4.7.2 (sur le serveur, la version Linux x86_64) ;
+  - `$GODOT` : le binaire de Godot 4.7.2 (sur le serveur, la version Linux arm64) ;
   - `$WORK` : ton dossier de travail, **hors du dépôt**, par exemple `~/cdp-work/<ton-lieu>/`. Tes scripts, captures et journaux y vont.
 - **Première chose à faire dans ta worktree :** `git lfs pull` si les modèles sont des pointeurs, puis `cd frontend && "$GODOT" --headless --path . --import`. Copier le dossier `frontend/.godot` d'une autre worktree fait gagner du temps.
 - **Lancer un test :** `cd <ta-worktree>/frontend && "$GODOT" --headless --path . --fixed-fps 60 --script res://tests/scenes/<test>.gd -- --api=http://127.0.0.1:9/api/v1`. `--path .` doit pointer sur **ta** worktree.
