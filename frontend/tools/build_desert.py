@@ -619,11 +619,9 @@ def build_gate(scene, rng):
             x = sign * (GATE_SCALE * (index + 1))
             scene.add(f"mini_arena/{model}", (x, 0.0, z), 0.0 if sign > 0 else 180.0, GATE_SCALE)
             if model == "wall-corner":
-                # L'angle du kit est en L : un bras prolonge la muraille, l'autre tourne à son bout (vers le
-                # portail à l'ouest, vers l'esplanade à l'est, l'angle étant retourné). Les bras font 1 m d'épaisseur
-                # à hauteur d'homme ; le chapiteau qui couvre l'intérieur du L est hors de portée.
-                scene.add_box((x - sign * 2.0, GATE_SCALE * 0.4, z - sign * 0.5), (1.0, GATE_SCALE * 0.8, 4.0))
-                scene.add_box((x - sign * 0.5, GATE_SCALE * 0.4, z - sign * 2.0), (4.0, GATE_SCALE * 0.8, 1.0))
+                # L'angle du kit est en L, aux faces creusées : sa collision suit ses triangles (EXACT_MODELS de
+                # desert.gd) ; deux boîtes d'1 m d'épaisseur débordaient de 0,5 à 1 m par endroits.
+                pass
             else:
                 scene.add_box((x, GATE_SCALE / 2, z), (GATE_SCALE, GATE_SCALE, 0.6 * GATE_SCALE))
         # Longues bannières plantées devant l'arche, côté portail : leur toile a sa collision.
@@ -662,7 +660,7 @@ def build_monument(scene, rng):
         scene.add(f"mini_arena/{model}", (x, 0.0, z), 0.0, 3.6)
         scene.column_collider(x, z, 0.6 * 3.6, (1.0 if model == "column" else 0.72) * 3.6)
     scene.add("mini_arena/statue", (0.0, 0.0, -17.0), 0.0, 3.4)
-    scene.add_box((0.0, 2.2, -17.0), (2.2, 4.4, 2.2))
+    scene.hull()
     for x in (-5.0, 5.0):
         # Collision taillée sur la bannière par desert.gd (EXACT_MODELS) : son pied, sa hampe et sa toile.
         scene.add("mini_arena/banner", (x, 0.0, -17.5), 0.0, 3.4)
@@ -765,7 +763,7 @@ def build_sanctum(scene, rng):
         scene.column_collider(x, pz, 0.6 * 4.0, 6.5, base=-1.2)
         mound(scene, x, pz, 1.9, 0.55, 1.6, collide=False)
     scene.add("mini_arena/column-damaged", (7.5, -1.2, pz), 0.0, (4.0, 3.0, 4.0))
-    scene.add_box((7.5, 0.5, pz), (2.3, 1.0, 2.3))
+    scene.hull()
     put(scene, "mini_arena/column", (14.6, 0.0, -21.6), 90.0, (4.0), height=2.4, tilt=90.0)
     scene.shape("box", {"size": (10.6, 0.9, 2.6)}, "stone", (-7.5, 5.75, pz))
     scene.shape("box", {"size": (11.0, 0.25, 2.9)}, "stone_dark", (-7.5, 6.32, pz))
@@ -802,8 +800,8 @@ def build_caravan(scene, rng):
         rng.uniform(0, 360)
         put(scene, "mini_dungeon/barrel", (x, 0.0, z), 0.0, 2.6, height=1.25)
     put(scene, "survival_kit/barrel-open", at(7.0, 0.2), heading, 3.0, height=1.0)
-    put(scene, "food_kit/bag", at(-7.4, 0.4), heading + 10.0, 1.2, height=1.0)
-    put(scene, "food_kit/bag", at(-7.2, -0.7), heading + 80.0, 1.1, height=0.92)
+    put(scene, "food_kit/bag", at(-7.4, 0.4), heading + 10.0, 1.2, height=1.0, hull=True)
+    put(scene, "food_kit/bag", at(-7.2, -0.7), heading + 80.0, 1.1, height=0.92, hull=True)
     put(scene, "food_kit/bag-flat", at(-6.2, -0.8), heading + 30.0, 1.5)
     put(scene, "fantasy_town_kit/cart", at(-1.0, -7.0), heading + 100.0, 2.8, height=1.5, roll=90.0, box=False)
     put(scene, "fantasy_town_kit/wheel", at(1.9, -6.4), heading + 30.0, 2.8, roll=90.0)
@@ -891,7 +889,7 @@ def build_oasis(scene, rng):
     skeleton_beast(scene, 46.6, 2.4, 75.0, 1.25, rng)
     for x, z, yaw in ((42.6, 4.2, 30.0), (36.4, -2.6, 250.0), (45.6, -7.0, 120.0)):
         vulture_skull(scene, x, z, yaw, 1.6)
-    put(scene, "nature_kit/cactus_short", (47.0, 0.0, 6.0), 30.0, 3.0, height=1.5)
+    put(scene, "nature_kit/cactus_short", (47.0, 0.0, 6.0), 30.0, 3.0, height=1.5, hull=True)
 
 
 def build_cistern(scene, rng):

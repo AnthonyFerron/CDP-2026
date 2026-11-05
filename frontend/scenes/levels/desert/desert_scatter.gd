@@ -161,9 +161,23 @@ func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, soli
 		groups[group].append(Transform3D(basis.scaled(Vector3.ONE * scale_factor), origin))
 		if solid:
 			var collision := CollisionShape3D.new()
-			if tilted and group < RUIN_BOXES.size() and (group > 0 or group >= hulls.size() or hulls[group].is_empty()):
-				# Tas de briques : une boîte tournée comme eux (leur enveloppe laissait une marche de 0,42 m sur la
-				# pente d'une dune) ; les colonnes couchées ont leur enveloppe.
+			if tilted and group > 0 and group < hulls.size() and not hulls[group].is_empty():
+				# Tas de briques : un prisme droit sur l'emprise de leur enveloppe, de la base au sommet ; la pleine
+				# enveloppe, en pente douce au pied, laissait une marche de 0,42 m sur la pente d'une dune.
+				var top := 0.0
+				for point in hulls[group]:
+					top = maxf(top, point.y)
+				var prism := PackedVector3Array()
+				for point in hulls[group]:
+					if point.y >= top * 0.15:
+						prism.append(basis * Vector3(point.x, -0.1, point.z) * scale_factor)
+						prism.append(basis * Vector3(point.x, top, point.z) * scale_factor)
+				var prism_shape := ConvexPolygonShape3D.new()
+				prism_shape.points = prism
+				collision.shape = prism_shape
+				collision.position = origin
+			elif tilted and group < RUIN_BOXES.size() and (group >= hulls.size() or hulls[group].is_empty()):
+				# Faute d'enveloppe, une boîte tournée comme la ruine, sur toute sa longueur.
 				var box := BoxShape3D.new()
 				box.size = RUIN_BOXES[group] * scale_factor
 				collision.shape = box
