@@ -1,7 +1,8 @@
 class_name Hud
 extends CanvasLayer
 ## Interface de jeu : invite d'interaction, messages, lecture de textes, fondu au noir,
-## chronomètre du volcan, pénalités et écran de fin quand le volcan entre en éruption.
+## chronomètre du volcan et pénalités. Quand le volcan entre en éruption, le joueur est ramené au hub, où se joue
+## la seule fin d'une partie perdue : la cinématique du Mont Sam Altan qui explose (HubEnding).
 
 signal reader_closed
 
@@ -34,7 +35,6 @@ var _warning_text: Label
 @onready var _crosshair: ColorRect = %Crosshair
 @onready var _timer: Label = %Timer
 @onready var _penalty: Label = %Penalty
-@onready var _game_over: Control = %GameOver
 
 
 func _ready() -> void:
@@ -43,22 +43,15 @@ func _ready() -> void:
 	_message.hide()
 	_reader.hide()
 	_penalty.hide()
-	_game_over.hide()
 	_fade.modulate.a = 0.0
 	GameState.time_penalized.connect(_on_time_penalized)
 	_build_warning()
 	GameState.erupted.connect(_on_erupted)
 	# Avis de la synchronisation avec le serveur : connexion perdue ou rétablie, refus.
 	GameSync.notice.connect(show_message)
-	# Retour à l'accueil depuis l'écran de fin, sous « Recommencer ».
-	var menu := %Restart.duplicate(Node.DUPLICATE_SCRIPTS) as Button
-	menu.name = "MainMenu"
-	menu.text = "Menu principal"
-	%Restart.add_sibling(menu)
-	menu.pressed.connect(_on_main_menu_pressed)
-	%Restart.pressed.connect(_on_restart_pressed)
 	_refresh_timer()
-	if GameState.has_erupted:
+	# Partie perdue pendant un changement de lieu : la fin suit dès l'arrivée. Le hub la joue lui-même.
+	if GameState.has_erupted and not get_parent() is Hub:
 		_on_erupted.call_deferred()
 
 
@@ -177,19 +170,27 @@ func _on_time_penalized(seconds: float) -> void:
 	_penalty.show()
 
 
+## Le chronomètre est à zéro, dans un lieu comme au hub : retour au hub, qui joue l'éruption du volcan. Une transition
+## déjà en cours ignore celle-ci ; le HUD du lieu d'arrivée la relance (_ready).
 func _on_erupted() -> void:
-	_game_over.show()
+	_close_panels()
 	_crosshair.hide()
 	set_prompt("")
-	get_tree().paused = true
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	Transition.change_scene(GameState.HUB_SCENE)
 
 
-func _on_main_menu_pressed() -> void:
-	GameState.reset()
-	Transition.change_scene(MainMenu.SCENE)
-
-
-func _on_restart_pressed() -> void:
-	GameState.reset()
-	Transition.change_scene(GameState.HUB_SCENE, GameState.hub_title())
+## Partie perdue : tout ce qui est ouvert se ferme avant la fin, quel que soit le lieu. Les panneaux d'énigme et le
+## carnet sont des CanvasLayer du niveau (tablette, runes, cercles, dispositif des codes…) ; s'y ajoutent le texte en
+## lecture, le bandeau « Mauvaise réponse » et l'indice. Le joueur ne reprend pas la main : la fin suit.
+func _close_panels() -> void:
+	_reader.hide()
+	_message.hide()
+	if _warning_tween:
+		_warning_tween.kill()
+	_warning.hide()
+	for layer: CanvasLayer in get_parent().find_children("*", "CanvasLayer", true, false):
+		if layer != self and not is_ancestor_of(layer):
+			layer.hide()
+	if Hints.is_open():
+		Hints.close()

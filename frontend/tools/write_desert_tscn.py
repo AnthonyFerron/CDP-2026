@@ -216,7 +216,7 @@ rings = 6
 
 [sub_resource type="BoxMesh" id="BoxMesh_hole"]
 material = SubResource("StandardMaterial3D_void")
-size = Vector3(2.3, 0.02, 2.3)
+size = Vector3(2.3, 0.8, 2.3)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_leather"]
 albedo_color = Color(0.32, 0.18, 0.09, 1)
@@ -615,18 +615,20 @@ def main():
 
     node(lines, "Trapdoor", "Node3D", "Exterior", props=["transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, -6)"])
     node(lines, "Hole", "MeshInstance3D", "Exterior/Trapdoor", props=[
-        "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)", 'mesh = SubResource("BoxMesh_hole")'])
-    node(lines, "Hatch", "Node3D", "Exterior/Trapdoor", props=["transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.2)"])
+        "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.44, 0)", 'mesh = SubResource("BoxMesh_hole")'])
+    # La dalle pivote sur ses gonds du bord nord : desert.gd la relève vers le nord, au-dessus du dallage, et le joueur
+    # qui arrive du sud voit le trou noir s'ouvrir devant lui.
+    node(lines, "Hatch", "Node3D", "Exterior/Trapdoor", props=["transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.2)"])
     for index, x in enumerate((-0.6, 0.6)):
         node(lines, f"Slab{index}", "MeshInstance3D", "Exterior/Trapdoor/Hatch", props=[
-            f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {x:g}, 0, -1.2)", 'mesh = SubResource("BoxMesh_hatch_slab")'])
+            f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {x:g}, 0, 1.2)", 'mesh = SubResource("BoxMesh_hatch_slab")'])
         node(lines, f"Groove{index}", "MeshInstance3D", "Exterior/Trapdoor/Hatch", props=[
-            f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {x * 0.5:g}, 0.081, -1.2)", 'mesh = SubResource("BoxMesh_hatch_groove")'])
+            f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {x * 0.5:g}, 0.081, 1.2)", 'mesh = SubResource("BoxMesh_hatch_groove")'])
     node(lines, "Ring", "MeshInstance3D", "Exterior/Trapdoor/Hatch", props=[
-        "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0.09, -0.35)", 'mesh = SubResource("TorusMesh_ring")'])
+        "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0.09, 2.05)", 'mesh = SubResource("TorusMesh_ring")'])
     # Le sable couvre une partie de la dalle : il se soulève avec elle.
     node(lines, "Drift", "MeshInstance3D", "Exterior/Trapdoor/Hatch", props=[
-        "transform = Transform3D(0.75, 0, 0, 0, 0.12, 0, 0, 0, 1.25, 0.75, 0.06, -1.5)", 'mesh = SubResource("SphereMesh_drift")'])
+        "transform = Transform3D(0.75, 0, 0, 0, 0.12, 0, 0, 0, 1.25, 0.75, 0.06, 0.9)", 'mesh = SubResource("SphereMesh_drift")'])
     node(lines, "Interactable", "Node3D", "Exterior/Trapdoor", props=[
         'script = ExtResource("11_interactable")', 'prompt = "Soulever la trappe de pierre et descendre"', "radius = 2.6"])
 
@@ -704,9 +706,11 @@ def main():
             "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)", 'script = ExtResource("13_fire")', "size = 0.7",
             "light_energy = 1.5", "light_range = 7.0", 'crackle_sound = ExtResource("52_crackle")', "crackle_volume_db = -14.0"])
     node(lines, "InsideSpawn", "Marker3D", "Interior", props=["transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, -1.0)"])
+    # Sortie au milieu de l'escalier : au pied, on la voit devant soi ; en haut, tourné vers le mur du fond, elle reste
+    # à moins d'un mètre (portée sans viser de interaction_controller.gd), donc l'invite ne disparaît plus.
     node(lines, "Exit", "Node3D", "Interior", props=[
-        "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 1.7)", 'script = ExtResource("11_interactable")',
-        'prompt = "Remonter à la surface"', "radius = 2.8"])
+        "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 2.4)", 'script = ExtResource("11_interactable")',
+        'prompt = "Remonter à la surface"', "radius = 3.2"])
     node(lines, "Clues", "Node3D", "Interior")
     node(lines, "Caravan", "Node3D", "Exterior/Clues", props=[
         at(-32.85, 0.9, -30.29, 1.0, 70.0), 'script = ExtResource("12_readable")',

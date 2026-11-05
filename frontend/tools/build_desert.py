@@ -908,11 +908,11 @@ def build_cistern(scene, rng):
     for z in (z0 - ring / 2, z1 + ring / 2):
         scene.add("mini_arena/wall", (cx, top - height, z), 0.0, (length_x, height, ring / 0.6))
         scene.shape("box", {"size": (length_x + 0.2, 0.16, ring + 0.2)}, "stone_dark", (cx, top + 0.08, z))
-        scene.box_collider((cx, center_y + 0.75, z), (length_x, height + 1.5, ring))
+        scene.box_collider((cx, center_y + 0.08, z), (length_x, height + 0.16, ring))
     for x in (x0 - ring / 2, x1 + ring / 2):
         scene.add("mini_arena/wall", (x, top - height, cz), 90.0, (length_z, height, ring / 0.6))
         scene.shape("box", {"size": (ring + 0.2, 0.16, length_z)}, "stone_dark", (x, top + 0.08, cz))
-        scene.box_collider((x, center_y + 0.75, cz), (ring, height + 1.5, length_z))
+        scene.box_collider((x, center_y + 0.08, cz), (ring, height + 0.16, length_z))
     for x in (x0 - ring / 2, x1 + ring / 2):
         for z in (z0 - ring / 2, z1 + ring / 2):
             scene.shape("box", {"size": (1.6, 0.35, 1.6)}, "stone_dark", (x, 0.175, z))
@@ -920,25 +920,58 @@ def build_cistern(scene, rng):
             scene.shape("box", {"size": (1.55, 0.22, 1.55)}, "stone_dark", (x, 1.56, z))
             scene.shape("box", {"size": (1.0, 0.15, 1.0)}, "stone", (x, 1.745, z))
             scene.box_collider((x, 0.175, z), (1.6, 0.35, 1.6))
-            scene.box_collider((x, 1.6, z), (1.3, 2.5, 1.3))
+            scene.box_collider((x, 1.085, z), (1.3, 1.47, 1.3))
     floor = -depth
-    for x, z, damaged in ((x0 + 1.3, z0 + 1.2, False), (x1 - 1.3, z0 + 1.2, True), (x0 + 1.3, z1 - 1.2, True), (x1 - 1.3, z1 - 1.2, False)):
+    # Les colonnes du sud laissent la place de l'escalier et de son pied, contre le mur sud.
+    for x, z, damaged in ((x0 + 1.3, z0 + 2.0, False), (x1 - 1.3, z0 + 2.0, True), (x0 + 1.3, z1 - 1.2, True), (x1 - 1.3, z1 - 1.2, False)):
         if damaged:
             scene.add("mini_arena/column-damaged", (x, floor, z), 0.0, (1.6, 3.4, 1.6))
         else:
             scene.add("mini_arena/column", (x, floor, z), 0.0, (1.6, 3.0, 1.6))
+        width, tall = 0.6 * 1.6, 3.4 * 0.72 if damaged else 3.0
+        scene.add_box((x, floor + 0.06 * width, z), (width, 0.12 * width, width))
+        scene.cylinder_collider((x, floor + tall / 2, z), width * 0.36, tall)
     beam = math.degrees(math.atan2(length_z + 2 * ring, length_x))
     yaw = 90.0 - beam + 8.0
     scene.shape("box", {"size": (0.6, 0.55, 9.4)}, "wood_bleached", (cx, top + 0.45, cz), yaw, roll=4.0)
+    scene.box_collider((cx, top + 0.45, cz), (0.6, 0.55, 9.4), yaw, roll=4.0)
     for u in (-3.2, 2.6):
         scene.shape("box", {"size": (0.66, 0.61, 0.14)}, "bronze",
                     (cx + math.sin(math.radians(yaw)) * u, top + 0.45, cz + math.cos(math.radians(yaw)) * u), yaw, roll=4.0)
-    for x, z in ((cx - 1.4, cz + 0.8), (cx + 1.6, cz - 1.0)):
-        put(scene, "mini_dungeon/pot", (x, floor, z), rng.uniform(0, 360), 1.6, roll=90.0 if x > cx else 0.0)
+    for x, z in ((cx - 1.4, cz + 0.8), (cx + 1.6, cz + 0.45)):
+        put(scene, "mini_dungeon/pot", (x, floor, z), rng.uniform(0, 360), 1.6, roll=90.0 if x > cx else 0.0,
+            height=0.5 if x > cx else 0.43 * 1.6)
     lying_skeleton(scene, cx + 0.4, cz + 1.2, 200.0, buried=False, y=floor)
-    scene.add("survival_kit/bucket", (cx - 0.6, floor + 0.2, cz - 1.3), 40.0, 3.5, tilt=90.0)
+    scene.add("survival_kit/bucket", (cx - 0.6, floor + 0.2, cz - 0.4), 40.0, 3.5, tilt=90.0)
+    cistern_stairs(scene, x0, z0, floor, top + 0.16)
     jars(scene, x1 + 2.6, z1 + 2.0, random.Random(71), 3, 0.9)
     vulture_skull(scene, x0 - 1.8, z0 - 2.2, 60.0, 1.6)
+
+
+def cistern_stairs(scene, x0, z0, floor, rim):
+    """Escalier des porteurs d'eau, contre le mur sud de la citerne, entre ses deux colonnes : neuf marches de pierre
+    du fond jusqu'au haut du mur, d'où l'on ressort. Le joueur les monte sur une rampe de collision qui passe par
+    le nez de la première marche et le bord de la dernière, puis tient debout sur le palier du haut."""
+    steps = 9
+    start, end = x0 + 1.9, x0 + 5.4
+    width = 1.05
+    zc = z0 + width / 2
+    rise = (rim - floor) / steps
+    depth = (end - start) / steps
+    for k in range(steps):
+        tall = (k + 1) * rise
+        scene.shape("box", {"size": (depth, tall, width)}, "stone" if k % 2 else "stone_dark",
+                    (start + (k + 0.5) * depth, floor + tall / 2, zc))
+    # Rampe du nez de la première marche au bord du palier, puis le palier (la dernière marche).
+    landing = end - depth
+    run, height = landing - start, rim - floor
+    length = math.hypot(run, height)
+    angle = math.degrees(math.atan2(height, run))
+    thick = 0.3
+    nx, ny = -height / length, run / length
+    mid = (start + run / 2 - nx * thick / 2, floor + height / 2 - ny * thick / 2)
+    scene.box_collider((mid[0], mid[1], zc), (length, thick, width), roll=angle)
+    scene.box_collider(((landing + end) / 2, (floor + rim) / 2, zc), (depth, rim - floor, width))
 
 
 def build_head(scene, rng):
