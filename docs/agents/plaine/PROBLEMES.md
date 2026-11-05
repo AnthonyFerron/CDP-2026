@@ -70,3 +70,20 @@ Captures avant et après aux mêmes points : `dos/avant`, `dos/apres`, `dos/apre
 - Le dos des rayonnages isolés du scriptorium paraît noir de tout près (ombre, pas de lumière derrière) : laissé.
 - `plaine_puzzle_test.gd` partagé attend « Relire » après la lecture d'un livre ; le livre disparaissant, il échoue : ma copie est adaptée.
 - `res://tests/run_tests.tscn` (PR #12) : 49 réussis, 1 échec « --mail-dir est requis pour lire les codes de connexion » (il faut le serveur de courrier `tests/mailsink.py`, sans lien avec la Plaine).
+
+## Retours des testeurs (5 novembre 2026)
+
+Les testeurs jouaient la production (`main`), qui n'avait pas encore les corrections de collisions de la nuit (2943f79 : rochers du pourtour, enveloppes des épaves et des tas de pierres, gros rochers au maillage ; 673da60 : arches et objets bas des archives). Captures avant et après : `.claude/captures/plaine-retours/avant` et `apres`.
+
+| # | Retour | Cause | Correction |
+| --- | --- | --- | --- |
+| 21 | Lanternes du chemin et lampadaires de la façade sans collision | Seul le poteau avait une boîte ; la potence et la lanterne qui pend (1,9 à 2,5 m) se traversaient en sautant | Boîte de la potence et de la lanterne, de 1,7 m (sous le haut du joueur) au haut du poteau (`LANTERN_HEAD`, `plaine_scatter.gd` et `lantern_post`) |
+| 22 | Bibliothèque extérieure sans collision, « texture mal placée » | Murs brisés : collision en boîte pleine jusqu'à 3 m, alors que le maillage monte à 4 m par endroits et s'ouvre ailleurs (grille : mur invisible en (-4 ; 1,5 ; -12), mur du fond) | Murs refaits (n° 23) |
+| 23 | Vue extérieure sans lien avec l'intérieur | Ruine ouverte de 20 x 20 m, sans toit, vide derrière ses brèches, alors que les archives sont des salles entières | Bâtiment entier de 12 m de large (comme les archives) sur 28 m, mêmes murs `wall`, porte au centre, étage de façade à fenêtres, long toit à deux pans en croupe, plafond de collision ; gravats et deux rayonnages jetés dehors ; carreaux plantés devant le nouveau mur du fond ; proclamation déplacée sur la façade (-4,3 ; 8,57) ; fumée sur le toit ; lumières des dos des anciens rayonnages retirées |
+| 24 | Livres au sol à travers un anneau (archives) | Le lustre tombé (-1,6 ; -29) était dans les livres répandus par le rayonnage renversé du mur ouest | Lustre tombé en (2,7 ; -29,6), à l'écart |
+| 25 | Tablette qui ne « tient » pas | Plaque penchée : son bord arrière flottait à 20 cm au-dessus du socle | Cale de pierre sous la plaque (`Interior/Tablet/Top/Support`) |
+| 26 | Sortir de la carte | Aucune sortie retrouvée sur `dev`, ni dehors ni dans les archives (`border_test.gd`, `limit_test`) ; la production n'avait pas encore les collisions des rochers du pourtour (2943f79) | Rien à fermer en plus ; l'outil reste ici pour la suite |
+
+`border_test.gd` (archivé ici) longe chaque bord en marchant puis en courant et sautant, appuyé à 25° contre lui, dans les deux sens : dehors tous les 7,5° du cercle de la limite (192 parcours), dedans le long de chaque mur des salles, du passage et de la petite salle, dalle ouverte (34 parcours).
+
+Résultats après corrections : `plaine_puzzle_test` 34 OK, 0 échec ; `tree_collision_test` (fenêtre) : Plaine 38 arbres, 0 sans collision ; grille dehors 0 problème (avant : 1 mur invisible, mur brisé du fond), grille dedans 0 problème ; `limit_test` 24 OK ; `border_test` dehors 192 parcours et dedans 34 parcours, 0 sortie. `build_plaine.py` relancé deux fois : aucune dérive.
