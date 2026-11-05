@@ -20,6 +20,8 @@ const REPAIR_SHOT := 4.0
 const VICTORY_SPAWN := Vector3(0.0, 0.3, -60.0)
 ## Temps laissé au titre de la bonne fin avant de rendre la main, en secondes.
 const VICTORY_TITLE_HOLD := 3.5
+## Temps laissé au titre de l'éruption avant le retour au menu principal, en secondes.
+const ERUPTION_TITLE_HOLD := 5.0
 ## Les deux personnages à écouter avant de sortir du bunker la première fois.
 const INTRO_SPEAKERS: Array[StringName] = [&"Codeon", &"Merlon"]
 ## Couleur des lettres du cercle magique, éteintes (gravées) et allumées par leur livre.
@@ -110,6 +112,9 @@ func _ready() -> void:
 		_release_survivors()
 	_place_player()
 	_volcano.set_state(Volcano.State.DORMANT if placed_count() >= GameState.BOOK_COUNT else Volcano.State.AWAKE)
+	# Partie perdue, d'où que vienne le joueur (HUD d'un lieu ou du hub, reprise) : la seule fin perdue est ici.
+	if GameState.has_erupted:
+		GameState.ending = &"eruption"
 	if GameState.ending != &"":
 		_play_ending(GameState.ending)
 		return
@@ -158,7 +163,17 @@ func _play_ending(ending: StringName) -> void:
 		await get_tree().create_timer(VICTORY_TITLE_HOLD).timeout
 		_resume_after_victory()
 	else:
-		_ending.play_eruption()
+		await _ending.play_eruption()
+		await get_tree().create_timer(ERUPTION_TITLE_HOLD).timeout
+		_leave_after_eruption()
+
+
+## Fin de l'éruption : la partie perdue est effacée (sauvegarde comprise) et le joueur revient au menu principal, où
+## il n'y a plus de partie à charger. L'aperçu de la fin depuis le menu de debug, sans éruption, n'efface rien.
+func _leave_after_eruption() -> void:
+	if GameState.has_erupted:
+		GameState.reset()
+	Transition.change_scene(MainMenu.SCENE)
 
 
 ## Fin de la cinématique de victoire : le joueur reprend la main devant le château, et tous les portails
