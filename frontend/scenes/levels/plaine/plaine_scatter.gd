@@ -58,6 +58,9 @@ var _tree_tops: Array[Vector3] = []
 ## Dessous de chaque modèle de gros rocher, en 25 points de son emprise (repère du modèle).
 var _undersides := {}
 var _rng := RandomNumberGenerator.new()
+## Bandes de la zone qui brûle pendant leur calcul : centre et taille.
+var _strip_positions := PackedVector3Array()
+var _strip_sizes := PackedVector3Array()
 
 
 func _ready() -> void:
@@ -71,9 +74,24 @@ func _ready() -> void:
 	_scatter_dead_trees()
 	_add_border_rocks()
 	_add_lanterns()
+	compute_lava_pools()
 	_add_crater_effects()
 	_add_lava_flow()
 	_add_lava_hazards()
+
+
+## Bassins de lave des cratères : centre de leur surface, au niveau de la lave, et rayon.
+func compute_lava_pools() -> void:
+	lava_pools.clear()
+	for index in PlaineTerrain.CRATERS.size():
+		var crater := PlaineTerrain.CRATERS[index]
+		var pool := Vector3(crater.x, terrain.crater_lava_level(index), crater.y)
+		lava_pools.append({center = pool, radius = crater.z * PlaineTerrain.LAVA_RATIO})
+
+
+## Empreinte des réglages dont découle la zone qui brûle, en plus de ceux du terrain.
+static func hazard_signature() -> String:
+	return var_to_str([PlaineTerrain.settings_signature(), HAZARD_STEP, HAZARD_DEPTH, HAZARD_LENGTH]).md5_text()
 
 
 func is_near_lava(point: Vector3, margin: float) -> bool:
@@ -325,10 +343,8 @@ func _add_crater_effects() -> void:
 	for index in PlaineTerrain.CRATERS.size():
 		var crater := PlaineTerrain.CRATERS[index]
 		var center := Vector3(crater.x, terrain.height_at(crater.x, crater.y), crater.y)
-		var radius := crater.z * PlaineTerrain.LAVA_RATIO
-		var surface := terrain.crater_lava_level(index)
-		var pool := Vector3(crater.x, surface, crater.y)
-		lava_pools.append({center = pool, radius = radius})
+		var radius: float = lava_pools[index].radius
+		var pool: Vector3 = lava_pools[index].center
 		add_child(_lava_surface(pool, radius))
 		add_child(_embers(pool, radius, ember_material))
 		if lava_sound:
@@ -461,13 +477,41 @@ func lava_surface_at(x: float, z: float) -> float:
 	return lava
 
 
-## Zone qui brûle, calée sur la lave visible : par rangées de HAZARD_STEP mètres, des bandes là où la lave couvre le
-## sol de plus de HAZARD_DEPTH. Elle colle aux rives tortueuses des lacs comme aux élargissements de la coulée, et
-## reste sous le tablier du pont.
+## Zone qui brûle : ses bandes, calculées d'avance (PlaineBake) si les réglages n'ont pas changé, sinon ici.
 func _add_lava_hazards() -> void:
 	var area := Area3D.new()
 	area.name = "LavaHazard"
+	var bake := terrain.bake
+	var strips: Array[PackedVector3Array] = []
+	if bake and bake.hazard_signature == hazard_signature() and terrain.is_baked() \
+			and bake.hazard_positions.size() == bake.hazard_sizes.size():
+		strips = [bake.hazard_positions, bake.hazard_sizes]
+	else:
+		if bake:
+			push_warning("Plaine : zone de lave calculée d'avance périmée, relancer tools/bake_plaine.gd")
+		strips = lava_hazard_strips()
+	var positions := strips[0]
+	var sizes := strips[1]
+	for index in positions.size():
+		var shape := BoxShape3D.new()
+		shape.size = sizes[index]
+		var collision := CollisionShape3D.new()
+		collision.shape = shape
+		collision.position = positions[index]
+		area.add_child(collision)
+	# La zone entre dans le monde une fois toutes ses bandes posées : ajoutées une à une à une zone déjà dans le
+	# monde, chacune faisait recalculer toutes les autres (2 s pour 2 600 bandes).
 	add_child(area)
+	print_verbose("Plaine : %d bandes de lave" % area.get_child_count())
+	area.body_entered.connect(func(body: Node3D) -> void: lava_touched.emit(body))
+
+
+## Zone qui brûle, calée sur la lave visible : par rangées de HAZARD_STEP mètres, des bandes là où la lave couvre le
+## sol de plus de HAZARD_DEPTH. Elle colle aux rives tortueuses des lacs comme aux élargissements de la coulée, et
+## reste sous le tablier du pont. Rend le centre et la taille de chaque bande (lava_pools doit être rempli).
+func lava_hazard_strips() -> Array[PackedVector3Array]:
+	_strip_positions = PackedVector3Array()
+	_strip_sizes = PackedVector3Array()
 	var regions: Array[Rect2] = []
 	for pool in lava_pools:
 		var center: Vector3 = pool.center
@@ -493,7 +537,7 @@ func _add_lava_hazards() -> void:
 					depth = minf(depth, lava_surface_at(x, z + edge) - terrain.surface_height(x, z + edge))
 				# Bandes courtes, pour que leur dessus suive la lave : jamais au-dessus du tablier du pont.
 				if start != INF and x - start > HAZARD_LENGTH:
-					_hazard_strip(area, start, x, z, bottom - 0.4, top + 0.3)
+					_hazard_strip(start, x, z, bottom - 0.4, top + 0.3)
 					start = INF
 					top = -INF
 					bottom = INF
@@ -503,23 +547,18 @@ func _add_lava_hazards() -> void:
 					top = maxf(top, lava)
 					bottom = minf(bottom, ground)
 				elif start != INF:
-					_hazard_strip(area, start, x, z, bottom - 0.4, top + 0.3)
+					_hazard_strip(start, x, z, bottom - 0.4, top + 0.3)
 					start = INF
 					top = -INF
 					bottom = INF
 				x += HAZARD_STEP * 0.5
 			z += HAZARD_STEP
-	print_verbose("Plaine : %d bandes de lave" % area.get_child_count())
-	area.body_entered.connect(func(body: Node3D) -> void: lava_touched.emit(body))
+	return [_strip_positions, _strip_sizes]
 
 
-func _hazard_strip(area: Area3D, from_x: float, to_x: float, z: float, bottom: float, top: float) -> void:
-	var shape := BoxShape3D.new()
-	shape.size = Vector3(to_x - from_x, top - bottom, HAZARD_STEP)
-	var collision := CollisionShape3D.new()
-	collision.shape = shape
-	collision.position = Vector3((from_x + to_x) * 0.5 - HAZARD_STEP * 0.25, (top + bottom) * 0.5, z)
-	area.add_child(collision)
+func _hazard_strip(from_x: float, to_x: float, z: float, bottom: float, top: float) -> void:
+	_strip_positions.append(Vector3((from_x + to_x) * 0.5 - HAZARD_STEP * 0.25, (top + bottom) * 0.5, z))
+	_strip_sizes.append(Vector3(to_x - from_x, top - bottom, HAZARD_STEP))
 
 
 func _embers(center: Vector3, radius: float, material: Material) -> CPUParticles3D:

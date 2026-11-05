@@ -59,8 +59,17 @@ const COLOR_SOOT := Color(0.11, 0.095, 0.11)
 const COLOR_CRATER := Color(0.22, 0.09, 0.07)
 const COLOR_BORDER := Color(0.26, 0.23, 0.28)
 const COLOR_TRAIL := Color(0.3, 0.26, 0.25)
+## Bruit du relief.
+const RELIEF_SEED := 2026
+const RELIEF_FREQUENCY := 0.035
+## Écart toléré entre une hauteur recalculée et celle du sol calculé d'avance : le bruit peut différer d'un
+## processeur à l'autre de quelques millionièmes, pas d'un millimètre.
+const BAKE_TOLERANCE := 0.001
 
 @export var ground_material: Material
+## Sol calculé d'avance (tools/bake_plaine.gd). Sans lui, ou s'il ne correspond plus aux réglages, le sol est
+## calculé au chargement.
+@export var bake: PlaineBake
 
 var _relief := FastNoiseLite.new()
 ## Niveau de la lave de chaque cratère, calé sur son bord : la coulée s'y raccorde.
@@ -73,13 +82,45 @@ var _cells := 0
 
 
 func _ready() -> void:
-	_relief.seed = 2026
-	_relief.frequency = 0.035
+	_relief.seed = RELIEF_SEED
+	_relief.frequency = RELIEF_FREQUENCY
 	_pool_levels.clear()
 	for crater in CRATERS:
 		_pool_levels.append(_pool_level(crater))
-	_build()
+	if is_baked():
+		_build_baked()
+	else:
+		if bake:
+			push_warning("Plaine : sol calculé d'avance périmé, relancer tools/bake_plaine.gd")
+		_build()
 	_build_limit()
+
+
+## Empreinte des réglages dont découle le sol : si l'un change, le sol calculé d'avance est périmé.
+static func settings_signature() -> String:
+	return var_to_str([CRATERS, IMPACTS, LAVA_RATIO, SIZE, CELL_SIZE, PLAY_RADIUS, BORDER_WIDTH, BORDER_HEIGHT,
+		RUINS_RADIUS, PATH_HALF_WIDTH, TRAIL_START, TRAIL_END, TRAIL_HALF_WIDTH, LAVA_FLOW, FLOW_HALF_WIDTH, FLOW_DEPTH,
+		FLOW_LAVA_RISE, FLOW_JOIN, COLOR_ASH, COLOR_SOOT, COLOR_CRATER, COLOR_BORDER, COLOR_TRAIL, SITES, RELIEF_SEED,
+		RELIEF_FREQUENCY]).md5_text()
+
+
+## Vrai si le sol calculé d'avance correspond aux réglages et au relief : même empreinte, même niveau de lave dans
+## chaque cratère, et mêmes hauteurs en quelques points de la grille.
+func is_baked() -> bool:
+	var cells := int(SIZE / CELL_SIZE)
+	if not bake or not bake.ground or bake.terrain_signature != settings_signature():
+		return false
+	if bake.heights.size() != (cells + 1) * (cells + 1) or bake.pool_levels.size() != CRATERS.size():
+		return false
+	for index in CRATERS.size():
+		if absf(bake.pool_levels[index] - crater_lava_level(index)) > BAKE_TOLERANCE:
+			return false
+	for spot: Vector2i in [Vector2i(0, 0), Vector2i(cells / 2, cells / 2), Vector2i(cells / 3, cells * 2 / 3),
+			Vector2i(cells * 3 / 5, cells / 4), Vector2i(cells * 7 / 10, cells * 3 / 5), Vector2i(cells / 2, cells * 3 / 4)]:
+		var height := height_at(spot.x * CELL_SIZE - SIZE * 0.5, spot.y * CELL_SIZE - SIZE * 0.5)
+		if absf(bake.heights[spot.y * (cells + 1) + spot.x] - height) > BAKE_TOLERANCE:
+			return false
+	return true
 
 
 func height_at(x: float, z: float) -> float:
@@ -315,18 +356,37 @@ func _build() -> void:
 	arrays[Mesh.ARRAY_TEX_UV] = uvs
 	var mesh := ArrayMesh.new()
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
-	mesh.surface_set_material(0, ground_material)
+	_heights = heights
+	_add_ground(mesh, vertices)
 
+
+## Le sol calculé d'avance : ses hauteurs, son maillage, et sa collision tirée des sommets du maillage.
+func _build_baked() -> void:
+	_cells = int(SIZE / CELL_SIZE)
+	_heights = bake.heights
+	var mesh := bake.ground
+	# Dans l'éditeur, le matériau se pose sur une copie : la ressource calculée d'avance reste sans matériau.
+	if Engine.is_editor_hint():
+		mesh = mesh.duplicate()
+	_add_ground(mesh, mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX])
+
+
+func _add_ground(mesh: ArrayMesh, vertices: PackedVector3Array) -> void:
+	mesh.surface_set_material(0, ground_material)
 	var mesh_instance := MeshInstance3D.new()
 	mesh_instance.mesh = mesh
 	add_child(mesh_instance)
 
-	_heights = heights
 	var shape := ConcavePolygonShape3D.new()
 	shape.set_faces(vertices)
 	var collision := CollisionShape3D.new()
 	collision.shape = shape
 	add_child(collision)
+
+
+## Hauteurs de la grille du sol, telles que le terrain les a calculées ou lues (pour tools/bake_plaine.gd).
+func grid_heights() -> PackedFloat32Array:
+	return _heights
 
 
 ## Mur invisible en cercle au pied des remparts, comme celui du hub : des panneaux qui se chevauchent, assez hauts
