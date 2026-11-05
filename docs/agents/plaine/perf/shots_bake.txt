@@ -1,0 +1,10 @@
+freeze
+a1_arrivee=0,1.7,54:0,1.5,30
+c1_cratere_ouest=-14,5,32:-28,-1,18
+c2_cratere_est=14,5,38:26,-1,26
+c3_cratere_sud=26,6,6:38,-1,-6
+c4_vue_haute=0,45,75:0,0,5
+b1_bibliotheque_dehors=3,1.7,18:-2,2,6
+b2_bibliotheque_lecture=in:0,-38.35,-1.5:0,-38.6,-12
+b3_scriptorium=in:-3.5,-38.35,-13.5:2,-39,-22
+b4_archives=in:3.5,-38.35,-25.5:0,-39,-33
