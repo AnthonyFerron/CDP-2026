@@ -20,8 +20,8 @@ const SANDSTONE := Color(1.0, 0.8, 0.6)
 ## et virait au noir sous la teinte du grès.
 const CAIRN_STONE := Color(0.7, 0.58, 0.46)
 ## Modèles des ruines dont une boîte laisserait des murs invisibles (étals ouverts sous leur auvent, charrette
-## renversée, bannières sur pied, rochers épars) : leur collision suit leurs triangles.
-const EXACT_MODELS: Array[String] = ["cart_", "stall_", "banner_", "rocks_small"]
+## renversée, bannières sur pied, rochers épars, angles en L de la muraille) : leur collision suit leurs triangles.
+const EXACT_MODELS: Array[String] = ["cart_", "stall_", "banner_", "rocks_small", "wall_corner"]
 ## Lumière ambiante dehors et dans la cave, sombre et poussiéreuse.
 const AMBIENT_OUTSIDE := 0.3
 const AMBIENT_INSIDE := 0.22
