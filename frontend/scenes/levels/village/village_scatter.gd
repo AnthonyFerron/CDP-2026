@@ -221,6 +221,8 @@ func _add_chunk(mesh: Mesh, transforms: Array[Transform3D], fades: bool) -> void
 		instance.visibility_range_end = detail_range
 		instance.visibility_range_end_margin = FADE_MARGIN
 		instance.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
+		# Petits détails : leur ombre coûte cher (le soleil les redessine dans chaque découpe d'ombre) pour peu d'effet.
+		instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(instance)
 
 

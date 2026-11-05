@@ -446,7 +446,7 @@ light_color = Color(1, 0.84, 0.6, 1)
 light_energy = 1.35
 shadow_enabled = true
 directional_shadow_mode = 1
-directional_shadow_max_distance = 55.0
+directional_shadow_max_distance = 50.0
 
 [node name="Exterior" type="Node3D" parent="."]
 

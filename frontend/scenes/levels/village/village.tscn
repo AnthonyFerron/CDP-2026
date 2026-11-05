@@ -395,7 +395,8 @@ transform = Transform3D(0.5, 0.19, -0.845, 0, 0.976, 0.218, 0.866, -0.109, 0.488
 light_color = Color(1, 0.72, 0.48, 1)
 light_energy = 1.1
 shadow_enabled = true
-directional_shadow_max_distance = 80.0
+directional_shadow_mode = 1
+directional_shadow_max_distance = 50.0
 
 [node name="SkyFill" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.7071, -0.3590, 0.6092, 0.0000, 0.8615, 0.5077, -0.7071, 0.3590, -0.6092, 0, 30, 0)

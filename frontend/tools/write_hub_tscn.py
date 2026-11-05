@@ -877,7 +877,7 @@ def main():
     node(lines, "Sun", "DirectionalLight3D", props=[
         "transform = Transform3D(0.866025, -0.25, 0.433013, 0, 0.866025, 0.5, -0.5, -0.433013, 0.75, 0, 40, 0)",
         "light_color = Color(1, 0.9, 0.78, 1)", "light_energy = 0.55", "shadow_enabled = true",
-        "directional_shadow_max_distance = 90.0"])
+        "directional_shadow_mode = 1", "directional_shadow_max_distance = 50.0"])
     node(lines, "Terrain", "StaticBody3D", props=['script = ExtResource("2_terrain")', 'ground_material = SubResource("ShaderMaterial_ground")'])
     lines += [
         '[node name="Scatter" type="Node3D" parent="." node_paths=PackedStringArray("terrain")]',
