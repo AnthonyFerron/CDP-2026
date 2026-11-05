@@ -149,17 +149,18 @@ func _run() -> void:
 	await action("pause")
 	check("pause refermee", not pause.is_open() and not paused)
 
-	# Écran de fin : bouton du menu principal.
+	# Fin perdue : la cinematique du volcan au hub, puis retour au menu principal.
 	game.time_left = 1.0
 	await wait(90)
-	var game_over_menu := current_scene.get_node("Hud").find_child("MainMenu", true, false) as Button
-	check("menu principal sur l'ecran de fin", game_over_menu != null and game_over_menu.is_visible_in_tree())
+	check("eruption jouee au hub", current_scene.name == "Hub" and current_scene.get_node("Ending").get("_camera") != null)
 	await action("pause")
-	check("pas de pause sur l'ecran de fin", not pause.is_open())
-	if game_over_menu:
-		game_over_menu.pressed.emit()
+	check("pas de pause pendant la fin", not pause.is_open())
+	for i in 40:
+		await create_timer(1.0).timeout
+		if current_scene and current_scene.scene_file_path.ends_with("main_menu.tscn"):
+			break
 	await wait(20)
-	check("retour au menu apres l'eruption", current_scene.scene_file_path.ends_with("main_menu.tscn") and not game.has_erupted)
+	check("retour au menu apres l'eruption", current_scene.scene_file_path.ends_with("main_menu.tscn") and not game.can_continue())
 
 	# Création de compte, puis déconnexion.
 	await click("Sedéconnecter")
