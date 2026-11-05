@@ -168,8 +168,11 @@ func _play_ending(ending: StringName) -> void:
 		_leave_after_eruption()
 
 
-## Fin de l'éruption : le joueur revient au menu principal.
+## Fin de l'éruption : la partie perdue est effacée (sauvegarde comprise) et le joueur revient au menu principal, où
+## il n'y a plus de partie à charger. L'aperçu de la fin depuis le menu de debug, sans éruption, n'efface rien.
 func _leave_after_eruption() -> void:
+	if GameState.has_erupted:
+		GameState.reset()
 	Transition.change_scene(MainMenu.SCENE)
 
 

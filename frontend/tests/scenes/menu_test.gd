@@ -149,7 +149,7 @@ func _run() -> void:
 	await action("pause")
 	check("pause refermee", not pause.is_open() and not paused)
 
-	# Fin perdue : la cinematique du volcan au hub, puis retour au menu principal.
+	# Fin perdue : la cinematique du volcan au hub, puis retour au menu principal, partie effacee.
 	game.time_left = 1.0
 	await wait(90)
 	check("eruption jouee au hub", current_scene.name == "Hub" and current_scene.get_node("Ending").get("_camera") != null)
@@ -160,7 +160,10 @@ func _run() -> void:
 		if current_scene and current_scene.scene_file_path.ends_with("main_menu.tscn"):
 			break
 	await wait(20)
-	check("retour au menu apres l'eruption", current_scene.scene_file_path.ends_with("main_menu.tscn") and not game.can_continue())
+	check("retour au menu apres l'eruption", current_scene.scene_file_path.ends_with("main_menu.tscn") and not game.has_erupted)
+	var save: Dictionary = game.read_save(game.save_path())
+	check("sauvegarde effacee apres l'eruption", not game.can_continue() and game.books.is_empty() and not game.intro_done
+		and (save.is_empty() or (not save.has_erupted and not save.intro_done)))
 
 	# Création de compte, puis déconnexion.
 	await click("Sedéconnecter")
