@@ -290,6 +290,14 @@ size = Vector3(2.4, 0.55, 0.9)
 material = SubResource("StandardMaterial3D_tomb_dark")
 size = Vector3(1.8, 0.1, 0.85)
 
+[sub_resource type="BoxMesh" id="BoxMesh_n6"]
+material = SubResource("StandardMaterial3D_tomb_dark")
+size = Vector3(0.06, 4.08, 0.06)
+
+[sub_resource type="BoxMesh" id="BoxMesh_n7"]
+material = SubResource("StandardMaterial3D_tomb_dark")
+size = Vector3(1.02, 0.05, 0.05)
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_n1"]
 size = Vector3(0.9, 2.7, 2.4)
 
@@ -768,10 +776,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -40, 0)
 
 [node name="InsideSpawn" type="Marker3D" parent="Interior"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.35, 11.0)
-
-[node name="Hatch" type="MeshInstance3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.13, 12.85)
-mesh = SubResource("BoxMesh_hatch")
 
 [node name="Exit" type="Node3D" parent="Interior"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 2.0)
@@ -1555,6 +1559,73 @@ material_overlay = SubResource("ShaderMaterial_dust")
 [node name="Shape5" type="CollisionShape3D" parent="Interior/Niches"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 1.35, 5.1)
 shape = SubResource("BoxShape3D_n2")
+
+[node name="Hatch" type="MeshInstance3D" parent="Interior/Niches"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 8.13, 12.85)
+mesh = SubResource("BoxMesh_hatch")
+
+[node name="Ladder" type="Node3D" parent="Interior/Niches"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 4.05, 13.67)
+
+[node name="Rail0" type="MeshInstance3D" parent="Interior/Niches/Ladder"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.47, 2.04, 0)
+mesh = SubResource("BoxMesh_n6")
+
+[node name="Rail2" type="MeshInstance3D" parent="Interior/Niches/Ladder"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.47, 2.04, 0)
+mesh = SubResource("BoxMesh_n6")
+
+[node name="Rung0" type="MeshInstance3D" parent="Interior/Niches/Ladder"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+mesh = SubResource("BoxMesh_n7")
+
+[node name="Rung1" type="MeshInstance3D" parent="Interior/Niches/Ladder"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+mesh = SubResource("BoxMesh_n7")
+
+[node name="Rung2" type="MeshInstance3D" parent="Interior/Niches/Ladder"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+mesh = SubResource("BoxMesh_n7")
+
+[node name="Rung3" type="MeshInstance3D" parent="Interior/Niches/Ladder"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+mesh = SubResource("BoxMesh_n7")
+
+[node name="Rung4" type="MeshInstance3D" parent="Interior/Niches/Ladder"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+mesh = SubResource("BoxMesh_n7")
+
+[node name="Rung5" type="MeshInstance3D" parent="Interior/Niches/Ladder"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+mesh = SubResource("BoxMesh_n7")
+
+[node name="Rung6" type="MeshInstance3D" parent="Interior/Niches/Ladder"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1, 0)
+mesh = SubResource("BoxMesh_n7")
+
+[node name="Rung7" type="MeshInstance3D" parent="Interior/Niches/Ladder"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4, 0)
+mesh = SubResource("BoxMesh_n7")
+
+[node name="Rung8" type="MeshInstance3D" parent="Interior/Niches/Ladder"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.7, 0)
+mesh = SubResource("BoxMesh_n7")
+
+[node name="Rung9" type="MeshInstance3D" parent="Interior/Niches/Ladder"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+mesh = SubResource("BoxMesh_n7")
+
+[node name="Rung10" type="MeshInstance3D" parent="Interior/Niches/Ladder"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.3, 0)
+mesh = SubResource("BoxMesh_n7")
+
+[node name="Rung11" type="MeshInstance3D" parent="Interior/Niches/Ladder"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+mesh = SubResource("BoxMesh_n7")
+
+[node name="Rung12" type="MeshInstance3D" parent="Interior/Niches/Ladder"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.9, 0)
+mesh = SubResource("BoxMesh_n7")
 
 [node name="Life" type="Node3D" parent="." node_paths=PackedStringArray("terrain", "player")]
 script = ExtResource("59_life")

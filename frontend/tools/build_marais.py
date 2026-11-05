@@ -32,7 +32,6 @@ from build_plaine import (
 
 # Boîtes englobantes (coin, taille) à l'échelle 1 des modèles posés ici, mesurées dans Godot.
 MODEL_BOXES.update({
-    "mini_forest/ladder": ((-0.252, 0.0, -0.05), (0.504, 1.0, 0.137)),
     "survival_kit/tent-canvas": ((-0.28, 0.0, -0.28), (0.56, 0.49, 0.56)),
     "survival_kit/bucket": ((-0.07, 0.0, -0.07), (0.14, 0.19, 0.14)),
     "survival_kit/campfire-pit": ((-0.14, 0.0, -0.13), (0.28, 0.09, 0.27)),
@@ -720,6 +719,8 @@ OPEN_EDGES = {((0, 0), (0, 1))}
 # Escalier du kit : son pied (z local -6,2) touche l'entrée, il monte de 4,05 m jusqu'au palier.
 STAIRS_ORIGIN = (0.0, 0.0, 8.2)
 LANDING = (0.0, 4.05, 12.4)
+# L'échelle de la trappe, à 0,5 m à l'est de l'axe du palier (LADDER_X dans write_marais_tscn.py).
+LADDER_X = 0.5
 # Façade des murs vue depuis la pièce : à 0,45 m du bord de la case (la collision dépasse, à 0,6 m).
 WALL_FACE = 0.45
 # Les murs du kit font juste la hauteur de la crypte (4,15 m) : leur haut affleurait le plafond et, sous certains
@@ -825,15 +826,10 @@ def build_crypt_underground(scene, rng):
         scene.add("modular_dungeon_kit/template-wall", (edge[0], ly, edge[1]), degrees, (0.95 if dz else 1.0, WALL_RISE, 1.0))
         size = (0.6, CRYPT_HEIGHT + 0.2, 4.0) if dx else (3.8, CRYPT_HEIGHT + 0.2, 0.6)
         scene.add_box((edge[0] - dx * 0.3, ly + CRYPT_HEIGHT / 2, edge[1] - dz * 0.3), size)
-    # L'échelle de bois qui descend de la trappe au palier, contre le mur du fond : trois pans de l'échelle du kit
-    # empilés (les barreaux gardent leur écart), du sol du palier jusqu'au bord de la trappe (Hatch dans marais.tscn).
-    # Contre le panneau central du mur, qui avance jusqu'à 0,63 m du bord (PANEL_FACE dans write_marais_tscn.py) : posée
-    # contre la façade à 0,45 m, l'échelle avait ses barreaux dans le panneau.
+    # Collision de l'échelle de fer qui monte du palier à la trappe (Ladder dans marais.tscn), devant le panneau central
+    # du mur du fond, qui avance jusqu'à 0,63 m du bord (PANEL_FACE dans write_marais_tscn.py).
     face = lz + 2.0 - 0.63
-    rung = (CRYPT_HEIGHT - 0.07) / 3
-    for index in range(3):
-        scene.place("mini_forest/ladder", (lx, ly + index * rung, face - 0.137 * rung / 2 - 0.005), 0.0, rung)
-    scene.add_box((lx, ly + CRYPT_HEIGHT / 2, face - 0.13), (0.75, CRYPT_HEIGHT, 0.24))
+    scene.add_box((lx + LADDER_X, ly + CRYPT_HEIGHT / 2, face - 0.13), (1.1, CRYPT_HEIGHT, 0.24))
 
     # Salle du mécanisme : colonnes aux angles, bannières et cierges autour du mécanisme, braseros au fond.
     for x in (-7.0, 7.0):
