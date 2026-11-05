@@ -173,6 +173,12 @@ GRAVESTONES = (
 )
 
 
+def upright_or_flipped(tilt, roll):
+    """Le modèle n'est que tourné autour de la verticale, ou retourné sens dessus dessous (barque à l'envers) : sa
+    boîte de collision tourne avec lui au lieu d'englober sa boîte tournée."""
+    return (not tilt and abs(roll) in (0.0, 180.0)) or (not roll and abs(tilt) == 180.0)
+
+
 def basis_of(degrees, tilt=0.0, roll=0.0):
     return multiply(multiply(rotation_y(degrees), rotation_x(tilt)), rotation_z(roll))
 
@@ -215,7 +221,7 @@ class MarshScene(Scene):
         if height:
             full = high[1] - low[1]
             h = full if height is True else min(height, full)
-            if round(degrees) % 90 and not tilt and not roll:
+            if round(degrees) % 90 and upright_or_flipped(tilt, roll):
                 (_, _, _), (sx, _, sz) = MODEL_BOXES[model]
                 axes = scale if isinstance(scale, tuple) else (scale, scale, scale)
                 self.add_box((center[0], center[1] + h / 2, center[2]), (sx * axes[0], h, sz * axes[2]), degrees)
@@ -242,7 +248,7 @@ class GroundItem:
         if height:
             full = high[1] - low[1]
             h = full if height is True else min(height, full)
-            if round(degrees) % 90 and not tilt and not roll:
+            if round(degrees) % 90 and upright_or_flipped(tilt, roll):
                 (_, _, _), (sx, _, sz) = MODEL_BOXES[model]
                 axes = scale if isinstance(scale, tuple) else (scale, scale, scale)
                 self.box((offset[0], offset[1] + h / 2, offset[2]), (sx * axes[0], h, sz * axes[2]), degrees)
@@ -713,8 +719,13 @@ OPEN_EDGES = {((0, 0), (0, 1))}
 # Escalier du kit : son pied (z local -6,2) touche l'entrée, il monte de 4,05 m jusqu'au palier.
 STAIRS_ORIGIN = (0.0, 0.0, 8.2)
 LANDING = (0.0, 4.05, 12.4)
+# L'échelle de la trappe, à 0,5 m à l'est de l'axe du palier (LADDER_X dans write_marais_tscn.py).
+LADDER_X = 0.5
 # Façade des murs vue depuis la pièce : à 0,45 m du bord de la case (la collision dépasse, à 0,6 m).
 WALL_FACE = 0.45
+# Les murs du kit font juste la hauteur de la crypte (4,15 m) : leur haut affleurait le plafond et, sous certains
+# angles, un jour laissait voir le fond du ciel. Ils montent 40 cm plus haut, dans l'épaisseur du plafond.
+WALL_RISE = (CRYPT_HEIGHT + 0.4) / CRYPT_HEIGHT
 
 
 # Niches d'ossuaire : point de la façade du mur et direction de la pièce. Leur cadre de pierre et sa collision
@@ -758,7 +769,7 @@ def build_crypt_underground(scene, rng):
             if (ix + dx, iz + dz) in tiles or ((ix, iz), (ix + dx, iz + dz)) in OPEN_EDGES:
                 continue
             edge = (x + dx * CRYPT_TILE / 2, z + dz * CRYPT_TILE / 2)
-            scene.add("modular_dungeon_kit/template-wall", (edge[0], 0.0, edge[1]), degrees, 1.0)
+            scene.add("modular_dungeon_kit/template-wall", (edge[0], 0.0, edge[1]), degrees, (1.0, WALL_RISE, 1.0))
             size = (0.6, CRYPT_HEIGHT, CRYPT_TILE) if dx else (CRYPT_TILE, CRYPT_HEIGHT, 0.6)
             scene.add_box((edge[0] - dx * 0.3, CRYPT_HEIGHT / 2, edge[1] - dz * 0.3), size)
 
@@ -812,9 +823,13 @@ def build_crypt_underground(scene, rng):
     scene.add_box((lx, ly - 0.25, lz - 0.3), (3.6, 0.5, 4.6))
     for (dx, dz), degrees in ((1, 0), 90.0), ((-1, 0), -90.0), ((0, 1), 0.0):
         edge = (lx + dx * 1.9, lz + dz * 2.0)
-        scene.add("modular_dungeon_kit/template-wall", (edge[0], ly, edge[1]), degrees, (0.95, 1.0, 1.0) if dz else 1.0)
+        scene.add("modular_dungeon_kit/template-wall", (edge[0], ly, edge[1]), degrees, (0.95 if dz else 1.0, WALL_RISE, 1.0))
         size = (0.6, CRYPT_HEIGHT + 0.2, 4.0) if dx else (3.8, CRYPT_HEIGHT + 0.2, 0.6)
         scene.add_box((edge[0] - dx * 0.3, ly + CRYPT_HEIGHT / 2, edge[1] - dz * 0.3), size)
+    # Collision de l'échelle de fer qui monte du palier à la trappe (Ladder dans marais.tscn, à 0,85 m du bord de la
+    # case, devant le socle du mur du fond), jusqu'à la collision du mur.
+    face = lz + 2.0 - 0.6
+    scene.add_box((lx + LADDER_X, ly + CRYPT_HEIGHT / 2, face - 0.17), (1.1, CRYPT_HEIGHT, 0.34))
 
     # Salle du mécanisme : colonnes aux angles, bannières et cierges autour du mécanisme, braseros au fond.
     for x in (-7.0, 7.0):
@@ -864,9 +879,13 @@ def build_crypt_underground(scene, rng):
     # Ossuaire, au sud-ouest : sarcophages et cercueils couverts de poussière, os entassés, une urne renversée.
     for z in (0.6, 3.6):
         scene.place("graveyard_kit/coffin-old", (-20.2, 0.0, z), 0.0, 2.6, height=True, coat="dust")
-    scene.place("graveyard_kit/gravestone-debris", (-17.4, 0.0, -0.4), 30.0, 2.6, coat="dust")
-    scene.place("mini_dungeon/stones", (-16.2, 0.0, 3.4), 20.0, 1.8, coat="dust")
-    scene.place("graveyard_kit/urn-round", (-15.2, 0.0, 4.7), 40.0, 2.4, tilt=90.0, coat="dust")
+    scene.place("graveyard_kit/gravestone-debris", (-17.4, 0.0, -0.4), 30.0, 2.6, height=True, coat="dust")
+    # Le tas de pierres et l'urne couchée, avec leur collision, laissent un passage d'un mètre jusqu'au mur : posés
+    # plus au sud, ils fermaient avec le cadre de la niche un recoin où le joueur restait pris.
+    scene.place("mini_dungeon/stones", (-16.0, 0.0, 2.6), 20.0, 1.8, height=True, coat="dust")
+    scene.place("graveyard_kit/urn-round", (-15.4, 0.0, 4.9), 60.0, 2.4, tilt=90.0, coat="dust")
+    # L'urne couchée : sa boîte tourne avec elle (la boîte englobante de l'urne tournée déborderait).
+    scene.add_box((-15.4, 0.32, 4.9), (0.64, 0.64, 0.91), 60.0)
     scene.place("graveyard_kit/candle-multiple", (-18.2, 0.0, 2.2), 10.0, 2.4)
     # Chambre des gardiens, au sud-est : leurs cercueils alignés, leurs boucliers et leurs lances.
     for x in (15.6, 20.4):

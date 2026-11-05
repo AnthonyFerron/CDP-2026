@@ -350,8 +350,9 @@ EPITAPHS = [
     "Codeon III, le Prudent. Là où son père avait avancé, il recula de trois pas, pour garder ce qui était acquis.",
     "Codeon IV, le Juste. Il reprit la marche en avant, de trois pas encore, puis ferma la mine d'argent. Son fils, Codeon V, règne aujourd'hui sur Codia.",
 ]
-# Tombeaux des rois, de part et d'autre de l'allée de la chambre de l'ouest (z = -12), à 0,75 m des murs.
-KINGS = ((-21.2, -8.95), (-26.8, -8.95), (-21.2, -15.05), (-26.8, -15.05))
+# Tombeaux des rois, de part et d'autre de l'allée de la chambre de l'ouest (z = -12), à 0,75 m des murs, dans
+# l'ordre de la visite : Codeon I et II face à face à l'entrée de la chambre, Codeon III et IV au fond, près de l'autel.
+KINGS = ((-21.2, -8.95), (-21.2, -15.05), (-26.8, -8.95), (-26.8, -15.05))
 # Niches de l'ossuaire : même liste que NICHES dans tools/build_marais.py (point de la façade, direction de la pièce).
 WALL_FACE = 0.45
 # Le panneau central des murs du kit avance jusqu'à 0,6 m du bord : les dalles gravées s'y posent devant.
@@ -367,6 +368,10 @@ NICHE_WIDTH, NICHE_HEIGHT, NICHE_DEPTH = 2.4, 2.7, 0.9
 NICHE_FLOOR, NICHE_SHELF = 0.55, 1.56
 # Palier du haut du long escalier, sous la trappe (LANDING dans build_marais.py).
 LANDING_Y = 4.05
+# La trappe et son échelle, un peu à l'est de l'axe du palier (LADDER_X dans build_marais.py). L'échelle se tient à
+# 0,85 m du bord de la case : le socle du mur du fond avance jusqu'à 0,8 m (jusqu'à 1 m de haut), son panneau à 0,63 m.
+LADDER_X = 0.5
+LADDER_FACE = 0.85
 
 INSCRIPTION = ("Pour ouvrir le tombeau, inscris le nom du royaume dans lequel tu te trouves. Puis, pour chaque lettre, "
                "alterne entre trois lettres en avant et trois lettres en arrière dans l'alphabet. Seul le nom ainsi "
@@ -639,8 +644,6 @@ def main():
     node(lines, "Crypt", parent="Interior", instance="50_crypt")
     # On arrive en haut du long escalier, sous la trappe, et l'on descend vers la salle.
     node(lines, "InsideSpawn", "Marker3D", "Interior", props=[f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, {LANDING_Y + 0.3:g}, 11.0)"])
-    node(lines, "Hatch", "MeshInstance3D", "Interior", props=[
-        f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, {LANDING_Y + 4.15 - 0.07:g}, 12.4)", 'mesh = SubResource("BoxMesh_hatch")'])
     node(lines, "Exit", "Node3D", "Interior", props=[
         "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 2.0)", 'script = ExtResource("11_interactable")',
         'prompt = "Remonter l\'escalier"', "radius = 2.2"])
@@ -773,6 +776,18 @@ def main():
         sign(lines, "Board", f"Interior/{name}", (-facing * 0.37, -1.6, 0.0), 90.0 * facing, board, style, 1,
              (1.3, 0.7), 1.75, 0.15)
     write_niches(lines)
+    # La trappe et l'échelle de fer qui y monte, devant le socle et le panneau central du mur du fond du palier (sa
+    # collision est dans marais_crypt.tscn). Rangées avec les niches, de la même pierre sombre : le regroupement du
+    # décor les fond en un seul maillage, sans appel de dessin de plus. Barreaux d'un mètre, pour qu'ils ne comptent
+    # pas parmi les petits objets (un lot à part). L'une et l'autre à 0,5 m à l'est de l'axe : toutes leurs pièces
+    # restent dans la même case de 12 m que la trappe (la limite des cases passe par l'axe, x = 0).
+    node(lines, "Hatch", "MeshInstance3D", "Interior/Niches", props=[
+        f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {LADDER_X:g}, {LANDING_Y + 4.15 - 0.07:g}, 12.85)", 'mesh = SubResource("BoxMesh_hatch")'])
+    node(lines, "Ladder", "Node3D", "Interior/Niches", props=[f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {LADDER_X:g}, {LANDING_Y:g}, {14.4 - LADDER_FACE:g})"])
+    for side in (-1, 1):
+        box_mesh(lines, f"Rail{side + 1}", "Interior/Niches/Ladder", (side * 0.47, (4.15 - 0.07) / 2, 0.0), (0.06, 4.15 - 0.07, 0.06), "StandardMaterial3D_tomb_dark")
+    for rung in range(13):
+        box_mesh(lines, f"Rung{rung}", "Interior/Niches/Ladder", (0.0, 0.3 * (rung + 1), 0.0), (1.02, 0.05, 0.05), "StandardMaterial3D_tomb_dark")
 
     # Volcan en éveil au nord, au-delà des reliefs : il domine la zone comme le hub.
     # La vie des marais : grenouilles des berges, poissons, corbeaux, chauves-souris de la crypte, lanternes pendues.
