@@ -349,12 +349,23 @@ func _build_login() -> void:
 	submit.pressed.connect(attempt)
 	password.line.text_submitted.connect(func(_text: String) -> void: attempt.call())
 	address.line.text_submitted.connect(func(_text: String) -> void: password.line.grab_focus())
+	# Mot de passe oublié : le serveur envoie un lien vers la page web de réinitialisation. Sa réponse est la
+	# même que le compte existe ou non, et le message aussi.
 	forgot.pressed.connect(func() -> void:
+		if _busy:
+			return
+		if address.text.strip_edges().is_empty():
+			_show_status(status, "Saisissez d'abord l'adresse e-mail du compte.")
+			address.line.grab_focus()
+			return
+		_busy = true
+		_show_status(status, "Envoi du lien…", true)
 		var result: Dictionary = await Account.request_password_reset(address.text.strip_edges())
+		_busy = false
 		if not is_instance_valid(status):
 			return
 		if result.ok:
-			_show_status(status, "Si un compte existe, un e-mail vient d'être envoyé.", true)
+			_show_status(status, "Si le compte existe, un e-mail vient de partir : lien valable 30 minutes.", true)
 		else:
 			_show_status(status, result.error))
 	address.line.grab_focus.call_deferred()

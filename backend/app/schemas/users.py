@@ -1,7 +1,8 @@
 import re
 from datetime import datetime
+from typing import Annotated
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
+from pydantic import AfterValidator, BaseModel, ConfigDict, EmailStr, Field, field_validator
 
 _USERNAME_RE = re.compile(r"^[\w .'-]+$")
 
@@ -11,6 +12,20 @@ def normalize_email(value: str) -> str:
     if len(value) > 255:
         raise ValueError("L'adresse e-mail ne doit pas dépasser 255 caractères.")
     return value
+
+
+def check_password_strength(value: str) -> str:
+    if not any(char.isalpha() for char in value) or not any(char.isdigit() for char in value):
+        raise ValueError("Le mot de passe doit contenir au moins une lettre et un chiffre.")
+    return value
+
+
+# Règles d'un nouveau mot de passe, communes à l'inscription et à la réinitialisation.
+NewPassword = Annotated[
+    str,
+    Field(min_length=8, max_length=128, description="8 à 128 caractères, avec au moins une lettre et un chiffre."),
+    AfterValidator(check_password_strength),
+]
 
 
 class UserCreate(BaseModel):
@@ -27,11 +42,7 @@ class UserCreate(BaseModel):
         description="Nom affiché dans les classements : lettres, chiffres, espaces, `_ - . '`.",
     )
     email: EmailStr = Field(description="Adresse unique, qui reçoit les codes de connexion.")
-    password: str = Field(
-        min_length=8,
-        max_length=128,
-        description="8 à 128 caractères, avec au moins une lettre et un chiffre.",
-    )
+    password: NewPassword
 
     @field_validator("username", mode="before")
     @classmethod
@@ -49,13 +60,6 @@ class UserCreate(BaseModel):
     @classmethod
     def _normalize_email(cls, value: str) -> str:
         return normalize_email(value)
-
-    @field_validator("password")
-    @classmethod
-    def _check_password(cls, value: str) -> str:
-        if not any(char.isalpha() for char in value) or not any(char.isdigit() for char in value):
-            raise ValueError("Le mot de passe doit contenir au moins une lettre et un chiffre.")
-        return value
 
 
 class UserRead(BaseModel):

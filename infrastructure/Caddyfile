@@ -5,6 +5,25 @@
 		reverse_proxy api:8000
 	}
 
+	# Page « nouveau mot de passe » (infrastructure/web/reinitialisation), ouverte depuis le lien de l'e-mail :
+	# /reinitialisation?token=<jeton>. Le jeton ne doit sortir de la page vers aucun autre site (no-referrer),
+	# ni rester en cache. Ce site n'a pas de directive `log` : aucun journal d'accès n'enregistre l'adresse.
+	# Si on en ajoute un, retirer le jeton de l'adresse journalisée :
+	#   log { format filter { request>uri query { delete token } } }
+	@reinitialisation path /reinitialisation /reinitialisation/*
+	handle @reinitialisation {
+		header {
+			Referrer-Policy no-referrer
+			Cache-Control no-store
+			X-Content-Type-Options nosniff
+			X-Frame-Options DENY
+			Content-Security-Policy "default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; connect-src 'self'; form-action 'none'; base-uri 'none'; frame-ancestors 'none'"
+		}
+		root * /srv
+		rewrite /reinitialisation /reinitialisation/index.html
+		file_server
+	}
+
 	handle {
 		root * /srv
 		file_server

@@ -40,4 +40,9 @@ RUN mkdir -p /game/build/web \
 FROM caddy:2
 
 COPY --from=build /game/build/web /srv
+# Page « nouveau mot de passe » du lien envoyé par e-mail, hors du projet Godot (la modifier ne relance pas
+# l'export), avec les polices des menus du jeu et leur licence.
+COPY infrastructure/web/reinitialisation /srv/reinitialisation
+COPY frontend/assets/fonts/Cinzel.ttf frontend/assets/fonts/Cinzel-OFL.txt \
+     frontend/assets/fonts/Lora.ttf frontend/assets/fonts/Lora-OFL.txt /srv/reinitialisation/
 COPY infrastructure/Caddyfile /etc/caddy/Caddyfile

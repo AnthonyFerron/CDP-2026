@@ -3,7 +3,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 
-from app.schemas.users import UserRead, normalize_email
+from app.schemas.users import NewPassword, UserRead, normalize_email
 
 
 class _EmailBody(BaseModel):
@@ -55,3 +55,30 @@ class SessionRead(BaseModel):
     token_type: Literal["bearer"] = "bearer"
     expires_at: datetime
     user: UserRead
+
+
+# --- Réinitialisation du mot de passe ---
+
+class PasswordResetRequest(_EmailBody):
+    model_config = ConfigDict(extra="forbid", json_schema_extra={"examples": [{"email": "devlyn@example.com"}]})
+
+
+class PasswordResetRequested(BaseModel):
+    message: str = Field(
+        description="Message à afficher au joueur. Il est le même que l'adresse corresponde à un compte ou non."
+    )
+    expires_in_minutes: int = Field(description="Durée de validité du lien envoyé (30 minutes).")
+
+
+class PasswordResetConfirm(BaseModel):
+    model_config = ConfigDict(
+        extra="forbid",
+        json_schema_extra={"examples": [{"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...", "password": "Lave2026"}]},
+    )
+
+    token: str = Field(min_length=1, max_length=2048, description="Jeton lu dans le lien reçu par e-mail.")
+    password: NewPassword
+
+
+class PasswordResetDone(BaseModel):
+    message: str = Field(description="Confirmation à afficher.")

@@ -24,6 +24,8 @@ const SIMULATED_DELAY := 0.35
 const MIN_PASSWORD := 8
 const MAX_PASSWORD := 128
 const PSEUDO_LENGTH := Vector2i(3, 20)
+## Réponse à une demande de nouveau mot de passe, si le serveur n'en donne pas.
+const RESET_SENT := "Si un compte correspond à cette adresse, un e-mail vient de lui être envoyé avec un lien pour choisir un nouveau mot de passe."
 
 var pseudo := ""
 var email := ""
@@ -140,12 +142,22 @@ func pending_address() -> String:
 	return str(_pending.get("masked", ""))
 
 
-## L'API ne propose pas encore de réinitialisation du mot de passe : aucune requête n'est envoyée.
+## Mot de passe oublié : le serveur envoie à l'adresse un lien vers la page web /reinitialisation, où le
+## joueur choisit un nouveau mot de passe (valable 30 minutes, une seule fois).
+## La réponse est la même que l'adresse corresponde à un compte ou non : `message` est à afficher tel quel.
 func request_password_reset(address: String) -> Dictionary:
 	var problem := _check_email(address)
 	if not problem.is_empty():
 		return {"ok": false, "error": problem}
-	return {"ok": false, "error": "La réinitialisation du mot de passe n'est pas encore disponible."}
+	if simulated:
+		await get_tree().create_timer(SIMULATED_DELAY).timeout
+		return {"ok": true, "message": RESET_SENT}
+	var result := await Api.post_json("/password-resets", {"email": address.strip_edges().to_lower()}, false)
+	if not result.ok:
+		return {"ok": false, "error": result.error}
+	var data: Variant = result.data
+	var message := str(data.get("message", RESET_SENT)) if data is Dictionary else RESET_SENT
+	return {"ok": true, "message": message}
 
 
 ## Ferme la session : le serveur révoque le jeton (sans attendre sa réponse), puis il est oublié ici.

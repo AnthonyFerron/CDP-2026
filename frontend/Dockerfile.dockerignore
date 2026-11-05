@@ -1,6 +1,7 @@
 *
 !frontend
 !infrastructure/Caddyfile
+!infrastructure/web
 !LICENCES.md
 frontend/.godot
 frontend/build

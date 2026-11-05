@@ -174,7 +174,6 @@ Le registre de l'usage de l'IA dans le projet est dans [`livrables/Registre_IA_R
 
 ## Limites connues
 
-- La réinitialisation du mot de passe n'existe pas encore côté API : le lien « Mot de passe oublié » l'indique au joueur.
 - Le site est exporté en version de debug : le menu de test (F1) y est accessible.
 - Le jeu est prévu pour ordinateur, au clavier et à la souris : pas de version mobile ni de manette.
 - Les tests fonctionnels du jeu demandent une API de test et un faux serveur SMTP locaux ; sans eux, seuls les tests statiques et unitaires tournent.
@@ -197,7 +196,9 @@ Chaque changement de lieu passe par l'autoload `Transition` (`frontend/scripts/t
 
 Chaque compte a sa propre sauvegarde (`user://sauvegarde_compte_<identifiant>.cfg`), l'invité garde `user://sauvegarde.cfg`. Elles gardent les livres trouvés et posés, les fragments de papier du Village, le temps, le niveau et la position.
 
-Le jeu est branché sur l'API (voir `docs/api-godot.md`) par trois autoloads : `Api` (`frontend/scripts/api.gd`) envoie les requêtes, `Account` (`frontend/scripts/account.gd`) gère le compte et les classements pour les menus, et `GameSync` (`frontend/scripts/game_sync.gd`) synchronise la partie d'un joueur connecté. Pour un joueur connecté, le serveur fait foi : un livre n'est posé et la victoire n'est jouée qu'après sa confirmation. La réinitialisation du mot de passe n'existe pas encore côté API : le lien l'indique au joueur.
+Le jeu est branché sur l'API (voir `docs/api-godot.md`) par trois autoloads : `Api` (`frontend/scripts/api.gd`) envoie les requêtes, `Account` (`frontend/scripts/account.gd`) gère le compte et les classements pour les menus, et `GameSync` (`frontend/scripts/game_sync.gd`) synchronise la partie d'un joueur connecté. Pour un joueur connecté, le serveur fait foi : un livre n'est posé et la victoire n'est jouée qu'après sa confirmation.
+
+**Mot de passe oublié** : sur l'écran de connexion, « Mot de passe oublié ? » envoie l'adresse saisie à l'API (`POST /api/v1/password-resets`), qui répond de la même façon que le compte existe ou non. Si le compte existe, il reçoit un e-mail avec un lien `https://codequest.anthonyferron.com/reinitialisation?token=…`, valable 30 minutes et à usage unique (un JWT signé, invalide dès que le mot de passe change). Ce lien ouvre une page web simple, servie par Caddy hors du jeu (`infrastructure/web/reinitialisation/`), où l'on saisit deux fois le nouveau mot de passe, avec les règles de l'inscription. Le changement ferme toutes les sessions du compte : on se reconnecte dans le jeu avec le nouveau mot de passe. Détails dans `docs/api-contract.md`.
 
 ## Debug
 
