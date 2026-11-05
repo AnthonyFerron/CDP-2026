@@ -46,6 +46,8 @@ var _queue: Array[Action] = []
 var _running := false
 ## Change quand la partie suivie change : les réponses d'une partie oubliée sont ignorées.
 var _generation := 0
+## Génération de l'action en cours d'envoi (_is_current).
+var _action_generation := 0
 var _since_save := 0.0
 var _frozen := false
 var _frozen_for := 0.0
@@ -193,6 +195,9 @@ func confirm_time_up() -> void:
 	action.max_attempts = 2
 	var result: Dictionary = await action.finished
 	_checking_time = false
+	# Partie oubliée entre-temps (remise à zéro, nouvelle partie) : la réponse ne la concerne plus.
+	if result.get("stale", false):
+		return
 	if not result.ok or status == "game_over":
 		GameState.erupt()
 
@@ -244,7 +249,7 @@ func sync_with_server() -> Dictionary:
 
 ## Partie invitée de cet appareil, rattachable au compte : en cours (mission commencée) ou gagnée.
 func guest_import_candidate() -> Dictionary:
-	var save := GameState.read_save(GameState.SAVE_PATH)
+	var save := GameState.read_save(GameState.guest_save_path())
 	if save.is_empty() or not save.intro_done or save.has_erupted:
 		return {}
 	return save
@@ -261,7 +266,7 @@ func import_guest_game() -> Dictionary:
 	action.max_attempts = 2
 	var result: Dictionary = await action.finished
 	if result.ok:
-		GameState.clear_save(GameState.SAVE_PATH)
+		GameState.clear_save(GameState.guest_save_path())
 	return result
 
 
@@ -288,6 +293,7 @@ func _process_queue() -> void:
 	_running = true
 	while not _queue.is_empty():
 		var action: Action = _queue[0]
+		_action_generation = action.generation
 		var result: Dictionary = await action.run.call()
 		if action.generation != _generation:
 			_queue.erase(action)
@@ -470,12 +476,15 @@ func _run_sync() -> Dictionary:
 	var active := await _fetch_active()
 	if not active.ok:
 		return active
+	if not _is_current():
+		return {"ok": true}
 	if active.data is Dictionary:
 		_adopt(active.data)
 		var state := await _progress()
 		if not state.ok:
 			return state
-		GameState.apply_server_state(active.data, state.data, _zones_by_id())
+		if _is_current():
+			GameState.apply_server_state(active.data, state.data, _zones_by_id())
 		return {"ok": true}
 	# Aucune partie en cours sur le serveur : la sauvegarde locale de ce compte n'est gardée que pour une
 	# partie gagnée (exploration après la victoire).
@@ -487,7 +496,8 @@ func _run_sync() -> Dictionary:
 			return {"ok": true}
 		if not previous.ok and Api.is_transient(previous):
 			return previous
-		GameState.reset(false)
+		if _is_current():
+			GameState.reset(false)
 	elif GameState.can_continue():
 		# Partie commencée alors que le serveur était injoignable : il ne l'a jamais vue. Elle est importée
 		# (temps et progression conservés), et ne comptera donc pas pour le classement.
@@ -504,7 +514,7 @@ func _run_import(save: Dictionary) -> Dictionary:
 		return result
 	_adopt(result.data)
 	var state := await _progress()
-	if state.ok:
+	if state.ok and _is_current():
 		GameState.apply_server_state(result.data, state.data, _zones_by_id())
 	return {"ok": true}
 
@@ -551,7 +561,15 @@ func _ensure_puzzles() -> Dictionary:
 
 # --- Application des réponses -----------------------------------------------------------------------------
 
+## La partie suivie n'a pas changé depuis le départ de l'action en cours : sa réponse peut s'appliquer. Sinon
+## (remise à zéro, nouvelle partie, changement de joueur), elle ne doit rien réécrire, ni l'état ni la sauvegarde.
+func _is_current() -> bool:
+	return _action_generation == _generation
+
+
 func _adopt(game: Dictionary) -> void:
+	if not _is_current():
+		return
 	game_id = int(game.id_game_sessions)
 	GameState.server_game_id = game_id
 	_pause_requested = bool(game.get("is_paused", false))
@@ -561,7 +579,7 @@ func _adopt(game: Dictionary) -> void:
 
 ## Réponse décrivant la partie (GameSessionRead ou GameProgressRead) : état et temps officiel.
 func _apply_game(game: Dictionary) -> void:
-	if int(game.get("id_game_sessions", game_id)) != game_id:
+	if not _is_current() or int(game.get("id_game_sessions", game_id)) != game_id:
 		return
 	status = str(game.get("status", status))
 	server_paused = bool(game.get("is_paused", server_paused))
