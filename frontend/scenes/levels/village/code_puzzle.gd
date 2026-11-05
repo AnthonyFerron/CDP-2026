@@ -112,6 +112,8 @@ func open(fragments: Array[String]) -> void:
 	_feedback.text = ""
 	_set_border(COLOR_IDLE)
 	current = solved.find(false) if not all_solved() else CODES.size() - 1
+	# Le cadre s'arrête au-dessus de y = 770 : le bandeau « Mauvaise réponse » du HUD se place dessous.
+	Hud.warning_position = Hud.WARNING_BOTTOM
 	_root.show()
 	select(current)
 
@@ -166,6 +168,7 @@ func submit(answer: String) -> bool:
 	answered.emit(current, correct)
 	if correct and all_solved():
 		_root.hide()
+		Hud.warning_position = Hud.WARNING_TOP
 		_flash_blue()
 		solved_all.emit()
 	elif correct:
@@ -235,6 +238,7 @@ func _flash_blue() -> void:
 
 func _on_close_pressed() -> void:
 	_root.hide()
+	Hud.warning_position = Hud.WARNING_TOP
 	closed.emit()
 
 
