@@ -52,3 +52,43 @@ Les chemins des captures sont relatifs à `$S/agents/hub/`.
 - **Grille de marche**, dans les 5 états : 0 trou, 0 ressaut, 0 chute, 0 glissade, 0 sortie de vallée. Les seuls objets sans collision sont ceux de la liste ci-dessus.
 - **`float_check`** : 0 objet flottant et 0 enfoncé à 4 livres. À 0 et 2 livres, ne restent que les pierres des bassins, qui sont de faux positifs.
 - **`hub_audit`** à 0 et 4 livres : seuls échouent les deux contrôles « traverser la rivière à gué », qui doivent échouer.
+
+## Intérieurs des nouveaux bâtiments (nuit du 4 au 5 novembre 2026)
+
+Méthode : `overlaps.py` (meuble contre mur et meuble contre meuble, polygones au sol, dans chaque ruine et chaque
+reconstruction), grille de marche à 0,5 m de chaque intérieur depuis le dehors de sa porte (`walk_grid.gd`, avec
+poches inaccessibles et plafond au-dessus de chaque case), captures à hauteur d'yeux (porte vue du dehors, entrée,
+fond, quatre coins, huit directions depuis le centre, plafond) à 0 et 4 livres, regardées une par une.
+Outils et captures : `~/cdp-work/hub/` (`tools/`, `shots/`, `grid/`).
+
+| # | Où | Constat (capture) | Cause | Correction |
+|---|----|-------------------|-------|------------|
+| 1 | Boulangerie (49, 32) | `q4/Bakery_fond.png` : un réverbère au milieu de la boulangerie | Lanterne de ruelle (`build_quarter_paths`) posée dans l'emprise du bâtiment | Retirée : la lanterne de la porte suffit |
+| 2 | Herboristerie (-56, 28) | `q4/Apothecary_dehors.png` : pied et tête d'un réverbère qui sortent du mur | Lanterne de ruelle dans le mur est | Déplacée au coin du jardin des simples (-55,2, 24,6) |
+| 3 | Boulangerie, herboristerie, 16 maisons | `q4/Bakery_entree.png` : flammes vertes au pied du four | Le brasero du kit cimetière (remplaçant médiéval du fourneau) a des flammes vertes | Âtres de pierre (manteau `chimney-base`) avec bûches et braises orangées (`Embers`) |
+| 4 | Tous les bâtiments | `q4/*_dehors.png` : cheminée du toit au-dessus d'un mur sans foyer | Cheminée toujours posée au même endroit du toit | La cheminée sort au-dessus de l'âtre (`HEARTHS`) ; sans âtre (école, chapelle, moulin, écuries, scriptorium), pas de cheminée |
+| 5 | École, taverne, ferme, caserne, scriptorium, 16 maisons | `q4/School_entree.png`, `q4/Farm_*.png`, `q4/Barracks_*.png` : bureaux, tables rondes, chaises, étagères et lits superposés blancs et roses, plante en pot | Meubles du kit mobilier moderne | Tables, chaises et coffres de bois (mini_dungeon, survival_kit), étagères de planches sur montants (`shelf`), lits de bois à paillasse (`bed`) |
+| 6 | Tous les intérieurs | `q4/*` : intérieurs bleutés, éclairés par le ciel seul | Aucune lumière dans les bâtiments | Lumières chaudes (`hub_lamp.gd`), allumées en fondu à l'approche, portée arrêtée avant le sol du dehors (`lamps.py` : 0 fuite) |
+| 7 | 27 ruines | `check_overlaps.py`, `overlaps.py` : 8 poutres dans les murs, une quarantaine dans les meubles | Poutres tombées posées au hasard | `fallen_beams` cherche une place libre, à l'écart des murs et des meubles |
+| 8 | Portes des 27 bâtiments | — | `doorway()` laisse ±0,95 m pour une arche visible de ±0,80 m | `arch_fill()` après chaque porte |
+| 9 | Plafonds des bâtiments reconstruits | — | Plafond sans collision : depuis un coffre ou une table, un saut passait la tête dans l'étage | Collision du plafond (3,8 à 4,1 m) ; plafond solide aussi dans l'observatoire |
+| 10 | Boulangerie, caserne, scriptorium, observatoire | — | Textes annoncés dans les commentaires (livre de comptes, registre, page, carnet), jamais posés | Readables posés sur les meubles, et de nouveaux textes dans les autres bâtiments |
+| 11 | Taverne | `q4/Tavern_*.png` : deux tables et quelques chaises dans une salle de 12 m | Intérieur commencé | Âtre, comptoir et tonneaux, tabourets, trois tables, ardoise, tonneau réservé, échelle |
+| 12 | Chapelle | `q4/Chapel_entree.png` : une croix au fond | Le panneau parle de quatre lutrins et d'une prière gravée | Quatre lutrins de pierre, prière gravée au mur, Readable, deux rangs de bancs |
+| 13 | Forge | `q4/Forge_*.png` : pas de foyer | — | Foyer, baquet, boucliers, outils, carnet de commandes |
+| 14 | Étages (école, taverne, caserne, scriptorium) | `q4/*_dehors.png` : fenêtres à l'étage, rien dedans | Pas d'accès à l'étage | Échelle appuyée jusqu'au plafond (l'étage reste fermé) |
+| 15 | Moulin | `q4/Mill_*.png` : meule au milieu, l'axe de la roue s'arrête au mur | — | Meule contre le mur est, axe prolongé dedans jusqu'à elle |
+| 16 | Taverne, école, chapelle, ferme | `plans/*_4.png` (plans de marche) : allées de 0,6 à 0,76 m, zones de la salle inaccessibles | Tables, bancs et rangs trop serrés | Allées d'au moins 0,85 m ; plus aucune zone libre inaccessible dans ces salles |
+| 17 | Observatoire | `v1_4/Observatory_*.png` : herbe entre les planches, coins du plafond ouverts | Plancher et plafond plus petits que la salle, une seule couche | Deux couches croisées, jusque sous les murs |
+| 18 | Écuries, observatoire | `v1_4/Stables_coin2.png` : lanterne vert-bleu | Lanterne du kit cimetière | Chandeliers |
+| 19 | Lits | `v1_4/Farm_coin2.png` : le « lit » est un tréteau en X | `bedroll-frame` n'est qu'un cadre | Lit de bois : cadre de planches, pieds, paillasse, traversin |
+| 20 | Observatoire | `gallery_tower.png`, `v1_4/Observatory_fond.png` : on passait à travers une porte de bois fermée | La porte du modèle de tour est pleine ; la collision lui laissait un trou | Mur plein, et la porte se passe avec E dans les deux sens (`tower_doors`, `hub.gd`), avec un fondu |
+| 21 | Moulin | `gen_reads.py` : le cahier du meunier hors de portée (coincé entre la table, l'échelle et la façade) | Cahier au bord de la table, côté façade | Posé au milieu du bord arrière de la table |
+| 22 | Grandes maisons (3 cases) | `plans/House08_4.png` : grande salle vide | Meubles des maisons de 2 cases | Second lit, tonneau et sac ; banc et tonneau dans les maisons profondes |
+| 23 | Chapelle | `v1_4/Chapel_entree.png` : la prière gravée n'apparaît pas au mur | L'inscription et son Readable portaient le même nom : l'un écrasait l'autre | Nœud `PrayerText` ; `pivot()` refuse désormais deux nœuds au même chemin |
+| 24 | Forge | — | Les armes forgées pour l'armée n'apparaissaient nulle part | Trois épées dans le tonneau du coin, la lame dedans |
+| 25 | Herboristerie, boulangerie, école, scriptorium, maisons | `c2_4/Apothecary_coin1.png`, `c2_4/Bakery_fond.png` : étagère plaquée devant une fenêtre | Fenêtres tirées au hasard sur chaque case de mur | Murs pleins derrière les étagères (`PLAIN_WALLS`) |
+| 26 | Observatoire | `c2_4/Observatory_entree.png` : lignes d'herbe entre les lattes | Le sol du terrain affleure sous le plancher de la tour | Terre sombre sous la salle (`BUILDING_FLOORS` de `hub_terrain.gd`) |
+| 27 | Tous les intérieurs | `c2_4/Tavern_plafond.png` : taches éblouissantes au plafond | Lampes à 0,5 m sous le plafond | Lampes à 3 m, énergie 1,45 |
+| 28 | Écuries (ruine) | `rooms_0.log` : entrée bloquée à 1 m de la porte | Roue tombée à plat dans le passage de la porte | Roue tombée au milieu de l'allée |
+| 29 | Taverne, chapelle, écuries (ruines) | grille : coupe des dragons, lutrins couchés et foin tombé sans collision | — | Collisions à leur taille |

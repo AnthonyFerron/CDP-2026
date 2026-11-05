@@ -119,6 +119,8 @@ const BUILDING_FLOORS: Array[Rect2] = [
 	Rect2(-40.1, -17.7, 8, 12), Rect2(-6, 56, 12, 8), Rect2(-66, -4, 12, 8), Rect2(-60, -36, 8, 12), Rect2(51, 14, 8, 8),
 	Rect2(40, 60, 8, 8), Rect2(48, 30, 8, 8), Rect2(57, 44, 8, 8), Rect2(-74, -50, 12, 8), Rect2(-54, -70, 12, 8),
 	Rect2(-64, 26, 8, 8), Rect2(-78, -20, 8, 8),
+	# Salle de l'observatoire : un carré inscrit sous son plancher, la tour étant tournée d'un quart de tour.
+	Rect2(-71.7, 56.3, 3.4, 3.4),
 ]
 
 @export var ground_material: Material
