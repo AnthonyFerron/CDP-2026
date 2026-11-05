@@ -1060,7 +1060,7 @@ outline_size = 0
 horizontal_alignment = 1
 
 [node name="King2" type="StaticBody3D" parent="Interior/Kings"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.8, 0, -8.95)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.2, 0, -15.05)
 
 [node name="Plinth" type="MeshInstance3D" parent="Interior/Kings/King2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
@@ -1082,38 +1082,38 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
 shape = SubResource("BoxShape3D_king")
 
 [node name="Sword" parent="Interior/Kings/King2" instance=ExtResource("36_sword")]
-transform = Transform3D(-3, 0, 0, 0, 0, -3, -0, -3, -0, 0.05, 1.38, 0.6)
+transform = Transform3D(3, 0, 0, 0, 0, -3, 0, 3, 0, 0.05, 1.38, -0.6)
 
 [node name="Cushion" type="MeshInstance3D" parent="Interior/Kings/King2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.235, 1.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.235, -1.2)
 mesh = SubResource("BoxMesh_cushion")
 
 [node name="Crown" type="MeshInstance3D" parent="Interior/Kings/King2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.31, 1.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.31, -1.2)
 mesh = SubResource("CylinderMesh_crown")
 
 [node name="Fleuron0" type="MeshInstance3D" parent="Interior/Kings/King2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 1.365)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, -1.035)
 mesh = SubResource("PrismMesh_crown_point")
 
 [node name="Fleuron1" type="MeshInstance3D" parent="Interior/Kings/King2"]
-transform = Transform3D(0.309017, 0, 0.951057, 0, 1, 0, -0.951057, 0, 0.309017, 0.156924, 1.4, 1.25099)
+transform = Transform3D(0.309017, 0, 0.951057, 0, 1, 0, -0.951057, 0, 0.309017, 0.156924, 1.4, -1.14901)
 mesh = SubResource("PrismMesh_crown_point")
 
 [node name="Fleuron2" type="MeshInstance3D" parent="Interior/Kings/King2"]
-transform = Transform3D(-0.809017, 0, 0.587785, 0, 1, 0, -0.587785, 0, -0.809017, 0.0969846, 1.4, 1.06651)
+transform = Transform3D(-0.809017, 0, 0.587785, 0, 1, 0, -0.587785, 0, -0.809017, 0.0969846, 1.4, -1.33349)
 mesh = SubResource("PrismMesh_crown_point")
 
 [node name="Fleuron3" type="MeshInstance3D" parent="Interior/Kings/King2"]
-transform = Transform3D(-0.809017, 0, -0.587785, 0, 1, 0, 0.587785, 0, -0.809017, -0.0969846, 1.4, 1.06651)
+transform = Transform3D(-0.809017, 0, -0.587785, 0, 1, 0, 0.587785, 0, -0.809017, -0.0969846, 1.4, -1.33349)
 mesh = SubResource("PrismMesh_crown_point")
 
 [node name="Fleuron4" type="MeshInstance3D" parent="Interior/Kings/King2"]
-transform = Transform3D(0.309017, 0, -0.951057, 0, 1, 0, 0.951057, 0, 0.309017, -0.156924, 1.4, 1.25099)
+transform = Transform3D(0.309017, 0, -0.951057, 0, 1, 0, 0.951057, 0, 0.309017, -0.156924, 1.4, -1.14901)
 mesh = SubResource("PrismMesh_crown_point")
 
 [node name="Epitaph" type="Node3D" parent="Interior/Kings/King2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.95)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 1.95)
 script = ExtResource("12_readable")
 title = "Roi Codeon II"
 body = "Codeon II, le Hardi. Sous son règne, le royaume avança de trois pas vers la lumière."
@@ -1121,7 +1121,7 @@ prompt = "Lire l'épitaphe"
 radius = 2.6
 
 [node name="Name" type="Label3D" parent="Interior/Kings/King2"]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, 0, 0.58, -1.512)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.58, 1.512)
 pixel_size = 0.0028
 shaded = true
 double_sided = false
@@ -1133,7 +1133,7 @@ outline_size = 0
 horizontal_alignment = 1
 
 [node name="King3" type="StaticBody3D" parent="Interior/Kings"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.2, 0, -15.05)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.8, 0, -8.95)
 
 [node name="Plinth" type="MeshInstance3D" parent="Interior/Kings/King3"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
@@ -1155,38 +1155,38 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
 shape = SubResource("BoxShape3D_king")
 
 [node name="Sword" parent="Interior/Kings/King3" instance=ExtResource("36_sword")]
-transform = Transform3D(3, 0, 0, 0, 0, -3, 0, 3, 0, 0.05, 1.38, -0.6)
+transform = Transform3D(-3, 0, 0, 0, 0, -3, -0, -3, -0, 0.05, 1.38, 0.6)
 
 [node name="Cushion" type="MeshInstance3D" parent="Interior/Kings/King3"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.235, -1.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.235, 1.2)
 mesh = SubResource("BoxMesh_cushion")
 
 [node name="Crown" type="MeshInstance3D" parent="Interior/Kings/King3"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.31, -1.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.31, 1.2)
 mesh = SubResource("CylinderMesh_crown")
 
 [node name="Fleuron0" type="MeshInstance3D" parent="Interior/Kings/King3"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, -1.035)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 1.365)
 mesh = SubResource("PrismMesh_crown_point")
 
 [node name="Fleuron1" type="MeshInstance3D" parent="Interior/Kings/King3"]
-transform = Transform3D(0.309017, 0, 0.951057, 0, 1, 0, -0.951057, 0, 0.309017, 0.156924, 1.4, -1.14901)
+transform = Transform3D(0.309017, 0, 0.951057, 0, 1, 0, -0.951057, 0, 0.309017, 0.156924, 1.4, 1.25099)
 mesh = SubResource("PrismMesh_crown_point")
 
 [node name="Fleuron2" type="MeshInstance3D" parent="Interior/Kings/King3"]
-transform = Transform3D(-0.809017, 0, 0.587785, 0, 1, 0, -0.587785, 0, -0.809017, 0.0969846, 1.4, -1.33349)
+transform = Transform3D(-0.809017, 0, 0.587785, 0, 1, 0, -0.587785, 0, -0.809017, 0.0969846, 1.4, 1.06651)
 mesh = SubResource("PrismMesh_crown_point")
 
 [node name="Fleuron3" type="MeshInstance3D" parent="Interior/Kings/King3"]
-transform = Transform3D(-0.809017, 0, -0.587785, 0, 1, 0, 0.587785, 0, -0.809017, -0.0969846, 1.4, -1.33349)
+transform = Transform3D(-0.809017, 0, -0.587785, 0, 1, 0, 0.587785, 0, -0.809017, -0.0969846, 1.4, 1.06651)
 mesh = SubResource("PrismMesh_crown_point")
 
 [node name="Fleuron4" type="MeshInstance3D" parent="Interior/Kings/King3"]
-transform = Transform3D(0.309017, 0, -0.951057, 0, 1, 0, 0.951057, 0, 0.309017, -0.156924, 1.4, -1.14901)
+transform = Transform3D(0.309017, 0, -0.951057, 0, 1, 0, 0.951057, 0, 0.309017, -0.156924, 1.4, 1.25099)
 mesh = SubResource("PrismMesh_crown_point")
 
 [node name="Epitaph" type="Node3D" parent="Interior/Kings/King3"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 1.95)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.95)
 script = ExtResource("12_readable")
 title = "Roi Codeon III"
 body = "Codeon III, le Prudent. Là où son père avait avancé, il recula de trois pas, pour garder ce qui était acquis."
@@ -1194,7 +1194,7 @@ prompt = "Lire l'épitaphe"
 radius = 2.6
 
 [node name="Name" type="Label3D" parent="Interior/Kings/King3"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.58, 1.512)
+transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, 0, 0.58, -1.512)
 pixel_size = 0.0028
 shaded = true
 double_sided = false

@@ -350,8 +350,9 @@ EPITAPHS = [
     "Codeon III, le Prudent. Là où son père avait avancé, il recula de trois pas, pour garder ce qui était acquis.",
     "Codeon IV, le Juste. Il reprit la marche en avant, de trois pas encore, puis ferma la mine d'argent. Son fils, Codeon V, règne aujourd'hui sur Codia.",
 ]
-# Tombeaux des rois, de part et d'autre de l'allée de la chambre de l'ouest (z = -12), à 0,75 m des murs.
-KINGS = ((-21.2, -8.95), (-26.8, -8.95), (-21.2, -15.05), (-26.8, -15.05))
+# Tombeaux des rois, de part et d'autre de l'allée de la chambre de l'ouest (z = -12), à 0,75 m des murs, dans
+# l'ordre de la visite : Codeon I et II face à face à l'entrée de la chambre, Codeon III et IV au fond, près de l'autel.
+KINGS = ((-21.2, -8.95), (-21.2, -15.05), (-26.8, -8.95), (-26.8, -15.05))
 # Niches de l'ossuaire : même liste que NICHES dans tools/build_marais.py (point de la façade, direction de la pièce).
 WALL_FACE = 0.45
 # Le panneau central des murs du kit avance jusqu'à 0,6 m du bord : les dalles gravées s'y posent devant.
