@@ -172,18 +172,18 @@ roughness = 1.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_pedestal_base"]
 material = SubResource("Material_pedestal_dark")
-size = Vector3(0.95, 0.22, 0.95)
+size = Vector3(1.1, 0.22, 1.1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_pedestal"]
 material = SubResource("StandardMaterial3D_stone")
-size = Vector3(0.62, 0.86, 0.62)
+size = Vector3(0.78, 0.86, 0.78)
 
 [sub_resource type="BoxMesh" id="BoxMesh_pedestal_top"]
 material = SubResource("Material_pedestal_dark")
-size = Vector3(0.82, 0.12, 0.82)
+size = Vector3(0.98, 0.12, 0.98)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_pedestal"]
-size = Vector3(0.66, 1.3, 0.66)
+size = Vector3(0.82, 1.3, 0.82)
 
 [sub_resource type="StandardMaterial3D" id="Material_robe"]
 albedo_color = Color(0.3, 0.18, 0.55, 1)
@@ -812,10 +812,11 @@ def hall(lines):
             f'script = {ext("9_interactable")}', 'prompt = "Piédestal"', "radius = 4.0"])
         for part, mesh, y in (("Base", "BoxMesh_pedestal_base", 0.11), ("Pedestal", "BoxMesh_pedestal", 0.65), ("Top", "BoxMesh_pedestal_top", 1.14)):
             node(lines, part, "MeshInstance3D", base, props=[f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, {y:g}, 0)", f'mesh = SubResource("{mesh}")'])
-        # En haut du fût (0,62 m de large), juste sous le plateau : plus près des yeux. Le plus long nom
-        # (Logiconomicon) y tient avec une marge. Crème sur la pierre sombre, pour le contraste.
-        engraved(lines, "Label", base, BOOK_TITLES[zone].capitalize(), "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0.322)",
-                 pixel=0.0016, color="Color(0.97, 0.88, 0.62, 1)")
+        # En haut du fût, juste sous le plateau : plus près des yeux. Le fût a été élargi (0,62 à 0,78 m) pour que le
+        # plus long nom (Logiconomicon, 0,67 m) y tienne à cette taille ; sur l'ancien, même Codonomicon débordait.
+        # Crème sur la pierre sombre, pour le contraste.
+        engraved(lines, "Label", base, BOOK_TITLES[zone].capitalize(), "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0.402)",
+                 pixel=0.00135, color="Color(0.97, 0.88, 0.62, 1)")
         node(lines, "Body", "StaticBody3D", base)
         node(lines, "CollisionShape3D", "CollisionShape3D", f"{base}/Body", props=[
             "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)", 'shape = SubResource("BoxShape3D_pedestal")'])

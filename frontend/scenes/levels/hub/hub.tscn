@@ -115,18 +115,18 @@ roughness = 1.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_pedestal_base"]
 material = SubResource("Material_pedestal_dark")
-size = Vector3(0.95, 0.22, 0.95)
+size = Vector3(1.1, 0.22, 1.1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_pedestal"]
 material = SubResource("StandardMaterial3D_stone")
-size = Vector3(0.62, 0.86, 0.62)
+size = Vector3(0.78, 0.86, 0.78)
 
 [sub_resource type="BoxMesh" id="BoxMesh_pedestal_top"]
 material = SubResource("Material_pedestal_dark")
-size = Vector3(0.82, 0.12, 0.82)
+size = Vector3(0.98, 0.12, 0.98)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_pedestal"]
-size = Vector3(0.66, 1.3, 0.66)
+size = Vector3(0.82, 1.3, 0.82)
 
 [sub_resource type="StandardMaterial3D" id="Material_robe"]
 albedo_color = Color(0.3, 0.18, 0.55, 1)
@@ -1231,8 +1231,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.14, 0)
 mesh = SubResource("BoxMesh_pedestal_top")
 
 [node name="Label" type="Label3D" parent="Castle/Pedestals/Plaine"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0.322)
-pixel_size = 0.0016
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0.402)
+pixel_size = 0.00135
 shaded = true
 double_sided = false
 alpha_cut = 1
@@ -1277,8 +1277,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.14, 0)
 mesh = SubResource("BoxMesh_pedestal_top")
 
 [node name="Label" type="Label3D" parent="Castle/Pedestals/Desert"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0.322)
-pixel_size = 0.0016
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0.402)
+pixel_size = 0.00135
 shaded = true
 double_sided = false
 alpha_cut = 1
@@ -1323,8 +1323,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.14, 0)
 mesh = SubResource("BoxMesh_pedestal_top")
 
 [node name="Label" type="Label3D" parent="Castle/Pedestals/Marais"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0.322)
-pixel_size = 0.0016
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0.402)
+pixel_size = 0.00135
 shaded = true
 double_sided = false
 alpha_cut = 1
@@ -1369,8 +1369,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.14, 0)
 mesh = SubResource("BoxMesh_pedestal_top")
 
 [node name="Label" type="Label3D" parent="Castle/Pedestals/Village"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0.322)
-pixel_size = 0.0016
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0.402)
+pixel_size = 0.00135
 shaded = true
 double_sided = false
 alpha_cut = 1
