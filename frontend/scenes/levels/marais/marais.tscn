@@ -586,6 +586,30 @@ body = "Ici vivaient les pêcheurs de Brumeval. Quand la guerre contre Vibelandi
 prompt = "Lire le panneau"
 radius = 2.6
 
+[node name="Notice" type="Node3D" parent="Clues"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.6, 1.3, 53)
+script = ExtResource("12_readable")
+title = "Avis de la capitainerie, an 5807"
+body = "Par ordre du capitaine du port de Brumeval. Les soldats de Vibelandia ont ouvert les digues du nord, et l'eau monte chaque nuit. Que chaque famille charge ses barques et gagne le château avant la nouvelle lune ; ne prenez que le nécessaire. Personne ne s'abritera dans la crypte des rois : depuis la mort du gardien Aldric, nul ne sait plus l'ouvrir, et l'on dit que son fantôme veille encore au cimetière."
+prompt = "Lire l'avis"
+radius = 2.8
+
+[node name="AdaSlate" type="Node3D" parent="Clues"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.9, 1.3, 4.4)
+script = ExtResource("12_readable")
+title = "L'ardoise d'Ada"
+body = "Ada apprenait aux enfants de Brumeval à cacher leurs messages. Pour chaque lettre, on avance ou l'on recule dans l'alphabet, et l'on change de sens à chaque lettre. Exemple, avec deux pas : B avance de deux et devient D, R recule de deux et devient P, U avance et devient W, M recule et devient K, E avance et devient G. Ainsi BRUME s'écrit DPWKG. Après Z, on repart de A ; avant A, on revient à Z. Pour relire, il suffit de refaire le chemin à l'envers."
+prompt = "Lire l'ardoise"
+radius = 2.8
+
+[node name="RoyalOrder" type="Node3D" parent="Clues"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 1.3, -32.6)
+script = ExtResource("12_readable")
+title = "Ordre du roi Codeon V, an 5812"
+body = "Codeon V, roi de Codia, à tous ceux qui vivent encore dans les marais. L'armée de Vibelandia marche sur le château. Rejoignez sans attendre le vieux refuge souterrain, près du château : ses portes se fermeront bientôt. Que personne ne force la crypte des rois. Le livre de la logique et du chiffrement y dort sous la garde de nos ancêtres, et seul celui qui sait dans quel royaume il se trouve pourra l'éveiller."
+prompt = "Lire l'ordre du roi"
+radius = 2.8
+
 [node name="Journal" type="MeshInstance3D" parent="Clues/Notebook"]
 transform = Transform3D(0.766044, 0, 0.642788, 0, 1, 0, -0.642788, 0, 0.766044, 0, -0.085, 0)
 mesh = SubResource("BoxMesh_journal")
@@ -625,6 +649,7 @@ board_height = 1.05
 line_height = 0.16
 serif = true
 collision = true
+double_sided = true
 
 [node name="Board" type="Node3D" parent="Clues/Welcome"]
 transform = Transform3D(0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, 0, -0.9, -0.35)
@@ -637,6 +662,75 @@ board_height = 1.5
 line_height = 0.2
 serif = true
 collision = true
+double_sided = true
+
+[node name="BackLight" type="OmniLight3D" parent="Clues/Welcome"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.45, 0.3, -1.13)
+light_color = Color(1, 0.8, 0.55, 1)
+light_energy = 0.6
+omni_range = 2.5
+distance_fade_enabled = true
+distance_fade_begin = 38.0
+distance_fade_length = 8.0
+
+[node name="BackLight" type="OmniLight3D" parent="Clues/Notice"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 0.2, -0.67)
+light_color = Color(1, 0.8, 0.55, 1)
+light_energy = 0.6
+omni_range = 2.5
+distance_fade_enabled = true
+distance_fade_begin = 38.0
+distance_fade_length = 8.0
+
+[node name="Board" type="Node3D" parent="Clues/Notice"]
+transform = Transform3D(0.743145, 0, -0.669131, 0, 1, 0, 0.669131, 0, 0.743145, 0, -0.9, 0)
+script = ExtResource("17_sign")
+text = "Capitainerie de Brumeval\nAvis aux pêcheurs"
+style = 2
+mount = 0
+board_size = Vector2(1.1, 0.75)
+board_height = 1.35
+line_height = 0.13
+serif = true
+collision = true
+double_sided = true
+
+[node name="Board" type="Node3D" parent="Clues/AdaSlate"]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, 0, -0.9, 0)
+script = ExtResource("17_sign")
+text = "Leçon d'Ada\nBRUME devient DPWKG"
+style = 1
+mount = 0
+board_size = Vector2(1, 0.6)
+board_height = 1.15
+line_height = 0.13
+serif = true
+collision = true
+double_sided = true
+
+[node name="Light" type="OmniLight3D" parent="Clues/AdaSlate"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.85, -0.3, -0.65)
+script = ExtResource("14_flicker")
+light_color = Color(1, 0.78, 0.45, 1)
+light_energy = 0.9
+omni_range = 3.5
+flicker = 0.15
+distance_fade_enabled = true
+distance_fade_begin = 38.0
+distance_fade_length = 8.0
+
+[node name="Board" type="Node3D" parent="Clues/RoyalOrder"]
+transform = Transform3D(0.945519, 0, -0.325568, 0, 1, 0, 0.325568, 0, 0.945519, 0, -0.9, 0)
+script = ExtResource("17_sign")
+text = "Ordre du roi\nCodeon V"
+style = 2
+mount = 0
+board_size = Vector2(1, 0.7)
+board_height = 1.35
+line_height = 0.15
+serif = true
+collision = true
+double_sided = true
 
 [node name="Ghost" type="Node3D" parent="."]
 transform = Transform3D(0, 0, -3, 0, 3, 0, 3, 0, 0, 19, 1.6, 3.6)
@@ -1201,6 +1295,46 @@ mount = 1
 board_size = Vector2(2.6, 0.9)
 board_height = 2.5
 line_height = 0.16
+serif = true
+collision = true
+
+[node name="OssuaryRegister" type="Node3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.98, 1.6, 4)
+script = ExtResource("12_readable")
+title = "Registre de l'ossuaire"
+body = "Ici reposent les bâtisseurs qui ont creusé la crypte sous le règne de Codeon I. Ils ont gravé l'alphabet entier sur cinq cercles de pierre, un cercle par lettre du nom à inscrire : le premier cercle, au centre, porte la première lettre, et le cinquième, au bord, la dernière. Le repère d'or, au nord du mécanisme, montre la lettre choisie sur chaque cercle. Note du gardien : vérifier chaque cercle avant de valider. Une erreur fait gronder la crypte, et le volcan s'éveille plus vite."
+prompt = "Lire le registre"
+radius = 3.0
+
+[node name="Board" type="Node3D" parent="Interior/OssuaryRegister"]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0.37, -1.6, 0)
+script = ExtResource("17_sign")
+text = "Registre de l'ossuaire"
+style = 2
+mount = 1
+board_size = Vector2(1.3, 0.7)
+board_height = 1.75
+line_height = 0.15
+serif = true
+collision = true
+
+[node name="GuardsOath" type="Node3D" parent="Interior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.98, 1.6, 4)
+script = ExtResource("12_readable")
+title = "Le serment des gardiens"
+body = "Moi, gardien du marais, je jure de veiller sur le tombeau des rois et sur le livre des anciens bâtisseurs. Je ne prononcerai jamais le mot du mécanisme et ne l'écrirai jamais en clair. Je le garderai comme on me l'a appris : le nom du royaume, chaque lettre déplacée tour à tour vers l'avant puis vers l'arrière. Ainsi le secret survit aux gardiens."
+prompt = "Lire le serment"
+radius = 3.0
+
+[node name="Board" type="Node3D" parent="Interior/GuardsOath"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -0.37, -1.6, 0)
+script = ExtResource("17_sign")
+text = "Serment des gardiens"
+style = 1
+mount = 1
+board_size = Vector2(1.3, 0.7)
+board_height = 1.75
+line_height = 0.15
 serif = true
 collision = true
 

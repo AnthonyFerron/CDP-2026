@@ -24,6 +24,9 @@ Chaque ligne a sa vérification (V) : G = grille de marche (`marais_walkgrid_tes
 | Pierres levées : sept menhirs, autel, champignons | îlot (-30, -44) | C |
 | Vieux débarcadère : barques, pieux, planche, feu froid, grill, tonneau, coffre, arbre mort | îlot (-40, 40) | C |
 | Arbres morts des berges (6) | autour du parcours | G, C |
+| Récit : avis de la capitainerie de Brumeval (parchemin sur poteaux) | (3.6, 53.0) | lore_test, C |
+| Récit : ardoise d'Ada (pierre sur poteaux) et sa lanterne | (11.9, 4.4), lanterne (12.75, 3.75) | lore_test, C |
+| Récit : ordre du roi Codeon V (parchemin sur poteaux) | (4.6, -32.6) | lore_test, C |
 | Arbres, roseaux, nénuphars en fleur, buissons, champignons, troncs noyés (dispersion) | partout | G, C |
 | Eau stagnante, brume au ras de l'eau, nappes de brume, lune, feux follets, lucioles | partout | C |
 | Grenouilles (berges et nénuphars), poissons, corbeaux, lanternes pendues | partout | C |
@@ -44,5 +47,7 @@ Chaque ligne a sa vérification (V) : G = grille de marche (`marais_walkgrid_tes
 | Chambre est : tombeau du livre, couvercle, livre, devise, statue, lanternes, cierges, bannières | x 18..30, z -18..-6 | A, P, G, C |
 | Couloir sud-ouest et ossuaire : cercueils, débris, ossements, urne, cierges, niche | x -22..-10, z -6..6 | G, C |
 | Couloir sud-est et chambre des gardiens : cercueils, boucliers, lance, cercueil, cierges, niche | x 10..22, z -6..6 | G, C |
+| Récit : registre de l'ossuaire (parchemin au mur est de l'ossuaire) | (-14.6, 1.75, 4.0) | lore_test, C |
+| Récit : serment des gardiens (pierre au mur ouest de la chambre des gardiens) | (14.6, 1.75, 4.0) | lore_test, C |
 | Chauves-souris (7), gouttes, lumières | — | C |
 | Murs, sol, plafond de chaque case | — | G, L, C |

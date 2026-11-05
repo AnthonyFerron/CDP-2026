@@ -324,6 +324,23 @@ CLUES = [
      "Ici vivaient les pêcheurs de Brumeval. Quand la guerre contre Vibelandia a brisé les digues, l'eau a englouti "
      "le village ; seuls ses toits sortent encore de la brume. Au nord, au bout des pontons, la crypte du gardien "
      "veille sur les tombeaux des premiers rois de Codia.", "Lire le panneau", 2.6),
+    # Récit des marais : l'avis du port au débarcadère, la leçon d'Ada au cimetière, l'ordre du roi devant la crypte.
+    ("Notice", 3.6, 1.3, 53.0, "Avis de la capitainerie, an 5807",
+     "Par ordre du capitaine du port de Brumeval. Les soldats de Vibelandia ont ouvert les digues du nord, et l'eau "
+     "monte chaque nuit. Que chaque famille charge ses barques et gagne le château avant la nouvelle lune ; ne prenez "
+     "que le nécessaire. Personne ne s'abritera dans la crypte des rois : depuis la mort du gardien Aldric, nul ne sait "
+     "plus l'ouvrir, et l'on dit que son fantôme veille encore au cimetière.", "Lire l'avis", 2.8),
+    ("AdaSlate", 11.9, 1.3, 4.4, "L'ardoise d'Ada",
+     "Ada apprenait aux enfants de Brumeval à cacher leurs messages. Pour chaque lettre, on avance ou l'on recule dans "
+     "l'alphabet, et l'on change de sens à chaque lettre. Exemple, avec deux pas : B avance de deux et devient D, R "
+     "recule de deux et devient P, U avance et devient W, M recule et devient K, E avance et devient G. Ainsi BRUME "
+     "s'écrit DPWKG. Après Z, on repart de A ; avant A, on revient à Z. Pour relire, il suffit de refaire le chemin "
+     "à l'envers.", "Lire l'ardoise", 2.8),
+    ("RoyalOrder", 4.6, 1.3, -32.6, "Ordre du roi Codeon V, an 5812",
+     "Codeon V, roi de Codia, à tous ceux qui vivent encore dans les marais. L'armée de Vibelandia marche sur le "
+     "château. Rejoignez sans attendre le vieux refuge souterrain, près du château : ses portes se fermeront bientôt. "
+     "Que personne ne force la crypte des rois. Le livre de la logique et du chiffrement y dort sous la garde de nos "
+     "ancêtres, et seul celui qui sait dans quel royaume il se trouve pourra l'éveiller.", "Lire l'ordre du roi", 2.8),
 ]
 
 # Épitaphes des quatre premiers rois : le nom du royaume, puis trois pas en avant, trois en arrière, et ainsi de suite.
@@ -339,6 +356,8 @@ KINGS = ((-21.2, -8.95), (-26.8, -8.95), (-21.2, -15.05), (-26.8, -15.05))
 WALL_FACE = 0.45
 # Le panneau central des murs du kit avance jusqu'à 0,6 m du bord : les dalles gravées s'y posent devant.
 PANEL_FACE = 0.63
+# Panneaux muraux du récit : à 1 cm du panneau central du mur.
+BOARD_FACE = 0.61
 NICHES = (
     ((-10.0 + WALL_FACE, -8.0), (1, 0)), ((-10.0 + WALL_FACE, -16.0), (1, 0)),
     ((10.0 - WALL_FACE, -8.0), (-1, 0)), ((10.0 - WALL_FACE, -16.0), (-1, 0)),
@@ -352,6 +371,16 @@ LANDING_Y = 4.05
 INSCRIPTION = ("Pour ouvrir le tombeau, inscris le nom du royaume dans lequel tu te trouves. Puis, pour chaque lettre, "
                "alterne entre trois lettres en avant et trois lettres en arrière dans l'alphabet. Seul le nom ainsi "
                "transformé révélera le secret des anciens.")
+
+OSSUARY_REGISTER = ("Ici reposent les bâtisseurs qui ont creusé la crypte sous le règne de Codeon I. Ils ont gravé "
+                    "l'alphabet entier sur cinq cercles de pierre, un cercle par lettre du nom à inscrire : le premier "
+                    "cercle, au centre, porte la première lettre, et le cinquième, au bord, la dernière. Le repère d'or, "
+                    "au nord du mécanisme, montre la lettre choisie sur chaque cercle. Note du gardien : vérifier chaque "
+                    "cercle avant de valider. Une erreur fait gronder la crypte, et le volcan s'éveille plus vite.")
+GUARDS_OATH = ("Moi, gardien du marais, je jure de veiller sur le tombeau des rois et sur le livre des anciens "
+               "bâtisseurs. Je ne prononcerai jamais le mot du mécanisme et ne l'écrirai jamais en clair. Je le "
+               "garderai comme on me l'a appris : le nom du royaume, chaque lettre déplacée tour à tour vers l'avant "
+               "puis vers l'arrière. Ainsi le secret survit aux gardiens.")
 
 
 # Pontons, comme MaraisTerrain.BOARDWALKS : début et fin.
@@ -405,12 +434,17 @@ def node(lines, name, kind=None, parent=".", instance=None, props=()):
     lines += [head + "]", *props, ""]
 
 
-def sign(lines, name, parent, position, yaw, text, style, mount, size, height, line=0.15, serif=True, collision=True):
-    """Panneau SignBoard : style 0 bois, 1 pierre, 2 parchemin, 3 fer ; mount 0 poteaux, 1 mur, 2 potence."""
-    node(lines, name, "Node3D", parent, props=[
+def sign(lines, name, parent, position, yaw, text, style, mount, size, height, line=0.15, serif=True, collision=True,
+         double_sided=False):
+    """Panneau SignBoard : style 0 bois, 1 pierre, 2 parchemin, 3 fer ; mount 0 poteaux, 1 mur, 2 potence.
+    double_sided : le texte et le cadre aussi au dos (panneau sur poteaux vu des deux côtés, jamais un dos nu)."""
+    props = [
         at(*position, 1.0, yaw), f"script = {ext('17_sign')}", f"text = {quote(text)}", f"style = {style}",
         f"mount = {mount}", f"board_size = Vector2({size[0]:g}, {size[1]:g})", f"board_height = {height:g}",
-        f"line_height = {line:g}", f"serif = {'true' if serif else 'false'}", f"collision = {'true' if collision else 'false'}"])
+        f"line_height = {line:g}", f"serif = {'true' if serif else 'false'}", f"collision = {'true' if collision else 'false'}"]
+    if double_sided:
+        props.append("double_sided = true")
+    node(lines, name, "Node3D", parent, props=props)
 
 
 def engraving(lines, name, parent, position, yaw, text, pixel, color="Color(0.12, 0.11, 0.1, 1)", font_size=64):
@@ -555,8 +589,30 @@ def main():
     node(lines, "Journal", "MeshInstance3D", "Clues/Notebook", props=[at(0.0, -0.085, 0.0, 1.0, 40.0), 'mesh = SubResource("BoxMesh_journal")'])
     sign(lines, "Plate", "Clues/KeeperTomb", (0.57, -1.2, 0.0), -90.0, "Aldric\nGardien du marais\n5761 - 5803", 3, 1, (0.78, 0.52), 1.5, 0.12)
     engraving(lines, "Name", "Clues/AdaTomb", (0.0, 0.13, 0.355), 180.0, "ADA", 0.0042)
-    sign(lines, "Board", "Clues/Plaque", (0.0, -0.85, -0.35), 0.0, "Crypte du gardien", 1, 0, (1.3, 0.55), 1.05, 0.16)
-    sign(lines, "Board", "Clues/Welcome", (0.0, -0.9, -0.35), 30.0, "Les marais de\nKernel Swamp", 0, 0, (1.5, 0.8), 1.5, 0.2)
+    # Panneaux sur poteaux : texte et cadre des deux côtés, pour qu'aucun dos sombre ne se voie à contre-jour.
+    sign(lines, "Board", "Clues/Plaque", (0.0, -0.85, -0.35), 0.0, "Crypte du gardien", 1, 0, (1.3, 0.55), 1.05, 0.16,
+         double_sided=True)
+    sign(lines, "Board", "Clues/Welcome", (0.0, -0.9, -0.35), 30.0, "Les marais de\nKernel Swamp", 0, 0, (1.5, 0.8), 1.5, 0.2,
+         double_sided=True)
+    # Derrière l'accueil et l'avis du port, vus de dos en revenant vers le portail : une faible lueur chaude.
+    for parent, x, y, z in (("Clues/Welcome", -0.45, 0.3, -1.13), ("Clues/Notice", 0.6, 0.2, -0.67)):
+        node(lines, "BackLight", "OmniLight3D", parent, props=[
+            f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {x:g}, {y:g}, {z:g})",
+            "light_color = Color(1, 0.8, 0.55, 1)", "light_energy = 0.6", "omni_range = 2.5",
+            "distance_fade_enabled = true", "distance_fade_begin = 38.0", "distance_fade_length = 8.0"])
+    # L'avis du port, au bout du débarcadère, tourné vers l'arrivée ; l'ardoise d'Ada, entre sa tombe et la suivante,
+    # tournée vers l'allée ; l'ordre du roi, au bout du dernier ponton, tourné vers lui.
+    sign(lines, "Board", "Clues/Notice", (0.0, -0.9, 0.0), -42.0, "Capitainerie de Brumeval\nAvis aux pêcheurs", 2, 0,
+         (1.1, 0.75), 1.35, 0.13, double_sided=True)
+    sign(lines, "Board", "Clues/AdaSlate", (0.0, -0.9, 0.0), 180.0, "Leçon d'Ada\nBRUME devient DPWKG", 1, 0,
+         (1.0, 0.6), 1.15, 0.13, double_sided=True)
+    # La face de l'ardoise regarde l'allée, au nord, à contre-jour de la lune : la lanterne posée à son pied l'éclaire.
+    node(lines, "Light", "OmniLight3D", "Clues/AdaSlate", props=[
+        "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.85, -0.3, -0.65)", 'script = ExtResource("14_flicker")',
+        "light_color = Color(1, 0.78, 0.45, 1)", "light_energy = 0.9", "omni_range = 3.5", "flicker = 0.15",
+        "distance_fade_enabled = true", "distance_fade_begin = 38.0", "distance_fade_length = 8.0"])
+    sign(lines, "Board", "Clues/RoyalOrder", (0.0, -0.9, 0.0), -19.0, "Ordre du roi\nCodeon V", 2, 0, (1.0, 0.7), 1.35, 0.15,
+         double_sided=True)
 
     node(lines, "Ghost", "Node3D", props=[at(19.0, 1.6, 3.6, 3.0, -90)])
     node(lines, "Model", parent="Ghost", instance="16_ghost")
@@ -703,6 +759,19 @@ def main():
         'prompt = "Lire l\'hommage"', "radius = 2.8"])
     sign(lines, "Slab", "Interior/KingsTribute", (-30.0 + PANEL_FACE + 28.9, -2.5, 0.0), 90.0,
          "Nos bons rois et protecteurs\ndu Royaume de Codia !", 1, 1, (2.6, 0.9), 2.5, 0.16)
+    # Registre de l'ossuaire et serment des gardiens : sur le pan de mur plein de chaque chambre du sud (au bout du
+    # couloir, à z 2 à 6), sur le panneau central du mur, au-dessus de l'urne couchée et du cercueil.
+    for name, x, facing, title, body, board, style, prompt in (
+            ("OssuaryRegister", -14.0 - BOARD_FACE, -1.0, "Registre de l'ossuaire", OSSUARY_REGISTER,
+             "Registre de l'ossuaire", 2, "Lire le registre"),
+            ("GuardsOath", 14.0 + BOARD_FACE, 1.0, "Le serment des gardiens", GUARDS_OATH,
+             "Serment des gardiens", 1, "Lire le serment")):
+        node(lines, name, "Node3D", "Interior", props=[
+            f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {x + facing * 0.37:g}, 1.6, 4)",
+            'script = ExtResource("12_readable")', f"title = {quote(title)}", f"body = {quote(body)}",
+            f"prompt = {quote(prompt)}", "radius = 3.0"])
+        sign(lines, "Board", f"Interior/{name}", (-facing * 0.37, -1.6, 0.0), 90.0 * facing, board, style, 1,
+             (1.3, 0.7), 1.75, 0.15)
     write_niches(lines)
 
     # Volcan en éveil au nord, au-delà des reliefs : il domine la zone comme le hub.

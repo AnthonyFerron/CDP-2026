@@ -419,6 +419,8 @@ def build_cemetery(scene, ground, rng):
     scene.add("graveyard_kit/candle-multiple", (21.8, GROUND, 3.2), 0.0, 3.0)
     scene.add("graveyard_kit/candle-multiple", (21.8, GROUND, -0.2), 40.0, 3.0)
     scene.place("graveyard_kit/bench-damaged", (15.0, GROUND, 2.85), 180.0, 3.0, height=1.5)
+    # La lanterne d'Ada, au pied de son ardoise (posée dans marais.tscn), entre sa tombe et la suivante.
+    scene.place("graveyard_kit/lantern-candle", (12.75, GROUND, 3.75), 15.0, 2.0, height=True)
     # Allée dallée, de la grille à la tombe du gardien.
     for index in range(9):
         scene.place("nature_kit/path_stone", (8.8 + index * 1.45, GROUND, 1.6 + rng.uniform(-0.1, 0.1)), 90.0 + rng.uniform(-5, 5), 2.2)
