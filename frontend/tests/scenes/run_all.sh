@@ -53,6 +53,7 @@ run menu_test headless menu_test
 run signboard_test headless signboard_test
 run login_test window login_test
 run debug_test headless debug_test
+run music_test headless music_test
 run fullscreen_test headless fullscreen_test
 run tree_collision_test window tree_collision_test
 
