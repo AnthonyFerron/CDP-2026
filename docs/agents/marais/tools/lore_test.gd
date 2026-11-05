@@ -193,7 +193,8 @@ func _check_room(item: Readable) -> void:
 					tested += 1
 					var local := board.global_transform.affine_inverse() * feet
 					var footprint := absf(local.x) < board.board_size.x / 2.0 + 0.55 and local.z > -0.75 and local.z < 0.65
-					if not with and not footprint:
+					var lantern := Vector2(feet.x - 12.75, feet.z - 3.75).length() < 0.75
+					if not with and not footprint and not lantern:
 						lost += 1
 						print("      place perdue en %s" % feet.snappedf(0.01))
 			z += 0.25
