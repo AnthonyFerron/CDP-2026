@@ -23,6 +23,12 @@ const VICTORY_SPAWN := Vector3(0.0, 0.3, -60.0)
 const VICTORY_TITLE_HOLD := 3.5
 ## Temps laissé au titre de l'éruption avant le retour au menu principal, en secondes.
 const ERUPTION_TITLE_HOLD := 5.0
+## Ce qui n'est que dehors, caché dans le bunker. Les personnages n'y sont pas : le roi, Merlon et les survivants
+## sont dans l'abri au début de la partie.
+const OUTSIDE: Array[NodePath] = [^"Terrain", ^"Scatter", ^"River", ^"Props", ^"Campfire", ^"Portals", ^"PortalSigns",
+	^"Castle", ^"Lore", ^"Braziers", ^"Bunker", ^"BunkerSign", ^"Volcano"]
+## Regroupement du décor fixe (hub_props.tscn), et des panneaux.
+const HubBatch := preload("res://scenes/levels/hub/hub_batch.gd")
 ## Les deux personnages à écouter avant de sortir du bunker la première fois.
 const INTRO_SPEAKERS: Array[StringName] = [&"Codeon", &"Merlon"]
 ## Couleur des lettres du cercle magique, éteintes (gravées) et allumées par leur livre.
@@ -77,6 +83,10 @@ var _tremor := 0.0
 
 
 func _ready() -> void:
+	# Chaque panneau dessiné d'un seul maillage, pour la version web (HubBatch.merge_sign).
+	for node in find_children("*", "Node3D", true, false):
+		if node is SignBoard:
+			HubBatch.merge_sign(node)
 	var interaction: InteractionController = _player.get_node("Interaction")
 	interaction.prompt_changed.connect(_hud.set_prompt)
 	_hud.reader_closed.connect(_close_panel)
@@ -301,12 +311,16 @@ func _place_player() -> void:
 	_player.get_node("CameraPivot").rotation.y = atan2(-look.x, -look.z)
 
 
-## Dans l'abri, ni soleil ni brume : seules ses lampes l'éclairent.
+## Dans l'abri, ni soleil ni brume : seules ses lampes l'éclairent. Le dehors n'y est pas dessiné, ni l'abri dehors
+## (il est sous la carte, mais dans le champ de la caméra dès qu'elle regarde vers le sol).
 func _set_location(inside: bool) -> void:
 	_inside = inside
 	_sun.visible = not inside
 	_environment.fog_enabled = not inside
 	$Ambience.volume_db = -20.0 if inside else -8.0
+	for path in OUTSIDE:
+		(get_node(path) as Node3D).visible = not inside
+	$BunkerInterior.visible = inside
 
 
 func _travel(inside: bool) -> void:
