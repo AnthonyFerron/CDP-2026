@@ -12,9 +12,9 @@ extends Node3D
 ## partait l'essentiel des appels de dessin. La profondeur d'une ombre ne dépend pas du matériau (opaque) : tous les
 ## lots d'une case projettent leur ombre d'un seul maillage, dessiné seulement dans les ombres (SHADOWS_ONLY). Les lots
 ## visibles n'en projettent plus. L'ombre reste exactement la même : mêmes triangles, même face cachée.
-## Chargement : seuls les groupes visibles se regroupent avant la première image ; les autres (ruines déjà réparées,
-## reconstructions à venir, tout le dehors quand la partie commence au bunker) suivent, un par image, ou dès qu'ils
-## apparaissent. Ne sont jamais fondus : les nœuds à script (panneaux, lampes, textes, portes, roue du moulin), les
+## Chargement : rien ne se regroupe avant la première image (le rendu est le même, en plus d'appels de dessin) ; les
+## groupes se regroupent ensuite par tranches de BUDGET_MSEC par image, ceux qu'on voit d'abord, et un groupe caché
+## qui apparaît (une réparation, la sortie du bunker) se regroupe aussitôt. Ne sont jamais fondus : les nœuds à script (panneaux, lampes, textes, portes, roue du moulin), les
 ## collisions, les arbres, et tout modèle qui contient autre chose que des maillages.
 
 const GROUPS: Array[StringName] = [&"Fixed", &"Ruins", &"Rebuilt"]
@@ -27,14 +27,15 @@ const CELL := 32.0
 const SMALL := 1.0
 const SMALL_RANGE := 40.0
 const FADE_MARGIN := 6.0
+## Temps de regroupement par image (ms), après le chargement : au moins un groupe par image.
+const BUDGET_MSEC := 8
 ## Attributs de sommet comparés entre surfaces : seules des surfaces de même format se fondent ensemble.
 const FORMAT_MASK := 0xFF
 
 var _signatures := {}
 var _painted := {}
 var _shadow_materials := {}
-## Groupes pas encore regroupés : ceux qu'on ne voit pas au chargement (les ruines déjà réparées, les reconstructions
-## à venir) attendent, un par image, pour ne pas allonger le chargement.
+## Groupes pas encore regroupés, pris par la fin.
 var _pending: Array[Node3D] = []
 ## Temps passé à regrouper, en millisecondes (pour les mesures).
 var batch_msec := 0.0
@@ -49,15 +50,20 @@ func _ready() -> void:
 	_batch_shown.call_deferred()
 
 
-## Regroupe tout de suite ce qui se voit ; le reste suit, un groupe par image, ou dès qu'il apparaît.
+## Rien n'est regroupé pendant le chargement : à partir de la première image, chaque image regroupe des groupes
+## pendant au plus BUDGET_MSEC, ceux qu'on voit d'abord. Un groupe caché qui apparaît avant son tour est regroupé
+## aussitôt.
 func _batch_shown() -> void:
-	for group in _pending.duplicate():
+	var shown: Array[Node3D] = []
+	var hidden: Array[Node3D] = []
+	for group in _pending:
 		if group.is_visible_in_tree():
-			_pending.erase(group)
-			_batch(group)
+			shown.append(group)
 		else:
+			hidden.append(group)
 			group.visibility_changed.connect(_batch_now.bind(group), CONNECT_ONE_SHOT)
-	# Le reste du décor se regroupe à partir de l'image suivante.
+	# _process prend les groupes par la fin : les groupes visibles passent en premier.
+	_pending.assign(hidden + shown)
 	set_process(not _pending.is_empty())
 
 
@@ -68,14 +74,16 @@ func _batch_now(group: Node3D) -> void:
 
 
 func _process(_delta: float) -> void:
-	if _pending.is_empty():
-		set_process(false)
-		return
-	var group: Node3D = _pending.pop_back()
-	var callback := _batch_now.bind(group)
-	if group.visibility_changed.is_connected(callback):
-		group.visibility_changed.disconnect(callback)
-	_batch(group)
+	var start := Time.get_ticks_msec()
+	while not _pending.is_empty():
+		var group: Node3D = _pending.pop_back()
+		var callback := _batch_now.bind(group)
+		if group.visibility_changed.is_connected(callback):
+			group.visibility_changed.disconnect(callback)
+		_batch(group)
+		if Time.get_ticks_msec() - start >= BUDGET_MSEC:
+			return
+	set_process(false)
 
 
 ## Tous les groupes regroupés (pour les tests et les mesures).
