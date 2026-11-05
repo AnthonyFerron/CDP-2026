@@ -50,6 +50,8 @@
 [ext_resource type="AudioStream" path="res://assets/audio/stone_door.wav" id="53_rumble"]
 [ext_resource type="AudioStream" path="res://assets/audio/plaine_wind.wav" id="54_ruin_wind"]
 [ext_resource type="Script" path="res://scenes/levels/desert/desert_life.gd" id="37_life"]
+[ext_resource type="Script" path="res://scenes/levels/desert/desert_mirages.gd" id="38_mirages"]
+[ext_resource type="Script" path="res://scenes/levels/desert/desert_whirlwinds.gd" id="39_whirlwinds"]
 [ext_resource type="Script" path="res://scenes/levels/hub/volcano.gd" id="90_volcano"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_day"]
@@ -294,24 +296,6 @@ size = Vector3(1.62, 0.08, 1.06)
 material = SubResource("StandardMaterial3D_bronze")
 size = Vector3(0.22, 0.26, 0.06)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_post_2p13"]
-size = Vector3(0.16, 2.13, 0.16)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_board_1p9_0p9"]
-size = Vector3(2, 0.95, 0.2)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_post_1p555"]
-size = Vector3(0.16, 1.555, 0.16)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_board_1p3_0p75"]
-size = Vector3(1.4, 0.8, 0.2)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_post_1p24"]
-size = Vector3(0.16, 1.24, 0.16)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_board_0p95_0p62"]
-size = Vector3(1.05, 0.67, 0.2)
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_chest"]
 size = Vector3(1.7, 1.0, 1.7)
 
@@ -479,6 +463,15 @@ quicksand_material = SubResource("ShaderMaterial_quicksand")
 script = ExtResource("37_life")
 terrain = NodePath("../Terrain")
 
+[node name="Mirages" type="Node3D" parent="Exterior" node_paths=PackedStringArray("terrain")]
+script = ExtResource("38_mirages")
+terrain = NodePath("../Terrain")
+
+[node name="Whirlwinds" type="Node3D" parent="Exterior" node_paths=PackedStringArray("terrain")]
+script = ExtResource("39_whirlwinds")
+terrain = NodePath("../Terrain")
+sound = ExtResource("54_ruin_wind")
+
 [node name="Portal" parent="Exterior" instance=ExtResource("8_portal")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 0, 54)
 closed_prompt = "Portail éteint"
@@ -494,21 +487,6 @@ board_size = Vector2(1.9, 0.9)
 board_height = 1.6
 line_height = 0.16
 double_sided = true
-collision = false
-
-[node name="PostsBody" type="StaticBody3D" parent="Exterior/Sign"]
-
-[node name="PostLeft" type="CollisionShape3D" parent="Exterior/Sign/PostsBody"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.98, 1.065, -0.1)
-shape = SubResource("BoxShape3D_post_2p13")
-
-[node name="PostRight" type="CollisionShape3D" parent="Exterior/Sign/PostsBody"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.98, 1.065, -0.1)
-shape = SubResource("BoxShape3D_post_2p13")
-
-[node name="Plank" type="CollisionShape3D" parent="Exterior/Sign/PostsBody"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
-shape = SubResource("BoxShape3D_board_1p9_0p9")
 
 [node name="OutsideSpawn" type="Marker3D" parent="Exterior"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, -2.5)
@@ -1320,21 +1298,6 @@ mount = 0
 board_size = Vector2(1.3, 0.75)
 board_height = 1.1
 double_sided = true
-collision = false
-
-[node name="PostsBody" type="StaticBody3D" parent="Exterior/Clues/JoranLetter"]
-
-[node name="PostLeft" type="CollisionShape3D" parent="Exterior/Clues/JoranLetter/PostsBody"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.68, 0.7775, -0.1)
-shape = SubResource("BoxShape3D_post_1p555")
-
-[node name="PostRight" type="CollisionShape3D" parent="Exterior/Clues/JoranLetter/PostsBody"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.68, 0.7775, -0.1)
-shape = SubResource("BoxShape3D_post_1p555")
-
-[node name="Plank" type="CollisionShape3D" parent="Exterior/Clues/JoranLetter/PostsBody"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
-shape = SubResource("BoxShape3D_board_1p3_0p75")
 
 [node name="ApprenticeTablet" type="Node3D" parent="Exterior/Clues"]
 transform = Transform3D(6.12323e-17, 0, -1, 0, 1, 0, 1, 0, 6.12323e-17, 14.6, 0, -13.6)
@@ -1352,21 +1315,6 @@ mount = 0
 board_size = Vector2(0.95, 0.62)
 board_height = 0.85
 double_sided = true
-collision = false
-
-[node name="PostsBody" type="StaticBody3D" parent="Exterior/Clues/ApprenticeTablet"]
-
-[node name="PostLeft" type="CollisionShape3D" parent="Exterior/Clues/ApprenticeTablet/PostsBody"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.505, 0.62, -0.1)
-shape = SubResource("BoxShape3D_post_1p24")
-
-[node name="PostRight" type="CollisionShape3D" parent="Exterior/Clues/ApprenticeTablet/PostsBody"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.505, 0.62, -0.1)
-shape = SubResource("BoxShape3D_post_1p24")
-
-[node name="Plank" type="CollisionShape3D" parent="Exterior/Clues/ApprenticeTablet/PostsBody"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
-shape = SubResource("BoxShape3D_board_0p95_0p62")
 
 [node name="ArchivistScroll" type="Node3D" parent="Interior/Clues"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 3.75, 0.64, -2.65)

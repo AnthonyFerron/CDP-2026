@@ -57,6 +57,8 @@ EXT = [
     ("AudioStream", A + "stone_door.wav", "53_rumble"),
     ("AudioStream", A + "plaine_wind.wav", "54_ruin_wind"),
     ("Script", "res://scenes/levels/desert/desert_life.gd", "37_life"),
+    ("Script", "res://scenes/levels/desert/desert_mirages.gd", "38_mirages"),
+    ("Script", "res://scenes/levels/desert/desert_whirlwinds.gd", "39_whirlwinds"),
     ("Script", "res://scenes/levels/hub/volcano.gd", "90_volcano"),
 ]
 
@@ -303,24 +305,6 @@ size = Vector3(1.62, 0.08, 1.06)
 material = SubResource("StandardMaterial3D_bronze")
 size = Vector3(0.22, 0.26, 0.06)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_post_2p13"]
-size = Vector3(0.16, 2.13, 0.16)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_board_1p9_0p9"]
-size = Vector3(2, 0.95, 0.2)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_post_1p555"]
-size = Vector3(0.16, 1.555, 0.16)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_board_1p3_0p75"]
-size = Vector3(1.4, 0.8, 0.2)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_post_1p24"]
-size = Vector3(0.16, 1.24, 0.16)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_board_0p95_0p62"]
-size = Vector3(1.05, 0.67, 0.2)
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_chest"]
 size = Vector3(1.7, 1.0, 1.7)
 
@@ -543,19 +527,6 @@ LORE = [
 ]
 
 
-def posts_body(lines, parent, width, height, board_height):
-    """Collision d'un SignBoard sur poteaux : ses deux poteaux et sa planche, rien entre les poteaux sous la planche."""
-    node(lines, "PostsBody", "StaticBody3D", parent)
-    top = board_height + height / 2 + 0.08
-    for side, name in ((-1, "PostLeft"), (1, "PostRight")):
-        node(lines, name, "CollisionShape3D", f"{parent}/PostsBody", props=[
-            f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {side * (width / 2 + 0.03):g}, {top / 2:g}, -0.1)",
-            f'shape = SubResource("BoxShape3D_post_{top:g}")'.replace(".", "p")])
-    node(lines, "Plank", "CollisionShape3D", f"{parent}/PostsBody", props=[
-        f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, {board_height:g}, 0)",
-        f'shape = SubResource("BoxShape3D_board_{width:g}_{height:g}")'.replace(".", "p")])
-
-
 def ext(identifier):
     return f'ExtResource("{identifier}")'
 
@@ -623,13 +594,23 @@ def main():
         'script = ExtResource("37_life")',
         'terrain = NodePath("../Terrain")',
         "",
+        # Mirages des vents brûlants : la nappe d'eau de l'oasis et la caravane fantôme des crêtes (desert_mirages.gd).
+        '[node name="Mirages" type="Node3D" parent="Exterior" node_paths=PackedStringArray("terrain")]',
+        'script = ExtResource("38_mirages")',
+        'terrain = NodePath("../Terrain")',
+        "",
+        # Tourbillons de sable qui errent dans les dunes, avec le sifflement du vent (desert_whirlwinds.gd).
+        '[node name="Whirlwinds" type="Node3D" parent="Exterior" node_paths=PackedStringArray("terrain")]',
+        'script = ExtResource("39_whirlwinds")',
+        'terrain = NodePath("../Terrain")',
+        'sound = ExtResource("54_ruin_wind")',
+        "",
     ]
     node(lines, "Portal", parent="Exterior", instance="8_portal", props=[
         at(0, 0, 54), 'closed_prompt = "Portail éteint"', 'open_prompt = "Retourner au hub"', "inner_color = Color(1, 0.95, 0.6, 1)", "outer_color = Color(0.95, 0.62, 0.15, 1)"])
     node(lines, "Sign", "Node3D", "Exterior", props=[
         at(-4.4, 0, 45.5, 1.0, 15.0), 'script = ExtResource("14_sign")', 'text = "Désert de Pythania\\nMonument des anciens bâtisseurs"',
-        "board_size = Vector2(1.9, 0.9)", "board_height = 1.6", "line_height = 0.16", "double_sided = true", "collision = false"])
-    posts_body(lines, "Exterior/Sign", 1.9, 0.9, 1.6)
+        "board_size = Vector2(1.9, 0.9)", "board_height = 1.6", "line_height = 0.16", "double_sided = true"])
     node(lines, "OutsideSpawn", "Marker3D", "Exterior", props=["transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, -2.5)"])
 
     node(lines, "Trapdoor", "Node3D", "Exterior", props=["transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, -6)"])
@@ -757,10 +738,8 @@ def main():
             if style == 2:
                 props.append("serif = false")
             if mount == 0:
-                props += ["double_sided = true", "collision = false"]
+                props.append("double_sided = true")
             node(lines, "Board", "Node3D", f"{parent}/{name}", props=props)
-            if mount == 0:
-                posts_body(lines, f"{parent}/{name}", size[0], size[1], height)
 
     node(lines, "RoundTable", "Node3D", "Interior", props=["transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6)"])
     node(lines, "Base", "MeshInstance3D", "Interior/RoundTable", props=[

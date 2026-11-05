@@ -33,6 +33,9 @@ grille = desert_grid_test.gd, marche = desert_walk_test.gd, audit = desert_audit
 | 4 sables mouvants | QUICKSANDS | planche sables ; zone qui happe (0,85 r) = centre sombre visible |
 | Limite de la carte | rayon 66,5 | bornes (32 directions × 3) |
 | Vautours, lézards, scorpions | vie | capture life/* (sans collision) |
+| Mirage de l'oasis (nappe d'eau qui s'efface à moins de 14 m) | (41, -3), au ras du bassin | captures oasis_* avant/après (loin, moyen, près), sans collision |
+| Caravane fantôme (2 marcheurs, 2 chameaux montés, 3 de bât) | crêtes, rayon 77 m, fait le tour en 7 min | captures caravane_* avant/après, effacée à moins de 30 m, sans collision |
+| 3 tourbillons de sable (entonnoir, grains, sifflement) | boucles autour de (32, 24), (-41, 9), (6, -50) | captures tourbillon_* avant/après, grille et marche (rien ne bloque), sans collision |
 
 ## Cave des archives (sous la carte, y = -40)
 

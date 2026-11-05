@@ -31,6 +31,11 @@ const WRECKS: Array[Vector3] = [
 	Vector3(44.0, -40.0, 4.0), Vector3(-52.0, -6.0, 3.6),
 ]
 ## Boîte des épaves à l'échelle 1, dans l'ordre de wreck_models : coin et taille.
+## Décalage vertical de chaque épave, réglé à la grille de marche (pas de 0,5 m) : aucune de ses planches ne
+## fait une marche de plus de 0,4 m au-dessus du sable ou de sa congère.
+const WRECK_LIFT: Array[float] = [0.0, 0.25, 0.0, 0.0, 0.0, -0.12]
+## Hauteur au plus des congères amassées contre les épaves.
+const DRIFT_HEIGHT := 0.55
 const WRECK_BOXES := [
 	[Vector3(-0.64, 0.0, -0.87), Vector3(1.68, 0.32, 1.67)],
 	[Vector3(-0.91, 0.0, -0.79), Vector3(1.75, 0.51, 1.55)],
@@ -51,7 +56,7 @@ const PROPS := [
 	[0, -16.0, 36.0, 200.0, 3.2, 30.0, 0.35, 0.0],
 	[1, -15.0, 37.4, 20.0, 3.0, 80.0, 0.05, 0.0],
 	[3, -44.0, -8.0, 30.0, 1.8, 90.0, 0.1, 0.0],
-	[3, -43.0, -9.6, 140.0, 1.6, 0.0, 0.25, 0.55],
+	[3, -43.0, -9.6, 140.0, 1.6, 0.0, 0.42, 0.46],
 	[4, -46.0, -16.0, 75.0, 3.0, 80.0, 0.15, 0.0],
 	[5, -45.0, -18.0, 15.0, 2.6, 0.0, 0.5, 0.65],
 	[6, 46.0, 18.0, 250.0, 3.4, -88.0, 0.0, 0.0],
@@ -60,7 +65,7 @@ const PROPS := [
 	[0, 8.0, -44.0, 120.0, 3.2, 26.0, 0.35, 0.0],
 	[1, 9.5, -42.5, 300.0, 3.0, 75.0, 0.05, 0.0],
 	[6, -8.0, -56.0, 45.0, 3.4, -88.0, 0.0, 0.0],
-	[3, -6.5, -55.0, 200.0, 1.8, 0.0, 0.2, 0.55],
+	[3, -6.5, -55.0, 200.0, 1.8, 0.0, 0.32, 0.5],
 	[4, 52.0, -24.0, 120.0, 3.0, 82.0, 0.1, 0.0],
 	[5, 50.0, -26.0, 210.0, 2.6, 12.0, 0.45, 0.65],
 	[3, -52.0, 30.0, 300.0, 1.6, 90.0, 0.1, 0.0],
@@ -187,7 +192,7 @@ func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, soli
 
 
 ## Épaves de machines de siège, restes de la guerre, à moitié ensablées à des endroits fixes : chacune a la
-## collision de sa boîte, tournée comme elle, et une congère qui la recouvre d'un côté.
+## collision de ses triangles, et une congère basse qui la recouvre d'un côté, avec la sienne.
 func _add_wrecks() -> void:
 	var body := StaticBody3D.new()
 	add_child(body)
@@ -206,7 +211,7 @@ func _add_wrecks() -> void:
 		var box: Array = WRECK_BOXES[kind]
 		var height: float = box[1].y * scale_factor
 		var basis := Basis(Vector3.UP, _rng.randf() * TAU) * Basis(Vector3.RIGHT, _rng.randf_range(-0.05, 0.05))
-		var origin := Vector3(spot.x, terrain.footing_height(spot.x, spot.y) - height * 0.45, spot.y)
+		var origin := Vector3(spot.x, terrain.footing_height(spot.x, spot.y) - height * 0.45 + WRECK_LIFT[index], spot.y)
 		wreck.transform = Transform3D(basis.scaled(Vector3.ONE * scale_factor), origin)
 		add_child(wreck)
 		# Les triangles de l'épave, tous ses maillages, tournés et mis à l'échelle comme elle : une enveloppe
@@ -225,13 +230,39 @@ func _add_wrecks() -> void:
 			var collision := CollisionShape3D.new()
 			collision.shape = shape
 			body.add_child(collision)
-		# Le sable s'est amassé contre l'épave, du côté du vent.
-		var mound := MeshInstance3D.new()
-		mound.mesh = drift
+		# Le sable s'est amassé contre l'épave, du côté du vent : une congère basse, qu'on gravit à pied.
 		var side := basis * Vector3(box[1].x * 0.3 * scale_factor, 0.0, 0.0)
-		mound.transform = Transform3D(basis.scaled(Vector3(box[1].x * 0.45, 0.5 * height, box[1].z * 0.5) * scale_factor), origin + side)
-		mound.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-		add_child(mound)
+		var foot := Vector2(origin.x + side.x, origin.z + side.z)
+		var a: float = box[1].x * 0.28 * scale_factor
+		var b: float = box[1].z * 0.31 * scale_factor
+		_add_drift(body, drift, Vector3(foot.x, terrain.footing_height(foot.x, foot.y), foot.y), a, b, minf(0.3 * minf(a, b), DRIFT_HEIGHT))
+
+
+## Congère : la calotte d'un ellipsoïde de demi-axes a et b au ras du sol (base) et haute de rise, en pente douce
+## (rise ≤ 0,3 a et 0,3 b : 42° au plus à son pied), et sa collision convexe, prise sur le même ellipsoïde jusqu'à
+## 0,4 m sous le sol pour qu'aucun bord ne dépasse sur une pente.
+func _add_drift(body: StaticBody3D, sphere: SphereMesh, base: Vector3, a: float, b: float, rise: float) -> void:
+	var big_a := a / 0.866
+	var big_b := b / 0.866
+	var mound := MeshInstance3D.new()
+	mound.mesh = sphere
+	# La sphère du maillage a un rayon de 0,5 m : l'ellipsoïde a pour demi-axes big_a, 2 rise et big_b.
+	mound.transform = Transform3D(Basis.from_scale(Vector3(big_a, 2.0 * rise, big_b) * 2.0), base - Vector3.UP * rise)
+	mound.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(mound)
+	var points := PackedVector3Array([Vector3(0.0, rise, 0.0)])
+	for y: float in [-0.4, 0.0, 0.5 * rise, 0.8 * rise]:
+		var t := (y + rise) / (2.0 * rise)
+		var ring := sqrt(maxf(0.0, 1.0 - t * t))
+		for k in 12:
+			var angle := TAU * k / 12.0
+			points.append(Vector3(cos(angle) * big_a * ring, y, sin(angle) * big_b * ring))
+	var shape := ConvexPolygonShape3D.new()
+	shape.points = points
+	var collision := CollisionShape3D.new()
+	collision.shape = shape
+	collision.position = base
+	body.add_child(collision)
 
 
 func _add_props() -> void:
