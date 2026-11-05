@@ -125,8 +125,195 @@ Piste pour reprendre :
 - ou essayer `directional_shadow_blend_splits` et une première tranche plus courte, puis regarder les mêmes vues au
   sol, de près.
 
+## Chargement : sol et zone de lave calculés d'avance (5 novembre)
+
+### Principe (commit 2debc5e)
+
+Avant, chaque chargement recalculait le sol et la zone de lave, soit environ 4 s rien que dans les `_ready`.
+
+`frontend/tools/bake_plaine.gd` fait ces calculs une fois, avec les fonctions mêmes du chargement. Il écrit
+`scenes/levels/plaine/plaine_bake.res` (`PlaineBake`, 799 901 octets compressés), qui contient :
+- les hauteurs de la grille du sol ;
+- le niveau de la lave de chacun des 7 cratères ;
+- le maillage du sol, soit 110 976 sommets, sans matériau ;
+- les 2 634 bandes de la zone qui brûle (centre et taille de chaque boîte).
+
+Au chargement :
+- **Le sol (`PlaineTerrain`)** est lu tel quel si `is_baked()` est vrai, c'est-à-dire si trois conditions sont
+  remplies :
+  - même empreinte des réglages (`settings_signature()`, md5 des constantes : cratères, trous d'obus, coulée,
+    chemin, replats, couleurs, graine et fréquence du bruit) ;
+  - même niveau de lave dans chaque cratère ;
+  - mêmes hauteurs, à 1 mm près, en 6 points témoins de la grille.
+
+  Sinon, il est recalculé comme avant, avec l'avertissement « sol calculé d'avance périmé ». Sa collision vient
+  des sommets du maillage lu.
+- **La zone qui brûle (`PlaineScatter`)** est lue si le sol est à jour et si `hazard_signature()` correspond (sol,
+  plus `HAZARD_STEP`, `HAZARD_DEPTH` et `HAZARD_LENGTH`). Sinon, elle est recalculée, avec l'avertissement « zone de
+  lave calculée d'avance périmée ».
+- **L'`Area3D` de la lave** n'entre dans le monde qu'une fois ses 2 634 bandes posées. Avant, chaque bande ajoutée
+  à une zone déjà dans le monde faisait recalculer toutes les autres, soit 2 s à elle seule.
+
+### Contrôle sur `dev` 0c8c89c
+
+Depuis le matin, `dev` a reconstruit la bibliothèque, donné une collision aux lanternes et ajouté le volcan
+« distant ». Le relief et la zone qui brûle n'en dépendent pas :
+- `git diff 2debc5e 0c8c89c` ne touche pas `plaine_terrain.gd` ;
+- dans `plaine_scatter.gd`, il ne touche que `_add_lanterns()`.
+
+Résultat du précalcul :
+- relancé deux fois, `bake_plaine.gd` écrit un fichier identique octet pour octet à celui de 2debc5e (md5
+  `0b608a5863bf90eb2b5f412798bc530f`) ;
+- `-- --check` répond « données d'avance à jour », avec le code de sortie 0 ;
+- la ressource n'avait donc pas à changer.
+
+Avec ce précalcul, aucun chargement n'affiche d'avertissement « périmé » : ni les mesures, ni les tests, ni le paquet
+exporté comme la production (`docker build`, puis `--main-pack`).
+
+### Temps de chargement, `dev` seul contre la branche
+
+Les mesures viennent du serveur (arm64, 4 cœurs), avec `perf/profile_load.gd` (`-- 3` : trois chargements de
+suite, sans écran) et `~/cdp-dev/.claude/captures/outils/perf_web.gd` (fenêtre sous Xvfb). Pour `dev`, une worktree
+détachée sur 0c8c89c a servi de référence.
+
+| Mesure | `dev` seul | Branche |
+| --- | --- | --- |
+| `profile_load`, sans écran, 1er essai (lecture + instance + `_ready` + 2 images) | 4 971 ms | 898 ms |
+| `profile_load`, essais 2 et 3 (`_ready` seul) | 4 318 et 4 303 ms (4 271 et 4 255 ms) | 392 et 383 ms (343 et 332 ms) |
+| `perf_web.gd`, Xvfb, llvmpipe, Compatibility (jusqu'à la 2e image) | 6 636 ms | 4 309 ms |
+| `perf_plaine.gd`, même mesure, serveur chargé (charge 12 sur 4 cœurs) | 11 336 ms | 5 092 ms |
+| Paquet exporté (`docker build`), `profile_load` sans écran, serveur chargé | non mesuré | 1 233 ms, puis 632 et 554 ms |
+
+Lecture des chiffres :
+- les `_ready` de la Plaine passent de 4,3 s à 0,34 s, soit 12 fois moins ;
+- le chargement complet sans écran passe de 5,0 s à 0,9 s ;
+- avec une fenêtre, environ 3,9 s ne bougent pas. Elles viennent de la mise en route du rendu logiciel et de la
+  compilation des shaders par llvmpipe, que le précalcul ne touche pas. Le gain y reste de 2,3 s, soit 35 %.
+
+Le dessin ne change pas :
+- `perf_web` donne 454 appels en moyenne des deux côtés ;
+- dans la pire direction, il donne 981 appels contre 980, en moyenne sur 20 images. L'empreinte est identique (plus
+  bas), donc cet écart d'une unité vient de ce qui bouge pendant la mesure : particules, corbeaux, bannières ;
+- `perf_plaine` donne 966 appels à l'arrivée des deux côtés.
+
+### Rendu et collisions : empreinte exacte
+
+`perf/fingerprint.gd` a été lancé sous Xvfb pour lire les tampons des MultiMesh. Il relève toutes les formes de
+collision et tous les objets dessinés :
+- pour chaque forme, sa transformation exacte et ses données ;
+- pour chaque objet, sa transformation, ses ombres, sa portée, ses matériaux, les tableaux de chaque maillage et les
+  tampons des MultiMesh.
+
+| | `dev` seul | Branche |
+| --- | --- | --- |
+| Collisions | 3 272 lignes, `e09a35cd3d261f2f1f68f5b29bf2446c` | identiques |
+| Dessin | 570 lignes, `efe66460e8bc0acf3c8d9f9d6096c5f7` | identiques |
+
+Les fichiers sont identiques octet pour octet. Ils comprennent en particulier :
+- les 2 634 bandes de `LavaHazard` ;
+- la forme concave du sol (`7d099f563095787e061d70d07fa64dd4`) ;
+- les tableaux du maillage du sol.
+
+Les empreintes du matin (3 264 et 583 lignes) ne servent plus de référence, car `dev` a changé entre-temps. La
+comparaison porte sur le même état.
+
+### Captures
+
+Elles ont été prises aux 9 mêmes points avant et après, figées : `perf/shots_bake.txt`, avec `perf_plaine.gd` et
+`--shots`. Les points sont l'arrivée, trois cratères et la coulée, la vue haute, la bibliothèque dehors, la salle de
+lecture, le scriptorium et les archives.
+
+Les écarts ont été mesurés avec `perf/diff_images.gd` :
+
+| Point | Écart moyen (sur 255) | Pixels changés |
+| --- | --- | --- |
+| Arrivée | 0,02 | 0,02 % |
+| Bibliothèque dehors | 0,00 | 0,00 % |
+| Salle de lecture | 0,00 | 0,00 % |
+| Scriptorium | 0,00 | 0,00 % |
+| Archives | 0,00 | 0,00 % |
+| Cratère ouest et coulée | 5,60 | 6,40 % |
+| Cratère est et coulée | 5,23 | 6,56 % |
+| Cratère sud | 1,64 | 2,25 % |
+| Vue haute | 0,78 | 0,95 % |
+
+Les écarts des cratères ne viennent que de la lave. Les planches montrent que seules la surface de la lave et la lueur
+des fissures changent : leurs shaders suivent `TIME`, que la capture n'arrête pas. Aucun objet n'a disparu, bougé ni
+changé d'éclairage. La bibliothèque, dehors comme dedans, est identique au pixel près.
+
+### Tests (branche)
+
+- `plaine_puzzle_test` : 0 échec.
+- `timer_test` : 0 échec.
+- `music_test` : 0 échec.
+- `tree_collision_test` en mode fenêtre : Plaine, 38 arbres, 0 sans collision.
+- `run_tests.tscn` : 51 réussis, 0 échec.
+- `perf/lave_test.gd` : 0 échec, en 18 contrôles.
+  - La zone qui brûle compte 2 634 bandes et elle est dans le monde.
+  - Le sol sec de l'arrivée ne brûle pas.
+  - Le joueur est posé au-dessus de chacun des 7 lacs, puis de la coulée. Il brûle, reçoit le message « La lave
+    vous brûle », puis revient à son dernier endroit sûr.
+- Aucun de ces tests n'affiche d'avertissement « périmé ».
+
+## Garde-fou : quand le précalcul est périmé
+
+### Commande à relancer
+
+Il faut la relancer après tout changement de `plaine_terrain.gd`, par exemple le relief, les cratères, les trous
+d'obus, la coulée, le chemin, les replats, les couleurs ou le maillage. Il faut aussi la relancer après tout
+changement de la zone qui brûle dans `plaine_scatter.gd` : `lava_hazard_strips()`, `_hazard_strip()`,
+`lava_surface_at()` ou `HAZARD_*`.
+
+```
+cd frontend
+~/cdp-work/bin/godot --headless --path . --audio-driver Dummy --script res://tools/bake_plaine.gd -- --api=http://127.0.0.1:9/api/v1
+~/cdp-work/bin/godot --headless --path . --audio-driver Dummy --script res://tools/bake_plaine.gd -- --check --api=http://127.0.0.1:9/api/v1
+```
+
+Le premier appel écrit `scenes/levels/plaine/plaine_bake.res`, en 2 s environ. Le second doit répondre « données
+d'avance à jour », avec le code de sortie 0. Il faut ensuite commiter `plaine_bake.res` avec le changement.
+
+Deux passages écrivent le même fichier. Si `git status` ne montre pas `plaine_bake.res`, c'est qu'il était déjà à
+jour.
+
+### Essai du repli, sans rien commiter
+
+Le script `perf/repli.sh <worktree> <sortie>` remet les fichiers en place à la fin, avec `git checkout`.
+Ensuite, `--check` répond de nouveau « à jour ».
+
+1. **Un réglage change sans que le bake soit relancé.** Le cratère 6 passe de 2,0 à 2,2 m de profondeur.
+   - `--check` sort en erreur : « DONNÉES D'AVANCE PÉRIMÉES ».
+   - Au chargement, deux avertissements s'affichent : « sol calculé d'avance périmé » et « zone de lave calculée
+     d'avance périmée ».
+   - Tout est recalculé. Les `_ready` prennent 2,4 s, contre 4,3 s sur `dev`, car l'`Area3D` posée d'un coup reste
+     un gain.
+   - Le jeu reste correct :
+     - `lave_test` passe à 0 échec, avec 2 645 bandes au lieu de 2 634, puisque le lac est plus profond ;
+     - l'empreinte du repli (3 283 collisions, `e404aaab…` ; 570 objets dessinés, `2a6bf333…`) est identique, fichier
+       pour fichier, à celle obtenue après avoir relancé le bake avec ce réglage.
+   - Une fois le bake relancé, le chargement ne montre plus d'avertissement et les `_ready` retombent à 0,7 s, sur un
+     serveur chargé.
+2. **Le code du relief change, sans toucher aux réglages.** Le bruit passe de × 0,8 à × 0,9.
+   - L'empreinte des réglages ne voit rien.
+   - Les niveaux de lave ou les points témoins, eux, s'écartent : les deux avertissements s'affichent et tout est
+     recalculé.
+   - `--check` sort en erreur.
+3. **Le code de la zone qui brûle change.** Le bas des bandes passe de - 0,4 à - 0,5 m.
+   - **Au chargement, rien ne le voit** : aucune vérification ne porte sur le code des bandes, et les anciennes
+     bandes sont utilisées.
+   - Seul `--check` le voit et sort en erreur.
+
+Conclusion :
+- le repli fonctionne, et il donne exactement le résultat d'un bake relancé ;
+- il se déclenche quand un réglage change ou quand le relief change ;
+- il ne se déclenche pas quand seul le code des bandes de lave change (cas 3). Dans ce cas, seul `--check`
+  protège, et il faut le lancer avant de livrer.
+
 ## Reste à faire
 
 - Soleil en 2 tranches : voir l'essai plus haut, il faut d'abord se débarrasser des bandes au sol.
+- Faire lancer `tools/bake_plaine.gd -- --check` par `tests/scenes/run_all.sh`, ou relancer le bake dans
+  `frontend/Dockerfile` avant l'export. Ces fichiers sont interdits aux agents de lieu. Sans cela, un changement du
+  seul code des bandes de lave (cas 3 du garde-fou) passerait en production avec des bandes périmées.
 - `MaraisBatch` et `PlaineBatch` gagneraient à devenir un seul outil partagé dans `scripts/`, interdit aux agents de
   lieu.
