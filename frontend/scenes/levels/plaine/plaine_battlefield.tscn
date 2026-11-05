@@ -398,16 +398,16 @@ transform = Transform3D(2.25167, 0, 1.3, 0, 2.6, 0, -1.3, 0, 2.25167, 20.6, 0, -
 transform = Transform3D(0.5904, 0, 3.34835, 0, 3.4, 0, -3.34835, 0, 0.5904, 18.8029, 0, -18.4167)
 
 [node name="weapon_spear_77" parent="Models" instance=ExtResource("34_model")]
-transform = Transform3D(-3.00557, 0.67626, -0.86557, 0, 2.52163, 1.97012, 1.09842, 1.85042, -2.36842, -6.5, -0.3, -15.2611)
+transform = Transform3D(-3.00557, 0.67626, -0.86557, 0, 2.52163, 1.97012, 1.09842, 1.85042, -2.36842, -5.5, -0.3, -22.1783)
 
 [node name="weapon_spear_78" parent="Models" instance=ExtResource("34_model")]
-transform = Transform3D(0.37989, 1.95618, -2.5038, 0, 2.52163, 1.97012, 3.17737, -0.23388, 0.29936, -2.8, -0.3, -15.6247)
+transform = Transform3D(0.37989, 1.95618, -2.5038, 0, 2.52163, 1.97012, 3.17737, -0.23388, 0.29936, -2.8, -0.3, -22.2874)
 
 [node name="weapon_spear_79" parent="Models" instance=ExtResource("34_model")]
-transform = Transform3D(1.78489, -1.63518, 2.09293, 0, 2.52163, 1.97012, -2.65597, -1.09889, 1.40651, 1.5, -0.3, -14.0348)
+transform = Transform3D(1.78489, -1.63518, 2.09293, 0, 2.52163, 1.97012, -2.65597, -1.09889, 1.40651, 1.5, -0.3, -21.8104)
 
 [node name="weapon_spear_80" parent="Models" instance=ExtResource("34_model")]
-transform = Transform3D(2.99759, 0.68956, -0.8826, 0, 2.52163, 1.97012, 1.12003, -1.8455, 2.36213, 5.8, -0.3, -14.0554)
+transform = Transform3D(2.99759, 0.68956, -0.8826, 0, 2.52163, 1.97012, 1.12003, -1.8455, 2.36213, 4.8, -0.3, -21.8166)
 
 [node name="Shapes" type="Node3D" parent="."]
 
@@ -748,17 +748,17 @@ transform = Transform3D(0.17365, 0, 0.98481, 0, 1, 0, -0.98481, 0, 0.17365, 18.8
 shape = SubResource("BoxShape3D_35")
 
 [node name="Box77" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.93924, 0.21133, -0.27049, 0, 0.78801, 0.61566, 0.34326, 0.57825, -0.74013, -6.29712, 0.45649, -14.706)
+transform = Transform3D(-0.93924, 0.21133, -0.27049, 0, 0.78801, 0.61566, 0.34326, 0.57825, -0.74013, -5.29712, 0.45649, -21.6232)
 shape = SubResource("BoxShape3D_33")
 
 [node name="Box78" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.11872, 0.61131, -0.78244, 0, 0.78801, 0.61566, 0.99293, -0.07309, 0.09355, -2.21314, 0.45649, -15.6949)
+transform = Transform3D(0.11872, 0.61131, -0.78244, 0, 0.78801, 0.61566, 0.99293, -0.07309, 0.09355, -2.21314, 0.45649, -22.3576)
 shape = SubResource("BoxShape3D_33")
 
 [node name="Box79" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.55778, -0.51099, 0.65404, 0, 0.78801, 0.61566, -0.82999, -0.3434, 0.43954, 1.00945, 0.45649, -14.3645)
+transform = Transform3D(0.55778, -0.51099, 0.65404, 0, 0.78801, 0.61566, -0.82999, -0.3434, 0.43954, 1.00945, 0.45649, -22.1401)
 shape = SubResource("BoxShape3D_33")
 
 [node name="Box80" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(0.93675, 0.21549, -0.27581, 0, 0.78801, 0.61566, 0.35001, -0.57672, 0.73817, 6.00687, 0.45649, -14.609)
+transform = Transform3D(0.93675, 0.21549, -0.27581, 0, 0.78801, 0.61566, 0.35001, -0.57672, 0.73817, 5.00687, 0.45649, -22.3703)
 shape = SubResource("BoxShape3D_33")

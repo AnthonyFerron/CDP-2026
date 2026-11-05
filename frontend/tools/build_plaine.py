@@ -404,6 +404,8 @@ BRIDGE_Z = 29.5
 BRIDGE_SCALE = 4.0
 # Le tablier dépasse à peine le sol, pour ne pas se confondre avec lui.
 BRIDGE_DECK = 0.04
+# Hauteur du toit de la bibliothèque, à l'échelle du modèle (0,571 m) : 3,4 m au faîte.
+ROOF_RISE = 6.0
 
 # Couleurs des formes simples.
 PARCHMENT = (0.86, 0.78, 0.6)
@@ -900,28 +902,38 @@ def arch_fill(scene, center, outward):
 
 
 def build_ruins():
-    """Ruines de la bibliothèque, à la surface : la façade regarde le portail, vers +Z."""
+    """Bibliothèque, à la surface : la façade regarde le portail, vers +Z. Le bâtiment est entier, comme ses archives
+    sous la carte : mêmes murs, porte au centre, 12 m de large, un long toit à deux pans ; la bataille a laissé ses
+    traces autour (gravats, rayonnage jeté dehors, colonne brisée)."""
     scene = PlaineScene("PlaineRuins")
-    front, back, side = 8.0, -12.0, 10.0
+    front, back, side = 8.0, -20.0, 6.0
 
-    # Façade : porte au centre, fenêtres, puis murs qui s'effondrent vers les côtés.
+    # Façade : la porte au centre, comme le mur d'entrée des archives ; au-dessus, un étage de façade à fenêtres et
+    # son arche, qui cachent le pignon du toit.
+    wall(scene, "wall", (-4, front), (0, 1))
     wall(scene, "wall-door", (0, front), (0, 1))
-    wall(scene, "wall-window-stone", (-4, front), (0, 1))
-    wall(scene, "wall-window-stone", (4, front), (0, 1))
-    wall(scene, "wall-broken", (-8, front), (0, 1), height=3.0)
-    wall(scene, "wall-half", (8, front), (0, 1), height=2.0)
-    wall(scene, "wall", (0, front), (0, 1), base=WALL_HEIGHT, solid=False)
+    wall(scene, "wall", (4, front), (0, 1))
     wall(scene, "wall-window-stone", (-4, front), (0, 1), base=WALL_HEIGHT, solid=False)
-    wall(scene, "wall-broken", (4, front), (0, 1), base=WALL_HEIGHT, solid=False)
+    wall(scene, "wall", (0, front), (0, 1), base=WALL_HEIGHT, solid=False)
+    wall(scene, "wall-window-stone", (4, front), (0, 1), base=WALL_HEIGHT, solid=False)
     wall(scene, "wall-arch", (0, front), (0, 1), base=WALL_HEIGHT * 2, solid=False)
 
-    # Côtés et fond éventrés, avec de larges brèches.
-    for z, model, height in ((6, "wall", 4.0), (2, "wall-broken", 3.0), (-6, "wall-half", 2.0), (-10, "wall", 4.0)):
-        wall(scene, model, (-side, z), (-1, 0), height=height)
-    for z, model, height in ((6, "wall-broken", 3.0), (-2, "wall-half", 2.0), (-10, "wall-broken", 3.0)):
-        wall(scene, model, (side, z), (1, 0), height=height)
-    for x, model, height in ((-8, "wall", 4.0), (-4, "wall-broken", 3.0), (4, "wall-half", 2.0), (8, "wall", 4.0)):
-        wall(scene, model, (x, back), (0, -1), height=height)
+    # Côtés et fond pleins, des mêmes murs que les salles.
+    for z in range(int(front) - 2, int(back), -4):
+        wall(scene, "wall", (-side, z), (-1, 0))
+        wall(scene, "wall", (side, z), (1, 0))
+    for x in (-4, 0, 4):
+        wall(scene, "wall", (x, back), (0, -1))
+
+    # Toit à deux pans, faîte dans la longueur : un pan par case de 4 m, les deux bouts en croupe.
+    roof_scale = (WALL_SCALE / 1.1, ROOF_RISE, (side + 0.4) / 0.535)
+    for z in range(int(front) - 2, int(back), -4):
+        if z == int(front) - 2:
+            scene.add("fantasy_town_kit/roof-gable-end", (0.0, WALL_HEIGHT, z), 90.0, roof_scale)
+        elif z == int(back) + 2:
+            scene.add("fantasy_town_kit/roof-gable-end", (0.0, WALL_HEIGHT, z), -90.0, roof_scale)
+        else:
+            scene.add("fantasy_town_kit/roof-gable", (0.0, WALL_HEIGHT, z), 90.0, roof_scale)
 
     # Colonnes de la façade, dont une brisée au sol.
     for x in (-6.0, -2.4, 2.4, 6.0):
@@ -936,23 +948,19 @@ def build_ruins():
     for x in (-2.3, 2.3):
         lantern_post(scene, x, front + 1.5, -1.0 if x > 0 else 1.0)
 
-    # Gravats, à l'intérieur comme devant le bâtiment : la collision suit la boîte du modèle.
+    # Gravats tombés le long des murs : la collision suit la boîte du modèle.
     for model, position, degrees, scale in (
         ("rock-large", (-12.6, 0.0, 3.6), 30.0, 2.2),
         ("rock-wide", (12.0, 0.0, 2.0), 110.0, 2.4),
-        ("rock-large", (7.0, 0.0, -9.8), 200.0, 1.8),
-        ("rock-wide", (-3.0, 0.0, -2.0), 70.0, 1.6),
-        ("rock-large", (5.0, 0.0, 3.0), 160.0, 1.4),
+        ("rock-large", (9.0, 0.0, -9.8), 200.0, 1.8),
+        ("rock-wide", (-8.6, 0.0, -14.0), 70.0, 1.6),
     ):
         model = f"fantasy_town_kit/{model}"
         furniture_fit(scene, model, position, degrees, scale)
-    # Rayonnages renversés au sol et rayonnages encore debout, chacun avec sa collision.
+    # Rayonnages jetés dehors pendant le pillage, couchés dans la cendre, chacun avec sa collision.
     for position, degrees, tilt in (
-        ((-5.0, 0.0, 2.0), 20.0, 90.0),
-        ((3.0, 0.0, -6.0), -35.0, 90.0),
-        ((-7.0, 0.0, -7.0), 90.0, 0.0),
-        ((7.0, 0.0, -4.0), -90.0, 0.0),
         ((13.5, 0.0, 7.0), 60.0, 90.0),
+        ((-10.5, 0.0, -9.0), 15.0, 90.0),
     ):
         furniture_fit(scene, "furniture_kit/bookcaseClosedWide", position, degrees, 3.2, height=2.5, tilt=tilt)
     # Campement des soldats envoyés défendre la bibliothèque, sur le replat au bord du chemin.
@@ -1134,8 +1142,9 @@ def battery(scene, rng):
     furniture_fit(scene, "mini_dungeon/barrel", (bx + 3.6, 0.0, bz + 2.4), 30.0, 2.6, height=1.2)
     furniture_fit(scene, "survival_kit/box-large-open", (bx + 1.8, 0.0, bz + 3.6), 80.0, 3.4, height=1.0)
     # Carreaux tirés sur la bibliothèque, fichés dans le sol devant son mur du fond.
-    for x in (-6.5, -2.8, 1.5, 5.8):
-        planted_spear(scene, rng, x, -15.0 + rng.uniform(-1.0, 1.0), lean=-38.0)
+    # Le mur du fond est en z = -20 : les carreaux se plantent juste devant, penchés vers lui.
+    for x in (-5.5, -2.8, 1.5, 4.8):
+        planted_spear(scene, rng, x, -22.1 + 0.3 * rng.uniform(-1.0, 1.0), lean=-38.0)
 
 
 def library_front(scene, rng):
