@@ -56,6 +56,10 @@ func height_at(x: float, z: float) -> float:
 	var hill := Vector2(x - MILL_HILL.x, z - MILL_HILL.y).length() / MILL_HILL.z
 	height = maxf(height, MILL_HILL.w * (1.0 - smoothstep(0.35, 1.0, hill)))
 	var bank := absf(x - STREAM_X)
+	# Hors du bourg, les ondulations du sol remontaient le fond du lit au-dessus de l'eau : le ruisseau s'arrêtait à sec
+	# bien avant le talus (au nord, dès z = -40). Il coule maintenant au fond d'un vallon aux pentes douces (le relief
+	# s'efface sur 7 m de part et d'autre), et ne rejoint la pente qu'au talus.
+	height -= maxf(height, 0.0) * (1.0 - smoothstep(STREAM_HALF_WIDTH, STREAM_HALF_WIDTH + 7.0, bank))
 	height -= STREAM_DEPTH * (1.0 - smoothstep(STREAM_HALF_WIDTH * 0.6, STREAM_HALF_WIDTH + 1.5, bank))
 	var distance := Vector2(x, z).length()
 	return height + BORDER_HEIGHT * smoothstep(PLAY_RADIUS, PLAY_RADIUS + BORDER_WIDTH, distance)
