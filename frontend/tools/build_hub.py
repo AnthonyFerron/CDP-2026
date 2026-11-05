@@ -668,7 +668,7 @@ def rebuilt_house(scene, rng, house, furnisher=None, kind=None):
         for sz in (-1, 1):
             for floor in range(floors):
                 scene.add(pillar, (cx + sx * half_w, floor * WALL_HEIGHT, cz + sz * half_d), 0.0, WALL_SCALE)
-            scene.add_box((cx + sx * half_w, WALL_HEIGHT / 2, cz + sz * half_d), (0.6, WALL_HEIGHT, 0.6))
+            scene.add_box((cx + sx * half_w, WALL_HEIGHT * floors / 2, cz + sz * half_d), (0.6, WALL_HEIGHT * floors, 0.6))
     roof(scene, cx, cz, width, depth, WALL_HEIGHT * floors)
     hearth = HEARTHS.get(kind, "default")
     if hearth == "default":
@@ -781,7 +781,7 @@ def build_camp(scene):
         ("survival_kit/barrel", -8.9, -2.6, 30.0, 4.0, (1.0, 1.4, 1.0)),
         ("survival_kit/box-large", 9.6, -5.6, 20.0, 4.0, (1.0, 1.0, 2.0)),
         ("survival_kit/box", -9.4, -4.6, 45.0, 4.0, (1.0, 1.0, 1.0)),
-        ("survival_kit/bucket", 7.4, -5.2, 0.0, 4.0, None),
+        ("survival_kit/bucket", 7.4, -5.2, 0.0, 4.0, (0.6, 0.75, 0.6)),
     ):
         scene.add(model, (x, 0.0, z), degrees, scale)
         if size:
@@ -1056,6 +1056,7 @@ def build_bunker(scene, rng):
     scene.add("castle_kit/metal-gate", (bx - TILE - 0.1, 0.0, bz), 0.0, 4.2)
     for dz in (-2.6, 2.6):
         scene.add("survival_kit/metal-panel", (bx - TILE - 0.3, 0.0, bz + dz), 90.0, 3.4)
+        scene.add_box((bx - TILE - 0.3, 0.85, bz + dz), (0.25, 1.7, 1.7))
     # Rochers entassés sur les flancs et le toit : de loin, un tertre.
     for index in range(14):
         angle = math.radians(-80 + index * (160 / 13))
@@ -1532,10 +1533,10 @@ def build_mine(scene, rng):
     scene.add_box((mx + 2.0, 3.0, mz - 2.0), (8.0, 6.0, 8.0))
     # Boisage de l'entrée, sous le tertre, et l'éboulis qui la bouche.
     for offset in (0.0, 1.6):
-        furniture(scene, "mini_dungeon/wood-structure", (mx - 2.6 + offset, 0.0, mz + 2.6 - offset), -45.0, 4.6)
+        furniture(scene, "mini_dungeon/wood-structure", (mx - 2.6 + offset, 0.0, mz + 2.6 - offset), -45.0, 4.6, height=4.6)
     scene.add_box((mx - 1.6, 2.3, mz + 1.6), (5.0, 4.6, 1.4), -45.0)
     for x, z in ((mx - 2.2, mz + 2.2), (mx - 1.2, mz + 1.4), (mx - 3.0, mz + 1.6)):
-        furniture(scene, "survival_kit/resource-stone-large", (x, 0.0, z), rng.uniform(0, 360), 6.0)
+        furniture(scene, "survival_kit/resource-stone-large", (x, 0.0, z), rng.uniform(0, 360), 6.0, height=0.9)
     # Chariot de minerai renversé, outils et caisses abandonnés devant.
     furniture(scene, "fantasy_town_kit/cart", (mx - 9.0, 0.0, mz + 6.5), 30.0, 2.6, height=1.4, roll=90.0)
     for x, z, yaw in ((mx - 5.0, mz + 7.0, 20.0), (mx - 6.0, mz + 8.0, 70.0)):
