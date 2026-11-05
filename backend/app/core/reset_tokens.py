@@ -105,7 +105,7 @@ def decode_reset_token(token: str, now: datetime) -> ResetClaims:
         raise ResetTokenError("compte illisible")
     if not 1 <= int(subject) <= MAX_DB_ID:
         raise ResetTokenError("compte hors limites")
-    if not isinstance(fingerprint, str) or not fingerprint:
+    if not (isinstance(fingerprint, str) and fingerprint and fingerprint.isascii()):
         raise ResetTokenError("empreinte illisible")
 
     timestamp = now.timestamp()
