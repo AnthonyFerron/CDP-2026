@@ -84,6 +84,7 @@ MODEL_BOXES.update({
     "fantasy_town_kit/chimney": ((0.21, 0.0, -0.17), (0.21, 1.0, 0.34)),
     "survival_kit/tool-hammer": ((-0.04, 0.0, -0.02), (0.09, 0.15, 0.04)),
     "nature_kit/campfire_logs": ((-0.15, 0.0, -0.15), (0.29, 0.06, 0.29)),
+    "survival_kit/bedroll-packed": ((-0.13, 0.0, -0.04), (0.26, 0.09, 0.09)),
 })
 
 
@@ -237,6 +238,7 @@ class StagedScene(Scene):
         """Ouvre un groupe posé en un point du monde, tourné de degrees autour de y, avec un script : les ajouts
         suivants s'y placent dans son repère. Sous un autre groupe posé (un panneau sous son Readable), la position
         est ramenée dans le repère du parent, qui n'est jamais tourné."""
+        assert path not in self.pivots, f"deux nœuds {path}"
         if script:
             self.scripts.setdefault(script, f"{len(self.scripts) + 1}_script")
         self.origins[path] = tuple(position)
@@ -434,7 +436,7 @@ class Room:
         # collision 0,5 m. Les meubles s'arrêtent à la collision (wall_u, wall_v), les panneaux et les inscriptions se
         # posent sur la face visible (face_u, face_v).
         self.wall_u, self.wall_v = self.hu + 0.1, self.hv + 0.1
-        self.face_u, self.face_v = self.hu + 0.15, self.hv + 0.15
+        self.face_u, self.face_v = self.hu + 0.1, self.hv + 0.1
 
     def at(self, u, v, y=0.0):
         return self.frame.at(u, v, y)
@@ -451,12 +453,22 @@ class Room:
         x, _, z = self.frame.at(u, v)
         self.scene.add_box((x, y, z), size, self.frame.turn(degrees))
 
-    def lamp(self, spots, energy=1.3, light_range=5.2, name="Lamp", color=None):
-        """Lumière de la pièce, en points (u, v, y)."""
-        self.scene.lamp(name, self.frame.at(0.0, 0.0, 3.0), [self.frame.at(u, v, y) for u, v, y in spots], energy, light_range, color)
+    def outside(self, x, y, z):
+        """Distance d'un point de la pièce au sol du dehors, au-delà de la face extérieure des murs (0,2 m après le
+        bord des cases)."""
+        cx, cz, width, depth, *_ = self.house
+        flat = min(width * TILE / 2 + 0.2 - abs(x - cx), depth * TILE / 2 + 0.2 - abs(z - cz))
+        return math.hypot(flat, y)
 
-    def hearth_glow(self, u, v, y=0.5, energy=1.2, light_range=2.6):
-        """Lueur orangée des braises d'un foyer."""
+    def lamp(self, spots, energy=1.6, light_range=5.3, name="Lamp", color=None):
+        """Lumière de la pièce, en points (u, v, y). Sa portée s'arrête avant le sol du dehors : sans ombres, la
+        lumière d'une lampe traverse les murs, et elle éclairerait l'herbe au pied de la façade."""
+        points = [self.frame.at(u, v, y) for u, v, y in spots]
+        light_range = min(light_range, min(self.outside(*point) for point in points) - 0.05)
+        self.scene.lamp(name, self.frame.at(0.0, 0.0, 3.0), points, energy, round(light_range, 2), color)
+
+    def hearth_glow(self, u, v, y=0.6, energy=1.4, light_range=2.6):
+        """Lueur orangée des braises d'un foyer, posée devant lui dans la pièce."""
         self.lamp([(u, v, y)], energy, light_range, name="Embers", color="Color(1, 0.48, 0.18, 1)")
 
     def reader(self, name, u, v, y, title, body, radius=1.8):
@@ -494,8 +506,7 @@ def furnish(scene, house, ruined, rng):
     r = Room(scene, house, ruined, rng)
     hu, hv = r.hu, r.hv
     # Lit contre le mur du fond, à gauche, et son coffre au pied ; l'âtre au fond, à droite.
-    r.put("survival_kit/bedroll-frame", -hu + 0.6 + (0.2 if ruined else 0.0), -r.wall_v + 1.0, rng.uniform(-8, 8) if ruined else 0.0, 3.2,
-          height=0.48)
+    bed(r, -hu + 0.6 + (0.2 if ruined else 0.0), -r.wall_v + 1.0, broken=ruined)
     r.put("survival_kit/chest", -hu + 0.6, -r.wall_v + 2.45, 0.0, 3.0, height=0.78, tilt=90.0 if ruined and rng.random() < 0.5 else 0.0)
     hu_, hv_ = HEARTHS["house"](r.frame)
     hearth(r, hu_, hv_, "back")
@@ -519,8 +530,17 @@ def furnish(scene, house, ruined, rng):
         r.put(model, u, 0.25, 0.0, 0.8 if "bowl" in model else 0.6, y=0.68)
     r.put("graveyard_kit/candle", 0.6, -0.1, 0.0, 1.6, y=0.68)
     r.put("survival_kit/box-open", -hu + 0.5, hv - 0.6, 15.0, 2.6, height=0.8)
-    r.lamp([(0.4, 0.0, 2.9)], energy=1.0, light_range=5.0)
-    r.hearth_glow(hu_, hv_ + 0.9, energy=1.0)
+    if hu > 5.0:
+        # Grande maison, trois cases de façade : le lit des enfants, et les réserves dans le coin de devant.
+        bed(r, -hu + 1.7, -r.wall_v + 1.0)
+        r.put("mini_dungeon/barrel", hu - 0.75, hv - 0.8, 0.0, 2.4, height=1.15)
+        r.put("food_kit/bag", hu - 1.75, hv - 0.6, 15.0, 1.5, height=1.25)
+    if hv > 5.0:
+        # Maison profonde : un banc le long du mur de gauche, un tonneau au fond à gauche de l'âtre.
+        r.put("fantasy_town_kit/stall-bench", -r.wall_u + 0.45, 1.6, 0.0, (3.0, 2.0, 2.6), height=0.46)
+        r.put("mini_dungeon/barrel", hu - 2.6, -r.wall_v + 0.7, 0.0, 2.2, height=1.05)
+    r.lamp([(0.0, 0.0, 3.3)])
+    r.hearth_glow(hu_ - 1.0, hv_ + 1.5)
     # Tonneau et caisse dehors, contre la façade, du côté opposé à la porte.
     side = -1.0 if r.door_u >= 0 else 1.0
     r.put("survival_kit/barrel", side * (hu - 0.4), hv + 1.2, 0.0, 3.2, height=1.1)
@@ -1145,6 +1165,29 @@ def shelf(r, u, v, degrees, width=1.6, height=2.0, depth=0.5, boards=4, books=Tr
         r.put(model, u + du, v + dv, degrees + rng.uniform(-20, 20), scale, y=0.16 + board * step)
 
 
+def bed(r, u, v, degrees=0.0, width=0.86, length=1.95, broken=False, slide=None):
+    """Lit de bois : un cadre de planches sur quatre pieds, la paillasse dessus et son traversin, la tête vers -Z du
+    lit (le mur du fond quand degrees vaut 0). Cassé dans les ruines : le cadre au sol, la paillasse de travers."""
+    rng = r.rng
+    mat = (width * 0.92 / 0.31, 2.0, length * 0.94 / 0.61)
+    if broken:
+        r.add("fantasy_town_kit/planks", u, v, degrees + rng.uniform(-8, 8), (width, 1.0, length), y=0.0)
+        # La paillasse a glissé de côté, vers le milieu de la pièce sauf avis contraire (slide, le long de u).
+        du, dv = (-math.copysign(0.3, u) if slide is None else slide), 0.0
+        r.put("survival_kit/bedroll", u + du, v + dv, degrees + rng.uniform(-6, 6), mat, y=0.06)
+        return
+    top = 0.34
+    r.add("fantasy_town_kit/planks", u, v, degrees, (width, 1.0, length), y=top)
+    for sx in (-1, 1):
+        for sz in (-1, 1):
+            du, dv = frame_offset(degrees, sx * (width / 2 - 0.06), sz * (length / 2 - 0.06))
+            r.add("fantasy_town_kit/pillar-wood", u + du, v + dv, degrees, (0.6, top, 0.6))
+    r.put("survival_kit/bedroll", u, v, degrees, mat, y=top + 0.06)
+    du, dv = frame_offset(degrees, 0.0, -length / 2 + 0.25)
+    r.put("survival_kit/bedroll-packed", u + du, v + dv, degrees, (width * 0.8 / 0.26, 2.4, 2.4), y=top + 0.3)
+    r.box(u, v, 0.3, (width, 0.6, length), degrees)
+
+
 def fallen_shelf(r, u, v, degrees, width=1.6, depth=0.5):
     """Étagère renversée : ses planches et deux montants à terre, des livres épars."""
     for k in range(3):
@@ -1191,13 +1234,13 @@ def furnish_school(scene, house, ruined, rng):
     # Tables et bancs des élèves, tournés vers la chaire : l'allée du milieu mène de la porte au maître.
     for row, v in enumerate((-0.9, 1.3)):
         for side in (-1, 1):
-            u = side * 2.6
+            u = side * 2.55
             tipped = ruined and rng.random() < 0.6
-            r.put("mini_dungeon/table", u, v, rng.uniform(-20, 20) if tipped else 0.0, (3.9, 2.0, 1.6), height=0.62,
+            r.put("mini_dungeon/table", u, v, rng.uniform(-20, 20) if tipped else 0.0, (3.6, 2.0, 1.6), height=0.62,
                   roll=90.0 if tipped else 0.0)
             fallen = ruined and rng.random() < 0.5
             r.put("fantasy_town_kit/stall-bench", u, v + 1.0 + (0.2 if fallen else 0.0), 90.0 + (rng.uniform(-15, 15) if fallen else 0.0),
-                  (2.6, 2.0, 3.6), height=0.46, roll=90.0 if fallen else 0.0)
+                  (2.6, 2.0, 3.3), height=0.46, roll=90.0 if fallen else 0.0)
     # Étagères de livres dans les coins du fond, contre les murs de côté.
     for side in (-1, 1):
         if ruined and side > 0:
@@ -1215,7 +1258,7 @@ def furnish_school(scene, house, ruined, rng):
     for v in (-0.9, 1.3):
         for side in (-1, 1):
             for k in (-1, 1):
-                r.put("furniture_kit/books", side * 2.6 + k * 0.9, v, rng.uniform(-20, 20), 2.0, y=0.62)
+                r.put("furniture_kit/books", side * 2.55 + k * 0.85, v, rng.uniform(-20, 20), 2.0, y=0.62)
     # Le tableau du maître, au mur du fond : la leçon du jour est restée écrite.
     group = r.reader("Lesson", 0.0, -hv + 0.4, 1.6, "Le tableau de la classe",
                      "À la craie, d'une écriture appliquée : « Leçon du jour : découper un problème en étapes, mettre les étapes dans l'ordre, vérifier chaque résultat. » Dessous, une autre main a ajouté : « Les anciens bâtisseurs ont tout consigné dans quatre livres. »",
@@ -1223,8 +1266,8 @@ def furnish_school(scene, house, ruined, rng):
     r.wall_board("Blackboard", "back", 0.0, "Découper,\nordonner,\nvérifier.", height=2.15, style=3, size=(2.2, 1.0), line=0.16)
     scene.group = group
     r.put("furniture_kit/rugRectangle", 0.0, 0.7, 90.0, (2.0, 1.0, 1.0), y=0.02)
-    attic_ladder(r, r.wall_u - LADDER_REACH, 0.55, -90.0)
-    r.lamp([(-2.6, 0.2, 2.9), (2.6, 0.2, 2.9)], energy=1.2, light_range=5.0)
+    attic_ladder(r, -3.0, -r.wall_v + LADDER_REACH, 0.0)
+    r.lamp([(-2.0, 0.0, 3.3), (2.0, 0.0, 3.3)])
 
 
 def furnish_tavern(scene, house, ruined, rng):
@@ -1266,9 +1309,7 @@ def furnish_tavern(scene, house, ruined, rng):
     r.put("mini_dungeon/table", 2.25, 3.4, 0.0, 2.4, height=0.74, roll=90.0 if ruined else 0.0)
     for v in (2.15, 4.65):
         r.put("fantasy_town_kit/stall-bench", 2.25, v, 90.0, (3.0, 2.0, 2.7), height=0.46, roll=90.0 if ruined and v > 3 else 0.0)
-    if ruined:
-        r.put("mini_forest/ladder", -2.3, -hv + 1.0, 80.0, 3.8, height=0.5, y=-0.05, tilt=90.0)
-    else:
+    if not ruined:
         attic_ladder(r, -2.5, -r.wall_v + LADDER_REACH, 0.0)
     if ruined:
         for index in range(3):
@@ -1289,8 +1330,8 @@ def furnish_tavern(scene, house, ruined, rng):
                      radius=2.0)
     r.wall_board("Board", "right", -0.8, "Bière : 2 sous\nRagoût : 3 sous", height=1.95, style=3, size=(1.1, 0.6), line=0.12)
     scene.group = group
-    r.lamp([(-1.0, -2.2, 2.9), (0.6, 2.4, 2.9)], energy=1.2, light_range=5.2)
-    r.hearth_glow(0.0, -hv + 1.3)
+    r.lamp([(0.0, -2.0, 3.3), (0.0, 2.0, 3.3)])
+    r.hearth_glow(hu_, hv_ + 1.5)
 
 
 def furnish_chapel(scene, house, ruined, rng):
@@ -1317,13 +1358,13 @@ def furnish_chapel(scene, house, ruined, rng):
         return
     for u in (-0.7, 0.7):
         r.put("graveyard_kit/candle-multiple", u, -hv + 1.15, 0.0, 2.0, y=0.98)
-    r.inscription("Prayer", "back", 0.0, 2.75, "QUE L'ORDRE, LA RIGUEUR,\nLA LOGIQUE ET LA CLARTÉ\nVEILLENT SUR CODIA",
+    r.inscription("PrayerText", "back", 0.0, 2.75, "QUE L'ORDRE, LA RIGUEUR,\nLA LOGIQUE ET LA CLARTÉ\nVEILLENT SUR CODIA",
                   pixel=0.0034, color="Color(0.55, 0.42, 0.18, 1)")
     back = r.reader("Prayer", 0.0, -hv + 1.9, 1.0, "La prière des Quatre Livres",
                     "Gravé au-dessus de l'autel : « Que l'ordre du Projenomicon, la rigueur de l'Algonicon, la logique du Logiconomicon et la clarté du Codonomicon veillent sur Codia. » De part et d'autre, quatre lutrins de pierre attendent toujours leurs livres.",
                     radius=2.4)
     scene.group = back
-    r.lamp([(0.0, -1.2, 3.0), (0.0, 2.0, 3.0)], energy=1.1, light_range=5.2)
+    r.lamp([(-2.0, 0.0, 3.3), (2.0, 0.0, 3.3)])
 
 
 def furnish_forge(scene, house, ruined, rng):
@@ -1350,13 +1391,16 @@ def furnish_forge(scene, house, ruined, rng):
     r.put("survival_kit/tool-axe", -3.3, 1.25, 90.0, 3.4, y=top, tilt=90.0)
     for v in (-2.0, -0.4):
         r.put("mini_dungeon/shield-round", r.face_u - 0.13, v, -90.0, 2.2, y=2.0)
+    # Épées forgées pour l'armée, la pointe dans le tonneau du coin, la garde dehors.
+    for du, dv, yaw in ((-0.2, 0.1, 0.0), (0.15, -0.1, 60.0), (0.1, 0.25, 120.0)):
+        r.put("mini_dungeon/weapon-sword", 2.9 + du, -3.0 + dv, yaw, 3.0, y=0.2, tilt=180.0)
     r.put("furniture_kit/books", -3.3, 0.65, 100.0, 2.4, y=top)
     back = r.reader("Orders", -3.3, 0.6, 0.95, "Le carnet de commandes",
                     "Commande de l'armée de Codia, hiver 5811 : quarante épées, soixante pointes de lance, vingt boucliers ronds. Livré : douze épées. En bas de la page, de la main de Bran : « Plus de fer, plus de charbon. Je garde le dernier marteau pour reconstruire. »",
                     radius=2.0)
     scene.group = back
-    r.lamp([(0.3, 0.3, 2.9)], energy=1.1, light_range=5.2)
-    r.hearth_glow(hu_, hv_ + 0.9, energy=1.6, light_range=3.4)
+    r.lamp([(0.0, 0.0, 3.3)])
+    r.hearth_glow(hu_ + 1.0, hv_ + 1.5, energy=1.8)
 
 
 def furnish_farm(scene, house, ruined, rng):
@@ -1367,11 +1411,11 @@ def furnish_farm(scene, house, ruined, rng):
     hu_, hv_ = HEARTHS["farm"](r.frame)
     hearth(r, hu_, hv_, "right")
     r.put("food_kit/pot-stew", hu_ - 1.2, hv_, 90.0, 1.4, height=0.5, tilt=90.0 if ruined else 0.0)
-    r.put("mini_dungeon/table", -0.35, 0.9, 0.0, 2.4, height=0.74, roll=90.0 if ruined else 0.0)
-    for v in (-0.28, 2.08):
+    r.put("mini_dungeon/table", -0.35, 1.1, 0.0, 2.4, height=0.74, roll=90.0 if ruined else 0.0)
+    for v in (-0.08, 2.28):
         r.put("fantasy_town_kit/stall-bench", -0.35, v, 90.0, (3.0, 2.0, 2.6), height=0.46, roll=90.0 if ruined and v > 0 else 0.0)
     for index, u in enumerate((-3.15, -2.0)):
-        r.put("survival_kit/bedroll-frame", u, -hv + 1.15 + (0.3 if ruined and index else 0.0), rng.uniform(-8, 8) if ruined else 0.0, 3.2, height=0.48)
+        bed(r, u, -hv + 1.15 + (0.3 if ruined and index else 0.0), broken=ruined)
     r.put("survival_kit/chest", -0.75, -hv + 0.5, 0.0, 3.0, height=0.78)
     for index, (u, v) in enumerate(((3.2, 3.1), (2.5, 3.15))):
         tipped = ruined and index == 1
@@ -1385,18 +1429,18 @@ def furnish_farm(scene, house, ruined, rng):
     if not ruined:
         top = 0.74
         for u in (-0.95, 0.25):
-            r.put("food_kit/bowl", u, 0.9, 0.0, 0.8, y=top)
-        r.put("food_kit/loaf-round", -0.35, 1.1, 20.0, 0.7, y=top)
-        r.put("graveyard_kit/candle", 0.55, 1.4, 0.0, 1.6, y=top)
-        for model, du in (("food_kit/cabbage", -0.2), ("food_kit/carrot", 0.22)):
-            r.put(model, 1.4 + du, 3.2, rng.uniform(0, 360), 0.9, y=0.8)
-        r.put("furniture_kit/books", -1.25, 0.65, 80.0, 2.2, y=top)
-        back = r.reader("Almanac", -1.15, 0.8, 0.9, "L'almanach de la ferme",
+            r.put("food_kit/bowl", u, 1.1, 0.0, 0.8, y=top)
+        r.put("food_kit/loaf-round", -0.35, 1.3, 20.0, 0.7, y=top)
+        r.put("graveyard_kit/candle", 0.55, 1.6, 0.0, 1.6, y=top)
+        for model, du, scale in (("food_kit/cabbage", -0.15, 0.6), ("food_kit/carrot", 0.15, 0.45)):
+            r.put(model, 1.4 + du, 3.2, rng.uniform(0, 360), scale, y=0.8)
+        r.put("furniture_kit/books", -1.25, 0.85, 80.0, 2.2, y=top)
+        back = r.reader("Almanac", -1.15, 1.0, 0.9, "L'almanach de la ferme",
                         "Semailles d'automne 5811 : blé dans le champ de l'est, citrouilles le long de l'enclos. Été 5812 : les soldats de Vibelandia ont brûlé la moisson avant qu'on puisse la rentrer. Dernière ligne, avant le départ pour le bunker : « Garder les semences au sec. On replantera. »",
                         radius=2.0)
         scene.group = back
-        r.lamp([(0.0, 0.0, 2.9)], energy=1.1, light_range=5.2)
-        r.hearth_glow(hu_ - 0.9, hv_)
+        r.lamp([(0.0, 0.0, 3.3)])
+        r.hearth_glow(hu_ - 1.5, hv_)
     cx, cz = house[0], house[1]
     # Champ à l'est de la ferme : rangées de terre et de cultures, qui repoussent avec le village.
     for row in range(5):
@@ -1521,8 +1565,8 @@ def furnish_bakery(scene, house, ruined, rng):
     # Étagère à pain contre la façade, à gauche de la porte : les miches du jour sur ses planches.
     shelf(r, -1.5, r.wall_v - 0.3, 180.0, width=1.8, height=1.6, depth=0.5, boards=3, books=False,
           items=[("food_kit/loaf-round" if k % 2 else "food_kit/loaf", -0.55 + (k % 3) * 0.55, 1 + k // 3, 0.6) for k in range(6)])
-    r.lamp([(0.2, 0.0, 2.9)], energy=1.1, light_range=5.2)
-    r.hearth_glow(hu_, hv_ + 0.9, energy=1.4, light_range=3.0)
+    r.lamp([(0.0, 0.0, 3.3)])
+    r.hearth_glow(hu_ + 1.0, hv_ + 1.5, energy=1.6)
     # Étal devant la porte : le pain du matin, sous l'auvent.
     side = -1.0 if r.door_u >= 0 else 1.0
     r.put("fantasy_town_kit/stall-bench", side * 2.0, hv + 1.4, 90.0, 3.0, height=0.7)
@@ -1553,16 +1597,16 @@ def furnish_mill(scene, house, ruined, rng):
     top = 0.81
     r.put("mini_dungeon/table", -0.9, 2.5, 0.0, 2.6, height=top)
     r.put("food_kit/bowl", -1.4, 2.4, 20.0, 1.4, y=top)
-    r.put("food_kit/bag-flat", -0.4, 2.6, -10.0, 1.2, y=top)
-    r.put("graveyard_kit/candle", 0.05, 2.2, 0.0, 1.6, y=top)
-    r.put("furniture_kit/books", -1.75, 3.0, 75.0, 2.2, y=top)
+    r.put("food_kit/bag-flat", -1.5, 2.8, -10.0, 1.2, y=top)
+    r.put("graveyard_kit/candle", 0.0, 2.7, 0.0, 1.6, y=top)
+    r.put("furniture_kit/books", -0.5, 2.0, 75.0, 2.2, y=top)
     for u, model in ((1.3, "survival_kit/tool-shovel"), (1.8, "survival_kit/tool-hoe")):
         r.put(model, u, -r.wall_v + 0.35, 0.0, 5.0, tilt=-10.0)
-    back = r.reader("Notebook", -1.75, 3.0, 0.9, "Le cahier du meunier",
+    back = r.reader("Notebook", -0.5, 2.0, 0.9, "Le cahier du meunier",
                     "Sacs moulus pour la boulangerie et pour la garde, an 5812 : quatre cents, puis plus un seul grain à moudre. Dernière ligne, la veille du départ pour le bunker : « Roue arrêtée, meule calée. Si la rivière retrouve sa force, il suffira d'ôter la cale. »",
                     radius=2.0)
     scene.group = back
-    r.lamp([(0.0, 0.3, 2.9)], energy=1.1, light_range=5.2)
+    r.lamp([(0.0, 0.0, 3.3)])
     # Charrette de sacs devant la porte, du côté opposé.
     side = -1.0 if r.door_u >= 0 else 1.0
     r.put("fantasy_town_kit/cart", side * 2.2, hv + 2.4, 90.0, 2.6, height=1.4)
@@ -1591,7 +1635,7 @@ def furnish_stables(scene, house, ruined, rng):
         r.add("graveyard_kit/hay-bale", 0.6, -2.0, rng.uniform(0, 360), 1.8, roll=90.0)
         return
     r.put("survival_kit/chest", -3.3, -1.8, 90.0, 3.4, height=0.88)
-    r.put("graveyard_kit/lantern-candle", -3.3, -1.8, 0.0, 1.4, y=0.88)
+    r.put("graveyard_kit/candle-multiple", -3.3, -1.8, 0.0, 1.6, y=0.88)
     r.put("graveyard_kit/bench", -3.3, 0.2, 90.0, 2.0, height=0.92)
     for v, model in ((1.6, "survival_kit/tool-hoe"), (2.1, "survival_kit/tool-shovel")):
         r.put(model, -r.wall_u + 0.35, v, 90.0, 5.0, tilt=-10.0)
@@ -1601,7 +1645,7 @@ def furnish_stables(scene, house, ruined, rng):
                     "Au-dessus de chaque stalle, un nom peint sur une planche : Brume, Silex, Comète, Orage. Les chevaux de la garde sont partis avec l'armée de Devlyn en 5804, contre Vibelandia ; aucun n'est revenu. Le palefrenier a pourtant laissé du foin dans chaque stalle, comme s'ils allaient rentrer le soir même.",
                     radius=2.2)
     scene.group = back
-    r.lamp([(0.0, -2.8, 2.9), (0.0, 2.8, 2.9)], energy=1.1, light_range=5.0)
+    r.lamp([(0.0, -2.0, 3.3), (0.0, 2.0, 3.3)])
     # Enclos derrière les écuries, côté forêt.
     cx, cz = house[0], house[1]
     for index in range(4):
@@ -1618,8 +1662,8 @@ def furnish_barracks(scene, house, ruined, rng):
     hearth(r, hu_, hv_, "left")
     for index, u in enumerate((-3.85, -2.65, -1.45, 1.45, 2.65, 3.85)):
         moved = ruined and index % 2 == 1
-        r.put("survival_kit/bedroll-frame", u + (0.1 if moved else 0.0), -hv + 0.95 + (0.25 if moved else 0.0),
-              rng.uniform(-8, 8) if moved else 0.0, 3.2, height=0.48, roll=90.0 if moved and index == 3 else 0.0)
+        bed(r, u + (0.1 if moved else 0.0), -hv + 0.95 + (0.25 if moved else 0.0), broken=moved,
+            slide=math.copysign(0.3, u) if abs(u) < 2.0 else -math.copysign(0.3, u))
         if not moved:
             r.put("survival_kit/chest", u, -1.4, 0.0, 2.4, height=0.62)
     r.put("mini_arena/weapon-rack", 0.0, -hv + 0.55, 0.0, 2.4, height=1.1, tilt=90.0 if ruined else 0.0)
@@ -1650,8 +1694,8 @@ def furnish_barracks(scene, house, ruined, rng):
         r.wall_board(f"Board{index}", "back", u, ("Volontaires\n5804", "Volontaires\n5807", "Volontaires\n5810")[index],
                      height=2.6, size=(1.05, 0.7), line=0.14)
     scene.group = back
-    r.lamp([(-2.6, 0.2, 2.9), (2.6, 0.2, 2.9)], energy=1.1, light_range=5.0)
-    r.hearth_glow(hu_ + 0.9, hv_, energy=1.2)
+    r.lamp([(-2.0, 0.0, 3.3), (2.0, 0.0, 3.3)])
+    r.hearth_glow(hu_ + 1.5, hv_)
     # Cour d'entraînement, entre la caserne et l'enceinte du château : cibles, mannequins de paille, râtelier.
     cx, cz = house[0], house[1]
     for index, (x, z) in enumerate(((cx + 10.0, cz - 3.0), (cx + 13.0, cz - 3.0), (cx + 16.0, cz - 3.0))):
@@ -1672,7 +1716,7 @@ def furnish_apothecary(scene, house, ruined, rng):
     r.put("food_kit/pot-stew", hu_, hv_ + 1.27, 0.0, 1.4, height=0.5, tilt=90.0 if ruined else 0.0)
     r.put("mini_dungeon/table", -0.5, -0.6, 0.0, 2.8, height=0.87, roll=90.0 if ruined else 0.0)
     r.put("fantasy_town_kit/stall-stool", -0.5, 0.75, 0.0, 2.4, roll=90.0 if ruined else 0.0)
-    r.put("survival_kit/bedroll-frame", 3.2, 2.6, 0.0, 3.2, height=0.48, roll=90.0 if ruined else 0.0)
+    bed(r, 3.2, 2.6, 180.0, broken=ruined)
     r.put("mini_dungeon/barrel", 3.0, 0.3, 0.0, 2.2, height=1.05)
     for u, v in ((-3.2, 3.1), (-3.2, 2.3)):
         r.put("survival_kit/box-open", u, v, rng.uniform(-10, 10), 2.6, height=0.8, tilt=90.0 if ruined and v > 3 else 0.0)
@@ -1699,8 +1743,8 @@ def furnish_apothecary(scene, house, ruined, rng):
                     "Pour les brûlures : sauge et miel. Pour la fièvre : écorce de saule, en tisane. Pour les plaies du front : onguent de souci, et du linge propre. Plus bas, souligné deux fois : « Pour la peur, quand les cloches sonnent : une tisane de tilleul, et quelqu'un à qui parler. »",
                     radius=2.0)
     scene.group = back
-    r.lamp([(0.0, 0.0, 2.9)], energy=1.1, light_range=5.2)
-    r.hearth_glow(hu_, hv_ + 0.9)
+    r.lamp([(0.0, 0.0, 3.3)])
+    r.hearth_glow(hu_ - 1.0, hv_ + 1.5)
     # Jardin des simples, entre la porte et le chemin : carrés d'herbes et de racines.
     cx, cz = house[0], house[1]
     for row in range(3):
@@ -1744,7 +1788,7 @@ def furnish_scriptorium(scene, house, ruined, rng):
                     radius=2.2)
     scene.group = back
     attic_ladder(r, 2.75, r.wall_v - LADDER_REACH, 180.0)
-    r.lamp([(0.0, -0.4, 2.9)], energy=1.0, light_range=5.2)
+    r.lamp([(0.0, 0.0, 3.3)], energy=1.4)
 
 
 QUARTER_FURNISHERS = {"bakery": furnish_bakery, "mill": furnish_mill, "stables": furnish_stables, "barracks": furnish_barracks,
@@ -1867,25 +1911,43 @@ def tower_point(x, z, a, b):
 
 
 def tower_walls(scene, x, z, scale, height):
-    """Murs de la tour en quatre boîtes autour de la salle du bas, au lieu d'un bloc plein : la porte, sur la face
-    +x du modèle (nord-est), reste ouverte sous son linteau."""
+    """Murs de la tour en quatre boîtes autour de la salle du bas, au lieu d'un bloc plein. La porte du modèle, sur
+    sa face +x (nord-est), est une porte de bois fermée : le mur reste plein, et l'on passe par elle avec E
+    (tower_doors)."""
     outer, inner = 0.465 * scale, 0.349 * scale
     middle, thick = (outer + inner) / 2, outer - inner
-    door_half, door_top = 0.18 * scale, 0.6 * scale
-    for a, b, size in ((-middle, 0.0, (thick, height, 2 * outer)), (0.0, middle, (2 * outer, height, thick)),
-                       (0.0, -middle, (2 * outer, height, thick))):
+    for a, b, size in ((-middle, 0.0, (thick, height, 2 * outer)), (middle, 0.0, (thick, height, 2 * outer)),
+                       (0.0, middle, (2 * outer, height, thick)), (0.0, -middle, (2 * outer, height, thick))):
         px, pz = tower_point(x, z, a, b)
         scene.add_box((px, height / 2, pz), size, TOWER_YAW)
-    side = outer - door_half
-    for b in (-(door_half + side / 2), door_half + side / 2):
-        px, pz = tower_point(x, z, middle, b)
-        scene.add_box((px, height / 2, pz), (thick, height, side), TOWER_YAW)
-    px, pz = tower_point(x, z, middle, 0.0)
-    scene.add_box((px, (door_top + height) / 2, pz), (thick, height - door_top, 2 * door_half), TOWER_YAW)
+
+
+def tower_doors(scene, x, z, scale, name):
+    """Les deux côtés de la porte fermée de la tour : un Interactable dehors pour entrer, un dedans pour sortir. Chacun
+    porte le point d'arrivée (destination) et le cap de la caméra (facing) ; hub.gd fait passer le joueur en fondu."""
+    outer, inner = 0.465 * scale, 0.349 * scale
+    group = scene.group
+    c, s = math.cos(math.radians(TOWER_YAW)), math.sin(math.radians(TOWER_YAW))
+    # Direction de la porte (+a) dans le monde, et le cap de la caméra (atan2(-x, -z) du regard) : dedans, on regarde
+    # la salle ; dehors, on tourne le dos à la tour.
+    out_x, out_z = c, -s
+    look_in = math.atan2(out_x, out_z)
+    look_out = math.atan2(-out_x, -out_z)
+    for key, (a, prompt, (da, db), facing) in {
+        "DoorOutside": (outer + 0.3, "Entrer dans l'observatoire", (0.6, -0.2), look_in),
+        "DoorInside": (inner - 0.2, "Sortir de l'observatoire", (outer + 1.6, 0.0), look_out),
+    }.items():
+        px, pz = tower_point(x, z, a, 0.0)
+        path = f"{group}/{key}"
+        scene.pivot(path, (px, 1.2, pz), "res://scripts/interactable.gd", {"prompt": quote(prompt), "radius": "1.7"})
+        tx, tz = tower_point(x, z, da, db)
+        scene.metadata[path] = {"destination": f"Vector3({tx:.3f}, 0.3, {tz:.3f})", "facing": f"{facing:.4f}"}
+        scene.texts.add(path)
+        scene.group = group
 
 
 def furnish_observatory(scene, x, z, scale, ruined, rng):
-    """Salle des veilleurs, au pied de la tour : la table où l'on tenait le registre du volcan (texte à lire), la
+    """Salle des veilleurs, au pied de la tour, derrière sa porte fermée : la table où l'on tenait le registre du volcan (texte à lire), la
     chaise, la paillasse du veilleur de nuit, le coffre et sa lanterne, et l'échelle vers la chambre de guet. Plancher
     de bois, et le plafond de l'étage au-dessus ; dans la tour décapitée, la table est renversée et le registre est
     resté à terre."""
@@ -1896,8 +1958,10 @@ def furnish_observatory(scene, x, z, scale, ruined, rng):
     def turn(degrees):
         return TOWER_YAW + degrees
 
-    side = 2 * 0.349 * scale
-    scene.add("fantasy_town_kit/planks", at(0.0, 0.0, -0.18), turn(0.0), side + 0.1)
+    # Plancher en deux couches croisées, jusque sous les murs : entre les lattes, on voit du bois et non l'herbe.
+    side = 2 * 0.465 * scale
+    scene.add("fantasy_town_kit/planks", at(0.0, 0.0, -0.18), turn(0.0), (side, 3.3, side))
+    scene.add("fantasy_town_kit/planks", at(0.0, 0.0, -0.2), turn(90.0), (side, 3.3, side))
     if ruined:
         furniture(scene, "mini_dungeon/table", at(-0.9, 0.5), turn(90.0), 1.8, height=0.6, roll=90.0)
         scene.add("furniture_kit/books", at(-0.2, -0.3), turn(rng.uniform(0, 360)), 2.4)
@@ -1905,11 +1969,11 @@ def furnish_observatory(scene, x, z, scale, ruined, rng):
         scene.add("survival_kit/resource-planks", at(0.3, -0.9), turn(rng.uniform(0, 360)), 2.6)
         return
     ceiling = 1.01 * scale - 0.2
-    scene.add("fantasy_town_kit/planks", at(0.0, 0.0, ceiling), turn(0.0), side + 0.1)
-    scene.add("fantasy_town_kit/planks", at(0.0, 0.0, ceiling - 0.015), turn(90.0), side + 0.1)
+    scene.add("fantasy_town_kit/planks", at(0.0, 0.0, ceiling), turn(0.0), (side, 3.3, side))
+    scene.add("fantasy_town_kit/planks", at(0.0, 0.0, ceiling - 0.015), turn(90.0), (side, 3.3, side))
     # Le plafond arrête la tête du joueur qui saute depuis le coffre ou la table.
     px, _, pz = at(0.0, 0.0)
-    scene.add_box((px, ceiling + 0.15, pz), (side + 0.4, 0.3, side + 0.4), TOWER_YAW)
+    scene.add_box((px, ceiling + 0.15, pz), (side, 0.3, side), TOWER_YAW)
     top = 1.8 * MODEL_BOXES["mini_dungeon/table"][1][1]
     furniture(scene, "mini_dungeon/table", at(-1.0, 0.6), turn(90.0), 1.8, height=top)
     furniture(scene, "furniture_kit/books", at(-1.05, 0.45, top), turn(100.0), 2.4)
@@ -1917,12 +1981,12 @@ def furnish_observatory(scene, x, z, scale, ruined, rng):
     furniture(scene, "mini_dungeon/chair", at(0.05, 0.45), turn(-90.0), 2.0)
     furniture(scene, "survival_kit/bedroll", at(-0.6, -1.15), turn(0.0), 2.4)
     furniture(scene, "survival_kit/chest", at(1.0, -1.2), turn(0.0), 2.4, height=0.62)
-    furniture(scene, "graveyard_kit/lantern-candle", at(1.0, -1.2, 2.4 * MODEL_BOXES["survival_kit/chest"][1][1]), turn(0.0), 1.3)
+    furniture(scene, "graveyard_kit/candle-multiple", at(1.0, -1.2, 2.4 * MODEL_BOXES["survival_kit/chest"][1][1]), turn(0.0), 1.6)
     furniture(scene, "mini_forest/ladder", at(0.85, 1.4), turn(180.0), (2.6, 4.4, 2.6), height=4.2, tilt=-8.0)
     group = scene.group
     scene.reader("Register", at(-1.0, 0.45, 0.95), "Le registre des veilleurs",
                  "Chaque soir, le veilleur notait la fumée du Mont Sam Altan : des siècles de lignes semblables, « Le volcan dort. » En 5810, la terre tremble à chaque bataille lointaine. Dernière ligne, en 5812 : « Fumée légère au sommet. Rien à signaler. Départ pour le bunker demain, à l'aube. »",
-                 "Lire : Le registre des veilleurs", 1.8)
+                 "Lire : Le registre des veilleurs", 2.0)
     scene.group = group
     scene.lamp("Lamp", at(0.0, 0.0, 3.0), [at(0.0, 0.0, 3.2)], 1.0, 3.6)
 
@@ -1938,6 +2002,7 @@ def build_observatory(scene, rng):
         scene.add(f"castle_kit/{model}", (x, y, z), TOWER_YAW, scale)
         y += 1.01 * scale
     tower_walls(scene, x, z, scale, y)
+    tower_doors(scene, x, z, scale, "Observatory")
     furnish_observatory(scene, x, z, scale, True, rng)
     rubble(scene, rng, x + 3.6, z + 3.6, True, count=2, spread=2.0)
     scene.rebuilt("Observatory")
@@ -1947,6 +2012,7 @@ def build_observatory(scene, rng):
         y += 1.01 * scale
     scene.add("castle_kit/tower-square-top-roof-high-windows", (x, y, z), TOWER_YAW, scale)
     tower_walls(scene, x, z, scale, y + 1.07 * scale)
+    tower_doors(scene, x, z, scale, "Observatory")
     furnish_observatory(scene, x, z, scale, False, rng)
     scene.add("castle_kit/flag-pennant", (x, y + 1.07 * scale, z), 0.0, 3.0)
     scene.group = "Fixed"

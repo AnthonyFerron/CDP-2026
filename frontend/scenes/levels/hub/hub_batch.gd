@@ -5,6 +5,10 @@ extends Node3D
 ## Les groupes restent séparés : les réparations continuent de montrer ou cacher chacun d'un bloc.
 
 const GROUPS: Array[StringName] = [&"Fixed", &"Ruins", &"Rebuilt"]
+## Les petits objets (vaisselle, livres, chandelles, outils : moins de SMALL_SIZE mètres) ne se dessinent plus au-delà
+## de SMALL_RANGE mètres : à cette distance ils ne font que quelques pixels, et chaque intérieur en compte des dizaines.
+const SMALL_SIZE := 1.0
+const SMALL_RANGE := 40.0
 
 
 func _ready() -> void:
@@ -46,6 +50,17 @@ func _batch(group: Node3D) -> void:
 		instance.name = "Batch"
 		instance.multimesh = multimesh
 		instance.cast_shadow = shadows[mesh]
+		# La distance se mesure au centre du lot : seulement pour les lots d'un même bâtiment (moins de 20 m), sinon des
+		# objets tout proches du joueur disparaîtraient avec leurs semblables lointains.
+		var largest := 0.0
+		var spread := AABB()
+		for index in transforms.size():
+			var box: AABB = transforms[index] * mesh.get_aabb()
+			largest = maxf(largest, box.size.length())
+			spread = box if index == 0 else spread.merge(box)
+		if largest < SMALL_SIZE and spread.size.length() < 20.0:
+			instance.visibility_range_end = SMALL_RANGE
+			instance.visibility_range_end_margin = 4.0
 		group.add_child(instance)
 	for child in batched:
 		group.remove_child(child)

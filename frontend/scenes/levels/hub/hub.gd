@@ -83,8 +83,12 @@ func _ready() -> void:
 	for sign: Readable in $Lore.get_children().filter(func(node: Node) -> bool: return node is Readable):
 		sign.interacted.connect(_read.bind(sign))
 	# Textes posés dans les intérieurs (hub_props.tscn) : ils suivent la ruine ou la reconstruction de leur bâtiment.
-	for writing: Readable in _repairs.find_children("*", "Readable", true, false):
-		writing.interacted.connect(_read.bind(writing))
+	# Portes fermées qu'on passe avec E (la tour de l'observatoire) : elles portent leur point d'arrivée.
+	for node in _repairs.find_children("*", "Node3D", true, false):
+		if node is Readable:
+			node.interacted.connect(_read.bind(node))
+		elif node is Interactable and node.has_meta(&"destination"):
+			node.interacted.connect(_through_door.bind(node))
 	_bunker.interacted.connect(_travel.bind(true))
 	_bunker_exit.interacted.connect(_on_bunker_exit)
 	for zone in ZONES:
@@ -292,6 +296,21 @@ func _travel(inside: bool) -> void:
 	# Dedans, face au fond de l'abri ; dehors, tourné vers le village.
 	var look := Vector3.FORWARD if inside else -Vector3(spot.global_position.x, 0.0, spot.global_position.z).normalized()
 	_player.get_node("CameraPivot").rotation.y = atan2(-look.x, -look.z)
+	await _hud.fade(false)
+	_player.process_mode = Node.PROCESS_MODE_INHERIT
+	_busy = false
+
+
+## Passe une porte fermée : fondu, puis le joueur arrive de l'autre côté, tourné comme la porte le demande.
+func _through_door(door: Interactable) -> void:
+	if _busy:
+		return
+	_busy = true
+	_player.process_mode = Node.PROCESS_MODE_DISABLED
+	await _hud.fade(true)
+	_player.global_position = door.get_meta(&"destination")
+	_player.velocity = Vector3.ZERO
+	_player.get_node("CameraPivot").rotation.y = float(door.get_meta(&"facing", 0.0))
 	await _hud.fade(false)
 	_player.process_mode = Node.PROCESS_MODE_INHERIT
 	_busy = false
