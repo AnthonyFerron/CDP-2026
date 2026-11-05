@@ -181,7 +181,7 @@ albedo_color = Color(0.32, 0.17, 0.09, 1)
 roughness = 0.9
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_niche_back"]
-albedo_color = Color(0.07, 0.065, 0.06, 1)
+albedo_color = Color(0.18, 0.17, 0.16, 1)
 roughness = 1.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_tomb"]

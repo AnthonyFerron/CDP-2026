@@ -46,3 +46,14 @@ Tests : `marais_walkgrid_test.gd` (dehors, crypte, maillages), `marais_holes_tes
 | --- | --- | --- |
 | Dos du panneau d'accueil (-4.4, 1.3, 53.25) et de la plaque de la crypte | Bois très sombre, vu de près à contre-jour | Face à l'ombre de la lune et dos à la lanterne ; le panneau vient de sign_board.gd (interdit) |
 | Panneau du mécanisme, après une erreur | Le bandeau « Mauvaise réponse » du HUD (y 770 à 910) couvre le bas gauche du cadran pendant 4 s | Le HUD le place au-dessus des panneaux d'énigme ; la consigne, les lettres choisies, les flèches, le message et les boutons restent visibles |
+
+## Après les textes du récit (nuit du 5 novembre)
+
+- Grille de marche du dehors relancée après les cinq textes, la lanterne d'Ada et les lueurs des panneaux
+  (`tools/walkgrid_serveur.gd`, mode dehors) : 10 465 points, 9 327 où le joueur tient (27 de moins qu'avant, l'emprise
+  des trois panneaux et de la lanterne) ; aucun mur invisible, piège, marche, chute ni glissade ; seul le bord de ponton
+  attendu en (6.0, 0.3, -12.5).
+- Dos des niches de l'ossuaire (le fond des rayonnages, derrière les urnes) : presque noir (albedo 0,07), lu comme un
+  trou à contre-jour. Éclairci en pierre sombre (0,18), plus foncé que le cadre (0,40) et la tablette (0,27) : la niche
+  garde sa profondeur.
+
