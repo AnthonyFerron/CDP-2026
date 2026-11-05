@@ -1642,6 +1642,11 @@ def room_walls(scene, cx, cz, width, depth, base, doors, skip=(), closed=(), mod
     half_w, half_d = width * TILE / 2, depth * TILE / 2
     for sx in (-1, 1):
         for sz in (-1, 1):
+            # Pas de pilier d'angle du côté laissé ouvert : le mur voisin y tient lieu de mur, et le pilier en sortait
+            # (salle secrète : une colonne pâle plantée dans le mur ouest du bureau, qui se battait avec lui à l'angle).
+            if ("east" in skip and sx > 0) or ("west" in skip and sx < 0) or ("north" in skip and sz < 0) \
+                    or ("south" in skip and sz > 0):
+                continue
             scene.add("fantasy_town_kit/pillar-stone", (cx + sx * half_w, base, cz + sz * half_d), 0.0, WALL_SCALE)
 
 
