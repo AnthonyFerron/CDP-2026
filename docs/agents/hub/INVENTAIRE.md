@@ -52,3 +52,19 @@ Chaque ligne se vérifie : marche (grille `walk_grid.gd`, audit `hub_audit.gd`),
 
 ## Sorties
 - Portails vers les 4 zones ; bunker (dans les deux sens) ; point de reprise après la victoire (0, -60).
+
+## Intérieurs (rez-de-chaussée de chaque bâtiment, en ruine puis reconstruit à son palier)
+Chaque intérieur reconstruit a sa lumière chaude (`hub_lamp.gd`, allumée à l'approche, dans `Repairs/<lieu>/Rebuilt/Lamp`), ses braises s'il a un âtre (`Embers`), et ses textes à lire (Readable sous `Repairs/<lieu>/Rebuilt`). La cheminée du toit sort au-dessus de l'âtre ; sans âtre, pas de cheminée. Les étages ont une échelle appuyée jusqu'au plafond (étage fermé). Dans les ruines : meubles renversés, poutres tombées à l'écart des meubles, ni lumière ni texte.
+- Maisons House00 à House15 : lit de bois et coffre, âtre et marmite au fond à droite, table et deux chaises, étagère de vaisselle, tapis, panier ; les grandes maisons ont un second lit, un tonneau et un sac, les profondes un banc et un tonneau ; dehors, tonneau et caisse.
+- École (2) : chaire et chaise du maître, tableau au mur du fond (Readable « Le tableau de la classe »), deux rangs de tables et de bancs, deux étagères de livres, tapis, échelle de l'étage.
+- Taverne (1) : âtre au fond, marmite, comptoir et quatre tonneaux, trois tabourets, tonneau réservé, deux tables et huit chaises, table et deux bancs devant, coupe des dragons, chopes, assiettes, chandelles, ardoise au mur (Readable « L'ardoise de la Chope du Dragon »), échelle.
+- Chapelle (3) : autel de pierre, chandeliers, quatre lutrins de pierre, prière gravée au mur du fond (Readable « La prière des Quatre Livres »), deux rangs de bancs, deux urnes.
+- Forge (1) : foyer, bois, enclume, baquet, meule, établi et outils, carnet de commandes (Readable), râtelier d'armes, deux boucliers au mur, tonneau, coffre.
+- Ferme (2) : âtre et marmite, table et deux bancs, deux lits de bois, coffre, sacs de grain, panier de légumes, baratte, houe et pelle, almanach (Readable) ; dehors, champ, enclos, foin.
+- Boulangerie (1) : four de pierre, bois, table à pain (miches, planche, rouleau), trois sacs de farine, tonneau, pétrin (jatte, farine), tabouret, livre de comptes (Readable), étagère à pain ; dehors, étal.
+- Moulin (2) : meule contre le mur où entre l'axe de la roue, axe intérieur, quatre sacs, deux caisses, échelle du grenier, tonneau, table du meunier (jatte, sac, chandelle), cahier du meunier (Readable), pelle et houe ; dehors, charrette de sacs.
+- Écuries (2) : quatre stalles (trois cloisons, foin, seau), noms des chevaux au mur (quatre panneaux), Readable « Les stalles des chevaux de la garde », réserve de foin, abreuvoir, roue, coffre et lanterne, banc, houe et pelle ; dehors, enclos.
+- Caserne (3) : âtre, six lits de camp et leurs coffres, râtelier au milieu sous la liste des volontaires (trois panneaux, Readable), table, deux bancs, registre (Readable), chopes, assiette, chandelle, deux râteliers d'armes, tonneau, échelle ; dehors, cour d'entraînement.
+- Herboristerie (3) : âtre et chaudron, étagère de fioles, étagère de livres, table (fioles, mortier, miel, jatte), carnet de l'herboriste (Readable), tabouret, lit des blessés, tonneau, deux caisses d'herbes ; dehors, jardin des simples.
+- Scriptorium (4) : deux rayonnages de livres, quatre pupitres et leurs tabourets, livres, chandelles, lutrin du maître copiste (page, chandelier, Readable « La page du maître copiste »), coffre, tapis, échelle.
+- Observatoire (4) : porte fermée de la tour, qu'on passe avec E dans les deux sens (« Entrer dans l'observatoire », « Sortir de l'observatoire ») ; salle des veilleurs au pied de la tour (plancher, plafond solide), table, registre des veilleurs (Readable), chandelle, chaise, paillasse, coffre et lanterne, échelle vers la chambre de guet.

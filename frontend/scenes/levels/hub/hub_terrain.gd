@@ -119,6 +119,9 @@ const BUILDING_FLOORS: Array[Rect2] = [
 	Rect2(-40.1, -17.7, 8, 12), Rect2(-6, 56, 12, 8), Rect2(-66, -4, 12, 8), Rect2(-60, -36, 8, 12), Rect2(51, 14, 8, 8),
 	Rect2(40, 60, 8, 8), Rect2(48, 30, 8, 8), Rect2(57, 44, 8, 8), Rect2(-74, -50, 12, 8), Rect2(-54, -70, 12, 8),
 	Rect2(-64, 26, 8, 8), Rect2(-78, -20, 8, 8),
+	# Salle de l'observatoire, tour tournée de 45 degrés : une croix sur les cinq sommets du terrain (tous les 2 m) qui
+	# sont sous son plancher, jusqu'aux coins de la salle.
+	Rect2(-72.3, 57.7, 4.6, 0.6), Rect2(-70.3, 55.7, 0.6, 4.6),
 ]
 
 @export var ground_material: Material
