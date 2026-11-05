@@ -7,7 +7,7 @@
 | 3 | Escalier de la cave | On ne pouvait ni monter ni descendre : bloc plein, sortie seulement en bas | Collision en boîte, plafond trop bas | 9 marches de 30 cm sur une rampe à 41°, cage haute de 5,4 m (linteau, plafond, murs), sortie au milieu de l'escalier, utilisable en bas et en haut (6bf5daa) |
 | 4 | Allée, x ±9..10 | Marches de 0,41 à 0,48 m entre deux points voisins | Talus des dunes trop raides au bord du chemin | Replat du chemin prolongé en pente douce jusqu'à 16 m de l'axe |
 | 5 | Obélisques | Mur invisible autour des fûts | Une seule boîte de 1,9 m jusqu'en haut | Socle, degré et fût séparés |
-| 6 | Panneaux sur poteaux (entrée, Joran, apprenti) | Mur invisible entre les poteaux, sous la planche | La collision du SignBoard couvre tout le dessous | Collision du SignBoard coupée, deux poteaux et la planche à la place |
+| 6 | Panneaux sur poteaux (entrée, Joran, apprenti) | Mur invisible entre les poteaux, sous la planche | La collision du SignBoard couvre tout le dessous | Contournement d'abord (collision coupée, PostsBody à la main), retiré le 5 novembre : `sign_board.gd` (e094f56) donne lui-même les deux poteaux et la planche. Revérifié par `sign_grid_test.gd` (grille de 0,5 m, 8 directions, 1 s de marche) : 0 mur invisible, captures des deux faces |
 | 7 | Colonnes (salle, portique, colonnade, cave) | Mur invisible autour des fûts | Boîtes carrées plus larges que les fûts | Socle carré bas et fût cylindrique |
 | 8 | Rochers et cactus épars | Mur invisible au-dessus des petits rochers (cylindres de 2,5 m) | Cylindre de hauteur fixe | Enveloppe convexe de chaque modèle, à son échelle |
 | 9 | Restes épars (jarres, tonneaux) | Cylindres de 1,6 m au-dessus de jarres de 0,7 m | Hauteur fixe | Hauteur du modèle |
