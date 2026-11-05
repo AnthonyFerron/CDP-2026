@@ -207,7 +207,7 @@ rings = 6
 
 [sub_resource type="BoxMesh" id="BoxMesh_hole"]
 material = SubResource("StandardMaterial3D_void")
-size = Vector3(2.3, 0.02, 2.3)
+size = Vector3(2.3, 0.8, 2.3)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_leather"]
 albedo_color = Color(0.32, 0.18, 0.09, 1)
@@ -495,34 +495,34 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, -2.5)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, -6)
 
 [node name="Hole" type="MeshInstance3D" parent="Exterior/Trapdoor"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.44, 0)
 mesh = SubResource("BoxMesh_hole")
 
 [node name="Hatch" type="Node3D" parent="Exterior/Trapdoor"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.2)
 
 [node name="Slab0" type="MeshInstance3D" parent="Exterior/Trapdoor/Hatch"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0, -1.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0, 1.2)
 mesh = SubResource("BoxMesh_hatch_slab")
 
 [node name="Groove0" type="MeshInstance3D" parent="Exterior/Trapdoor/Hatch"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0.081, -1.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0.081, 1.2)
 mesh = SubResource("BoxMesh_hatch_groove")
 
 [node name="Slab1" type="MeshInstance3D" parent="Exterior/Trapdoor/Hatch"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 0, -1.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 0, 1.2)
 mesh = SubResource("BoxMesh_hatch_slab")
 
 [node name="Groove1" type="MeshInstance3D" parent="Exterior/Trapdoor/Hatch"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.081, -1.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.081, 1.2)
 mesh = SubResource("BoxMesh_hatch_groove")
 
 [node name="Ring" type="MeshInstance3D" parent="Exterior/Trapdoor/Hatch"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0.09, -0.35)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0.09, 2.05)
 mesh = SubResource("TorusMesh_ring")
 
 [node name="Drift" type="MeshInstance3D" parent="Exterior/Trapdoor/Hatch"]
-transform = Transform3D(0.75, 0, 0, 0, 0.12, 0, 0, 0, 1.25, 0.75, 0.06, -1.5)
+transform = Transform3D(0.75, 0, 0, 0, 0.12, 0, 0, 0, 1.25, 0.75, 0.06, 0.9)
 mesh = SubResource("SphereMesh_drift")
 
 [node name="Interactable" type="Node3D" parent="Exterior/Trapdoor"]
@@ -1201,10 +1201,10 @@ crackle_volume_db = -14.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, -1.0)
 
 [node name="Exit" type="Node3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 1.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 2.4)
 script = ExtResource("11_interactable")
 prompt = "Remonter à la surface"
-radius = 2.8
+radius = 3.2
 
 [node name="Clues" type="Node3D" parent="Interior"]
 
