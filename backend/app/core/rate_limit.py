@@ -1,4 +1,4 @@
-"""Limitation des échecs de connexion, en mémoire.
+"""Limitation des échecs de connexion et des demandes de réinitialisation du mot de passe, en mémoire.
 
 Suffisant pour l'unique conteneur API du projet. Avec plusieurs processus ou conteneurs, chacun
 aurait son propre compteur : il faudrait alors un stockage partagé (Redis ou table dédiée).
@@ -50,3 +50,9 @@ class FailureLimiter:
 
 
 login_failures = FailureLimiter()
+
+# Demandes de réinitialisation du mot de passe, par adresse e-mail (que le compte existe ou non) : une
+# fenêtre courte (délai entre deux envois) et une fenêtre d'une heure. Deux compteurs, car `record_failure`
+# nettoie toutes les clés d'un compteur avec la même fenêtre.
+password_reset_recent = FailureLimiter()
+password_reset_hourly = FailureLimiter()

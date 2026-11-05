@@ -50,10 +50,13 @@ func _ready() -> void:
 		_body.add_child(hip)
 		_box(hip, fur, Vector3(0.035, 0.16, 0.035), Vector3(0, -0.08, 0))
 		_legs.append(hip)
+	# La queue part de l'arrière du corps (son pivot est dans le corps) et se dresse vers l'arrière : posée plus haut
+	# et penchée vers le bas, elle flottait au-dessus de la croupe.
 	_tail = Node3D.new()
-	_tail.position = Vector3(0, 0.24, -0.16)
+	_tail.position = Vector3(0, 0.22, -0.14)
 	_body.add_child(_tail)
-	_box(_tail, fur, Vector3(0.03, 0.03, 0.26), Vector3(0, 0.06, -0.12), Vector3(-30, 0, 0))
+	_box(_tail, fur, Vector3(0.03, 0.03, 0.28), Vector3(0, 0.12 * sin(deg_to_rad(35.0)), -0.12 * cos(deg_to_rad(35.0))),
+		Vector3(35, 0, 0))
 	if not waypoints.is_empty():
 		global_position = waypoints[0]
 		_target = 1 % waypoints.size()

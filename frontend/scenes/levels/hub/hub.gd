@@ -2,8 +2,9 @@ class_name Hub
 extends Node3D
 ## Hub : le village de Codia, d'où partent les portails des zones. La partie commence dans le bunker, où les
 ## survivants s'abritent : le roi et Merlon y confient la mission. Les livres se posent sur leurs piédestaux,
-## autour du cercle magique de la salle du trône, et le village se reconstruit à chaque livre posé. Tous les
-## habitants restent au bunker jusqu'au quatrième livre : ils en sortent alors, et Merlon accomplit le rituel.
+## autour du cercle magique de la salle du trône, et le village se reconstruit à chaque livre posé. Dès que le
+## quatrième livre est trouvé, Merlon quitte le bunker pour la salle du trône, où il attend les livres ; les autres
+## habitants en sortent au rituel, quand le quatrième livre est posé.
 
 const ZONES: Array[StringName] = [&"plaine", &"desert", &"marais", &"village"]
 const ZONE_NAMES := {
@@ -20,6 +21,8 @@ const REPAIR_SHOT := 4.0
 const VICTORY_SPAWN := Vector3(0.0, 0.3, -60.0)
 ## Temps laissé au titre de la bonne fin avant de rendre la main, en secondes.
 const VICTORY_TITLE_HOLD := 3.5
+## Temps laissé au titre de l'éruption avant le retour au menu principal, en secondes.
+const ERUPTION_TITLE_HOLD := 5.0
 ## Les deux personnages à écouter avant de sortir du bunker la première fois.
 const INTRO_SPEAKERS: Array[StringName] = [&"Codeon", &"Merlon"]
 ## Couleur des lettres du cercle magique, éteintes (gravées) et allumées par leur livre.
@@ -108,11 +111,17 @@ func _ready() -> void:
 	_apply_life(_life)
 	if placed_count() >= GameState.BOOK_COUNT:
 		_release_survivors()
+	elif GameState.books.size() >= GameState.BOOK_COUNT:
+		_send_merlon_to_castle()
 	_place_player()
 	_volcano.set_state(Volcano.State.DORMANT if placed_count() >= GameState.BOOK_COUNT else Volcano.State.AWAKE)
+	# Partie perdue, d'où que vienne le joueur (HUD d'un lieu ou du hub, reprise) : la seule fin perdue est ici.
+	if GameState.has_erupted:
+		GameState.ending = &"eruption"
 	if GameState.ending != &"":
 		_play_ending(GameState.ending)
 		return
+	Music.play(_music())
 	if not GameState.intro_done:
 		_hud.show_message("Le bunker des survivants. Le roi et Merlon vous attendent.")
 	elif GameState.is_victory_pending():
@@ -149,6 +158,8 @@ func _play_ending(ending: StringName) -> void:
 	_hud.visible = false
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	_set_location(false)
+	# La victoire continue après la fin, pendant l'épilogue ; la défaite ne joue qu'une fois, jusqu'au menu principal.
+	Music.play(&"victoire" if ending == &"victory" else &"defaite")
 	if ending == &"victory":
 		_release_survivors()
 		_set_repairs(GameState.BOOK_COUNT, false)
@@ -158,7 +169,17 @@ func _play_ending(ending: StringName) -> void:
 		await get_tree().create_timer(VICTORY_TITLE_HOLD).timeout
 		_resume_after_victory()
 	else:
-		_ending.play_eruption()
+		await _ending.play_eruption()
+		await get_tree().create_timer(ERUPTION_TITLE_HOLD).timeout
+		_leave_after_eruption()
+
+
+## Fin de l'éruption : la partie perdue est effacée (sauvegarde comprise) et le joueur revient au menu principal, où
+## il n'y a plus de partie à charger. L'aperçu de la fin depuis le menu de debug, sans éruption, n'efface rien.
+func _leave_after_eruption() -> void:
+	if GameState.has_erupted:
+		GameState.reset()
+	Transition.change_scene(MainMenu.SCENE)
 
 
 ## Fin de la cinématique de victoire : le joueur reprend la main devant le château, et tous les portails
@@ -236,6 +257,11 @@ func _closed_message(zone: StringName) -> String:
 func _release_survivors() -> void:
 	for character: Node3D in $Characters.get_children():
 		character.global_transform = get_node("Spots/%sOutside" % character.name).global_transform
+
+
+## Le quatrième livre trouvé, Merlon se rend au château, au bord du cercle de la salle du trône, pour le rituel.
+func _send_merlon_to_castle() -> void:
+	_merlon.global_transform = get_node("Spots/MerlonOutside").global_transform
 
 
 ## Chaque personnage joue sa pose en boucle : le roi et Merlon tiennent sceptre et bâton, les autres respirent,
@@ -325,9 +351,21 @@ func _on_bunker_exit() -> void:
 				missing.append("au roi" if speaker == &"Codeon" else "à Merlon")
 		_hud.show_message("Avant de partir, parlez %s." % " et ".join(missing))
 		return
+	# La musique de l'introduction s'arrête à la première sortie : le thème du village prend le relais.
+	Music.play(_music())
 	await _travel(false)
 	if GameState.books.is_empty():
 		_hud.show_message("Le portail des plaines d'Hexcole vous attend au nord-ouest du village, non loin des ruines du château.")
+
+
+## Musique du hub hors des fins : l'introduction jusqu'à la première sortie du bunker, la victoire pendant l'épilogue
+## (quatre livres posés, victoire validée), et sinon le thème du village.
+func _music() -> StringName:
+	if not GameState.intro_done:
+		return &"intro"
+	if placed_count() >= GameState.BOOK_COUNT and not GameState.is_victory_pending():
+		return &"victoire"
+	return &"hub"
 
 
 ## Cendres : le ciel s'assombrit et rougeoit quand le quatrième livre est trouvé, jusqu'au rituel.
@@ -470,7 +508,7 @@ func _show_repairs() -> void:
 	_player.process_mode = Node.PROCESS_MODE_INHERIT
 
 
-## Le rituel, dans la salle du trône : les habitants sortent du bunker, les piédestaux projettent leur lumière vers
+## Le rituel, dans la salle du trône, où Merlon attend depuis le quatrième livre trouvé : les habitants sortent du bunker, les piédestaux projettent leur lumière vers
 ## le centre du cercle, Merlon lève les mains et prononce l'incantation, une vague d'énergie part de la salle, les
 ## cendres se dissipent ; Merlon tombe à genoux, épuisé. Puis la bonne fin se joue.
 func _ritual() -> void:
@@ -489,6 +527,8 @@ func _ritual() -> void:
 		_hud.show_message("La victoire n'a pas pu être validée : %s Approchez-vous d'un piédestal pour réessayer." % victory.get("error", ""))
 		return
 	_busy = false
+	# La victoire part avec le rituel et continue pendant la bonne fin.
+	Music.play(&"victoire")
 	await _hud.fade(true)
 	_release_survivors()
 	var camera := Camera3D.new()
@@ -631,6 +671,8 @@ func _arrival_message() -> String:
 		var names: Array[String] = []
 		for book in carried:
 			names.append(GameState.BOOK_NAMES[book])
+		if GameState.books.size() >= GameState.BOOK_COUNT:
+			return "Vous portez %s. Merlon vous attend dans la salle du trône du château, au nord, pour le rituel." % " et ".join(names)
 		return "Vous portez %s : posez-le dans la salle du trône du château, au nord." % " et ".join(names)
 	return ""
 
@@ -652,7 +694,7 @@ func _merlon_text() -> String:
 	if not GameState.intro_done or GameState.books.is_empty():
 		return "Devlyn… Tu ne me connais pas, mais je sais qui tu es. Je vivais loin du royaume, au cœur d'une forêt enchantée, et personne ici ne savait que j'avais trouvé refuge parmi vous. Écoute-moi bien : les explosions de la guerre ont fragilisé les profondeurs, et le Mont Sam Altan se réveille. Dans une heure, il entrera en éruption. D'anciennes légendes parlent de quatre ouvrages magiques laissés par les anciens bâtisseurs de Codia : le Projenomicon, l'Algonicon, le Logiconomicon et le Codonomicon. Réunis, ils peuvent apaiser le volcan et rendre vie à nos terres. J'ai usé mes dernières réserves de magie pour ouvrir des portails vers les lieux où ils reposent : le premier t'attend dehors, non loin des ruines du château, vers les plaines d'Hexcole. Pose chaque livre sur son piédestal, autour du cercle de la salle du trône. Prends garde : leurs cachettes sont protégées par des épreuves, et chaque erreur réveille le volcan plus vite, cinq minutes de moins à chaque fois."
 	if GameState.books.size() >= GameState.BOOK_COUNT:
-		return "Te voilà ! J'ai senti le quatrième livre s'éveiller, et le ciel se couvre de cendres. Pose les livres qui te restent autour du cercle de la salle du trône : dès que les quatre seront réunis, nous remonterons tous, et j'accomplirai le rituel."
+		return "Te voilà ! J'ai senti le quatrième livre s'éveiller, et le ciel se couvre de cendres : je suis venu t'attendre ici, au bord du cercle. Pose les livres qui te restent sur leurs piédestaux : dès que les quatre seront réunis, j'accomplirai le rituel, et les survivants pourront remonter."
 	if not GameState.carried_books().is_empty():
 		return "Tu portes un livre, Devlyn. Ne le garde pas : va le poser sur son piédestal, dans la salle du trône du château. Le portail suivant ne s'ouvrira qu'à ce moment-là."
 	var next := ""

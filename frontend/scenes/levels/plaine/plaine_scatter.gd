@@ -11,6 +11,8 @@ const LIT_CRATERS := 4
 const SMOKING_IMPACTS := 4
 ## Hauteur des poteaux des lanternes.
 const POST_HEIGHT := 2.7
+## Bas de la collision d'une lanterne qui pend, sous le haut du joueur.
+const LANTERN_HEAD := 1.7
 ## Pas des bandes de la zone qui brûle, et épaisseur de lave à partir de laquelle elle brûle.
 const HAZARD_STEP := 0.25
 const HAZARD_DEPTH := 0.08
@@ -332,6 +334,14 @@ func _add_lanterns() -> void:
 			add_child(light)
 			shape.size = Vector3(0.5, POST_HEIGHT + 0.3, 0.5)
 			collision.position = base + Vector3.UP * (POST_HEIGHT + 0.3) * 0.5
+			# La potence et sa lanterne : on s'y cogne la tête en sautant, ou en passant dessous (le bas de la
+			# boîte est sous le haut du joueur, 1,8 m).
+			var head := BoxShape3D.new()
+			head.size = Vector3(0.62, POST_HEIGHT + 0.1 - LANTERN_HEAD, 0.42)
+			var hanging := CollisionShape3D.new()
+			hanging.shape = head
+			hanging.position = base + Vector3(toward * 0.47, (LANTERN_HEAD + POST_HEIGHT + 0.1) * 0.5, 0.0)
+			body.add_child(hanging)
 		lanterns.add_child(post)
 		lanterns.add_child(lantern)
 		body.add_child(collision)

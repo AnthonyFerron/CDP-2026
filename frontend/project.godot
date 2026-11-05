@@ -15,6 +15,10 @@ run/main_scene="res://scenes/ui/menus/main_menu.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
+[audio]
+
+driver/output_latency.web=200
+
 [autoload]
 
 Api="*res://scripts/api.gd"
@@ -26,6 +30,7 @@ Hints="*res://scripts/hints.gd"
 Transition="*res://scripts/transition.gd"
 GameSync="*res://scripts/game_sync.gd"
 DebugMenu="*res://scenes/debug/debug_menu.tscn"
+Music="*res://scripts/music.gd"
 
 [cdp]
 

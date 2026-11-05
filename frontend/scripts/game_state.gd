@@ -21,6 +21,10 @@ signal state_restored
 
 ## Sauvegarde de l'invité ; un compte a la sienne, nommée d'après son profil (use_profile).
 const SAVE_PATH := "user://sauvegarde.cfg"
+## Sauvegardes d'un test lancé en script (godot --script res://tests/…) : un dossier par processus. Le dossier user://
+## est commun à toutes les copies du projet : sans cela, deux tests lancés en même temps sur la même machine
+## (plusieurs agents) écrivaient la même sauvegarde, et l'un relisait celle de l'autre.
+const TEST_SAVE_DIR := "user://tests/"
 const HUB_SCENE := "res://scenes/levels/hub/hub.tscn"
 ## Scène de chaque zone ; une zone sans scène n'est pas encore construite.
 const ZONE_SCENES := {
@@ -92,11 +96,38 @@ var player_rotation := 0.0
 var server_game_id := 0
 
 var _since_save := 0.0
+## Dossier des sauvegardes : user://, ou celui du processus pour un test (TEST_SAVE_DIR).
+var _save_dir := "user://"
 var _save_path := SAVE_PATH
 
 
 func _ready() -> void:
+	_isolate_test_saves()
 	load_game()
+
+
+func _exit_tree() -> void:
+	if _save_dir != "user://":
+		_remove_dir(_save_dir)
+
+
+## Un test lancé en script (la boucle principale est son SceneTree) garde ses sauvegardes dans son propre dossier ;
+## ceux d'anciens tests arrêtés en route sont effacés.
+func _isolate_test_saves() -> void:
+	if get_tree().get_script() == null:
+		return
+	for name in DirAccess.get_directories_at(TEST_SAVE_DIR):
+		if name.is_valid_int() and not OS.is_process_running(name.to_int()):
+			_remove_dir(TEST_SAVE_DIR + name + "/")
+	_save_dir = TEST_SAVE_DIR + "%d/" % OS.get_process_id()
+	DirAccess.make_dir_recursive_absolute(_save_dir)
+	_save_path = profile_save_path("")
+
+
+func _remove_dir(path: String) -> void:
+	for file in DirAccess.get_files_at(path):
+		DirAccess.remove_absolute(path + file)
+	DirAccess.remove_absolute(path)
 
 
 func _process(delta: float) -> void:
@@ -154,9 +185,10 @@ func _on_time_out() -> void:
 		_erupt()
 
 
-## Éruption déclarée par le serveur (ou confirmée sans réponse de sa part).
+## Éruption déclarée par le serveur (ou confirmée sans réponse de sa part). Une partie remise à zéro (mission pas
+## commencée) ne peut plus être perdue : une réponse tardive ne la réécrit pas.
 func erupt() -> void:
-	if not has_erupted:
+	if not has_erupted and intro_done:
 		_erupt()
 
 
@@ -305,7 +337,8 @@ func hub_title() -> Array:
 ## Repart d'une partie neuve : aucun livre, chronomètre plein. La partie suivie sur le serveur est oubliée.
 func reset(forget_server_game := true) -> void:
 	_clear()
-	save_game()
+	# La position du joueur dans la scène en cours (le hub, après l'éruption) n'est pas celle d'une partie neuve.
+	_write_save()
 	if forget_server_game:
 		GameSync.forget_game()
 
@@ -326,7 +359,7 @@ func _clear() -> void:
 
 ## Change de joueur : l'invité (profil vide) ou un compte. Sa sauvegarde est chargée, s'il en a une.
 func use_profile(profile: String) -> void:
-	var path := SAVE_PATH if profile.is_empty() else "user://sauvegarde_%s.cfg" % profile
+	var path := profile_save_path(profile)
 	if path == _save_path:
 		return
 	_save_path = path
@@ -336,6 +369,16 @@ func use_profile(profile: String) -> void:
 
 func save_path() -> String:
 	return _save_path
+
+
+## Sauvegarde d'un profil : l'invité (profil vide) ou un compte.
+func profile_save_path(profile: String) -> String:
+	return _save_dir + ("sauvegarde.cfg" if profile.is_empty() else "sauvegarde_%s.cfg" % profile)
+
+
+## Sauvegarde de l'invité sur cet appareil, rattachable à un compte.
+func guest_save_path() -> String:
+	return profile_save_path("")
 
 
 ## Remplace la partie par celle du serveur : `game` est une GameSessionRead, `progress` une GameProgressRead,
@@ -379,8 +422,12 @@ func elapsed_time() -> float:
 
 
 func save_game() -> void:
-	_since_save = 0.0
 	_capture_player()
+	_write_save()
+
+
+func _write_save() -> void:
+	_since_save = 0.0
 	var file := ConfigFile.new()
 	file.set_value("partie", "livres", books.map(func(book: StringName) -> String: return String(book)))
 	file.set_value("partie", "livres_poses", placed_books.map(func(book: StringName) -> String: return String(book)))

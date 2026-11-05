@@ -31,7 +31,9 @@ TAGS = [
     {
         "name": "Authentification",
         "description": "Connexion en deux étapes : mot de passe (POST /auth-challenges), puis code reçu par "
-        "e-mail (POST /auth-sessions), qui renvoie le token à envoyer dans `Authorization: Bearer <token>`.",
+        "e-mail (POST /auth-sessions), qui renvoie le token à envoyer dans `Authorization: Bearer <token>`. "
+        "Mot de passe oublié : lien envoyé par e-mail (POST /password-resets), puis nouveau mot de passe "
+        "(POST /password-resets/confirmations).",
     },
     {
         "name": "Parties",

@@ -128,8 +128,10 @@ class DesertScene(Scene):
         self.shapes = {}
         self.extra_colliders = []
         self.footprints = []
-        # Indices des modèles dont desert.gd taille la collision sur leur enveloppe convexe (metadata/hull).
+        # Indices des modèles dont desert.gd taille la collision sur leur enveloppe convexe (metadata/hull), ou sur
+        # leurs triangles (metadata/exact).
         self.hull_models = set()
+        self.exact_models = set()
 
     def shape(self, kind, params, material, position, degrees=0.0, tilt=0.0, roll=0.0, scale=1.0, spin=0.0,
               shadow=True, fade=0.0):
@@ -200,13 +202,18 @@ class DesertScene(Scene):
         """Le dernier modèle posé aura pour collision l'enveloppe convexe de ses triangles (desert.gd)."""
         self.hull_models.add(len(self.visuals) - 1)
 
+    def exact(self):
+        """Le dernier modèle posé aura pour collision ses propres triangles (desert.gd)."""
+        self.exact_models.add(len(self.visuals) - 1)
+
     def text(self):
         base = super().text()
-        for index in self.hull_models:
-            header = f'[node name="{self.visuals[index][0]}_{index}" parent="Models"'
-            start = base.index(header)
-            end = base.index("\n", start)
-            base = base[:end + 1] + "metadata/hull = true\n" + base[end + 1:]
+        for models, meta in ((self.hull_models, "hull"), (self.exact_models, "exact")):
+            for index in models:
+                header = f'[node name="{self.visuals[index][0]}_{index}" parent="Models"'
+                start = base.index(header)
+                end = base.index("\n", start)
+                base = base[:end + 1] + f"metadata/{meta} = true\n" + base[end + 1:]
         head, separator, body = base.partition(f'[node name="{self.root_name}"')
         head_lines = head.rstrip("\n").split("\n")
         last_ext = max((i for i, line in enumerate(head_lines) if line.startswith("[ext_resource")), default=1)
@@ -483,12 +490,17 @@ def skeleton_beast(scene, x, z, degrees, size, rng, horns=False, walkable=False,
                 foot = frame(side * radius * 0.97, v, 0.0)
                 inward = frame(side * radius * 0.92, v, 0.0)
                 scene.add_box((inward[0], y + 0.35, inward[2]), (thick * 2.2, 0.7, thick * 2.2), degrees)
+    spacing = length / (ribs * 2 - 2)
     for i in range(ribs * 2 - 1):
         v0, h0 = tops[i // 2]
         v1, h1 = tops[min(i // 2 + 1, ribs - 1)]
         f = (i % 2) * 0.5
         v, h = v0 + (v1 - v0) * f, h0 + (h1 - h0) * f
         scene.shape("box", {"size": (0.16 * size, 0.12 * size, 0.14 * size)}, "bone", frame(0.0, v, h), degrees + rng.uniform(-8, 8))
+        if walkable:
+            # Sous la cage où l'on passe, la colonne a sa collision, vertèbre par vertèbre, jointive : on passe sous
+            # son milieu, haut, et l'on bute contre ses bouts, bas.
+            scene.box_collider(frame(0.0, v, h), (0.16 * size, 0.12 * size, min(0.14 * size, spacing) if i in (0, ribs * 2 - 2) else spacing), degrees)
     # Crâne allongé, orbites et mâchoire.
     skull = frame(0.0, length / 2 + 0.55 * size, y + 0.17 * size)
     scene.shape("cyl", {"top": 0.11 * size, "bottom": 0.22 * size, "height": 0.75 * size, "segments": 6}, "bone",
@@ -523,8 +535,9 @@ def skeleton_beast(scene, x, z, degrees, size, rng, horns=False, walkable=False,
                 for dv in ((-0.05 * size, 0.05 * size) if i in (0, ribs - 1) else (0.0,)):
                     points.append((math.cos(angle) * radius, y - 0.25 * radius + math.sin(angle) * radius, v + dv))
         scene.convex_collider((x, 0.0, z), degrees, points)
-        skull = frame(0.0, length / 2 + 0.5 * size, 0.0)
-        scene.box_collider((skull[0], y + 0.17 * size, skull[2]), (0.44 * size, 0.4 * size, 0.8 * size), degrees)
+    # Le crâne : une boîte allongée, aussi sous la cage où l'on passe.
+    skull = frame(0.0, length / 2 + 0.5 * size, 0.0)
+    scene.box_collider((skull[0], y + 0.17 * size, skull[2]), (0.44 * size, 0.4 * size, 0.8 * size), degrees)
 
 
 def vulture_skull(scene, x, z, degrees, size=1.0, y=0.0, tilt=0.0):
@@ -543,7 +556,7 @@ def vulture_skull(scene, x, z, degrees, size=1.0, y=0.0, tilt=0.0):
 
 def lying_skeleton(scene, x, z, degrees, buried=True, y=0.0):
     """Squelette de voyageur couché sur le dos, à demi recouvert de sable."""
-    put(scene, "graveyard_kit/character-skeleton", (x, y, z), degrees, 3.2, tilt=-90.0)
+    put(scene, "graveyard_kit/character-skeleton", (x, y, z), degrees, 3.2, tilt=-90.0, hull=True)
     if buried:
         frame = local_frame(x, z, degrees)
         a, _, b = frame(0.55, -0.35)
@@ -605,25 +618,21 @@ def shelf(scene, x, z, degrees, width, depth, height, levels, rng, contents):
 
 
 def build_gate(scene, rng):
-    """Arche d'entrée à z = 16, entre deux pans de muraille qui s'effritent, sur le chemin du portail."""
+    """Arche d'entrée à z = 16, entre deux pans de muraille qui s'effritent, sur le chemin du portail.
+    La muraille a pour collision les triangles de ses modèles (metadata/exact, desert.gd) : le socle et la corniche
+    qui débordent, le fût en retrait et la courbe de l'arche, que des boîtes ne suivaient pas (mur invisible de
+    0,25 m le long du fût et dans l'ouverture, pierre traversée aux épaules de l'arche). Sa grille, qui ne
+    servait à rien, est retirée au chargement (desert.gd) : l'arche reste grande ouverte."""
     z = 16.0
     scene.add("mini_arena/wall-gate", (0.0, 0.0, z), 0.0, GATE_SCALE)
-    side = (0.5 - GATE_HALF_OPENING) * GATE_SCALE
-    offset = (GATE_HALF_OPENING * GATE_SCALE) + side / 2
-    for sign in (-1, 1):
-        scene.add_box((sign * offset, GATE_SCALE / 2, z), (side, GATE_SCALE, 0.6 * GATE_SCALE))
-    lintel = GATE_SCALE * (1 - GATE_OPENING_HEIGHT)
-    scene.add_box((0.0, GATE_SCALE - lintel / 2, z), (GATE_HALF_OPENING * 2 * GATE_SCALE, lintel, 0.6 * GATE_SCALE))
+    scene.exact()
     for sign in (-1, 1):
         for index, model in enumerate(("wall", "wall", "wall-corner")):
             x = sign * (GATE_SCALE * (index + 1))
             scene.add(f"mini_arena/{model}", (x, 0.0, z), 0.0 if sign > 0 else 180.0, GATE_SCALE)
-            if model == "wall-corner":
-                # L'angle du kit est en L, aux faces creusées : sa collision suit ses triangles (EXACT_MODELS de
-                # desert.gd) ; deux boîtes d'1 m d'épaisseur débordaient de 0,5 à 1 m par endroits.
-                pass
-            else:
-                scene.add_box((x, GATE_SCALE / 2, z), (GATE_SCALE, GATE_SCALE, 0.6 * GATE_SCALE))
+            # L'angle du kit est en L, aux faces creusées : sa collision suit déjà ses triangles (EXACT_MODELS).
+            if model == "wall":
+                scene.exact()
         # Longues bannières plantées devant l'arche, côté portail : leur toile a sa collision.
         scene.add("castle_kit/flag-banner-long", (sign * 3.0, 0.0, z + 1.8), -90.0, 2.4)
         scene.add_box((sign * 3.0, 2.6, z + 1.85), (1.6, 5.2, 0.35))
@@ -869,6 +878,11 @@ def build_oasis(scene, rng):
     scene.shape("cyl", {"top": 0.02, "bottom": 0.02, "height": 0.32, "segments": 4}, "rope", (wx, 1.97, wz))
     scene.add("survival_kit/bucket", (wx, 1.06, wz), 10.0, 4.0)
     scene.cylinder_collider((wx, 0.5, wz), 1.2, 1.0)
+    # Collisions du haut du puits : la traverse de la potence et sa manivelle, la corde et le seau suspendu.
+    scene.box_collider((wx, 2.15, wz), (2.9, 0.14, 0.14))
+    scene.box_collider((wx + 1.5, 2.0, wz), (0.06, 0.35, 0.06))
+    scene.box_collider((wx, 1.97, wz), (0.05, 0.32, 0.05))
+    scene.cylinder_collider((wx, 1.06 + 0.19 * 4.0 / 2, wz), 0.07 * 4.0, 0.19 * 4.0)
     # Abreuvoir sec et jarres.
     scene.shape("box", {"size": (2.6, 0.55, 0.9)}, "stone", (wx, 0.275, wz + 3.1))
     scene.shape("box", {"size": (2.3, 0.02, 0.6)}, "crack", (wx, 0.56, wz + 3.1), shadow=False)
@@ -908,11 +922,11 @@ def build_cistern(scene, rng):
     for z in (z0 - ring / 2, z1 + ring / 2):
         scene.add("mini_arena/wall", (cx, top - height, z), 0.0, (length_x, height, ring / 0.6))
         scene.shape("box", {"size": (length_x + 0.2, 0.16, ring + 0.2)}, "stone_dark", (cx, top + 0.08, z))
-        scene.box_collider((cx, center_y + 0.75, z), (length_x, height + 1.5, ring))
+        scene.box_collider((cx, center_y + 0.08, z), (length_x, height + 0.16, ring))
     for x in (x0 - ring / 2, x1 + ring / 2):
         scene.add("mini_arena/wall", (x, top - height, cz), 90.0, (length_z, height, ring / 0.6))
         scene.shape("box", {"size": (ring + 0.2, 0.16, length_z)}, "stone_dark", (x, top + 0.08, cz))
-        scene.box_collider((x, center_y + 0.75, cz), (ring, height + 1.5, length_z))
+        scene.box_collider((x, center_y + 0.08, cz), (ring, height + 0.16, length_z))
     for x in (x0 - ring / 2, x1 + ring / 2):
         for z in (z0 - ring / 2, z1 + ring / 2):
             scene.shape("box", {"size": (1.6, 0.35, 1.6)}, "stone_dark", (x, 0.175, z))
@@ -920,25 +934,58 @@ def build_cistern(scene, rng):
             scene.shape("box", {"size": (1.55, 0.22, 1.55)}, "stone_dark", (x, 1.56, z))
             scene.shape("box", {"size": (1.0, 0.15, 1.0)}, "stone", (x, 1.745, z))
             scene.box_collider((x, 0.175, z), (1.6, 0.35, 1.6))
-            scene.box_collider((x, 1.6, z), (1.3, 2.5, 1.3))
+            scene.box_collider((x, 1.085, z), (1.3, 1.47, 1.3))
     floor = -depth
-    for x, z, damaged in ((x0 + 1.3, z0 + 1.2, False), (x1 - 1.3, z0 + 1.2, True), (x0 + 1.3, z1 - 1.2, True), (x1 - 1.3, z1 - 1.2, False)):
+    # Les colonnes du sud laissent la place de l'escalier et de son pied, contre le mur sud.
+    for x, z, damaged in ((x0 + 1.3, z0 + 2.0, False), (x1 - 1.3, z0 + 2.0, True), (x0 + 1.3, z1 - 1.2, True), (x1 - 1.3, z1 - 1.2, False)):
         if damaged:
             scene.add("mini_arena/column-damaged", (x, floor, z), 0.0, (1.6, 3.4, 1.6))
         else:
             scene.add("mini_arena/column", (x, floor, z), 0.0, (1.6, 3.0, 1.6))
+        width, tall = 0.6 * 1.6, 3.4 * 0.72 if damaged else 3.0
+        scene.add_box((x, floor + 0.06 * width, z), (width, 0.12 * width, width))
+        scene.cylinder_collider((x, floor + tall / 2, z), width * 0.36, tall)
     beam = math.degrees(math.atan2(length_z + 2 * ring, length_x))
     yaw = 90.0 - beam + 8.0
     scene.shape("box", {"size": (0.6, 0.55, 9.4)}, "wood_bleached", (cx, top + 0.45, cz), yaw, roll=4.0)
+    scene.box_collider((cx, top + 0.45, cz), (0.6, 0.55, 9.4), yaw, roll=4.0)
     for u in (-3.2, 2.6):
         scene.shape("box", {"size": (0.66, 0.61, 0.14)}, "bronze",
                     (cx + math.sin(math.radians(yaw)) * u, top + 0.45, cz + math.cos(math.radians(yaw)) * u), yaw, roll=4.0)
-    for x, z in ((cx - 1.4, cz + 0.8), (cx + 1.6, cz - 1.0)):
-        put(scene, "mini_dungeon/pot", (x, floor, z), rng.uniform(0, 360), 1.6, roll=90.0 if x > cx else 0.0)
+    for x, z in ((cx - 1.4, cz + 0.8), (cx + 1.6, cz + 0.45)):
+        put(scene, "mini_dungeon/pot", (x, floor, z), rng.uniform(0, 360), 1.6, roll=90.0 if x > cx else 0.0,
+            height=0.5 if x > cx else 0.43 * 1.6)
     lying_skeleton(scene, cx + 0.4, cz + 1.2, 200.0, buried=False, y=floor)
-    scene.add("survival_kit/bucket", (cx - 0.6, floor + 0.2, cz - 1.3), 40.0, 3.5, tilt=90.0)
+    scene.add("survival_kit/bucket", (cx - 0.6, floor + 0.2, cz - 0.4), 40.0, 3.5, tilt=90.0)
+    cistern_stairs(scene, x0, z0, floor, top + 0.16)
     jars(scene, x1 + 2.6, z1 + 2.0, random.Random(71), 3, 0.9)
     vulture_skull(scene, x0 - 1.8, z0 - 2.2, 60.0, 1.6)
+
+
+def cistern_stairs(scene, x0, z0, floor, rim):
+    """Escalier des porteurs d'eau, contre le mur sud de la citerne, entre ses deux colonnes : neuf marches de pierre
+    du fond jusqu'au haut du mur, d'où l'on ressort. Le joueur les monte sur une rampe de collision qui passe par
+    le nez de la première marche et le bord de la dernière, puis tient debout sur le palier du haut."""
+    steps = 9
+    start, end = x0 + 1.9, x0 + 5.4
+    width = 1.05
+    zc = z0 + width / 2
+    rise = (rim - floor) / steps
+    depth = (end - start) / steps
+    for k in range(steps):
+        tall = (k + 1) * rise
+        scene.shape("box", {"size": (depth, tall, width)}, "stone" if k % 2 else "stone_dark",
+                    (start + (k + 0.5) * depth, floor + tall / 2, zc))
+    # Rampe du nez de la première marche au bord du palier, puis le palier (la dernière marche).
+    landing = end - depth
+    run, height = landing - start, rim - floor
+    length = math.hypot(run, height)
+    angle = math.degrees(math.atan2(height, run))
+    thick = 0.3
+    nx, ny = -height / length, run / length
+    mid = (start + run / 2 - nx * thick / 2, floor + height / 2 - ny * thick / 2)
+    scene.box_collider((mid[0], mid[1], zc), (length, thick, width), roll=angle)
+    scene.box_collider(((landing + end) / 2, (floor + rim) / 2, zc), (depth, rim - floor, width))
 
 
 def build_head(scene, rng):
@@ -1031,7 +1078,17 @@ def build_dune_ruins(scene, rng):
 # --- Cave des archives ------------------------------------------------------------------------------------
 
 CELLAR_TILE = 4.0
-CELLAR_HEIGHT = 4.15
+# Hauteur sous plafond de la salle. Les murs du kit (4,15 m) sont étirés jusqu'à entrer de WALL_TUCK dans la dalle du
+# plafond : aucun jour ne reste entre le haut des murs et le plafond, d'où l'on voyait le ciel du dehors.
+CELLAR_HEIGHT = 4.8
+WALL_MODEL_HEIGHT = 4.15
+DOOR_MODEL_HEIGHT = 4.4
+WALL_TUCK = 0.2
+# Profil des murs du kit, depuis le bord de la case : la face du mur à 0,55 m (bosses à 0,63 m), la plinthe
+# jusqu'à 1 m de haut à 0,8 m, et son pied chanfreiné jusqu'à 1,2 m au ras du sol. Les meubles posés contre un mur
+# s'arrêtent à WALL_CLEAR du bord, ce qui se dresse au-dessus de la plinthe s'appuie sur WALL_FACE.
+WALL_FACE = 0.55
+WALL_CLEAR = 1.25
 # Cases de 4 m de la cave, par leur centre : la salle de 5 × 3 cases (x de -10 à 10, z de 0 à -12) et, au sud,
 # la case de l'escalier qui remonte vers la trappe. Les murs ont 0,6 m d'épaisseur, vers l'intérieur des cases.
 CELLAR_TILES = [(x, z) for x in (-8.0, -4.0, 0.0, 4.0, 8.0) for z in (-2.0, -6.0, -10.0)] + [(0.0, 2.0)]
@@ -1046,65 +1103,71 @@ SHAFT_HEIGHT = 5.4
 def build_cellar(scene, rng):
     """Cave des archives, sombre et poussiéreuse : la table ronde de pierre au centre (desert.tscn), un algorithme
     gravé sur chaque mur, la porte scellée au fond sous son inscription, le coffre de pierre dans le coin nord-est
-    sous son tas de sable, des étagères de tablettes et de rouleaux, des coffres et des jarres."""
+    sous son tas de sable, des étagères de tablettes et de rouleaux, un pupitre, des coffres et des urnes.
+    Tout ce qui est posé contre un mur s'arrête au pied de sa plinthe (WALL_CLEAR) : rien n'entre dans le mur, et
+    les deux tables des runes, le pupitre et les tas de sable restent dégagés, à un pas les uns des autres."""
     tiles = set(CELLAR_TILES)
+    west, east, north, south = -10.0 + WALL_CLEAR, 10.0 - WALL_CLEAR, -12.0 + WALL_CLEAR, -WALL_CLEAR
     for x, z in CELLAR_TILES:
         scene.add("modular_dungeon_kit/template-floor", (x, 0.0, z), 0.0, 1.0)
         scene.add_box((x, -0.25, z), (CELLAR_TILE, 0.5, CELLAR_TILE))
         # La cage de l'escalier monte plus haut que la salle : on tient debout sur la dernière marche.
         ceiling = SHAFT_HEIGHT if (x, z) == STAIR_TILE else CELLAR_HEIGHT
         scene.add_box((x, ceiling + 0.25, z), (CELLAR_TILE, 0.5, CELLAR_TILE))
-        # Un mur sur chaque bord qui ne donne sur aucune case : son pied regarde l'intérieur de la case.
+        # Un mur sur chaque bord qui ne donne sur aucune case : son pied regarde l'intérieur de la case, son haut
+        # entre dans la dalle du plafond.
         for (dx, dz), degrees in CELLAR_NEIGHBOURS.items():
             if (x + dx * CELLAR_TILE, z + dz * CELLAR_TILE) in tiles:
                 continue
             edge = (x + dx * CELLAR_TILE / 2, z + dz * CELLAR_TILE / 2)
             model = "gate-door" if edge == SEALED_DOOR else "template-wall"
-            scene.add(f"modular_dungeon_kit/{model}", (edge[0], 0.0, edge[1]), degrees, 1.0)
-            height = SHAFT_HEIGHT if (x, z) == STAIR_TILE else CELLAR_HEIGHT
-            size = (0.6, height, CELLAR_TILE) if dx else (CELLAR_TILE, height, 0.6)
-            scene.add_box((edge[0] - dx * 0.3, height / 2, edge[1] - dz * 0.3), size)
+            model_height = DOOR_MODEL_HEIGHT if edge == SEALED_DOOR else WALL_MODEL_HEIGHT
+            stretch = (ceiling + WALL_TUCK) / model_height
+            scene.add(f"modular_dungeon_kit/{model}", (edge[0], 0.0, edge[1]), degrees, (1.0, stretch, 1.0))
+            size = (0.6, ceiling, CELLAR_TILE) if dx else (CELLAR_TILE, ceiling, 0.6)
+            scene.add_box((edge[0] - dx * 0.3, ceiling / 2, edge[1] - dz * 0.3), size)
     # Derrière la porte scellée, la roche : on ne voit plus le vide par les jours de l'arc.
-    scene.shape("box", {"size": (6.4, 4.6, 0.2)}, "void", (0.0, 2.3, -12.85), shadow=False)
-    # Colonnes de part et d'autre de la porte scellée.
-    for x in (-4.0, 4.0):
-        scene.add("mini_dungeon/column", (x, 0.0, -10.2), 0.0, 3.6)
-        scene.column_collider(x, -10.2, 0.5 * 3.6, 1.1 * 3.6)
-    # Tables de part et d'autre de l'escalier : une rune est posée sur chacune, bien en vue (desert.tscn).
+    scene.shape("box", {"size": (6.4, CELLAR_HEIGHT + 0.3, 0.2)}, "void", (0.0, (CELLAR_HEIGHT + 0.3) / 2, -12.85), shadow=False)
+    # Tables de part et d'autre de l'escalier : une rune est posée sur chacune, bien en vue (desert.tscn, RUNES).
     for x in (-7.0, 7.0):
-        furniture(scene, "mini_dungeon/table", (x, 0.0, -1.9), 0.0, 3.0, height=0.93)
+        furniture(scene, "mini_dungeon/table", (x, 0.0, -2.3), 0.0, 3.0, height=0.93)
     # Poutres du plafond.
     for z in (-3.0, -7.0, -11.0):
         scene.shape("box", {"size": (18.8, 0.35, 0.4)}, "wood_dark", (0.0, CELLAR_HEIGHT - 0.18, z))
-    # Archives : étagère de tablettes au nord-ouest, casiers à rouleaux de part et d'autre de l'escalier.
-    shelf(scene, -7.0, -10.95, 0.0, 2.6, 0.75, 2.7, 4, rng, "tablettes")
-    shelf(scene, -3.9, -0.98, 180.0, 2.5, 0.65, 2.2, 4, rng, "rouleaux")
-    shelf(scene, 3.9, -0.98, 180.0, 2.5, 0.65, 2.2, 4, rng, "rouleaux")
-    # Coffre ouvert le long du mur ouest, des rouleaux rangés dedans ; tablettes empilées près des colonnes.
-    put(scene, "mini_dungeon/chest", (-8.72, 0.0, -9.6), 0.0, 2.2, height=0.62)
+    # Archives : étagère de tablettes au nord-ouest, casiers à rouleaux de part et d'autre de l'escalier, chacun au
+    # pied de la plinthe de son mur.
+    shelf(scene, -7.0, north + 0.375, 0.0, 2.6, 0.75, 2.7, 4, rng, "tablettes")
+    for x in (-3.9, 3.9):
+        shelf(scene, x, south - 0.325, 180.0, 2.5, 0.65, 2.2, 4, rng, "rouleaux")
+    # Coffre ouvert contre le mur ouest, sous la torche du nord, des rouleaux rangés dedans.
+    chest = (west + 0.55, -9.0)
+    put(scene, "mini_dungeon/chest", (chest[0], 0.0, chest[1]), 0.0, 2.2, height=0.62)
     for k in range(3):
         scene.shape("cyl", {"top": 0.055, "bottom": 0.055, "height": 0.6, "segments": 6}, "parchment",
-                    (-8.72 + (k - 1) * 0.14, 0.4, -9.6), 0.0, tilt=90.0, roll=0.0, shadow=False)
-    for x, z in ((-5.25, -11.0), (5.25, -11.0)):
+                    (chest[0] + (k - 1) * 0.14, 0.4, chest[1]), 0.0, tilt=90.0, roll=0.0, shadow=False)
+    # Tablettes empilées de part et d'autre de la porte scellée.
+    for x in (-3.6, 3.6):
         for k in range(rng.randint(4, 7)):
-            scene.shape("box", {"size": (0.42, 0.06, 0.3)}, "tablet", (x + rng.uniform(-0.04, 0.04), 0.03 + k * 0.062, z),
+            scene.shape("box", {"size": (0.42, 0.06, 0.3)}, "tablet", (x + rng.uniform(-0.04, 0.04), 0.03 + k * 0.062, north + 0.3),
                         rng.uniform(-15, 15), shadow=False)
-    # Pupitre de lecture : un rouleau ouvert, l'encrier et des bougies éteintes.
-    furniture(scene, "mini_dungeon/table", (3.9, 0.0, -2.65), 0.0, 2.0, height=0.62)
-    furniture(scene, "mini_dungeon/chair", (3.9, 0.0, -3.75), 180.0, 2.0, height=0.55)
-    scene.shape("box", {"size": (0.7, 0.01, 0.42)}, "parchment", (3.75, 0.63, -2.65), 8.0, shadow=False)
+    # Pupitre de lecture à l'est, entre la table des runes et la table ronde : un rouleau ouvert, l'encrier et des
+    # bougies éteintes ; sa chaise regarde le pupitre, côté table ronde.
+    desk = (4.3, -3.2)
+    furniture(scene, "mini_dungeon/table", (desk[0], 0.0, desk[1]), 0.0, 2.0, height=0.62)
+    furniture(scene, "mini_dungeon/chair", (desk[0], 0.0, desk[1] - 1.15), 180.0, 2.0, height=0.55)
+    scene.shape("box", {"size": (0.7, 0.01, 0.42)}, "parchment", (desk[0] - 0.15, 0.63, desk[1]), 8.0, shadow=False)
     for dx in (-0.37, 0.37):
         scene.shape("cyl", {"top": 0.035, "bottom": 0.035, "height": 0.46, "segments": 6}, "parchment",
-                    (3.75 + dx, 0.66, -2.65), 8.0, tilt=90.0, shadow=False)
-    scene.shape("cyl", {"top": 0.04, "bottom": 0.05, "height": 0.08, "segments": 8}, "ink", (4.45, 0.66, -2.4), shadow=False)
-    furniture(scene, "graveyard_kit/candle-multiple", (3.2, 0.62, -2.35), 0.0, 1.6)
-    # Urnes contre les murs, sous les torches du sud.
-    for x in (-8.9, 8.9):
-        put(scene, "graveyard_kit/urn-round", (x, 0.0, -3.4), rng.uniform(0, 360), 2.8, height=0.78)
+                    (desk[0] - 0.15 + dx, 0.66, desk[1]), 8.0, tilt=90.0, shadow=False)
+    scene.shape("cyl", {"top": 0.04, "bottom": 0.05, "height": 0.08, "segments": 8}, "ink", (desk[0] + 0.55, 0.66, desk[1] + 0.25), shadow=False)
+    furniture(scene, "graveyard_kit/candle-multiple", (desk[0] - 0.7, 0.62, desk[1] + 0.3), 0.0, 1.6)
+    # Urnes au pied des murs est et ouest, sous les torches du sud, à côté des tables des runes.
+    for x in (west + 0.37, east - 0.37):
+        put(scene, "graveyard_kit/urn-round", (x, 0.0, -3.85), rng.uniform(0, 360), 2.8, height=0.78)
     # Rouleaux tombés au pied de l'étagère et poussière dans les coins.
     for k in range(5):
         scene.shape("cyl", {"top": 0.055, "bottom": 0.055, "height": 0.55, "segments": 6}, "parchment",
-                    (-7.6 + k * 0.42 + rng.uniform(-0.1, 0.1), 0.055, -10.25 + rng.uniform(-0.12, 0.12)), rng.uniform(0, 180),
+                    (-7.6 + k * 0.42 + rng.uniform(-0.1, 0.1), 0.055, north + 1.05 + rng.uniform(-0.1, 0.1)), rng.uniform(0, 180),
                     tilt=90.0, shadow=False)
     for x, z, a, b in ((-8.9, -0.9, 0.9, 0.7), (8.9, -11.0, 1.0, 0.9), (-2.2, -11.1, 1.2, 0.5), (2.3, -11.1, 1.2, 0.5)):
         mound(scene, x, z, a, 0.18, b, collide=False)

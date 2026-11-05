@@ -7,6 +7,10 @@ extends StaticBody3D
 const STREAM_X := -38.0
 const STREAM_HALF_WIDTH := 3.0
 const STREAM_DEPTH := 1.4
+## Distances au centre (m) entre lesquelles le lit remonte à la rencontre du talus, à ses deux bouts.
+const STREAM_END := Vector2(60.0, 68.0)
+## Talus élargi le long du ruisseau (m).
+const STREAM_BORDER_WIDEN := 3.0
 ## Colline du moulin à vent : centre (x, z), rayon et hauteur.
 const MILL_HILL := Vector4(30.0, -30.0, 12.0, 4.0)
 ## Bourg : zone plate qui porte les maisons, en x et en z.
@@ -60,9 +64,16 @@ func height_at(x: float, z: float) -> float:
 	# bien avant le talus (au nord, dès z = -40). Il coule maintenant au fond d'un vallon aux pentes douces (le relief
 	# s'efface sur 7 m de part et d'autre), et ne rejoint la pente qu'au talus.
 	height -= maxf(height, 0.0) * (1.0 - smoothstep(STREAM_HALF_WIDTH, STREAM_HALF_WIDTH + 7.0, bank))
-	height -= STREAM_DEPTH * (1.0 - smoothstep(STREAM_HALF_WIDTH * 0.6, STREAM_HALF_WIDTH + 1.5, bank))
 	var distance := Vector2(x, z).length()
-	return height + BORDER_HEIGHT * smoothstep(PLAY_RADIUS, PLAY_RADIUS + BORDER_WIDTH, distance)
+	# Aux deux bouts, le lit remonte à la rencontre du talus : creusé à pleine profondeur, la pente de sa berge ouest
+	# s'ajoutait à celle du talus (jusqu'à 55°), et le joueur glissait de la berge jusqu'au fond, 1,2 à 1,9 m plus bas.
+	# L'eau rejoint toujours le talus (jusqu'à 65 m du centre).
+	var depth := STREAM_DEPTH * (1.0 - smoothstep(STREAM_END.x, STREAM_END.y, distance))
+	height -= depth * (1.0 - smoothstep(STREAM_HALF_WIDTH * 0.6, STREAM_HALF_WIDTH + 1.5, bank))
+	# Le long du ruisseau, le pied du talus monte plus doucement : sa pente et celle des berges ne s'additionnent plus
+	# au-delà de 45°, d'où le joueur glissait jusqu'au fond du lit.
+	var width := BORDER_WIDTH + STREAM_BORDER_WIDEN * (1.0 - smoothstep(STREAM_HALF_WIDTH + 2.0, STREAM_HALF_WIDTH + 11.0, bank))
+	return height + BORDER_HEIGHT * smoothstep(PLAY_RADIUS, PLAY_RADIUS + width, distance)
 
 
 ## Hauteur du sol tel qu'il est maillé, à l'interpolation de ses triangles : c'est sur elle que le décor se pose.

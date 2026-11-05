@@ -13,13 +13,17 @@ const SLOT_COUNT := 6
 const NUMERALS: Array[String] = ["I", "II", "III", "IV", "V", "VI"]
 const WRONG_TIME := 1.4
 const RIGHT_TIME := 1.1
-## Teinte des cases selon leur état.
-const STONE := Color(0.42, 0.39, 0.37)
-const STONE_DARK := Color(0.25, 0.23, 0.23)
+## Teinte des cases selon leur état : une pierre sombre et chaude, comme le fond des boutons des menus, sous un texte
+## crème (contraste d'au moins 4,5 pour 1, rouge et vert compris).
+const STONE := Color(0.3, 0.23, 0.19)
+const STONE_DARK := Color(0.14, 0.1, 0.08)
 const WRONG := Color(1.0, 0.28, 0.18)
 const RIGHT := Color(0.42, 0.95, 0.5)
 
 enum Mark { NONE, WRONG, RIGHT }
+
+## Taille du texte des fragments, sur les cases et les parchemins : le plus long tient sur deux lignes.
+const TEXT_SIZE := 25
 
 ## Fragments retrouvés : numéro vers texte.
 var _fragments := {}
@@ -134,7 +138,7 @@ func _rebuild() -> void:
 		card.pressed.connect(_on_fragment_pressed.bind(fragment))
 		_pool.add_child(card)
 	if free.is_empty() and _fragments.size() == SLOT_COUNT:
-		var done := Ornate.label("Les six fragments sont posés : relisez la discussion, puis validez.", 22, Ornate.MUTED)
+		var done := Ornate.label("Les six fragments sont posés : relisez la discussion, puis validez.", 24, Ornate.MUTED)
 		done.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		done.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		_pool.add_child(done)
@@ -207,51 +211,51 @@ func _build() -> void:
 	shade.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_root.add_child(shade)
 	_glow = Glow.new()
-	Ornate.place(_root, _glow, Vector2(96, 46), Vector2(1728, 988))
+	Ornate.place(_root, _glow, Vector2(26, 46), Vector2(1868, 988))
 	_panel = Ornate.Frame.new()
 	_panel.title = "Les fragments du passé"
 	_panel.title_size = 44
 	_panel.bottom_diamond = false
 	_panel.dividers = [150.0, 806.0]
-	_panel.vertical_dividers = [890.0]
-	Ornate.place(_root, _panel, Vector2(110, 60), Vector2(1700, 960))
+	_panel.vertical_dividers = [950.0]
+	Ornate.place(_root, _panel, Vector2(40, 60), Vector2(1840, 960))
 	_panel.unique_name_in_owner = true
 	_panel.name = "Panel"
 	_panel.owner = self
-	var instruction := Ornate.label("Six emplacements gravés attendent les fragments d'une conversation entre la bibliothécaire, cheffe de projet, et l'un de ses employés. Choisissez un fragment, puis l'emplacement où le poser, en suivant les étapes du projet.", 23)
+	var instruction := Ornate.label("Six emplacements gravés attendent les fragments d'une conversation entre la bibliothécaire, cheffe de projet, et l'un de ses employés. Choisissez un fragment, puis l'emplacement où le poser, en suivant les étapes du projet.", 24)
 	instruction.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	instruction.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	Ornate.place(_panel, instruction, Vector2(80, 66), Vector2(1540, 72))
-	for spec: Array in [["La tablette", Vector2(60, 168), Vector2(800, 36)], ["Fragments retrouvés", Vector2(920, 168), Vector2(720, 36)]]:
+	Ornate.place(_panel, instruction, Vector2(130, 66), Vector2(1580, 72))
+	for spec: Array in [["La tablette", Vector2(50, 168), Vector2(870, 36)], ["Fragments retrouvés", Vector2(980, 168), Vector2(810, 36)]]:
 		var heading := Ornate.label(spec[0], 28, Ornate.GOLD, true)
 		heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		Ornate.place(_panel, heading, spec[1], spec[2])
 	_slot_list = VBoxContainer.new()
 	_slot_list.add_theme_constant_override("separation", 9)
-	Ornate.place(_panel, _slot_list, Vector2(60, 214), Vector2(800, 576))
+	Ornate.place(_panel, _slot_list, Vector2(50, 214), Vector2(870, 576))
 	_add_unique(_panel, _slot_list, "Slots", false)
 	_pool = VBoxContainer.new()
 	_pool.add_theme_constant_override("separation", 9)
-	Ornate.place(_panel, _pool, Vector2(920, 214), Vector2(720, 576))
+	Ornate.place(_panel, _pool, Vector2(980, 214), Vector2(810, 576))
 	_add_unique(_panel, _pool, "Pool", false)
 	_feedback = Ornate.label("", 23, Ornate.ERROR)
 	_feedback.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_feedback.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	Ornate.place(_panel, _feedback, Vector2(60, 816), Vector2(1580, 44))
+	Ornate.place(_panel, _feedback, Vector2(60, 816), Vector2(1720, 44))
 	_add_unique(_panel, _feedback, "Feedback", false)
 	_validate = Ornate.HexButton.new()
 	_validate.caption = "Valider"
 	_validate.highlighted = true
 	_validate.font_size = 40
-	Ornate.place(_panel, _validate, Vector2(450, 868), Vector2(380, 82))
+	Ornate.place(_panel, _validate, Vector2(520, 868), Vector2(380, 82))
 	_add_unique(_panel, _validate, "Validate", false)
 	_close = Ornate.PillButton.new()
 	_close.caption = "Quitter la tablette"
 	_close.font_size = 26
-	Ornate.place(_panel, _close, Vector2(900, 878), Vector2(360, 62))
+	Ornate.place(_panel, _close, Vector2(970, 878), Vector2(360, 62))
 	_add_unique(_panel, _close, "Close", false)
 	var cross := CloseCross.new()
-	Ornate.place(_panel, cross, Vector2(1592, 26), Vector2(70, 70))
+	Ornate.place(_panel, cross, Vector2(1732, 26), Vector2(70, 70))
 	cross.pressed.connect(_on_close_pressed)
 
 
@@ -266,8 +270,8 @@ func _add_unique(parent: Node, node: Node, unique: String, attach := true) -> vo
 
 class StoneSlot:
 	extends Button
-	## Case de pierre gravée : un chiffre romain dans un médaillon, et le fragment posé écrit à l'encre ;
-	## rouge à l'erreur, verte à la réussite.
+	## Case de pierre gravée : un chiffre romain dans un médaillon, et le fragment posé écrit en crème, comme le texte
+	## des menus ; rouge à l'erreur, verte à la réussite.
 
 	var numeral := ""
 	var text_value := ""
@@ -293,7 +297,7 @@ class StoneSlot:
 			tint = tint.lerp(TabletPuzzle.WRONG, 0.35)
 			line = TabletPuzzle.WRONG
 		elif mark == TabletPuzzle.Mark.RIGHT:
-			tint = tint.lerp(TabletPuzzle.RIGHT, 0.3)
+			tint = tint.lerp(TabletPuzzle.RIGHT, 0.25)
 			line = TabletPuzzle.RIGHT
 		elif armed and is_hovered():
 			tint = tint.lightened(0.12)
@@ -312,20 +316,20 @@ class StoneSlot:
 		var left := 96.0
 		var width := size.x - left - 22.0
 		if text_value.is_empty():
-			Ornate.centered_text(self, Ornate.TEXT, Vector2(left + width / 2, size.y / 2), "emplacement vide", 22,
-				Color(0.2, 0.18, 0.18))
+			Ornate.centered_text(self, Ornate.TEXT, Vector2(left + width / 2, size.y / 2), "emplacement vide", 23,
+				Ornate.MUTED)
 			return
 		var font := Ornate.TEXT
-		var font_size := 21
+		var font_size := TabletPuzzle.TEXT_SIZE
 		var block := font.get_multiline_string_size(text_value, HORIZONTAL_ALIGNMENT_LEFT, width, font_size)
 		var top := (size.y - block.y) / 2.0 + font.get_ascent(font_size)
 		draw_multiline_string(font, Vector2(left, top), text_value, HORIZONTAL_ALIGNMENT_LEFT, width, font_size,
-			3, Color(0.09, 0.06, 0.05))
+			3, Ornate.CREAM)
 
 
 class ParchmentCard:
 	extends Button
-	## Fragment de parchemin : bords irréguliers, encre brune ; doré une fois choisi.
+	## Fragment de parchemin : bords irréguliers, encre noire ; doré, au bord épais, une fois choisi.
 
 	var text_value := ""
 	var seed := 0
@@ -357,16 +361,16 @@ class ParchmentCard:
 		var chosen := button_pressed
 		var paper := Color(0.93, 0.85, 0.66) if not is_hovered() else Color(0.97, 0.9, 0.72)
 		if chosen:
-			draw_colored_polygon(points, Color(Ornate.GOLD, 0.35))
+			paper = Color(1.0, 0.82, 0.48)
 		draw_colored_polygon(points, paper)
-		draw_polyline(Ornate.closed(points), Ornate.GOLD_LIGHT if chosen else Color(0.55, 0.38, 0.2), 3.0 if chosen else 1.5)
+		draw_polyline(Ornate.closed(points), Ornate.GOLD if chosen else Color(0.55, 0.38, 0.2), 5.0 if chosen else 1.5)
 		var font := Ornate.TEXT
-		var font_size := 21
+		var font_size := TabletPuzzle.TEXT_SIZE
 		var width := size.x - 56.0
 		var block := font.get_multiline_string_size(text_value, HORIZONTAL_ALIGNMENT_LEFT, width, font_size)
 		var top := (size.y - block.y) / 2.0 + font.get_ascent(font_size)
 		draw_multiline_string(font, Vector2(28, top), text_value, HORIZONTAL_ALIGNMENT_LEFT, width, font_size, 3,
-			Color(0.24, 0.13, 0.06))
+			Ornate.INK)
 
 
 class Glow:
