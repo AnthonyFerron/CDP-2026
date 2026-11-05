@@ -172,18 +172,18 @@ roughness = 1.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_pedestal_base"]
 material = SubResource("Material_pedestal_dark")
-size = Vector3(0.95, 0.22, 0.95)
+size = Vector3(1.1, 0.22, 1.1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_pedestal"]
 material = SubResource("StandardMaterial3D_stone")
-size = Vector3(0.62, 0.86, 0.62)
+size = Vector3(0.78, 0.86, 0.78)
 
 [sub_resource type="BoxMesh" id="BoxMesh_pedestal_top"]
 material = SubResource("Material_pedestal_dark")
-size = Vector3(0.82, 0.12, 0.82)
+size = Vector3(0.98, 0.12, 0.98)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_pedestal"]
-size = Vector3(0.66, 1.3, 0.66)
+size = Vector3(0.82, 1.3, 0.82)
 
 [sub_resource type="StandardMaterial3D" id="Material_robe"]
 albedo_color = Color(0.3, 0.18, 0.55, 1)
@@ -790,11 +790,14 @@ def hall(lines):
     node(lines, "Inscription", "Node3D", "Castle", props=[
         f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 0, {-HALL_HALF_DEPTH + 2.9:g})", f'script = {ext("10_readable")}',
         'title = "Le cercle des anciens bâtisseurs"',
-        'body = "Gravé dans le mur, au-dessus du trône : « Quatre livres, quatre savoirs. Posés autour du cercle, ils rendront la vie à Codia. » Les piédestaux attendent le Projenomicon, l\'Algonicon, le Logiconomicon et le Codonomicon ; chacun posé illumine son nom dans le cercle, et le rituel ne pourra commencer qu\'une fois les quatre réunis."',
+        'body = "Gravé dans le mur du fond, face à la porte : « Quatre livres, quatre savoirs. Posés autour du cercle, ils rendront la vie à Codia. » Les piédestaux attendent le Projenomicon, l\'Algonicon, le Logiconomicon et le Codonomicon ; chacun posé illumine son nom dans le cercle, et le rituel ne pourra commencer qu\'une fois les quatre réunis."',
         'prompt = "Lire l\'inscription"', "radius = 3.0"])
-    engraved(lines, "Text", "Castle/Inscription", "QUATRE LIVRES, QUATRE SAVOIRS",
-             f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4, 4.4, {-2.9 + 0.012:g})", pixel=0.0055,
-             color="Color(0.55, 0.42, 0.18, 1)")
+    # Sur deux lignes, entre les colonnes du mur du fond (x = ±2,4) et sous la rangée haute du donjon (y = 4,4), plus
+    # épaisse que celle du bas : sur une ligne à 4,4 m, le haut des lettres rentrait dedans et les colonnes le coupaient.
+    # Brun foncé sur l'enduit clair, pour le contraste.
+    engraved(lines, "Text", "Castle/Inscription", "QUATRE LIVRES,\nQUATRE SAVOIRS",
+             f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4, 3.7, {-2.9 + 0.012:g})", pixel=0.0055,
+             color="Color(0.24, 0.15, 0.07, 1)")
     for name, x, z in (("LightWest", -6.0, -3.0), ("LightEast", 6.0, -3.0), ("LightDoor", 0.0, 3.5)):
         node(lines, name, "OmniLight3D", "Castle", props=[
             f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {x:g}, 5.0, {z:g})", "light_color = Color(1, 0.75, 0.45, 1)",
@@ -803,13 +806,17 @@ def hall(lines):
     for name, zone, _, _, _, label in ZONES:
         x, z = pedestal_spot(zone)
         base = f"Castle/Pedestals/{name}"
+        # Face +Z (celle du nom) tournée vers le centre du cercle, d'où on voit les quatre.
         node(lines, name, "Node3D", "Castle/Pedestals", props=[
-            f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {x:g}, 0.1, {z:g})",
+            at(x, 0.1, z, 1.0, yaw_toward(CIRCLE[0] - x, CIRCLE[1] - z)),
             f'script = {ext("9_interactable")}', 'prompt = "Piédestal"', "radius = 4.0"])
         for part, mesh, y in (("Base", "BoxMesh_pedestal_base", 0.11), ("Pedestal", "BoxMesh_pedestal", 0.65), ("Top", "BoxMesh_pedestal_top", 1.14)):
             node(lines, part, "MeshInstance3D", base, props=[f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, {y:g}, 0)", f'mesh = SubResource("{mesh}")'])
-        engraved(lines, "Label", base, BOOK_TITLES[zone].capitalize(), "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.78, 0.322)",
-                 pixel=0.0012, color="Color(0.6, 0.47, 0.22, 1)")
+        # En haut du fût, juste sous le plateau : plus près des yeux. Le fût a été élargi (0,62 à 0,78 m) pour que le
+        # plus long nom (Logiconomicon, 0,67 m) y tienne à cette taille ; sur l'ancien, même Codonomicon débordait.
+        # Crème sur la pierre sombre, pour le contraste.
+        engraved(lines, "Label", base, BOOK_TITLES[zone].capitalize(), "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0.402)",
+                 pixel=0.00135, color="Color(0.97, 0.88, 0.62, 1)")
         node(lines, "Body", "StaticBody3D", base)
         node(lines, "CollisionShape3D", "CollisionShape3D", f"{base}/Body", props=[
             "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)", 'shape = SubResource("BoxShape3D_pedestal")'])
@@ -829,9 +836,12 @@ def lore(lines):
     name, x, z, yaw, title, body = STATUE
     node(lines, name, "Node3D", "Lore", props=[at(x, 0, z, 1.0, yaw), f'script = {ext("10_readable")}',
          f"title = {quote(title)}", f"body = {quote(body)}", f"prompt = {quote('Lire : ' + title)}", "radius = 2.6"])
-    # Le socle (2,34 m de côté) est centré à 2,6 m derrière le Readable : sa face sud est à 1,43 m.
-    engraved(lines, "Text", f"Lore/{name}", "DEVLYN\nVAINQUEUR DES QUATRE\nDRAGONS DU CHAOS\n5802",
-             "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, -1.418)", pixel=0.0021, color="Color(0.5, 0.38, 0.16, 1)")
+    # Le socle (2,34 m de côté) est centré à 2,6 m derrière le Readable : sa face sud est à 1,43 m. Son creux (1,2 m de
+    # large, de 0,3 à 1,5 m de haut : le modèle commence 5 cm sous son origine) a son fond 0,3 m plus loin, à 1,73 m : l'inscription y est gravée, en lignes
+    # courtes qui tiennent dans sa largeur. Collée à la face avant et dorée, elle flottait devant le creux, en
+    # débordait et se lisait mal sur la pierre blanche.
+    engraved(lines, "Text", f"Lore/{name}", "DEVLYN\nVAINQUEUR\nDES QUATRE\nDRAGONS\nDU CHAOS\n5802",
+             "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, -1.718)", pixel=0.0019, color="Color(0.14, 0.12, 0.1, 1)")
     name, x, z, yaw, title, body = MEMORIAL
     node(lines, name, "Node3D", "Lore", props=[at(x, 0, z, 1.0, yaw), f'script = {ext("10_readable")}',
          f"title = {quote(title)}", f"body = {quote(body)}", f"prompt = {quote('Lire : ' + title)}", "radius = 2.6"])

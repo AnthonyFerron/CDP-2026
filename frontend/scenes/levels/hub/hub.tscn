@@ -115,18 +115,18 @@ roughness = 1.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_pedestal_base"]
 material = SubResource("Material_pedestal_dark")
-size = Vector3(0.95, 0.22, 0.95)
+size = Vector3(1.1, 0.22, 1.1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_pedestal"]
 material = SubResource("StandardMaterial3D_stone")
-size = Vector3(0.62, 0.86, 0.62)
+size = Vector3(0.78, 0.86, 0.78)
 
 [sub_resource type="BoxMesh" id="BoxMesh_pedestal_top"]
 material = SubResource("Material_pedestal_dark")
-size = Vector3(0.82, 0.12, 0.82)
+size = Vector3(0.98, 0.12, 0.98)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_pedestal"]
-size = Vector3(0.66, 1.3, 0.66)
+size = Vector3(0.82, 1.3, 0.82)
 
 [sub_resource type="StandardMaterial3D" id="Material_robe"]
 albedo_color = Color(0.3, 0.18, 0.55, 1)
@@ -1176,18 +1176,19 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.4, 6.6, 1.6)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 0, -3.1)
 script = ExtResource("10_readable")
 title = "Le cercle des anciens bâtisseurs"
-body = "Gravé dans le mur, au-dessus du trône : « Quatre livres, quatre savoirs. Posés autour du cercle, ils rendront la vie à Codia. » Les piédestaux attendent le Projenomicon, l'Algonicon, le Logiconomicon et le Codonomicon ; chacun posé illumine son nom dans le cercle, et le rituel ne pourra commencer qu'une fois les quatre réunis."
+body = "Gravé dans le mur du fond, face à la porte : « Quatre livres, quatre savoirs. Posés autour du cercle, ils rendront la vie à Codia. » Les piédestaux attendent le Projenomicon, l'Algonicon, le Logiconomicon et le Codonomicon ; chacun posé illumine son nom dans le cercle, et le rituel ne pourra commencer qu'une fois les quatre réunis."
 prompt = "Lire l'inscription"
 radius = 3.0
 
 [node name="Text" type="Label3D" parent="Castle/Inscription"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4, 4.4, -2.888)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4, 3.7, -2.888)
 pixel_size = 0.0055
 shaded = true
 double_sided = false
 alpha_cut = 1
-modulate = Color(0.55, 0.42, 0.18, 1)
-text = "QUATRE LIVRES, QUATRE SAVOIRS"
+modulate = Color(0.24, 0.15, 0.07, 1)
+text = "QUATRE LIVRES,
+QUATRE SAVOIRS"
 font_size = 64
 outline_size = 0
 
@@ -1212,7 +1213,7 @@ omni_range = 13.0
 [node name="Pedestals" type="Node3D" parent="Castle"]
 
 [node name="Plaine" type="Node3D" parent="Castle/Pedestals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.53553, 0.1, 3.33553)
+transform = Transform3D(-0.70711, 0, 0.70711, 0, 1, 0, -0.70711, 0, -0.70711, -3.53553, 0.1, 3.33553)
 script = ExtResource("9_interactable")
 prompt = "Piédestal"
 radius = 4.0
@@ -1230,12 +1231,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.14, 0)
 mesh = SubResource("BoxMesh_pedestal_top")
 
 [node name="Label" type="Label3D" parent="Castle/Pedestals/Plaine"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.78, 0.322)
-pixel_size = 0.0012
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0.402)
+pixel_size = 0.00135
 shaded = true
 double_sided = false
 alpha_cut = 1
-modulate = Color(0.6, 0.47, 0.22, 1)
+modulate = Color(0.97, 0.88, 0.62, 1)
 text = "Projenomicon"
 font_size = 64
 outline_size = 0
@@ -1258,7 +1259,7 @@ light_energy = 1.0
 omni_range = 2.5
 
 [node name="Desert" type="Node3D" parent="Castle/Pedestals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.53553, 0.1, -3.73553)
+transform = Transform3D(0.70711, 0, 0.70711, 0, 1, 0, -0.70711, 0, 0.70711, -3.53553, 0.1, -3.73553)
 script = ExtResource("9_interactable")
 prompt = "Piédestal"
 radius = 4.0
@@ -1276,12 +1277,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.14, 0)
 mesh = SubResource("BoxMesh_pedestal_top")
 
 [node name="Label" type="Label3D" parent="Castle/Pedestals/Desert"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.78, 0.322)
-pixel_size = 0.0012
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0.402)
+pixel_size = 0.00135
 shaded = true
 double_sided = false
 alpha_cut = 1
-modulate = Color(0.6, 0.47, 0.22, 1)
+modulate = Color(0.97, 0.88, 0.62, 1)
 text = "Algonicon"
 font_size = 64
 outline_size = 0
@@ -1304,7 +1305,7 @@ light_energy = 1.0
 omni_range = 2.5
 
 [node name="Marais" type="Node3D" parent="Castle/Pedestals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.53553, 0.1, -3.73553)
+transform = Transform3D(0.70711, 0, -0.70711, 0, 1, 0, 0.70711, 0, 0.70711, 3.53553, 0.1, -3.73553)
 script = ExtResource("9_interactable")
 prompt = "Piédestal"
 radius = 4.0
@@ -1322,12 +1323,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.14, 0)
 mesh = SubResource("BoxMesh_pedestal_top")
 
 [node name="Label" type="Label3D" parent="Castle/Pedestals/Marais"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.78, 0.322)
-pixel_size = 0.0012
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0.402)
+pixel_size = 0.00135
 shaded = true
 double_sided = false
 alpha_cut = 1
-modulate = Color(0.6, 0.47, 0.22, 1)
+modulate = Color(0.97, 0.88, 0.62, 1)
 text = "Logiconomicon"
 font_size = 64
 outline_size = 0
@@ -1350,7 +1351,7 @@ light_energy = 1.0
 omni_range = 2.5
 
 [node name="Village" type="Node3D" parent="Castle/Pedestals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.53553, 0.1, 3.33553)
+transform = Transform3D(-0.70711, 0, -0.70711, 0, 1, 0, 0.70711, 0, -0.70711, 3.53553, 0.1, 3.33553)
 script = ExtResource("9_interactable")
 prompt = "Piédestal"
 radius = 4.0
@@ -1368,12 +1369,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.14, 0)
 mesh = SubResource("BoxMesh_pedestal_top")
 
 [node name="Label" type="Label3D" parent="Castle/Pedestals/Village"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.78, 0.322)
-pixel_size = 0.0012
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0.402)
+pixel_size = 0.00135
 shaded = true
 double_sided = false
 alpha_cut = 1
-modulate = Color(0.6, 0.47, 0.22, 1)
+modulate = Color(0.97, 0.88, 0.62, 1)
 text = "Codonomicon"
 font_size = 64
 outline_size = 0
@@ -2087,15 +2088,17 @@ prompt = "Lire : La statue de Devlyn"
 radius = 2.6
 
 [node name="Text" type="Label3D" parent="Lore/Statue"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, -1.418)
-pixel_size = 0.0021
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, -1.718)
+pixel_size = 0.0019
 shaded = true
 double_sided = false
 alpha_cut = 1
-modulate = Color(0.5, 0.38, 0.16, 1)
+modulate = Color(0.14, 0.12, 0.1, 1)
 text = "DEVLYN
-VAINQUEUR DES QUATRE
-DRAGONS DU CHAOS
+VAINQUEUR
+DES QUATRE
+DRAGONS
+DU CHAOS
 5802"
 font_size = 64
 outline_size = 0
