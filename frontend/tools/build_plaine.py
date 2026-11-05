@@ -847,6 +847,8 @@ def wall_banner(scene, x, z, inward, y=1.0, color="red"):
 
 
 LANTERN_POST = 2.7
+# Bas de la collision d'une lanterne qui pend : sous le haut du joueur (1,8 m), pour qu'il s'y cogne la tête.
+LANTERN_HEAD = 1.7
 
 
 def lantern_post(scene, x, z, toward):
@@ -858,6 +860,9 @@ def lantern_post(scene, x, z, toward):
     scene.add("graveyard_kit/lantern-candle", (x + toward * 0.58, hang, z), 0.0, 1.6)
     scene.add_shape("sphere", (0.06,), FLAME, (x + toward * 0.58, hang + 0.3, z), emission=4.0)
     scene.add_box((x, (LANTERN_POST + 0.3) / 2, z), (0.5, LANTERN_POST + 0.3, 0.5))
+    # La potence et sa lanterne : on s'y cogne la tête en sautant, ou en passant dessous.
+    scene.add_box((x + toward * 0.47, (LANTERN_HEAD + LANTERN_POST + 0.1) / 2, z),
+                  (0.62, LANTERN_POST + 0.1 - LANTERN_HEAD, 0.42))
 
 
 def soldiers_camp(scene, rng, cx, cz, heading):
