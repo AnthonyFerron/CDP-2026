@@ -26,9 +26,10 @@ Les sables mouvants ralentissent le joueur, puis le ramènent à son dernier poi
 | Chambres du levant et du zénith | Une stèle gravée dans chacune (socle, cadre, soleil et nom sur ses deux faces, fronton), jarres, tablettes brisées, une colonne tombée |
 | Sanctuaire englouti | Façade à demi enfouie sous une dune, portique dont l'architrave de l'est a basculé |
 | Caravane | Tentes, étals de marchandises, feu éteint, charrette renversée, le squelette du caravanier près de son carnet, celui de sa bête |
-| Oasis asséchée | Bassin de boue craquelée, roseaux secs, palmiers dont un couché, puits et abreuvoir, la jarre sacrée sur son socle |
+| Oasis asséchée | Bassin de boue craquelée, roseaux secs, palmiers dont un couché, puits et abreuvoir, la jarre sacrée sur son socle ; de loin, le mirage d'une nappe d'eau qui scintille au fond du bassin et s'efface quand on approche |
 | Citerne | Fosse aux pans de muraille épais et piliers d'angle à chapiteau, colonnes de l'ancienne voûte, poutre tombée cerclée de bronze, jarres et squelette au fond |
-| Dunes | Tête colossale à demi enfouie, poste de garde tombé au combat, colonnade engloutie, porte des vents, tombes des caravaniers, cage thoracique géante d'une bête des sables sous laquelle on passe, armes et ossements épars, crânes de vautours |
+| Crêtes | La caravane fantôme : les silhouettes tremblantes de marchands d'autrefois et de leurs chameaux, montés ou chargés de ballots, qui marchent sans fin sur les crêtes autour du désert et se dissolvent dès qu'on s'en approche |
+| Dunes | Trois tourbillons de sable qui errent loin du chemin, en sifflant ; tête colossale à demi enfouie, poste de garde tombé au combat, colonnade engloutie, porte des vents, tombes des caravaniers, cage thoracique géante d'une bête des sables sous laquelle on passe, armes et ossements épars, crânes de vautours |
 | Cave des archives | Table ronde de pierre à six emplacements, étagère de tablettes d'argile, casiers à rouleaux, coffres, pupitre de lecture, urnes, poutres, poussière en suspension |
 
 ## Récit du lieu
@@ -41,11 +42,11 @@ Au chargement, `desert.gd` regroupe les maillages fixes des ruines par matériau
 
 ## Ambiance et vie
 
-Lumière chaude et dure ; la lumière ambiante est surtout chaude (le ciel n'en donne que 30 %), les ombres restent brunes au lieu de virer au vert-gris ; horizon voilé de chaleur et brume au ras des dunes ; des voiles de sable passent autour du joueur. Le vent siffle dans les ruines (sources sonores posées sur le sanctuaire, l'arche, la porte des vents, la colonnade, la bête des sables et la tête colossale). Dans la cave, la poussière flotte et tombe en filets du plafond. Des vautours tournent haut au-dessus des ossements, des lézards et des scorpions filent entre les pierres et fuient le joueur, et les toiles claquent au vent : fanions de la caravane et du poste de garde, chiffons des pieux, bannières du sanctuaire (`desert_life.gd`, `desert_cloth.gdshader`).
+Lumière chaude et dure ; la lumière ambiante est surtout chaude (le ciel n'en donne que 30 %), les ombres restent brunes au lieu de virer au vert-gris ; horizon voilé de chaleur et brume au ras des dunes ; des voiles de sable passent autour du joueur. Le vent siffle dans les ruines (sources sonores posées sur le sanctuaire, l'arche, la porte des vents, la colonnade, la bête des sables et la tête colossale). Dans la cave, la poussière flotte et tombe en filets du plafond. Les vents brûlants se voient : trois tourbillons de sable (`desert_whirlwinds.gd`, `whirlwind.gdshader`) errent dans les dunes, à l'est de l'allée, à l'ouest près de la citerne et au sud derrière le sanctuaire, chacun avec son entonnoir de sable qui tourne, ses grains à son pied et son sifflement ; ils n'ont pas de collision. La chaleur fait naître des mirages (`desert_mirages.gd`) : une nappe d'eau au fond de l'oasis asséchée (`mirage_pool.gdshader`), entière au-delà de 30 m et effacée à 14 m, et la caravane fantôme des crêtes (`mirage_caravan.gdshader`), qui fait le tour du désert en sept minutes, à 77 m du centre, et disparaît à moins de 30 m. Des vautours tournent haut au-dessus des ossements, des lézards et des scorpions filent entre les pierres et fuient le joueur, et les toiles claquent au vent : fanions de la caravane et du poste de garde, chiffons des pieux, bannières du sanctuaire (`desert_life.gd`, `desert_cloth.gdshader`).
 
 Les textes du monde sont écrits sur des `SignBoard` (panneau d'entrée, plaque de l'inscription) ou gravés à fleur de pierre (noms des stèles, algorithmes) : aucun texte ne flotte. Les panneaux sur poteaux sont lisibles des deux côtés et les stèles n'ont pas de dos nu.
 
-Les collisions suivent les modèles au plus près : boîtes, cylindres et enveloppes taillés à la main dans `tools/build_desert.py`, et pour les formes ouvertes (étals sous leur auvent, charrette renversée, bannières sur pied, épaves de siège) leurs propres triangles (`EXACT_MODELS` dans `desert.gd`, `_add_wrecks` dans `desert_scatter.gd`).
+Les collisions suivent les modèles au plus près : boîtes, cylindres et enveloppes taillés à la main dans `tools/build_desert.py`, et pour les formes ouvertes (étals sous leur auvent, charrette renversée, bannières sur pied, épaves de siège) leurs propres triangles (`EXACT_MODELS` dans `desert.gd`, `_add_wrecks` dans `desert_scatter.gd`). La congère amassée contre chaque épave se gravit à pied, avec sa collision ; la hauteur de chaque épave (`WRECK_LIFT`) est réglée pour qu'aucune planche ne fasse une marche de plus de 0,4 m.
 
 ## Fichiers
 
@@ -55,6 +56,8 @@ Les collisions suivent les modèles au plus près : boîtes, cylindres et envelo
 | `desert_terrain.gd` | Dunes, esplanade, chemin, replats du décor (`SITES`), bassin de l'oasis, fosse de la citerne, sables mouvants et limite invisible |
 | `desert_scatter.gd` | Cactus, rochers, ruines, épaves de siège ensablées, restes épars, ossements et crânes de vautours, sables mouvants ; les détails sont découpés en cases de 32 m pour s'effacer au loin case par case |
 | `desert_life.gd`, `desert_cloth.gdshader` | Vautours, lézards et scorpions, toiles qui claquent au vent |
+| `desert_mirages.gd`, `mirage_pool.gdshader`, `mirage_caravan.gdshader` | Mirages : la nappe d'eau de l'oasis et la caravane fantôme des crêtes |
+| `desert_whirlwinds.gd`, `whirlwind.gdshader` | Tourbillons de sable qui errent dans les dunes |
 | `desert_ruins.tscn`, `desert_cellar.tscn` | Surface et cave, générées par `tools/build_desert.py` |
 | `rune.gd`, `sand_pile.gd` | Rune à ramasser, tas de sable à dégager en maintenant E |
 | `rune_puzzle.tscn`, `rune_puzzle.gd` | Écran de la table ronde et vérification des algorithmes |

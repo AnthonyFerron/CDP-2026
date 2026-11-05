@@ -57,6 +57,8 @@ EXT = [
     ("AudioStream", A + "stone_door.wav", "53_rumble"),
     ("AudioStream", A + "plaine_wind.wav", "54_ruin_wind"),
     ("Script", "res://scenes/levels/desert/desert_life.gd", "37_life"),
+    ("Script", "res://scenes/levels/desert/desert_mirages.gd", "38_mirages"),
+    ("Script", "res://scenes/levels/desert/desert_whirlwinds.gd", "39_whirlwinds"),
     ("Script", "res://scenes/levels/hub/volcano.gd", "90_volcano"),
 ]
 
@@ -591,6 +593,17 @@ def main():
         '[node name="Life" type="Node3D" parent="Exterior" node_paths=PackedStringArray("terrain")]',
         'script = ExtResource("37_life")',
         'terrain = NodePath("../Terrain")',
+        "",
+        # Mirages des vents brûlants : la nappe d'eau de l'oasis et la caravane fantôme des crêtes (desert_mirages.gd).
+        '[node name="Mirages" type="Node3D" parent="Exterior" node_paths=PackedStringArray("terrain")]',
+        'script = ExtResource("38_mirages")',
+        'terrain = NodePath("../Terrain")',
+        "",
+        # Tourbillons de sable qui errent dans les dunes, avec le sifflement du vent (desert_whirlwinds.gd).
+        '[node name="Whirlwinds" type="Node3D" parent="Exterior" node_paths=PackedStringArray("terrain")]',
+        'script = ExtResource("39_whirlwinds")',
+        'terrain = NodePath("../Terrain")',
+        'sound = ExtResource("54_ruin_wind")',
         "",
     ]
     node(lines, "Portal", parent="Exterior", instance="8_portal", props=[
