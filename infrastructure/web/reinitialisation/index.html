@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="fr">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- Le jeton est dans l'adresse : il ne doit partir vers aucun autre site (Caddy envoie aussi l'en-tête). -->
+	<meta name="referrer" content="no-referrer">
+	<meta name="robots" content="noindex, nofollow">
+	<title>CodeQuest - Nouveau mot de passe</title>
+	<link rel="stylesheet" href="/reinitialisation/style.css">
+	<script src="/reinitialisation/page.js" defer></script>
+</head>
+<body>
+	<div class="sky" aria-hidden="true"><span class="moon"></span><span class="hills"></span></div>
+
+	<main class="card">
+		<h1 class="plaque" id="title"><span>Nouveau mot de passe</span></h1>
+		<div class="frame">
+			<div class="panel">
+				<p class="lead">CodeQuest, la Recherche des livres oubliés</p>
+				<div class="divider" aria-hidden="true"></div>
+
+				<noscript><p class="status error">Cette page a besoin de JavaScript pour enregistrer votre nouveau mot de passe.</p></noscript>
+
+				<form id="form" novalidate hidden>
+					<label for="password">Nouveau mot de passe</label>
+					<input id="password" name="password" type="password" autocomplete="new-password" required>
+					<label for="confirmation">Confirmez le mot de passe</label>
+					<input id="confirmation" name="confirmation" type="password" autocomplete="new-password" required>
+					<p class="hint">8 à 128 caractères, avec au moins une lettre et un chiffre.</p>
+					<label class="toggle"><input id="show" type="checkbox"> Afficher les mots de passe</label>
+					<button class="hex" id="submit" type="submit"><span>Enregistrer</span></button>
+				</form>
+
+				<p class="status" id="status" role="status" aria-live="polite"></p>
+				<p class="after" id="after" hidden>
+					Dans le jeu, choisissez «&nbsp;Se connecter&nbsp;». Pour un nouveau lien&nbsp;: «&nbsp;Mot de passe oublié&nbsp;?&nbsp;».
+				</p>
+				<a class="hex secondary" id="back" href="/" hidden><span>Retour au jeu</span></a>
+			</div>
+		</div>
+	</main>
+</body>
+</html>
