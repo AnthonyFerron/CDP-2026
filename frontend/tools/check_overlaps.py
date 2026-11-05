@@ -44,31 +44,42 @@ def wall(scene, kit_model, center, outward, height=bp.WALL_HEIGHT, base=0.0, sol
     return _wall(scene, kit_model, center, outward, height=height, base=base, solid=solid)
 
 
-def furniture(scene, model, center, degrees=0.0, scale=2.6, height=None, tilt=0.0, roll=0.0):
+def record(model, center, degrees, scale, tilt, roll):
     (px, py, pz), (sx, sy, sz) = bp.MODEL_BOXES[model]
     basis = bp.multiply(bp.multiply(bp.rotation_y(degrees), bp.rotation_x(tilt)), bp.rotation_z(roll))
+    # Échelle unique ou par axe (furniture() du hub accepte un triplet).
+    axes = scale if isinstance(scale, (tuple, list)) else (scale, scale, scale)
     corners = []
     for cx in (px, px + sx):
         for cy in (py, py + sy):
             for cz in (pz, pz + sz):
-                local = (cx * scale, cy * scale, cz * scale)
+                local = (cx * axes[0], cy * axes[1], cz * axes[2])
                 corners.append([sum(basis[r][i] * local[i] for i in range(3)) for r in range(3)])
     low = [min(c[i] for c in corners) for i in range(3)]
     high = [max(c[i] for c in corners) for i in range(3)]
     w, h, d = (high[i] - low[i] for i in range(3))
     ITEMS.append((model, center[0] - w / 2, center[0] + w / 2, center[2] - d / 2, center[2] + d / 2,
                   center[1], center[1] + h, CURRENT[0]))
-    return _furniture(scene, model, center, degrees, scale, height, tilt, roll)
 
 
+def watched(original):
+    """Enveloppe une fonction furniture() : relève l'emprise du meuble, puis laisse la fonction d'origine le poser."""
+    def furniture(scene, model, center, degrees=0.0, scale=2.6, height=None, tilt=0.0, roll=0.0):
+        record(model, center, degrees, scale, tilt, roll)
+        return original(scene, model, center, degrees, scale, height, tilt, roll)
+    return furniture
+
+
+furniture = watched(_furniture)
 bp.wall = wall
 bp.furniture = furniture
 for name in ("build_hub", "build_village", "build_desert", "build_marais"):
     module = __import__(name)
     module.wall = wall
-    module.furniture = furniture
-    if hasattr(module, "doorway"):
-        pass
+    # Un générateur qui a sa propre furniture() (le hub) la garde, enveloppée : la remplacer par celle de la Plaine
+    # perdait ce qu'elle ajoute (échelle par axe).
+    own = getattr(module, "furniture", _furniture)
+    module.furniture = furniture if own is _furniture else watched(own)
 
 import build_hub as bh
 import build_village as bv
