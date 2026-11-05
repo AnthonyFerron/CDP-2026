@@ -26,8 +26,11 @@ const PLAY_RADIUS := 64.0
 const BORDER_WIDTH := 10.0
 const BORDER_HEIGHT := 10.0
 ## Limite invisible que le joueur ne peut franchir, à mi-hauteur du talus qui ferme la zone : ni en marchant, ni en
-## sautant depuis un mur, un toit ou une charrette. Le portail, à 63 m du centre, reste en deçà.
-const LIMIT_RADIUS := 72.0
+## sautant depuis un mur, un toit ou une charrette. Le portail, à 63 m du centre, reste en deçà. À 72 m, aux deux
+## bouts du ruisseau, où le talus est plus doux, on montait en courant et en sautant jusqu'à 8 m de haut, derrière
+## les arbres de la bordure : de là, on voyait le talus nu et le bord du monde. À 70 m, on s'arrête à mi-pente, l'œil
+## sous la crête.
+const LIMIT_RADIUS := 70.0
 const LIMIT_SEGMENTS := 72
 
 const COLOR_GRASS := Color(0.32, 0.36, 0.18)
