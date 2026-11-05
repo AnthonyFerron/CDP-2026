@@ -17,15 +17,16 @@
 [ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/barrel.glb" id="15_model"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/pot_small.glb" id="16_model"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/plant_bushSmall.glb" id="17_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-doorway-round.glb" id="18_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/urn-round.glb" id="19_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-detail-cross.glb" id="20_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall.glb" id="21_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-detail-horizontal.glb" id="22_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/pillar-stone.glb" id="23_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/candle.glb" id="24_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/chest.glb" id="25_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/candle-multiple.glb" id="26_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-detail-horizontal.glb" id="18_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-doorway-round.glb" id="19_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/urn-round.glb" id="20_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-window-glass.glb" id="21_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall.glb" id="22_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/wall-detail-cross.glb" id="23_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/pillar-stone.glb" id="24_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/candle.glb" id="25_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_dungeon/chest.glb" id="26_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/candle-multiple.glb" id="27_model"]
 [ext_resource type="Script" path="res://scenes/levels/village/village_instances.gd" id="instances"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
@@ -275,6 +276,41 @@ resource_name = "cloth_red"
 albedo_color = Color(0.55, 0.12, 0.1, 1)
 roughness = 1
 
+[sub_resource type="StandardMaterial3D" id="Material_dusk"]
+resource_name = "dusk"
+albedo_color = Color(0.85, 0.62, 0.45, 1)
+roughness = 1
+emission_enabled = true
+emission = Color(0.95, 0.62, 0.4, 1)
+emission_energy_multiplier = 0.9
+
+[sub_resource type="BoxMesh" id="BoxMesh_size_1p6_1p7_0p04"]
+size = Vector3(1.6, 1.7, 0.04)
+
+[sub_resource type="BoxMesh" id="BoxMesh_size_1p12_2p5_0p08"]
+size = Vector3(1.12, 2.5, 0.08)
+
+[sub_resource type="BoxMesh" id="BoxMesh_size_0p025_2p42_0p012"]
+size = Vector3(0.025, 2.42, 0.012)
+
+[sub_resource type="BoxMesh" id="BoxMesh_size_1p0_0p09_0p02"]
+size = Vector3(1, 0.09, 0.02)
+
+[sub_resource type="BoxMesh" id="BoxMesh_size_0p05_0p05_0p02"]
+size = Vector3(0.05, 0.05, 0.02)
+
+[sub_resource type="BoxMesh" id="BoxMesh_size_0p12_0p2_0p025"]
+size = Vector3(0.12, 0.2, 0.025)
+
+[sub_resource type="TorusMesh" id="TorusMesh_inner_radius0p06_outer_radius0p085_ring_segments4_rings12"]
+inner_radius = 0.06
+outer_radius = 0.085
+rings = 12
+ring_segments = 4
+
+[sub_resource type="BoxMesh" id="BoxMesh_size_0p04_1p7_1p6"]
+size = Vector3(0.04, 1.7, 1.6)
+
 [sub_resource type="BoxMesh" id="BoxMesh_size_1p0_0p16_1p0"]
 size = Vector3(1, 0.16, 1)
 
@@ -283,6 +319,36 @@ size = Vector3(0.5, 0.86, 0.5)
 
 [sub_resource type="BoxMesh" id="BoxMesh_size_0p95_0p12_0p8"]
 size = Vector3(0.95, 0.12, 0.8)
+
+[sub_resource type="MultiMesh" id="MultiMesh_1"]
+transform_format = 1
+instance_count = 6
+mesh = SubResource("BoxMesh_size_1p6_1p7_0p04")
+buffer = PackedFloat32Array(1, 0, 0, -6, 0, 1, 0, 1.9, 0, 0, 1, -6.42, 1, 0, 0, 2, 0, 1, 0, 1.9, 0, 0, 1, -6.42, 1, 0, 0, 2, 0, 1, 0, 1.9, 0, 0, 1, 6.42, 1, 0, 0, 6, 0, 1, 0, 1.9, 0, 0, 1, 6.42, 1, 0, 0, -2, 0, 1, 0, 5.9, 0, 0, 1, 6.42, 1, 0, 0, 6, 0, 1, 0, 5.9, 0, 0, 1, 6.42)
+
+[sub_resource type="MultiMesh" id="MultiMesh_2"]
+transform_format = 1
+instance_count = 3
+mesh = SubResource("BoxMesh_size_0p025_2p42_0p012")
+buffer = PackedFloat32Array(1, 0, 0, -2.28, 0, 1, 0, 1.25, 0, 0, 1, 5.715, 1, 0, 0, -2, 0, 1, 0, 1.25, 0, 0, 1, 5.715, 1, 0, 0, -1.72, 0, 1, 0, 1.25, 0, 0, 1, 5.715)
+
+[sub_resource type="MultiMesh" id="MultiMesh_3"]
+transform_format = 1
+instance_count = 2
+mesh = SubResource("BoxMesh_size_1p0_0p09_0p02")
+buffer = PackedFloat32Array(1, 0, 0, -2.08, 0, 1, 0, 0.45, 0, 0, 1, 5.71, 1, 0, 0, -2.08, 0, 1, 0, 1.95, 0, 0, 1, 5.71)
+
+[sub_resource type="MultiMesh" id="MultiMesh_4"]
+transform_format = 1
+instance_count = 4
+mesh = SubResource("BoxMesh_size_0p05_0p05_0p02")
+buffer = PackedFloat32Array(1, 0, 0, -2.46, 0, 1, 0, 0.45, 0, 0, 1, 5.698, 1, 0, 0, -1.7, 0, 1, 0, 0.45, 0, 0, 1, 5.698, 1, 0, 0, -2.46, 0, 1, 0, 1.95, 0, 0, 1, 5.698, 1, 0, 0, -1.7, 0, 1, 0, 1.95, 0, 0, 1, 5.698)
+
+[sub_resource type="MultiMesh" id="MultiMesh_5"]
+transform_format = 1
+instance_count = 3
+mesh = SubResource("BoxMesh_size_0p04_1p7_1p6")
+buffer = PackedFloat32Array(1, 0, 0, 8.42, 0, 1, 0, 5.9, 0, 0, 1, -4, 1, 0, 0, 8.42, 0, 1, 0, 5.9, 0, 0, 1, 0, 1, 0, 0, 8.42, 0, 1, 0, 5.9, 0, 0, 1, 4)
 
 [node name="VillageHall" type="Node3D"]
 
@@ -450,55 +516,96 @@ transform = Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -0.6, 0.494, 5.35)
 [node name="plant_bushSmall_53" parent="Models" instance=ExtResource("17_model")]
 transform = Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -7, 4.994, 5.1)
 
-[node name="wall_doorway_round_54" parent="Models" instance=ExtResource("18_model")]
+[node name="wall_detail_horizontal_54" parent="Models" instance=ExtResource("18_model")]
+transform = Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 2, 4, -4.2)
+
+[node name="wall_detail_horizontal_55" parent="Models" instance=ExtResource("18_model")]
+transform = Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 2, 4, 4.2)
+
+[node name="wall_doorway_round_56" parent="Models" instance=ExtResource("19_model")]
 transform = Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -6.2, 4, 0)
 
-[node name="urn_round_55" parent="Models" instance=ExtResource("19_model")]
+[node name="urn_round_57" parent="Models" instance=ExtResource("20_model")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -12.8, 4.5, -3.1)
 
-[node name="urn_round_56" parent="Models" instance=ExtResource("19_model")]
+[node name="urn_round_58" parent="Models" instance=ExtResource("20_model")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -12.8, 4.5, 3.1)
 
 [node name="Instances" type="Node3D" parent="."]
 
-[node name="fantasy_town_kit_wall_detail_cross" type="Node3D" parent="Instances"]
+[node name="fantasy_town_kit_wall_window_glass" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("20_model")
-transforms = Array[Transform3D]([Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -6, 0, -4.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -6, 0, 4.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 6.2, 0, 0), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -6.2, 0, 0), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -6, 4, -4.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -6, 4, 4.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 6.2, 4, 0), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -14, 4, -2.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -14, 4, 2.2), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -14.2, 4, 2)])
+model = ExtResource("21_model")
+transforms = Array[Transform3D]([Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -6, 0, -4.2), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 2, 0, -4.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 2, 0, 4.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 6, 0, 4.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -2, 4, 4.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 6, 4, 4.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 6.2, 4, -4), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 6.2, 4, 0), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 6.2, 4, 4)])
 
 [node name="fantasy_town_kit_wall" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("21_model")
-transforms = Array[Transform3D]([Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -2, 0, -4.2), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 6, 0, -4.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 6, 0, 4.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 6.2, 0, -4), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 6.2, 0, 4), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -6.2, 0, -4), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -6.2, 0, 4), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -2, 4, -4.2), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 6, 4, -4.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -2, 4, 4.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 6, 4, 4.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 6.2, 4, -4), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 6.2, 4, 4), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -6.2, 4, -4), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -6.2, 4, 4), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -10, 4, -2.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -10, 4, 2.2), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -14.2, 4, -2)])
-
-[node name="fantasy_town_kit_wall_detail_horizontal" type="Node3D" parent="Instances"]
-script = ExtResource("instances")
 model = ExtResource("22_model")
-transforms = Array[Transform3D]([Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 2, 0, -4.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 2, 0, 4.2), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 2, 4, -4.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, 2, 4, 4.2)])
+transforms = Array[Transform3D]([Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -2, 0, -4.2), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 6, 0, -4.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 6.2, 0, -4), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 6.2, 0, 4), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -6.2, 0, -4), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -6.2, 0, 4), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -2, 4, -4.2), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, 6, 4, -4.2), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -6.2, 4, -4), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -6.2, 4, 4), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -10, 4, -2.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -10, 4, 2.2), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -14.2, 4, -2)])
+
+[node name="fantasy_town_kit_wall_detail_cross" type="Node3D" parent="Instances"]
+script = ExtResource("instances")
+model = ExtResource("23_model")
+transforms = Array[Transform3D]([Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -6, 0, 4.2), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 6.2, 0, 0), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -6.2, 0, 0), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -6, 4, -4.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -6, 4, 4.2), Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -14, 4, -2.2), Transform3D(0, 0, -4, 0, 4, 0, 4, 0, 0, -14, 4, 2.2), Transform3D(-4, 0, 0, 0, 4, 0, -0, 0, -4, -14.2, 4, 2)])
 
 [node name="fantasy_town_kit_pillar_stone" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("23_model")
+model = ExtResource("24_model")
 transforms = Array[Transform3D]([Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -8, 0, -6), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -8, 0, 6), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 8, 0, -6), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 8, 0, 6), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -0.7, 4, -6), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -0.7, 4, 6), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0.7, 4, -6), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0.7, 4, 6), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -16, 4, -4), Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -16, 4, 4)])
 
 [node name="graveyard_kit_candle" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("24_model")
+model = ExtResource("25_model")
 transforms = Array[Transform3D]([Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, -1.3, 1.064, -1), Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, -4.9, 1.064, -2.9), Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, -1.8, 5.564, -1.1)])
 visibility_end = 45
 
 [node name="mini_dungeon_chest" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("25_model")
+model = ExtResource("26_model")
 transforms = Array[Transform3D]([Transform3D(0, 0, 2.4, 0, 2.4, 0, -2.4, 0, 0, 3.5, 0, -5.1), Transform3D(0, 0, 2.4, 0, 2.4, 0, -2.4, 0, 0, -6.4, 4.5, -5.1), Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, 6.4, 4.5, 4.6)])
 
 [node name="graveyard_kit_candle_multiple" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
-model = ExtResource("26_model")
+model = ExtResource("27_model")
 transforms = Array[Transform3D]([Transform3D(2.4, 0, 0, 0, 2.4, 0, 0, 0, 2.4, -14.824, 4.5, -3.012), Transform3D(2.4, 0, 0, 0, 2.4, 0, 0, 0, 2.4, -14.824, 4.5, 2.988), Transform3D(2.4, 0, 0, 0, 2.4, 0, 0, 0, 2.4, -9.624, 4.5, -3.212), Transform3D(2.4, 0, 0, 0, 2.4, 0, 0, 0, 2.4, -9.624, 4.5, 3.188)])
 visibility_end = 45
 
 [node name="Shapes" type="Node3D" parent="."]
+
+[node name="BoxMesh_size_1p6_1p7_0p04_dusk" type="MultiMeshInstance3D" parent="Shapes"]
+material_override = SubResource("Material_dusk")
+multimesh = SubResource("MultiMesh_1")
+
+[node name="BoxMesh_size_1p12_2p5_0p08_wood_dark" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1.25, 5.76)
+material_override = SubResource("Material_wood_dark")
+mesh = SubResource("BoxMesh_size_1p12_2p5_0p08")
+
+[node name="BoxMesh_size_0p025_2p42_0p012_soot" type="MultiMeshInstance3D" parent="Shapes"]
+material_override = SubResource("Material_soot")
+multimesh = SubResource("MultiMesh_2")
+
+[node name="BoxMesh_size_1p0_0p09_0p02_iron" type="MultiMeshInstance3D" parent="Shapes"]
+material_override = SubResource("Material_iron")
+multimesh = SubResource("MultiMesh_3")
+
+[node name="BoxMesh_size_0p05_0p05_0p02_iron" type="MultiMeshInstance3D" parent="Shapes"]
+material_override = SubResource("Material_iron")
+multimesh = SubResource("MultiMesh_4")
+
+[node name="BoxMesh_size_0p12_0p2_0p025_iron" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.62, 1.15, 5.705)
+material_override = SubResource("Material_iron")
+mesh = SubResource("BoxMesh_size_0p12_0p2_0p025")
+
+[node name="TorusMesh_inner_radius0p06_outer_radius0p085_ring_segments4_rings12_iron" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, -1.62, 0.98, 5.69)
+material_override = SubResource("Material_iron")
+mesh = SubResource("TorusMesh_inner_radius0p06_outer_radius0p085_ring_segments4_rings12")
+
+[node name="BoxMesh_size_0p04_1p7_1p6_dusk" type="MultiMeshInstance3D" parent="Shapes"]
+material_override = SubResource("Material_dusk")
+multimesh = SubResource("MultiMesh_5")
 
 [node name="BoxMesh_size_1p0_0p16_1p0_stone" type="MeshInstance3D" parent="Shapes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.6, 4.58, 0)
