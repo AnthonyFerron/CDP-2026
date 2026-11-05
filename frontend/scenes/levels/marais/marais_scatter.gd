@@ -414,6 +414,8 @@ func _add_chunked(mesh: Mesh, transforms: Array[Transform3D], material: Material
 		var instance := _add_multimesh(mesh, cells[key], center)
 		instance.name = "Detail_%d_%d" % [key.x, key.y]
 		instance.material_override = material
+		# Petits détails : sans ombre, que la lune ne redessine pas dans sa carte d'ombres.
+		instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		instance.visibility_range_end = detail_range
 		instance.visibility_range_end_margin = FADE_MARGIN
 		instance.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF

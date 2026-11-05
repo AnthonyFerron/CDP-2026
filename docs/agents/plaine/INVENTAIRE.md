@@ -31,6 +31,9 @@ et les planches de captures (`sheets.gd`). Résultat dans `PROBLEMES.md`.
 | Batterie de balistes | (17, -22) | collisions |
 | Feux, fumées, vent | trébuchet, charrette, camp | rien ne brûle le joueur |
 | Corbeaux, bannières | au-dessus du siège et des tombes | sans collision |
+| Affiche de la fête des foins (récit) | (3,3 ; 47,8) | `lore_test` : poteaux au sol, collision, invite, lecteur |
+| Relevé de l'arpenteur, panneau « Danger : terre brûlante » (récit) | (-4,3 ; 35,0), tête sud du pont | `lore_test` : poteaux au sol, collision, invite, lecteur |
+| Proclamation du roi Codeon V (récit) | mur ouest de la façade (-8,9 ; 8,27) | `lore_test` : planche contre le mur, invite, lecteur |
 
 ## Dedans (sous la carte, y = -40)
 
@@ -48,3 +51,6 @@ et les planches de captures (`sheets.gd`). Résultat dans `PROBLEMES.md`.
 | Escalier oublié | z -36,7 à -38,5 | montée et descente, du bas, du haut et des côtés |
 | Petite salle et pupitre de pierre, Projenomicon | (0, -39,8) | livre pris du haut de l'escalier et de la salle |
 | Plafonds | partout | aucun saut ne les traverse |
+| Lettre de la bibliothécaire (récit) | table de lecture (2,15 ; -7,12) | `lore_test` : posée sur la table (5 points), invite, lecteur |
+| Règlement de la bibliothèque (récit) | mur de la salle de lecture (-0,95 ; -11,75) | `lore_test` : contre le mur, invite, lecteur |
+| Notes du greffier (récit) | pupitre du scriptorium (2,48 ; -15,95) | `lore_test` : posées sur la table (5 points), invite, lecteur |

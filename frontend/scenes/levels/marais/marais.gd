@@ -23,6 +23,10 @@ const STONE_SHADER := preload("res://scenes/levels/marais/crypt_stone.gdshader")
 ## Lumière d'ambiance de la crypte : sous terre, elle vient des cierges et non du ciel de nuit. Une faible lueur
 ## chaude, pour qu'aucune face tournée à l'opposé des lumières ne reste d'un noir d'encre.
 const CRYPT_AMBIENT := Color(0.36, 0.3, 0.25)
+## Le dehors, caché quand on est dans la crypte (et la crypte, cachée dehors).
+const OUTSIDE_NODES: Array[NodePath] = [^"Terrain", ^"Water", ^"Scatter", ^"Props", ^"Grounded", ^"Portal", ^"Campfire",
+	^"GateLightNorth", ^"GateLightSouth", ^"CryptLight", ^"SignLight", ^"ChapelLight", ^"Clues", ^"Ghost", ^"CryptDoor",
+	^"DoorInteractable", ^"Volcano"]
 ## Direction d'où vient la lumière de la lune (axe +Z du nœud Moon).
 const MOON_DIRECTION := Vector3(-0.5, 0.7071, 0.5)
 
@@ -127,6 +131,17 @@ func _ready() -> void:
 		_mist_banks.append(flies)
 		add_child(flies)
 	_tint_crypt()
+	# Pour le web : le décor fixe fondu par matériau (MaraisBatch), par cases de 32 m dehors, de 12 m (une pièce)
+	# sous terre : tombeaux des rois et niches de l'ossuaire compris.
+	for root: Node3D in [$Props/Models, $Grounded, $Scatter/Boardwalks, $Scatter/Lanterns]:
+		MaraisBatch.merge(root, 32.0, true)
+	for root: Node3D in [$Interior/Crypt/Models, $Interior/Kings, $Interior/Niches]:
+		MaraisBatch.merge(root, 12.0, false)
+	# La lumière du feu de camp s'éteint au loin, comme les autres lumières du dehors.
+	for light: Light3D in $Campfire.find_children("*", "Light3D", true, false):
+		light.distance_fade_enabled = true
+		light.distance_fade_begin = 38.0
+		light.distance_fade_length = 8.0
 	_apply_location()
 	# Le nom du lieu s'affiche déjà pendant la transition du portail.
 	if GameState.has_book(BOOK_ID):
@@ -215,6 +230,11 @@ func _travel(inside: bool) -> void:
 
 func _apply_location() -> void:
 	_moon.visible = not _inside
+	# On ne dessine que le côté où l'on est : la crypte, sous la carte, entrait dans le champ quand on regardait le
+	# sol ; le marais, au-dessus du plafond, quand on levait les yeux dans la crypte. Lumières comprises.
+	$Interior.visible = _inside
+	for path in OUTSIDE_NODES:
+		get_node(path).visible = not _inside
 	_environment.fog_enabled = not _inside
 	_environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR if _inside else Environment.AMBIENT_SOURCE_SKY
 	_environment.ambient_light_color = CRYPT_AMBIENT if _inside else _sky_ambient

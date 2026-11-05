@@ -313,7 +313,8 @@ light_color = Color(0.58, 0.7, 0.95, 1)
 light_energy = 0.5
 light_specular = 1.4
 shadow_enabled = true
-directional_shadow_max_distance = 60.0
+directional_shadow_mode = 1
+directional_shadow_max_distance = 50.0
 
 [node name="Terrain" type="StaticBody3D" parent="."]
 script = ExtResource("2_terrain")
@@ -487,6 +488,9 @@ light_color = Color(1, 0.75, 0.4, 1)
 light_energy = 1.6
 omni_range = 7.0
 flicker = 0.2
+distance_fade_enabled = true
+distance_fade_begin = 38.0
+distance_fade_length = 8.0
 
 [node name="GateLightSouth" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 3.8, 6.3)
@@ -495,6 +499,9 @@ light_color = Color(1, 0.75, 0.4, 1)
 light_energy = 1.6
 omni_range = 7.0
 flicker = 0.2
+distance_fade_enabled = true
+distance_fade_begin = 38.0
+distance_fade_length = 8.0
 
 [node name="CryptLight" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, -32)
@@ -503,6 +510,9 @@ light_color = Color(0.5, 0.9, 0.7, 1)
 light_energy = 1.2
 omni_range = 9.0
 flicker = 0.1
+distance_fade_enabled = true
+distance_fade_begin = 38.0
+distance_fade_length = 8.0
 
 [node name="SignLight" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3, 2.5, 54.0)
@@ -511,6 +521,9 @@ light_color = Color(1, 0.78, 0.45, 1)
 light_energy = 1.4
 omni_range = 5.5
 flicker = 0.15
+distance_fade_enabled = true
+distance_fade_begin = 38.0
+distance_fade_length = 8.0
 
 [node name="ChapelLight" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -37.8, 2.2, -4)
@@ -519,6 +532,9 @@ light_color = Color(0.55, 0.95, 0.85, 1)
 light_energy = 1.3
 omni_range = 8.0
 flicker = 0.25
+distance_fade_enabled = true
+distance_fade_begin = 38.0
+distance_fade_length = 8.0
 
 [node name="Clues" type="Node3D" parent="."]
 
@@ -690,7 +706,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.3, 1)
 script = ExtResource("14_flicker")
 light_color = Color(1, 0.8, 0.6, 1)
 light_energy = 1.2
-omni_range = 12.0
+omni_range = 12
 flicker = 0.15
 
 [node name="LightStairs" type="OmniLight3D" parent="Interior"]
@@ -698,7 +714,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.4, 11.4)
 script = ExtResource("14_flicker")
 light_color = Color(0.72, 0.8, 0.88, 1)
 light_energy = 0.7
-omni_range = 12.0
+omni_range = 12
 flicker = 0.15
 
 [node name="LightStairsMid" type="OmniLight3D" parent="Interior"]
@@ -706,7 +722,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 6.4)
 script = ExtResource("14_flicker")
 light_color = Color(1, 0.8, 0.6, 1)
 light_energy = 0.9
-omni_range = 12.0
+omni_range = 12
 flicker = 0.15
 
 [node name="LightHall" type="OmniLight3D" parent="Interior"]
@@ -714,7 +730,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.3, -12)
 script = ExtResource("14_flicker")
 light_color = Color(1, 0.8, 0.6, 1)
 light_energy = 2.2
-omni_range = 12.0
+omni_range = 12
 flicker = 0.15
 
 [node name="LightEast" type="OmniLight3D" parent="Interior"]
@@ -722,7 +738,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 3.3, -12)
 script = ExtResource("14_flicker")
 light_color = Color(1, 0.8, 0.6, 1)
 light_energy = 1.6
-omni_range = 12.0
+omni_range = 12
 flicker = 0.15
 
 [node name="LightEastTomb" type="OmniLight3D" parent="Interior"]
@@ -730,7 +746,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.6, 1.5, -12)
 script = ExtResource("14_flicker")
 light_color = Color(1, 0.8, 0.6, 1)
 light_energy = 0.5
-omni_range = 12.0
+omni_range = 12
 flicker = 0.15
 
 [node name="LightWest" type="OmniLight3D" parent="Interior"]
@@ -738,7 +754,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 3.3, -12)
 script = ExtResource("14_flicker")
 light_color = Color(1, 0.8, 0.6, 1)
 light_energy = 1.4
-omni_range = 12.0
+omni_range = 12
 flicker = 0.15
 
 [node name="LightOssuary" type="OmniLight3D" parent="Interior"]
@@ -746,7 +762,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 3.3, 2)
 script = ExtResource("14_flicker")
 light_color = Color(1, 0.8, 0.6, 1)
 light_energy = 0.9
-omni_range = 12.0
+omni_range = 12
 flicker = 0.15
 
 [node name="LightGuards" type="OmniLight3D" parent="Interior"]
@@ -754,7 +770,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 3.3, 2)
 script = ExtResource("14_flicker")
 light_color = Color(1, 0.8, 0.6, 1)
 light_energy = 0.9
-omni_range = 12.0
+omni_range = 12
 flicker = 0.15
 
 [node name="Brazier0" type="Node3D" parent="Interior"]

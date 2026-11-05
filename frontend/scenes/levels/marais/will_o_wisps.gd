@@ -56,10 +56,12 @@ func _ready() -> void:
 			var core_instance := MeshInstance3D.new()
 			core_instance.mesh = core
 			core_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			core_instance.visibility_range_end = 50.0
 			wisp.add_child(core_instance)
 			var halo_instance := MeshInstance3D.new()
 			halo_instance.mesh = halo
 			halo_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			halo_instance.visibility_range_end = 50.0
 			wisp.add_child(halo_instance)
 			_wisps.append({
 				"node": wisp,

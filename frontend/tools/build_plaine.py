@@ -739,6 +739,12 @@ def lectern(scene, x, z, degrees, open_book=True):
     scene.add_box((x, 0.6, z), (0.7, 1.2, 0.55), degrees)
 
 
+# Dessus des tables, à l'échelle 1, mesuré sur les sommets de leur maillage : ce qu'on y pose part de là (la boîte de
+# MODEL_BOXES arrondit, et 0,31 enfonçait feuillets et bougies dans le plateau, 0,33 les faisait flotter).
+DUNGEON_TABLE_TOP = 0.315
+TABLE_TOP = 0.327
+
+
 def writing_desk(scene, rng, x, z, degrees, overturned=False):
     """Pupitre de scribe : une table, un tabouret, une bougie, un encrier, une plume et des feuillets."""
     if overturned:
@@ -748,7 +754,7 @@ def writing_desk(scene, rng, x, z, degrees, overturned=False):
         sheets(scene, rng, x + 0.6, z + 0.4, 6, 1.0)
         return
     furniture_fit(scene, "mini_dungeon/table", (x, 0.0, z), degrees, 2.2, height=0.69)
-    top = 0.31 * 2.2
+    top = DUNGEON_TABLE_TOP * 2.2
     c, s = math.cos(math.radians(degrees)), math.sin(math.radians(degrees))
 
     def on_desk(u, v):
@@ -777,7 +783,7 @@ def writing_desk(scene, rng, x, z, degrees, overturned=False):
 def reading_table(scene, rng, x, z, degrees, chairs=((-1, -0.55), (-1, 0.55), (1, -0.55), (1, 0.55)), tipped=()):
     """Longue table de lecture, ses chaises, des livres empilés et une bougie."""
     furniture_fit(scene, "furniture_kit/table", (x, 0.0, z), degrees, 3.0, height=0.99)
-    top = 0.33 * 3.0
+    top = TABLE_TOP * 3.0
     c, s = math.cos(math.radians(degrees)), math.sin(math.radians(degrees))
 
     def at(u, v):
@@ -1175,7 +1181,7 @@ def camp_extras(scene, rng):
     cx, cz, _ = SITES["camp"]
     furniture_fit(scene, "mini_arena/weapon-rack", (cx - 5.2, 0.0, cz + 4.8), 60.0, 2.6, height=1.2)
     furniture_fit(scene, "mini_dungeon/table", (cx + 5.0, 0.0, cz + 3.6), -30.0, 2.2, height=0.69)
-    top = 0.31 * 2.2
+    top = DUNGEON_TABLE_TOP * 2.2
     scene.add_shape("box", (1.0, 0.006, 0.7), PARCHMENT_DARK, (cx + 5.0, top + 0.004, cz + 3.6), -24.0)
     furniture_fit(scene, "graveyard_kit/candle", (cx + 4.6, top, cz + 3.4), 0.0, 1.6)
     furniture_fit(scene, "mini_dungeon/chair", (cx + 3.2, 0.0, cz + 5.5), 150.0, 2.4, height=1.1)

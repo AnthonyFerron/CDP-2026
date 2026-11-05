@@ -258,6 +258,34 @@ size = Vector3(0.5, 0.025, 0.34)
 material = SubResource("StandardMaterial3D_journal_pages")
 size = Vector3(0.23, 0.02, 0.32)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_letter"]
+albedo_color = Color(0.9, 0.83, 0.66, 1)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_letter_ink"]
+albedo_color = Color(0.1, 0.07, 0.06, 1)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_letter_seal"]
+albedo_color = Color(0.5, 0.07, 0.05, 1)
+roughness = 0.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_letter_sheet"]
+material = SubResource("StandardMaterial3D_letter")
+size = Vector3(0.26, 0.003, 0.34)
+
+[sub_resource type="BoxMesh" id="BoxMesh_letter_line"]
+material = SubResource("StandardMaterial3D_letter_ink")
+size = Vector3(0.18, 0.001, 0.006)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_letter_seal"]
+material = SubResource("StandardMaterial3D_letter_seal")
+top_radius = 0.026
+bottom_radius = 0.026
+height = 0.008
+radial_segments = 12
+rings = 1
+
 [node name="Plaine" type="Node3D"]
 script = ExtResource("1_plaine")
 soot_material = SubResource("ShaderMaterial_soot")
@@ -438,6 +466,73 @@ board_height = 1.45
 line_height = 0.14
 roof = true
 
+[node name="Fete" type="Node3D" parent="Exterior/Lore"]
+transform = Transform3D(0.86603, 0, -0.5, 0, 1, 0, 0.5, 0, 0.86603, 3.15, 1.4, 48.06)
+script = ExtResource("12_readable")
+title = "L'affiche de la fête des foins"
+body = "Grande fête des foins d'Hexcole, an 5804, au premier jour de l'été, dans les prairies devant la bibliothèque. Fauche à l'aube, repas au bord des champs, concours du plus beau mouton et bal des moissonneurs à la nuit tombée. La bibliothécaire lira aux enfants l'histoire de Devlyn, vainqueur des Quatre Dragons du Chaos il y a deux ans. Elle mène la fête comme tous ses chantiers : chaque volontaire inscrit son nom au registre, et chacun saura sa tâche et son heure.
+
+En travers de l'affiche, quelqu'un a écrit au charbon : « Fête annulée. Vibelandia nous a déclaré la guerre. »"
+prompt = "Lire l'affiche"
+radius = 2.4
+
+[node name="Sign" type="Node3D" parent="Exterior/Lore/Fete"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.4, -0.3)
+script = ExtResource("13_sign")
+text = "Fête des foins d'Hexcole"
+board_size = Vector2(1.3, 0.78)
+board_height = 1.4
+line_height = 0.17
+
+[node name="Arpenteur" type="Node3D" parent="Exterior/Lore"]
+transform = Transform3D(0.76604, 0, 0.64279, 0, 1, 0, -0.64279, 0, 0.76604, -4.107, 1.3, 35.23)
+script = ExtResource("12_readable")
+title = "Le relevé de l'arpenteur royal"
+body = "Relevé de l'arpenteur du roi Codeon V, an 5811.
+
+Les prairies d'Hexcole ne sont plus qu'un champ de bataille. J'ai compté sept cratères, creusés par les boulets de feu de Vibelandia ; au fond des plus profonds, la roche a fondu et la lave affleure. Une coulée relie maintenant deux d'entre eux et passe sous le pont du chemin.
+
+La terre est chaude jusqu'au pied du Mont Sam Altan, endormi depuis des siècles. Pourvu que les explosions ne le réveillent pas.
+
+Voyageur : ne quitte pas le pont, et n'approche pas des lacs de feu."
+prompt = "Lire le panneau"
+radius = 2.4
+
+[node name="Sign" type="Node3D" parent="Exterior/Lore/Arpenteur"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.3, -0.3)
+script = ExtResource("13_sign")
+text = "Danger : terre brûlante"
+board_size = Vector2(1.2, 0.66)
+board_height = 1.3
+line_height = 0.16
+
+[node name="Proclamation" type="Node3D" parent="Exterior/Lore"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.9, 1.55, 8.57)
+script = ExtResource("12_readable")
+title = "La proclamation du roi"
+body = "Proclamation du roi Codeon V, an 5812.
+
+Codia ne peut plus contenir l'ennemi. Habitants d'Hexcole, quittez vos fermes et rejoignez sans attendre l'ancien bunker souterrain creusé non loin du château, bâti jadis pour servir de refuge en cas de catastrophe. N'emportez que de l'eau, du pain et une couverture. Les lourdes portes se refermeront à la nuit tombée.
+
+Au bas de l'affiche, d'une écriture pressée : « La bibliothécaire est restée pour sceller ses archives. Gardez-lui une place. »"
+prompt = "Lire la proclamation"
+radius = 2.4
+
+[node name="Sign" type="Node3D" parent="Exterior/Lore/Proclamation"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.55, -0.3)
+script = ExtResource("13_sign")
+text = "PROCLAMATION ROYALE
+
+Habitants d'Hexcole, rejoignez sans attendre le bunker, non loin du château.
+
+Codeon V, roi de Codia"
+style = 2
+mount = 1
+board_size = Vector2(0.9, 1.1)
+board_height = 1.55
+line_height = 0.09
+serif = false
+
 [node name="Life" type="Node3D" parent="Exterior" node_paths=PackedStringArray("player", "decor")]
 script = ExtResource("42_life")
 player = NodePath("../../Player")
@@ -560,6 +655,124 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, -0.8)
 script = ExtResource("11_interactable")
 prompt = "Sortir de la bibliothèque"
 radius = 2.0
+
+[node name="Lore" type="Node3D" parent="Interior"]
+
+[node name="Lettre" type="Node3D" parent="Interior/Lore"]
+transform = Transform3D(0.97815, 0, -0.20791, 0, 1, 0, 0.20791, 0, 0.97815, 2.15, 0.9825, -7.12)
+script = ExtResource("12_readable")
+title = "La lettre de la bibliothécaire"
+body = "À toi qui descends dans les archives.
+
+Les troupes de Vibelandia sont aux portes des plaines. Je ne leur laisserai pas le Projenomicon : il repose derrière la grande dalle. La tablette à six emplacements des anciens bâtisseurs ne la rouvrira qu'à celui qui lui rendra, dans le même ordre, les paroles que je lui ai confiées.
+
+Ce sont les six répliques de ma dernière réunion avec mon employé. J'ai caché chaque morceau du compte rendu dans un livre de ces salles : un pillard ne lit pas, il brûle ; toi, tu liras. L'ordre est celui de tous nos projets, de la première idée au dernier bilan. Si tu te trompes, la pierre tremble.
+
+Ce soir, je rejoins les habitants au bunker du roi.
+La bibliothécaire d'Hexcole, an 5812"
+prompt = "Lire la lettre"
+radius = 2
+
+[node name="Sheet" type="MeshInstance3D" parent="Interior/Lore/Lettre"]
+mesh = SubResource("BoxMesh_letter_sheet")
+
+[node name="Line1" type="MeshInstance3D" parent="Interior/Lore/Lettre"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0, 0.002, -0.125)
+mesh = SubResource("BoxMesh_letter_line")
+
+[node name="Line2" type="MeshInstance3D" parent="Interior/Lore/Lettre"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0, 0.002, -0.085)
+mesh = SubResource("BoxMesh_letter_line")
+
+[node name="Line3" type="MeshInstance3D" parent="Interior/Lore/Lettre"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0, 0.002, -0.045)
+mesh = SubResource("BoxMesh_letter_line")
+
+[node name="Line4" type="MeshInstance3D" parent="Interior/Lore/Lettre"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0, 0.002, -0.005)
+mesh = SubResource("BoxMesh_letter_line")
+
+[node name="Line5" type="MeshInstance3D" parent="Interior/Lore/Lettre"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0, 0.002, 0.035)
+mesh = SubResource("BoxMesh_letter_line")
+
+[node name="Line6" type="MeshInstance3D" parent="Interior/Lore/Lettre"]
+transform = Transform3D(0.55, 0, 0, 0, 1, 0, 0, 0, 1, -0.0405, 0.002, 0.075)
+mesh = SubResource("BoxMesh_letter_line")
+
+[node name="Seal" type="MeshInstance3D" parent="Interior/Lore/Lettre"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.06, 0.0055, 0.12)
+mesh = SubResource("CylinderMesh_letter_seal")
+
+[node name="Greffier" type="Node3D" parent="Interior/Lore"]
+transform = Transform3D(-0.96126, 0, -0.27564, 0, 1, 0, 0.27564, 0, -0.96126, 2.48, 0.697, -15.95)
+script = ExtResource("12_readable")
+title = "Les notes du greffier"
+body = "Notes du greffier, réunion sur la restauration des archives.
+
+La bibliothécaire et son employé ont parlé chacun son tour : elle propose, il répond, et chaque réplique reprend le fil de la précédente. Six répliques en tout, que j'ai recopiées dans l'ordre sur une seule feuille.
+
+Ce soir, la bibliothécaire m'a repris la feuille. Elle l'a découpée aux ciseaux, une réplique par morceau, et m'a fait promettre de ne jamais en dire l'ordre. Je tiens ma promesse."
+prompt = "Lire les notes"
+radius = 2.2
+
+[node name="Sheet" type="MeshInstance3D" parent="Interior/Lore/Greffier"]
+mesh = SubResource("BoxMesh_letter_sheet")
+
+[node name="Under" type="MeshInstance3D" parent="Interior/Lore/Greffier"]
+transform = Transform3D(0.98769, 0, 0.15643, 0, 1, 0, -0.15643, 0, 0.98769, 0.03, -0.0025, -0.025)
+mesh = SubResource("BoxMesh_letter_sheet")
+
+[node name="Line1" type="MeshInstance3D" parent="Interior/Lore/Greffier"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0, 0.002, -0.125)
+mesh = SubResource("BoxMesh_letter_line")
+
+[node name="Line2" type="MeshInstance3D" parent="Interior/Lore/Greffier"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0, 0.002, -0.085)
+mesh = SubResource("BoxMesh_letter_line")
+
+[node name="Line3" type="MeshInstance3D" parent="Interior/Lore/Greffier"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0, 0.002, -0.045)
+mesh = SubResource("BoxMesh_letter_line")
+
+[node name="Line4" type="MeshInstance3D" parent="Interior/Lore/Greffier"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0, 0.002, -0.005)
+mesh = SubResource("BoxMesh_letter_line")
+
+[node name="Line5" type="MeshInstance3D" parent="Interior/Lore/Greffier"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0, 0.002, 0.035)
+mesh = SubResource("BoxMesh_letter_line")
+
+[node name="Line6" type="MeshInstance3D" parent="Interior/Lore/Greffier"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0, 0.002, 0.075)
+mesh = SubResource("BoxMesh_letter_line")
+
+[node name="Line7" type="MeshInstance3D" parent="Interior/Lore/Greffier"]
+transform = Transform3D(0.55, 0, 0, 0, 1, 0, 0, 0, 1, -0.0405, 0.002, 0.115)
+mesh = SubResource("BoxMesh_letter_line")
+
+[node name="Reglement" type="Node3D" parent="Interior/Lore"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.95, 1.65, -11.45)
+script = ExtResource("12_readable")
+title = "Le règlement de la bibliothèque"
+body = "Règlement de la bibliothèque d'Hexcole, sous l'autorité de la bibliothécaire.
+
+I. On parle bas : les livres dorment.
+II. Tout livre emprunté s'inscrit au registre, avec le nom du lecteur et la date.
+III. Un livre sorti de son rang porte un signet, pour qu'on sache où le remettre.
+IV. Chaque chantier se mène pas à pas : on ne passe à l'étape suivante qu'une fois la précédente achevée.
+V. Pas de bougie entre les rayonnages, pas de feu près des archives."
+prompt = "Lire le règlement"
+radius = 2.2
+
+[node name="Sign" type="Node3D" parent="Interior/Lore/Reglement"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.65, -0.3)
+script = ExtResource("13_sign")
+text = "Règlement de la bibliothèque"
+mount = 1
+board_size = Vector2(1.1, 0.7)
+board_height = 1.65
+line_height = 0.15
 
 [node name="Books" type="Node3D" parent="Interior"]
 

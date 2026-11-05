@@ -30,5 +30,8 @@ Les eaux peu profondes ralentissent le joueur ; dans les eaux profondes, la vase
 | `swamp_fog.gdshader`, `reeds_sway.gdshader` | Brume qui roule au ras de l'eau, roseaux qui ondulent |
 | `moss_overlay.gdshader`, `crypt_stone.gdshader` | Mousse et poussière en surcouche, dalles de pierre froide de la crypte |
 | `marais_ground.gdshader`, `swamp_water.gdshader` | Sol et eau stagnante |
+| `marais_batch.gd` | Regroupement du décor fixe au chargement, pour le web : par cases (32 m dehors, 12 m dans la crypte), les modèles d'un même matériau sont fondus en un seul maillage ; les petits objets ne projettent plus d'ombre et s'effacent au-delà de 40 m |
+
+Pour le web, le niveau ne dessine que le côté où l'on est (le dehors ou la crypte, `OUTSIDE_NODES` dans `marais.gd`), les lumières du dehors s'éteignent au-delà de 46 m et celles de la crypte ne portent que sur leur pièce. Mesures avant et après : `docs/agents/marais/PERFORMANCES.md`.
 
 `marais.tscn` est écrit par un script Python (textes, indices, tombeaux de jeu, niches de l'ossuaire, lumières) : modifier ce script plutôt que la scène.
