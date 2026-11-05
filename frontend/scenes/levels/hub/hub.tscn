@@ -2201,3 +2201,7 @@ volume_db = -8.0
 autoplay = true
 
 [node name="Hud" parent="." instance=ExtResource("8_hud")]
+
+[editable path="Characters/Merlon/Model"]
+
+[editable path="Characters/Codeon/Model"]

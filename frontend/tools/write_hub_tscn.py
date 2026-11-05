@@ -934,6 +934,11 @@ def main():
     node(lines, "TremorSound", "AudioStreamPlayer", props=['stream = ExtResource("46_rumble")', "volume_db = -9.0", "pitch_scale = 0.6"])
     node(lines, "Ambience", "AudioStreamPlayer", props=['stream = ExtResource("40_ambience")', "volume_db = -8.0", "autoplay = true"])
     node(lines, "Hud", instance="8_hud")
+    # Les apparats du roi et de Merlon sont accrochés aux os de leur modèle importé. Sans ces marqueurs
+    # (« enfants modifiables »), l'export, qui convertit la scène en binaire, les perd : le jeu en ligne les montrait
+    # sans couronne, cape, sceptre, chapeau, barbe ni bâton.
+    for character in ("Merlon", "Codeon"):
+        lines += [f'[editable path="Characters/{character}/Model"]', ""]
     out = FRONTEND / "scenes" / "levels" / "hub" / "hub.tscn"
     out.write_text("\n".join(lines).rstrip("\n") + "\n", encoding="utf-8", newline="\n")
     print(out.name, len(lines), "lignes")
