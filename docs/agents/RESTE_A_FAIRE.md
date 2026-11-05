@@ -1,42 +1,54 @@
 # Reste à faire après la nuit du 4 au 5 novembre
 
-Le journal complet de la nuit est sur le serveur, dans `~/cdp-work/JOURNAL.md`.
+Le journal complet de la nuit est sur le serveur, dans `~/cdp-work/JOURNAL.md`. Chaque livraison ci-dessous a passé la suite complète des tests de scène et `run_tests` (49 sur 49), et a été déployée.
 
-## Livré cette nuit (dans `dev` et `main`, déployé)
-- Lot du 4 novembre : passes au centimètre du Hub, de la Plaine et du Désert, PR #11 (livrable L4), PR #12 (intégration Godot ↔ API).
-- Marais : performances web finies et vérifiées. Appels de dessin divisés par 4 à 7 dehors, nœuds de 3 561 à 1 788, objets qui projettent une ombre de 1 170 à 201 (`docs/agents/marais/PERFORMANCES.md`).
-- Plaine : six textes à lire (fête des foins, relevé de l'arpenteur, proclamation du roi, lettre de la bibliothécaire, règlement, notes du greffier), indices mis à jour, dessus des tables mesuré sur leur maillage.
-- Désert :
-  - contournement des panneaux sur poteaux retiré ;
-  - 4 marches de plus de 0,4 m réglées ;
-  - congères des épaves avec leur collision ;
-  - tourbillons de sable, caravane fantôme sur les crêtes, mirage de l'oasis.
-- Corrections partagées :
-  - fumées préchauffées aussi quand elles sont chargées avec une scène (`smoke_effect.gd`) ;
-  - bandeau « Mauvaise réponse » en haut de l'écran, avec le « −5:00 » dedans (en bas pour le dispositif du Village) ;
+## Livré cette nuit (dans `dev` et `main`)
+- **Lot du 4 novembre :** passes au centimètre du Hub, de la Plaine et du Désert, PR #11 (livrable L4), PR #12 (intégration Godot ↔ API).
+- **Hub :**
+  - intérieurs des 12 bâtiments et des 16 maisons, meublés en bois, avec âtres, lampes chaudes et plafonds solides ;
+  - porte de l'observatoire qu'on passe avec E, et 13 textes à lire ;
+  - collisions des engins de siège à leur emprise réelle.
+- **Plaine :**
+  - six textes à lire ;
+  - décor fixe fondu par matériau : 25 à 35 % d'appels de dessin en moins dehors, 2,3 à 2,7 fois moins dans les archives ;
+  - dos des panneaux écrits des deux côtés, et lueurs derrière les dos sombres.
+- **Désert :**
+  - contournement des panneaux sur poteaux retiré, et 4 marches réglées ;
+  - tourbillons de sable, caravane fantôme, mirage de l'oasis ;
+  - collisions au plus près du visible : de 310 contacts légers à 60.
+- **Marais :**
+  - performances web : appels de dessin divisés par 4 à 7 dehors ;
+  - 5 textes à lire (dont l'ardoise d'Ada, qui montre la méthode sur un autre mot), et fond des niches éclairci.
+- **Village :**
+  - passe au centimètre : grilles de marche à 0 problème, salle secrète, fumées au-dessus de la tête ;
+  - `arch_fill()` aux portes voûtées ;
+  - porte du tonnelier tournée vers la place ;
+  - ruisseau en eau jusqu'au talus aux deux bouts.
+- **Corrections partagées :**
+  - fumées préchauffées au chargement ;
+  - bandeau « Mauvaise réponse » en haut de l'écran, avec le « −5:00 » dedans ;
   - croix du dispositif du Village sous le chronomètre ;
-  - `check_overlaps.py` sans effet de bord.
+  - `check_overlaps.py` sans effet de bord ;
+  - changement de scène attendu après la physique quand un portail le déclenche.
 
-## Travail des agents en cours à la clôture
-Voir la dernière section du journal de la nuit : ce qui a été commité, vérifié et fusionné, ou laissé sur la branche `agents/<lieu>`.
-- Village (`agents/village`) : passe au centimètre, reprise cette nuit.
-- Hub (`agents/hub`) : intérieurs des nouveaux bâtiments, puis villageois qui vivent après la victoire, puis performances web.
-- Marais (`agents/marais`) : textes à lire dans le décor.
-- Plaine (`agents/plaine`) : performances web.
-- Désert (`agents/desert`) : 310 contacts où une collision dépasse le visible de 0,5 à 1 m (rochers de la chambre du zénith en premier).
-
-## Corrections relevées
-- `arch_fill()` : `doorway()` laisse un trou de ± 0,95 m pour une arche visible de ± 0,80 m. Le Hub (2 appels) et le Village (`vdoorway`) doivent appeler `arch_fill()` ; le Désert et le Marais n'utilisent pas `doorway()`.
-- Le chronomètre du HUD passe sous le cadre des panneaux d'énigme : le HUD est dessiné sous eux.
-- Dos des panneaux et des rayonnages très sombres à contre-jour (Marais, Plaine) : dos plus clair ou `double_sided`.
-- `tree_collision_test` ne voit plus les arbres morts du Marais, fondus dans le décor : la grille de marche du Marais les vérifie.
-- Restes acceptés, à revoir si le temps le permet :
-  - Plaine : 1 732 cases sur le dessus d'objets non atteintes ;
-  - Hub : boîtes des engins de siège un peu larges.
+## Corrections relevées, non faites
+- **Village :**
+  - 12 chutes libres de 1,2 à 1,9 m au bout nord du ruisseau, vers (-37 à -40, -46 à -50,5) : sans doute un rocher ou le pied d'un arbre à l'entrée du talus, à confirmer sur captures ;
+  - grille de captures à 4 m du bourg (357 points prêts sur le serveur) ;
+  - marche du joueur au bout sud du ruisseau après la correction.
+- **Désert :** 60 contacts légers restants, surtout les bords hauts des prismes des tas de briques épars.
+- **`arch_fill()` :** au-dessus de 2,3 m, ses marches arrêtent la collision 0,21 m avant l'arche visible. Ça ne se sent qu'en sautant ; il faudrait une marche de plus dans `build_plaine.py`.
+- **Chronomètre :** il passe sous le cadre des panneaux d'énigme, car le HUD est dessiné sous eux.
+- **Dos des panneaux (`sign_board.gd`) :** il n'est éclairé que par la lumière ambiante. Les lieux le compensent par des lueurs ou par `double_sided`.
+- **Ombres de la Plaine :** le soleil en 2 tranches d'ombre réduirait les appels de dessin de 30 à 45 % dehors, mais fait du moiré au sol. Piste : adoucir le filtrage des ombres dans les réglages du projet.
+- **Regroupement :** `MaraisBatch` et `PlaineBatch` gagneraient à devenir un seul outil dans `scripts/`.
+- **`tests/scenes/hub_houses.json` :** il ne couvre pas les 6 nouveaux bâtiments ni l'observatoire, que vérifie aujourd'hui le `rooms_walk.gd` de l'agent du Hub (`docs/agents/hub/interieurs/`).
+- **`tree_collision_test` :** il ne voit plus les arbres morts du Marais, fondus dans le décor ; la grille de marche du Marais les vérifie.
+- **Reste accepté :** Plaine, 1 732 cases sur le dessus d'objets non atteintes.
 
 ## Backlog des lieux
-- Récit environnemental : Village et Hub (la Plaine est faite, le Marais est en cours).
-- Performances web : Village et Hub (Désert et Marais faits, Plaine en cours).
+- Hub : villageois qui vivent après la victoire, performances web (chaque intérieur ajoute ses MultiMesh), parc et rivière qui reprennent vie par paliers.
+- Village : récit environnemental, performances web.
 - Finitions libres : trois améliorations par lieu (Désert fait).
 - Tâches transversales :
   - HUD dans le style des menus ;
