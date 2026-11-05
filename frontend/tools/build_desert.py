@@ -128,8 +128,10 @@ class DesertScene(Scene):
         self.shapes = {}
         self.extra_colliders = []
         self.footprints = []
-        # Indices des modèles dont desert.gd taille la collision sur leur enveloppe convexe (metadata/hull).
+        # Indices des modèles dont desert.gd taille la collision sur leur enveloppe convexe (metadata/hull), ou sur
+        # leurs triangles (metadata/exact).
         self.hull_models = set()
+        self.exact_models = set()
 
     def shape(self, kind, params, material, position, degrees=0.0, tilt=0.0, roll=0.0, scale=1.0, spin=0.0,
               shadow=True, fade=0.0):
@@ -200,13 +202,18 @@ class DesertScene(Scene):
         """Le dernier modèle posé aura pour collision l'enveloppe convexe de ses triangles (desert.gd)."""
         self.hull_models.add(len(self.visuals) - 1)
 
+    def exact(self):
+        """Le dernier modèle posé aura pour collision ses propres triangles (desert.gd)."""
+        self.exact_models.add(len(self.visuals) - 1)
+
     def text(self):
         base = super().text()
-        for index in self.hull_models:
-            header = f'[node name="{self.visuals[index][0]}_{index}" parent="Models"'
-            start = base.index(header)
-            end = base.index("\n", start)
-            base = base[:end + 1] + "metadata/hull = true\n" + base[end + 1:]
+        for models, meta in ((self.hull_models, "hull"), (self.exact_models, "exact")):
+            for index in models:
+                header = f'[node name="{self.visuals[index][0]}_{index}" parent="Models"'
+                start = base.index(header)
+                end = base.index("\n", start)
+                base = base[:end + 1] + f"metadata/{meta} = true\n" + base[end + 1:]
         head, separator, body = base.partition(f'[node name="{self.root_name}"')
         head_lines = head.rstrip("\n").split("\n")
         last_ext = max((i for i, line in enumerate(head_lines) if line.startswith("[ext_resource")), default=1)
@@ -611,25 +618,21 @@ def shelf(scene, x, z, degrees, width, depth, height, levels, rng, contents):
 
 
 def build_gate(scene, rng):
-    """Arche d'entrée à z = 16, entre deux pans de muraille qui s'effritent, sur le chemin du portail."""
+    """Arche d'entrée à z = 16, entre deux pans de muraille qui s'effritent, sur le chemin du portail.
+    La muraille a pour collision les triangles de ses modèles (metadata/exact, desert.gd) : le socle et la corniche
+    qui débordent, le fût en retrait et la courbe de l'arche, que des boîtes ne suivaient pas (mur invisible de
+    0,25 m le long du fût et dans l'ouverture, pierre traversée aux épaules de l'arche). Sa grille, qui ne
+    servait à rien, est retirée au chargement (desert.gd) : l'arche reste grande ouverte."""
     z = 16.0
     scene.add("mini_arena/wall-gate", (0.0, 0.0, z), 0.0, GATE_SCALE)
-    side = (0.5 - GATE_HALF_OPENING) * GATE_SCALE
-    offset = (GATE_HALF_OPENING * GATE_SCALE) + side / 2
-    for sign in (-1, 1):
-        scene.add_box((sign * offset, GATE_SCALE / 2, z), (side, GATE_SCALE, 0.6 * GATE_SCALE))
-    lintel = GATE_SCALE * (1 - GATE_OPENING_HEIGHT)
-    scene.add_box((0.0, GATE_SCALE - lintel / 2, z), (GATE_HALF_OPENING * 2 * GATE_SCALE, lintel, 0.6 * GATE_SCALE))
+    scene.exact()
     for sign in (-1, 1):
         for index, model in enumerate(("wall", "wall", "wall-corner")):
             x = sign * (GATE_SCALE * (index + 1))
             scene.add(f"mini_arena/{model}", (x, 0.0, z), 0.0 if sign > 0 else 180.0, GATE_SCALE)
-            if model == "wall-corner":
-                # L'angle du kit est en L, aux faces creusées : sa collision suit ses triangles (EXACT_MODELS de
-                # desert.gd) ; deux boîtes d'1 m d'épaisseur débordaient de 0,5 à 1 m par endroits.
-                pass
-            else:
-                scene.add_box((x, GATE_SCALE / 2, z), (GATE_SCALE, GATE_SCALE, 0.6 * GATE_SCALE))
+            # L'angle du kit est en L, aux faces creusées : sa collision suit déjà ses triangles (EXACT_MODELS).
+            if model == "wall":
+                scene.exact()
         # Longues bannières plantées devant l'arche, côté portail : leur toile a sa collision.
         scene.add("castle_kit/flag-banner-long", (sign * 3.0, 0.0, z + 1.8), -90.0, 2.4)
         scene.add_box((sign * 3.0, 2.6, z + 1.85), (1.6, 5.2, 0.35))
