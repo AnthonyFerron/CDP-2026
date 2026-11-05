@@ -48,7 +48,7 @@ mode `all`, l'invite de chacun des autres interactables du lieu, pour vérifier 
 | 17 | Lettre de la bibliothécaire | `lore_test` (cadre du lecteur) | 18 lignes : le lecteur prenait presque tout l'écran (50 à 1030 px sur 1080) | Texte resserré |
 | 18 | Notes du greffier | `lore_test` | Rayon 1,8 : 5 places seulement d'où lire | Rayon 2,2 |
 
-Résultat : `lore_test all` 160 OK, 0 échec (les 6 textes et les 26 autres interactables gardent leur invite) ; `plaine_puzzle_test` 34 OK ; `signboard_test` 8 OK ; les trois indices (fenêtre H) tiennent dans leur cadre ; captures rapprochées de chaque texte (face, profil, depuis le chemin), toutes regardées.
+Résultat : `lore_test all` 160 OK, 0 échec (les 6 textes et les 20 autres interactables du lieu gardent leur invite) ; `plaine_puzzle_test` 34 OK ; `signboard_test` 8 OK ; les trois indices (fenêtre H) tiennent dans leur cadre ; captures rapprochées de chaque texte (face, profil, depuis le chemin), toutes regardées.
 
 ## Restent, signalés
 
