@@ -320,14 +320,6 @@ size = Vector3(4.0, 0.3, 4.2)
 material = SubResource("StandardMaterial3D_cave_stone")
 size = Vector3(4.0, 1.45, 0.4)
 
-[sub_resource type="BoxMesh" id="BoxMesh_shaft_side"]
-material = SubResource("StandardMaterial3D_cave_stone")
-size = Vector3(0.6, 1.45, 4.0)
-
-[sub_resource type="BoxMesh" id="BoxMesh_shaft_back"]
-material = SubResource("StandardMaterial3D_cave_stone")
-size = Vector3(4.0, 1.45, 0.6)
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_cellar_ramp"]
 size = Vector3(2.8, 0.6, 4.54)
 
@@ -388,6 +380,22 @@ top_radius = 0.09
 bottom_radius = 0.06
 height = 0.8
 
+[sub_resource type="CylinderMesh" id="CylinderMesh_torch_collar"]
+material = SubResource("StandardMaterial3D_iron")
+top_radius = 0.095
+bottom_radius = 0.095
+height = 0.07
+radial_segments = 8
+rings = 1
+
+[sub_resource type="BoxMesh" id="BoxMesh_torch_arm"]
+material = SubResource("StandardMaterial3D_iron")
+size = Vector3(0.2, 0.05, 0.05)
+
+[sub_resource type="BoxMesh" id="BoxMesh_torch_plate"]
+material = SubResource("StandardMaterial3D_iron")
+size = Vector3(0.03, 0.24, 0.14)
+
 [sub_resource type="BoxMesh" id="BoxMesh_pedestal"]
 material = SubResource("StandardMaterial3D_sandstone")
 size = Vector3(1.4, 1.1, 0.9)
@@ -447,22 +455,29 @@ RUNES = [
     ("porter", 8.4, 0.0, 7.6, False, False),
     ("pour", 2.6, 0.0, 12.0, False, False),
     ("puiser", -9.0, 0.0, -1.0, False, True),
-    ("si", -7.0, 0.94, -1.9, True, False),
-    ("fermer", 7.0, 0.94, -1.9, True, False),
-    ("ouvrir", -6.5, 0.0, -8.8, True, True),
-    ("sinon", 6.0, 0.0, -4.4, True, True),
+    ("si", -7.0, 0.94, -2.3, True, False),
+    ("fermer", 7.0, 0.94, -2.3, True, False),
+    ("ouvrir", -5.6, 0.0, -8.4, True, True),
+    ("sinon", 6.2, 0.0, -6.2, True, True),
 ]
 # Tas de sable : position (x, z), dans la cave, rune cachée dessous.
 PILES = [
     ("PileWest", -9.0, -1.0, False, "puiser"),
     ("PileEastRoom", 15.6, -9.4, False, ""),
     ("PileGate", -4.0, 8.0, False, ""),
-    ("PileCaveWest", -6.5, -8.8, True, "ouvrir"),
-    ("PileCaveEast", 6.0, -4.4, True, "sinon"),
-    ("PileCaveNorth", -3.6, -8.2, True, ""),
+    ("PileCaveWest", -5.6, -8.4, True, "ouvrir"),
+    ("PileCaveEast", 6.2, -6.2, True, "sinon"),
+    ("PileCaveNorth", 3.8, -9.0, True, ""),
 ]
 # Coffre de pierre du livre, dans le coin nord-est de la cave, sous son tas de sable ; sa face regarde la salle.
-CHEST = (7.6, -9.8, -63.0)
+# Le tas (1,5 m de rayon au pied) s'arrête au pied des plinthes des murs nord et est.
+CHEST = (7.2, -9.3, -63.0)
+# Cave des archives (build_desert.py) : hauteur sous plafond et face des murs est et ouest, à x = ±9,45.
+CELLAR_HEIGHT = 4.8
+WALL_FACE_X = 9.45
+# Torches : leur pied est à TORCH_OFFSET de la face du mur, le manche penché de TORCH_LEAN degrés vers la salle.
+TORCH_OFFSET = 0.22
+TORCH_LEAN = 18.0
 # Un algorithme par mur de la cave : le premier à l'ouest, le second à l'est.
 ALGORITHM_WEST = (
     "Algorithme 1 — Remplir la jarre sacrée\\n"
@@ -518,7 +533,7 @@ LORE = [
      "la porte à clé. » Le maître a rayé les deux lignes et gravé dessous : « Compter les grains ne remplit aucune jarre, "
      "et une porte que l'on ferme ne répond à personne. Ne grave que ce que l'ouvrage demande. »",
      (1, 0, (0.95, 0.62), 0.85, "Tablette d'un apprenti", 0.0)),
-    ("ArchivistScroll", "Interior/Clues", (3.75, 0.64, -2.65), 0.0, "Le rouleau de l'archiviste", "Lire le rouleau", 2.0,
+    ("ArchivistScroll", "Interior/Clues", (4.15, 0.64, -3.2), 0.0, "Le rouleau de l'archiviste", "Lire le rouleau", 2.0,
      "Rouleau resté ouvert sur le pupitre. « Avant d'ouvrir la porte du temple, le gardien pose une question au "
      "voyageur. Si la réponse est la bonne, il agit d'une façon ; sinon, il agit d'une autre, et la cité entière "
      "l'entend. Une condition commence par sa question et s'achève quand ses deux chemins se rejoignent. » En marge, "
@@ -673,17 +688,14 @@ def main():
 
     node(lines, "Interior", "Node3D", props=["transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -40, 0)"])
     node(lines, "Cellar", parent="Interior", instance="7_cellar")
-    # Plafond de pierre sombre sur la salle ; la cage de l'escalier, plus haute, a le sien, raccordé par un linteau.
+    # Plafond de pierre sombre sur la salle, à 4,8 m (CELLAR_HEIGHT de build_desert.py) : le haut des murs entre
+    # dans sa dalle. La cage de l'escalier, plus haute, a le sien, raccordé par un linteau.
     node(lines, "Ceiling", "MeshInstance3D", "Interior", props=[
-        "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.3, -6)", 'mesh = SubResource("BoxMesh_ceiling")'])
+        f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, {CELLAR_HEIGHT + 0.15:g}, -6)", 'mesh = SubResource("BoxMesh_ceiling")'])
     node(lines, "ShaftCeiling", "MeshInstance3D", "Interior", props=[
         "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.55, 2.0)", 'mesh = SubResource("BoxMesh_shaft_ceiling")'])
     node(lines, "ShaftLintel", "MeshInstance3D", "Interior", props=[
         "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.85, 0.2)", 'mesh = SubResource("BoxMesh_shaft_lintel")'])
-    for name, mesh, x, z in (("ShaftWest", "BoxMesh_shaft_side", -1.7, 2.0), ("ShaftEast", "BoxMesh_shaft_side", 1.7, 2.0),
-                             ("ShaftBack", "BoxMesh_shaft_back", 0.0, 3.7)):
-        node(lines, name, "MeshInstance3D", "Interior", props=[
-            f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {x:g}, 4.85, {z:g})", f'mesh = SubResource("{mesh}")'])
     # Escalier de pierre qui remonte vers la trappe, dans la case au sud de la salle : neuf marches de 30 cm,
     # que le joueur monte et descend sur une rampe de collision à 41 degrés, à mi-hauteur de chaque marche.
     node(lines, "Stairs", "StaticBody3D", "Interior")
@@ -698,12 +710,30 @@ def main():
     node(lines, "LightStairs", "OmniLight3D", "Interior", props=[
         "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 2.6)", "light_color = Color(1, 0.88, 0.62, 1)",
         "light_energy = 1.0", "omni_range = 6.0"])
-    # Torches contre les murs est et ouest, de part et d'autre des algorithmes.
-    for index, (x, z) in enumerate(((-9.15, -3.0), (9.15, -3.0), (-9.15, -9.0), (9.15, -9.0))):
+    # Torches contre les murs est et ouest, de part et d'autre des algorithmes : chacune penchée vers la salle, le
+    # pied contre la pierre, tenue par un collier de fer et sa patte scellée dans le mur (face à WALL_FACE_X).
+    lean = math.radians(TORCH_LEAN)
+    for index, (side, z) in enumerate(((-1, -3.0), (1, -3.0), (-1, -9.0), (1, -9.0))):
+        x = side * (WALL_FACE_X - TORCH_OFFSET)
+        c, s_ = math.cos(lean), side * math.sin(lean)
+        top = (-side * math.sin(lean) * 0.45, math.cos(lean) * 0.45)
         node(lines, f"Torch{index}", "Node3D", "Interior", props=[f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {x:g}, 2.2, {z:g})"])
-        node(lines, "Stick", "MeshInstance3D", f"Interior/Torch{index}", props=['mesh = SubResource("CylinderMesh_torch")'])
+        node(lines, "Stick", "MeshInstance3D", f"Interior/Torch{index}", props=[
+            f"transform = Transform3D({c:.5g}, {-s_:.5g}, 0, {s_:.5g}, {c:.5g}, 0, 0, 0, 1, 0, 0, 0)", 'mesh = SubResource("CylinderMesh_torch")'])
+        # Collier autour du manche, au tiers bas, et patte de fer jusqu'au mur.
+        ring = (side * math.sin(lean) * 0.12, -math.cos(lean) * 0.12)
+        node(lines, "Collar", "MeshInstance3D", f"Interior/Torch{index}", props=[
+            f"transform = Transform3D({c:.5g}, {-s_:.5g}, 0, {s_:.5g}, {c:.5g}, 0, 0, 0, 1, {ring[0]:.4g}, {ring[1]:.4g}, 0)",
+            'mesh = SubResource("CylinderMesh_torch_collar")'])
+        arm = (TORCH_OFFSET + ring[0] * side) / 2
+        node(lines, "Arm", "MeshInstance3D", f"Interior/Torch{index}", props=[
+            f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {side * arm:.4g}, {ring[1]:.4g}, 0)",
+            'mesh = SubResource("BoxMesh_torch_arm")'])
+        node(lines, "Plate", "MeshInstance3D", f"Interior/Torch{index}", props=[
+            f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {side * (TORCH_OFFSET - 0.015):.4g}, {ring[1]:.4g}, 0)",
+            'mesh = SubResource("BoxMesh_torch_plate")'])
         node(lines, "Fire", "Node3D", f"Interior/Torch{index}", props=[
-            "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)", 'script = ExtResource("13_fire")', "size = 0.7",
+            f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {top[0]:.4g}, {top[1]:.4g}, 0)", 'script = ExtResource("13_fire")', "size = 0.7",
             "light_energy = 1.5", "light_range = 7.0", 'crackle_sound = ExtResource("52_crackle")', "crackle_volume_db = -14.0"])
     node(lines, "InsideSpawn", "Marker3D", "Interior", props=["transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, -1.0)"])
     # Sortie au milieu de l'escalier : au pied, on la voit devant soi ; en haut, tourné vers le mur du fond, elle reste
@@ -775,15 +805,17 @@ def main():
     node(lines, "Interactable", "Node3D", "Interior/RoundTable", props=[
         "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)", 'script = ExtResource("11_interactable")',
         'prompt = "Examiner la table ronde"', "radius = 2.8"])
-    # Chaque algorithme est gravé sur une dalle de pierre plaquée contre le mur, côté salle :
-    # rien ne la cache et le texte tient dans sa largeur.
+    # Chaque algorithme est gravé sur une dalle de pierre plaquée contre le mur, côté salle, au milieu du mur entre
+    # ses deux torches : son dos touche la face du mur, son pied repose sur la plinthe (1 m), aucun pilier ni meuble
+    # ne se dresse devant, et le texte tient dans son cadre.
     for name, x, yaw, body in (("AlgorithmWall", -9.0, 90.0, ALGORITHM_WEST), ("AlgorithmWallEast", 9.0, -90.0, ALGORITHM_EAST)):
         side = -1.0 if x < 0 else 1.0
+        slab_x = WALL_FACE_X - 0.175 - abs(x)
         node(lines, name, "Node3D", "Interior/Clues", props=[
-            f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {x:g}, 1.6, -6)", 'script = ExtResource("12_readable")',
+            f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {x:g}, 2.35, -6)", 'script = ExtResource("12_readable")',
             'title = "Le mur des algorithmes"', f'body = "{body}"', 'prompt = "Examiner l\'algorithme"', "radius = 3.8"])
         node(lines, "Slab", "StaticBody3D", f"Interior/Clues/{name}", props=[
-            f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {side * 0.2:g}, -0.3, 0)"])
+            f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {side * slab_x:g}, 0, 0)"])
         node(lines, "Mesh", "MeshInstance3D", f"Interior/Clues/{name}/Slab", props=['mesh = SubResource("BoxMesh_algo_slab")'])
         node(lines, "Shape", "CollisionShape3D", f"Interior/Clues/{name}/Slab", props=[
             'shape = SubResource("BoxShape3D_algo_slab")'])
@@ -794,7 +826,7 @@ def main():
                 f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {face_x:g}, {y:g}, {z:g})", f'mesh = SubResource("{mesh}")'])
         # Le texte part du bord gauche de la dalle, vu de la salle, et s'étend vers la droite.
         node(lines, "Text", "Label3D", f"Interior/Clues/{name}", props=[
-            at(side * 0.012, 0.0, -side * 1.7, 1.0, yaw), "pixel_size = 0.0024", "shaded = true", "double_sided = false",
+            at(side * (slab_x - 0.175 - 0.012), 0.0, -side * 1.7, 1.0, yaw), "pixel_size = 0.0024", "shaded = true", "double_sided = false",
             "alpha_cut = 1", "modulate = Color(0.86, 0.66, 0.3, 1)", f'text = "{body}"', "font_size = 64", "outline_size = 0",
             "horizontal_alignment = 0"])
     # Coffre du livre, au centre du fond, devant la porte scellée.

@@ -1064,7 +1064,17 @@ def build_dune_ruins(scene, rng):
 # --- Cave des archives ------------------------------------------------------------------------------------
 
 CELLAR_TILE = 4.0
-CELLAR_HEIGHT = 4.15
+# Hauteur sous plafond de la salle. Les murs du kit (4,15 m) sont étirés jusqu'à entrer de WALL_TUCK dans la dalle du
+# plafond : aucun jour ne reste entre le haut des murs et le plafond, d'où l'on voyait le ciel du dehors.
+CELLAR_HEIGHT = 4.8
+WALL_MODEL_HEIGHT = 4.15
+DOOR_MODEL_HEIGHT = 4.4
+WALL_TUCK = 0.2
+# Profil des murs du kit, depuis le bord de la case : la face du mur à 0,55 m (bosses à 0,63 m), la plinthe
+# jusqu'à 1 m de haut à 0,8 m, et son pied chanfreiné jusqu'à 1,2 m au ras du sol. Les meubles posés contre un mur
+# s'arrêtent à WALL_CLEAR du bord, ce qui se dresse au-dessus de la plinthe s'appuie sur WALL_FACE.
+WALL_FACE = 0.55
+WALL_CLEAR = 1.25
 # Cases de 4 m de la cave, par leur centre : la salle de 5 × 3 cases (x de -10 à 10, z de 0 à -12) et, au sud,
 # la case de l'escalier qui remonte vers la trappe. Les murs ont 0,6 m d'épaisseur, vers l'intérieur des cases.
 CELLAR_TILES = [(x, z) for x in (-8.0, -4.0, 0.0, 4.0, 8.0) for z in (-2.0, -6.0, -10.0)] + [(0.0, 2.0)]
@@ -1079,65 +1089,71 @@ SHAFT_HEIGHT = 5.4
 def build_cellar(scene, rng):
     """Cave des archives, sombre et poussiéreuse : la table ronde de pierre au centre (desert.tscn), un algorithme
     gravé sur chaque mur, la porte scellée au fond sous son inscription, le coffre de pierre dans le coin nord-est
-    sous son tas de sable, des étagères de tablettes et de rouleaux, des coffres et des jarres."""
+    sous son tas de sable, des étagères de tablettes et de rouleaux, un pupitre, des coffres et des urnes.
+    Tout ce qui est posé contre un mur s'arrête au pied de sa plinthe (WALL_CLEAR) : rien n'entre dans le mur, et
+    les deux tables des runes, le pupitre et les tas de sable restent dégagés, à un pas les uns des autres."""
     tiles = set(CELLAR_TILES)
+    west, east, north, south = -10.0 + WALL_CLEAR, 10.0 - WALL_CLEAR, -12.0 + WALL_CLEAR, -WALL_CLEAR
     for x, z in CELLAR_TILES:
         scene.add("modular_dungeon_kit/template-floor", (x, 0.0, z), 0.0, 1.0)
         scene.add_box((x, -0.25, z), (CELLAR_TILE, 0.5, CELLAR_TILE))
         # La cage de l'escalier monte plus haut que la salle : on tient debout sur la dernière marche.
         ceiling = SHAFT_HEIGHT if (x, z) == STAIR_TILE else CELLAR_HEIGHT
         scene.add_box((x, ceiling + 0.25, z), (CELLAR_TILE, 0.5, CELLAR_TILE))
-        # Un mur sur chaque bord qui ne donne sur aucune case : son pied regarde l'intérieur de la case.
+        # Un mur sur chaque bord qui ne donne sur aucune case : son pied regarde l'intérieur de la case, son haut
+        # entre dans la dalle du plafond.
         for (dx, dz), degrees in CELLAR_NEIGHBOURS.items():
             if (x + dx * CELLAR_TILE, z + dz * CELLAR_TILE) in tiles:
                 continue
             edge = (x + dx * CELLAR_TILE / 2, z + dz * CELLAR_TILE / 2)
             model = "gate-door" if edge == SEALED_DOOR else "template-wall"
-            scene.add(f"modular_dungeon_kit/{model}", (edge[0], 0.0, edge[1]), degrees, 1.0)
-            height = SHAFT_HEIGHT if (x, z) == STAIR_TILE else CELLAR_HEIGHT
-            size = (0.6, height, CELLAR_TILE) if dx else (CELLAR_TILE, height, 0.6)
-            scene.add_box((edge[0] - dx * 0.3, height / 2, edge[1] - dz * 0.3), size)
+            model_height = DOOR_MODEL_HEIGHT if edge == SEALED_DOOR else WALL_MODEL_HEIGHT
+            stretch = (ceiling + WALL_TUCK) / model_height
+            scene.add(f"modular_dungeon_kit/{model}", (edge[0], 0.0, edge[1]), degrees, (1.0, stretch, 1.0))
+            size = (0.6, ceiling, CELLAR_TILE) if dx else (CELLAR_TILE, ceiling, 0.6)
+            scene.add_box((edge[0] - dx * 0.3, ceiling / 2, edge[1] - dz * 0.3), size)
     # Derrière la porte scellée, la roche : on ne voit plus le vide par les jours de l'arc.
-    scene.shape("box", {"size": (6.4, 4.6, 0.2)}, "void", (0.0, 2.3, -12.85), shadow=False)
-    # Colonnes de part et d'autre de la porte scellée.
-    for x in (-4.0, 4.0):
-        scene.add("mini_dungeon/column", (x, 0.0, -10.2), 0.0, 3.6)
-        scene.column_collider(x, -10.2, 0.5 * 3.6, 1.1 * 3.6)
-    # Tables de part et d'autre de l'escalier : une rune est posée sur chacune, bien en vue (desert.tscn).
+    scene.shape("box", {"size": (6.4, CELLAR_HEIGHT + 0.3, 0.2)}, "void", (0.0, (CELLAR_HEIGHT + 0.3) / 2, -12.85), shadow=False)
+    # Tables de part et d'autre de l'escalier : une rune est posée sur chacune, bien en vue (desert.tscn, RUNES).
     for x in (-7.0, 7.0):
-        furniture(scene, "mini_dungeon/table", (x, 0.0, -1.9), 0.0, 3.0, height=0.93)
+        furniture(scene, "mini_dungeon/table", (x, 0.0, -2.3), 0.0, 3.0, height=0.93)
     # Poutres du plafond.
     for z in (-3.0, -7.0, -11.0):
         scene.shape("box", {"size": (18.8, 0.35, 0.4)}, "wood_dark", (0.0, CELLAR_HEIGHT - 0.18, z))
-    # Archives : étagère de tablettes au nord-ouest, casiers à rouleaux de part et d'autre de l'escalier.
-    shelf(scene, -7.0, -10.95, 0.0, 2.6, 0.75, 2.7, 4, rng, "tablettes")
-    shelf(scene, -3.9, -0.98, 180.0, 2.5, 0.65, 2.2, 4, rng, "rouleaux")
-    shelf(scene, 3.9, -0.98, 180.0, 2.5, 0.65, 2.2, 4, rng, "rouleaux")
-    # Coffre ouvert le long du mur ouest, des rouleaux rangés dedans ; tablettes empilées près des colonnes.
-    put(scene, "mini_dungeon/chest", (-8.72, 0.0, -9.6), 0.0, 2.2, height=0.62)
+    # Archives : étagère de tablettes au nord-ouest, casiers à rouleaux de part et d'autre de l'escalier, chacun au
+    # pied de la plinthe de son mur.
+    shelf(scene, -7.0, north + 0.375, 0.0, 2.6, 0.75, 2.7, 4, rng, "tablettes")
+    for x in (-3.9, 3.9):
+        shelf(scene, x, south - 0.325, 180.0, 2.5, 0.65, 2.2, 4, rng, "rouleaux")
+    # Coffre ouvert contre le mur ouest, sous la torche du nord, des rouleaux rangés dedans.
+    chest = (west + 0.55, -9.0)
+    put(scene, "mini_dungeon/chest", (chest[0], 0.0, chest[1]), 0.0, 2.2, height=0.62)
     for k in range(3):
         scene.shape("cyl", {"top": 0.055, "bottom": 0.055, "height": 0.6, "segments": 6}, "parchment",
-                    (-8.72 + (k - 1) * 0.14, 0.4, -9.6), 0.0, tilt=90.0, roll=0.0, shadow=False)
-    for x, z in ((-5.25, -11.0), (5.25, -11.0)):
+                    (chest[0] + (k - 1) * 0.14, 0.4, chest[1]), 0.0, tilt=90.0, roll=0.0, shadow=False)
+    # Tablettes empilées de part et d'autre de la porte scellée.
+    for x in (-3.6, 3.6):
         for k in range(rng.randint(4, 7)):
-            scene.shape("box", {"size": (0.42, 0.06, 0.3)}, "tablet", (x + rng.uniform(-0.04, 0.04), 0.03 + k * 0.062, z),
+            scene.shape("box", {"size": (0.42, 0.06, 0.3)}, "tablet", (x + rng.uniform(-0.04, 0.04), 0.03 + k * 0.062, north + 0.3),
                         rng.uniform(-15, 15), shadow=False)
-    # Pupitre de lecture : un rouleau ouvert, l'encrier et des bougies éteintes.
-    furniture(scene, "mini_dungeon/table", (3.9, 0.0, -2.65), 0.0, 2.0, height=0.62)
-    furniture(scene, "mini_dungeon/chair", (3.9, 0.0, -3.75), 180.0, 2.0, height=0.55)
-    scene.shape("box", {"size": (0.7, 0.01, 0.42)}, "parchment", (3.75, 0.63, -2.65), 8.0, shadow=False)
+    # Pupitre de lecture à l'est, entre la table des runes et la table ronde : un rouleau ouvert, l'encrier et des
+    # bougies éteintes ; sa chaise regarde le pupitre, côté table ronde.
+    desk = (4.3, -3.2)
+    furniture(scene, "mini_dungeon/table", (desk[0], 0.0, desk[1]), 0.0, 2.0, height=0.62)
+    furniture(scene, "mini_dungeon/chair", (desk[0], 0.0, desk[1] - 1.15), 180.0, 2.0, height=0.55)
+    scene.shape("box", {"size": (0.7, 0.01, 0.42)}, "parchment", (desk[0] - 0.15, 0.63, desk[1]), 8.0, shadow=False)
     for dx in (-0.37, 0.37):
         scene.shape("cyl", {"top": 0.035, "bottom": 0.035, "height": 0.46, "segments": 6}, "parchment",
-                    (3.75 + dx, 0.66, -2.65), 8.0, tilt=90.0, shadow=False)
-    scene.shape("cyl", {"top": 0.04, "bottom": 0.05, "height": 0.08, "segments": 8}, "ink", (4.45, 0.66, -2.4), shadow=False)
-    furniture(scene, "graveyard_kit/candle-multiple", (3.2, 0.62, -2.35), 0.0, 1.6)
-    # Urnes contre les murs, sous les torches du sud.
-    for x in (-8.9, 8.9):
-        put(scene, "graveyard_kit/urn-round", (x, 0.0, -3.4), rng.uniform(0, 360), 2.8, height=0.78)
+                    (desk[0] - 0.15 + dx, 0.66, desk[1]), 8.0, tilt=90.0, shadow=False)
+    scene.shape("cyl", {"top": 0.04, "bottom": 0.05, "height": 0.08, "segments": 8}, "ink", (desk[0] + 0.55, 0.66, desk[1] + 0.25), shadow=False)
+    furniture(scene, "graveyard_kit/candle-multiple", (desk[0] - 0.7, 0.62, desk[1] + 0.3), 0.0, 1.6)
+    # Urnes au pied des murs est et ouest, sous les torches du sud, à côté des tables des runes.
+    for x in (west + 0.37, east - 0.37):
+        put(scene, "graveyard_kit/urn-round", (x, 0.0, -3.85), rng.uniform(0, 360), 2.8, height=0.78)
     # Rouleaux tombés au pied de l'étagère et poussière dans les coins.
     for k in range(5):
         scene.shape("cyl", {"top": 0.055, "bottom": 0.055, "height": 0.55, "segments": 6}, "parchment",
-                    (-7.6 + k * 0.42 + rng.uniform(-0.1, 0.1), 0.055, -10.25 + rng.uniform(-0.12, 0.12)), rng.uniform(0, 180),
+                    (-7.6 + k * 0.42 + rng.uniform(-0.1, 0.1), 0.055, north + 1.05 + rng.uniform(-0.1, 0.1)), rng.uniform(0, 180),
                     tilt=90.0, shadow=False)
     for x, z, a, b in ((-8.9, -0.9, 0.9, 0.7), (8.9, -11.0, 1.0, 0.9), (-2.2, -11.1, 1.2, 0.5), (2.3, -11.1, 1.2, 0.5)):
         mound(scene, x, z, a, 0.18, b, collide=False)
