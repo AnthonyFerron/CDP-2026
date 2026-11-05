@@ -260,7 +260,7 @@ transform = Transform3D(1.3, 0, 2.25167, 0, 2.6, 0, -2.25167, 0, 1.3, 8.8, 0, 46
 transform = Transform3D(1.90526, 0, -1.1, 0, 2.2, 0, 1.1, 0, 1.90526, 19.0055, 0, 45.5905)
 
 [node name="candle_31" parent="Models" instance=ExtResource("17_model")]
-transform = Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, 18.6, 0.682, 45.4)
+transform = Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, 18.6, 0.693, 45.4)
 
 [node name="chair_32" parent="Models" instance=ExtResource("18_model")]
 transform = Transform3D(-2.07846, 0, 1.2, 0, 2.4, 0, -1.2, 0, -2.07846, 17.2104, 0, 47.506)
@@ -412,7 +412,7 @@ transform = Transform3D(2.99759, 0.68956, -0.8826, 0, 2.52163, 1.97012, 1.12003,
 [node name="Shapes" type="Node3D" parent="."]
 
 [node name="box_0" type="MeshInstance3D" parent="Shapes"]
-transform = Transform3D(0.91355, 0, -0.40674, 0, 1, 0, 0.40674, 0, 0.91355, 19, 0.686, 45.6)
+transform = Transform3D(0.91355, 0, -0.40674, 0, 1, 0, 0.40674, 0, 0.91355, 19, 0.697, 45.6)
 mesh = SubResource("Mesh_3")
 
 [node name="Repeated" type="Node3D" parent="."]
