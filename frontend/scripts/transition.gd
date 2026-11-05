@@ -51,6 +51,12 @@ func change_scene(path: String, lines: Array = []) -> void:
 	if _busy:
 		return
 	var tree := get_tree()
+	# Appelé depuis un signal de la physique (un portail franchi) : changer de scène tout de suite retirait des corps
+	# de collision pendant le calcul de la physique, ce que le moteur signale comme une erreur. On attend l'image.
+	if Engine.is_in_physics_frame():
+		_busy = true
+		await tree.process_frame
+		_busy = false
 	if DisplayServer.get_name() == "headless":
 		tree.paused = false
 		tree.change_scene_to_file(path)
