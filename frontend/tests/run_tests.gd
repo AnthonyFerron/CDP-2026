@@ -239,8 +239,15 @@ func _unit_tests() -> void:
 			["Joueur", "joueur@example.com", "court1", "caractères"]]:
 		var result: Dictionary = await Account.register(case[0], case[1], case[2])
 		_check(not result.ok and case[3] in result.error, "inscription refusée avant envoi : %s" % result.error)
-	var reset_request: Dictionary = await Account.request_password_reset("joueur@example.com")
-	_check(not reset_request.ok and "pas encore disponible" in reset_request.error, "mot de passe oublié : signalé comme indisponible, sans route inventée")
+	var reset_invalid: Dictionary = await Account.request_password_reset("pas-une-adresse")
+	_check(not reset_invalid.ok and "adresse" in reset_invalid.error, "mot de passe oublié : adresse refusée avant envoi")
+	var account_source := FileAccess.get_file_as_string("res://scripts/account.gd")
+	_check('"/password-resets"' in account_source and not "pas encore disponible" in account_source,
+		"mot de passe oublié : branché sur POST /password-resets, plus de message « pas encore disponible »")
+	Account.simulated = true
+	var reset_simulated: Dictionary = await Account.request_password_reset("joueur@example.com")
+	Account.simulated = false
+	_check(reset_simulated.ok and "e-mail" in str(reset_simulated.get("message", "")), "mot de passe oublié : réponse simulée sans serveur")
 
 	# Messages d'erreur de l'API.
 	_check(Api._message(409, "La partie est en pause.") == "La partie est en pause.", "message du serveur repris tel quel")
