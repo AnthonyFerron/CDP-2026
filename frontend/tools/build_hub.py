@@ -1449,8 +1449,9 @@ def furnish_chapel(scene, house, ruined, rng):
         return
     for u in (-0.7, 0.7):
         r.put("graveyard_kit/candle-multiple", u, -hv + 1.15, 0.0, 2.0, y=0.98)
+    # Bronze sombre : l'or clair de 0.55, 0.42, 0.18 ne ressortait qu'à 2,3 pour 1 sur la pierre claire du mur.
     r.inscription("PrayerText", "back", 0.0, 2.75, "QUE L'ORDRE, LA RIGUEUR,\nLA LOGIQUE ET LA CLARTÉ\nVEILLENT SUR CODIA",
-                  pixel=0.0034, color="Color(0.55, 0.42, 0.18, 1)")
+                  pixel=0.0034, color="Color(0.27, 0.17, 0.04, 1)")
     back = r.reader("Prayer", 0.0, -hv + 1.9, 1.0, "La prière des Quatre Livres",
                     "Gravé au-dessus de l'autel : « Que l'ordre du Projenomicon, la rigueur de l'Algonicon, la logique du Logiconomicon et la clarté du Codonomicon veillent sur Codia. » De part et d'autre, quatre lutrins de pierre attendent toujours leurs livres.",
                     radius=2.4)

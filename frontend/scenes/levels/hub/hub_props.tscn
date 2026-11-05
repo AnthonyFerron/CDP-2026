@@ -22889,7 +22889,7 @@ pixel_size = 0.0034
 shaded = true
 double_sided = false
 alpha_cut = 1
-modulate = Color(0.55, 0.42, 0.18, 1)
+modulate = Color(0.27, 0.17, 0.04, 1)
 text = "QUE L'ORDRE, LA RIGUEUR,
 LA LOGIQUE ET LA CLARTÉ
 VEILLENT SUR CODIA"
