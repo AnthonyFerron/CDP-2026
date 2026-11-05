@@ -445,6 +445,9 @@ PORTALS = {"plaine": (-38.0, -38.0), "desert": (38.0, -38.0), "marais": (38.0, 3
 # Salle du trône du château : centre et profondeur, comme dans tools/build_hub.py.
 HALL_Z = -81.0
 HALL_HALF_DEPTH = 6.0
+# Trône contre le mur ouest de la salle (qui va de x = -10 à 10), tourné vers le cercle : au fond de la salle, son
+# estrade recouvrait l'anneau extérieur du cercle (5,62 m de rayon pour 6 m de demi-profondeur).
+THRONE_X = -8.7
 # Cercle magique au milieu de la salle, dans son repère : centre, rayon des piédestaux, rayon des lettres.
 CIRCLE = (0.0, -0.2)
 PEDESTAL_RADIUS = 5.0
@@ -476,7 +479,7 @@ def pedestal_spot(zone):
 # Merlon et le roi dans la salle du trône pour le rituel, les autres autour du feu, face à la caméra de la fin.
 OUTSIDE = {
     "Merlon": (1.2, HALL_Z + 4.1, yaw_toward(CIRCLE[0] - 1.2, CIRCLE[1] - 4.1), 0.1),
-    "Codeon": (-1.3, HALL_Z - 2.6, 20.0, 0.1),
+    "Codeon": (-6.3, HALL_Z - 2.2, 70.0, 0.1),
     "Mira": around_fire(180.0),
     "Bran": around_fire(225.0),
     "Elda": around_fire(270.0),
@@ -736,7 +739,7 @@ def hall(lines):
     for index, x in enumerate((-7.5, -2.5, 2.5, 7.5)):
         node(lines, f"Beam{index}", "MeshInstance3D", "Castle", props=[
             f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {x:g}, 8.7, 0)", 'mesh = SubResource("BoxMesh_beam")'])
-    node(lines, "Throne", "StaticBody3D", "Castle", props=[f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, {-HALL_HALF_DEPTH + 1.3:g})"])
+    node(lines, "Throne", "StaticBody3D", "Castle", props=[at(THRONE_X, 0.0, CIRCLE[1], 1.0, 90.0)])
     for name, mesh, x, y, z in (("Dais", "dais", 0, 0.15, 0), ("Seat", "throne_seat", 0, 0.6, 0.1), ("Back", "throne_back", 0, 1.7, -0.5),
                                 ("ArmLeft", "throne_frame", -0.9, 0.9, 0.05), ("ArmRight", "throne_frame", 0.9, 0.9, 0.05),
                                 ("Crest", "throne_crest", 0, 3.2, -0.5)):
