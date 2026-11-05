@@ -584,7 +584,8 @@ def main():
     node(lines, "Sun", "DirectionalLight3D", props=[
         "transform = Transform3D(0.819152, -0.32899, 0.469846, 0, 0.819152, 0.573576, -0.573576, -0.469846, 0.67101, 0, 40, 0)",
         "light_color = Color(1, 0.84, 0.6, 1)", "light_energy = 1.35", "shadow_enabled = true",
-        "shadow_normal_bias = 4.0", "directional_shadow_mode = 1", "directional_shadow_max_distance = 50.0"])
+        "shadow_normal_bias = 4.0", "directional_shadow_mode = 1", "directional_shadow_split_1 = 0.2",
+        "directional_shadow_max_distance = 50.0"])
 
     node(lines, "Exterior", "Node3D")
     node(lines, "Terrain", "StaticBody3D", "Exterior", props=[
