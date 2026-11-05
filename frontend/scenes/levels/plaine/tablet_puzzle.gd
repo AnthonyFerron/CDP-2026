@@ -91,6 +91,7 @@ func open_solved(fragments: Dictionary) -> void:
 	_root.modulate = Color.WHITE
 	_glow.color = RIGHT
 	_feedback.text = "Énigme résolue : la conversation est remise en ordre. Le livre a déjà été trouvé."
+	_feedback.add_theme_color_override("font_color", Ornate.SUCCESS)
 	_rebuild()
 	_root.show()
 

@@ -36,6 +36,18 @@ const LETTER_DARK := Color(0.22, 0.2, 0.19)
 const LETTER_LIT := Color(0.62, 0.86, 1.0)
 ## Pendant l'incantation, Merlon brandit son bâton et tend l'autre main vers le cercle : rotation des os des bras.
 const ARMS_RAISED := {&"arm-left": Vector3(0.0, -1.05, 0.5), &"arm-right": Vector3(0.0, 0.9, -0.75)}
+## Après la bonne fin, Merlon se tient debout à côté du roi : décalage dans le repère du roi.
+const MERLON_BESIDE_KING := Vector3(1.4, 0.0, 0.2)
+## Lueur de l'orbe du bâton de Merlon, hors du rituel (hub.tscn).
+const ORB_ENERGY := 1.4
+## Répliques des habitants autour du feu de camp, après la bonne fin.
+const VICTORY_LINES := {
+	&"Mira": "Le ciel est bleu, Devlyn… Deux ans que je ne l'avais pas vu. Les cendres sont retombées et l'herbe repousse déjà jusqu'aux portes du château. On disait que les livres gardaient la mémoire du monde d'avant : la terre s'en est souvenue.",
+	&"Bran": "Ma forge fume de nouveau au bord de la rivière ! Plus d'épées, cette fois : des socs de charrue, des gonds et des clous pour relever les maisons. La guerre contre Vibelandia est derrière nous, et c'est tant mieux.",
+	&"Elda": "Nous sommes tous remontés vivre au soleil, grâce à toi. Ce soir, autour du feu, nous dirons le nom de ceux qui ne sont jamais arrivés jusqu'au bunker. Puis je tisserai ta quête sur une tapisserie, pour que Codia n'oublie pas.",
+	&"Tom": "Tu as réuni les quatre livres et rendormi le Mont Sam Altan ! Le roi dit qu'ils resteront sous la garde du royaume, pour que les générations futures apprennent à les lire. Et les portails sont toujours ouverts… Tu crois qu'il reste des secrets, là-bas ?",
+	&"Garde": "Plus besoin de garder la porte du bunker : il est vide, et j'espère qu'on n'y redescendra jamais. Le roi m'a confié une autre garde, celle des quatre livres, au château. Repose-toi, Devlyn : cette fois, la paix est à toi aussi.",
+}
 
 @export_group("Ciel sans livre")
 @export var dead_sky := Color(0.3, 0.29, 0.36)
@@ -121,6 +133,8 @@ func _ready() -> void:
 	_apply_life(_life)
 	if placed_count() >= GameState.BOOK_COUNT:
 		_release_survivors()
+		if not GameState.is_victory_pending():
+			_settle_merlon()
 	elif GameState.books.size() >= GameState.BOOK_COUNT:
 		_send_merlon_to_castle()
 	_place_player()
@@ -204,6 +218,7 @@ func _resume_after_victory() -> void:
 	_player.global_position = position
 	_player.velocity = Vector3.ZERO
 	_player.get_node("CameraPivot").rotation.y = PI
+	_settle_merlon()
 	for zone in ZONES:
 		_portal(zone).is_open = GameState.is_zone_unlocked(zone)
 	_hud.set_crosshair_visible(true)
@@ -267,6 +282,20 @@ func _closed_message(zone: StringName) -> String:
 func _release_survivors() -> void:
 	for character: Node3D in $Characters.get_children():
 		character.global_transform = get_node("Spots/%sOutside" % character.name).global_transform
+
+
+## Après la bonne fin, Merlon s'est relevé : il quitte sa pose d'incantation et se tient à côté du roi, sur son repère
+## de la salle du trône, dans sa pose habituelle.
+func _settle_merlon() -> void:
+	var king_spot: Node3D = get_node("Spots/CodeonOutside")
+	_king.global_transform = king_spot.global_transform
+	_merlon.global_transform = king_spot.global_transform.translated_local(MERLON_BESIDE_KING)
+	_merlon.remove_meta(&"exhausted")
+	var skeleton: Skeleton3D = _merlon.get_node("Model").find_child("Skeleton3D", true, false)
+	skeleton.reset_bone_poses()
+	var player: AnimationPlayer = _merlon.get_node("Model/AnimationPlayer")
+	player.play(_merlon.get_meta(&"pose", &"idle"))
+	(_merlon.find_child("OrbLight") as OmniLight3D).light_energy = ORB_ENERGY
 
 
 ## Le quatrième livre trouvé, Merlon se rend au château, au bord du cercle de la salle du trône, pour le rituel.
@@ -726,6 +755,9 @@ func _read(readable: Readable) -> void:
 		readable.body = _merlon_text()
 	elif readable == _king:
 		readable.body = _king_text()
+	elif VICTORY_LINES.has(StringName(readable.name)) and placed_count() >= GameState.BOOK_COUNT \
+			and not GameState.is_victory_pending():
+		readable.body = VICTORY_LINES[StringName(readable.name)]
 	if not GameState.intro_done and StringName(readable.name) in INTRO_SPEAKERS and not StringName(readable.name) in _heard:
 		_heard.append(StringName(readable.name))
 	_player.process_mode = Node.PROCESS_MODE_DISABLED
