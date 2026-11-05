@@ -635,13 +635,21 @@ def main():
     # Le modèle a son origine dans un coin : décalé pour que la bibliothèque soit centrée sur le passage.
     node(lines, "Model", parent="Interior/SecretShelf", instance="56_shelf", props=[
         at(0.125 * SHELF_SCALE, 0, 0.4 * SHELF_SCALE, SHELF_SCALE, 90)])
-    for row, y in enumerate((0.13, 1.07, 1.98)):
+    # Les livres tiennent debout sur les planches (0,07, 0,31 et 0,55 du modèle bookcaseClosedWide, à son échelle) et
+    # restent entre ses côtés : posés 11 à 14 cm plus bas, ils s'enfonçaient dans les planches, et la dernière pile
+    # sortait du côté sud de 0,3 m, puis traversait le mur en glissant avec le meuble.
+    for row, level in enumerate((0.07, 0.31, 0.55)):
+        y = round(level * SHELF_SCALE + 0.005, 3)
         for k in range(6):
             if (row * 7 + k * 3) % 5 == 0:
                 continue
-            z = -1.15 + k * 0.46
+            scale = 3.2 + (k % 3) * 0.25
+            yaw = -90 if (row + k) % 2 else 90
+            # Tourné de -90 degrés, le groupe de livres s'étend vers +z depuis son origine ; de 90, vers -z.
+            middle = -1.1 + k * 0.44
+            z = round(middle - 0.075 * scale if yaw == -90 else middle + 0.075 * scale, 4)
             node(lines, f"Books{row}_{k}", parent="Interior/SecretShelf", instance="58_books", props=[
-                at(0.05, y, z + 0.15, 3.2 + (k % 3) * 0.25, -90 if (row + k) % 2 else 90)])
+                at(0.05, y, z, scale, yaw)])
     node(lines, "Body", "StaticBody3D", "Interior/SecretShelf")
     node(lines, "Shape", "CollisionShape3D", "Interior/SecretShelf/Body", props=[
         "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)", 'shape = SubResource("BoxShape3D_shelf")'])

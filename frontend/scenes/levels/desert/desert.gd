@@ -7,6 +7,8 @@ extends Node3D
 signal book_collected(book_id: StringName)
 signal hub_requested
 
+## Durée du glissement du sable qui couvre le coffre (s).
+const SAND_DURATION := 2.6
 const ZONE := &"desert"
 const BOOK_ID := &"algonicon"
 const QUICKSAND_SPEED := 0.35
@@ -144,7 +146,7 @@ func _show_solved() -> void:
 	_table_glow.light_color = Color(0.4, 0.7, 1.0)
 	_table_glow.light_energy = 7.0
 	_light_slots(Color(0.35, 0.7, 1.0), 6.0)
-	_chest_sand.hide()
+	_set_sand_spread(1.0)
 	_chest.show()
 	_chest_lid.rotation.x = deg_to_rad(-105.0)
 	_book.hide()
@@ -312,11 +314,13 @@ func _on_puzzle_validated(correct: bool) -> void:
 	_rumble.play()
 	_shake(1.6, 0.05)
 	_hud.show_message("Les runes s'illuminent d'une intense lumière bleutée. Un grondement mécanique : dans un coin, le sable se disperse…")
-	var tween := create_tween()
-	tween.tween_property(_chest_sand, "scale", Vector3(1.4, 0.02, 1.4), 2.0).set_trans(Tween.TRANS_SINE)
-	await tween.finished
-	_chest_sand.hide()
+	# Le coffre est déjà sous le tas : le sable glisse de son couvercle, puis de ses flancs, et s'étale autour de lui en
+	# soulevant une poussière légère. La couche étalée reste au sol.
 	_chest.show()
+	_sand_dust()
+	var tween := create_tween()
+	tween.tween_method(_set_sand_spread, 0.0, 1.0, SAND_DURATION).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	await tween.finished
 	# Le coffre de pierre se déverrouille : son couvercle bascule en arrière.
 	var unlock := create_tween()
 	unlock.tween_property(_chest_lid, "rotation:x", deg_to_rad(-105.0), 1.0).set_trans(Tween.TRANS_BACK)
@@ -675,3 +679,62 @@ func _remove_gate_grille() -> void:
 	if grille:
 		grille.get_parent().remove_child(grille)
 		grille.free()
+
+
+## Étalement du tas de sable du coffre (chest_sand.gdshader) : 0, le dôme ; 1, la couche mince autour du coffre.
+func _set_sand_spread(value: float) -> void:
+	((_chest_sand as MeshInstance3D).mesh.surface_get_material(0) as ShaderMaterial).set_shader_parameter("spread", value)
+
+
+## Poussière légère qui monte du pied du tas pendant qu'il s'étale : une trentaine de grains, une seule fois.
+func _sand_dust() -> void:
+	var material := StandardMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.vertex_color_use_as_albedo = true
+	# Grains ronds aux bords flous : une petite texture de 32 pixels, du centre opaque au bord transparent.
+	var edge := Gradient.new()
+	edge.set_color(0, Color(1.0, 1.0, 1.0, 1.0))
+	edge.set_color(1, Color(1.0, 1.0, 1.0, 0.0))
+	var puff := GradientTexture2D.new()
+	puff.gradient = edge
+	puff.fill = GradientTexture2D.FILL_RADIAL
+	puff.fill_from = Vector2(0.5, 0.5)
+	puff.fill_to = Vector2(1.0, 0.5)
+	puff.width = 32
+	puff.height = 32
+	material.albedo_texture = puff
+	var quad := QuadMesh.new()
+	quad.size = Vector2(0.5, 0.5)
+	quad.material = material
+	var gradient := Gradient.new()
+	gradient.set_color(0, Color(0.88, 0.74, 0.52, 0.0))
+	gradient.add_point(0.25, Color(0.88, 0.74, 0.52, 0.35))
+	gradient.set_color(gradient.get_point_count() - 1, Color(0.88, 0.74, 0.52, 0.0))
+	var grow := Curve.new()
+	grow.add_point(Vector2(0.0, 0.5))
+	grow.add_point(Vector2(1.0, 1.4))
+	var dust := CPUParticles3D.new()
+	dust.mesh = quad
+	dust.amount = 32
+	dust.lifetime = 1.8
+	dust.emission_shape = CPUParticles3D.EMISSION_SHAPE_RING
+	dust.emission_ring_axis = Vector3.UP
+	dust.emission_ring_radius = 1.5
+	dust.emission_ring_inner_radius = 0.7
+	dust.emission_ring_height = 0.3
+	dust.direction = Vector3.UP
+	dust.spread = 55.0
+	dust.initial_velocity_min = 0.25
+	dust.initial_velocity_max = 0.8
+	dust.gravity = Vector3(0.0, -0.3, 0.0)
+	dust.damping_min = 0.4
+	dust.damping_max = 0.8
+	dust.scale_amount_curve = grow
+	dust.color_ramp = gradient
+	_chest_sand.add_child(dust)
+	dust.position = Vector3(0.0, 0.35, 0.0)
+	dust.emitting = true
+	get_tree().create_timer(SAND_DURATION * 0.75).timeout.connect(func() -> void: dust.emitting = false)
+	get_tree().create_timer(SAND_DURATION + 2.5).timeout.connect(dust.queue_free)

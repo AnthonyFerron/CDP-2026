@@ -15,7 +15,7 @@ import random
 import re
 from pathlib import Path
 
-from build_plaine import (DOORWAY_HEIGHT, MODEL_BOXES, WALL_HEIGHT, WALL_SCALE, WALL_THICKNESS, Scene, arch_fill, doorway,
+from build_plaine import (SHELVES, DOORWAY_HEIGHT, MODEL_BOXES, WALL_HEIGHT, WALL_SCALE, WALL_THICKNESS, Scene, arch_fill, doorway,
                           furniture, multiply, rotation_x, rotation_y, rotation_z, transform_text, wall)
 
 OUTPUT = Path(__file__).resolve().parent.parent / "scenes" / "levels" / "village" / "village_props.tscn"
@@ -1755,14 +1755,21 @@ def hp(scene, model, center, degrees=0.0, scale=2.6, solid=True, label=None, til
     place(scene, model, center, degrees, scale, height=height, tilt=tilt, roll=roll, label=label)
 
 
+# Dessus des trois planches basses de l'étagère ouverte (bookcaseOpen à l'échelle 3,2), d'après SHELVES de
+# build_plaine : les livres posés plus bas passaient sous les planches.
+OPEN_SHELF_ROWS = tuple(round(level * 3.2 + 0.005, 3) for level in SHELVES["furniture_kit/bookcaseOpen"][:3])
+
+
 def shelf_books(scene, rng, center, degrees, rows, width):
-    """Livres rangés sur les planches d'une étagère : une rangée de piles par planche."""
+    """Livres rangés sur les planches d'une étagère : une rangée de piles par planche, centrée entre ses côtés.
+    rows : hauteurs du dessus des planches."""
     c, s = math.cos(math.radians(degrees)), math.sin(math.radians(degrees))
+    count = int(width / 0.42)
     for y in rows:
-        for k in range(int(width / 0.42)):
+        for k in range(count):
             if rng.random() < 0.25:
                 continue
-            u = -width / 2 + 0.2 + k * 0.42
+            u = (k - (count - 1) / 2) * 0.44
             lay(scene, "furniture_kit/books", (center[0] + c * u, center[1] + y, center[2] - s * u), degrees + rng.choice((0.0, 180.0)),
                 2.4 + rng.uniform(-0.2, 0.3))
 
@@ -1803,7 +1810,7 @@ def build_hall_interior():
     lay(scene, "graveyard_kit/candle", (-4.9, top_of("furniture_kit/desk", 2.8), -2.9), 0.0, 0.8)
     for x in (-3.0, -1.6):
         hp(scene, "furniture_kit/bookcaseOpen", (x, 0.0, -5.28), 0.0, 3.2, label="étagère")
-        shelf_books(scene, rng, (x, 0.0, -5.28), 0.0, (0.06, 0.98, 1.9), 1.1)
+        shelf_books(scene, rng, (x, 0.0, -5.28), 0.0, OPEN_SHELF_ROWS, 1.1)
     # Une table d'appoint au plateau plat contre le mur nord (un fragment y est posé), et le coffre de l'accueil.
     hp(scene, "furniture_kit/sideTable", (1.6, 0.0, -5.4), 0.0, 2.6, label="table d'appoint")
     hp(scene, "mini_dungeon/chest", (3.5, 0.0, -5.1), 90.0, 2.4, label="coffre de l'accueil")
@@ -1833,7 +1840,7 @@ def build_hall_interior():
     lay(scene, "furniture_kit/books", (-1.6, office + top_of("furniture_kit/desk", 2.8), -0.2), 60.0, 2.6)
     hp(scene, "furniture_kit/sideTableDrawers", (1.4, office, -0.8), 180.0, 2.6, label="tiroir du maire")
     hp(scene, "furniture_kit/bookcaseOpen", (-5.0, office, 5.28), 180.0, 3.2, label="étagère du maire")
-    shelf_books(scene, rng, (-5.0, office, 5.28), 180.0, (0.06, 0.98, 1.9), 1.1)
+    shelf_books(scene, rng, (-5.0, office, 5.28), 180.0, OPEN_SHELF_ROWS, 1.1)
     hp(scene, "furniture_kit/bookcaseClosedDoors", (1.6, office, 5.3), 180.0, 3.2, label="armoire du maire")
     hp(scene, "mini_dungeon/chest", (-6.4, office, -5.1), 90.0, 2.4, label="coffre du bureau")
     lay(scene, "furniture_kit/rugRectangle", (-1.0, office, 1.4), 0.0, 2.6)
