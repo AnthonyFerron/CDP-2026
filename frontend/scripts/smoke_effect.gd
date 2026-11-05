@@ -50,3 +50,7 @@ func _ready() -> void:
 	initial_velocity_max = rise_speed * 1.3
 	scale_amount_curve = growth
 	color_ramp = gradient
+	# Ces réglages arrivent après le démarrage de l'émission : sans relance, le préchauffage (preprocess) ne
+	# s'applique pas à une fumée chargée avec une scène (Village, volcan du hub), qui fait alors une boule sombre au
+	# pied du feu pendant ses dix premières secondes. Relancée une fois dans l'arbre, elle monte tout de suite.
+	restart.call_deferred()
