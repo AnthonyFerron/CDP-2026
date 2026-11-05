@@ -1415,7 +1415,7 @@ def furnish_farm(scene, house, ruined, rng):
     hu, hv = r.hu, r.hv
     hu_, hv_ = HEARTHS["farm"](r.frame)
     hearth(r, hu_, hv_, "right")
-    r.put("food_kit/pot-stew", hu_ - 1.2, hv_ - 1.0, 90.0, 1.4, height=0.5, tilt=90.0 if ruined else 0.0)
+    r.put("food_kit/pot-stew", hu_ - 1.2, hv_ - 1.3, 90.0, 1.4, height=0.5, tilt=90.0 if ruined else 0.0)
     r.put("mini_dungeon/table", -0.7, 1.1, 0.0, 2.4, height=0.74, roll=90.0 if ruined else 0.0)
     for v in (-0.08, 2.28):
         r.put("fantasy_town_kit/stall-bench", -0.7, v, 90.0, (3.0, 2.0, 2.3), height=0.46, roll=90.0 if ruined and v > 0 else 0.0)

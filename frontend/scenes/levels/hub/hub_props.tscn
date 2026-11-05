@@ -15872,7 +15872,7 @@ transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 45, -0.2, 66)
 transform = Transform3D(3.6, 0, -0, 0, 3.6, 0, 0, 0, 3.6, 40.006, 0, 63.982)
 
 [node name="pot_stew_2547" parent="Repairs/Farm/Ruins" instance=ExtResource("21_model")]
-transform = Transform3D(-0, -1.4, -0, 0, 0, -1.4, 1.4, -0, -0, 42.315, 0.574, 64.993)
+transform = Transform3D(-0, -1.4, -0, 0, 0, -1.4, 1.4, -0, -0, 42.315, 0.574, 65.293)
 
 [node name="table_2548" parent="Repairs/Farm/Ruins" instance=ExtResource("22_model")]
 transform = Transform3D(-0, 2.4, 0, 2.4, 0, 0, -0, 0, -2.4, 44.328, 1.056, 62.912)
@@ -16081,7 +16081,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 40.87, 1.8, 64)
 shape = SubResource("BoxShape3D_43")
 
 [node name="Box1519" type="CollisionShape3D" parent="Repairs/Farm/Ruins/Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 42.07, 0.567, 65)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 42.07, 0.567, 65.3)
 shape = SubResource("BoxShape3D_201")
 
 [node name="Box1520" type="CollisionShape3D" parent="Repairs/Farm/Ruins/Collision"]
@@ -16241,7 +16241,7 @@ transform = Transform3D(3.6, 0, -0, 0, 3.6, 0, 0, 0, 3.6, 40.006, 0, 63.982)
 transform = Transform3D(2.2, 0, -0, 0, 2.2, 0, 0, 0, 2.2, 41.07, 0, 64)
 
 [node name="pot_stew_2618" parent="Repairs/Farm/Rebuilt" instance=ExtResource("21_model")]
-transform = Transform3D(-0, 0, -1.4, 0, 1.4, 0, 1.4, 0, -0, 42.077, 0, 64.993)
+transform = Transform3D(-0, 0, -1.4, 0, 1.4, 0, 1.4, 0, -0, 42.077, 0, 65.293)
 
 [node name="table_2619" parent="Repairs/Farm/Rebuilt" instance=ExtResource("22_model")]
 transform = Transform3D(-2.4, 0, 0, 0, 2.4, 0, -0, 0, -2.4, 44.7, 0, 62.912)
@@ -16569,7 +16569,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 40.87, 1.8, 64)
 shape = SubResource("BoxShape3D_43")
 
 [node name="Box1559" type="CollisionShape3D" parent="Repairs/Farm/Rebuilt/Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 42.07, 0.25, 65)
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 42.07, 0.25, 65.3)
 shape = SubResource("BoxShape3D_48")
 
 [node name="Box1560" type="CollisionShape3D" parent="Repairs/Farm/Rebuilt/Collision"]
