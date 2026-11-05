@@ -1407,7 +1407,9 @@ def build_interior():
         ((-2.2, -26.0), "survival_kit/box-open", 35.0, 3.0, 0.9),
     ):
         furniture_fit(scene, model, (position[0], 0.0, position[1]), degrees, scale, height=height)
-    fallen_chandelier(scene, -1.6, -29.0)
+    # Lustre tombé à l'écart des livres répandus par le rayonnage renversé du mur ouest : ils passaient à travers
+    # son anneau.
+    fallen_chandelier(scene, 2.7, -29.6)
     floor_books(scene, rng, 1.6, -27.0, 5, 0.8)
     sheets(scene, rng, -0.5, -30.0, 14, 2.4)
     chandelier(scene, 1.0, -31.5, drop=0.8)
