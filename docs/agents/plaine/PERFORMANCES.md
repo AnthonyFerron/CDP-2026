@@ -83,9 +83,50 @@ La suie (`soot.gdshader`) suit la position dans le monde : elle tombe au même e
   - grille de marche : 30 962 cases dehors et 2 348 dans les archives, empreinte `35c814a6936278a221bdbb5db1d9569d`.
 - Tests : `plaine_puzzle_test` et `signboard_test` à 0 échec.
 
+## Essai : soleil en 2 tranches d'ombre (non retenu)
+
+Le Marais est passé de 4 à 2 tranches. Pour la Plaine, j'ai mesuré plusieurs réglages sans toucher à la scène, avec
+`perf.sh … --sun=mode,distance[,tranche1[,biais,biais normal]]`, sur le décor déjà regroupé (commit 339ce57).
+Les passages ont été faits l'un derrière l'autre, sur un serveur presque libre.
+
+| Vue | 4 tranches, 70 m (actuel) | 2 tranches, 50 m | 2 tranches, 70 m | 2 tranches, 70 m, 1re tranche 0,25 |
+| --- | --- | --- | --- | --- |
+| o1 arrivée | 902 (371 ms) | 558 (309 ms) | 588 (302 ms) | 665 (315 ms) |
+| o2 pont | 583 (384 ms) | 388 (316 ms) | 400 (308 ms) | 421 (322 ms) |
+| o3 façade | 725 (378 ms) | 398 (314 ms) | 429 (296 ms) | 482 (311 ms) |
+| o4 campement | 358 (312 ms) | 283 (255 ms) | 282 (254 ms) | 293 (260 ms) |
+| o5 engins de siège | 708 (352 ms) | 382 (279 ms) | 414 (276 ms) | 467 (289 ms) |
+| o6 batterie | 274 (312 ms) | 162 (241 ms) | 166 (244 ms) | 192 (255 ms) |
+| o7 vue haute | 639 (359 ms) | 509 (413 ms) | 545 (307 ms) | 548 (312 ms) |
+
+Chaque case donne les appels de dessin, puis l'image médiane entre parenthèses. Dans les archives, rien ne change
+(aucune ombre) : 169, 117 et 68 appels.
+
+Le gain est net : 30 à 45 % d'appels en moins dehors, et environ 20 % de temps d'image en moins.
+
+Le réglage n'est pas retenu, car le rendu se dégrade à hauteur d'yeux :
+- avec 2 tranches, le sol proche du joueur se couvre de fines bandes et d'anneaux de moiré (crénelage de l'ombre),
+  bien visibles devant la façade et devant les engins de siège ;
+- avec 4 tranches, ce même sol reste lisse ;
+- à 50 m, les ombres lointaines s'arrêtent aussi plus tôt : écart plus fort aux tombes (1,49 sur 255) et vers le loin.
+
+J'ai essayé trois corrections, sans succès :
+
+| Réglage essayé, en plus de 2 tranches à 70 m | Appels à l'arrivée | Bandes |
+| --- | --- | --- |
+| 1re tranche à 0,25 | 665 | atténuées, toujours visibles |
+| biais normal 2,0 (au lieu de 1,0) | 588 | toujours là |
+| biais 0,3 (au lieu de 0,1) | 588 | toujours là |
+
+Les ombres des ruines et des engins restent lisibles et rien ne flotte dans ces essais ; seul le sol se dégrade.
+
+Piste pour reprendre :
+- adoucir le filtrage des ombres (`soft_shadow_filter_quality` du projet, fichier interdit aux agents de lieu) ;
+- ou essayer `directional_shadow_blend_splits` et une première tranche plus courte, puis regarder les mêmes vues au
+  sol, de près.
+
 ## Reste à faire
 
-- Soleil en 2 tranches d'ombre au lieu de 4 (le Marais l'a fait) : à mesurer à part, avec des planches avant et
-  après, car le grain des ombres change.
+- Soleil en 2 tranches : voir l'essai plus haut, il faut d'abord se débarrasser des bandes au sol.
 - `MaraisBatch` et `PlaineBatch` gagneraient à devenir un seul outil partagé dans `scripts/`, interdit aux agents de
   lieu.
