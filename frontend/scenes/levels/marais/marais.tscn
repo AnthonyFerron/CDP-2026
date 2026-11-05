@@ -706,7 +706,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.3, 1)
 script = ExtResource("14_flicker")
 light_color = Color(1, 0.8, 0.6, 1)
 light_energy = 1.2
-omni_range = 7
+omni_range = 12
 flicker = 0.15
 
 [node name="LightStairs" type="OmniLight3D" parent="Interior"]
@@ -714,7 +714,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.4, 11.4)
 script = ExtResource("14_flicker")
 light_color = Color(0.72, 0.8, 0.88, 1)
 light_energy = 0.7
-omni_range = 6.5
+omni_range = 12
 flicker = 0.15
 
 [node name="LightStairsMid" type="OmniLight3D" parent="Interior"]
@@ -722,7 +722,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 6.4)
 script = ExtResource("14_flicker")
 light_color = Color(1, 0.8, 0.6, 1)
 light_energy = 0.9
-omni_range = 6.5
+omni_range = 12
 flicker = 0.15
 
 [node name="LightHall" type="OmniLight3D" parent="Interior"]
@@ -738,7 +738,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 3.3, -12)
 script = ExtResource("14_flicker")
 light_color = Color(1, 0.8, 0.6, 1)
 light_energy = 1.6
-omni_range = 9.5
+omni_range = 12
 flicker = 0.15
 
 [node name="LightEastTomb" type="OmniLight3D" parent="Interior"]
@@ -746,7 +746,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.6, 1.5, -12)
 script = ExtResource("14_flicker")
 light_color = Color(1, 0.8, 0.6, 1)
 light_energy = 0.5
-omni_range = 4.5
+omni_range = 12
 flicker = 0.15
 
 [node name="LightWest" type="OmniLight3D" parent="Interior"]
@@ -754,7 +754,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 3.3, -12)
 script = ExtResource("14_flicker")
 light_color = Color(1, 0.8, 0.6, 1)
 light_energy = 1.4
-omni_range = 9.5
+omni_range = 12
 flicker = 0.15
 
 [node name="LightOssuary" type="OmniLight3D" parent="Interior"]
@@ -762,7 +762,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 3.3, 2)
 script = ExtResource("14_flicker")
 light_color = Color(1, 0.8, 0.6, 1)
 light_energy = 0.9
-omni_range = 7.5
+omni_range = 12
 flicker = 0.15
 
 [node name="LightGuards" type="OmniLight3D" parent="Interior"]
@@ -770,7 +770,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 3.3, 2)
 script = ExtResource("14_flicker")
 light_color = Color(1, 0.8, 0.6, 1)
 light_energy = 0.9
-omni_range = 7.5
+omni_range = 12
 flicker = 0.15
 
 [node name="Brazier0" type="Node3D" parent="Interior"]

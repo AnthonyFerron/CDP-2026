@@ -600,14 +600,15 @@ def main():
     node(lines, "Chain", "MeshInstance3D", "Interior/StairLantern", props=[
         "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.2, 0)", 'mesh = SubResource("BoxMesh_chain")'])
     node(lines, "Lantern", parent="Interior/StairLantern", instance="61_hanging_lantern", props=[at(0.0, -2.4 - 0.39 * 1.6, 0.0, 1.6)])
-    # Pour le web, chaque lumière ne porte que sur sa pièce : dans le rendu Compatibility, chaque lumière qui touche
-    # un objet le redessine une fois de plus.
+    # Portée de 12 m pour toutes : dans le rendu Compatibility, une lumière sans ombre ne coûte aucun appel de dessin
+    # de plus (mesuré : mêmes appels à 12 m qu'à la portée de la pièce), et une portée plus courte assombrissait les
+    # murs. Chaque maillage fondu de la crypte en reçoit 7 au plus, sous la limite de 8 par objet.
     for name, x, y, z, energy, color, reach in (
-            ("LightEntry", 0, 3.3, 1.0, 1.2, warm, 7.0), ("LightStairs", 0, 7.4, 11.4, 0.7, cold, 6.5),
-            ("LightStairsMid", 0, 5.0, 6.4, 0.9, warm, 6.5), ("LightHall", 0, 3.3, -12, 2.2, warm, 12.0),
-            ("LightEast", 24, 3.3, -12, 1.6, warm, 9.5), ("LightEastTomb", 20.6, 1.5, -12, 0.5, warm, 4.5),
-            ("LightWest", -24, 3.3, -12, 1.4, warm, 9.5), ("LightOssuary", -18, 3.3, 2, 0.9, warm, 7.5),
-            ("LightGuards", 18, 3.3, 2, 0.9, warm, 7.5)):
+            ("LightEntry", 0, 3.3, 1.0, 1.2, warm, 12.0), ("LightStairs", 0, 7.4, 11.4, 0.7, cold, 12.0),
+            ("LightStairsMid", 0, 5.0, 6.4, 0.9, warm, 12.0), ("LightHall", 0, 3.3, -12, 2.2, warm, 12.0),
+            ("LightEast", 24, 3.3, -12, 1.6, warm, 12.0), ("LightEastTomb", 20.6, 1.5, -12, 0.5, warm, 12.0),
+            ("LightWest", -24, 3.3, -12, 1.4, warm, 12.0), ("LightOssuary", -18, 3.3, 2, 0.9, warm, 12.0),
+            ("LightGuards", 18, 3.3, 2, 0.9, warm, 12.0)):
         node(lines, name, "OmniLight3D", "Interior", props=[
             f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {x:g}, {y:g}, {z:g})", 'script = ExtResource("14_flicker")',
             f"light_color = {color}", f"light_energy = {energy:g}", f"omni_range = {reach:g}", "flicker = 0.15"])

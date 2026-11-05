@@ -131,10 +131,12 @@ func _ready() -> void:
 		_mist_banks.append(flies)
 		add_child(flies)
 	_tint_crypt()
-	# Pour le web : le décor fixe regroupé en MultiMesh, par cases de 32 m dehors, de 12 m (une pièce) sous terre.
+	# Pour le web : le décor fixe fondu par matériau (MaraisBatch), par cases de 32 m dehors, de 12 m (une pièce)
+	# sous terre : tombeaux des rois et niches de l'ossuaire compris.
 	for root: Node3D in [$Props/Models, $Grounded, $Scatter/Boardwalks, $Scatter/Lanterns]:
 		MaraisBatch.merge(root, 32.0, true)
-	MaraisBatch.merge($Interior/Crypt/Models, 12.0, false)
+	for root: Node3D in [$Interior/Crypt/Models, $Interior/Kings, $Interior/Niches]:
+		MaraisBatch.merge(root, 12.0, false)
 	# La lumière du feu de camp s'éteint au loin, comme les autres lumières du dehors.
 	for light: Light3D in $Campfire.find_children("*", "Light3D", true, false):
 		light.distance_fade_enabled = true

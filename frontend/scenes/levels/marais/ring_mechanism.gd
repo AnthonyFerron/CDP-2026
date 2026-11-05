@@ -18,6 +18,9 @@ const RING_BASE := 0.07
 const RING_STEP := 0.025
 ## Capitales romaines des gravures (la police du texte courant perd son N en maillage).
 const ENGRAVING_FONT: Font = preload("res://ui/cinzel_bold.tres")
+## Taille d'un pixel de lettre sur le cercle intérieur, et ce qu'elle gagne à chaque cercle vers l'extérieur.
+const LETTER_PIXEL := 0.0035
+const LETTER_PIXEL_STEP := 0.0004
 
 @export var stone_color := Color(0.32, 0.3, 0.3)
 @export var letter_color := Color(0.82, 0.68, 0.38)
@@ -108,6 +111,16 @@ func _build() -> void:
 	plinth.position.y = PLINTH_HEIGHT * 0.5
 	add_child(plinth)
 
+	# Les 26 lettres sont taillées une fois : chaque cercle les reprend, à sa taille.
+	var glyphs: Array[TextMesh] = []
+	for index in LETTERS.length():
+		var glyph := TextMesh.new()
+		glyph.font = ENGRAVING_FONT
+		glyph.text = LETTERS[index]
+		glyph.font_size = 64
+		glyph.pixel_size = LETTER_PIXEL
+		glyph.depth = 0.0
+		glyphs.append(glyph)
 	for ring in RING_COUNT:
 		var pivot := Node3D.new()
 		add_child(pivot)
@@ -129,19 +142,14 @@ func _build() -> void:
 		# Les 26 lettres d'un cercle forment un seul maillage gravé (et non 26 textes) : un appel de dessin par cercle
 		# au lieu de vingt-six.
 		var tool := SurfaceTool.new()
+		var size := (LETTER_PIXEL + ring * LETTER_PIXEL_STEP) / LETTER_PIXEL
 		for index in LETTERS.length():
 			var angle := -index * TAU / LETTERS.length()
-			var glyph := TextMesh.new()
-			glyph.font = ENGRAVING_FONT
-			glyph.text = LETTERS[index]
-			glyph.font_size = 64
-			glyph.pixel_size = 0.0035 + ring * 0.0004
-			glyph.depth = 0.0
 			var radius := inner + RING_WIDTH * 0.5
 			# Gravée à 1 cm au-dessus de la pierre, couchée sur le cercle.
-			var place := Transform3D(Basis.from_euler(Vector3(-PI * 0.5, 0.0, -angle)),
+			var place := Transform3D(Basis.from_euler(Vector3(-PI * 0.5, 0.0, -angle)).scaled(Vector3.ONE * size),
 				Vector3(sin(angle) * -radius, top + 0.01, cos(angle) * -radius))
-			tool.append_from(glyph, 0, place)
+			tool.append_from(glyphs[index], 0, place)
 		var engraved := MeshInstance3D.new()
 		engraved.name = "Letters"
 		engraved.mesh = tool.commit()

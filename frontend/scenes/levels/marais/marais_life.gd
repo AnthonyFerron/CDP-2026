@@ -214,6 +214,8 @@ func _make_frog() -> Node3D:
 		_part(frog, _sphere(0.05, skin), Vector3(side * 0.09, 0.03, -0.07), Vector3(1.0, 0.6, 1.6))
 	frog.scale = Vector3.ONE * FROG_SIZE
 	add_child(frog)
+	# Pour le web : une grenouille, un seul maillage (ses couleurs passent dans les sommets), un appel de dessin.
+	MaraisBatch.merge(frog, 100.0, false)
 	return frog
 
 
@@ -321,6 +323,9 @@ func _make_crow() -> Dictionary:
 		_part(crow, leg, Vector3(side * 0.03, 0.03, 0.0))
 	crow.scale = Vector3.ONE * 1.6
 	add_child(crow)
+	# Corps, queue et pattes en un maillage, la tête en un autre ; les ailes battent à part.
+	MaraisBatch.merge(crow, 100.0, false, false)
+	MaraisBatch.merge(head, 100.0, false)
 	return {"node": crow, "head": head, "wings": wings}
 
 
@@ -421,6 +426,7 @@ func _make_bat() -> Dictionary:
 		wings.append(pivot)
 	bat.scale = Vector3.ONE * 1.5
 	add_child(bat)
+	MaraisBatch.merge(bat, 100.0, false, false)
 	return {"node": bat, "wings": wings}
 
 
@@ -526,6 +532,9 @@ func _build_gallows() -> void:
 		shape.position = Vector3(0, 1.35, 0)
 		body.add_child(shape)
 		post.add_child(body)
+		# La potence en un maillage, la chaîne et la lanterne qui se balancent en un autre ; visibles de loin.
+		MaraisBatch.merge(post, 100.0, false, false, false)
+		MaraisBatch.merge(hook, 100.0, false, true, false)
 		_lanterns.append({"hook": hook, "phase": _rng.randf() * TAU})
 
 
