@@ -25,6 +25,6 @@
 
 ## Restants signalés
 
-- Grille de marche : 422 points de contact où un collisionneur dépasse le modèle visible de 0,5 à 1 m (rochers, gravats, faces creusées des murs du kit, piles de pierres). Tous ont un triangle visible à moins de 1 m ; je les juge acceptables, mais ils restent comptés par le test.
-- 3 contacts sur le mur est de la salle (12, 1.3, 3) sans triangle visible à moins de 1 m : à revoir (un creux du modèle étiré, ou l'arrondi de la congère voisine).
+- Grille de marche (5 novembre) : 310 points de contact où un collisionneur dépasse le modèle visible de 0,5 à 1 m (rochers, gravats, faces creusées des murs du kit, piles de pierres, dont la boîte des rochers de la chambre du zénith (18, -7.8), plus large que les rochers en haut). Tous ont un triangle visible à moins de 1 m ; je les juge acceptables, mais ils restent comptés par le test. 0 marche de plus de 0,4 m, 0 point coincé, 0 trou.
+- Les 3 contacts du mur est de la salle (12, 1.3, 3) ne sont plus relevés : aucun contact sans triangle visible à moins de 1 m.
 - Le test de grille doit tourner avec une fenêtre et l'argument « sans_regroupement » : en mode sans affichage, Godot ne garde pas les positions des MultiMesh, et le regroupement des maillages fixes empêche le test triangle par triangle de voir certains modèles.
