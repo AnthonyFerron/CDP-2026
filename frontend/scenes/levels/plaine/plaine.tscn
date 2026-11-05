@@ -303,6 +303,7 @@ transform = Transform3D(0.8660254, -0.25, 0.4330127, 0, 0.8660254, 0.5, -0.5, -0
 light_color = Color(1, 0.7, 0.55, 1)
 light_energy = 0.75
 shadow_enabled = true
+shadow_normal_bias = 4.0
 directional_shadow_mode = 1
 directional_shadow_max_distance = 50.0
 

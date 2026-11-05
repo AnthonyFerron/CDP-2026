@@ -519,7 +519,7 @@ def main():
     node(lines, "Moon", "DirectionalLight3D", props=[
         "transform = Transform3D(0.7071068, 0.5, -0.5, 0, 0.7071068, 0.7071068, 0.7071068, -0.5, 0.5, 0, 40, 0)",
         "light_color = Color(0.58, 0.7, 0.95, 1)", "light_energy = 0.5", "light_specular = 1.4", "shadow_enabled = true",
-        "directional_shadow_mode = 1", "directional_shadow_max_distance = 50.0"])
+        "shadow_normal_bias = 4.0", "directional_shadow_mode = 1", "directional_shadow_max_distance = 50.0"])
     node(lines, "Terrain", "StaticBody3D", props=[
         'script = ExtResource("2_terrain")', 'ground_material = SubResource("ShaderMaterial_ground")'])
     node(lines, "Water", "MeshInstance3D", props=['mesh = SubResource("PlaneMesh_water")', "cast_shadow = 0"])

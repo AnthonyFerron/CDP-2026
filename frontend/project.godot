@@ -111,6 +111,8 @@ hint={
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
+lights_and_shadows/directional_shadow/size.web=2048
+lights_and_shadows/directional_shadow/soft_shadow_filter_quality=4
 
 [gui]
 
