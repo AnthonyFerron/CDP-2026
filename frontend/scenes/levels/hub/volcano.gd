@@ -3,6 +3,7 @@ extends Node3D
 ## Volcan low-poly qui domine le hub, construit par code : un cône à facettes, son cratère et des coulées
 ## de lave qui suivent ses pentes. Trois états : endormi, en réveil (fissures qui rougeoient, fumée
 ## légère), en éruption (lave à flots, nuage de rochers sombres et projections incandescentes).
+## Vu de loin, depuis un lieu (distant), il n'a que sa fumée et sa lueur : pas de lumière dynamique ni d'éruption.
 
 enum State { DORMANT, AWAKE, ERUPTING }
 
@@ -14,6 +15,9 @@ enum State { DORMANT, AWAKE, ERUPTING }
 @export var rings := 9
 @export var rivers := 6
 @export var seed := 5814
+## Volcan à l'horizon d'un lieu : lac et coulées de lave qui brillent seuls (matériaux émissifs) et fumée, sans
+## lumière dynamique, ni projections, ni nuage d'éruption. Seul le hub joue l'éruption, à la fin perdue.
+@export var distant := false
 
 const ROCK_TOP := Color(0.2, 0.17, 0.19)
 const ROCK_MID := Color(0.26, 0.21, 0.23)
@@ -59,11 +63,12 @@ func _ready() -> void:
 	_rivers.mesh = _build_rivers()
 	_rivers.material_override = _river_material
 	add_child(_rivers)
-	_light = OmniLight3D.new()
-	_light.light_color = Color(1.0, 0.45, 0.15)
-	_light.omni_range = 110.0
-	_light.position.y = height + 4.0
-	add_child(_light)
+	if not distant:
+		_light = OmniLight3D.new()
+		_light.light_color = Color(1.0, 0.45, 0.15)
+		_light.omni_range = 110.0
+		_light.position.y = height + 4.0
+		add_child(_light)
 	for offset in [Vector3(-2.5, 0, 1.0), Vector3(2.0, 0, -1.5)]:
 		var wisp := SmokeEffect.new()
 		wisp.smoke_color = Color(0.82, 0.8, 0.78)
@@ -73,10 +78,16 @@ func _ready() -> void:
 		wisp.position = Vector3(0, height - 2.0, 0) + offset
 		add_child(wisp)
 		_wisps.append(wisp)
-	_bombs = _build_bombs()
-	add_child(_bombs)
-	_cloud = _build_cloud()
-	add_child(_cloud)
+		if distant:
+			# De loin, le brouillard du lieu effaçait la fumée : elle reste visible au-dessus du cratère.
+			(wisp.mesh as QuadMesh).material.disable_fog = true
+	if distant:
+		add_child(_build_glow())
+	else:
+		_bombs = _build_bombs()
+		add_child(_bombs)
+		_cloud = _build_cloud()
+		add_child(_cloud)
 	set_state(state)
 
 
@@ -195,6 +206,34 @@ func _glow_material(color: Color) -> StandardMaterial3D:
 	return material
 
 
+## Lueur du cratère vue de loin, à la place de la lumière dynamique : un halo orangé, additif et toujours tourné
+## vers la caméra, dont le bord du cratère cache le bas.
+func _build_glow() -> MeshInstance3D:
+	var falloff := Gradient.new()
+	falloff.set_color(0, Color(1.0, 0.45, 0.12, 0.75))
+	falloff.set_color(1, Color(1.0, 0.3, 0.08, 0.0))
+	var texture := GradientTexture2D.new()
+	texture.gradient = falloff
+	texture.fill = GradientTexture2D.FILL_RADIAL
+	texture.fill_from = Vector2(0.5, 0.5)
+	texture.fill_to = Vector2(1.0, 0.5)
+	var material := StandardMaterial3D.new()
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+	material.disable_fog = true
+	material.albedo_texture = texture
+	var quad := QuadMesh.new()
+	quad.size = Vector2(crater_radius * 4.0, crater_radius * 2.6)
+	quad.material = material
+	var glow := MeshInstance3D.new()
+	glow.mesh = quad
+	glow.position.y = height + 1.0
+	glow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	return glow
+
+
 ## Projections de lave : des éclats incandescents lancés haut au-dessus du cratère, qui retombent.
 func _build_bombs() -> CPUParticles3D:
 	var shard := PrismMesh.new()
@@ -247,24 +286,28 @@ func _build_cloud() -> Node3D:
 
 
 func set_state(value: State) -> void:
-	state = value
+	state = State.AWAKE if distant and value == State.ERUPTING else value
 	var awake := state != State.DORMANT
 	var erupting := state == State.ERUPTING
 	_pool.visible = awake
 	_rivers.visible = awake
 	_river_material.emission_energy_multiplier = 4.0 if erupting else 1.6
 	_rivers.scale = Vector3.ONE * (1.0 if erupting else 0.96)
-	_light.visible = awake
-	_light.light_energy = 14.0 if erupting else 3.0
+	if _light:
+		_light.visible = awake
+		_light.light_energy = 14.0 if erupting else 3.0
 	# Une fumée légère monte toujours du cratère, sauf pendant l'éruption où le nuage la remplace.
 	for wisp in _wisps:
 		wisp.emitting = not erupting
-	_bombs.emitting = erupting
-	_cloud.visible = erupting
+	if _bombs:
+		_bombs.emitting = erupting
+		_cloud.visible = erupting
 
 
 ## Passe en éruption : le nuage jaillit du cratère et grossit, les projections commencent.
 func erupt() -> void:
+	if distant:
+		return
 	set_state(State.ERUPTING)
 	_cloud.scale = Vector3.ONE * 0.1
 	create_tween().tween_property(_cloud, "scale", Vector3.ONE, 3.5).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)

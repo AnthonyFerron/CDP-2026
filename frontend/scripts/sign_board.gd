@@ -30,6 +30,17 @@ const FRAME := {
 	Style.IRON: Color(0.12, 0.12, 0.14),
 }
 const POST_COLOR := Color(0.33, 0.21, 0.12)
+## Section des poteaux, et leur écart derrière la planche.
+const POST_SIZE := 0.1
+const POST_BACK := 0.05
+## Petit toit : deux planches inclinées, leur centre à ROOF_RISE au-dessus de la planche et à ROOF_OFFSET devant ou
+## derrière elle ; elles dépassent de ROOF_OVERHANG de chaque côté.
+const ROOF_RISE := 0.24
+const ROOF_OFFSET := 0.16
+const ROOF_ANGLE := 28.0
+const ROOF_THICKNESS := 0.05
+const ROOF_DEPTH := 0.4
+const ROOF_OVERHANG := 0.2
 const FONT_SIZE := 64
 const SERIF: Font = preload("res://ui/cinzel_bold.tres")
 const TEXT: Font = preload("res://assets/fonts/Lora.ttf")
@@ -115,11 +126,12 @@ func _rebuild() -> void:
 		for x in [-1.0, 1.0]:
 			for y in [-1.0, 1.0]:
 				_box(Vector3(x * (board_size.x / 2.0 - 0.11), center.y + y * (board_size.y / 2.0 - 0.11), front + 0.02), Vector3(0.04, 0.04, 0.03), Color(0.2, 0.2, 0.22))
+	var post_z := center.z - thickness / 2.0 - POST_BACK
+	var post_top := _post_top(center, post_z)
 	match mount:
 		Mount.POSTS:
-			var post_top := center.y + board_size.y / 2.0 + 0.08
 			for side in [-1.0, 1.0]:
-				_box(Vector3(side * (board_size.x / 2.0 + 0.03), post_top / 2.0, center.z - thickness / 2.0 - 0.05), Vector3(0.1, post_top, 0.1), POST_COLOR)
+				_box(Vector3(side * (board_size.x / 2.0 + 0.03), post_top / 2.0, post_z), Vector3(POST_SIZE, post_top, POST_SIZE), POST_COLOR)
 		Mount.HANGING:
 			# Potence : un montant, un bras, deux chaînes.
 			var arm_y := center.y + board_size.y / 2.0 + 0.35
@@ -129,10 +141,10 @@ func _rebuild() -> void:
 			for side in [-1.0, 1.0]:
 				_box(Vector3(side * board_size.x * 0.38, (arm_y + center.y + board_size.y / 2.0) / 2.0, 0.0), Vector3(0.025, arm_y - center.y - board_size.y / 2.0, 0.025), Color(0.18, 0.18, 0.2))
 	if roof:
-		var top := center.y + board_size.y / 2.0 + 0.16
 		for side in [-1.0, 1.0]:
-			var plank := _box(Vector3(0.0, top + 0.08, center.z + side * 0.16), Vector3(board_size.x + 0.4, 0.05, 0.4), FRAME[style])
-			plank.rotation.x = side * deg_to_rad(28.0)
+			var plank := _box(Vector3(0.0, center.y + board_size.y / 2.0 + ROOF_RISE, center.z + side * ROOF_OFFSET),
+				Vector3(board_size.x + 2.0 * ROOF_OVERHANG, ROOF_THICKNESS, ROOF_DEPTH), FRAME[style])
+			plank.rotation.x = side * deg_to_rad(ROOF_ANGLE)
 	# Texte.
 	if not text.strip_edges().is_empty():
 		_label(Vector3(0.0, center.y, front + 0.018), 0.0)
@@ -148,14 +160,33 @@ func _rebuild() -> void:
 				_collide(body, Vector3(0.3, arm_y + 0.1, 0.3), Vector3(-board_size.x / 2.0 - 0.25, (arm_y + 0.1) / 2.0, 0.0))
 			Mount.POSTS:
 				# Les deux poteaux et la planche : le dessous de la planche reste libre, sans mur invisible.
-				var post_top := center.y + board_size.y / 2.0 + 0.08
 				for side in [-1.0, 1.0]:
-					_collide(body, Vector3(0.25, post_top, 0.25), Vector3(side * (board_size.x / 2.0 + 0.03), post_top / 2.0, center.z - thickness / 2.0 - 0.05))
+					_collide(body, Vector3(0.25, post_top, 0.25), Vector3(side * (board_size.x / 2.0 + 0.03), post_top / 2.0, post_z))
 				_collide(body, Vector3(board_size.x + 0.2, board_size.y, depth), center)
 			Mount.WALL:
 				_collide(body, Vector3(board_size.x + 0.2, board_size.y, depth), center)
 		_add(body)
 
+
+
+## Haut des poteaux : un peu au-dessus de la planche ou, sous un petit toit, jusqu'à lui. Le dessous du toit monte
+## vers le faîte : le poteau s'arrête juste au-dessus de son point le plus haut, au bord du poteau côté faîte,
+## donc touche le toit sur toute sa section, sans ressortir au-dessus (la planche est plus épaisse que la pente
+## sur la section du poteau).
+func _post_top(center: Vector3, post_z: float) -> float:
+	if not roof:
+		return center.y + board_size.y / 2.0 + 0.08
+	var edge := post_z + signf(center.z - post_z) * POST_SIZE / 2.0
+	return _roof_underside(center, edge) + 0.002
+
+
+## Hauteur du dessous du petit toit à la profondeur z : la planche de devant pour z > center.z, sinon celle de
+## derrière. Chacune monte vers le faîte, au-dessus de la planche du panneau.
+func _roof_underside(center: Vector3, z: float) -> float:
+	var side := 1.0 if z > center.z else -1.0
+	var angle := deg_to_rad(ROOF_ANGLE)
+	var middle := center.y + board_size.y / 2.0 + ROOF_RISE + (z - center.z - side * ROOF_OFFSET) * -side * tan(angle)
+	return middle - ROOF_THICKNESS / 2.0 / cos(angle)
 
 
 func _collide(body: StaticBody3D, size: Vector3, position: Vector3) -> void:

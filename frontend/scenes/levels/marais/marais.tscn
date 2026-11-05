@@ -1643,6 +1643,7 @@ gallows = Array[Vector4]([Vector4(7.2, 52.2, 0, 90), Vector4(-16, 25.6, 0, 90), 
 [node name="Volcano" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, -6, -215)
 script = ExtResource("90_volcano")
+distant = true
 
 [node name="Player" parent="." instance=ExtResource("9_player")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 57)

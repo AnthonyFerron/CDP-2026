@@ -627,6 +627,7 @@ autoplay = true
 [node name="Volcano" type="Node3D" parent="Exterior"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, -6, -215)
 script = ExtResource("90_volcano")
+distant = true
 
 [node name="Interior" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -40, 0)
