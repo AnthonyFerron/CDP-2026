@@ -89,7 +89,10 @@ func _run() -> void:
 	state.placed_books.assign([&"projenomicon", &"algonicon", &"logiconomicon"])
 	state.last_zone = &"village"
 	await reload_hub()
-	check("encore tous au bunker au quatrieme livre", in_bunker(level))
+	check("Merlon au chateau des le quatrieme livre trouve", level.get_node("Characters/Merlon").global_position.z < -75
+		and level.get_node("Characters/Merlon").global_position.y > -2.0)
+	check("les autres encore au bunker au quatrieme livre", level.get_node("Characters").get_children().all(
+		func(c: Node3D) -> bool: return c.name == "Merlon" or c.global_position.y < -30.0))
 	check("portail du village encore ouvert", level.get_node("Portals/Village").is_open)
 	level.get_node("Castle/Pedestals/Village").interact()
 	await wait(700)
