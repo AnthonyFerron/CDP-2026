@@ -464,29 +464,34 @@ crackle_volume_db = -10.0
 [node name="Smokes" type="Node3D" parent="."]
 
 [node name="Smoke0" type="CPUParticles3D" parent="Smokes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 3.5, -2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 5, -2)
 script = ExtResource("11_smoke")
 radius = 1
+puff_size = 2.6
 
 [node name="Smoke1" type="CPUParticles3D" parent="Smokes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27, 3.5, -3.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27, 5, -3.5)
 script = ExtResource("11_smoke")
 radius = 1.4
+puff_size = 2.6
 
 [node name="Smoke2" type="CPUParticles3D" parent="Smokes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.6, 3.5, -1.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.6, 5, -1.6)
 script = ExtResource("11_smoke")
 radius = 1
+puff_size = 2.6
 
 [node name="Smoke3" type="CPUParticles3D" parent="Smokes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.6, 3.5, 34)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.6, 5, 34)
 script = ExtResource("11_smoke")
 radius = 1.1
+puff_size = 2.6
 
 [node name="Smoke4" type="CPUParticles3D" parent="Smokes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 3.5, 20)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 5, 20)
 script = ExtResource("11_smoke")
 radius = 1
+puff_size = 2.6
 
 [node name="Chimney0" type="CPUParticles3D" parent="Smokes"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.65, 4, 28.7)

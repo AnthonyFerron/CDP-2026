@@ -413,9 +413,11 @@ def main():
             "crackle_volume_db = -10.0"])
     node(lines, "Smokes", "Node3D")
     for index, (x, z, radius) in enumerate(SMOKES):
+        # Les colonnes montent des ruines où l'on marche (maison brûlée, auberge, cratères, écuries) : leurs volutes
+        # partent au-dessus de la tête, sinon le joueur qui y entre ne voit plus qu'une boule noire.
         node(lines, f"Smoke{index}", "CPUParticles3D", "Smokes", props=[
-            f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {x:g}, 3.5, {z:g})", 'script = ExtResource("11_smoke")',
-            f"radius = {radius:g}"])
+            f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {x:g}, 5, {z:g})", 'script = ExtResource("11_smoke")',
+            f"radius = {radius:g}", "puff_size = 2.6"])
     for index, (x, y, z) in enumerate(CHIMNEYS):
         node(lines, f"Chimney{index}", "CPUParticles3D", "Smokes", props=[
             f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {x:g}, {y:g}, {z:g})", 'script = ExtResource("11_smoke")',
