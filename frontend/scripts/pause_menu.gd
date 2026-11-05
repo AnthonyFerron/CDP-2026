@@ -103,7 +103,10 @@ func close() -> void:
 	_root.hide()
 	get_tree().paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	_was_captured = true
+	# Dans le navigateur, le verrou de la souris n'arrive que quelques images plus tard : tant qu'il n'est pas là,
+	# la souris n'a pas été « perdue » et la pause ne doit pas se rouvrir (il fallait recliquer pour la fermer).
+	# S'il est refusé, un clic dans le jeu capture la souris (Player).
+	_was_captured = false
 
 
 func _on_main_menu() -> void:
