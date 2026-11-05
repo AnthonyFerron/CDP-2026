@@ -92,3 +92,7 @@ Outils et captures : `~/cdp-work/hub/` (`tools/`, `shots/`, `grid/`).
 | 27 | Tous les intérieurs | `c2_4/Tavern_plafond.png` : taches éblouissantes au plafond | Lampes à 0,5 m sous le plafond | Lampes à 3 m, énergie 1,45 |
 | 28 | Écuries (ruine) | `rooms_0.log` : entrée bloquée à 1 m de la porte | Roue tombée à plat dans le passage de la porte | Roue tombée au milieu de l'allée |
 | 29 | Taverne, chapelle, écuries (ruines) | grille : coupe des dragons, lutrins couchés et foin tombé sans collision | — | Collisions à leur taille |
+
+### Outils de la nuit (`docs/agents/hub/interieurs/`, chemins du serveur)
+- `overlaps.py` : meuble contre mur et meuble contre meuble, dans chaque ruine et chaque reconstruction ; `lamps.py` : portée de chaque lumière contre la distance au sol du dehors ; `plan.py` : plans de marche au décimètre (collisions, cases atteintes depuis le dehors de la porte, poches), sans Godot.
+- `walk_grid.gd` (grilles à 0,5 et 0,25 m, poches, plafond au-dessus de chaque case), `rooms_walk.gd` (entrer et sortir de chaque bâtiment, porte de l'observatoire avec E, lecture de chaque texte), `float_check.gd` (objets qui flottent ou s'enfoncent, petits objets compris), `shots.gd` (captures et planches), `gen_views.py` (caméras posées sur des cases atteintes), `cycle2.sh` (tout le tour).

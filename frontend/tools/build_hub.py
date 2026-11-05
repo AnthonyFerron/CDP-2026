@@ -1187,7 +1187,7 @@ def bed(r, u, v, degrees=0.0, width=0.86, length=1.95, broken=False, slide=None)
     r.put("survival_kit/bedroll", u, v, degrees, mat, y=top + 0.06)
     du, dv = frame_offset(degrees, 0.0, -length / 2 + 0.25)
     r.put("survival_kit/bedroll-packed", u + du, v + dv, degrees, (width * 0.8 / 0.26, 2.4, 2.4), y=top + 0.3)
-    r.box(u, v, 0.3, (width, 0.6, length), degrees)
+    r.box(u, v, 0.32, (width, 0.64, length), degrees)
 
 
 def fallen_shelf(r, u, v, degrees, width=1.6, depth=0.5):
@@ -1213,6 +1213,9 @@ def hearth(r, u, v, wall_side, logs=True):
 
 
 LADDER_REACH = 0.7
+# Un râtelier d'armes couché flotte de 0,15 m par unité d'échelle (mesuré par float_check) : sa boîte (MODEL_BOXES)
+# est plus profonde que son modèle, on l'abaisse d'autant.
+RACK_SINK = 0.15
 
 
 def attic_ladder(r, u, v, degrees):
@@ -1236,7 +1239,7 @@ def furnish_school(scene, house, ruined, rng):
     # Tables et bancs des élèves, tournés vers la chaire : l'allée du milieu mène de la porte au maître.
     for row, v in enumerate((-0.9, 1.3)):
         for side in (-1, 1):
-            u = side * 2.55
+            u = side * 2.45
             tipped = ruined and rng.random() < 0.6
             r.put("mini_dungeon/table", u, v, rng.uniform(-20, 20) if tipped else 0.0, (3.6, 2.0, 1.6), height=0.62,
                   roll=90.0 if tipped else 0.0)
@@ -1248,7 +1251,7 @@ def furnish_school(scene, house, ruined, rng):
         if ruined and side > 0:
             fallen_shelf(r, hu - 1.4, -hv + 1.3, 80.0)
             continue
-        shelf(r, side * (hu - 0.3), -hv + 1.2, -90.0 * side, width=1.6, height=2.2, depth=0.5, boards=4)
+        shelf(r, side * (hu - 0.3), -hv + 1.05, -90.0 * side, width=1.6, height=2.2, depth=0.5, boards=4)
     if ruined:
         for index in range(4):
             r.add("furniture_kit/books", rng.uniform(-3.5, 3.5), rng.uniform(-1.2, 2.6), rng.uniform(0, 360), 2.4)
@@ -1260,7 +1263,7 @@ def furnish_school(scene, house, ruined, rng):
     for v in (-0.9, 1.3):
         for side in (-1, 1):
             for k in (-1, 1):
-                r.put("furniture_kit/books", side * 2.55 + k * 0.85, v, rng.uniform(-20, 20), 2.0, y=0.62)
+                r.put("furniture_kit/books", side * 2.45 + k * 0.85, v, rng.uniform(-20, 20), 2.0, y=0.62)
     # Le tableau du maître, au mur du fond : la leçon du jour est restée écrite.
     group = r.reader("Lesson", 0.0, -hv + 0.4, 1.6, "Le tableau de la classe",
                      "À la craie, d'une écriture appliquée : « Leçon du jour : découper un problème en étapes, mettre les étapes dans l'ordre, vérifier chaque résultat. » Dessous, une autre main a ajouté : « Les anciens bâtisseurs ont tout consigné dans quatre livres. »",
@@ -1356,7 +1359,7 @@ def furnish_chapel(scene, house, ruined, rng):
     for side in (-1, 1):
         r.put("graveyard_kit/urn-round", side * (hu - 0.4), -hv + 0.45, 0.0, 2.2, height=0.84, tilt=90.0 if ruined and side > 0 else 0.0)
     if ruined:
-        r.add("graveyard_kit/candle-multiple", 0.9, -1.6, 40.0, 2.0, tilt=90.0)
+        r.put("graveyard_kit/candle-multiple", 0.2, -1.45, 40.0, 2.0, tilt=90.0)
         return
     for u in (-0.7, 0.7):
         r.put("graveyard_kit/candle-multiple", u, -hv + 1.15, 0.0, 2.0, y=0.98)
@@ -1376,28 +1379,28 @@ def furnish_forge(scene, house, ruined, rng):
     hu, hv = r.hu, r.hv
     hu_, hv_ = HEARTHS["forge"](r.frame)
     hearth(r, hu_, hv_, "back")
-    r.put("survival_kit/workbench-anvil", -1.9, -1.2, 0.0, 3.4, height=1.16, roll=90.0 if ruined else 0.0)
+    r.put("survival_kit/workbench-anvil", -1.6, -1.2, 0.0, 3.4, height=1.16, roll=90.0 if ruined else 0.0)
     r.put("survival_kit/barrel-open", -0.4, -2.3, 0.0, 3.0, height=1.0, tilt=90.0 if ruined else 0.0)
     r.put("survival_kit/workbench-grind", 1.2, -hv + 0.75, 180.0, 3.6, height=1.0)
-    r.put("survival_kit/workbench", -r.wall_u + 0.5, 0.6, 90.0, (5.0, 3.0, 3.0), height=0.87, roll=90.0 if ruined else 0.0)
+    r.put("survival_kit/workbench", -r.wall_u + 0.5, 1.2, 90.0, (5.0, 3.0, 3.0), height=0.87, roll=90.0 if ruined else 0.0)
     tipped = ruined
-    r.put("mini_arena/weapon-rack", r.wall_u - 0.6, -1.2, -90.0, 2.6, height=1.2, tilt=90.0 if tipped else 0.0)
+    r.put("mini_arena/weapon-rack", r.wall_u - 0.6, -1.2, -90.0, 2.6, height=1.2, y=-RACK_SINK * 2.6 if tipped else 0.0, tilt=90.0 if tipped else 0.0)
     r.put("mini_dungeon/barrel", 2.9, -3.0, 0.0, 2.4, height=1.15)
-    r.put("survival_kit/chest", -3.0, 2.8, 90.0, 3.0, height=0.78)
+    r.put("survival_kit/chest", -3.0, 2.95, 90.0, 3.0, height=0.78)
     r.put("nature_kit/log_stack", -1.2, -hv + 0.6, 0.0, 1.6, height=0.56)
     if ruined:
         r.add("survival_kit/tool-hammer", -1.0, 0.3, 30.0, 4.0, tilt=90.0)
         return
     top = 0.87
-    r.put("survival_kit/tool-hammer", -3.3, 0.05, 90.0, 3.4, y=top, tilt=90.0)
-    r.put("survival_kit/tool-axe", -3.3, 1.25, 90.0, 3.4, y=top, tilt=90.0)
+    r.put("survival_kit/tool-hammer", -3.3, 0.65, 90.0, 3.4, y=top, tilt=90.0)
+    r.put("survival_kit/tool-axe", -3.3, 1.85, 90.0, 3.4, y=top, tilt=90.0)
     for v in (-2.0, -0.4):
         r.put("mini_dungeon/shield-round", r.face_u - 0.13, v, -90.0, 2.2, y=2.0)
     # Épées forgées pour l'armée, la pointe dans le tonneau du coin, la garde dehors.
     for du, dv, yaw in ((-0.2, 0.1, 0.0), (0.15, -0.1, 60.0), (0.1, 0.25, 120.0)):
         r.put("mini_dungeon/weapon-sword", 2.9 + du, -3.0 + dv, yaw, 3.0, y=0.2, tilt=180.0)
-    r.put("furniture_kit/books", -3.3, 0.65, 100.0, 2.4, y=top)
-    back = r.reader("Orders", -3.3, 0.6, 0.95, "Le carnet de commandes",
+    r.put("furniture_kit/books", -3.3, 1.25, 100.0, 2.4, y=top)
+    back = r.reader("Orders", -3.3, 1.2, 0.95, "Le carnet de commandes",
                     "Commande de l'armée de Codia, hiver 5811 : quarante épées, soixante pointes de lance, vingt boucliers ronds. Livré : douze épées. En bas de la page, de la main de Bran : « Plus de fer, plus de charbon. Je garde le dernier marteau pour reconstruire. »",
                     radius=2.0)
     scene.group = back
@@ -1412,10 +1415,10 @@ def furnish_farm(scene, house, ruined, rng):
     hu, hv = r.hu, r.hv
     hu_, hv_ = HEARTHS["farm"](r.frame)
     hearth(r, hu_, hv_, "right")
-    r.put("food_kit/pot-stew", hu_ - 1.2, hv_, 90.0, 1.4, height=0.5, tilt=90.0 if ruined else 0.0)
-    r.put("mini_dungeon/table", -0.35, 1.1, 0.0, 2.4, height=0.74, roll=90.0 if ruined else 0.0)
+    r.put("food_kit/pot-stew", hu_ - 1.2, hv_ - 1.0, 90.0, 1.4, height=0.5, tilt=90.0 if ruined else 0.0)
+    r.put("mini_dungeon/table", -0.7, 1.1, 0.0, 2.4, height=0.74, roll=90.0 if ruined else 0.0)
     for v in (-0.08, 2.28):
-        r.put("fantasy_town_kit/stall-bench", -0.35, v, 90.0, (3.0, 2.0, 2.6), height=0.46, roll=90.0 if ruined and v > 0 else 0.0)
+        r.put("fantasy_town_kit/stall-bench", -0.7, v, 90.0, (3.0, 2.0, 2.3), height=0.46, roll=90.0 if ruined and v > 0 else 0.0)
     for index, u in enumerate((-3.15, -2.0)):
         bed(r, u, -hv + 1.15 + (0.3 if ruined and index else 0.0), broken=ruined)
     r.put("survival_kit/chest", -0.75, -hv + 0.5, 0.0, 3.0, height=0.78)
@@ -1423,21 +1426,21 @@ def furnish_farm(scene, house, ruined, rng):
         tipped = ruined and index == 1
         r.put("food_kit/bag", u - (0.4 if tipped else 0.0), v - (0.6 if tipped else 0.0), rng.uniform(-20, 20) if not tipped else 0.0, 1.6, height=1.3,
               y=-0.14 if tipped else 0.0, tilt=90.0 if tipped else 0.0)
-    r.put("survival_kit/box-open", 1.4, 3.2, rng.uniform(-10, 10), 2.6, height=0.8)
+    r.put("survival_kit/box-open", 1.55, 3.25, 0.0, 2.6, height=0.8)
     r.put("survival_kit/barrel-open", 3.2, 2.2, 0.0, 3.0, height=1.0)
     for v, model in ((1.0, "survival_kit/tool-hoe"), (1.5, "survival_kit/tool-shovel")):
         r.put(model, -r.wall_u + 0.35 + (0.35 if ruined and v > 1.2 else 0.0), v + (0.3 if ruined and v > 1.2 else 0.0), 90.0, 5.0,
               tilt=-10.0 if not ruined else 0.0, roll=90.0 if ruined else 0.0)
     if not ruined:
         top = 0.74
-        for u in (-0.95, 0.25):
-            r.put("food_kit/bowl", u, 1.1, 0.0, 0.8, y=top)
-        r.put("food_kit/loaf-round", -0.35, 1.3, 20.0, 0.7, y=top)
-        r.put("graveyard_kit/candle", 0.55, 1.6, 0.0, 1.6, y=top)
+        for u in (-0.95, 0.05):
+            r.put("food_kit/bowl", u, 1.45, 0.0, 0.8, y=top)
+        r.put("food_kit/loaf-round", -0.3, 0.75, 20.0, 0.7, y=top)
+        r.put("graveyard_kit/candle", 0.15, 0.7, 0.0, 1.6, y=top)
         for model, du, scale in (("food_kit/cabbage", -0.15, 0.6), ("food_kit/carrot", 0.15, 0.45)):
-            r.put(model, 1.4 + du, 3.2, rng.uniform(0, 360), scale, y=0.8)
-        r.put("furniture_kit/books", -1.25, 0.85, 80.0, 2.2, y=top)
-        back = r.reader("Almanac", -1.15, 1.0, 0.9, "L'almanach de la ferme",
+            r.put(model, 1.55 + du, 3.25, rng.uniform(0, 360), scale, y=0.8)
+        r.put("furniture_kit/books", -1.55, 0.85, 80.0, 2.2, y=top)
+        back = r.reader("Almanac", -1.45, 1.0, 0.9, "L'almanach de la ferme",
                         "Semailles d'automne 5811 : blé dans le champ de l'est, citrouilles le long de l'enclos. Été 5812 : les soldats de Vibelandia ont brûlé la moisson avant qu'on puisse la rentrer. Dernière ligne, avant le départ pour le bunker : « Garder les semences au sec. On replantera. »",
                         radius=2.0)
         scene.group = back
@@ -1598,8 +1601,8 @@ def furnish_mill(scene, house, ruined, rng):
     r.put("mini_dungeon/barrel", 3.0, 1.8, 0.0, 2.6, height=1.25)
     top = 0.81
     r.put("mini_dungeon/table", -0.9, 2.5, 0.0, 2.6, height=top)
-    r.put("food_kit/bowl", -1.4, 2.4, 20.0, 1.4, y=top)
-    r.put("food_kit/bag-flat", -1.5, 2.8, -10.0, 1.2, y=top)
+    r.put("food_kit/bowl", -1.5, 2.2, 0.0, 1.4, y=top)
+    r.put("food_kit/bag-flat", -0.85, 3.0, 0.0, 1.2, y=top)
     r.put("graveyard_kit/candle", 0.0, 2.7, 0.0, 1.6, y=top)
     r.put("furniture_kit/books", -0.5, 2.0, 75.0, 2.2, y=top)
     for u, model in ((1.3, "survival_kit/tool-shovel"), (1.8, "survival_kit/tool-hoe")):
@@ -1672,13 +1675,13 @@ def furnish_barracks(scene, house, ruined, rng):
             slide=math.copysign(0.3, u) if abs(u) < 2.0 else -math.copysign(0.3, u))
         if not moved:
             r.put("survival_kit/chest", u, -1.4, 0.0, 2.4, height=0.62)
-    r.put("mini_arena/weapon-rack", 0.0, -hv + 0.55, 0.0, 2.4, height=1.1, tilt=90.0 if ruined else 0.0)
+    r.put("mini_arena/weapon-rack", 0.0, -hv + 0.55, 0.0, 2.4, height=1.1, y=-RACK_SINK * 2.4 if ruined else 0.0, tilt=90.0 if ruined else 0.0)
     r.put("mini_dungeon/table", -2.8, 2.0, 0.0, 2.8, height=0.87, roll=90.0 if ruined else 0.0)
     for v in (0.6, 3.32):
         r.put("fantasy_town_kit/stall-bench", -2.8, v, 90.0, (3.0, 2.0, 3.0), height=0.46, roll=90.0 if ruined and v > 1 else 0.0)
     for index, v in enumerate((-0.9, 1.4)):
         tipped = ruined and index == 0
-        r.put("mini_arena/weapon-rack", r.wall_u - 0.6, v, -90.0, 2.6, height=1.2, tilt=90.0 if tipped else 0.0)
+        r.put("mini_arena/weapon-rack", r.wall_u - 0.6, v, -90.0, 2.6, height=1.2, y=-RACK_SINK * 2.6 if tipped else 0.0, tilt=90.0 if tipped else 0.0)
     r.put("survival_kit/barrel", 5.1, 3.2, 0.0, 3.0, height=1.0)
     if ruined:
         return
@@ -1729,8 +1732,8 @@ def furnish_apothecary(scene, house, ruined, rng):
     if ruined:
         fallen_shelf(r, -1.4, -2.3, 10.0, width=2.2)
         fallen_shelf(r, -2.6, 0.9, 80.0, width=1.8)
-        for index in range(3):
-            r.add("mini_dungeon/potion", rng.uniform(-1.5, 1.5), rng.uniform(-1.0, 1.5), rng.uniform(0, 360), 1.0, tilt=90.0)
+        for u, v in ((1.2, 1.2), (1.7, 0.85), (-1.6, 1.7)):
+            r.put("mini_dungeon/potion", u, v, rng.uniform(0, 360), 1.0, tilt=90.0)
         return
     potions = [("mini_dungeon/potion", -0.8 + (k % 4) * 0.5, 1 + k // 4, 0.7) for k in range(8)]
     shelf(r, -1.55, -r.wall_v + 0.3, 0.0, width=2.2, height=2.2, depth=0.5, boards=4, books=False,
@@ -1771,7 +1774,7 @@ def furnish_scriptorium(scene, house, ruined, rng):
             fallen_shelf(r, 2.75, -1.2, 90.0, width=2.6)
             continue
         shelf(r, side * (r.wall_u - 0.3), -1.2, -90.0 * side, width=2.6, height=2.6, depth=0.5, boards=5)
-    for row, v in enumerate((-1.0, 1.2)):
+    for row, v in enumerate((-0.8, 1.4)):
         for side in (-1, 1):
             tipped = ruined and side > 0
             r.put("mini_dungeon/table", side * 1.4, v, 0.0, 2.0, height=0.62, roll=90.0 if tipped else 0.0)
@@ -1781,7 +1784,7 @@ def furnish_scriptorium(scene, house, ruined, rng):
                 r.put("graveyard_kit/candle", side * 1.4 + 0.5, v - 0.25, 0.0, 1.6, y=0.62)
     lectern = 1.6 * MODEL_BOXES["graveyard_kit/altar-wood"][1][1]
     r.put("graveyard_kit/altar-wood", 0.0, -hv + 0.6, 0.0, 1.6, height=lectern)
-    r.put("survival_kit/chest", 2.7, -3.2, 0.0, 3.0, height=0.78)
+    r.put("survival_kit/chest", -2.7, -3.2, 0.0, 3.0, height=0.78)
     if ruined:
         for index in range(4):
             r.add("furniture_kit/books", rng.uniform(-2.0, 2.0), rng.uniform(-1.0, 2.0), rng.uniform(0, 360), 2.4)
@@ -1940,7 +1943,7 @@ def tower_doors(scene, x, z, scale, name):
     look_in = math.atan2(out_x, out_z)
     look_out = math.atan2(-out_x, -out_z)
     for key, (a, prompt, (da, db), facing) in {
-        "DoorOutside": (outer + 0.3, "Entrer dans l'observatoire", (0.6, -0.2), look_in),
+        "DoorOutside": (outer + 0.3, "Entrer dans l'observatoire", (0.3, -0.4), look_in),
         "DoorInside": (inner - 0.2, "Sortir de l'observatoire", (outer + 1.6, 0.0), look_out),
     }.items():
         px, pz = tower_point(x, z, a, 0.0)
