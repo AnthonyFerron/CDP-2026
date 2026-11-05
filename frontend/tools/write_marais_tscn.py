@@ -641,7 +641,7 @@ def main():
     # On arrive en haut du long escalier, sous la trappe, et l'on descend vers la salle.
     node(lines, "InsideSpawn", "Marker3D", "Interior", props=[f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, {LANDING_Y + 0.3:g}, 11.0)"])
     node(lines, "Hatch", "MeshInstance3D", "Interior", props=[
-        f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, {LANDING_Y + 4.15 - 0.07:g}, 13.0)", 'mesh = SubResource("BoxMesh_hatch")'])
+        f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, {LANDING_Y + 4.15 - 0.07:g}, 12.85)", 'mesh = SubResource("BoxMesh_hatch")'])
     node(lines, "Exit", "Node3D", "Interior", props=[
         "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 2.0)", 'script = ExtResource("11_interactable")',
         'prompt = "Remonter l\'escalier"', "radius = 2.2"])

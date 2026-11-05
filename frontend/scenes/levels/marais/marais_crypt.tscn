@@ -62,7 +62,7 @@ size = Vector3(0.6, 4.35, 4)
 size = Vector3(3.8, 4.35, 0.6)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_13"]
-size = Vector3(0.75, 4.15, 0.2)
+size = Vector3(0.75, 4.15, 0.24)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_14"]
 size = Vector3(1.6, 4, 1.6)
@@ -711,13 +711,13 @@ transform = Transform3D(0, 0, -1, 0, 1.09639, 0, 1, 0, 0, -1.9, 4.05, 12.4)
 transform = Transform3D(0.95, 0, 0, 0, 1.09639, 0, 0, 0, 1, 0, 4.05, 14.4)
 
 [node name="ladder_202" parent="Models" instance=ExtResource("5_model")]
-transform = Transform3D(1.36, 0, 0, 0, 1.36, 0, 0, 0, 1.36, 0, 4.05, 13.8267)
+transform = Transform3D(1.36, 0, 0, 0, 1.36, 0, 0, 0, 1.36, 0, 4.05, 13.6467)
 
 [node name="ladder_203" parent="Models" instance=ExtResource("5_model")]
-transform = Transform3D(1.36, 0, 0, 0, 1.36, 0, 0, 0, 1.36, 0, 5.41, 13.8267)
+transform = Transform3D(1.36, 0, 0, 0, 1.36, 0, 0, 0, 1.36, 0, 5.41, 13.6467)
 
 [node name="ladder_204" parent="Models" instance=ExtResource("5_model")]
-transform = Transform3D(1.36, 0, 0, 0, 1.36, 0, 0, 0, 1.36, 0, 6.77, 13.8267)
+transform = Transform3D(1.36, 0, 0, 0, 1.36, 0, 0, 0, 1.36, 0, 6.77, 13.6467)
 
 [node name="dust_column_205" parent="Models" instance=ExtResource("6_model")]
 transform = Transform3D(3.6, 0, 0, 0, 3.6, 0, 0, 0, 3.6, -7, 0, -5)
@@ -1765,7 +1765,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.125, 14.1)
 shape = SubResource("BoxShape3D_12")
 
 [node name="Box200" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.125, 13.68)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.125, 13.64)
 shape = SubResource("BoxShape3D_13")
 
 [node name="Box201" type="CollisionShape3D" parent="Collision"]

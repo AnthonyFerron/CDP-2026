@@ -827,11 +827,13 @@ def build_crypt_underground(scene, rng):
         scene.add_box((edge[0] - dx * 0.3, ly + CRYPT_HEIGHT / 2, edge[1] - dz * 0.3), size)
     # L'échelle de bois qui descend de la trappe au palier, contre le mur du fond : trois pans de l'échelle du kit
     # empilés (les barreaux gardent leur écart), du sol du palier jusqu'au bord de la trappe (Hatch dans marais.tscn).
-    face = lz + 2.0 - WALL_FACE
+    # Contre le panneau central du mur, qui avance jusqu'à 0,63 m du bord (PANEL_FACE dans write_marais_tscn.py) : posée
+    # contre la façade à 0,45 m, l'échelle avait ses barreaux dans le panneau.
+    face = lz + 2.0 - 0.63
     rung = (CRYPT_HEIGHT - 0.07) / 3
     for index in range(3):
         scene.place("mini_forest/ladder", (lx, ly + index * rung, face - 0.137 * rung / 2 - 0.005), 0.0, rung)
-    scene.add_box((lx, ly + CRYPT_HEIGHT / 2, face - 0.27), (0.75, CRYPT_HEIGHT, 0.2))
+    scene.add_box((lx, ly + CRYPT_HEIGHT / 2, face - 0.13), (0.75, CRYPT_HEIGHT, 0.24))
 
     # Salle du mécanisme : colonnes aux angles, bannières et cierges autour du mécanisme, braseros au fond.
     for x in (-7.0, 7.0):
