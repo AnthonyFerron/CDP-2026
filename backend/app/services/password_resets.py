@@ -75,13 +75,13 @@ def _check_rate_limit(email: str, now: datetime) -> None:
     wait = password_reset_recent.retry_after(email, timestamp, 1, recent_window)
     if wait is not None:
         raise TooManyRequestsError(
-            "Une demande vient d'être faite pour cette adresse. Patientez avant d'en faire une autre.",
+            "Un lien vient d'être demandé : patientez avant d'en redemander un.",
             retry_after=wait,
         )
     wait = password_reset_hourly.retry_after(email, timestamp, settings.password_reset_max_per_hour, HOUR_SECONDS)
     if wait is not None:
         raise TooManyRequestsError(
-            "Trop de demandes de réinitialisation pour cette adresse. Réessayez plus tard.", retry_after=wait
+            "Trop de liens demandés pour cette adresse : réessayez plus tard.", retry_after=wait
         )
     password_reset_recent.record_failure(email, timestamp, recent_window)
     password_reset_hourly.record_failure(email, timestamp, HOUR_SECONDS)

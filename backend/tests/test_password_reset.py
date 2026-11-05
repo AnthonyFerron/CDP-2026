@@ -137,7 +137,7 @@ def test_requests_are_rate_limited_per_address_whether_the_account_exists_or_not
     clock.advance(61)
     hourly = request_reset(api.client, EMAIL)
     assert hourly.status_code == 429
-    assert "Trop de demandes" in hourly.json()["detail"]
+    assert "Trop de liens" in hourly.json()["detail"]
     assert len(mails_to(api.outbox)) == 5
 
     clock.advance(hours=1)
