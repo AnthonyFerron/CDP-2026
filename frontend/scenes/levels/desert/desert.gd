@@ -20,8 +20,8 @@ const SANDSTONE := Color(1.0, 0.8, 0.6)
 ## et virait au noir sous la teinte du grès.
 const CAIRN_STONE := Color(0.7, 0.58, 0.46)
 ## Modèles des ruines dont une boîte laisserait des murs invisibles (étals ouverts sous leur auvent, charrette
-## renversée, bannières sur pied) : leur collision suit leurs triangles.
-const EXACT_MODELS: Array[String] = ["cart_", "stall_", "banner_"]
+## renversée, bannières sur pied, rochers épars) : leur collision suit leurs triangles.
+const EXACT_MODELS: Array[String] = ["cart_", "stall_", "banner_", "rocks_small"]
 ## Lumière ambiante dehors et dans la cave, sombre et poussiéreuse.
 const AMBIENT_OUTSIDE := 0.3
 const AMBIENT_INSIDE := 0.22
@@ -106,6 +106,7 @@ func _ready() -> void:
 	_safe_position = _player.global_position
 	_tint_stone($Exterior/Ruins)
 	_exact_colliders($Exterior/Ruins)
+	_hull_colliders($Exterior/Ruins)
 	# Les tests d'audit, qui mesurent les maillages triangle par triangle, lancent le niveau sans ce regroupement.
 	if not "sans_regroupement" in OS.get_cmdline_user_args():
 		_merge_static($Exterior/Ruins)
@@ -380,6 +381,32 @@ func _exact_colliders(root: Node3D) -> void:
 			var holder := CollisionShape3D.new()
 			holder.shape = shape
 			body.add_child(holder)
+
+
+## Collision des modèles marqués « hull » par tools/build_desert.py (tas de briques, tentes, tête colossale,
+## colonnes abîmées) : l'enveloppe convexe de tous leurs triangles, au lieu d'une boîte qui débordait.
+func _hull_colliders(root: Node3D) -> void:
+	var body := StaticBody3D.new()
+	body.name = "HullCollision"
+	root.add_child(body)
+	var inverse := body.global_transform.affine_inverse()
+	for model: Node in root.get_node("Models").get_children():
+		if not model.has_meta(&"hull"):
+			continue
+		var points := {}
+		for mesh: MeshInstance3D in model.find_children("*", "MeshInstance3D", true, false):
+			if not mesh.mesh:
+				continue
+			var xform := inverse * mesh.global_transform
+			for corner in mesh.mesh.get_faces():
+				points[(xform * corner).snappedf(0.001)] = true
+		if points.size() < 4:
+			continue
+		var shape := ConvexPolygonShape3D.new()
+		shape.points = PackedVector3Array(points.keys())
+		var holder := CollisionShape3D.new()
+		holder.shape = shape
+		body.add_child(holder)
 
 
 ## Modèle du kit auquel appartient un maillage : l'enfant du nœud Models qui le contient.
