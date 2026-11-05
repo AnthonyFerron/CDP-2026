@@ -472,6 +472,22 @@ def add_tilted_box(scene, center, size, roll):
     scene.colliders.append((transform_text(rotation_z(roll), center), scene._box_id(size)))
 
 
+def shaft(scene, position, degrees, scale, lean, half, width=0.14, label="hampe"):
+    """Collision d'une hampe fichée de biais dans le sol (une flèche) : une boîte tournée comme elle, du point où elle
+    sort du sol à sa pointe haute, aussi haute qu'elle. Sans elle, on passait au travers des flèches de la rue."""
+    basis = basis_of(degrees, lean)
+    # Le bout haut du modèle est son bout -z : sa direction une fois tourné et incliné.
+    up = [-basis[r][2] for r in range(3)]
+    top = half * scale
+    ground = -position[1] / up[1]
+    mid = (ground + top) / 2
+    center = (position[0] + up[0] * mid, position[2] + up[2] * mid)
+    height = position[1] + up[1] * top
+    length = (top - ground) * math.hypot(up[0], up[2]) + width
+    scene.add_box((center[0], height / 2, center[1]), (width, height, length), degrees)
+    LAYOUT.add(label, None, (center[0], 0, center[1]), (width, height, length), degrees, 0.0, height)
+
+
 def post(scene, x, z, radius, height, y=0.0, group=None, label="poteau"):
     """Collision cylindrique d'un poteau, d'un tonneau ou d'un tronc."""
     if hasattr(scene, "add_cylinder"):
@@ -652,6 +668,16 @@ def cat(scene, x, y, z, degrees, coat, lying=False):
         cylinder(scene, coat, at(side, 0.45, 0.04), 0.025, 0.06, top=0.0, degrees=degrees, sides=4)
         sphere(scene, "eye", at(side * 0.8, 0.375, 0.12), 0.012)
     box(scene, coat, at(0.09, 0.03, -0.08), (0.04, 0.04, 0.24), degrees + 35.0)
+
+
+def axe_in_block(scene, edge, degrees, scale):
+    """Hache fichée dans un billot : le tranchant de son fer (bout -x du haut du modèle) enfoncé au point edge, le
+    manche relevé de 30 degrés au-dessus de l'horizontale. Posée par le bas de son manche, elle flottait."""
+    roll = 120.0
+    basis = basis_of(degrees, 0.0, roll, scale)
+    blade = (-0.07, 0.22, 0.0)
+    offset = [sum(basis[r][i] * blade[i] for i in range(3)) for r in range(3)]
+    scene.add("survival_kit/tool-axe", (edge[0] - offset[0], edge[1] - offset[1], edge[2] - offset[2]), degrees, scale, roll=roll)
 
 
 def doll(scene, position, degrees):
@@ -949,6 +975,15 @@ def fp(scene, frame, model, a, b, local=0.0, scale=2.6, height=None, tilt=0.0, r
     place(scene, model, frame.p(a, b, y), frame.yaw(local), scale, height=height, tilt=tilt, roll=roll, label=label)
 
 
+def flat(model, scale, thickness=0.22):
+    """Échelle d'une arme ou d'un bouclier couché (tilt 90) : son épaisseur (son axe z, devenu vertical) ramenée sous
+    la cheville, pour qu'on l'enjambe sans passer au travers."""
+    depth = MODEL_BOXES[model][1][2] if model in MODEL_BOXES else None
+    if depth is None or depth * scale <= thickness:
+        return scale
+    return (scale, scale, thickness / depth)
+
+
 def fl(scene, frame, model, a, b, local=0.0, scale=1.0, y=0.0, tilt=0.0, roll=0.0):
     """Petit objet sans collision posé dans le repère de la maison, par le bas de sa boîte."""
     lay(scene, model, frame.p(a, b, y), frame.yaw(local), scale, tilt=tilt, roll=roll)
@@ -1188,8 +1223,9 @@ def guard(scene, rng, frame):
     a, local = frame.wall_a(-far, deep)
     fp(scene, frame, "mini_arena/weapon-rack", a, -2.4, local, 2.4, height=1.15, label="râtelier vide")
     for a2, b2 in ((far * 2.4, 0.6), (far * 1.4, 1.5)):
-        fl(scene, frame, "mini_dungeon/shield-rectangle", a2, b2, rng.uniform(0, 360), 2.6, y=FLOOR, tilt=90.0)
-    fl(scene, frame, "mini_dungeon/weapon-spear", -far * 0.4, 1.7, 70.0, 3.2, y=FLOOR, tilt=90.0)
+        fl(scene, frame, "mini_dungeon/shield-rectangle", a2, b2, rng.uniform(0, 360), flat("mini_dungeon/shield-rectangle", 2.6),
+           y=FLOOR, tilt=90.0)
+    fl(scene, frame, "mini_dungeon/weapon-spear", -far * 0.4, 1.7, 70.0, flat("mini_dungeon/weapon-spear", 3.2), y=FLOOR, tilt=90.0)
     a, local = frame.wall_a(far, 1.12)
     fp(scene, frame, "mini_dungeon/chest", a, 0.6, local + 90.0, 1.6, height=0.6, label="coffre")
 
@@ -1266,16 +1302,17 @@ def build_gate_defense(scene, rng):
     for model, x, z, degrees, scale in (("mini_dungeon/weapon-spear", -4.4, 35.9, 70.0, 3.2), ("mini_dungeon/weapon-spear", 4.2, 34.6, 120.0, 3.2),
                                         ("mini_dungeon/weapon-sword", -7.6, 35.4, 30.0, 2.2), ("mini_dungeon/weapon-sword", 9.6, 37.4, 160.0, 2.2),
                                         ("mini_arena/weapon-spear", -15.6, 38.6, 95.0, 3.0)):
-        lay(scene, model, (x, 0.0, z), degrees, scale, tilt=90.0)
+        lay(scene, model, (x, 0.0, z), degrees, flat(model, scale), tilt=90.0)
     for model, x, z, scale in (("mini_dungeon/shield-round", -5.2, 34.9, 1.9), ("mini_dungeon/shield-rectangle", 7.4, 34.9, 2.8),
                                ("mini_dungeon/shield-round", -11.4, 36.6, 1.9), ("mini_dungeon/shield-rectangle", 3.4, 35.8, 2.8)):
-        lay(scene, model, (x, 0.0, z), rng.uniform(0, 360), scale, tilt=90.0)
+        lay(scene, model, (x, 0.0, z), rng.uniform(0, 360), flat(model, scale), tilt=90.0)
     # Bannière de Codia arrachée, couchée au pied de la tour.
     lay(scene, "castle_kit/flag-banner-long", (-11.5, 0.0, 35.0), 0.0, 1.4, roll=90.0)
     # Flèches de Vibelandia fichées dans le sol et dans les charrettes.
-    for x, z, degrees, lean in ((-3.3, 33.0, 20.0, 35.0), (3.1, 31.4, 200.0, 40.0), (-3.6, 27.5, 150.0, 30.0),
-                                (3.4, 41.2, 10.0, 45.0), (-1.9, 44.0, 0.0, 50.0), (5.0, 36.1, 260.0, 30.0)):
+    for x, z, degrees, lean in ((-3.3, 33.0, 20.0, 35.0), (3.1, 31.4, 200.0, 40.0), (-4.2, 27.2, 150.0, 30.0),
+                                (3.4, 41.2, 10.0, 45.0), (-2.4, 44.0, 0.0, 50.0), (5.0, 36.1, 260.0, 30.0)):
         decor(scene, "mini_forest/weapon-arrow", (x, 0.12, z), degrees, 3.0, tilt=lean)
+        shaft(scene, (x, 0.12, z), degrees, 3.0, lean, 0.23, label="flèche fichée")
     place(scene, "fantasy_town_kit/lantern", (-3.3, 0.0, 27.4), 0.0, 2.2, height=0.5, tilt=90.0, label="lanterne fauchée")
     # Autour du mémorial des gardes (posé dans village.tscn, en (12, 37,5)) : leurs lances plantées, leurs boucliers
     # appuyés au socle, des bougies et des fleurs déposées par les survivants.
@@ -1381,7 +1418,7 @@ def build_gardens(scene, rng):
     place(scene, "nature_kit/log_stack", (-22.5, 0.0, -25.0), 90.0, 2.6, height=0.9, label="tas de bois")
     place(scene, "nature_kit/log_stack", (-20.3, 0.0, -25.2), 90.0, 2.6, height=0.9, label="tas de bois")
     place(scene, "nature_kit/stump_old", (-24.4, 0.0, -23.0), 0.0, 2.2, height=0.6, label="billot")
-    decor(scene, "survival_kit/tool-axe", (-24.3, 0.58, -23.0), 30.0, 3.0, tilt=-28.0)
+    axe_in_block(scene, (-24.4, top_of("nature_kit/stump_old", 2.2) - 0.06, -23.0), 30.0, 3.0)
     for x, z in ((-23.6, -22.2), (-25.0, -22.0)):
         lay(scene, "nature_kit/log", (x, 0.0, z), rng.uniform(0, 360), 1.6)
     cx, cz = -26.4, -29.0
@@ -1420,6 +1457,8 @@ def build_stables(scene, rng):
     box(scene, "wood_dark", (24.0, 5.22, 30.0), (0.3, 0.3, 12.8))
     box(scene, "char_wood", (21.7, 2.1, 34.0), (5.2, 0.14, 3.5), roll=42.0)
     block(scene, (20.6, 0.6, 34.0), (2.2, 1.2, 3.3), label="toit effondré")
+    # Le pan lui-même, incliné comme lui : on ne passe plus au travers de sa moitié haute.
+    add_tilted_box(scene, (21.7, 2.1, 34.0), (5.2, 0.3, 3.5), 42.0)
     # Poutres tombées du toit, à l'écart de l'entrée de l'écurie.
     for x, z, degrees in ((21.6, 37.6, 85.0), (24.6, 38.4, 100.0)):
         charred_beam(scene, (x, 0.15, z), 2.4, degrees)
@@ -1435,12 +1474,14 @@ def build_stables(scene, rng):
     place(scene, "graveyard_kit/hay-bale-bundled", (21.6, 0.0, 24.9), 90.0, 2.0, height=0.76, label="botte de foin")
     place(scene, "fantasy_town_kit/cart-high", (22.6, 0.0, 28.6), 0.0, 2.2, height=1.9, label="charrette à foin")
     lay(scene, "graveyard_kit/hay-bale", (22.6, top_of("fantasy_town_kit/cart-high", 2.2) - 0.4, 28.4), 15.0, 1.8)
-    box(scene, "leather", (25.0, 1.32, 28.0), (0.5, 0.12, 0.6))
-    for x, z in ((25.2, 31.2), (23.4, 33.0)):
+    box(scene, "leather", (25.0, 1.32, 28.0), (0.5, 0.12, 0.34))
+    for x, z in ((25.0, 31.7), (23.4, 33.0)):
         lay(scene, "survival_kit/bucket", (x, 0.0, z), rng.uniform(0, 360), 2.2)
+        post(scene, x, z, 0.17, 0.42, label="seau")
     for x, z in ((24.2, 26.2), (21.4, 30.6), (23.0, 21.0)):
         torus(scene, "iron", (x, 0.02, z), 0.05, 0.08, rng.uniform(0, 360))
     decor(scene, "survival_kit/tool-hoe", (20.45, 0.0, 29.0), 90.0, 5.6, roll=-14.0)
+    block(scene, (20.45, 0.65, 29.0), (0.36, 1.3, 0.5), label="houe")
     # Enclos devant les écuries, clôture brisée par les chevaux en fuite.
     fence = "nature_kit/fence_simple"
     for x in (19.2, 21.6, 24.0, 26.4, 28.8):
@@ -1499,6 +1540,7 @@ def build_town_hall(scene):
         if side == "south" and index == 1:
             # Porte fermée : on entre par l'interaction, qui mène à l'intérieur, sous la carte.
             vwall(scene, "wall-door", center, outward, group="mairie")
+            door_leaf(scene, center, outward, step=True)
         else:
             vwall(scene, "wall-window-shutters" if index != 1 else "wall", center, outward, group="mairie")
         wall(scene, "wall-window-stone" if (side == "south" or index != 1) else "wall-detail-cross",
@@ -1556,6 +1598,14 @@ def build_mills(scene, rng):
         r = math.radians(roll)
         center = (top[0] + math.sin(r) * 0.1, top[1] - math.cos(r) * 0.1, 6.0)
         add_tilted_box(scene, center, (math.hypot(run, rise) + 0.1, 0.2, 5.2), roll)
+        # La rampe se voit : des planches du bout du tablier à la rue, sur une culée de pierre enfoncée dans la berge.
+        # Sans elles, le tablier s'arrêtait au-dessus de l'eau et le pont semblait ne toucher aucune rive.
+        planks = (top[0] + math.sin(r) * 0.08, top[1] - math.cos(r) * 0.08, 6.0)
+        box(scene, "wood", planks, (math.hypot(run, rise) + 0.3, 0.16, 4.5), roll=roll)
+        for k in range(-3, 4):
+            box(scene, "wood_dark", (planks[0] - math.sin(r) * 0.081, planks[1] + math.cos(r) * 0.081, 6.0 + k * 0.62),
+                (math.hypot(run, rise) + 0.3, 0.005, 0.04), roll=roll)
+        box(scene, "stone", ((x0 + x1) / 2 + side * 0.15, (street - 0.04 - 1.4) / 2, 6.0), (run + 0.6, street - 0.04 + 1.4, 5.0))
     for side in (-1, 1):
         # Flancs du pont, du lit du ruisseau au haut du garde-corps : ni on n'y entre depuis l'eau, ni on ne s'y
         # enfonce depuis le tablier.
@@ -1577,8 +1627,8 @@ def build_mills(scene, rng):
     # Porte du moulin, sacs de grain et meule de rechange au pied de la tour.
     # La porte est dans le mur ouest de la tour (son modèle est mince selon x) : tournée d'un quart de tour, elle en
     # sortait de travers comme une planche.
-    scene.add("castle_kit/door", (28.48, 4.0, -30.0), 0.0, 3.0)
-    block(scene, (28.38, 4.0 + 0.92, -30.0), (0.3, 1.84, 1.1), label="porte du moulin", structure=True)
+    scene.add("castle_kit/door", (28.56, 4.0, -30.0), 0.0, 4.0)
+    block(scene, (28.4, 4.0 + 1.22, -30.0), (0.34, 2.44, 1.44), label="porte du moulin", structure=True)
     for x, z, degrees in ((27.8, -28.4, 20.0), (27.6, -27.6, 80.0), (28.4, -27.4, 140.0)):
         place(scene, "food_kit/bag", (x, 4.0, z), degrees, 1.05, height=0.88, label="sac de grain")
     cylinder(scene, "stone", (31.0, 4.2, -26.9), 0.8, 0.35, sides=14)
@@ -1623,14 +1673,22 @@ OFFICE_FLOOR = 4.5
 OFFICE_WALLS = WALL_HEIGHT
 
 
-def room_walls(scene, cx, cz, width, depth, base, doors, skip=(), closed=(), models=("wall", "wall-detail-cross", "wall", "wall-detail-horizontal")):
-    """Murs de pierre d'une pièce, sans fenêtres : elle est sous terre. Les portes sont des couples (côté, case) :
-    celles de doors sont des passages voûtés, celles de closed des portes fermées qu'on franchit par interaction."""
+def room_walls(scene, cx, cz, width, depth, base, doors, skip=(), closed=(), models=("wall", "wall-detail-cross", "wall", "wall-detail-horizontal"),
+               windows=()):
+    """Murs de pierre d'une pièce. Les portes sont des couples (côté, case) : celles de doors sont des passages voûtés,
+    celles de closed des portes fermées qu'on franchit par interaction. Celles de windows sont des fenêtres : la pièce
+    est posée sous la carte, une lueur du soir derrière chaque vitre tient lieu de dehors."""
     for side, index, count, center, outward in edge_tiles(cx, cz, width, depth):
         if side in skip:
             continue
+        if (side, index) in windows:
+            vwall(scene, "wall-window-glass", center, outward, base=base, group="murs")
+            size = (0.04, 1.7, 1.6) if outward[0] else (1.6, 1.7, 0.04)
+            box(scene, "dusk", (center[0] + outward[0] * 0.42, base + 1.9, center[1] + outward[1] * 0.42), size)
+            continue
         if (side, index) in closed:
             vwall(scene, "wall-door", center, outward, base=base, group="murs")
+            door_leaf(scene, center, outward, base=base, face=-1)
         elif (side, index) in doors:
             wall(scene, "wall-doorway-round", center, outward, base=base, solid=False)
             # Montants et linteau de la porte.
@@ -1660,6 +1718,31 @@ def room_walls(scene, cx, cz, width, depth, base, doors, skip=(), closed=(), mod
                     or ("south" in skip and sz > 0):
                 continue
             scene.add("fantasy_town_kit/pillar-stone", (cx + sx * half_w, base, cz + sz * half_d), 0.0, WALL_SCALE)
+
+
+def door_leaf(scene, center, outward, base=0.0, face=1, step=False):
+    """Vantail de bois clouté posé dans l'arche de la porte fermée (wall-door), côté face (+1 dehors, -1 dedans) : des
+    planches, deux pentures de fer, un anneau et sa serrure. Le modèle seul ne montre qu'un encadrement et une lucarne,
+    et les testeurs ne voyaient pas de porte, ni dehors ni dedans."""
+    x, z = center
+    nx, nz = outward[0] * face, outward[1] * face
+    along = (abs(outward[1]), abs(outward[0]))
+    degrees = 0.0 if outward[1] else 90.0
+    width, height = 1.12, 2.5
+
+    def at(u, h, out):
+        return (x + along[0] * u + nx * out, base + h, z + along[1] * u + nz * out)
+    box(scene, "wood_dark", at(0.0, height / 2, 0.24), (width, height, 0.08), degrees)
+    for u in (-0.28, 0.0, 0.28):
+        box(scene, "soot", at(u, height / 2, 0.285), (0.025, height - 0.08, 0.012), degrees)
+    for h in (0.45, 1.95):
+        box(scene, "iron", at(-0.08, h, 0.29), (width - 0.12, 0.09, 0.02), degrees)
+        for u in (-0.46, 0.3):
+            box(scene, "iron", at(u, h, 0.302), (0.05, 0.05, 0.02), degrees)
+    box(scene, "iron", at(0.38, 1.15, 0.295), (0.12, 0.2, 0.025), degrees)
+    torus(scene, "iron", at(0.38, 0.98, 0.31), 0.06, 0.085, degrees, tilt=90.0)
+    if step:
+        box(scene, "stone", at(0.0, 0.06, 0.6), (1.9, 0.12, 0.7), degrees)
 
 
 def hp(scene, model, center, degrees=0.0, scale=2.6, solid=True, label=None, tilt=0.0, roll=0.0):
@@ -1695,10 +1778,15 @@ def potted_plant(scene, position):
 def build_hall_interior():
     scene = VillageScene("VillageHall")
     materials(scene)
+    # Ciel du soir derrière les vitres : une lueur chaude et douce, comme celle qui baigne le village.
+    scene.material("dusk", (0.85, 0.62, 0.45), 1.0, emission=(0.95, 0.62, 0.4), energy=0.9)
     rng = random.Random(77)
     LAYOUT.reset()
     # Rez-de-chaussée : l'accueil des habitants et ses bureaux. Porte au sud, escalier le long du mur est.
-    room_walls(scene, 0.0, 0.0, 4, 3, 0.0, doors=set(), closed={("south", 1)})
+    # Ses fenêtres donnent au sud et au nord, au-dessus des bancs, du pied de l'escalier, du coin de l'archiviste et
+    # de la table d'appoint.
+    room_walls(scene, 0.0, 0.0, 4, 3, 0.0, doors=set(), closed={("south", 1)},
+               windows={("south", 2), ("south", 3), ("north", 0), ("north", 2)})
     # Le comptoir de l'accueil et son tiroir, tourné vers les visiteurs.
     hp(scene, "furniture_kit/desk", (-2.0, 0.0, -0.6), 180.0, 2.8, label="comptoir")
     hp(scene, "furniture_kit/chair", (-2.0, 0.0, -2.0), 0.0, 3.0, label="chaise de l'accueil")
@@ -1735,7 +1823,9 @@ def build_hall_interior():
     potted_plant(scene, (-0.6, 0.0, 5.35))
 
     # Étage : le bureau du maire, avec le dispositif des cinq codes contre le mur nord.
-    room_walls(scene, 0.0, 0.0, 4, 3, OFFICE_WALLS, doors={("west", 1)})
+    # Celles du bureau, au sud et à l'est, au-dessus de la cage d'escalier.
+    room_walls(scene, 0.0, 0.0, 4, 3, OFFICE_WALLS, doors={("west", 1)},
+               windows={("south", 1), ("south", 3), ("east", 0), ("east", 1), ("east", 2)})
     office = OFFICE_FLOOR
     hp(scene, "furniture_kit/desk", (-1.0, office, -0.6), 180.0, 2.8, label="bureau du maire")
     hp(scene, "furniture_kit/chair", (-1.0, office, -2.0), 0.0, 3.0, label="chaise du maire")
