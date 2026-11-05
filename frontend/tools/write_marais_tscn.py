@@ -356,6 +356,8 @@ KINGS = ((-21.2, -8.95), (-26.8, -8.95), (-21.2, -15.05), (-26.8, -15.05))
 WALL_FACE = 0.45
 # Le panneau central des murs du kit avance jusqu'à 0,6 m du bord : les dalles gravées s'y posent devant.
 PANEL_FACE = 0.63
+# Panneaux muraux du récit : à 1 cm du panneau central du mur.
+BOARD_FACE = 0.61
 NICHES = (
     ((-10.0 + WALL_FACE, -8.0), (1, 0)), ((-10.0 + WALL_FACE, -16.0), (1, 0)),
     ((10.0 - WALL_FACE, -8.0), (-1, 0)), ((10.0 - WALL_FACE, -16.0), (-1, 0)),
@@ -592,12 +594,23 @@ def main():
          double_sided=True)
     sign(lines, "Board", "Clues/Welcome", (0.0, -0.9, -0.35), 30.0, "Les marais de\nKernel Swamp", 0, 0, (1.5, 0.8), 1.5, 0.2,
          double_sided=True)
+    # Derrière l'accueil et l'avis du port, vus de dos en revenant vers le portail : une faible lueur chaude.
+    for parent, x, y, z in (("Clues/Welcome", -0.45, 0.3, -1.13), ("Clues/Notice", 0.6, 0.2, -0.67)):
+        node(lines, "BackLight", "OmniLight3D", parent, props=[
+            f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {x:g}, {y:g}, {z:g})",
+            "light_color = Color(1, 0.8, 0.55, 1)", "light_energy = 0.6", "omni_range = 2.5",
+            "distance_fade_enabled = true", "distance_fade_begin = 38.0", "distance_fade_length = 8.0"])
     # L'avis du port, au bout du débarcadère, tourné vers l'arrivée ; l'ardoise d'Ada, entre sa tombe et la suivante,
     # tournée vers l'allée ; l'ordre du roi, au bout du dernier ponton, tourné vers lui.
     sign(lines, "Board", "Clues/Notice", (0.0, -0.9, 0.0), -42.0, "Capitainerie de Brumeval\nAvis aux pêcheurs", 2, 0,
          (1.1, 0.75), 1.35, 0.13, double_sided=True)
     sign(lines, "Board", "Clues/AdaSlate", (0.0, -0.9, 0.0), 180.0, "Leçon d'Ada\nBRUME devient DPWKG", 1, 0,
          (1.0, 0.6), 1.15, 0.13, double_sided=True)
+    # La face de l'ardoise regarde l'allée, au nord, à contre-jour de la lune : la lanterne posée à son pied l'éclaire.
+    node(lines, "Light", "OmniLight3D", "Clues/AdaSlate", props=[
+        "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.85, -0.3, -0.65)", 'script = ExtResource("14_flicker")',
+        "light_color = Color(1, 0.78, 0.45, 1)", "light_energy = 0.9", "omni_range = 3.5", "flicker = 0.15",
+        "distance_fade_enabled = true", "distance_fade_begin = 38.0", "distance_fade_length = 8.0"])
     sign(lines, "Board", "Clues/RoyalOrder", (0.0, -0.9, 0.0), -19.0, "Ordre du roi\nCodeon V", 2, 0, (1.0, 0.7), 1.35, 0.15,
          double_sided=True)
 
@@ -749,9 +762,9 @@ def main():
     # Registre de l'ossuaire et serment des gardiens : sur le pan de mur plein de chaque chambre du sud (au bout du
     # couloir, à z 2 à 6), sur le panneau central du mur, au-dessus de l'urne couchée et du cercueil.
     for name, x, facing, title, body, board, style, prompt in (
-            ("OssuaryRegister", -14.0 - PANEL_FACE, -1.0, "Registre de l'ossuaire", OSSUARY_REGISTER,
+            ("OssuaryRegister", -14.0 - BOARD_FACE, -1.0, "Registre de l'ossuaire", OSSUARY_REGISTER,
              "Registre de l'ossuaire", 2, "Lire le registre"),
-            ("GuardsOath", 14.0 + PANEL_FACE, 1.0, "Le serment des gardiens", GUARDS_OATH,
+            ("GuardsOath", 14.0 + BOARD_FACE, 1.0, "Le serment des gardiens", GUARDS_OATH,
              "Serment des gardiens", 1, "Lire le serment")):
         node(lines, name, "Node3D", "Interior", props=[
             f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {x + facing * 0.37:g}, 1.6, 4)",
