@@ -483,12 +483,17 @@ def skeleton_beast(scene, x, z, degrees, size, rng, horns=False, walkable=False,
                 foot = frame(side * radius * 0.97, v, 0.0)
                 inward = frame(side * radius * 0.92, v, 0.0)
                 scene.add_box((inward[0], y + 0.35, inward[2]), (thick * 2.2, 0.7, thick * 2.2), degrees)
+    spacing = length / (ribs * 2 - 2)
     for i in range(ribs * 2 - 1):
         v0, h0 = tops[i // 2]
         v1, h1 = tops[min(i // 2 + 1, ribs - 1)]
         f = (i % 2) * 0.5
         v, h = v0 + (v1 - v0) * f, h0 + (h1 - h0) * f
         scene.shape("box", {"size": (0.16 * size, 0.12 * size, 0.14 * size)}, "bone", frame(0.0, v, h), degrees + rng.uniform(-8, 8))
+        if walkable:
+            # Sous la cage où l'on passe, la colonne a sa collision, vertèbre par vertèbre, jointive : on passe sous
+            # son milieu, haut, et l'on bute contre ses bouts, bas.
+            scene.box_collider(frame(0.0, v, h), (0.16 * size, 0.12 * size, min(0.14 * size, spacing) if i in (0, ribs * 2 - 2) else spacing), degrees)
     # Crâne allongé, orbites et mâchoire.
     skull = frame(0.0, length / 2 + 0.55 * size, y + 0.17 * size)
     scene.shape("cyl", {"top": 0.11 * size, "bottom": 0.22 * size, "height": 0.75 * size, "segments": 6}, "bone",
@@ -523,8 +528,9 @@ def skeleton_beast(scene, x, z, degrees, size, rng, horns=False, walkable=False,
                 for dv in ((-0.05 * size, 0.05 * size) if i in (0, ribs - 1) else (0.0,)):
                     points.append((math.cos(angle) * radius, y - 0.25 * radius + math.sin(angle) * radius, v + dv))
         scene.convex_collider((x, 0.0, z), degrees, points)
-        skull = frame(0.0, length / 2 + 0.5 * size, 0.0)
-        scene.box_collider((skull[0], y + 0.17 * size, skull[2]), (0.44 * size, 0.4 * size, 0.8 * size), degrees)
+    # Le crâne : une boîte allongée, aussi sous la cage où l'on passe.
+    skull = frame(0.0, length / 2 + 0.5 * size, 0.0)
+    scene.box_collider((skull[0], y + 0.17 * size, skull[2]), (0.44 * size, 0.4 * size, 0.8 * size), degrees)
 
 
 def vulture_skull(scene, x, z, degrees, size=1.0, y=0.0, tilt=0.0):
@@ -543,7 +549,7 @@ def vulture_skull(scene, x, z, degrees, size=1.0, y=0.0, tilt=0.0):
 
 def lying_skeleton(scene, x, z, degrees, buried=True, y=0.0):
     """Squelette de voyageur couché sur le dos, à demi recouvert de sable."""
-    put(scene, "graveyard_kit/character-skeleton", (x, y, z), degrees, 3.2, tilt=-90.0)
+    put(scene, "graveyard_kit/character-skeleton", (x, y, z), degrees, 3.2, tilt=-90.0, hull=True)
     if buried:
         frame = local_frame(x, z, degrees)
         a, _, b = frame(0.55, -0.35)
@@ -869,6 +875,11 @@ def build_oasis(scene, rng):
     scene.shape("cyl", {"top": 0.02, "bottom": 0.02, "height": 0.32, "segments": 4}, "rope", (wx, 1.97, wz))
     scene.add("survival_kit/bucket", (wx, 1.06, wz), 10.0, 4.0)
     scene.cylinder_collider((wx, 0.5, wz), 1.2, 1.0)
+    # Collisions du haut du puits : la traverse de la potence et sa manivelle, la corde et le seau suspendu.
+    scene.box_collider((wx, 2.15, wz), (2.9, 0.14, 0.14))
+    scene.box_collider((wx + 1.5, 2.0, wz), (0.06, 0.35, 0.06))
+    scene.box_collider((wx, 1.97, wz), (0.05, 0.32, 0.05))
+    scene.cylinder_collider((wx, 1.06 + 0.19 * 4.0 / 2, wz), 0.07 * 4.0, 0.19 * 4.0)
     # Abreuvoir sec et jarres.
     scene.shape("box", {"size": (2.6, 0.55, 0.9)}, "stone", (wx, 0.275, wz + 3.1))
     scene.shape("box", {"size": (2.3, 0.02, 0.6)}, "crack", (wx, 0.56, wz + 3.1), shadow=False)
