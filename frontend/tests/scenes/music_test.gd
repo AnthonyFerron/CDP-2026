@@ -16,9 +16,28 @@ func _run() -> void:
 	var bus := AudioServer.get_bus_index(&"Music")
 	check("bus Music cree, sous le Master", bus > 0 and AudioServer.get_bus_send(bus) == &"Master" and AudioServer.get_bus_volume_db(bus) < -3.0)
 
+	# Comme sur le web avant le premier geste du joueur : la piste du menu attend, puis part au premier clic.
+	music.set("_unlocked", false)
+	music.set_process_input(true)
 	change_scene_to_file("res://scenes/ui/menus/main_menu.tscn")
 	await wait(10)
-	_check_track("menu principal", &"menu")
+	check("menu avant le premier geste : piste en attente, silencieuse", music.current_track() == &"menu" and not music.is_playing())
+	var motion := InputEventMouseMotion.new()
+	motion.relative = Vector2(5, 0)
+	Input.parse_input_event(motion)
+	await wait(3)
+	check("un mouvement de souris ne compte pas comme un geste", not music.is_playing())
+	var click := InputEventMouseButton.new()
+	click.button_index = MOUSE_BUTTON_LEFT
+	click.pressed = true
+	click.position = Vector2(4, 4)
+	Input.parse_input_event(click)
+	await wait(2)
+	click = click.duplicate()
+	click.pressed = false
+	Input.parse_input_event(click)
+	await wait(8)
+	_check_track("menu principal, apres le premier clic", &"menu")
 	# Fondu d'entrée : le volume monte en 1,5 s jusqu'au gain de la piste.
 	var player: AudioStreamPlayer = music.active_player()
 	check("fondu d'entree en cours (%.2f)" % player.volume_linear, player.volume_linear > 0.0 and player.volume_linear < db_to_linear(music.TRACKS[&"menu"]))
