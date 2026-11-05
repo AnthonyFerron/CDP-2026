@@ -24,7 +24,7 @@ Chaque ligne est vérifiée à l'étape 4 de la passe (colonne Vérification : t
 | 18 | Maison 7 : burnt | (-28, -2), 2×2 cases | porte south en (-26, 2), stone, 1 étage(s) | portes et passages, grille de marche, captures |
 | 19 | Maison 8 : guard | (21, 12), 2×2 cases | porte west en (17, 14), stone, 1 étage(s), enseigne « Corps de garde » | portes et passages, grille de marche, captures |
 | 20 | Maison 9 : family | (-12, -18), 2×2 cases | porte south en (-10, -14), wood, 1 étage(s) | portes et passages, grille de marche, captures |
-| 21 | Maison 10 : cooper | (12, -18), 2×2 cases | porte south en (14, -14), stone, 2 étage(s), enseigne « Tonnelier » | portes et passages, grille de marche, captures |
+| 21 | Maison 10 : cooper | (12, -18), 2×2 cases | porte west en (8, -16), stone, 2 étage(s), enseigne « Tonnelier » | portes et passages, grille de marche, captures |
 | 22 | Maison 11 : miller | (-31, -14), 2×2 cases | porte east en (-27, -12), wood, 1 étage(s), enseigne « Moulin » | portes et passages, grille de marche, captures |
 | 23 | Grande rue | x de -2.6 à 2.6, z de -20 à 64 | pavés, lanternes, traces de brûlure | grille de marche, captures |
 | 24 | Place du marché | (0, -2), rayon 11 | fontaine, colonne brisée, statue du roi fondateur, étals, cratère | grille de marche, captures |
