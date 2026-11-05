@@ -355,7 +355,8 @@ func _build() -> void:
 		Ornate.place(_root, hint, Vector2(x + 138, 960), Vector2(140, 40))
 		x += 300.0
 	var close := HINTS_SCRIPT.CloseButton.new() as Button
-	Ornate.place(frame, close, Vector2(1690, -30), Vector2(80, 80))
+	# Dans le coin du cadre, sous le chronomètre du HUD (y = 30 à 84) : posée à cheval sur le bord, elle le cachait.
+	Ornate.place(frame, close, Vector2(1700, 40), Vector2(80, 80))
 	_close = close
 	_own(_close, "Close")
 	# Lumière bleutée de la réussite : hors du panneau, elle reste à l'écran quand il se ferme.
