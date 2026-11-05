@@ -21,8 +21,9 @@ logger = logging.getLogger(__name__)
 class Settings(BaseSettings):
     database_url: str
 
-    # Secret serveur qui sert à hacher les codes 2FA (HMAC-SHA256). S'il est vide, une clé aléatoire
-    # est tirée au démarrage : cela fonctionne, mais les codes en attente sont perdus à chaque redémarrage.
+    # Secret serveur qui sert à hacher les codes 2FA (HMAC-SHA256) et dont est dérivée la clé des jetons de
+    # réinitialisation du mot de passe. S'il est vide, une clé aléatoire est tirée au démarrage : cela
+    # fonctionne, mais les codes et les liens en attente sont perdus à chaque redémarrage.
     secret_key: SecretStr = SecretStr("")
 
     # Double authentification par e-mail
@@ -35,6 +36,14 @@ class Settings(BaseSettings):
     session_ttl_hours: int = 168
     login_max_failures: int = 10
     login_failure_window_seconds: int = 900
+
+    # Réinitialisation du mot de passe : lien envoyé par e-mail, avec un JWT valable 30 minutes.
+    # Le lien est `<password_reset_url>?token=<jeton>` : la page web de Caddy lit le jeton et appelle l'API.
+    password_reset_url: str = "https://codequest.anthonyferron.com/reinitialisation"
+    password_reset_ttl_seconds: int = 1800
+    # Par adresse e-mail, que le compte existe ou non : un e-mail par minute, cinq par heure.
+    password_reset_cooldown_seconds: int = 60
+    password_reset_max_per_hour: int = 5
 
     # Règles de la partie
     game_duration_seconds: int = 3600
@@ -69,12 +78,12 @@ def get_settings() -> Settings:
 
 @lru_cache
 def get_secret_key() -> bytes:
-    """Clé HMAC des codes 2FA : SECRET_KEY, ou une clé aléatoire propre à ce processus."""
+    """Clé HMAC des codes 2FA (et racine des clés dérivées) : SECRET_KEY, ou une clé aléatoire propre à ce processus."""
     configured = get_settings().secret_key.get_secret_value()
     if configured:
         return configured.encode()
     logger.warning(
         "SECRET_KEY n'est pas défini : une clé temporaire est utilisée, "
-        "les codes de connexion en attente seront invalides après un redémarrage."
+        "les codes de connexion et les liens de réinitialisation en attente seront invalides après un redémarrage."
     )
     return secrets.token_bytes(32)

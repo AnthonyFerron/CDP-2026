@@ -42,6 +42,10 @@ os.environ.update(
         "SESSION_TTL_HOURS": "168",
         "LOGIN_MAX_FAILURES": "10",
         "LOGIN_FAILURE_WINDOW_SECONDS": "900",
+        "PASSWORD_RESET_URL": "https://codequest.anthonyferron.com/reinitialisation",
+        "PASSWORD_RESET_TTL_SECONDS": "1800",
+        "PASSWORD_RESET_COOLDOWN_SECONDS": "60",
+        "PASSWORD_RESET_MAX_PER_HOUR": "5",
         "GAME_DURATION_SECONDS": "3600",
         "PENALTY_SECONDS": "300",
         "PUZZLE_MIN_SOLVE_SECONDS": "30",
@@ -56,7 +60,7 @@ from sqlalchemy import text  # noqa: E402
 
 from app.core import clock as clock_module  # noqa: E402
 from app.core import security  # noqa: E402
-from app.core.rate_limit import login_failures  # noqa: E402
+from app.core.rate_limit import login_failures, password_reset_hourly, password_reset_recent  # noqa: E402
 from app.db.session import engine  # noqa: E402
 from app.main import app  # noqa: E402
 from app.services.email import MemoryEmailSender, get_email_sender  # noqa: E402
@@ -117,6 +121,8 @@ def client(database, clock, outbox):
     with engine.begin() as connection:
         connection.execute(text(f"TRUNCATE {DATA_TABLES} RESTART IDENTITY CASCADE"))
     login_failures.clear()
+    password_reset_recent.clear()
+    password_reset_hourly.clear()
     app.dependency_overrides[get_email_sender] = lambda: outbox
     with TestClient(app) as test_client:
         yield test_client
