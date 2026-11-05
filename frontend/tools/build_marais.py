@@ -880,10 +880,12 @@ def build_crypt_underground(scene, rng):
     for z in (0.6, 3.6):
         scene.place("graveyard_kit/coffin-old", (-20.2, 0.0, z), 0.0, 2.6, height=True, coat="dust")
     scene.place("graveyard_kit/gravestone-debris", (-17.4, 0.0, -0.4), 30.0, 2.6, height=True, coat="dust")
-    scene.place("mini_dungeon/stones", (-16.2, 0.0, 3.4), 20.0, 1.8, height=True, coat="dust")
-    scene.place("graveyard_kit/urn-round", (-15.2, 0.0, 4.7), 40.0, 2.4, tilt=90.0, coat="dust")
+    # Le tas de pierres et l'urne couchée, avec leur collision, laissent un passage d'un mètre jusqu'au mur : posés
+    # plus au sud, ils fermaient avec le cadre de la niche un recoin où le joueur restait pris.
+    scene.place("mini_dungeon/stones", (-16.0, 0.0, 2.6), 20.0, 1.8, height=True, coat="dust")
+    scene.place("graveyard_kit/urn-round", (-15.4, 0.0, 4.9), 60.0, 2.4, tilt=90.0, coat="dust")
     # L'urne couchée : sa boîte tourne avec elle (la boîte englobante de l'urne tournée déborderait).
-    scene.add_box((-15.2, 0.32, 4.7), (0.64, 0.64, 0.91), 40.0)
+    scene.add_box((-15.4, 0.32, 4.9), (0.64, 0.64, 0.91), 60.0)
     scene.place("graveyard_kit/candle-multiple", (-18.2, 0.0, 2.2), 10.0, 2.4)
     # Chambre des gardiens, au sud-est : leurs cercueils alignés, leurs boucliers et leurs lances.
     for x in (15.6, 20.4):
