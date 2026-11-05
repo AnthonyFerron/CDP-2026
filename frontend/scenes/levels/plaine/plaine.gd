@@ -105,6 +105,7 @@ func _ready() -> void:
 	_apply_soot($Interior/Library/Models, interior_soot_material)
 	_add_hull_collisions($Exterior/Battlefield/Models, HULL_PROPS)
 	_add_hull_collisions($Exterior/Ruins/Models, HULL_PROPS)
+	_batch_decor()
 	_ash = _create_ash()
 	_exterior.add_child(_ash)
 	_dust = _create_dust()
@@ -323,6 +324,17 @@ func _add_hull_collisions(models: Node3D, prefixes: Array[String]) -> void:
 		collision.name = String(model.name)
 		collision.shape = shape
 		body.add_child(collision)
+
+
+## Pour le web : le décor fixe (ruines, champ de bataille, archives) fondu par matériau et par case (PlaineBatch),
+## une fois sa suie posée et les enveloppes de collision tirées de ses modèles. Rien ne s'efface au loin et chaque
+## objet garde son ombre : l'écran ne change pas, seuls les appels de dessin fondent. Les bannières, que
+## plaine_life.gd fait onduler, restent à part ; les collisions ne bougent pas.
+func _batch_decor() -> void:
+	var animated: Array[String] = ["flag_"]
+	PlaineBatch.merge($Exterior/Ruins, 32.0, true, true, false, animated)
+	PlaineBatch.merge($Exterior/Battlefield, 32.0, true, true, false, animated)
+	PlaineBatch.merge($Interior/Library, 12.0, true, true, false)
 
 
 func _apply_soot(root: Node, material: Material) -> void:
