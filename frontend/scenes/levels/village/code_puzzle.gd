@@ -15,7 +15,7 @@ signal closed
 const CODES := [
 	{
 		"language": "HTML", "level": "Facile",
-		"code": "<h1>Registre de Codia</h1>\n<ul>\n  <li>Forge</li>\n  <li>Moulin</li>\n  <!-- <li>Tour de garde</li> -->\n  <li>Puits</li>\n</ul>",
+		"code": "<h1>Registre du village</h1>\n<ul>\n  <li>Forge</li>\n  <li>Moulin</li>\n  <!-- <li>Tour de garde</li> -->\n  <li>Puits</li>\n</ul>",
 		"question": "Combien de lieux la liste affiche-t-elle à l'écran ?",
 		"answers": ["3", "trois"],
 	},

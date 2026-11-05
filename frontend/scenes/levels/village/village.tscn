@@ -783,8 +783,7 @@ outer_color = Color(0.45, 0.2, 0.8, 1)
 [node name="EntranceSign" type="Node3D" parent="."]
 transform = Transform3D(0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, -4.5, 0, 55)
 script = ExtResource("15_sign")
-text = "Codia
-Le village détruit"
+text = "Le village détruit"
 board_size = Vector2(1.9, 0.95)
 board_height = 1.55
 line_height = 0.26
@@ -795,14 +794,14 @@ line_height = 0.26
 transform = Transform3D(6.12323e-17, 0, 1, 0, 1, 0, -1, 0, 6.12323e-17, -4.6, 0, 13)
 script = ExtResource("57_readable")
 title = "L'avis du maire"
-body = "Proclamation du maire de Codia : la mairie reste ouverte tant que le village tient debout. Les registres et les savoirs des anciens bâtisseurs sont à l'abri dans le bureau du maire, à l'étage. Seul celui qui comprendra leurs cinq langages pourra en percer le dernier secret."
+body = "Proclamation du maire : la mairie reste ouverte tant que le village tient debout. Les registres et les savoirs des anciens bâtisseurs sont à l'abri dans le bureau du maire, à l'étage. Seul celui qui comprendra leurs cinq langages pourra en percer le dernier secret."
 prompt = "Lire : L'avis du maire"
 radius = 2.6
 
 [node name="Board" type="Node3D" parent="Lore/Notice"]
 script = ExtResource("15_sign")
 text = "Avis du maire
-à la population de Codia"
+à la population"
 style = 2
 mount = 0
 roof = true

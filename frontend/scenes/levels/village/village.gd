@@ -152,7 +152,7 @@ func _travel(inside: bool) -> void:
 	_player.process_mode = Node.PROCESS_MODE_INHERIT
 	_busy = false
 	if inside and _found.is_empty():
-		_hud.show_message("La mairie de Codia. Fouillez-la : [I] ouvre le carnet des fragments retrouvés.")
+		_hud.show_message("La mairie. Fouillez-la : [I] ouvre le carnet des fragments retrouvés.")
 
 
 func _apply_location() -> void:

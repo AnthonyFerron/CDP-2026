@@ -3793,7 +3793,7 @@ double_sided = true
 [node name="Enseigne_mairie" type="Node3D" parent="Signs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 0, 3.45, -19.74)
 script = ExtResource("sign")
-text = "Mairie de Codia"
+text = "Mairie"
 style = 1
 mount = 1
 board_size = Vector2(3, 0.62)

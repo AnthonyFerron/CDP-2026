@@ -1574,7 +1574,7 @@ def build_town_hall(scene):
         scene.add("fantasy_town_kit/lantern", (x, 0.0, cz + 6.7), 0.0, 1.7)
         block(scene, (x, 1.3, cz + 6.7), (0.4, 2.6, 0.4), label="lanterne de la mairie")
     LAYOUT.keep_clear("porte de la mairie", -1.5, 1.5, cz + 6.3, cz + 10.0)
-    sign(scene, "Enseigne_mairie", (cx, 3.45, cz + 6.26), 0.0, text="Mairie de Codia", style=1, mount=1,
+    sign(scene, "Enseigne_mairie", (cx, 3.45, cz + 6.26), 0.0, text="Mairie", style=1, mount=1,
          board_size=(3.0, 0.62), board_height=0.0, line_height=0.32, collision=False)
 
 

@@ -268,10 +268,10 @@ LECTERN_TILT = -15.0
 # panneau qui le porte.
 LORE = [
     ("Notice", (-4.6, 0.0, 13.0), 90.0, "L'avis du maire",
-     "Proclamation du maire de Codia : la mairie reste ouverte tant que le village tient debout. Les registres et "
+     "Proclamation du maire : la mairie reste ouverte tant que le village tient debout. Les registres et "
      "les savoirs des anciens bâtisseurs sont à l'abri dans le bureau du maire, à l'étage. Seul celui qui comprendra "
      "leurs cinq langages pourra en percer le dernier secret.",
-     dict(text="Avis du maire\nà la population de Codia", style=2, mount=0, roof=True, board_size=(1.3, 0.85),
+     dict(text="Avis du maire\nà la population", style=2, mount=0, roof=True, board_size=(1.3, 0.85),
           board_height=1.45, line_height=0.13, double_sided=True)),
     ("Order", (-4.2, 0.0, 35.2), 90.0, "L'ordre du capitaine",
      "Ordre du capitaine de la garde, an 5812 : tenez la porte tant que les habitants ne sont pas à l'abri. Les "
@@ -485,7 +485,7 @@ def main():
         "inner_color = Color(0.85, 0.7, 1, 1)", "outer_color = Color(0.45, 0.2, 0.8, 1)"])
     # Panneau d'entrée, sur ses poteaux au bord de la route, tourné vers le portail.
     node(lines, "EntranceSign", "Node3D", props=[at(-4.5, 0, 55, 1.0, 30)] + sign_props(dict(
-        text="Codia\nLe village détruit", board_size=(1.9, 0.95), board_height=1.55, line_height=0.26)))
+        text="Le village détruit", board_size=(1.9, 0.95), board_height=1.55, line_height=0.26)))
     # Textes à lire avec E : le panneau ne porte qu'un titre, le Readable donne le texte entier.
     node(lines, "Lore", "Node3D")
     for name, (x, y, z), degrees, title, body, board in LORE:
