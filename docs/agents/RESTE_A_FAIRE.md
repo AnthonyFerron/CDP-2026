@@ -1,28 +1,43 @@
-# Reste à faire après la livraison du 4 novembre
+# Reste à faire après la nuit du 4 au 5 novembre
 
-## Travail des agents interrompu le 4 novembre au soir (voir REPRISE.md)
-- Village (`agents/village`) : passe au centimètre interrompue pendant ses tests. À terminer, puis fusionner.
-- Hub (`agents/hub`) : intérieurs des neuf nouveaux bâtiments commencés, non vérifiés. Restent les villageois qui vivent après la victoire et les performances web.
-- Marais (`agents/marais`) : performances web commencées, non vérifiées. Restent les textes à lire dans le décor.
+Le journal complet de la nuit est sur le serveur, dans `~/cdp-work/JOURNAL.md`.
 
-## Corrections relevées par les agents
-- Désert : retirer le contournement des panneaux sur poteaux (`collision = false` et `PostsBody`) maintenant que `sign_board.gd` est corrigé (e094f56), puis revérifier les panneaux.
-- `scripts/smoke_effect.gd` : le préchauffage ne s'applique pas quand la fumée est chargée avec une scène (Village, volcan du hub). Il faut un `restart()` différé ; la Plaine le contourne déjà.
-- `doorway()` dans build_plaine.py laisse un trou de ± 0,95 m pour une arche visible de ± 0,80 m : le Hub, le Village, le Désert et le Marais doivent appeler `arch_fill()`.
-- `check_overlaps.py` régénère les scènes des autres lieux quand il importe les builders : le rendre sans effet de bord.
-- HUD :
-  - le bandeau « Mauvaise réponse » (y 770 à 910) couvre une partie des panneaux d'énigme latéraux, par exemple le cadran du Marais ;
-  - le « −5:00 » flottant sous le chronomètre chevauche le haut des panneaux.
+## Livré cette nuit (dans `dev` et `main`, déployé)
+- Lot du 4 novembre : passes au centimètre du Hub, de la Plaine et du Désert, PR #11 (livrable L4), PR #12 (intégration Godot ↔ API).
+- Marais : performances web finies et vérifiées. Appels de dessin divisés par 4 à 7 dehors, nœuds de 3 561 à 1 788, objets qui projettent une ombre de 1 170 à 201 (`docs/agents/marais/PERFORMANCES.md`).
+- Plaine : six textes à lire (fête des foins, relevé de l'arpenteur, proclamation du roi, lettre de la bibliothécaire, règlement, notes du greffier), indices mis à jour, dessus des tables mesuré sur leur maillage.
+- Désert :
+  - contournement des panneaux sur poteaux retiré ;
+  - 4 marches de plus de 0,4 m réglées ;
+  - congères des épaves avec leur collision ;
+  - tourbillons de sable, caravane fantôme sur les crêtes, mirage de l'oasis.
+- Corrections partagées :
+  - fumées préchauffées aussi quand elles sont chargées avec une scène (`smoke_effect.gd`) ;
+  - bandeau « Mauvaise réponse » en haut de l'écran, avec le « −5:00 » dedans (en bas pour le dispositif du Village) ;
+  - croix du dispositif du Village sous le chronomètre ;
+  - `check_overlaps.py` sans effet de bord.
+
+## Travail des agents en cours à la clôture
+Voir la dernière section du journal de la nuit : ce qui a été commité, vérifié et fusionné, ou laissé sur la branche `agents/<lieu>`.
+- Village (`agents/village`) : passe au centimètre, reprise cette nuit.
+- Hub (`agents/hub`) : intérieurs des nouveaux bâtiments, puis villageois qui vivent après la victoire, puis performances web.
+- Marais (`agents/marais`) : textes à lire dans le décor.
+- Plaine (`agents/plaine`) : performances web.
+- Désert (`agents/desert`) : 310 contacts où une collision dépasse le visible de 0,5 à 1 m (rochers de la chambre du zénith en premier).
+
+## Corrections relevées
+- `arch_fill()` : `doorway()` laisse un trou de ± 0,95 m pour une arche visible de ± 0,80 m. Le Hub (2 appels) et le Village (`vdoorway`) doivent appeler `arch_fill()` ; le Désert et le Marais n'utilisent pas `doorway()`.
+- Le chronomètre du HUD passe sous le cadre des panneaux d'énigme : le HUD est dessiné sous eux.
 - Dos des panneaux et des rayonnages très sombres à contre-jour (Marais, Plaine) : dos plus clair ou `double_sided`.
+- `tree_collision_test` ne voit plus les arbres morts du Marais, fondus dans le décor : la grille de marche du Marais les vérifie.
 - Restes acceptés, à revoir si le temps le permet :
-  - Désert : 4 marches de plus de 0,4 m sur des jarres et des débris ;
   - Plaine : 1 732 cases sur le dessus d'objets non atteintes ;
   - Hub : boîtes des engins de siège un peu larges.
 
 ## Backlog des lieux
-- Récit environnemental : Plaine, Village, Hub.
-- Performances web : Plaine et Village (Désert fait, Hub et Marais en cours).
-- Finitions libres : trois améliorations par lieu.
+- Récit environnemental : Village et Hub (la Plaine est faite, le Marais est en cours).
+- Performances web : Village et Hub (Désert et Marais faits, Plaine en cours).
+- Finitions libres : trois améliorations par lieu (Désert fait).
 - Tâches transversales :
   - HUD dans le style des menus ;
   - sons d'interface, pas sur bois et sur pierre, rivière et parc ;
@@ -35,3 +50,6 @@
 - PDF L4 (livrables/L4_Produit.pdf) : la date et l'heure de dépôt sont vides, et « cerlces » doit devenir « cercles ». À corriger par ses auteurs.
 - Scénario : le roi et Merlon attendent dans la salle du trône, alors que la règle actuelle garde tous les PNJ au bunker jusqu'à la victoire.
 - Éditeur Godot de l'utilisateur à rouvrir après la PR #12.
+- Serveur, à décider par Anthony :
+  - le conteneur de test `sweet_shaw` tourne encore, avec une connexion sur la base de production (`sudo docker stop sweet_shaw`) ;
+  - l'ancien clone `~/CDP-2026` garde du travail absent de GitHub (`perf/fluidite-web`, 2 commits de `feature/api-routes`).
