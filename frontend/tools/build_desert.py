@@ -660,7 +660,7 @@ def build_monument(scene, rng):
         scene.add(f"mini_arena/{model}", (x, 0.0, z), 0.0, 3.6)
         scene.column_collider(x, z, 0.6 * 3.6, (1.0 if model == "column" else 0.72) * 3.6)
     scene.add("mini_arena/statue", (0.0, 0.0, -17.0), 0.0, 3.4)
-    scene.add_box((0.0, 2.2, -17.0), (2.2, 4.4, 2.2))
+    scene.hull()
     for x in (-5.0, 5.0):
         # Collision taillée sur la bannière par desert.gd (EXACT_MODELS) : son pied, sa hampe et sa toile.
         scene.add("mini_arena/banner", (x, 0.0, -17.5), 0.0, 3.4)
@@ -889,7 +889,7 @@ def build_oasis(scene, rng):
     skeleton_beast(scene, 46.6, 2.4, 75.0, 1.25, rng)
     for x, z, yaw in ((42.6, 4.2, 30.0), (36.4, -2.6, 250.0), (45.6, -7.0, 120.0)):
         vulture_skull(scene, x, z, yaw, 1.6)
-    put(scene, "nature_kit/cactus_short", (47.0, 0.0, 6.0), 30.0, 3.0, height=1.5)
+    put(scene, "nature_kit/cactus_short", (47.0, 0.0, 6.0), 30.0, 3.0, height=1.5, hull=True)
 
 
 def build_cistern(scene, rng):
