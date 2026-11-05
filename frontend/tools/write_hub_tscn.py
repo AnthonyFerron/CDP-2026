@@ -355,6 +355,10 @@ size = Vector3(4, 0.3, 2.6)
 material = SubResource("Material_hall_floor")
 size = Vector3(20, 0.1, 12)
 
+[sub_resource type="BoxMesh" id="BoxMesh_bunker_cover"]
+material = SubResource("Material_hall_ceiling")
+size = Vector3(21, 0.3, 13)
+
 [sub_resource type="BoxMesh" id="BoxMesh_hall_ceiling"]
 material = SubResource("Material_hall_ceiling")
 size = Vector3(20.4, 0.4, 12.4)
@@ -920,6 +924,10 @@ def main():
     # Abri des survivants, sous le bunker : la partie commence ici.
     node(lines, "BunkerInterior", "Node3D", props=[f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {BUNKER_INSIDE[0]:g}, {BUNKER_INSIDE[1]:g}, {BUNKER_INSIDE[2]:g})"])
     node(lines, "Shelter", parent="BunkerInterior", instance="51_bunker")
+    # Planche pleine au-dessus du plafond de planches (de 4 à 4,24 m), de mur à mur : entre les planches, on voit du
+    # bois sombre, et rien de ce qui est au-dessus.
+    node(lines, "CeilingCover", "MeshInstance3D", "BunkerInterior", props=[
+        "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.45, 0)", 'mesh = SubResource("BoxMesh_bunker_cover")'])
     node(lines, "Spawn", "Marker3D", "BunkerInterior", props=["transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 4.2)"])
     node(lines, "Exit", "Node3D", "BunkerInterior", props=[
         "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 5.6)", 'script = ExtResource("9_interactable")',

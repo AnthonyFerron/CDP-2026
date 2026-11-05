@@ -298,6 +298,10 @@ size = Vector3(4, 0.3, 2.6)
 material = SubResource("Material_hall_floor")
 size = Vector3(20, 0.1, 12)
 
+[sub_resource type="BoxMesh" id="BoxMesh_bunker_cover"]
+material = SubResource("Material_hall_ceiling")
+size = Vector3(21, 0.3, 13)
+
 [sub_resource type="BoxMesh" id="BoxMesh_hall_ceiling"]
 material = SubResource("Material_hall_ceiling")
 size = Vector3(20.4, 0.4, 12.4)
@@ -2167,6 +2171,10 @@ transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 70.6, 0.3, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 78, -40, 0)
 
 [node name="Shelter" parent="BunkerInterior" instance=ExtResource("51_bunker")]
+
+[node name="CeilingCover" type="MeshInstance3D" parent="BunkerInterior"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.45, 0)
+mesh = SubResource("BoxMesh_bunker_cover")
 
 [node name="Spawn" type="Marker3D" parent="BunkerInterior"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 4.2)
