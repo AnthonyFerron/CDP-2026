@@ -16002,64 +16002,64 @@ transform = Transform3D(-0, 0, -5, 5, 0, 0, 0, -5, -0, 47.375, 0.35, 63.6)
 transform = Transform3D(-0, 0, -5, 5, 0, 0, 0, -5, -0, 47.025, 0.2, 62.925)
 
 [node name="crops_dirtRow_2562" parent="Repairs/Farm/Ruins" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 52, 0, 59)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 52, 0.05, 59)
 
 [node name="crops_dirtRow_2563" parent="Repairs/Farm/Ruins" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 54.4, 0, 59)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 54.4, 0.05, 59)
 
 [node name="crops_dirtRow_2564" parent="Repairs/Farm/Ruins" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 56.8, 0, 59)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 56.8, 0.05, 59)
 
 [node name="crops_dirtRow_2565" parent="Repairs/Farm/Ruins" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 59.2, 0, 59)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 59.2, 0.05, 59)
 
 [node name="crops_dirtRow_2566" parent="Repairs/Farm/Ruins" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 52, 0, 61.4)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 52, 0.05, 61.4)
 
 [node name="crops_dirtRow_2567" parent="Repairs/Farm/Ruins" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 54.4, 0, 61.4)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 54.4, 0.05, 61.4)
 
 [node name="crops_dirtRow_2568" parent="Repairs/Farm/Ruins" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 56.8, 0, 61.4)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 56.8, 0.05, 61.4)
 
 [node name="crops_dirtRow_2569" parent="Repairs/Farm/Ruins" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 59.2, 0, 61.4)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 59.2, 0.05, 61.4)
 
 [node name="crops_dirtRow_2570" parent="Repairs/Farm/Ruins" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 52, 0, 63.8)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 52, 0.05, 63.8)
 
 [node name="crops_dirtRow_2571" parent="Repairs/Farm/Ruins" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 54.4, 0, 63.8)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 54.4, 0.05, 63.8)
 
 [node name="crops_dirtRow_2572" parent="Repairs/Farm/Ruins" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 56.8, 0, 63.8)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 56.8, 0.05, 63.8)
 
 [node name="crops_dirtRow_2573" parent="Repairs/Farm/Ruins" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 59.2, 0, 63.8)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 59.2, 0.05, 63.8)
 
 [node name="crops_dirtRow_2574" parent="Repairs/Farm/Ruins" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 52, 0, 66.2)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 52, 0.05, 66.2)
 
 [node name="crops_dirtRow_2575" parent="Repairs/Farm/Ruins" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 54.4, 0, 66.2)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 54.4, 0.05, 66.2)
 
 [node name="crops_dirtRow_2576" parent="Repairs/Farm/Ruins" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 56.8, 0, 66.2)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 56.8, 0.05, 66.2)
 
 [node name="crops_dirtRow_2577" parent="Repairs/Farm/Ruins" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 59.2, 0, 66.2)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 59.2, 0.05, 66.2)
 
 [node name="crops_dirtRow_2578" parent="Repairs/Farm/Ruins" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 52, 0, 68.6)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 52, 0.05, 68.6)
 
 [node name="crops_dirtRow_2579" parent="Repairs/Farm/Ruins" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 54.4, 0, 68.6)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 54.4, 0.05, 68.6)
 
 [node name="crops_dirtRow_2580" parent="Repairs/Farm/Ruins" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 56.8, 0, 68.6)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 56.8, 0.05, 68.6)
 
 [node name="crops_dirtRow_2581" parent="Repairs/Farm/Ruins" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 59.2, 0, 68.6)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 59.2, 0.05, 68.6)
 
 [node name="fence_simple_2582" parent="Repairs/Farm/Ruins" instance=ExtResource("111_model")]
 transform = Transform3D(2.8, 0, 0, 0, 2.8, 0, 0, 0, 2.8, 40, 0, 72.302)
@@ -16422,124 +16422,124 @@ transform = Transform3D(-0.4497, 0, -0.01632, 0, 0.45, 0, 0.01632, 0, -0.4497, 4
 transform = Transform3D(-0.38203, 0, -2.16658, 0, 2.2, 0, 2.16658, 0, -0.38203, 45.4812, 0.74, 62.9703)
 
 [node name="crops_dirtRow_2650" parent="Repairs/Farm/Rebuilt" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 52, 0, 59)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 52, 0.05, 59)
 
 [node name="crops_wheatStageB_2651" parent="Repairs/Farm/Rebuilt" instance=ExtResource("114_model")]
-transform = Transform3D(-1.56247, 0, 1.82173, 0, 2.4, 0, -1.82173, 0, -1.56247, 52, 0.28, 59)
+transform = Transform3D(-1.56247, 0, 1.82173, 0, 2.4, 0, -1.82173, 0, -1.56247, 52, 0.05, 59)
 
 [node name="crops_dirtRow_2652" parent="Repairs/Farm/Rebuilt" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 54.4, 0, 59)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 54.4, 0.05, 59)
 
 [node name="crops_wheatStageB_2653" parent="Repairs/Farm/Rebuilt" instance=ExtResource("114_model")]
-transform = Transform3D(2.34522, 0, -0.50983, 0, 2.4, 0, 0.50983, 0, 2.34522, 54.4, 0.28, 59)
+transform = Transform3D(2.34522, 0, -0.50983, 0, 2.4, 0, 0.50983, 0, 2.34522, 54.4, 0.05, 59)
 
 [node name="crops_dirtRow_2654" parent="Repairs/Farm/Rebuilt" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 56.8, 0, 59)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 56.8, 0.05, 59)
 
 [node name="crops_wheatStageB_2655" parent="Repairs/Farm/Rebuilt" instance=ExtResource("114_model")]
-transform = Transform3D(2.32557, 0, -0.59305, 0, 2.4, 0, 0.59305, 0, 2.32557, 56.8, 0.28, 59)
+transform = Transform3D(2.32557, 0, -0.59305, 0, 2.4, 0, 0.59305, 0, 2.32557, 56.8, 0.05, 59)
 
 [node name="crops_dirtRow_2656" parent="Repairs/Farm/Rebuilt" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 59.2, 0, 59)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 59.2, 0.05, 59)
 
 [node name="crops_wheatStageB_2657" parent="Repairs/Farm/Rebuilt" instance=ExtResource("114_model")]
-transform = Transform3D(-2.31206, 0, 0.64371, 0, 2.4, 0, -0.64371, 0, -2.31206, 59.2, 0.28, 59)
+transform = Transform3D(-2.31206, 0, 0.64371, 0, 2.4, 0, -0.64371, 0, -2.31206, 59.2, 0.05, 59)
 
 [node name="crops_dirtRow_2658" parent="Repairs/Farm/Rebuilt" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 52, 0, 61.4)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 52, 0.05, 61.4)
 
 [node name="crops_cornStageD_2659" parent="Repairs/Farm/Rebuilt" instance=ExtResource("115_model")]
-transform = Transform3D(-0.17979, 0, 2.39326, 0, 2.4, 0, -2.39326, 0, -0.17979, 52, 0.28, 61.4)
+transform = Transform3D(-0.17979, 0, 2.39326, 0, 2.4, 0, -2.39326, 0, -0.17979, 52, 0.05, 61.4)
 
 [node name="crops_dirtRow_2660" parent="Repairs/Farm/Rebuilt" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 54.4, 0, 61.4)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 54.4, 0.05, 61.4)
 
 [node name="crops_cornStageD_2661" parent="Repairs/Farm/Rebuilt" instance=ExtResource("115_model")]
-transform = Transform3D(-2.33604, 0, -0.5504, 0, 2.4, 0, 0.5504, 0, -2.33604, 54.4, 0.28, 61.4)
+transform = Transform3D(-2.33604, 0, -0.5504, 0, 2.4, 0, 0.5504, 0, -2.33604, 54.4, 0.05, 61.4)
 
 [node name="crops_dirtRow_2662" parent="Repairs/Farm/Rebuilt" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 56.8, 0, 61.4)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 56.8, 0.05, 61.4)
 
 [node name="crops_cornStageD_2663" parent="Repairs/Farm/Rebuilt" instance=ExtResource("115_model")]
-transform = Transform3D(-1.2179, 0, -2.06802, 0, 2.4, 0, 2.06802, 0, -1.2179, 56.8, 0.28, 61.4)
+transform = Transform3D(-1.2179, 0, -2.06802, 0, 2.4, 0, 2.06802, 0, -1.2179, 56.8, 0.05, 61.4)
 
 [node name="crops_dirtRow_2664" parent="Repairs/Farm/Rebuilt" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 59.2, 0, 61.4)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 59.2, 0.05, 61.4)
 
 [node name="crops_cornStageD_2665" parent="Repairs/Farm/Rebuilt" instance=ExtResource("115_model")]
-transform = Transform3D(-0.90834, 0, -2.22147, 0, 2.4, 0, 2.22147, 0, -0.90834, 59.2, 0.28, 61.4)
+transform = Transform3D(-0.90834, 0, -2.22147, 0, 2.4, 0, 2.22147, 0, -0.90834, 59.2, 0.05, 61.4)
 
 [node name="crops_dirtRow_2666" parent="Repairs/Farm/Rebuilt" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 52, 0, 63.8)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 52, 0.05, 63.8)
 
 [node name="crop_pumpkin_2667" parent="Repairs/Farm/Rebuilt" instance=ExtResource("116_model")]
-transform = Transform3D(-1.49049, 0, -1.88108, 0, 2.4, 0, 1.88108, 0, -1.49049, 52, 0.28, 63.8)
+transform = Transform3D(-1.49049, 0, -1.88108, 0, 2.4, 0, 1.88108, 0, -1.49049, 52, 0.05, 63.8)
 
 [node name="crops_dirtRow_2668" parent="Repairs/Farm/Rebuilt" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 54.4, 0, 63.8)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 54.4, 0.05, 63.8)
 
 [node name="crop_pumpkin_2669" parent="Repairs/Farm/Rebuilt" instance=ExtResource("116_model")]
-transform = Transform3D(0.87171, 0, 2.23609, 0, 2.4, 0, -2.23609, 0, 0.87171, 54.4, 0.28, 63.8)
+transform = Transform3D(0.87171, 0, 2.23609, 0, 2.4, 0, -2.23609, 0, 0.87171, 54.4, 0.05, 63.8)
 
 [node name="crops_dirtRow_2670" parent="Repairs/Farm/Rebuilt" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 56.8, 0, 63.8)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 56.8, 0.05, 63.8)
 
 [node name="crop_pumpkin_2671" parent="Repairs/Farm/Rebuilt" instance=ExtResource("116_model")]
-transform = Transform3D(-2.3227, 0, -0.60421, 0, 2.4, 0, 0.60421, 0, -2.3227, 56.8, 0.28, 63.8)
+transform = Transform3D(-2.3227, 0, -0.60421, 0, 2.4, 0, 0.60421, 0, -2.3227, 56.8, 0.05, 63.8)
 
 [node name="crops_dirtRow_2672" parent="Repairs/Farm/Rebuilt" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 59.2, 0, 63.8)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 59.2, 0.05, 63.8)
 
 [node name="crop_pumpkin_2673" parent="Repairs/Farm/Rebuilt" instance=ExtResource("116_model")]
-transform = Transform3D(2.37132, 0, 0.36993, 0, 2.4, 0, -0.36993, 0, 2.37132, 59.2, 0.28, 63.8)
+transform = Transform3D(2.37132, 0, 0.36993, 0, 2.4, 0, -0.36993, 0, 2.37132, 59.2, 0.05, 63.8)
 
 [node name="crops_dirtRow_2674" parent="Repairs/Farm/Rebuilt" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 52, 0, 66.2)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 52, 0.05, 66.2)
 
 [node name="crops_wheatStageB_2675" parent="Repairs/Farm/Rebuilt" instance=ExtResource("114_model")]
-transform = Transform3D(2.23571, 0, 0.87269, 0, 2.4, 0, -0.87269, 0, 2.23571, 52, 0.28, 66.2)
+transform = Transform3D(2.23571, 0, 0.87269, 0, 2.4, 0, -0.87269, 0, 2.23571, 52, 0.05, 66.2)
 
 [node name="crops_dirtRow_2676" parent="Repairs/Farm/Rebuilt" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 54.4, 0, 66.2)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 54.4, 0.05, 66.2)
 
 [node name="crops_wheatStageB_2677" parent="Repairs/Farm/Rebuilt" instance=ExtResource("114_model")]
-transform = Transform3D(0.73475, 0, -2.28476, 0, 2.4, 0, 2.28476, 0, 0.73475, 54.4, 0.28, 66.2)
+transform = Transform3D(0.73475, 0, -2.28476, 0, 2.4, 0, 2.28476, 0, 0.73475, 54.4, 0.05, 66.2)
 
 [node name="crops_dirtRow_2678" parent="Repairs/Farm/Rebuilt" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 56.8, 0, 66.2)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 56.8, 0.05, 66.2)
 
 [node name="crops_wheatStageB_2679" parent="Repairs/Farm/Rebuilt" instance=ExtResource("114_model")]
-transform = Transform3D(2.27434, 0, 0.76641, 0, 2.4, 0, -0.76641, 0, 2.27434, 56.8, 0.28, 66.2)
+transform = Transform3D(2.27434, 0, 0.76641, 0, 2.4, 0, -0.76641, 0, 2.27434, 56.8, 0.05, 66.2)
 
 [node name="crops_dirtRow_2680" parent="Repairs/Farm/Rebuilt" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 59.2, 0, 66.2)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 59.2, 0.05, 66.2)
 
 [node name="crops_wheatStageB_2681" parent="Repairs/Farm/Rebuilt" instance=ExtResource("114_model")]
-transform = Transform3D(-2.33877, 0, 0.53866, 0, 2.4, 0, -0.53866, 0, -2.33877, 59.2, 0.28, 66.2)
+transform = Transform3D(-2.33877, 0, 0.53866, 0, 2.4, 0, -0.53866, 0, -2.33877, 59.2, 0.05, 66.2)
 
 [node name="crops_dirtRow_2682" parent="Repairs/Farm/Rebuilt" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 52, 0, 68.6)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 52, 0.05, 68.6)
 
 [node name="crops_cornStageD_2683" parent="Repairs/Farm/Rebuilt" instance=ExtResource("115_model")]
-transform = Transform3D(-0.4172, 0, 2.36346, 0, 2.4, 0, -2.36346, 0, -0.4172, 52, 0.28, 68.6)
+transform = Transform3D(-0.4172, 0, 2.36346, 0, 2.4, 0, -2.36346, 0, -0.4172, 52, 0.05, 68.6)
 
 [node name="crops_dirtRow_2684" parent="Repairs/Farm/Rebuilt" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 54.4, 0, 68.6)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 54.4, 0.05, 68.6)
 
 [node name="crops_cornStageD_2685" parent="Repairs/Farm/Rebuilt" instance=ExtResource("115_model")]
-transform = Transform3D(-0.35828, 0, 2.37311, 0, 2.4, 0, -2.37311, 0, -0.35828, 54.4, 0.28, 68.6)
+transform = Transform3D(-0.35828, 0, 2.37311, 0, 2.4, 0, -2.37311, 0, -0.35828, 54.4, 0.05, 68.6)
 
 [node name="crops_dirtRow_2686" parent="Repairs/Farm/Rebuilt" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 56.8, 0, 68.6)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 56.8, 0.05, 68.6)
 
 [node name="crops_cornStageD_2687" parent="Repairs/Farm/Rebuilt" instance=ExtResource("115_model")]
-transform = Transform3D(-0.58049, 0, 2.32874, 0, 2.4, 0, -2.32874, 0, -0.58049, 56.8, 0.28, 68.6)
+transform = Transform3D(-0.58049, 0, 2.32874, 0, 2.4, 0, -2.32874, 0, -0.58049, 56.8, 0.05, 68.6)
 
 [node name="crops_dirtRow_2688" parent="Repairs/Farm/Rebuilt" instance=ExtResource("110_model")]
-transform = Transform3D(2.4, 0, 0, 0, 6, 0, 0, 0, 2.4, 59.2, 0, 68.6)
+transform = Transform3D(2.4, 0, 0, 0, 3, 0, 0, 0, 2.4, 59.2, 0.05, 68.6)
 
 [node name="crops_cornStageD_2689" parent="Repairs/Farm/Rebuilt" instance=ExtResource("115_model")]
-transform = Transform3D(0.57515, 0, 2.33006, 0, 2.4, 0, -2.33006, 0, 0.57515, 59.2, 0.28, 68.6)
+transform = Transform3D(0.57515, 0, 2.33006, 0, 2.4, 0, -2.33006, 0, 0.57515, 59.2, 0.05, 68.6)
 
 [node name="fence_simple_2690" parent="Repairs/Farm/Rebuilt" instance=ExtResource("111_model")]
 transform = Transform3D(2.8, 0, 0, 0, 2.8, 0, 0, 0, 2.8, 40, 0, 72.302)

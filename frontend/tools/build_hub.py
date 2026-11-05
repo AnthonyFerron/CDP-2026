@@ -1535,18 +1535,19 @@ def furnish_farm(scene, house, ruined, rng):
         r.lamp([(0.0, 0.0, 3.0)])
         r.hearth_glow(hu_ - 1.5, hv_)
     cx, cz = house[0], house[1]
-    # Champ à l'est de la ferme : rangées de terre et de cultures, qui repoussent avec le village. Les buttes
-    # labourées montent à 0,3 m (le modèle n'a que 0,05 de haut : à l'échelle 2,4, elles se perdaient dans l'herbe) ;
-    # les cultures sont plantées sur leur dessus.
-    furrow = 0.3
+    # Champ à l'est de la ferme : rangées de terre et de cultures, qui repoussent avec le village. Une rangée du
+    # modèle est une bande de terre plate entre deux petits sillons : posée à y = 0, sa bande se confondait avec le
+    # sol et scintillait en rayures, à demi cachée par l'herbe. Elle est relevée de 5 cm, ses sillons montés à 15 cm,
+    # et les cultures sont plantées sur la bande.
+    lift, ridge = 0.05, 0.15
     for row in range(5):
         z = cz - 5.0 + row * 2.4
         for column in range(4):
             x = cx + 8.0 + column * 2.4
-            scene.add("nature_kit/crops_dirtRow", (x, 0.0, z), 0.0, (2.4, furrow / 0.05, 2.4))
+            scene.add("nature_kit/crops_dirtRow", (x, lift, z), 0.0, (2.4, ridge / 0.05, 2.4))
             if not ruined:
                 crop = ("nature_kit/crops_wheatStageB", "nature_kit/crops_cornStageD", "nature_kit/crop_pumpkin")[row % 3]
-                scene.add(crop, (x, furrow - 0.02, z), rng.uniform(0, 360), 2.4)
+                scene.add(crop, (x, lift, z), rng.uniform(0, 360), 2.4)
     # Enclos et foin au sud de la ferme.
     for index in range(4):
         x = cx - 4.0 + index * 2.8
