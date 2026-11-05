@@ -5,8 +5,22 @@ rectangle (boîte de son modèle tournée). Un meuble qui chevauche un mur, ou u
 qui entre dans l'emprise d'une maison, est signalé.
 """
 import math
+import pathlib
 import random
 import sys
+
+# Les générateurs écrivent leurs scènes en passant (abri du hub, mairie du village…). Ici, on ne fait que les rejouer,
+# dans un autre ordre et avec d'autres tirages : sans ce garde-fou, ils réécrivaient ces scènes de travers dans la
+# copie de travail. Aucune écriture de fichier n'est faite, on compte seulement celles qui ont été évitées.
+SKIPPED = []
+
+
+def _no_write(self, *args, **kwargs):
+    SKIPPED.append(self.name)
+    return 0
+
+
+pathlib.Path.write_text = _no_write
 
 sys.path.insert(0, sys.argv[1])
 import build_plaine as bp
@@ -141,3 +155,4 @@ run("bibliothèque", bp.build_interior)
 run("ruines plaine", bp.build_ruins)
 print("\n".join(results) if results else "aucun chevauchement")
 print(len(ITEMS), "meubles contrôlés,", len(WALLS), "murs")
+print(len(SKIPPED), "scène(s) non réécrite(s) :", ", ".join(sorted(set(SKIPPED))) or "aucune")
