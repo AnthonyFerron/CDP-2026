@@ -4,7 +4,7 @@ FROM debian:trixie-slim AS build
 ARG GODOT_VERSION=4.7.2
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates curl unzip libfontconfig1 \
+    && apt-get install -y --no-install-recommends ca-certificates curl unzip libfontconfig1 brotli \
     && rm -rf /var/lib/apt/lists/*
 
 # Téléchargé avant de copier le jeu, pour rester en cache d'un déploiement à l'autre
@@ -36,6 +36,10 @@ RUN mkdir -p /game/build/web \
     && godot --headless --path /game --export-release "Web" build/web/index.html \
     && test -f /game/build/web/index.html \
     && cp /licences/* /game/build/web/
+
+# Compressé une fois ici, mieux et sans coût à chaque requête : Caddy sert directement les .br et .gz du jeu.
+RUN find /game/build/web -type f \( -name '*.wasm' -o -name '*.pck' -o -name '*.js' -o -name '*.html' \) \
+        -exec gzip -k -9 {} \; -exec brotli -k -q 9 {} \;
 
 FROM caddy:2
 
