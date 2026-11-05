@@ -6,11 +6,14 @@ extends Node3D
 
 signal finished
 
+const LavaFlood := preload("res://scenes/levels/hub/hub_lava_flood.gd")
+
 @export var volcano: Volcano
 @export var eruption_sound: AudioStream
-## Nappe de lave qui monte sur le village pendant l'éruption.
+## Coulée de lave qui descend des crêtes du nord et noie le village pendant l'éruption (hub_flood.gdshader).
 @export var flood_material: Material
-@export var flood_radius := 75.0
+## Sol que la coulée épouse.
+@export var terrain: HubTerrain
 
 var _camera: Camera3D
 var _overlay: CanvasLayer
@@ -19,6 +22,7 @@ var _title: Label
 var _subtitle: Label
 var _shake := 0.0
 var _look_target := Vector3.ZERO
+var _flood: LavaFlood
 
 
 func _process(delta: float) -> void:
@@ -32,6 +36,8 @@ func _process(delta: float) -> void:
 
 
 func play_eruption() -> void:
+	# La coulée se calcule au chargement du hub, sous le fondu, et non au milieu de la cinématique.
+	_prepare_flood()
 	_begin(Vector3(0, 9, 22), _volcano_top())
 	await _move(Vector3(-34, 58, -86), _volcano_top(), 4.0, 44.0)
 	volcano.erupt()
@@ -39,8 +45,9 @@ func play_eruption() -> void:
 	_shake = 2.2
 	await _flash_screen(Color(1.0, 0.6, 0.3), 0.15, 1.4)
 	_darken_sky()
-	await get_tree().create_timer(2.5).timeout
+	# La lave déborde des crêtes du nord sous les yeux de la caméra, puis celle-ci recule sur le village qu'elle noie.
 	_flood_village()
+	await get_tree().create_timer(2.5).timeout
 	await _move(Vector3(0, 48, 72), Vector3(0, 0, -18), 5.0, 70.0)
 	await _show_title("Le Mont Sam Altan s'est réveillé", "Les quatre livres n'ont pas été réunis à temps. Codia a disparu sous la lave.", Color(1.0, 0.45, 0.25))
 	finished.emit()
@@ -141,24 +148,35 @@ func _clear_air() -> void:
 	sun.light_color = Color(1.0, 0.85, 0.66)
 
 
-## Une nappe de lave monte du sol et recouvre tout le village.
+func _prepare_flood() -> void:
+	if _flood or not terrain:
+		return
+	_flood = LavaFlood.new()
+	_flood.name = "LavaFlood"
+	# Ses sommets sont en coordonnées du monde, comme ceux du terrain.
+	_flood.top_level = true
+	_flood.build(terrain, flood_material)
+	add_child(_flood)
+
+
+## La lave déborde des crêtes, dévale les pentes, suit les creux et s'étale sur tout le village. Une lueur orangée
+## la précède du nord jusqu'au centre du village.
 func _flood_village() -> void:
-	var lava := MeshInstance3D.new()
-	var plane := PlaneMesh.new()
-	plane.size = Vector2.ONE * flood_radius * 2.0
-	plane.subdivide_width = 40
-	plane.subdivide_depth = 40
-	plane.material = flood_material
-	lava.mesh = plane
-	lava.position = Vector3(0, -1.5, -10)
-	get_tree().current_scene.add_child(lava)
+	_prepare_flood()
+	if not _flood:
+		return
 	var glow := OmniLight3D.new()
 	glow.light_color = Color(1.0, 0.4, 0.1)
-	glow.light_energy = 6.0
+	glow.light_energy = 0.0
 	glow.omni_range = 90.0
-	glow.position = Vector3(0, 12, -10)
+	glow.shadow_enabled = false
+	glow.position = Vector3(0, 14, -80)
 	get_tree().current_scene.add_child(glow)
-	create_tween().tween_property(lava, "position:y", 2.2, 6.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	var duration: float = LavaFlood.LAST_ARRIVAL
+	create_tween().tween_method(_flood.set_progress, 0.0, duration, duration)
+	var light := create_tween().set_parallel().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	light.tween_property(glow, "light_energy", 6.0, LavaFlood.CENTER_ARRIVAL)
+	light.tween_property(glow, "position", Vector3(0, 12, -10), LavaFlood.CENTER_ARRIVAL)
 
 
 func _build_overlay() -> void:

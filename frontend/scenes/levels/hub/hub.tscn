@@ -44,7 +44,7 @@
 [ext_resource type="AudioStream" path="res://assets/audio/stone_door.wav" id="46_rumble"]
 [ext_resource type="Script" path="res://scenes/levels/hub/volcano.gd" id="47_volcano"]
 [ext_resource type="Script" path="res://scenes/levels/hub/hub_ending.gd" id="48_ending"]
-[ext_resource type="Shader" path="res://scenes/levels/plaine/lava.gdshader" id="49_lava"]
+[ext_resource type="Shader" path="res://scenes/levels/hub/hub_flood.gdshader" id="49_flood"]
 [ext_resource type="AudioStream" path="res://assets/audio/volcano_eruption.wav" id="50_eruption"]
 [ext_resource type="PackedScene" path="res://scenes/levels/hub/hub_bunker.tscn" id="51_bunker"]
 [ext_resource type="Script" path="res://scenes/levels/hub/hub_river.gd" id="52_river"]
@@ -326,7 +326,7 @@ noise = SubResource("FastNoiseLite_flood")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_flood"]
 render_priority = 0
-shader = ExtResource("49_lava")
+shader = ExtResource("49_flood")
 shader_parameter/flow_noise = SubResource("NoiseTexture2D_flood")
 shader_parameter/emission_strength = 3.0
 
@@ -2218,9 +2218,10 @@ far = 450.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, -4, -215)
 script = ExtResource("47_volcano")
 
-[node name="Ending" type="Node3D" parent="." node_paths=PackedStringArray("volcano")]
+[node name="Ending" type="Node3D" parent="." node_paths=PackedStringArray("volcano", "terrain")]
 script = ExtResource("48_ending")
 volcano = NodePath("../Volcano")
+terrain = NodePath("../Terrain")
 eruption_sound = ExtResource("50_eruption")
 flood_material = SubResource("ShaderMaterial_flood")
 

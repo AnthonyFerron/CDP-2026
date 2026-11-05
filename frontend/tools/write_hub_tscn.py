@@ -55,7 +55,7 @@ EXT = [
     ("AudioStream", A + "stone_door.wav", "46_rumble"),
     ("Script", "res://scenes/levels/hub/volcano.gd", "47_volcano"),
     ("Script", "res://scenes/levels/hub/hub_ending.gd", "48_ending"),
-    ("Shader", "res://scenes/levels/plaine/lava.gdshader", "49_lava"),
+    ("Shader", "res://scenes/levels/hub/hub_flood.gdshader", "49_flood"),
     ("AudioStream", A + "volcano_eruption.wav", "50_eruption"),
     ("PackedScene", "res://scenes/levels/hub/hub_bunker.tscn", "51_bunker"),
     ("Script", "res://scenes/levels/hub/hub_river.gd", "52_river"),
@@ -383,7 +383,7 @@ noise = SubResource("FastNoiseLite_flood")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_flood"]
 render_priority = 0
-shader = ExtResource("49_lava")
+shader = ExtResource("49_flood")
 shader_parameter/flow_noise = SubResource("NoiseTexture2D_flood")
 shader_parameter/emission_strength = 3.0
 
@@ -961,8 +961,8 @@ def main():
     node(lines, "Volcano", "Node3D", props=[
         "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, -4, -215)", 'script = ExtResource("47_volcano")'])
     lines += [
-        '[node name="Ending" type="Node3D" parent="." node_paths=PackedStringArray("volcano")]',
-        'script = ExtResource("48_ending")', 'volcano = NodePath("../Volcano")',
+        '[node name="Ending" type="Node3D" parent="." node_paths=PackedStringArray("volcano", "terrain")]',
+        'script = ExtResource("48_ending")', 'volcano = NodePath("../Volcano")', 'terrain = NodePath("../Terrain")',
         'eruption_sound = ExtResource("50_eruption")', 'flood_material = SubResource("ShaderMaterial_flood")', ""]
     node(lines, "DefaultSpawn", "Marker3D", props=["transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 12)"])
     node(lines, "Player", instance="7_player", props=[
