@@ -120,6 +120,13 @@ func open(fragments: Array[String]) -> void:
 	select(current)
 
 
+## Livre déjà trouvé : les cinq épreuves sont montrées résolues, en vert ; on peut les relire, plus y répondre.
+func open_solved(fragments: Array[String]) -> void:
+	solved.fill(true)
+	open(fragments)
+	_set_border(COLOR_SOLVED)
+
+
 ## Taille du texte de l'extrait : 20 au plus, réduite tant que ses lignes ne tiennent pas au-dessus de la bordure
 ## basse de la page (de y = 64 à y = 352 dans la page). En 20, les douze lignes de l'extrait JavaScript / TypeScript
 ## mordaient sur la bordure.

@@ -150,7 +150,20 @@ func _ready() -> void:
 	# Le nom du lieu s'affiche déjà pendant la transition du portail.
 	if GameState.has_book(BOOK_ID):
 		_portal.is_open = true
+		_show_solved()
 		_hud.show_message("Vous avez déjà trouvé le livre de cette zone : le portail est ouvert.")
+
+
+## Livre déjà trouvé : les cercles gardent le code en vert, le tombeau reste ouvert et vide, et le mécanisme ne
+## montre plus que la solution.
+func _show_solved() -> void:
+	_mechanism_interactable.prompt = "Mécanisme des cercles : énigme résolue"
+	_mechanism.set_letters(RingPuzzle.SOLUTION)
+	_mechanism.set_glow(Color(0.35, 1.0, 0.5), 3.0)
+	_tomb_lid.position += Vector3(1.82, -0.51, 0.0)
+	_tomb_lid.rotation.z = deg_to_rad(-30.0)
+	_book.hide()
+	_book_pickup.enabled = false
 
 
 func _process(delta: float) -> void:
@@ -276,6 +289,9 @@ func _open_mechanism() -> void:
 	_hud.set_crosshair_visible(false)
 	_hud.set_prompt("")
 	_mechanism_camera.current = true
+	if GameState.has_book(BOOK_ID):
+		_puzzle.open_solved(_mechanism)
+		return
 	_puzzle.open(_mechanism)
 
 

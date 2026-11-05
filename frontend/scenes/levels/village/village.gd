@@ -101,7 +101,20 @@ func _ready() -> void:
 	_apply_location()
 	# Le nom du lieu est déjà annoncé par la transition du portail.
 	if GameState.has_book(BOOK_ID):
+		_show_solved()
 		_hud.show_message("Vous avez déjà trouvé le livre de cette zone : le portail est ouvert.")
+
+
+## Livre déjà trouvé : les sections du dispositif restent vertes, la bibliothèque reste ouverte sur la salle secrète
+## vide, et le dispositif ne montre plus que les épreuves résolues.
+func _show_solved() -> void:
+	_device.prompt = "Dispositif des cinq langages : énigme résolue"
+	for index in _sections.get_child_count():
+		_set_section(index, Color(0.3, 1.0, 0.4), 2.5)
+	_shelf.position.z += SHELF_TRAVEL
+	_secret_light.visible = true
+	_book.hide()
+	_book_pickup.enabled = false
 
 
 func _process(delta: float) -> void:
@@ -169,6 +182,9 @@ func _on_storage_opened(had_fragment: bool, storage: Storage) -> void:
 func _open_device() -> void:
 	_open_panel()
 	_hud.set_crosshair_visible(false)
+	if GameState.has_book(BOOK_ID):
+		_puzzle.open_solved(found_fragments())
+		return
 	_puzzle.open(found_fragments())
 
 

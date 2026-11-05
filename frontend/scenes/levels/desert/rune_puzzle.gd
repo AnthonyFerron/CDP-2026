@@ -48,6 +48,8 @@ var _slots: Array[StringName] = []
 var _selected: StringName = &""
 var _flash: Tween
 var _wrong := false
+## Énigme déjà résolue (livre trouvé) : le panneau montre la solution, sans qu'on puisse la refaire.
+var _solved := false
 
 var _root: Control
 var _frame: Ornate.Frame
@@ -91,8 +93,25 @@ func open(runes: Array[StringName]) -> void:
 	_root.show()
 
 
+## Livre déjà trouvé : la table montre les runes à leur place, en vert, et ne se manipule plus.
+func open_solved() -> void:
+	_solved = true
+	_runes = SOLUTION.duplicate()
+	_slots = SOLUTION.duplicate()
+	_selected = &""
+	_wrong = false
+	_set_feedback("Énigme résolue : les deux algorithmes s'exécutent. Le livre a déjà été trouvé.", Ornate.SUCCESS)
+	_set_border(Color(0.35, 0.9, 0.5))
+	_rebuild()
+	_root.show()
+
+
+func is_solved() -> bool:
+	return _solved
+
+
 func place(rune: StringName, slot: int) -> void:
-	if not rune in _runes:
+	if _solved or not rune in _runes:
 		return
 	var previous := _slots.find(rune)
 	if previous >= 0:
@@ -103,6 +122,8 @@ func place(rune: StringName, slot: int) -> void:
 
 
 func clear_slot(slot: int) -> void:
+	if _solved:
+		return
 	_slots[slot] = &""
 	_rebuild()
 
@@ -112,7 +133,7 @@ func is_complete() -> bool:
 
 
 func validate() -> void:
-	if not is_complete():
+	if _solved or not is_complete():
 		return
 	var correct := _slots == SOLUTION
 	if correct:
@@ -236,7 +257,7 @@ func _rebuild() -> void:
 		var row := index / 3
 		Ornate.place(_pool, tile, Vector2(70 + column * 515, 604 + row * 64), Vector2(490, 56))
 		tile.pressed.connect(_on_rune_pressed.bind(rune))
-	_validate.disabled = not is_complete()
+	_validate.disabled = _solved or not is_complete()
 	_validate.queue_redraw()
 
 

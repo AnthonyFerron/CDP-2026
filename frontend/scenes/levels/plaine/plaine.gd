@@ -115,7 +115,19 @@ func _ready() -> void:
 	# Le nom du lieu s'affiche déjà pendant la transition du portail.
 	if GameState.has_book(BOOK_ID):
 		_portal.is_open = true
+		_show_solved()
 		_hud.show_message("Vous avez déjà trouvé le livre de cette zone : le portail est ouvert.")
+
+
+## Livre déjà trouvé : la dalle reste ouverte sur l'escalier, le pupitre est vide, les inscriptions sont vertes, et
+## la tablette ne montre plus que la solution.
+func _show_solved() -> void:
+	_tablet.prompt = "Tablette : énigme résolue"
+	_set_tablet_glow(Color(0.3, 1.0, 0.45), 3.0)
+	_set_inscription(INSCRIPTION_RIGHT)
+	_stone.position.x -= stone_travel
+	_book.hide()
+	_book_pickup.enabled = false
 
 
 func _process(_delta: float) -> void:
@@ -201,6 +213,12 @@ func found_fragments() -> Dictionary:
 func _open_tablet() -> void:
 	_open_panel()
 	_hud.set_crosshair_visible(false)
+	if GameState.has_book(BOOK_ID):
+		var all := {}
+		for index in FRAGMENTS.size():
+			all[index] = FRAGMENTS[index]
+		_puzzle.open_solved(all)
+		return
 	_puzzle.open(_found)
 
 

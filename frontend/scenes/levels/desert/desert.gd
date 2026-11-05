@@ -132,7 +132,23 @@ func _ready() -> void:
 	# Le nom du lieu s'affiche déjà pendant la transition du portail.
 	if GameState.has_book(BOOK_ID):
 		_portal.is_open = true
+		_show_solved.call_deferred()
 		_hud.show_message("Vous avez déjà trouvé le livre de cette zone : le portail est ouvert.")
+
+
+## Livre déjà trouvé : la cave reste telle que l'énigme l'a laissée (runes allumées, coffre ouvert et vide), et la
+## table ne montre plus que la solution.
+func _show_solved() -> void:
+	_table.prompt = "Table des runes : énigme résolue"
+	_table_glow.visible = true
+	_table_glow.light_color = Color(0.4, 0.7, 1.0)
+	_table_glow.light_energy = 7.0
+	_light_slots(Color(0.35, 0.7, 1.0), 6.0)
+	_chest_sand.hide()
+	_chest.show()
+	_chest_lid.rotation.x = deg_to_rad(-105.0)
+	_book.hide()
+	_book_pickup.enabled = false
 
 
 func _process(delta: float) -> void:
@@ -259,6 +275,9 @@ func _open_table() -> void:
 	_player.process_mode = Node.PROCESS_MODE_DISABLED
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	_hud.set_crosshair_visible(false)
+	if GameState.has_book(BOOK_ID):
+		_puzzle.open_solved()
+		return
 	_puzzle.open(_inventory)
 
 

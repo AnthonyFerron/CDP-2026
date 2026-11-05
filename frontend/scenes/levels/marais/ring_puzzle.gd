@@ -30,6 +30,8 @@ var _state := COLOR_IDLE
 var _shown: Array[float] = []
 var _turns: Array[Tween] = []
 var _flash: Tween
+## Énigme déjà résolue (livre trouvé) : le panneau montre le code, sans qu'on puisse le refaire.
+var _solved := false
 
 var _root: Control
 var _frame: Ornate.Frame
@@ -78,7 +80,25 @@ func open(mechanism: RingMechanism) -> void:
 	_root.show()
 
 
+## Livre déjà trouvé : les cercles montrent le code, en vert ; on ne peut plus les tourner ni valider, seulement quitter.
+func open_solved(mechanism: RingMechanism) -> void:
+	open(mechanism)
+	_solved = true
+	_mechanism.set_letters(SOLUTION)
+	for ring in RingMechanism.RING_COUNT:
+		_shown[ring] = _mechanism.letters[ring]
+	_validate.disabled = true
+	_set_state(COLOR_RIGHT)
+	_set_feedback("Énigme résolue : le tombeau est ouvert. Le livre a déjà été trouvé.", Ornate.SUCCESS)
+
+
+func is_solved() -> bool:
+	return _solved
+
+
 func turn(ring: int, step: int) -> void:
+	if _solved:
+		return
 	_mechanism.rotate_ring(ring, step)
 	# Le cadran tourne par le plus court chemin jusqu'à la nouvelle lettre.
 	var count := RingMechanism.LETTERS.length()
@@ -96,7 +116,7 @@ func turn(ring: int, step: int) -> void:
 
 
 func validate() -> void:
-	if not _open:
+	if not _open or _solved:
 		return
 	var correct := _mechanism.code() == SOLUTION
 	if correct:

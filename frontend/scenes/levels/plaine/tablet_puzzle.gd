@@ -42,6 +42,8 @@ var _pool: VBoxContainer
 var _feedback: Label
 var _validate: Ornate.HexButton
 var _close: Ornate.PillButton
+## Énigme déjà résolue (livre trouvé) : le panneau montre la conversation remise en ordre, sans qu'on puisse la refaire.
+var _solved := false
 
 
 func _ready() -> void:
@@ -76,8 +78,29 @@ func open(found: Dictionary) -> void:
 	_root.show()
 
 
+## Livre déjà trouvé : la tablette montre les six fragments dans le bon ordre, en vert, et ne se manipule plus.
+## `fragments` associe chaque numéro à son texte.
+func open_solved(fragments: Dictionary) -> void:
+	_solved = true
+	_fragments = fragments.duplicate()
+	for slot in SLOT_COUNT:
+		_slots[slot] = slot
+	_selected = -1
+	_closing = false
+	_mark = Mark.RIGHT
+	_root.modulate = Color.WHITE
+	_glow.color = RIGHT
+	_feedback.text = "Énigme résolue : la conversation est remise en ordre. Le livre a déjà été trouvé."
+	_rebuild()
+	_root.show()
+
+
+func is_solved() -> bool:
+	return _solved
+
+
 func place(fragment: int, slot: int) -> void:
-	if not _fragments.has(fragment):
+	if _solved or not _fragments.has(fragment):
 		return
 	var previous := _slots.find(fragment)
 	if previous >= 0:
@@ -89,6 +112,8 @@ func place(fragment: int, slot: int) -> void:
 
 
 func clear_slot(slot: int) -> void:
+	if _solved:
+		return
 	_slots[slot] = -1
 	_mark = Mark.NONE
 	_rebuild()
@@ -99,7 +124,7 @@ func is_complete() -> bool:
 
 
 func validate() -> void:
-	if not is_complete():
+	if _solved or not is_complete():
 		return
 	var correct := true
 	for index in SLOT_COUNT:
@@ -137,12 +162,12 @@ func _rebuild() -> void:
 		card.custom_minimum_size = Vector2(0, 88)
 		card.pressed.connect(_on_fragment_pressed.bind(fragment))
 		_pool.add_child(card)
-	if free.is_empty() and _fragments.size() == SLOT_COUNT:
+	if free.is_empty() and _fragments.size() == SLOT_COUNT and not _solved:
 		var done := Ornate.label("Les six fragments sont posés : relisez la discussion, puis validez.", 24, Ornate.MUTED)
 		done.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		done.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		_pool.add_child(done)
-	_validate.disabled = not is_complete()
+	_validate.disabled = _solved or not is_complete()
 	_validate.queue_redraw()
 
 
