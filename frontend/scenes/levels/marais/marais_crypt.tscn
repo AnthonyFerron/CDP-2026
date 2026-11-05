@@ -107,10 +107,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 0, -16)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, -28, 4.15, -16)
 
 [node name="template_wall_2" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, -28, 0, -18)
+transform = Transform3D(-1, 0, 0, 0, 1.09639, 0, -0, 0, -1, -28, 0, -18)
 
 [node name="template_wall_3" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -30, 0, -16)
+transform = Transform3D(0, 0, -1, 0, 1.09639, 0, 1, 0, 0, -30, 0, -16)
 
 [node name="template_floor_4" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 0, -12)
@@ -119,7 +119,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 0, -12)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, -28, 4.15, -12)
 
 [node name="template_wall_6" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -30, 0, -12)
+transform = Transform3D(0, 0, -1, 0, 1.09639, 0, 1, 0, 0, -30, 0, -12)
 
 [node name="template_floor_7" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 0, -8)
@@ -128,10 +128,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 0, -8)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, -28, 4.15, -8)
 
 [node name="template_wall_9" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 0, -6)
+transform = Transform3D(1, 0, 0, 0, 1.09639, 0, 0, 0, 1, -28, 0, -6)
 
 [node name="template_wall_10" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -30, 0, -8)
+transform = Transform3D(0, 0, -1, 0, 1.09639, 0, 1, 0, 0, -30, 0, -8)
 
 [node name="template_floor_11" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0, -16)
@@ -140,7 +140,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0, -16)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, -24, 4.15, -16)
 
 [node name="template_wall_13" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, -24, 0, -18)
+transform = Transform3D(-1, 0, 0, 0, 1.09639, 0, -0, 0, -1, -24, 0, -18)
 
 [node name="template_floor_14" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0, -12)
@@ -155,7 +155,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0, -8)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, -24, 4.15, -8)
 
 [node name="template_wall_18" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0, -6)
+transform = Transform3D(1, 0, 0, 0, 1.09639, 0, 0, 0, 1, -24, 0, -6)
 
 [node name="template_floor_19" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0, -16)
@@ -164,10 +164,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0, -16)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, -20, 4.15, -16)
 
 [node name="template_wall_21" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, -20, 0, -18)
+transform = Transform3D(-1, 0, 0, 0, 1.09639, 0, -0, 0, -1, -20, 0, -18)
 
 [node name="template_wall_22" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -18, 0, -16)
+transform = Transform3D(0, 0, 1, 0, 1.09639, 0, -1, 0, 0, -18, 0, -16)
 
 [node name="template_floor_23" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0, -12)
@@ -182,10 +182,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0, -8)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, -20, 4.15, -8)
 
 [node name="template_wall_27" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0, -6)
+transform = Transform3D(1, 0, 0, 0, 1.09639, 0, 0, 0, 1, -20, 0, -6)
 
 [node name="template_wall_28" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -18, 0, -8)
+transform = Transform3D(0, 0, 1, 0, 1.09639, 0, -1, 0, 0, -18, 0, -8)
 
 [node name="template_floor_29" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0, 0)
@@ -194,10 +194,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0, 0)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, -20, 4.15, 0)
 
 [node name="template_wall_31" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, -20, 0, -2)
+transform = Transform3D(-1, 0, 0, 0, 1.09639, 0, -0, 0, -1, -20, 0, -2)
 
 [node name="template_wall_32" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -22, 0, 0)
+transform = Transform3D(0, 0, -1, 0, 1.09639, 0, 1, 0, 0, -22, 0, 0)
 
 [node name="template_floor_33" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0, 4)
@@ -206,10 +206,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0, 4)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, -20, 4.15, 4)
 
 [node name="template_wall_35" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0, 6)
+transform = Transform3D(1, 0, 0, 0, 1.09639, 0, 0, 0, 1, -20, 0, 6)
 
 [node name="template_wall_36" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -22, 0, 4)
+transform = Transform3D(0, 0, -1, 0, 1.09639, 0, 1, 0, 0, -22, 0, 4)
 
 [node name="template_floor_37" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, -12)
@@ -218,10 +218,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, -12)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, -16, 4.15, -12)
 
 [node name="template_wall_39" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, -16, 0, -14)
+transform = Transform3D(-1, 0, 0, 0, 1.09639, 0, -0, 0, -1, -16, 0, -14)
 
 [node name="template_wall_40" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, -10)
+transform = Transform3D(1, 0, 0, 0, 1.09639, 0, 0, 0, 1, -16, 0, -10)
 
 [node name="template_floor_41" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, 0)
@@ -230,7 +230,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, 0)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, -16, 4.15, 0)
 
 [node name="template_wall_43" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, -16, 0, -2)
+transform = Transform3D(-1, 0, 0, 0, 1.09639, 0, -0, 0, -1, -16, 0, -2)
 
 [node name="template_floor_44" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, 4)
@@ -239,10 +239,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, 4)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, -16, 4.15, 4)
 
 [node name="template_wall_46" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, 6)
+transform = Transform3D(1, 0, 0, 0, 1.09639, 0, 0, 0, 1, -16, 0, 6)
 
 [node name="template_wall_47" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -14, 0, 4)
+transform = Transform3D(0, 0, 1, 0, 1.09639, 0, -1, 0, 0, -14, 0, 4)
 
 [node name="template_floor_48" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, -12)
@@ -251,10 +251,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, -12)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, -12, 4.15, -12)
 
 [node name="template_wall_50" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, -12, 0, -14)
+transform = Transform3D(-1, 0, 0, 0, 1.09639, 0, -0, 0, -1, -12, 0, -14)
 
 [node name="template_wall_51" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, -10)
+transform = Transform3D(1, 0, 0, 0, 1.09639, 0, 0, 0, 1, -12, 0, -10)
 
 [node name="template_floor_52" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, -4)
@@ -263,10 +263,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, -4)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, -12, 4.15, -4)
 
 [node name="template_wall_54" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, -12, 0, -6)
+transform = Transform3D(-1, 0, 0, 0, 1.09639, 0, -0, 0, -1, -12, 0, -6)
 
 [node name="template_wall_55" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -14, 0, -4)
+transform = Transform3D(0, 0, -1, 0, 1.09639, 0, 1, 0, 0, -14, 0, -4)
 
 [node name="template_floor_56" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 0)
@@ -275,10 +275,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 0)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, -12, 4.15, 0)
 
 [node name="template_wall_58" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 2)
+transform = Transform3D(1, 0, 0, 0, 1.09639, 0, 0, 0, 1, -12, 0, 2)
 
 [node name="template_wall_59" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -10, 0, 0)
+transform = Transform3D(0, 0, 1, 0, 1.09639, 0, -1, 0, 0, -10, 0, 0)
 
 [node name="template_floor_60" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -20)
@@ -287,10 +287,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -20)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, -8, 4.15, -20)
 
 [node name="template_wall_62" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, -8, 0, -22)
+transform = Transform3D(-1, 0, 0, 0, 1.09639, 0, -0, 0, -1, -8, 0, -22)
 
 [node name="template_wall_63" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -10, 0, -20)
+transform = Transform3D(0, 0, -1, 0, 1.09639, 0, 1, 0, 0, -10, 0, -20)
 
 [node name="template_floor_64" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -16)
@@ -299,7 +299,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -16)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, -8, 4.15, -16)
 
 [node name="template_wall_66" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -10, 0, -16)
+transform = Transform3D(0, 0, -1, 0, 1.09639, 0, 1, 0, 0, -10, 0, -16)
 
 [node name="template_floor_67" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -12)
@@ -314,7 +314,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -8)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, -8, 4.15, -8)
 
 [node name="template_wall_71" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -10, 0, -8)
+transform = Transform3D(0, 0, -1, 0, 1.09639, 0, 1, 0, 0, -10, 0, -8)
 
 [node name="template_floor_72" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -4)
@@ -323,7 +323,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -4)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, -8, 4.15, -4)
 
 [node name="template_wall_74" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -2)
+transform = Transform3D(1, 0, 0, 0, 1.09639, 0, 0, 0, 1, -8, 0, -2)
 
 [node name="template_floor_75" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -20)
@@ -332,7 +332,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -20)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, -4, 4.15, -20)
 
 [node name="template_wall_77" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, -4, 0, -22)
+transform = Transform3D(-1, 0, 0, 0, 1.09639, 0, -0, 0, -1, -4, 0, -22)
 
 [node name="template_floor_78" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -16)
@@ -359,7 +359,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -4)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, -4, 4.15, -4)
 
 [node name="template_wall_86" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -2)
+transform = Transform3D(1, 0, 0, 0, 1.09639, 0, 0, 0, 1, -4, 0, -2)
 
 [node name="template_floor_87" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -20)
@@ -368,7 +368,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -20)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, 0, 4.15, -20)
 
 [node name="template_wall_89" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, 0, 0, -22)
+transform = Transform3D(-1, 0, 0, 0, 1.09639, 0, -0, 0, -1, 0, 0, -22)
 
 [node name="template_floor_90" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -16)
@@ -401,10 +401,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, 0, 4.15, 0)
 
 [node name="template_wall_100" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 2, 0, 0)
+transform = Transform3D(0, 0, 1, 0, 1.09639, 0, -1, 0, 0, 2, 0, 0)
 
 [node name="template_wall_101" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -2, 0, 0)
+transform = Transform3D(0, 0, -1, 0, 1.09639, 0, 1, 0, 0, -2, 0, 0)
 
 [node name="template_floor_102" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -20)
@@ -413,7 +413,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -20)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, 4, 4.15, -20)
 
 [node name="template_wall_104" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, 4, 0, -22)
+transform = Transform3D(-1, 0, 0, 0, 1.09639, 0, -0, 0, -1, 4, 0, -22)
 
 [node name="template_floor_105" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -16)
@@ -440,7 +440,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -4)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, 4, 4.15, -4)
 
 [node name="template_wall_113" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -2)
+transform = Transform3D(1, 0, 0, 0, 1.09639, 0, 0, 0, 1, 4, 0, -2)
 
 [node name="template_floor_114" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -20)
@@ -449,10 +449,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -20)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, 8, 4.15, -20)
 
 [node name="template_wall_116" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, 8, 0, -22)
+transform = Transform3D(-1, 0, 0, 0, 1.09639, 0, -0, 0, -1, 8, 0, -22)
 
 [node name="template_wall_117" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 10, 0, -20)
+transform = Transform3D(0, 0, 1, 0, 1.09639, 0, -1, 0, 0, 10, 0, -20)
 
 [node name="template_floor_118" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -16)
@@ -461,7 +461,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -16)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, 8, 4.15, -16)
 
 [node name="template_wall_120" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 10, 0, -16)
+transform = Transform3D(0, 0, 1, 0, 1.09639, 0, -1, 0, 0, 10, 0, -16)
 
 [node name="template_floor_121" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -12)
@@ -476,7 +476,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -8)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, 8, 4.15, -8)
 
 [node name="template_wall_125" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 10, 0, -8)
+transform = Transform3D(0, 0, 1, 0, 1.09639, 0, -1, 0, 0, 10, 0, -8)
 
 [node name="template_floor_126" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -4)
@@ -485,7 +485,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -4)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, 8, 4.15, -4)
 
 [node name="template_wall_128" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -2)
+transform = Transform3D(1, 0, 0, 0, 1.09639, 0, 0, 0, 1, 8, 0, -2)
 
 [node name="template_floor_129" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, -12)
@@ -494,10 +494,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, -12)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, 12, 4.15, -12)
 
 [node name="template_wall_131" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, 12, 0, -14)
+transform = Transform3D(-1, 0, 0, 0, 1.09639, 0, -0, 0, -1, 12, 0, -14)
 
 [node name="template_wall_132" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, -10)
+transform = Transform3D(1, 0, 0, 0, 1.09639, 0, 0, 0, 1, 12, 0, -10)
 
 [node name="template_floor_133" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, -4)
@@ -506,10 +506,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, -4)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, 12, 4.15, -4)
 
 [node name="template_wall_135" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, 12, 0, -6)
+transform = Transform3D(-1, 0, 0, 0, 1.09639, 0, -0, 0, -1, 12, 0, -6)
 
 [node name="template_wall_136" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 14, 0, -4)
+transform = Transform3D(0, 0, 1, 0, 1.09639, 0, -1, 0, 0, 14, 0, -4)
 
 [node name="template_floor_137" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 0)
@@ -518,10 +518,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 0)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, 12, 4.15, 0)
 
 [node name="template_wall_139" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 2)
+transform = Transform3D(1, 0, 0, 0, 1.09639, 0, 0, 0, 1, 12, 0, 2)
 
 [node name="template_wall_140" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 10, 0, 0)
+transform = Transform3D(0, 0, -1, 0, 1.09639, 0, 1, 0, 0, 10, 0, 0)
 
 [node name="template_floor_141" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, -12)
@@ -530,10 +530,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, -12)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, 16, 4.15, -12)
 
 [node name="template_wall_143" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, 16, 0, -14)
+transform = Transform3D(-1, 0, 0, 0, 1.09639, 0, -0, 0, -1, 16, 0, -14)
 
 [node name="template_wall_144" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, -10)
+transform = Transform3D(1, 0, 0, 0, 1.09639, 0, 0, 0, 1, 16, 0, -10)
 
 [node name="template_floor_145" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, 0)
@@ -542,7 +542,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, 0)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, 16, 4.15, 0)
 
 [node name="template_wall_147" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, 16, 0, -2)
+transform = Transform3D(-1, 0, 0, 0, 1.09639, 0, -0, 0, -1, 16, 0, -2)
 
 [node name="template_floor_148" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, 4)
@@ -551,10 +551,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, 4)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, 16, 4.15, 4)
 
 [node name="template_wall_150" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, 6)
+transform = Transform3D(1, 0, 0, 0, 1.09639, 0, 0, 0, 1, 16, 0, 6)
 
 [node name="template_wall_151" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 14, 0, 4)
+transform = Transform3D(0, 0, -1, 0, 1.09639, 0, 1, 0, 0, 14, 0, 4)
 
 [node name="template_floor_152" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, -16)
@@ -563,10 +563,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, -16)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, 20, 4.15, -16)
 
 [node name="template_wall_154" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, 20, 0, -18)
+transform = Transform3D(-1, 0, 0, 0, 1.09639, 0, -0, 0, -1, 20, 0, -18)
 
 [node name="template_wall_155" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 18, 0, -16)
+transform = Transform3D(0, 0, -1, 0, 1.09639, 0, 1, 0, 0, 18, 0, -16)
 
 [node name="template_floor_156" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, -12)
@@ -581,10 +581,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, -8)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, 20, 4.15, -8)
 
 [node name="template_wall_160" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, -6)
+transform = Transform3D(1, 0, 0, 0, 1.09639, 0, 0, 0, 1, 20, 0, -6)
 
 [node name="template_wall_161" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 18, 0, -8)
+transform = Transform3D(0, 0, -1, 0, 1.09639, 0, 1, 0, 0, 18, 0, -8)
 
 [node name="template_floor_162" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, 0)
@@ -593,10 +593,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, 0)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, 20, 4.15, 0)
 
 [node name="template_wall_164" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, 20, 0, -2)
+transform = Transform3D(-1, 0, 0, 0, 1.09639, 0, -0, 0, -1, 20, 0, -2)
 
 [node name="template_wall_165" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 22, 0, 0)
+transform = Transform3D(0, 0, 1, 0, 1.09639, 0, -1, 0, 0, 22, 0, 0)
 
 [node name="template_floor_166" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, 4)
@@ -605,10 +605,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, 4)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, 20, 4.15, 4)
 
 [node name="template_wall_168" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, 6)
+transform = Transform3D(1, 0, 0, 0, 1.09639, 0, 0, 0, 1, 20, 0, 6)
 
 [node name="template_wall_169" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 22, 0, 4)
+transform = Transform3D(0, 0, 1, 0, 1.09639, 0, -1, 0, 0, 22, 0, 4)
 
 [node name="template_floor_170" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0, -16)
@@ -617,7 +617,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0, -16)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, 24, 4.15, -16)
 
 [node name="template_wall_172" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, 24, 0, -18)
+transform = Transform3D(-1, 0, 0, 0, 1.09639, 0, -0, 0, -1, 24, 0, -18)
 
 [node name="template_floor_173" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0, -12)
@@ -632,7 +632,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0, -8)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, 24, 4.15, -8)
 
 [node name="template_wall_177" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0, -6)
+transform = Transform3D(1, 0, 0, 0, 1.09639, 0, 0, 0, 1, 24, 0, -6)
 
 [node name="template_floor_178" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 0, -16)
@@ -641,10 +641,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 0, -16)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, 28, 4.15, -16)
 
 [node name="template_wall_180" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, 28, 0, -18)
+transform = Transform3D(-1, 0, 0, 0, 1.09639, 0, -0, 0, -1, 28, 0, -18)
 
 [node name="template_wall_181" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 30, 0, -16)
+transform = Transform3D(0, 0, 1, 0, 1.09639, 0, -1, 0, 0, 30, 0, -16)
 
 [node name="template_floor_182" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 0, -12)
@@ -653,7 +653,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 0, -12)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, 28, 4.15, -12)
 
 [node name="template_wall_184" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 30, 0, -12)
+transform = Transform3D(0, 0, 1, 0, 1.09639, 0, -1, 0, 0, 30, 0, -12)
 
 [node name="template_floor_185" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 0, -8)
@@ -662,10 +662,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 0, -8)
 transform = Transform3D(1, 0, 0, 0, -1, -0, 0, 0, -1, 28, 4.15, -8)
 
 [node name="template_wall_187" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 0, -6)
+transform = Transform3D(1, 0, 0, 0, 1.09639, 0, 0, 0, 1, 28, 0, -6)
 
 [node name="template_wall_188" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 30, 0, -8)
+transform = Transform3D(0, 0, 1, 0, 1.09639, 0, -1, 0, 0, 30, 0, -8)
 
 [node name="dust_stairs_189" parent="Models" instance=ExtResource("3_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 8.2)
@@ -698,13 +698,13 @@ transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -2.25, 4.15, 4)
 transform = Transform3D(0.75, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.05, 12.4)
 
 [node name="template_wall_199" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 1.9, 4.05, 12.4)
+transform = Transform3D(0, 0, 1, 0, 1.09639, 0, -1, 0, 0, 1.9, 4.05, 12.4)
 
 [node name="template_wall_200" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -1.9, 4.05, 12.4)
+transform = Transform3D(0, 0, -1, 0, 1.09639, 0, 1, 0, 0, -1.9, 4.05, 12.4)
 
 [node name="template_wall_201" parent="Models" instance=ExtResource("2_model")]
-transform = Transform3D(0.95, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.05, 14.4)
+transform = Transform3D(0.95, 0, 0, 0, 1.09639, 0, 0, 0, 1, 0, 4.05, 14.4)
 
 [node name="dust_column_202" parent="Models" instance=ExtResource("5_model")]
 transform = Transform3D(3.6, 0, 0, 0, 3.6, 0, 0, 0, 3.6, -7, 0, -5)

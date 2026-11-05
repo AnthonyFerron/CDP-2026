@@ -721,6 +721,9 @@ STAIRS_ORIGIN = (0.0, 0.0, 8.2)
 LANDING = (0.0, 4.05, 12.4)
 # Façade des murs vue depuis la pièce : à 0,45 m du bord de la case (la collision dépasse, à 0,6 m).
 WALL_FACE = 0.45
+# Les murs du kit font juste la hauteur de la crypte (4,15 m) : leur haut affleurait le plafond et, sous certains
+# angles, un jour laissait voir le fond du ciel. Ils montent 40 cm plus haut, dans l'épaisseur du plafond.
+WALL_RISE = (CRYPT_HEIGHT + 0.4) / CRYPT_HEIGHT
 
 
 # Niches d'ossuaire : point de la façade du mur et direction de la pièce. Leur cadre de pierre et sa collision
@@ -764,7 +767,7 @@ def build_crypt_underground(scene, rng):
             if (ix + dx, iz + dz) in tiles or ((ix, iz), (ix + dx, iz + dz)) in OPEN_EDGES:
                 continue
             edge = (x + dx * CRYPT_TILE / 2, z + dz * CRYPT_TILE / 2)
-            scene.add("modular_dungeon_kit/template-wall", (edge[0], 0.0, edge[1]), degrees, 1.0)
+            scene.add("modular_dungeon_kit/template-wall", (edge[0], 0.0, edge[1]), degrees, (1.0, WALL_RISE, 1.0))
             size = (0.6, CRYPT_HEIGHT, CRYPT_TILE) if dx else (CRYPT_TILE, CRYPT_HEIGHT, 0.6)
             scene.add_box((edge[0] - dx * 0.3, CRYPT_HEIGHT / 2, edge[1] - dz * 0.3), size)
 
@@ -818,7 +821,7 @@ def build_crypt_underground(scene, rng):
     scene.add_box((lx, ly - 0.25, lz - 0.3), (3.6, 0.5, 4.6))
     for (dx, dz), degrees in ((1, 0), 90.0), ((-1, 0), -90.0), ((0, 1), 0.0):
         edge = (lx + dx * 1.9, lz + dz * 2.0)
-        scene.add("modular_dungeon_kit/template-wall", (edge[0], ly, edge[1]), degrees, (0.95, 1.0, 1.0) if dz else 1.0)
+        scene.add("modular_dungeon_kit/template-wall", (edge[0], ly, edge[1]), degrees, (0.95 if dz else 1.0, WALL_RISE, 1.0))
         size = (0.6, CRYPT_HEIGHT + 0.2, 4.0) if dx else (3.8, CRYPT_HEIGHT + 0.2, 0.6)
         scene.add_box((edge[0] - dx * 0.3, ly + CRYPT_HEIGHT / 2, edge[1] - dz * 0.3), size)
 
