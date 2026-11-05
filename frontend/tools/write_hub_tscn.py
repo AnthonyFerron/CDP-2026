@@ -235,20 +235,21 @@ bottom_radius = 0.61
 height = 0.1
 radial_segments = 10
 
-[sub_resource type="SphereMesh" id="SphereMesh_beard"]
+[sub_resource type="BoxMesh" id="BoxMesh_beard_jaw"]
 material = SubResource("Material_beard")
-radius = 0.5
-height = 1.0
-radial_segments = 12
-rings = 6
+size = Vector3(0.88, 0.27, 0.62)
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_beard"]
+[sub_resource type="BoxMesh" id="BoxMesh_beard_tail1"]
 material = SubResource("Material_beard")
-top_radius = 0.34
-bottom_radius = 0.05
-height = 0.5
-radial_segments = 10
-rings = 2
+size = Vector3(0.7, 0.22, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_beard_tail2"]
+material = SubResource("Material_beard")
+size = Vector3(0.5, 0.2, 0.18)
+
+[sub_resource type="BoxMesh" id="BoxMesh_beard_tail3"]
+material = SubResource("Material_beard")
+size = Vector3(0.28, 0.18, 0.16)
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_mustache"]
 material = SubResource("Material_beard")
@@ -354,6 +355,10 @@ size = Vector3(4, 0.3, 2.6)
 material = SubResource("Material_hall_floor")
 size = Vector3(20, 0.1, 12)
 
+[sub_resource type="BoxMesh" id="BoxMesh_bunker_cover"]
+material = SubResource("Material_hall_ceiling")
+size = Vector3(21, 0.3, 13)
+
 [sub_resource type="BoxMesh" id="BoxMesh_hall_ceiling"]
 material = SubResource("Material_hall_ceiling")
 size = Vector3(20.4, 0.4, 12.4)
@@ -388,10 +393,10 @@ roughness = 1.0
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_crown"]
 material = SubResource("Material_crown")
-top_radius = 0.44
-bottom_radius = 0.42
+top_radius = 0.63
+bottom_radius = 0.594
 height = 0.24
-radial_segments = 10
+radial_segments = 4
 cap_top = false
 cap_bottom = false
 
@@ -444,6 +449,9 @@ PORTALS = {"plaine": (-38.0, -38.0), "desert": (38.0, -38.0), "marais": (38.0, 3
 # Salle du trône du château : centre et profondeur, comme dans tools/build_hub.py.
 HALL_Z = -81.0
 HALL_HALF_DEPTH = 6.0
+# Trône contre le mur ouest de la salle (qui va de x = -10 à 10), tourné vers le cercle : au fond de la salle, son
+# estrade recouvrait l'anneau extérieur du cercle (5,62 m de rayon pour 6 m de demi-profondeur).
+THRONE_X = -8.7
 # Cercle magique au milieu de la salle, dans son repère : centre, rayon des piédestaux, rayon des lettres.
 CIRCLE = (0.0, -0.2)
 PEDESTAL_RADIUS = 5.0
@@ -475,7 +483,7 @@ def pedestal_spot(zone):
 # Merlon et le roi dans la salle du trône pour le rituel, les autres autour du feu, face à la caméra de la fin.
 OUTSIDE = {
     "Merlon": (1.2, HALL_Z + 4.1, yaw_toward(CIRCLE[0] - 1.2, CIRCLE[1] - 4.1), 0.1),
-    "Codeon": (-1.3, HALL_Z - 2.6, 20.0, 0.1),
+    "Codeon": (-6.3, HALL_Z - 2.2, 70.0, 0.1),
     "Mira": around_fire(180.0),
     "Bran": around_fire(225.0),
     "Elda": around_fire(270.0),
@@ -667,20 +675,25 @@ def characters(lines):
     def mesh(name, mesh_id, parent, basis=IDENTITY, origin=(0, 0, 0)):
         node(lines, name, "MeshInstance3D", parent, props=[tf(basis, origin), f'mesh = SubResource("{mesh_id}")'])
 
-    # Merlon le mage : longue robe, chapeau pointu posé sur le crâne, barbe blanche en volume qui épouse le menton
-    # et tombe sur la robe, bâton à orbe tenu dans la main gauche. Mesures du crâne (modèle à l'échelle 2,5) :
-    # haut de la tête à 1,525 m, menton à 0,85 m, face avant vers z = 0,43 à 0,51 m.
+    # Merlon le mage : longue robe, chapeau pointu posé sur le crâne, barbe blanche taillée en blocs comme la tête du
+    # modèle : elle enveloppe la mâchoire et les joues, puis tombe en trois gradins sur la robe ; bâton à orbe tenu dans
+    # la main gauche. Mesures de la tête (modèle à l'échelle 2,5, vues orthographiques) : un cube de x = -0,40 à 0,40 et
+    # de z = -0,40 à 0,41, du menton (0,85 m) au haut du crâne (1,525 m), la bouche vers 1,03 m.
     node(lines, "Wizard", "Node3D", "Characters/Merlon")
     mesh("Robe", "CylinderMesh_robe", "Characters/Merlon/Wizard", origin=(0, 0.5, 0.02))
     head = attach("Merlon", "head", 2.5, HEAD_BONE)
     mesh("Brim", "CylinderMesh_brim", head, origin=(0, 1.545, 0.05))
     mesh("Band", "CylinderMesh_band", head, origin=(0, 1.625, 0.05))
     mesh("Hat", "CylinderMesh_hat", head, origin=(0, 2.155, 0.05))
-    mesh("BeardChin", "SphereMesh_beard", head, scaled(IDENTITY, 0.84, 0.32, 0.26), (0, 0.88, 0.5))
-    mesh("BeardTail", "CylinderMesh_beard", head, scaled(rot_x(-11.0), 1.0, 1.0, 0.42), (0, 0.62, 0.53))
+    # Mâchoire : de 0,79 à 1,06 m, de z = -0,1 (les joues) à 0,52 (devant le menton), un peu plus large que la tête.
+    mesh("BeardJaw", "BoxMesh_beard_jaw", head, origin=(0, 0.925, 0.21))
+    # Gradins sur la robe, chacun enfoncé de 3 cm dans le précédent et dans le devant de la robe (qui s'évase vers le bas).
+    mesh("BeardTail1", "BoxMesh_beard_tail1", head, origin=(0, 0.7, 0.55))
+    mesh("BeardTail2", "BoxMesh_beard_tail2", head, origin=(0, 0.52, 0.575))
+    mesh("BeardTail3", "BoxMesh_beard_tail3", head, origin=(0, 0.36, 0.6))
     for side in (-1, 1):
         mesh("Mustache" + ("Left" if side > 0 else "Right"), "CapsuleMesh_mustache", head,
-             mul(rot_y(side * 14.0), rot_z(-side * 105.0)), (side * 0.15, 1.03, 0.56))
+             mul(rot_y(side * 14.0), rot_z(-side * 105.0)), (side * 0.15, 1.07, 0.55))
     hand = attach("Merlon", "arm-left", 2.5, *ARM_LEFT_HOLD)
     mesh("Staff", "CylinderMesh_staff", hand, origin=(0.47, 1.25, 0.47))
     mesh("Orb", "SphereMesh_orb", hand, origin=(0.47, 2.6, 0.47))
@@ -691,15 +704,19 @@ def characters(lines):
         "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0.9)", "light_color = Color(0.6, 0.45, 1, 1)",
         "light_energy = 1.0", "omni_range = 4.0"])
 
-    # Le roi Codeon V : couronne ouverte posée sur le haut du crâne (1,464 m à l'échelle 2,4), col d'hermine et cape
-    # au torse, sceptre dans la main gauche.
+    # Le roi Codeon V : couronne carrée comme sa tête (un cube de ±0,39 m, haut du crâne à 1,47 m à l'échelle 2,4),
+    # enfoncée sur le haut du crâne de 1,33 à 1,57 m, ses faces à 3 cm de celles de la tête ; trois fleurons par face.
+    # Col d'hermine et cape au torse, sceptre dans la main gauche.
     head = attach("Codeon", "head", 2.4, HEAD_BONE)
-    mesh("Crown", "CylinderMesh_crown", head, origin=(0, 1.584, 0.05))
-    for index in range(5):
-        angle = math.radians(90 + index * 72)
-        mesh(f"Spike{index}", "PrismMesh_crown_spike", head, rot_y(-math.degrees(angle) + 90),
-             (math.cos(angle) * 0.42, 1.81, 0.05 + math.sin(angle) * 0.42))
-    mesh("Jewel", "SphereMesh_jewel", head, origin=(0, 1.6, 0.51))
+    mesh("Crown", "CylinderMesh_crown", head, rot_y(45.0), (0, 1.45, 0.0))
+    for face in range(4):
+        yaw = face * 90.0
+        nx, nz = math.sin(math.radians(yaw)), math.cos(math.radians(yaw))
+        for index, offset in enumerate((-0.27, 0.0, 0.27)):
+            tall = 1.3 if offset == 0.0 else 1.0
+            mesh(f"Spike{face * 3 + index}", "PrismMesh_crown_spike", head, scaled(rot_y(yaw), 1.0, tall, 1.0),
+                 (nx * 0.42 + nz * offset, 1.57 + 0.11 * tall - 0.02, nz * 0.42 - nx * offset))
+    mesh("Jewel", "SphereMesh_jewel", head, origin=(0, 1.45, 0.45))
     torso = attach("Codeon", "torso", 2.4, TORSO_BONE)
     mesh("Collar", "CylinderMesh_collar", torso, origin=(0, 0.86, 0.0))
     mesh("Cape", "BoxMesh_cape", torso, origin=(0, 0.47, -0.44))
@@ -726,7 +743,7 @@ def hall(lines):
     for index, x in enumerate((-7.5, -2.5, 2.5, 7.5)):
         node(lines, f"Beam{index}", "MeshInstance3D", "Castle", props=[
             f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {x:g}, 8.7, 0)", 'mesh = SubResource("BoxMesh_beam")'])
-    node(lines, "Throne", "StaticBody3D", "Castle", props=[f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, {-HALL_HALF_DEPTH + 1.3:g})"])
+    node(lines, "Throne", "StaticBody3D", "Castle", props=[at(THRONE_X, 0.0, CIRCLE[1], 1.0, 90.0)])
     for name, mesh, x, y, z in (("Dais", "dais", 0, 0.15, 0), ("Seat", "throne_seat", 0, 0.6, 0.1), ("Back", "throne_back", 0, 1.7, -0.5),
                                 ("ArmLeft", "throne_frame", -0.9, 0.9, 0.05), ("ArmRight", "throne_frame", 0.9, 0.9, 0.05),
                                 ("Crest", "throne_crest", 0, 3.2, -0.5)):
@@ -907,6 +924,10 @@ def main():
     # Abri des survivants, sous le bunker : la partie commence ici.
     node(lines, "BunkerInterior", "Node3D", props=[f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {BUNKER_INSIDE[0]:g}, {BUNKER_INSIDE[1]:g}, {BUNKER_INSIDE[2]:g})"])
     node(lines, "Shelter", parent="BunkerInterior", instance="51_bunker")
+    # Planche pleine au-dessus du plafond de planches (de 4 à 4,24 m), de mur à mur : entre les planches, on voit du
+    # bois sombre, et rien de ce qui est au-dessus.
+    node(lines, "CeilingCover", "MeshInstance3D", "BunkerInterior", props=[
+        "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.45, 0)", 'mesh = SubResource("BoxMesh_bunker_cover")'])
     node(lines, "Spawn", "Marker3D", "BunkerInterior", props=["transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 4.2)"])
     node(lines, "Exit", "Node3D", "BunkerInterior", props=[
         "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 5.6)", 'script = ExtResource("9_interactable")',
