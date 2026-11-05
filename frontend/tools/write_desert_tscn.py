@@ -60,6 +60,7 @@ EXT = [
     ("Script", "res://scenes/levels/desert/desert_mirages.gd", "38_mirages"),
     ("Script", "res://scenes/levels/desert/desert_whirlwinds.gd", "39_whirlwinds"),
     ("Script", "res://scenes/levels/hub/volcano.gd", "90_volcano"),
+    ("Shader", "res://scenes/levels/desert/chest_sand.gdshader", "91_chest_sand"),
 ]
 
 SUBRESOURCES = """
@@ -427,16 +428,18 @@ size = Vector3(0.6, 0.14, 0.8)
 height = 1.2
 radius = 1.6
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_chest_sand"]
-albedo_color = Color(0.8, 0.62, 0.38, 1)
-roughness = 1.0
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_chest_sand"]
+render_priority = 0
+shader = ExtResource("91_chest_sand")
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_chest_sand"]
-material = SubResource("StandardMaterial3D_chest_sand")
-top_radius = 0.4
-bottom_radius = 1.5
-height = 1.3
-radial_segments = 12
+material = SubResource("ShaderMaterial_chest_sand")
+top_radius = 1.0
+bottom_radius = 1.0
+height = 1.0
+radial_segments = 20
+rings = 6
+cap_bottom = false
 
 """
 
@@ -844,8 +847,11 @@ def main():
         "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, 0.5)", 'mesh = SubResource("BoxMesh_chest_band")'])
     node(lines, "Lock", "MeshInstance3D", "Interior/Chest/Lid", props=[
         "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0, 1.03)", 'mesh = SubResource("BoxMesh_chest_lock")'])
+    # Tas de sable sur le coffre : chest_sand.gdshader fait du cylindre un dôme qui couvre tout le coffre, puis l'étale
+    # en couche mince autour de lui. Son pied est 2 cm sous le sol, et sa boîte couvre la couche étalée.
     node(lines, "ChestSand", "MeshInstance3D", "Interior", props=[
-        f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {cx:g}, 0.65, {cz:g})", 'mesh = SubResource("CylinderMesh_chest_sand")'])
+        f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {cx:g}, -0.02, {cz:g})", 'mesh = SubResource("CylinderMesh_chest_sand")',
+        "custom_aabb = AABB(-2.8, -0.1, -2.8, 5.6, 1.7, 5.6)"])
     # Le tas puis le coffre arrêtent le joueur au même endroit.
     node(lines, "ChestBody", "StaticBody3D", "Interior", props=[f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {cx:g}, 0.5, {cz:g})"])
     node(lines, "Shape", "CollisionShape3D", "Interior/ChestBody", props=['shape = SubResource("BoxShape3D_chest")'])
