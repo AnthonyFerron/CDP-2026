@@ -725,6 +725,8 @@ func _add_chunked_multimesh(mesh: Mesh, transforms: Array[Transform3D], material
 		var instance := _add_multimesh(mesh, items, material)
 		instance.name = "%sDetail%d_%d_%d" % [kind, get_child_count(), cell.x, cell.y]
 		instance.visibility_range_end_margin = CHUNK_FADE
+		# Petits détails : leur ombre coûte cher (le soleil les redessine dans chaque découpe d'ombre) pour peu d'effet.
+		instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
 
 func _flat_material(color: Color) -> StandardMaterial3D:
