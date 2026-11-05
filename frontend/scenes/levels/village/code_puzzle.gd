@@ -55,6 +55,8 @@ const HINTS_SCRIPT := preload("res://scripts/hints.gd")
 ## Place du cadre, en coordonnées de référence (1920 × 1080).
 const FRAME_ORIGIN := Vector2(60, 44)
 const FRAME_SIZE := Vector2(1800, 722)
+## Hauteur de page (px de référence) où tiennent les lignes de l'extrait, sans toucher la bordure basse.
+const CODE_HEIGHT := 288.0
 
 var solved: Array[bool] = [false, false, false, false, false]
 var current := 0
@@ -118,6 +120,19 @@ func open(fragments: Array[String]) -> void:
 	select(current)
 
 
+## Taille du texte de l'extrait : 20 au plus, réduite tant que ses lignes ne tiennent pas au-dessus de la bordure
+## basse de la page (de y = 64 à y = 352 dans la page). En 20, les douze lignes de l'extrait JavaScript / TypeScript
+## mordaient sur la bordure.
+func _fit_code(lines: int) -> void:
+	var font := _code.get_theme_font("font")
+	var spacing := _code.get_theme_constant("line_spacing")
+	var size := 20
+	while size > 14 and lines * (font.get_height(size) + spacing) > CODE_HEIGHT:
+		size -= 1
+	_code.add_theme_font_size_override("font_size", size)
+	_numbers.add_theme_font_size_override("font_size", size)
+
+
 func select(index: int) -> void:
 	if not is_unlocked(index):
 		return
@@ -132,6 +147,7 @@ func select(index: int) -> void:
 	for line in code.code.split("\n").size():
 		numbers.append(str(line + 1))
 	_numbers.text = "\n".join(numbers)
+	_fit_code(numbers.size())
 	_question.text = code.question
 	_answer.text = ""
 	_answer.editable = not solved[index]
@@ -301,7 +317,7 @@ func _build() -> void:
 	_level = Ornate.label("", 20, Color(0.42, 0.26, 0.12))
 	_level.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	Ornate.place(_page, _level, Vector2(800, 16), Vector2(290, 34))
-	# Lignes serrées : les treize lignes de l'extrait le plus long tiennent dans la page.
+	# Lignes serrées ; _fit_code() réduit la taille du texte d'un extrait trop long pour la page.
 	_numbers = Ornate.label("", 20, Color(0.55, 0.42, 0.28))
 	_numbers.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_numbers.add_theme_constant_override("line_spacing", -1)
