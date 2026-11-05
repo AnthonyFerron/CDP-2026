@@ -86,7 +86,7 @@ func _ready() -> void:
 	_exit_door.interacted.connect(_travel.bind(false))
 	for book: SearchableBook in _books.get_children():
 		book.interacted.connect(_on_book_searched.bind(book))
-	for note: Readable in $Exterior/Lore.get_children():
+	for note: Readable in $Exterior/Lore.get_children() + $Interior/Lore.get_children():
 		note.interacted.connect(_read_note.bind(note))
 
 	_tablet.interacted.connect(_open_tablet)

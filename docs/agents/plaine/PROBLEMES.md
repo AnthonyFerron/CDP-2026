@@ -32,6 +32,22 @@ Défauts des outils de test, corrigés (ils cachaient des problèmes) :
 - `audit_test` 93 OK, `lava_test` 7 OK, `limit_test` 24 OK, `books_test` 31 OK, copie de `plaine_puzzle_test` 34 OK : 0 échec.
 - Planches : 18 dedans (27 points tous les 4 m environ, 8 directions, coins, plafonds), 35 dehors (140 points : tous les 4 m sur les lieux garnis, tous les 16 m ailleurs, 4 vues de 96° ; raccords du pont, des ruines, du portail, des rives), toutes regardées.
 
+## Récit environnemental (nuit du 4 au 5 novembre 2026)
+
+Six textes à lire ajoutés (trois dehors, trois dans les archives), écrits par `tools/lore.py` dans `plaine.tscn` et
+contrôlés par `lore_test.gd` (archivés dans ce dossier) : pose au sol, au mur ou sur le meuble, collision sans
+chevauchement, texte dans la planche, sol accessible à portée, ligne de vue, invite, lecteur entier dans l'écran ; en
+mode `all`, l'invite de chacun des autres interactables du lieu, pour vérifier qu'aucun texte ne la leur vole.
+
+| # | Où (x, z) | Vu par | Cause | Correction |
+| --- | --- | --- | --- | --- |
+| 13 | Pupitres du scriptorium, table du capitaine au camp (`mini_dungeon/table`) | capture rapprochée des notes du greffier | Dessus pris à 0,31 x 2,2 = 0,682 m, le maillage monte à 0,693 m : feuillets et parchemin enfoncés dans le plateau (invisibles), bougies et encriers enfoncés d'un centimètre | `DUNGEON_TABLE_TOP = 0,315`, mesuré sur les sommets du maillage |
+| 14 | Table de lecture (`furniture_kit/table`) | mesure des sommets | Dessus pris à 0,33 x 3 = 0,99 m pour 0,981 m : livres, livre ouvert, feuillets et chandelier flottaient de 9 mm | `TABLE_TOP = 0,327` |
+| 15 | Affiche de la fête (3,7 ; 47,2) | captures `fete_side`, `fete_far` | Une touffe d'herbe brûlée poussait entre les poteaux | Panneau avancé au bord du chemin, en (3,3 ; 47,8) |
+| 16 | Proclamation (-8,0 ; 8,27) | capture `procl_far` | Depuis le chemin, la colonne de la façade la cachait | Décalée sur le mur, en (-8,9 ; 8,27) ; titre en trois lignes avec un « V » seul, remplacé par une vraie affiche (titre, ordre, signature) |
+| 17 | Lettre de la bibliothécaire | `lore_test` (cadre du lecteur) | 18 lignes : le lecteur prenait presque tout l'écran (50 à 1030 px sur 1080) | Texte resserré |
+| 18 | Notes du greffier | `lore_test` | Rayon 1,8 : 5 places seulement d'où lire | Rayon 2,2 |
+
 ## Restent, signalés
 
 - `scripts/smoke_effect.gd` (interdit) : le préchauffage ne prend pas quand la fumée est chargée avec une scène. Contourné dans la Plaine ; le Village et le volcan du hub ont le même défaut.
