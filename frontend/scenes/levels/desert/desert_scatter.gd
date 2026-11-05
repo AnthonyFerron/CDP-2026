@@ -83,6 +83,9 @@ const ROCK_HEIGHTS: Array[float] = [0.39, 0.45, 0.51]
 const RUIN_BOXES: Array[Vector3] = [Vector3(0.6, 0.72, 0.6), Vector3(0.77, 0.41, 0.85)]
 
 var _rng := RandomNumberGenerator.new()
+## Emprises déjà prises par les cactus, rochers et ruines dispersés : centre (x, z) et rayon au sol. Un nouvel objet
+## ne se pose pas sur un autre (un cactus traversait un rocher).
+var _taken: Array[Vector3] = []
 
 
 func _ready() -> void:
@@ -140,6 +143,16 @@ func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, soli
 			# Ruines couchées et tas de briques : l'enveloppe entière, sans simplification, qui colle à leurs bords.
 			var hull := _load_mesh(model).create_convex_shape(true, not tilted) as ConvexPolygonShape3D
 			hulls.append(hull.points if hull else PackedVector3Array())
+	# Rayon au sol de chaque modèle à l'échelle 1 : la distance de son origine au coin le plus loin de sa boîte ;
+	# une colonne couchée bascule autour de son pied, elle s'étend de toute sa longueur.
+	var footprints: Array[float] = []
+	for model in models:
+		var box := _load_mesh(model).get_aabb()
+		var flat := 0.0
+		for corner in [Vector2(box.position.x, box.position.z), Vector2(box.end.x, box.position.z),
+				Vector2(box.position.x, box.end.z), Vector2(box.end.x, box.end.z)]:
+			flat = maxf(flat, corner.length())
+		footprints.append(maxf(flat, box.end.y) if tilted else flat)
 	var placed := 0
 	for attempt in count * 10:
 		if placed >= count:
@@ -149,6 +162,10 @@ func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, soli
 			continue
 		var scale_factor := _rng.randf_range(scale_range.x, scale_range.y)
 		var group := placed % groups.size()
+		var reach := footprints[group] * scale_factor
+		if _overlaps(spot, reach):
+			continue
+		_taken.append(Vector3(spot.x, spot.y, reach))
 		# Seules les colonnes se couchent ; les tas de briques restent posés à plat.
 		var lying := tilted and group == 0
 		var basis := Basis(Vector3.UP, _rng.randf() * TAU)
@@ -205,6 +222,13 @@ func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, soli
 		var transforms: Array[Transform3D] = []
 		transforms.assign(groups[index])
 		_add_multimesh(_load_mesh(models[index]), transforms)
+
+
+func _overlaps(spot: Vector2, reach: float) -> bool:
+	for other in _taken:
+		if spot.distance_to(Vector2(other.x, other.y)) < reach + other.z:
+			return true
+	return false
 
 
 ## Épaves de machines de siège, restes de la guerre, à moitié ensablées à des endroits fixes : chacune a la
@@ -296,6 +320,23 @@ func _add_props() -> void:
 		item.rotate_object_local(Vector3.RIGHT, deg_to_rad(prop[5]))
 		item.scale = Vector3.ONE * prop[4]
 		add_child(item)
+		if prop[7] <= 0.0:
+			# Lance plantée, roue, squelette, épée, bouclier ou jarre couchés : l'enveloppe convexe de leurs triangles,
+			# tournée et posée comme eux.
+			var points := {}
+			var inverse := body.global_transform.affine_inverse()
+			for mesh: MeshInstance3D in item.find_children("*", "MeshInstance3D", true, false):
+				if not mesh.mesh:
+					continue
+				var xform := inverse * mesh.global_transform
+				for corner in mesh.mesh.get_faces():
+					points[(xform * corner).snappedf(0.001)] = true
+			if points.size() >= 4:
+				var hull := ConvexPolygonShape3D.new()
+				hull.points = PackedVector3Array(points.keys())
+				var holder := CollisionShape3D.new()
+				holder.shape = hull
+				body.add_child(holder)
 		if prop[7] > 0.0:
 			var height: float = PROP_HEIGHTS[prop[0]] * prop[4]
 			var shape := CylinderShape3D.new()
@@ -371,15 +412,43 @@ func _compose(parts: Array, material: Material, mesh: ArrayMesh = null) -> Array
 
 func _add_border_rocks() -> void:
 	var items: Array[Array] = []
+	var hulls: Array[PackedVector3Array] = []
+	var boxes: Array[AABB] = []
 	for model in rock_models:
 		items.append([])
+		var mesh := _load_mesh(model)
+		var hull := mesh.create_convex_shape(true, false) as ConvexPolygonShape3D
+		hulls.append(hull.points if hull else PackedVector3Array())
+		boxes.append(mesh.get_aabb())
+	var body := StaticBody3D.new()
+	add_child(body)
 	for i in border_rock_count:
 		var angle := TAU * i / border_rock_count + _rng.randf_range(-0.05, 0.05)
 		var spot := Vector2.from_angle(angle) * (DesertTerrain.PLAY_RADIUS + _rng.randf_range(2.0, 8.0))
 		var basis := Basis(Vector3.UP, _rng.randf() * TAU).scaled(Vector3.ONE * _rng.randf_range(12.0, 20.0))
-		# Ces rochers sont énormes : enfoncés d'un dixième de leur taille pour ne pas flotter au-dessus des pentes.
-		var sink := basis.get_scale().x * 0.12
-		items[i % items.size()].append(Transform3D(basis, Vector3(spot.x, terrain.footing_height(spot.x, spot.y) - sink, spot.y)))
+		# Ces rochers sont énormes et se dressent sur la pente des crêtes : leur pied est posé au plus bas du sol sous
+		# toute leur emprise (une grille de points sur leur boîte tournée), un peu plus bas encore, pour qu'aucune de
+		# leurs parties ne reste dans le vide au-dessus du creux d'une dune.
+		var group := i % items.size()
+		var box := boxes[group]
+		var low := INF
+		for u in 7:
+			for v in 7:
+				var local := Vector3(box.position.x + box.size.x * u / 6.0, 0.0, box.position.z + box.size.z * v / 6.0)
+				var point := basis * local
+				low = minf(low, terrain.surface_height(spot.x + point.x, spot.y + point.z))
+		var xform := Transform3D(basis, Vector3(spot.x, low - 0.35, spot.y))
+		items[group].append(xform)
+		# Leur collision : l'enveloppe du rocher, tournée et mise à l'échelle comme lui.
+		if not hulls[group].is_empty():
+			var points := PackedVector3Array()
+			for point in hulls[group]:
+				points.append(xform * point)
+			var shape := ConvexPolygonShape3D.new()
+			shape.points = points
+			var holder := CollisionShape3D.new()
+			holder.shape = shape
+			body.add_child(holder)
 	for index in rock_models.size():
 		var transforms: Array[Transform3D] = []
 		transforms.assign(items[index])

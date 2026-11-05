@@ -82,7 +82,7 @@ func _ready() -> void:
 	var interaction: InteractionController = _player.get_node("Interaction")
 	interaction.prompt_changed.connect(_hud.set_prompt)
 	_hud.reader_closed.connect(_close_panel)
-	_raise_gate_grille()
+	_remove_gate_grille()
 	for clues: Node in [$Exterior/Clues, $Interior/Clues]:
 		for clue: Readable in clues.get_children():
 			clue.interacted.connect(_read.bind(clue))
@@ -362,7 +362,7 @@ func _exact_colliders(root: Node3D) -> void:
 	root.add_child(body)
 	var inverse := body.global_transform.affine_inverse()
 	for model: Node in root.get_node("Models").get_children():
-		var exact := false
+		var exact := model.has_meta(&"exact")
 		for prefix in EXACT_MODELS:
 			exact = exact or String(model.name).begins_with(prefix)
 		if not exact:
@@ -648,8 +648,11 @@ func _create_sandstorm() -> CPUParticles3D:
 	return storm
 
 
-## La grille de la porte de la muraille est relevée dans son logement : le passage est libre, comme sa collision.
-func _raise_gate_grille() -> void:
-	var grille := $Exterior/Ruins.find_child("gate", true, false) as Node3D
+## La grille de l'arche de la muraille ne sert à rien : elle est retirée avant que la collision de l'arche ne soit
+## taillée sur ses triangles (_exact_colliders). Relevée, elle dépassait de 2 m au-dessus de la muraille.
+func _remove_gate_grille() -> void:
+	var arch := $Exterior/Ruins.get_node_or_null("Models/wall_gate_0")
+	var grille := arch.find_child("gate", true, false) if arch else null
 	if grille:
-		grille.position.y += 0.62
+		grille.get_parent().remove_child(grille)
+		grille.free()
