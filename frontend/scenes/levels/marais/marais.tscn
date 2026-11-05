@@ -770,7 +770,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -40, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.35, 11.0)
 
 [node name="Hatch" type="MeshInstance3D" parent="Interior"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.13, 12.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.13, 13.0)
 mesh = SubResource("BoxMesh_hatch")
 
 [node name="Exit" type="Node3D" parent="Interior"]
