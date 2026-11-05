@@ -82,6 +82,9 @@ func _ready() -> void:
 	$Castle/Inscription.interacted.connect(_read.bind($Castle/Inscription))
 	for sign: Readable in $Lore.get_children().filter(func(node: Node) -> bool: return node is Readable):
 		sign.interacted.connect(_read.bind(sign))
+	# Textes posés dans les intérieurs (hub_props.tscn) : ils suivent la ruine ou la reconstruction de leur bâtiment.
+	for writing: Readable in _repairs.find_children("*", "Readable", true, false):
+		writing.interacted.connect(_read.bind(writing))
 	_bunker.interacted.connect(_travel.bind(true))
 	_bunker_exit.interacted.connect(_on_bunker_exit)
 	for zone in ZONES:
