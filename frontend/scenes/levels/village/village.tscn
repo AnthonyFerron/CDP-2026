@@ -286,7 +286,7 @@ size = Vector3(0.1, 0.42, 8.38525)
 
 [sub_resource type="BoxMesh" id="BoxMesh_handrail"]
 material = SubResource("Material_wood")
-size = Vector3(0.09, 0.09, 9.86231)
+size = Vector3(0.09, 0.09, 9.05608)
 
 [sub_resource type="BoxMesh" id="BoxMesh_baluster"]
 material = SubResource("Material_wood_dark")
@@ -1139,7 +1139,7 @@ transform = Transform3D(1, 0, 0, 0, 0.894427, -0.447214, 0, 0.447214, 0.894427, 
 mesh = SubResource("BoxMesh_stringer")
 
 [node name="Handrail" type="MeshInstance3D" parent="Interior/Stairs"]
-transform = Transform3D(1, 0, 0, 0, 0.894427, -0.447214, 0, 0.447214, 0.894427, 4.68, 3.5200, 0.4)
+transform = Transform3D(1, 0, 0, 0, 0.894427, -0.447214, 0, 0.447214, 0.894427, 4.68, 3.6950, 0.05)
 mesh = SubResource("BoxMesh_handrail")
 
 [node name="Railing" type="Node3D" parent="Interior"]

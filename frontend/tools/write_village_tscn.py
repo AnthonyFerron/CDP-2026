@@ -362,7 +362,7 @@ def main():
         lines += [f'[sub_resource type="BoxMesh" id="BoxMesh_step{step}"]', 'material = SubResource("Material_wood_dark")',
                   f"size = Vector3(3, {STEP_RISE * (step + 1):g}, {STEP_RUN:g})", ""]
     for name, size, material in (("tread", (3.04, 0.06, STEP_RUN + 0.05), "wood"), ("stringer", (0.1, 0.42, 7.5 / math.cos(math.atan2(OFFICE, 9.0))), "wood"),
-                                 ("handrail", (0.09, 0.09, STAIR_LENGTH - 0.2), "wood"), ("baluster", (0.05, 0.9, 0.05), "wood_dark")):
+                                 ("handrail", (0.09, 0.09, 8.1 / math.cos(math.atan2(OFFICE, 9.0))), "wood"), ("baluster", (0.05, 0.9, 0.05), "wood_dark")):
         lines += [f'[sub_resource type="BoxMesh" id="BoxMesh_{name}"]', f'material = SubResource("Material_{material}")',
                   "size = Vector3(%s)" % ", ".join(f"{v:g}" for v in size), ""]
     for step in range(0, STEPS, 3):
@@ -548,9 +548,10 @@ def main():
                 f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.68, {height + 0.45:g}, {z:g})", 'mesh = SubResource("BoxMesh_baluster")'])
     # Le limon et la main courante suivent la pente des nez de marches (le même angle que la rampe).
     for name, mesh, x, lift in (("Stringer", "stringer", 4.56, -0.18), ("Handrail", "handrail", 4.68, 0.92)):
-        # Le limon va de la deuxième marche (z = 4,1, où commence la collision de la main courante : on ne s'y frotte
-        # pas en montant) au nez de la dernière (z = -3,4), sous le niveau du bureau.
-        mid = 0.35 if name == "Stringer" else 0.4
+        # Le limon et la main courante partent de la deuxième marche (z = 4,1), où commence la collision de la main
+        # courante : on ne s'y frotte pas en entrant dans l'escalier. Le limon s'arrête au nez de la dernière marche
+        # (z = -3,4), sous le niveau du bureau ; la main courante rejoint la rambarde de la trémie (z = -4).
+        mid = 0.35 if name == "Stringer" else 0.05
         node(lines, name, "MeshInstance3D", "Interior/Stairs", props=[
             f"transform = Transform3D(1, 0, 0, 0, {c:.6f}, {-s_:.6f}, 0, {s_:.6f}, {c:.6f}, {x:g}, {nose_height(mid) + lift:.4f}, {mid:g})",
             f'mesh = SubResource("BoxMesh_{mesh}")'])
