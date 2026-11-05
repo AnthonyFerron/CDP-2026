@@ -42,3 +42,31 @@ func animate(speed: float, on_floor: bool, delta: float) -> void:
 	_arm_right.rotation.x = deg_to_rad(arm_swing_degrees) * swing
 	# Le corps est au plus haut quand les jambes se croisent, au plus bas quand un pied se pose.
 	_upper.position.y = _upper_rest + absf(cos(_phase)) * bob_height * _amount
+
+
+## Ombre fondue : les 37 morceaux du corps sont réunis en un maillage par articulation (hanches, haut du corps,
+## épaules), qui seul projette l'ombre. Le soleil ne dessine plus que 5 maillages dans chaque découpe d'ombre au
+## lieu de 37 ; l'ombre a la même forme et marche toujours, car chaque maillage suit son articulation.
+## Si body_visible est faux (vue à la première personne), les morceaux sont cachés : il ne reste que l'ombre.
+func merge_shadow(body_visible: bool) -> void:
+	for joint: Node3D in [_hip_left, _hip_right, _upper, _arm_left, _arm_right]:
+		var surfaces := SurfaceTool.new()
+		var merged := 0
+		for child in joint.get_children():
+			var part := child as MeshInstance3D
+			if not part or not part.mesh:
+				continue
+			for surface in part.mesh.get_surface_count():
+				surfaces.append_from(part.mesh, surface, part.transform)
+			merged += 1
+			if body_visible:
+				part.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			else:
+				part.visible = false
+		if merged == 0:
+			continue
+		var shadow := MeshInstance3D.new()
+		shadow.name = "Shadow"
+		shadow.mesh = surfaces.commit()
+		shadow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY
+		joint.add_child(shadow)

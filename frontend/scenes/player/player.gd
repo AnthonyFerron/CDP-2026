@@ -2,6 +2,11 @@ class_name Player
 extends CharacterBody3D
 ## Personnage jouable : déplacement relatif à la caméra, sprint, saut et bruits de pas.
 ## La caméra est à la troisième personne, ou à la première avec first_person.
+##
+## Le corps avance au rythme de la physique (60 fois par seconde), alors que l'écran peut afficher 75, 120 ou
+## 144 images. Le visuel et la caméra sont donc placés, à chaque image, entre les deux dernières positions
+## physiques : sans ça, l'image tremble. Le décalage passe par Visual et SpringArm3D, que rien d'autre ne
+## déplace : CameraPivot reste libre pour les secousses de caméra des lieux.
 
 @export_group("Déplacement")
 @export var walk_speed := 5.0
@@ -35,6 +40,8 @@ const HELD_BOOK_ROTATION := Vector3(deg_to_rad(28.0), deg_to_rad(-38.0), deg_to_
 const HELD_BOOK_SCALE := 0.28
 ## Durée du vol d'un livre entre la main et le monde.
 const BOOK_FLIGHT := 1.1
+## Au-delà de ce déplacement entre deux images physiques, c'est une téléportation : pas de lissage.
+const TELEPORT_DISTANCE := 2.0
 
 ## Multiplie la vitesse, par exemple pour ralentir le joueur dans l'eau.
 var speed_multiplier := 1.0
@@ -43,6 +50,12 @@ var _bob := 0.0
 var _spawn_position: Vector3
 var _stride := 0.0
 var _footsteps: AudioStreamPlayer
+var _move_direction := Vector3.ZERO
+## Position du corps au début et à la fin de la dernière image physique.
+var _previous_origin: Vector3
+var _current_origin: Vector3
+var _visual_rest: Vector3
+var _arm_rest: Vector3
 
 @onready var _camera_pivot: Node3D = $CameraPivot
 @onready var _spring_arm: SpringArm3D = $CameraPivot/SpringArm3D
@@ -55,6 +68,12 @@ func _ready() -> void:
 	_spring_arm.add_excluded_object(get_rid())
 	if first_person:
 		_use_first_person()
+	# Le corps ne se voit plus à la première personne, mais garde son ombre au sol.
+	_devlyn.merge_shadow(not first_person)
+	_visual_rest = _visual.position
+	_arm_rest = _spring_arm.position
+	_previous_origin = global_position
+	_current_origin = global_position
 	if not footstep_sounds.is_empty():
 		_footsteps = AudioStreamPlayer.new()
 		_footsteps.volume_db = footstep_volume_db
@@ -79,9 +98,6 @@ func _use_first_person() -> void:
 	pitch_max_degrees = 85.0
 	var camera: Camera3D = _spring_arm.get_node("Camera3D")
 	camera.near = 0.05
-	# Le corps ne se voit plus, mais garde son ombre au sol.
-	for mesh: GeometryInstance3D in _visual.find_children("*", "GeometryInstance3D"):
-		mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -97,6 +113,7 @@ func _physics_process(delta: float) -> void:
 	if global_position.y < respawn_height:
 		global_position = _spawn_position
 		velocity = Vector3.ZERO
+	_previous_origin = global_position
 
 	if not is_on_floor():
 		velocity += get_gravity() * delta
@@ -116,22 +133,24 @@ func _physics_process(delta: float) -> void:
 	velocity.x = move_toward(velocity.x, target_velocity.x, acceleration * delta)
 	velocity.z = move_toward(velocity.z, target_velocity.z, acceleration * delta)
 	move_and_slide()
+	_current_origin = global_position
+	_move_direction = direction
 	_update_footsteps(delta)
-	var ground_speed := Vector2(velocity.x, velocity.z).length()
-	_devlyn.animate(ground_speed, is_on_floor(), delta)
-
-	if first_person:
-		# Le corps, invisible mais dont l'ombre marche au sol, se tourne vers où il avance, et vers le regard à l'arrêt.
-		var body_yaw := _camera_pivot.rotation.y
-		if ground_speed > 0.5:
-			body_yaw = atan2(-velocity.x, -velocity.z)
-		_visual.rotation.y = lerp_angle(_visual.rotation.y, body_yaw, turn_speed * delta)
-	elif direction != Vector3.ZERO:
-		var target_yaw := atan2(-direction.x, -direction.z)
-		_visual.rotation.y = lerp_angle(_visual.rotation.y, target_yaw, turn_speed * delta)
+	_devlyn.animate(Vector2(velocity.x, velocity.z).length(), is_on_floor(), delta)
 
 
 func _process(delta: float) -> void:
+	_smooth_motion()
+	var turn := minf(turn_speed * delta, 1.0)
+	if first_person:
+		# Le corps, invisible mais dont l'ombre marche au sol, se tourne vers où il avance, et vers le regard à l'arrêt.
+		var body_yaw := _camera_pivot.rotation.y
+		if Vector2(velocity.x, velocity.z).length() > 0.5:
+			body_yaw = atan2(-velocity.x, -velocity.z)
+		_visual.rotation.y = lerp_angle(_visual.rotation.y, body_yaw, turn)
+	elif _move_direction != Vector3.ZERO:
+		var target_yaw := atan2(-_move_direction.x, -_move_direction.z)
+		_visual.rotation.y = lerp_angle(_visual.rotation.y, target_yaw, turn)
 	if not _held_book or not _held_book.visible:
 		return
 	# Le livre se balance un peu au rythme des pas.
@@ -139,6 +158,17 @@ func _process(delta: float) -> void:
 	_bob += delta * (2.0 + speed * 1.6)
 	var swing := minf(speed / walk_speed, 1.0)
 	_held_book.position = HELD_BOOK_POSITION + Vector3(cos(_bob * 0.5) * 0.008 * swing, sin(_bob) * (0.004 + 0.012 * swing), 0.0)
+
+
+## Place le visuel et la caméra entre les deux dernières positions physiques du corps.
+func _smooth_motion() -> void:
+	# Téléporté depuis la dernière image physique (portail, retour au point sûr…) : on suit sans lisser.
+	if _current_origin.distance_squared_to(global_position) > TELEPORT_DISTANCE * TELEPORT_DISTANCE:
+		_previous_origin = global_position
+		_current_origin = global_position
+	var lag := _previous_origin.lerp(_current_origin, Engine.get_physics_interpolation_fraction()) - global_position
+	_visual.position = _visual_rest + global_basis.inverse() * lag
+	_spring_arm.position = _arm_rest + _camera_pivot.global_basis.inverse() * lag
 
 
 ## Le livre ramassé vole jusqu'à la main du joueur, en tournant, puis reste visible en bas de la vue.
