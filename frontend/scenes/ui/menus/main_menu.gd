@@ -141,7 +141,7 @@ func _build_home() -> void:
 	var commands := Ornate.place(_screen, Ornate.Frame.new(), Vector2(58, 172), Vector2(512, 718)) as Ornate.Frame
 	commands.title = "Commandes"
 	commands.book_bottom = true
-	commands.dividers = [Ornate.commands(commands, 108.0, 64.0, 74.0)]
+	commands.dividers = [Ornate.commands(commands, 108.0, 58.0, 74.0)]
 	Ornate.place(_screen, Ornate.Logo.new(), Vector2(640, 40), Vector2(640, 420))
 	var logged := Account.is_logged_in()
 	var first := _hex("Nouvelle partie" if logged else "Jouer en tant qu'invité", Vector2(632, 492), Vector2(656, 116), "", true, 50 if logged else 44)

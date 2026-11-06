@@ -21,10 +21,10 @@ const TEXT: Font = preload("res://assets/fonts/Lora.ttf")
 const PORTRAIT: Texture2D = preload("res://assets/ui/devlyn_portrait.png")
 const STUDIO: Texture2D = preload("res://assets/ui/ruminate_studio.png")
 ## Touches rappelées dans les panneaux de commandes.
-const KEYS := [["Z", "Avancer"], ["Q", "Aller à gauche"], ["S", "Reculer"], ["D", "Aller à droite"], ["E", "Interagir / Action"]]
+const KEYS := [["Z", "Avancer"], ["Q", "Aller à gauche"], ["S", "Reculer"], ["D", "Aller à droite"], ["E", "Interagir / Action"], ["H", "Voir les indices"]]
 const WIDE_KEYS := [["Espace", "Sauter"], ["Shift", "Courir"]]
 ## Raccourcis du jeu, rappelés en pied d'écran.
-const SHORTCUTS := "Échap : pause     H : indice     F : plein écran"
+const SHORTCUTS := "Échap : pause     F : plein écran"
 
 
 ## Texte prêt à placer : Cinzel pour les titres, Lora pour le reste.

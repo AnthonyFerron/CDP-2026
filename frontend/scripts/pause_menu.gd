@@ -38,14 +38,14 @@ func _ready() -> void:
 	menu.font_size = 46
 	Ornate.place(frame, menu, Vector2(56, 400), Vector2(524, 108))
 	menu.pressed.connect(_on_main_menu)
-	var shortcuts := Ornate.label("H : indice     F : plein écran", 22, Ornate.MUTED)
+	var shortcuts := Ornate.label("F : plein écran", 22, Ornate.MUTED)
 	shortcuts.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	Ornate.place(frame, shortcuts, Vector2(56, 640), Vector2(524, 34))
 	var commands := Ornate.place(frame, Ornate.Frame.new(), Vector2(676, 120), Vector2(530, 590)) as Ornate.Frame
 	commands.title = "Commandes"
 	commands.title_size = 36
 	commands.bottom_diamond = false
-	commands.dividers = [Ornate.commands(commands, 70.0, 58.0, 70.0, Vector2(84, 190))]
+	commands.dividers = [Ornate.commands(commands, 70.0, 54.0, 70.0, Vector2(84, 190))]
 	_root.hide()
 
 
