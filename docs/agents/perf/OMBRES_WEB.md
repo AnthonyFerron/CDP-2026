@@ -116,6 +116,23 @@ Vérifié sur le paquet exporté (`docs/agents/perf/outils/verif_rq.gd` et `veri
 - fenêtre de 3840 x 2160 : automatique à 50 % (3D en 1920 x 1080), interface et texte nets ;
 - F3 affiche puis cache le compteur.
 
+## Qualité adaptative (6 novembre)
+
+Retour d'Anthony : sur un PC neuf, le premier lancement n'est pas fluide. `render_quality.gd` adapte maintenant
+la qualité tout seul, sur le web seulement (en natif : option `--qualite-auto` ; `--qualite-cran=N` impose un cran).
+- À chaque arrivée dans un lieu (signal `scene_changed`, puis fin du fondu de `Transition`), le temps d'image moyen
+  est mesuré pendant 3 s, sans les 20 premières images ni les 5 % d'images les plus lentes.
+- Au-delà de 22 ms : un cran de moins, puis nouvelle mesure. Sous 12 ms, sans baisse dans le lieu : un cran de plus,
+  mais seulement à l'arrivée dans le lieu suivant.
+- Crans : 1 à 3, 3D à 85, 70 puis 55 % ; 4, ombres du soleil à 30 m, une découpe, carte de 2048 ; 5, ombres du soleil
+  et des lumières ponctuelles coupées ; 6, `visibility_range_end` × 0,6 et moitié moins de particules.
+  Les valeurs d'origine de chaque nœud sont gardées (méta `rq`) : remonter rend la scène telle qu'elle est.
+- Le cran est retenu dans `user://qualite.cfg`. F3 l'affiche ; une résolution fixe (F4) suspend l'adaptation.
+- Limite : à 60 Hz, le navigateur cale les images sur 16,7 ms ; la remontée (moins de 12 ms) ne se produit alors
+  qu'avec un écran plus rapide.
+
+Test : `tests/scenes/quality_test.gd -- --qualite-auto` (dans `run_all.sh`), images lentes simulées par `forced_ms`.
+
 ## Livraison web
 
 - `frontend/Dockerfile` : `.wasm`, `.pck`, `.js` et `.html` du jeu compressés au build, en brotli 9 et gzip 9 :
