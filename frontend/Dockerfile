@@ -7,7 +7,9 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates curl unzip libfontconfig1 brotli \
     && rm -rf /var/lib/apt/lists/*
 
-# Téléchargé avant de copier le jeu, pour rester en cache d'un déploiement à l'autre
+# Téléchargé avant de copier le jeu, pour rester en cache d'un déploiement à l'autre. Modèles web avec fils
+# d'exécution (web_release, web_debug) : le son est mixé sur son propre fil, une image lente ne le hache plus.
+# Ils exigent une page isolée (COOP et COEP, infrastructure/Caddyfile). Voir docs/web-threads.md.
 RUN set -eu; \
     case "$(uname -m)" in \
         aarch64) arch=arm64 ;; \
@@ -21,7 +23,7 @@ RUN set -eu; \
     curl -fsSL -o /tmp/templates.tpz "$base/Godot_v${GODOT_VERSION}-stable_export_templates.tpz"; \
     templates="/root/.local/share/godot/export_templates/${GODOT_VERSION}.stable"; \
     mkdir -p "$templates"; \
-    unzip -q -j /tmp/templates.tpz 'templates/web_nothreads_*' 'templates/version.txt' -d "$templates"; \
+    unzip -q -j /tmp/templates.tpz 'templates/web_release.zip' 'templates/web_debug.zip' 'templates/version.txt' -d "$templates"; \
     rm /tmp/godot.zip /tmp/templates.tpz; \
     mkdir -p /licences; \
     base="https://raw.githubusercontent.com/godotengine/godot/${GODOT_VERSION}-stable"; \

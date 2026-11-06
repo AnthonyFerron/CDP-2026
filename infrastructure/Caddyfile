@@ -27,9 +27,16 @@
 	# Le jeu. Ses fichiers gardent le même nom d'une version à l'autre : le navigateur garde sa copie mais vérifie
 	# à chaque visite (ETag) qu'elle est encore à jour. Ils sont compressés au build (frontend/Dockerfile) ;
 	# `encode` ne compresse plus que le reste.
+	# L'export web utilise des fils d'exécution (le son est mixé hors du fil principal, les lieux se chargent en
+	# arrière-plan) : il lui faut SharedArrayBuffer, donc une page isolée (COOP et COEP). Tout ce que charge le jeu
+	# vient de ce même site, `require-corp` ne bloque donc rien. Voir docs/web-threads.md.
 	handle {
 		root * /srv
-		header Cache-Control no-cache
+		header {
+			Cache-Control no-cache
+			Cross-Origin-Opener-Policy same-origin
+			Cross-Origin-Embedder-Policy require-corp
+		}
 		file_server {
 			precompressed br gzip
 		}

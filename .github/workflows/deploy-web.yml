@@ -44,6 +44,10 @@ jobs:
       - name: Exporter le jeu
         run: |
           godot="$HOME/godot/Godot_v${GODOT_VERSION}-stable_linux.x86_64"
+          # GitHub Pages n'envoie pas les en-têtes d'isolation (COOP, COEP) qu'exige l'export avec fils
+          # d'exécution du serveur : ici, export sans fils (docs/web-threads.md).
+          sed -i 's|^variant/thread_support=true$|variant/thread_support=false|' frontend/export_presets.cfg
+          grep -q '^variant/thread_support=false$' frontend/export_presets.cfg
           mkdir -p frontend/build/web
           "$godot" --headless --path frontend --import
           "$godot" --headless --path frontend --export-debug "Web" build/web/index.html
