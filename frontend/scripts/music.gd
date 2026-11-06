@@ -37,6 +37,8 @@ var _track: StringName = &""
 var _tweens := {}
 ## Faux sur le web jusqu'au premier geste du joueur : la piste demandée est mise de côté jusque-là.
 var _unlocked := true
+## Fichiers de pistes dont le chargement en arrière-plan est demandé (prefetch), pas encore repris.
+var _pending := {}
 
 
 func _ready() -> void:
@@ -48,9 +50,10 @@ func _ready() -> void:
 		player.name = "Piste%d" % (index + 1)
 		player.bus = BUS
 		# Lecture par le mélangeur de Godot. En mode « sample », celui du web par défaut, chaque piste serait décodée
-		# en entier au premier lancement : plus de 300 Mo de mémoire pour les sept minutes de la Plaine. Sur le web, ce
-		# mélangeur tourne sur le fil principal : project.godot allonge sa réserve (audio/driver/output_latency.web,
-		# 200 ms) pour qu'une image lente ne coupe pas la musique. Les effets, en mode « sample », n'en dépendent pas.
+		# en entier au premier lancement : plus de 300 Mo de mémoire pour les sept minutes de la Plaine. L'export web a
+		# des fils d'exécution : ce mélangeur y tourne sur son propre fil, une image lente ne coupe plus la musique
+		# (docs/web-threads.md). Sans fils (repli, GitHub Pages), il tourne sur le fil principal, et project.godot
+		# allonge sa réserve (audio/driver/output_latency.web, 200 ms). Les effets, en mode « sample », n'en dépendent pas.
 		player.playback_type = AudioServer.PLAYBACK_TYPE_STREAM
 		player.volume_linear = 0.0
 		add_child(player)
@@ -74,8 +77,37 @@ func play(track: StringName) -> void:
 	_track = track
 	_fade(_active, 0.0, true)
 	_active = _players[1] if _active == _players[0] else _players[0]
-	_active.stream = load(DIR + String(track) + ".ogg")
+	_active.stream = _load_track(track)
 	_start()
+
+
+## Charge en arrière-plan la piste de la scène qui va s'ouvrir : Transition l'appelle sous le titre, en même temps
+## qu'elle charge la scène, et play() la trouve prête au lieu de bloquer l'image où le lieu apparaît. Sans fil
+## d'exécution (web sans threads), elle se charge sur place, sous le noir de la transition.
+func prefetch(scene_path: String) -> void:
+	var track := _track_for(scene_path)
+	if track == &"" or track == _track:
+		return
+	var path := DIR + String(track) + ".ogg"
+	if _pending.has(path) or ResourceLoader.has_cached(path):
+		return
+	if ResourceLoader.load_threaded_request(path) == OK:
+		_pending[path] = true
+
+
+## Piste préchargée si elle l'a été (attendue si elle se charge encore), sinon chargée sur place. Les autres pistes
+## préchargées et déjà prêtes sont lâchées : le hub a pu en choisir une autre que celle prévue.
+func _load_track(track: StringName) -> AudioStream:
+	var path := DIR + String(track) + ".ogg"
+	var stream: AudioStream = null
+	if _pending.has(path):
+		_pending.erase(path)
+		stream = ResourceLoader.load_threaded_get(path) as AudioStream
+	for other: String in _pending.keys():
+		if ResourceLoader.load_threaded_get_status(other) != ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+			ResourceLoader.load_threaded_get(other)
+			_pending.erase(other)
+	return stream if stream else load(path)
 
 
 ## Coupe la musique en fondu (éruption) : rien ne joue jusqu'à la piste suivante.
@@ -125,15 +157,23 @@ func _fade(player: AudioStreamPlayer, volume: float, stop_after := false) -> voi
 ## Le menu principal et chaque lieu (piste du même nom que la zone) ont leur piste ; le hub choisit la sienne.
 func _on_scene_changed() -> void:
 	var scene := get_tree().current_scene
-	if not scene:
+	if not scene or scene.scene_file_path == GameState.HUB_SCENE:
 		return
-	if scene.scene_file_path == MainMenu.SCENE:
-		play(&"menu")
-		return
+	var track := _track_for(scene.scene_file_path)
+	if track != &"":
+		play(track)
+
+
+## Piste qu'aura la scène : celle du menu, du lieu, ou pour le hub celle qu'il choisit le plus souvent (hub.gd).
+func _track_for(scene_path: String) -> StringName:
+	if scene_path == MainMenu.SCENE:
+		return &"menu"
+	if scene_path == GameState.HUB_SCENE:
+		return &"hub" if GameState.intro_done else &"intro"
 	for zone: StringName in GameState.ZONE_SCENES:
-		if GameState.ZONE_SCENES[zone] == scene.scene_file_path:
-			play(zone)
-			return
+		if GameState.ZONE_SCENES[zone] == scene_path:
+			return zone
+	return &""
 
 
 ## Premier geste du joueur sur le web : le navigateur rouvre le son (Godot reprend son contexte audio à chaque clic ou

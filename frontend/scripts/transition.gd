@@ -4,6 +4,11 @@ extends CanvasLayer
 ## premières images : le chargement reste caché derrière le titre. La partie est en pause pendant la transition,
 ## chronomètre compris.
 ##
+## La scène se charge sur le fil principal, d'un bloc, une fois le titre affiché, et la musique du lieu avec elle
+## (Music.prefetch). L'export web a des fils d'exécution : le son, mixé sur son propre fil, continue pendant ce
+## chargement. Un chargement en arrière-plan (load_threaded_request) serait bien plus lent : avec le rendu sur le fil
+## principal, chaque ressource attend une image pour se créer (docs/web-threads.md).
+##
 ## Sans affichage (tests en ligne de commande), le changement de scène est immédiat.
 
 ## Durée du fondu au noir, du dévoilement, de l'apparition d'une ligne et du délai entre deux lignes.
@@ -72,13 +77,11 @@ func change_scene(path: String, lines: Array = []) -> void:
 		if index == 1 and lines.size() > 2:
 			_add_divider()
 		await tree.create_timer(LINE_DELAY, true).timeout
-	# Le chargement part une fois le titre affiché : sans fil d'exécution (web), il bloque l'image, mais sur le titre.
+	# Le chargement part une fois le titre affiché : il bloque l'image, mais sur le titre.
 	await tree.process_frame
 	var started := Time.get_ticks_msec()
-	var requested := ResourceLoader.load_threaded_request(path) == OK
-	while requested and ResourceLoader.load_threaded_get_status(path) == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
-		await tree.process_frame
-	var scene: PackedScene = ResourceLoader.load_threaded_get(path) if requested else null
+	Music.prefetch(path)
+	var scene := ResourceLoader.load(path) as PackedScene
 	var waited := (Time.get_ticks_msec() - started) / 1000.0
 	if not lines.is_empty() and waited < HOLD:
 		await tree.create_timer(HOLD - waited, true).timeout
