@@ -51,7 +51,9 @@ Sur le web :
 
 - la musique attend le premier clic ou la première touche du joueur, car le navigateur bloque le son avant ;
 - elle passe par le mélangeur de Godot (`PLAYBACK_TYPE_STREAM`), et non par le mode « sample » du web, qui décoderait chaque piste en entier en mémoire ;
-- `audio/driver/output_latency.web` vaut 200 ms, pour qu'une image lente ne la coupe pas.
+- l'export web a des fils d'exécution : le mélangeur tourne sur son propre fil, et une image lente ne coupe plus la musique (`docs/web-threads.md`) ;
+- `audio/driver/output_latency.web` vaut 200 ms. Cette réserve sert surtout à l'export sans fils, utilisé en repli et sur GitHub Pages ;
+- la piste du lieu de destination se charge en arrière-plan sous le titre de la transition (`Music.prefetch`).
 
 Pour ajouter une piste :
 
