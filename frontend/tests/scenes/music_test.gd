@@ -155,6 +155,30 @@ func _run() -> void:
 	finish()
 
 
+## Sert data une seule fois, puis ferme la connexion : réponse 200 marquée gzip. La première ligne et les en-têtes de
+## la requête reçue vont dans request[0].
+func _serve_once(server: TCPServer, data: PackedByteArray, request: Array) -> void:
+	var deadline := Time.get_ticks_msec() + 15000
+	while not server.is_connection_available():
+		if Time.get_ticks_msec() > deadline:
+			return
+		await process_frame
+	var peer := server.take_connection()
+	while not "\r\n\r\n" in request[0] and Time.get_ticks_msec() < deadline:
+		peer.poll()
+		var available := peer.get_available_bytes()
+		if available > 0:
+			request[0] += peer.get_utf8_string(available)
+		else:
+			await process_frame
+	var head := "HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Encoding: gzip\r\nContent-Length: %d\r\nConnection: close\r\n\r\n" % data.size()
+	peer.put_data(head.to_utf8_buffer())
+	peer.put_data(data)
+	for frame in 5:
+		await process_frame
+	peer.disconnect_from_host()
+
+
 ## Comme sur le web avant la fin du téléchargement de musique.pck : les pistes des lieux manquent (autre dossier).
 func _check_deferred() -> void:
 	OS.add_logger(errors)
@@ -185,10 +209,26 @@ func _check_deferred() -> void:
 		ok = ok and packer.add_file(DEFERRED_DIR + "%s.ogg.import" % track, source) == OK
 	ok = ok and packer.flush() == OK
 	check("faux paquet de musique ecrit", ok)
+	# Téléchargé par HTTP : un serveur local le sert marqué gzip alors qu'il est déjà décodé, comme une réponse que le
+	# navigateur a décompressée. Sur le web, la réponse n'a en plus jamais de longueur connue (HTTPClientWeb) : ce cas,
+	# où HTTPRequest effaçait un fichier téléchargé (download_file), ne se reproduit pas ici, le client natif traitant
+	# la fermeture de la connexion comme une erreur ; il est vérifié dans le navigateur (docs/musique-differee.md).
+	var server := TCPServer.new()
+	check("serveur HTTP de test", server.listen(0, "127.0.0.1") == OK)
+	var request := [""]
+	_serve_once(server, FileAccess.get_file_as_bytes(pack), request)
 	var loaded := [false]
 	music.pack_loaded.connect(func() -> void: loaded[0] = true, CONNECT_ONE_SHOT)
 	var warnings := errors.warnings
-	check("paquet monte", music.load_pack(ProjectSettings.globalize_path(pack)) and music.is_pack_loaded() and loaded[0])
+	music.fetch_pack("http://127.0.0.1:%d/musique.pck" % server.get_local_port())
+	start = Time.get_ticks_msec()
+	while not music.is_pack_loaded() and music.pack_failures() == 0 and Time.get_ticks_msec() - start < 15000:
+		await process_frame
+	server.stop()
+	check("requete GET /musique.pck sans demander gzip (%s)" % request[0].get_slice("\r\n", 0),
+		request[0].begins_with("GET /musique.pck ") and not "gzip" in request[0].to_lower())
+	check("paquet telecharge, ecrit puis monte (%d echec(s))" % music.pack_failures(),
+		music.is_pack_loaded() and loaded[0] and music.pack_failures() == 0)
 	# Le faux paquet n'a que deux pistes : l'avertissement qui le signale prouve que le compteur suit bien le journal.
 	check("le compteur du journal releve l'avertissement du paquet incomplet", errors.warnings == warnings + 1)
 	await wait(10)
