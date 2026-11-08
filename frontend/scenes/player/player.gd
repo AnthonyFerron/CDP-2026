@@ -29,10 +29,26 @@ extends CharacterBody3D
 @export_range(0.0, 89.0) var pitch_max_degrees := 40.0
 
 @export_group("Sons")
+## Pas sur le sol propre au lieu (herbe, cendre, sable, boue…), que le lieu peut changer en cours de route.
 @export var footstep_sounds: Array[AudioStream]
 ## Distance parcourue entre deux pas, en marchant.
 @export var stride_length := 1.9
 @export var footstep_volume_db := -13.0
+
+## Pas sur le bois (planchers, ponts, pontons, estrades) et sur la pierre (château, crypte, cave, dallages, pavés) :
+## ils remplacent footstep_sounds là où FootstepSurfaces les place, dans tous les lieux.
+const SURFACE_STEPS := {
+	FootstepSurfaces.WOOD: [
+		preload("res://assets/audio/footstep_wood_1.wav"),
+		preload("res://assets/audio/footstep_wood_2.wav"),
+		preload("res://assets/audio/footstep_wood_3.wav"),
+	],
+	FootstepSurfaces.STONE: [
+		preload("res://assets/audio/footstep_stone_1.wav"),
+		preload("res://assets/audio/footstep_stone_2.wav"),
+		preload("res://assets/audio/footstep_stone_3.wav"),
+	],
+}
 
 ## Place du livre tenu en main, dans le repère de la caméra : en bas à droite de la vue.
 const HELD_BOOK_POSITION := Vector3(0.36, -0.3, -0.78)
@@ -50,6 +66,10 @@ var _bob := 0.0
 var _spawn_position: Vector3
 var _stride := 0.0
 var _footsteps: AudioStreamPlayer
+## Zones de bois et de pierre du lieu, s'il en a.
+var _surfaces: FootstepSurfaces
+## Surface du dernier pas : &"wood", &"stone", ou &"" pour le sol propre au lieu.
+var footstep_surface := &""
 var _move_direction := Vector3.ZERO
 ## Position du corps au début et à la fin de la dernière image physique.
 var _previous_origin: Vector3
@@ -74,10 +94,13 @@ func _ready() -> void:
 	_arm_rest = _spring_arm.position
 	_previous_origin = global_position
 	_current_origin = global_position
-	if not footstep_sounds.is_empty():
-		_footsteps = AudioStreamPlayer.new()
-		_footsteps.volume_db = footstep_volume_db
-		add_child(_footsteps)
+	# Le lecteur des pas existe toujours : le Désert et le Marais ne donnent leurs pas (sable, boue) qu'après ce _ready,
+	# depuis le leur, et n'en avaient donc aucun.
+	_footsteps = AudioStreamPlayer.new()
+	_footsteps.volume_db = footstep_volume_db
+	add_child(_footsteps)
+	# Le joueur est posé dans la scène du lieu, qui en est le propriétaire.
+	_surfaces = FootstepSurfaces.for_level(owner)
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	if first_person:
 		_held_book = Node3D.new()
@@ -278,12 +301,17 @@ func _book_model(book_id: StringName, glowing: bool) -> Node3D:
 
 
 func _update_footsteps(delta: float) -> void:
-	if not _footsteps or not is_on_floor():
+	if not is_on_floor():
 		return
 	_stride += Vector2(velocity.x, velocity.z).length() * delta
 	if _stride >= stride_length:
 		_stride = 0.0
-		_footsteps.stream = footstep_sounds.pick_random()
+		# La surface n'est cherchée qu'au moment du pas, deux ou trois fois par seconde : quelques tests de zones.
+		footstep_surface = _surfaces.at(global_position, GameState.placed_books.size()) if _surfaces else &""
+		var sounds: Array = SURFACE_STEPS.get(footstep_surface, footstep_sounds)
+		if sounds.is_empty():
+			return
+		_footsteps.stream = sounds.pick_random()
 		# Légères variations d'un pas à l'autre : la marche sonne naturelle, sans répétition mécanique.
 		_footsteps.pitch_scale = randf_range(0.94, 1.06)
 		_footsteps.volume_db = footstep_volume_db + randf_range(-1.5, 0.5)
