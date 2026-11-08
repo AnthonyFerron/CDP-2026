@@ -16,6 +16,13 @@ extends Node3D
 @export var detail_range := 75.0
 ## Distance du mur invisible au bord de l'eau, sur la berge.
 @export var wall_offset := 1.0
+## Le mur dépasse d'autant le plus haut point qu'un saut en courant (vitesse de course et saut du joueur) atteint
+## en arrivant sur lui, depuis le sol des environs : un mètre de plus couvre un élan pris sur une caisse ou un rocher.
+@export var wall_margin := 1.2
+const SPRINT_SPEED := 8.0
+const JUMP_VELOCITY := 5.5
+## Portée du regard en arrière depuis le mur, en mètres : au-delà, un saut redescend sous son point de départ.
+const JUMP_REACH := 10.0
 ## Lieux où les rives restent dégagées : (x, z, rayon), le lavoir, la roue du moulin et la passerelle des pêcheurs.
 @export var clear_spots: Array[Vector3] = [Vector3(59.5, 6.5, 3.0), Vector3(70.5, 48.0, 4.5)]
 
@@ -134,31 +141,53 @@ func _build_banks() -> void:
 		for side: float in [-1.0, 1.0]:
 			var a := points[index] + normals[index] * (widths[index] + wall_offset) * side
 			var b := points[index + 1] + normals[index + 1] * (widths[index + 1] + wall_offset) * side
-			_add_wall(body, a, b)
+			_add_wall(body, a, b, ((normals[index] + normals[index + 1]) * 0.5 * side).normalized())
 	for pond in HubTerrain.PONDS:
 		var segments := 24
 		var radius := pond.z + 0.9
 		for index in segments:
 			var a := Vector2(pond.x, pond.y) + Vector2.from_angle(TAU * index / segments) * radius
 			var b := Vector2(pond.x, pond.y) + Vector2.from_angle(TAU * (index + 1) / segments) * radius
-			_add_wall(body, a, b)
+			_add_wall(body, a, b, ((a + b) * 0.5 - Vector2(pond.x, pond.y)).normalized())
 
 
-func _add_wall(body: StaticBody3D, a: Vector2, b: Vector2) -> void:
+## Un pan de mur de a à b ; outward pointe vers la terre ferme, d'où le joueur peut prendre son élan.
+## Le mur montait à 3,1 m au-dessus de la berge : depuis le haut d'une berge, un saut en courant le passait et
+## le joueur tombait dans le lit, d'où il ne pouvait plus sortir. Il dépasse maintenant tout saut pris alentour.
+func _add_wall(body: StaticBody3D, a: Vector2, b: Vector2, outward: Vector2) -> void:
 	var middle := (a + b) * 0.5
 	if not HubTerrain.inside_limit(middle, -3.0):
 		return
 	for bridge: Array in HubTerrain.BRIDGES:
 		if HubTerrain.bridge_contains(bridge, middle, 0.45):
 			return
+	var ground := terrain.surface_height(middle.x, middle.y)
+	var top := maxf(ground + 3.1, _jump_height(a, b, outward) + wall_margin)
+	var bottom := ground - 0.5
 	var shape := BoxShape3D.new()
-	shape.size = Vector3(a.distance_to(b) + 0.3, 3.6, 0.4)
+	shape.size = Vector3(a.distance_to(b) + 0.3, top - bottom, 0.4)
 	var collision := CollisionShape3D.new()
 	collision.shape = shape
-	var ground := terrain.surface_height(middle.x, middle.y)
-	collision.position = Vector3(middle.x, ground + 1.3, middle.y)
+	collision.position = Vector3(middle.x, (top + bottom) * 0.5, middle.y)
 	collision.rotation.y = -(b - a).angle()
 	body.add_child(collision)
+
+
+## Plus haute altitude des pieds d'un joueur qui arrive sur le pan de mur ab en sautant en courant depuis la terre
+## ferme : sol à distance d du mur, plus la hauteur gagnée au bout de d mètres de saut (nulle une fois redescendu).
+func _jump_height(a: Vector2, b: Vector2, outward: Vector2) -> float:
+	var best := -INF
+	var along := (b - a).normalized()
+	for spot: Vector2 in [a - along * 1.5, (a + b) * 0.5, b + along * 1.5]:
+		var distance := 0.0
+		while distance <= JUMP_REACH:
+			var t := distance / SPRINT_SPEED
+			var rise := maxf(JUMP_VELOCITY * t - 0.5 * 9.8 * t * t, 0.0)
+			for slant: float in [-0.5, 0.0, 0.5]:
+				var point := spot + (outward + along * slant).normalized() * distance
+				best = maxf(best, terrain.surface_height(point.x, point.y) + rise)
+			distance += 1.0
+	return best
 
 
 func _is_clear(point: Vector2, margin: float) -> bool:
