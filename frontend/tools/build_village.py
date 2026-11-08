@@ -143,12 +143,29 @@ def smoothstep(edge0, edge1, x):
     return t * t * (3.0 - 2.0 * t)
 
 
+# Berges au sud du pont, adoucies (SOFT_BANK et SOFT_BANK_Z de village_terrain.gd).
+SOFT_BANK = ((0.5, 1.0), (1.75, 0.76), (3.0, 0.48), (4.25, 0.15), (5.5, 0.0))
+SOFT_BANK_Z = (10.0, 11.25)
+
+
+def soft_bank(bank):
+    if bank <= SOFT_BANK[0][0]:
+        return SOFT_BANK[0][1]
+    for (x0, y0), (x1, y1) in zip(SOFT_BANK, SOFT_BANK[1:]):
+        if bank < x1:
+            return y0 + (y1 - y0) * (bank - x0) / (x1 - x0)
+    return 0.0
+
+
 def town_ground(x, z):
     """Hauteur du sol dans le bourg, comme village_terrain.gd : le relief y est effacé, restent la colline du moulin
     et la rive du ruisseau."""
     hill = math.hypot(x - 30.0, z + 30.0) / 12.0
     height = max(0.0, 4.0 * (1.0 - smoothstep(0.35, 1.0, hill)))
-    return height - 1.4 * (1.0 - smoothstep(1.8, 4.5, abs(x + 38.0)))
+    bank = abs(x + 38.0)
+    bed = 1.0 - smoothstep(1.8, 4.5, bank)
+    bed += (soft_bank(bank) - bed) * smoothstep(SOFT_BANK_Z[0], SOFT_BANK_Z[1], z)
+    return height - 1.4 * bed
 
 
 def ground_span(x0, x1, z0, z1):
