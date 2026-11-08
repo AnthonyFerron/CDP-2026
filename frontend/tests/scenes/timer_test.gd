@@ -17,6 +17,9 @@ func _run() -> void:
 	await wait(120)
 	var elapsed: float = start - state.time_left
 	check("le chronometre s'ecoule (%.2f s)" % elapsed, elapsed > 1.5 and elapsed < 2.5)
+	# Le texte et la couleur du chronometre sont poses dans le _process du HUD : sous charge, wait() peut finir sur une
+	# suite d'images physiques sans _process. settle() laisse passer des images completes avant de les lire.
+	await settle()
 	var timer: Label = hud().get_node("%Timer")
 	check("affichage : " + timer.text, timer.visible and timer.text.begins_with("Éruption du volcan : 59:"))
 	var before: float = state.time_left
@@ -30,6 +33,7 @@ func _run() -> void:
 
 	state.time_left = 4.0 * 60.0
 	await wait(2)
+	await settle()
 	check("chronometre au rouge sous 5 minutes", timer.modulate.r > 0.9 and timer.modulate.g < 0.5)
 	state.time_left = 0.05
 	await wait(10)
@@ -42,7 +46,9 @@ func _run() -> void:
 	level._open_tablet()
 	var tablet: CanvasLayer = level.get_node("TabletPuzzle")
 	await wait(5)
+	await settle()
 	check("tablette ouverte", tablet.is_open() and tablet.visible)
+	check_timer_over(tablet, "la tablette")
 	var seen := {}
 	var on_erupted := func() -> void:
 		seen.tablet_hidden = not tablet.visible
@@ -68,6 +74,8 @@ func _check_eruption_ending(where: String) -> void:
 		return
 	check("cinematique de l'eruption (%s)" % where, ending.get("_camera") != null and ending.get("_camera").current)
 	check("aucun autre ecran de fin (%s)" % where, hud().get_node_or_null("%GameOver") == null and not hud().visible)
+	# Le chronometre est sur sa propre couche : il suit le HUD cache.
+	check("chronometre cache pendant la fin (%s)" % where, not hud().get_node("Clock").visible)
 	check("jeu pas en pause pendant la fin (%s)" % where, not paused)
 	check("pas de menu pause pendant la fin (%s)" % where, not root.get_node("PauseMenu").can_open())
 	for i in 40:
@@ -78,3 +86,29 @@ func _check_eruption_ending(where: String) -> void:
 	check("partie effacee (%s)" % where, not state.has_erupted and not state.intro_done and absf(state.time_left - state.TOTAL_TIME) < 0.01)
 	var save: Dictionary = state.read_save(state.save_path())
 	check("sauvegarde effacee (%s)" % where, save.is_empty() or (not save.has_erupted and not save.intro_done and save.books.is_empty()))
+
+
+## Le chronometre reste visible au-dessus d'un panneau d'enigme ouvert (sa couche est plus haute), sans recouvrir le
+## titre du panneau (plaque des cadres Ornate.Frame) ni aucun de ses boutons, croix de fermeture comprise.
+func check_timer_over(panel: CanvasLayer, where: String) -> void:
+	var clock: CanvasLayer = hud().get_node("Clock")
+	var plate: Control = hud().get_node("Clock/TimerPlate")
+	check("chronometre au-dessus de %s (couche %d sur %d)" % [where, clock.layer, panel.layer],
+		clock.layer > panel.layer and clock.visible and plate.is_visible_in_tree())
+	var area := plate.get_global_rect()
+	var hidden: Array[String] = []
+	for node in panel.find_children("*", "Control", true, false):
+		var item := node as Control
+		if not item.is_visible_in_tree():
+			continue
+		if item is BaseButton and item.get_global_rect().intersects(area):
+			hidden.append(item.name)
+		var title := str(item.get("title")) if item.get("title") != null else ""
+		if not title.is_empty():
+			var size: int = item.get("title_size")
+			var font: Font = load("res://ui/cinzel_bold.tres")
+			var plaque := Vector2(font.get_string_size(title, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x + size * 2.6, size * 1.9)
+			var center := item.get_global_rect().position + Vector2(item.size.x / 2.0, 0.0)
+			if Rect2(center - plaque / 2.0, plaque).intersects(area):
+				hidden.append("titre " + title)
+	check("chronometre sans rien cacher de %s %s" % [where, hidden], hidden.is_empty())
