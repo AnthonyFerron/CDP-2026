@@ -13,11 +13,14 @@ extends Node3D
 ## Vitesse de marche (m/s) et de rotation (rad/s).
 const SPEED := 1.3
 const TURN := 5.0
-## Le villageois qui marche s'arrête si le joueur est devant lui à moins de YIELD_RADIUS, ou n'importe où à moins de
-## NEAR ; il repart quand le joueur s'est éloigné au-delà de RESUME_RADIUS. Le joueur lit les villageois à 3 m.
+## Le villageois qui marche s'arrête si le joueur est devant lui à moins de YIELD_RADIUS, n'importe où à moins de
+## NEAR, ou s'il le vise (son invite « Parler à … » est affichée) ; il attend tant que le joueur lui parle. Il repart
+## quand le joueur s'est éloigné au-delà de RESUME_RADIUS, ou s'est écarté de son chemin depuis PATIENCE secondes.
+## Le joueur lit les villageois à 3 m.
 const YIELD_RADIUS := 3.2
 const NEAR := 1.6
 const RESUME_RADIUS := 4.0
+const PATIENCE := 1.5
 ## Animations des modèles Kenney qui bouclent pendant une pause.
 const LOOPED: Array[StringName] = [&"idle", &"walk", &"interact-right", &"interact-left", &"pick-up"]
 ## Attente au feu avant le premier départ, après la cinématique : ils quittent la place l'un après l'autre.
@@ -78,6 +81,8 @@ class Walker:
 	var wait := 0.0
 	var walking := false
 	var yielding := false
+	## Temps depuis lequel le joueur ne le retient plus, pendant qu'il attend.
+	var patience := 0.0
 	var animation := &""
 
 
@@ -155,14 +160,18 @@ func _step(walker: Walker, delta: float, near: Vector2) -> void:
 	var target := Vector2(entry[0], entry[1])
 	var to_player := near - here
 	var distance := to_player.length()
+	var talking := _held(walker, distance)
 	if walker.walking:
 		var heading := (target - here).normalized()
 		var ahead := distance < YIELD_RADIUS and (distance < NEAR or heading.dot(to_player / maxf(distance, 0.001)) > 0.3)
-		if walker.yielding and distance > RESUME_RADIUS:
-			walker.yielding = false
-			_play(walker, &"walk")
-		elif not walker.yielding and ahead:
+		if walker.yielding:
+			walker.patience = 0.0 if ahead or talking else walker.patience + delta
+			if distance > RESUME_RADIUS or walker.patience > PATIENCE:
+				walker.yielding = false
+				_play(walker, &"walk")
+		elif ahead or talking:
 			walker.yielding = true
+			walker.patience = 0.0
 			_play(walker, &"idle")
 		if walker.yielding:
 			_turn(walker, to_player, delta)
@@ -182,8 +191,17 @@ func _step(walker: Walker, delta: float, near: Vector2) -> void:
 	elif entry.size() > 2:
 		_turn(walker, Vector2(entry[4], entry[5]) - here, delta)
 	walker.wait -= delta
-	if walker.wait <= 0.0 and distance >= NEAR:
+	if walker.wait <= 0.0 and distance >= NEAR and not talking:
 		_leave(walker)
+
+
+## Vrai si le joueur retient le villageois : il le vise (son invite est affichée), ou lui parle (le joueur est
+## arrêté pendant la lecture) tout près de lui.
+func _held(walker: Walker, distance: float) -> bool:
+	var readable := walker.node as Interactable
+	if readable and readable.focused:
+		return true
+	return distance < RESUME_RADIUS and player and not player.can_process()
 
 
 ## Arrivé au point visé : une pause commence, ou il file vers le point suivant.
