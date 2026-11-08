@@ -384,6 +384,243 @@ def stream():
     return normalize(samples, 0.5)
 
 
+def bandpass(samples, low, high):
+    return highpass(lowpass(samples, high), low)
+
+
+def crackles(count, rng, density):
+    """Craquements secs, épars : une impulsion au hasard, plus ou moins serrées selon density(x), x de 0 à 1."""
+    return [rng.uniform(-1.0, 1.0) if rng.random() < density(i / count) else 0.0 for i in range(count)]
+
+
+def echo(samples, taps):
+    """Échos très courts d'une surface dure : (retard en secondes, gain) ; le son s'allonge d'autant."""
+    longest = int(max(delay for delay, _ in taps) * RATE)
+    result = samples + [0.0] * longest
+    for delay, gain in taps:
+        offset = int(delay * RATE)
+        for i, value in enumerate(samples):
+            result[i + offset] += value * gain
+    return result
+
+
+def wood_step(seed):
+    """Pas sur un plancher, un pont ou un ponton : le talon frappe la planche, qui sonne creux un court instant,
+    puis la semelle frotte le bois."""
+    rng = random.Random(seed)
+    count = int(RATE * 0.24)
+    knock = bandpass(noise(count, rng), 900, 3500)
+    scuff = bandpass(noise(count, rng), 300, 1600)
+    body = rng.uniform(150.0, 185.0)
+    # Modes de la planche, inharmoniques comme ceux du bois, et la solive plus grave dessous.
+    modes = ((body, 26.0, 0.55), (body * rng.uniform(2.2, 2.45), 42.0, 0.3), (body * rng.uniform(3.7, 4.1), 62.0, 0.16),
+             (rng.uniform(85.0, 100.0), 38.0, 0.35))
+    samples = []
+    for i in range(count):
+        t = i / RATE
+        attack = 1 - math.exp(-t * 900)
+        tone = sum(gain * math.sin(2 * math.pi * pitch * t) * math.exp(-t * decay) for pitch, decay, gain in modes)
+        click = knock[i] * math.exp(-t * 260) * 0.9
+        rub = scuff[i] * (1 - math.exp(-t * 60)) * math.exp(-t * 22) * 0.25
+        samples.append((tone + click) * attack + rub)
+    return normalize(samples, 0.42)
+
+
+def stone_step(seed):
+    """Pas sur la pierre : le talon claque net sur la dalle, quelques grains crissent sous la semelle, et la pierre
+    renvoie un écho très court. Plus sec et plus clair que le pas feutré sur la cendre."""
+    rng = random.Random(seed)
+    count = int(RATE * 0.2)
+    snap = bandpass(noise(count, rng), 1800, 6000)
+    grit = bandpass(crackles(count, rng, lambda x: 0.025 if 0.06 < x < 0.4 else 0.0), 2200, 7000)
+    ring_pitch = rng.uniform(2300.0, 3200.0)
+    thud_pitch = rng.uniform(95.0, 120.0)
+    samples = []
+    for i in range(count):
+        t = i / RATE
+        attack = 1 - math.exp(-t * 2500)
+        click = snap[i] * math.exp(-t * 170)
+        ring = 0.22 * math.sin(2 * math.pi * ring_pitch * t) * math.exp(-t * 95)
+        thud = 0.42 * math.sin(2 * math.pi * thud_pitch * t) * math.exp(-t * 55)
+        samples.append((click + ring + thud) * attack + grit[i] * 0.7 * math.exp(-t * 15))
+    samples = echo(samples, ((0.017, 0.16), (0.031, 0.07)))
+    # Le claquement est bref : sa crête monte plus haut que celle des autres pas pour une même force perçue.
+    return normalize(samples, 0.62)
+
+
+def ui_click():
+    """Clic d'un bouton des menus : un petit coup sec sur du bois, très court."""
+    rng = random.Random(60)
+    count = int(RATE * 0.09)
+    tick = bandpass(noise(count, rng), 2000, 6500)
+    modes = ((1150.0, 70.0, 0.6), (1830.0, 95.0, 0.35), (2720.0, 130.0, 0.2), (420.0, 60.0, 0.25))
+    samples = []
+    for i in range(count):
+        t = i / RATE
+        tone = sum(gain * math.sin(2 * math.pi * pitch * t) * math.exp(-t * decay) for pitch, decay, gain in modes)
+        samples.append((tone + tick[i] * math.exp(-t * 600) * 0.8) * (1 - math.exp(-t * 3000)))
+    return normalize(samples, 0.5)
+
+
+def parchment(rng, count, opening):
+    """Parchemin qu'on déroule (opening) ou qu'on replie : un souffle de papier et des craquements secs. Le papier
+    s'éclaircit en se déroulant et s'assourdit en se repliant."""
+    breath = noise(count, rng)
+    bright = bandpass(breath, 1600, 6000)
+    dull = bandpass(breath, 700, 2600)
+    crackle = bandpass(crackles(count, rng, lambda x: 0.015 + 0.09 * math.sin(math.pi * x) ** 2), 1500, 7000)
+    samples = []
+    for i in range(count):
+        x = i / count
+        envelope = math.sin(math.pi * x) ** 1.5
+        mix = x if opening else 1.0 - x
+        paper = bright[i] * mix + dull[i] * (1.0 - mix)
+        samples.append(envelope * (paper * 0.55 + crackle[i] * 1.7))
+    return samples
+
+
+def small_bell(count, pitch, decay):
+    """Clochette : partiels inharmoniques d'une petite cloche, les aigus s'éteignant plus vite."""
+    partials = ((1.0, 1.0), (2.0, 0.42), (2.76, 0.3), (5.4, 0.1))
+    samples = []
+    for i in range(count):
+        t = i / RATE
+        tone = sum(gain * math.sin(2 * math.pi * pitch * ratio * t) * math.exp(-t * decay * (0.7 + 0.3 * ratio))
+                   for ratio, gain in partials)
+        samples.append(tone * (1 - math.exp(-t * 500)))
+    return samples
+
+
+def ui_open():
+    """Ouverture d'un panneau (énigme, texte lu, indice, pause) : un parchemin qui se déroule, puis une clochette
+    discrète, sur le sol des notes des tablettes (do, mi, sol)."""
+    rng = random.Random(61)
+    count = int(RATE * 1.0)
+    paper = normalize(parchment(rng, int(RATE * 0.3), True), 0.55)
+    bell = normalize(small_bell(int(RATE * 0.85), 1567.98, 5.5), 0.22)
+    samples = [0.0] * count
+    for i, value in enumerate(paper):
+        samples[i] += value
+    start = int(RATE * 0.14)
+    for i, value in enumerate(bell):
+        samples[start + i] += value
+    return normalize(samples, 0.5)
+
+
+def ui_close():
+    """Fermeture d'un panneau : le parchemin qu'on replie, puis un petit coup de bois sourd, comme un coffret
+    qu'on referme."""
+    rng = random.Random(62)
+    count = int(RATE * 0.45)
+    paper = normalize(parchment(rng, int(RATE * 0.22), False), 0.5)
+    lid = []
+    thump = lowpass(noise(int(RATE * 0.2), rng), 900)
+    for i in range(int(RATE * 0.2)):
+        t = i / RATE
+        tone = 0.6 * math.sin(2 * math.pi * 185.0 * t) * math.exp(-t * 32) + 0.3 * math.sin(2 * math.pi * 430.0 * t) * math.exp(-t * 55)
+        lid.append((tone + thump[i] * 0.8 * math.exp(-t * 70)) * (1 - math.exp(-t * 1500)))
+    lid = normalize(lid, 0.42)
+    samples = [0.0] * count
+    for i, value in enumerate(paper):
+        samples[i] += value
+    start = int(RATE * 0.17)
+    for i, value in enumerate(lid):
+        samples[start + i] += value
+    return normalize(samples, 0.48)
+
+
+def river():
+    """Rivière large et lente du hub : un courant sourd, des remous qui gargouillent et un léger chuintement d'eau
+    sur les pierres, en boucle de 6 s. Plus grave et plus pleine que le ruisseau (stream)."""
+    rng = random.Random(14)
+    length, fade = RATE * 6, RATE // 2
+    total = length + fade
+    rush = lowpass(lowpass(noise(total, rng), 650), 900)
+    hiss = bandpass(noise(total, rng), 1800, 4200)
+    samples = []
+    for i in range(total):
+        t = i / RATE
+        # Houle lente, sur des périodes qui divisent la boucle.
+        swell = 0.8 + 0.12 * math.sin(2 * math.pi * t / 6.0) + 0.08 * math.sin(2 * math.pi * t / 2.0 + 1.3)
+        samples.append(rush[i] * swell + hiss[i] * 0.18 * (0.7 + 0.3 * math.sin(2 * math.pi * t / 3.0)))
+    samples = normalize(seamless(samples, length, fade), 0.32)
+    for _ in range(170):
+        start = rng.randrange(length)
+        pitch = rng.uniform(220.0, 820.0)
+        size = rng.uniform(0.04, 0.13)
+        decay = rng.uniform(35.0, 70.0)
+        bubble = [size * math.sin(2 * math.pi * pitch * (1 + i / RATE * 5) * i / RATE) * math.exp(-i / RATE * decay)
+                  * (1 - math.exp(-i / RATE * 800)) for i in range(int(RATE * 0.08))]
+        add_event(samples, start, bubble)
+    return normalize(samples, 0.55)
+
+
+def leaves():
+    """Feuillage du jardin du roi : des feuilles froissées par la brise, par vagues, avec le petit crépitement des
+    feuilles qui se touchent, et un souffle grave, en boucle de 8 s."""
+    rng = random.Random(15)
+    length, fade = RATE * 8, RATE
+    total = length + fade
+    rustle = bandpass(lowpass(noise(total, rng), 5000), 1200, 5000)
+    flutter = normalize(lowpass(lowpass(noise(total, rng), 18), 24), 1.0)
+    breeze = lowpass(lowpass(noise(total, rng), 220), 320)
+    breeze = normalize(breeze, 1.0)
+    patter = bandpass(crackles(total, rng, lambda x: 0.004), 1800, 7000)
+    samples = []
+    for i in range(total):
+        t = i / RATE
+        gust = 0.5 + 0.3 * math.sin(2 * math.pi * t / 8.0 + 0.4) + 0.2 * math.sin(2 * math.pi * t / 2.0 + 2.1)
+        gust = max(0.05, gust)
+        samples.append(rustle[i] * gust * (0.55 + 0.45 * flutter[i]) + patter[i] * 0.9 * gust * gust
+                       + breeze[i] * 0.06 * (0.6 + 0.4 * gust))
+    return normalize(seamless(samples, length, fade), 0.5)
+
+
+def bird_note(start, end, duration, vibrato=0.0, rate=0.0, gain=1.0):
+    """Note d'oiseau : un sifflement qui glisse d'une hauteur à l'autre, attaqué vite et éteint plus doucement, avec un
+    léger vibrato et un frémissement rapide du gosier, pour ne pas sonner comme un bip."""
+    count = int(RATE * duration)
+    samples = []
+    phase = 0.0
+    for i in range(count):
+        x = i / count
+        t = i / RATE
+        pitch = (start + (end - start) * x) * (1 + vibrato * math.sin(2 * math.pi * rate * t))
+        pitch *= 1 + 0.012 * math.sin(2 * math.pi * 85.0 * t)
+        phase += 2 * math.pi * pitch / RATE
+        harmonic = 0.12 * math.sin(2 * phase) if pitch * 2 < 10000 else 0.0
+        envelope = math.sin(math.pi / 2 * x / 0.15) if x < 0.15 else (1 - (x - 0.15) / 0.85) ** 0.7
+        samples.append(gain * envelope * (math.sin(phase) + harmonic))
+    return samples
+
+
+def bird_song(notes):
+    """Chant fait de notes (début, fin, durée, silence après, vibrato, fréquence du vibrato, gain)."""
+    samples = []
+    for start, end, duration, gap, vibrato, rate, gain in notes:
+        samples += bird_note(start, end, duration, vibrato, rate, gain)
+        samples += [0.0] * int(RATE * gap)
+    return normalize(samples, 0.5)
+
+
+def bird(kind):
+    """Trois oiseaux du jardin : une phrase de rouge-gorge, l'appel « ti-tu » d'une mésange, le trille d'un pinson."""
+    rng = random.Random(70 + kind)
+    if kind == 0:
+        notes = [(3200, 3900, 0.07, 0.04, 0.01, 40, 0.8), (4100, 3600, 0.06, 0.035, 0.0, 0, 0.9),
+                 (2800, 3400, 0.09, 0.05, 0.02, 35, 1.0), (3900, 4400, 0.05, 0.03, 0.0, 0, 0.7),
+                 (4400, 3800, 0.05, 0.06, 0.0, 0, 0.75), (3100, 2650, 0.13, 0.02, 0.03, 30, 0.85)]
+    elif kind == 1:
+        notes = []
+        for _ in range(3):
+            high = rng.uniform(4150, 4350)
+            notes += [(high, high - 120, 0.07, 0.05, 0.0, 0, 0.9), (3250, 3100, 0.09, 0.1, 0.0, 0, 1.0)]
+    else:
+        notes = [(5200 - k * 70, 4700 - k * 70, 0.035, 0.022, 0.0, 0, 0.6 + 0.03 * k) for k in range(11)]
+        notes += [(3700, 2800, 0.16, 0.02, 0.025, 45, 1.0)]
+    return bird_song(notes)
+
+
 def main():
     write_wav("plaine_wind.wav", wind(), loop=True)
     write_wav("plaine_lava.wav", lava(), loop=True)
@@ -409,6 +646,16 @@ def main():
     write_wav("stream.wav", stream(), loop=True)
     for index in range(3):
         write_wav(f"footstep_grass_{index + 1}.wav", grass_step(50 + index))
+    for index in range(3):
+        write_wav(f"footstep_wood_{index + 1}.wav", wood_step(80 + index))
+        write_wav(f"footstep_stone_{index + 1}.wav", stone_step(90 + index))
+    write_wav("ui_click.wav", ui_click())
+    write_wav("ui_open.wav", ui_open())
+    write_wav("ui_close.wav", ui_close())
+    write_wav("river.wav", river(), loop=True)
+    write_wav("park_leaves.wav", leaves(), loop=True)
+    for kind in range(3):
+        write_wav(f"bird_{kind + 1}.wav", bird(kind))
 
 
 if __name__ == "__main__":
