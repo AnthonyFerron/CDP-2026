@@ -1,7 +1,7 @@
 class_name Gamepad
 extends Node
 ## Manette, en disposition standard (celle de l'API Gamepad des navigateurs, d'une manette Xbox) : le jeu se joue en
-## entier sans clavier ni souris. Les commandes sont dans docs/manette.md.
+## entier sans clavier ni souris. Les commandes sont dans docs/manette-mobile.md.
 ##
 ## Ce script est chargé en autoload sous le nom GamepadInput. Le reste du jeu passe par ses fonctions statiques
 ## (Gamepad.active, Gamepad.setup…), qui ne nomment aucun autoload : Ornate et le clavier virtuel s'en servent, et un
@@ -50,6 +50,10 @@ const STICK_SWITCH := 0.5
 const MOUSE_SWITCH := 24.0
 ## Défilement des listes au stick droit, en pixels de référence par seconde, stick à fond.
 const SCROLL_SPEED := 1300.0
+## Croix (ou stick gauche) maintenue dans un menu : la sélection avance seule après ce délai, puis à ce rythme.
+const REPEAT_DELAY := 0.4
+const REPEAT_RATE := 0.11
+const DIRECTIONS: Array[StringName] = [&"ui_up", &"ui_down", &"ui_left", &"ui_right"]
 
 ## Nom de chaque bouton, tel que l'écrivent les invites et les textes (disposition Xbox, la plus répandue sur ordinateur).
 const BUTTON_NAMES := {
@@ -68,6 +72,8 @@ var _mouse_travel := 0.0
 ## Dernier contrôle sélectionné dans chaque couche : il retrouve le focus quand la couche du dessus se ferme.
 var _last_focus := {}
 var _scroll_rest := 0.0
+var _held := &""
+var _held_time := 0.0
 
 
 func _ready() -> void:
@@ -128,6 +134,30 @@ func _process(delta: float) -> void:
 		return
 	_ensure_focus()
 	_scroll(delta)
+	_repeat(delta)
+
+
+## Direction maintenue dans un menu : elle se répète, comme une touche du clavier tenue (clavier virtuel, longues listes).
+func _repeat(delta: float) -> void:
+	var held := &""
+	for action in DIRECTIONS:
+		if Input.is_action_pressed(action):
+			held = action
+			break
+	if held != _held:
+		_held = held
+		_held_time = 0.0
+		return
+	if held == &"" or get_viewport().gui_get_focus_owner() == null:
+		return
+	_held_time += delta
+	if _held_time >= REPEAT_DELAY:
+		_held_time -= REPEAT_RATE
+		# Un appui seul : la direction reste tenue tant que la croix l'est.
+		var event := InputEventAction.new()
+		event.action = held
+		event.pressed = true
+		Input.parse_input_event(event)
 
 
 func _on_joy_connection_changed(_device: int, connected: bool) -> void:
@@ -388,15 +418,14 @@ static func button_name(action: StringName) -> String:
 
 
 ## Texte qui cite une touche du clavier, récrit pour la manette quand elle est en main : « maintenez E » devient
-## « maintenez A », « avec I » devient « avec le bouton Affichage ».
+## « maintenez A », « avec I » devient « avec le bouton Affichage ». La touche doit être un mot à elle seule : « avec
+## Hexcole » ne change pas.
 static func adapt(text: String) -> String:
 	if not active:
 		return text
-	var interact := button_name(&"interact")
-	for pair: Array in [
-		["maintenez E ", "maintenez %s " % interact], ["Maintenez E ", "Maintenez %s " % interact],
-		["maintenir E ", "maintenir %s " % interact], ["Maintenir E ", "Maintenir %s " % interact],
-		["avec I", "avec le bouton %s" % button_name(&"inventory")], ["avec H", "avec le bouton %s" % button_name(&"hint")],
-	]:
-		text = text.replace(pair[0], pair[1])
+	var hold := RegEx.create_from_string("\\b([Mm]aint(?:enez|enir)) E\\b")
+	text = hold.sub(text, "$1 " + button_name(&"interact"), true)
+	for pair: Array in [["I", &"inventory"], ["H", &"hint"]]:
+		var with_key := RegEx.create_from_string("\\bavec %s\\b" % pair[0])
+		text = with_key.sub(text, "avec le bouton " + button_name(pair[1]), true)
 	return text

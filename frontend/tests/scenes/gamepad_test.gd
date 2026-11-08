@@ -165,6 +165,28 @@ func _menu() -> void:
 	await wait(3)
 	check("B : retour à l'accueil depuis la connexion", menu.current_screen() == &"home")
 
+	# Code de vérification : le clavier virtuel remplit les six cases, chiffre par chiffre.
+	menu.show_screen(&"verify")
+	await wait(3)
+	await settle()
+	var boxes: Node = menu.find_child("Code", true, false)
+	check("vérification : première case choisie", root.gui_get_focus_owner() == boxes.boxes[0])
+	await pad(JOY_BUTTON_A)
+	await pad(JOY_BUTTON_A)
+	await pad(JOY_BUTTON_DPAD_RIGHT)
+	await pad(JOY_BUTTON_A)
+	check("clavier : « 12 » dans les cases (%s)" % boxes.code(), boxes.code() == "12")
+	await pad(JOY_BUTTON_X)
+	check("X : dernier chiffre effacé (%s)" % boxes.code(), boxes.code() == "1")
+	await pad(JOY_BUTTON_B)
+	check("B : clavier fermé, case suivante choisie", PadKeyboard.current() == null and root.gui_get_focus_owner() == boxes.boxes[1])
+	await pad(JOY_BUTTON_B)
+	await wait(3)
+	check("B : retour à la connexion", menu.current_screen() == &"login")
+	await pad(JOY_BUTTON_B)
+	await wait(3)
+	check("B : retour à l'accueil", menu.current_screen() == &"home")
+
 	await key(KEY_SHIFT)
 	check("touche du clavier : mode clavier", not Gamepad.active)
 	check("au clavier, plus de bouton choisi", root.gui_get_focus_owner() == null and menu.find_child("NewGame", true, false).focus_mode == Control.FOCUS_NONE)
@@ -283,6 +305,9 @@ func _marais() -> void:
 	check("croix droite : indice suivant (%s)" % counter.text, counter.text.begins_with("Indice 3 sur 3"))
 	await pad(JOY_BUTTON_Y)
 	check("Y : indices fermés", not hints.is_open() and not paused)
+	check("indices à la manette : « maintenez A »", Gamepad.adapt("maintenez E devant un tas") == "maintenez A devant un tas")
+	check("indices à la manette : « avec le bouton Affichage »", Gamepad.adapt("Relisez-les avec I.") == "Relisez-les avec le bouton Affichage.")
+	check("indices à la manette : un mot qui commence par H ne change pas", Gamepad.adapt("avec Hexcole") == "avec Hexcole")
 
 	# Mécanisme aux cinq cercles : la croix choisit une flèche, A tourne le cercle, puis « Valider ».
 	await level._travel(true)

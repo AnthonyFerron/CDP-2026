@@ -3,6 +3,8 @@
 <!--
 	Page du jeu sur le web : le modèle de Godot 4.7.2 (godot.html des modèles d'export), avec des messages en français
 	quand le jeu ne peut pas démarrer, et ce qu'il faut faire. Voir docs/web-threads.md, partie « Navigateurs ».
+	Sur un appareil seulement tactile (téléphone, tablette sans souris), la page dit d'abord que le jeu se joue sur
+	ordinateur ou à la manette : voir docs/manette-mobile.md.
 	Les mots commençant par $GODOT_ sont remplis par Godot à l'export (préréglage « Web », html/custom_html_shell).
 -->
 	<head>
@@ -112,6 +114,66 @@ body {
 	box-sizing: border-box;
 }
 
+#touch-notice {
+	position: fixed;
+	inset: 0;
+	z-index: 5;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 1rem;
+	box-sizing: border-box;
+	background-color: #1c0f1f;
+	overflow-y: auto;
+}
+
+#touch-notice[hidden] {
+	display: none;
+}
+
+#touch-notice .box {
+	background-color: #241310;
+	border: 2px solid #f5a633;
+	border-radius: 0.5rem;
+	box-shadow: 0 0 0 4px #241310, 0 0 0 6px #94591c;
+	color: #fbebcc;
+	font-family: Georgia, 'Times New Roman', serif;
+	font-size: 1.05rem;
+	line-height: 1.45;
+	max-width: 34rem;
+	padding: 1.25rem 1.25rem 1.5rem;
+	text-align: center;
+}
+
+#touch-notice h1 {
+	color: #ffd97a;
+	font-size: 1.45rem;
+	font-weight: bold;
+	letter-spacing: 0.04em;
+	margin: 0 0 0.75rem;
+}
+
+#touch-notice p {
+	margin: 0 0 0.85rem;
+}
+
+#touch-notice .muted {
+	color: #b8a38c;
+	font-size: 0.92rem;
+}
+
+#touch-notice button {
+	margin-top: 0.5rem;
+	padding: 0.65rem 1.4rem;
+	font: inherit;
+	color: #fbebcc;
+	background-color: #5a3416;
+	border: 2px solid #f5a633;
+	border-radius: 1.4rem;
+	cursor: pointer;
+	touch-action: manipulation;
+}
+
 #context-lost button {
 	margin-top: 1rem;
 	padding: 0.5rem 1.5rem;
@@ -138,6 +200,16 @@ body {
 			<img id="status-splash" class="$GODOT_SPLASH_CLASSES" src="$GODOT_SPLASH" alt="">
 			<progress id="status-progress"></progress>
 			<div id="status-notice"></div>
+		</div>
+
+		<div id="touch-notice" role="dialog" aria-labelledby="touch-title" hidden>
+			<div class="box">
+				<h1 id="touch-title">CodeQuest se joue sur ordinateur</h1>
+				<p>Ce jeu en 3D se joue au clavier et à la souris, ou avec une manette. Il n'a pas de commandes tactiles : sur un téléphone ou une tablette, vous ne pourriez ni vous déplacer ni regarder autour de vous.</p>
+				<p>Ouvrez-le sur un ordinateur, ou reliez une manette à cet appareil (Bluetooth ou USB) et appuyez sur l'un de ses boutons : le jeu se lancera.</p>
+				<p class="muted">Le jeu télécharge près de 30 Mo et demande un appareil récent.</p>
+				<button type="button" id="touch-start">Lancer quand même</button>
+			</div>
 		</div>
 
 		<script src="$GODOT_URL"></script>
@@ -202,7 +274,8 @@ const engine = new Engine(GODOT_CONFIG);
 		}
 		setStatusNotice('Le jeu n\'a pas pu démarrer.\n'
 			+ 'Rechargez la page. Si cela recommence, fermez les autres onglets et applications lourdes, puis réessayez '
-			+ 'dans un navigateur à jour (Chrome, Edge, Firefox ou Safari). Le jeu se joue sur ordinateur, au clavier et à la souris.',
+			+ 'dans un navigateur à jour (Chrome, Edge, Firefox ou Safari). Le jeu se joue sur ordinateur, au clavier et à la souris, '
+			+ 'ou avec une manette.',
 		detail);
 		setStatusMode('notice');
 		initializing = false;
@@ -334,7 +407,41 @@ const engine = new Engine(GODOT_CONFIG);
 			// Message en français, avec ce qu'il faut faire.
 			missingFeaturesNotice(missing);
 		}
+	} else if (touchOnly()) {
+		askTouchDevice();
 	} else {
+		startEngine();
+	}
+
+	// Appareil seulement tactile : un écran tactile pour tout pointeur (pas de souris ni de pavé tactile). Les tablettes
+	// avec un pavé ou une souris et les ordinateurs à écran tactile démarrent comme avant.
+	function touchOnly() {
+		const media = (query) => typeof window.matchMedia === 'function' && window.matchMedia(query).matches;
+		const touch = navigator.maxTouchPoints > 0 || 'ontouchstart' in window;
+		return touch && media('(pointer: coarse)') && !media('(any-pointer: fine)');
+	}
+
+	// Le message en français, avant de télécharger le jeu. Une manette reliée (son premier bouton la fait connaître au
+	// navigateur) ou le bouton « Lancer quand même » le lancent : la manette joue le jeu en entier.
+	function askTouchDevice() {
+		const notice = document.getElementById('touch-notice');
+		notice.hidden = false;
+		console.info('Appareil tactile : le jeu attend une manette ou « Lancer quand même ».');
+		let started = false;
+		const go = () => {
+			if (started) {
+				return;
+			}
+			started = true;
+			window.removeEventListener('gamepadconnected', go);
+			notice.remove();
+			startEngine();
+		};
+		document.getElementById('touch-start').addEventListener('click', go);
+		window.addEventListener('gamepadconnected', go);
+	}
+
+	function startEngine() {
 		setStatusMode('progress');
 		engine.startGame({
 			'onProgress': function (current, total) {
