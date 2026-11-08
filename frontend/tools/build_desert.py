@@ -744,7 +744,10 @@ def build_east_room(scene, rng):
     put(scene, "castle_kit/rocks-small", (18.0, 0.0, -7.8), 30.0, 2.2, height=1.1, box=False)
     put(scene, "mini_arena/block", (14.0, 0.0, -15.6), 25.0, 1.4, height=0.7)
     put(scene, "mini_arena/block", (15.9, 0.0, -16.2), 70.0, 1.2, height=0.6)
-    jars(scene, 18.4, -15.6, random.Random(42), 2, 0.7)
+    # Jarre à plus d'un mètre des deux murs : dans l'angle, entre elle et les murs, le joueur qui sautait dessus
+    # tombait dans un creux de 0,4 à 0,6 m d'où il ne ressortait plus (sonde de saut). Ses tessons restent ainsi
+    # hors des murs et du bloc voisin (ils entraient dans l'angle des murs).
+    jars(scene, 17.75, -14.25, random.Random(42), 2, 0.7)
     for k in range(5):
         scene.shape("box", {"size": (0.4, 0.06, 0.3)}, "tablet", (14.4 + k * 0.1, 0.03 + k * 0.06, -12.6 + k * 0.05),
                     rng.uniform(-30, 30), shadow=False)
@@ -1142,6 +1145,9 @@ def build_cellar(scene, rng):
     # Coffre ouvert contre le mur ouest, sous la torche du nord, des rouleaux rangés dedans.
     chest = (west + 0.55, -9.0)
     put(scene, "mini_dungeon/chest", (chest[0], 0.0, chest[1]), 0.0, 2.2, height=0.62)
+    # Derrière lui, la plinthe du mur a sa collision (1 m de haut, jusqu'à 0,8 m du bord de la case) : sans elle, la
+    # fente de 0,65 m entre le mur et le coffre gardait calé le joueur qui sautait sur le coffre (sonde de saut).
+    scene.add_box((-10.0 + 0.7, 0.5, chest[1]), (0.2, 1.0, 1.5))
     for k in range(3):
         scene.shape("cyl", {"top": 0.055, "bottom": 0.055, "height": 0.6, "segments": 6}, "parchment",
                     (chest[0] + (k - 1) * 0.14, 0.4, chest[1]), 0.0, tilt=90.0, roll=0.0, shadow=False)
