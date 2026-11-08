@@ -10,7 +10,7 @@ Liste de tout ce que le projet utilise et qui n'a pas été créé pour lui. À 
 | --- | --- | --- |
 | Code GDScript, scènes, `icon.svg` | Créés pour le projet | Aucune licence choisie : tous droits réservés par défaut |
 | Modèles 3D et leurs textures | Kits Kenney, listés ci-dessous | CC0 1.0 |
-| Sons du jeu (vent, lave, marais, désert, cave, hub, village, ruisseau, pas, feu, porte, tablettes) | Générés pour le projet par `frontend/tools/generate_sounds.py` | Comme le code du projet |
+| Sons du jeu (vent, lave, marais, désert, cave, hub, village, ruisseau, rivière, feuillage, oiseaux, pas, feu, porte, tablettes, interface) | Générés pour le projet par `frontend/tools/generate_sounds.py`, sans aucun enregistrement extérieur (voir `docs/sons.md`) | Comme le code du projet |
 | Musiques, dans `frontend/assets/audio/music/` | Pixabay Music, NullRights, OpenGameArt, et une piste sans auteur tiers, listées dans la section Musiques ci-dessous | Voir la section Musiques |
 | Polices : Cinzel (titres et boutons), Lora (textes) | [Google Fonts](https://github.com/google/fonts), dans `frontend/assets/fonts/` avec leur licence | SIL Open Font License 1.1 |
 
