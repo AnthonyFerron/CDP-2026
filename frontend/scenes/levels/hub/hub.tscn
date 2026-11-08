@@ -49,6 +49,7 @@
 [ext_resource type="PackedScene" path="res://scenes/levels/hub/hub_bunker.tscn" id="51_bunker"]
 [ext_resource type="Script" path="res://scenes/levels/hub/hub_river.gd" id="52_river"]
 [ext_resource type="Shader" path="res://scenes/levels/hub/hub_water.gdshader" id="53_water"]
+[ext_resource type="Script" path="res://scenes/levels/hub/hub_sounds.gd" id="54_sounds"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_hub"]
 sky_top_color = Color(0.3, 0.29, 0.36, 1)
@@ -2251,6 +2252,9 @@ pitch_scale = 0.6
 stream = ExtResource("40_ambience")
 volume_db = -8.0
 autoplay = true
+
+[node name="Sounds" type="Node3D" parent="."]
+script = ExtResource("54_sounds")
 
 [node name="Hud" parent="." instance=ExtResource("8_hud")]
 

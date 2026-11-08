@@ -105,6 +105,8 @@ func _ready() -> void:
 	Ornate.place(frame, done, Vector2(430, 610), Vector2(400, 96))
 	done.pressed.connect(close)
 	_root.hide()
+	# Parchemin et clochette à l'ouverture, parchemin replié à la fermeture (scripts/ui_sounds.gd).
+	UiSounds.watch(_root)
 
 
 func _unhandled_input(event: InputEvent) -> void:

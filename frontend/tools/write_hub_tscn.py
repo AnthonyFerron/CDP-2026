@@ -60,6 +60,7 @@ EXT = [
     ("PackedScene", "res://scenes/levels/hub/hub_bunker.tscn", "51_bunker"),
     ("Script", "res://scenes/levels/hub/hub_river.gd", "52_river"),
     ("Shader", "res://scenes/levels/hub/hub_water.gdshader", "53_water"),
+    ("Script", "res://scenes/levels/hub/hub_sounds.gd", "54_sounds"),
 ]
 
 
@@ -972,6 +973,9 @@ def main():
     node(lines, "RepairSound", "AudioStreamPlayer", props=['stream = ExtResource("46_rumble")', "volume_db = -4.0"])
     node(lines, "TremorSound", "AudioStreamPlayer", props=['stream = ExtResource("46_rumble")', "volume_db = -9.0", "pitch_scale = 0.6"])
     node(lines, "Ambience", "AudioStreamPlayer", props=['stream = ExtResource("40_ambience")', "volume_db = -8.0", "autoplay = true"])
+    # Eau de la rivière, feuillage et oiseaux du jardin du roi, roue du moulin : des sources dans l'espace, qui suivent
+    # l'auditeur et les livres posés (hub_sounds.gd).
+    node(lines, "Sounds", "Node3D", props=['script = ExtResource("54_sounds")'])
     node(lines, "Hud", instance="8_hud")
     # Les apparats du roi et de Merlon sont accrochés aux os de leur modèle importé. Sans ces marqueurs
     # (« enfants modifiables »), l'export, qui convertit la scène en binaire, les perd : le jeu en ligne les montrait
