@@ -6,10 +6,10 @@ extends Node
 ##
 ## Pendant que le joueur est au menu, ce nœud dessine hors de l'écran, dans un SubViewport minuscule qui n'est affiché
 ## nulle part, chaque matériau de l'inventaire (ShaderWarmList, assets/shader_warm_list.tres, fait par
-## tools/bake_shaders.gd), un par image, dans les conditions de son lieu. Après une image qui a compilé, le menu
-## souffle autant d'images qu'il le faut pour que la préparation prenne au plus la moitié du temps. Elle s'arrête dès
-## qu'une transition commence (le joueur lance une partie) : ce qui reste sera compilé en jeu, comme avant. Un retour
-## au menu reprend où elle s'était arrêtée.
+## tools/bake_shaders.gd), dans les conditions de son lieu, un seul objet par image. Après une image qui a compilé, le
+## menu souffle autant d'images qu'il le faut pour que la préparation prenne au plus la moitié du temps. Elle s'arrête
+## dès qu'une transition commence (le joueur lance une partie) : ce qui reste sera compilé en jeu, comme avant. Un
+## retour au menu reprend où elle s'était arrêtée. Mesures : docs/shaders-menu.md.
 ##
 ## Seulement dans un jeu exporté (web, Windows), avec un affichage. Ailleurs (éditeur, tests), --prechauffage l'active.
 
@@ -35,9 +35,12 @@ static var _kept: ShaderWarmList
 static var _group_index := 0
 static var _entry_index := 0
 static var _lit_pass := false
+## 0 : ombres du cran de qualité courant ; 1 : l'inverse (sans ombres si le cran en a, avec sinon). La qualité
+## adaptative peut couper les ombres en jeu, ou les rendre entre deux lieux.
+static var _variant := 0
 static var _finished := false
 
-## Entrées dessinées, groupes finis et temps passé depuis le début, pour les mesures.
+## Images de préparation dessinées et temps passé depuis le début, pour les mesures.
 var drawn := 0
 var elapsed_ms := 0
 
@@ -146,10 +149,20 @@ func _build_view() -> void:
 	_viewport.add_child(_batch)
 
 
-## Dessine l'entrée suivante. Faux quand l'inventaire est fini.
+## Dessine l'entrée suivante. Faux quand l'inventaire est fini, dans les deux variantes.
 func _next_slice() -> bool:
-	while _group_index < _kept.groups.size():
+	while _variant < 2:
+		if _group_index >= _kept.groups.size():
+			_variant += 1
+			_group_index = 0
+			_entry_index = 0
+			_group_ready = -1
+			continue
 		var group: Dictionary = _kept.groups[_group_index]
+		# La seconde variante ne concerne que les groupes dont un soleil a une ombre.
+		if _variant == 1 and not (group.suns as Array).any(func(sun: Dictionary) -> bool: return sun.shadow):
+			_group_index += 1
+			continue
 		if _group_ready != _group_index:
 			_setup_group(group)
 			_group_ready = _group_index
@@ -195,10 +208,13 @@ func _setup_group(group: Dictionary) -> void:
 	_camera.environment = environment
 	var quality := get_node_or_null(^"/root/RenderQuality")
 	var tier: int = quality.get(&"tier") if quality else 0
+	var shadows := tier < Quality.TIER_NO_SHADOWS
+	if _variant == 1:
+		shadows = not shadows
 	for settings: Dictionary in group.suns:
 		var sun := DirectionalLight3D.new()
 		sun.rotation_degrees = Vector3(-55.0, 30.0, 0.0)
-		sun.shadow_enabled = bool(settings.shadow) and tier < Quality.TIER_NO_SHADOWS
+		sun.shadow_enabled = bool(settings.shadow) and shadows
 		sun.directional_shadow_mode = DirectionalLight3D.SHADOW_ORTHOGONAL if tier >= Quality.TIER_LIGHT_SHADOWS \
 			else int(settings.mode)
 		sun.directional_shadow_blend_splits = bool(settings.blend)
