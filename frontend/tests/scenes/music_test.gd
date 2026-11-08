@@ -245,6 +245,7 @@ func _check_deferred() -> void:
 		and path == DEFERRED_DIR + "plaine.ogg" and player.playing)
 	check("le paquet ne remplace aucun fichier du jeu", ResourceLoader.exists("res://assets/audio/music/plaine.ogg")
 		and not ResourceLoader.exists(DEFERRED_DIR + "marais.ogg"))
+	check("aucune erreur au telechargement ni au montage (%d : %s)" % [errors.count, errors.last], errors.count == 0)
 
 	# Téléchargement raté (adresse morte) : nouvelle tentative quelques secondes plus tard, la musique continue.
 	var failures_before: int = music.pack_failures()

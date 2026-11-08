@@ -46,6 +46,42 @@ const PACK_FILE := "musique.pck"
 const PACK_RETRY := [5.0, 15.0, 30.0, 60.0]
 ## Un téléchargement qui ne reçoit plus rien pendant ce temps (secondes de jeu) est abandonné, puis retenté.
 const PACK_STALL := 60.0
+## Téléchargement du second paquet par le navigateur (web) : l'état (1 en cours, 2 reçu, -1 échec), les octets reçus et
+## le paquet entier, une fois reçu, sont dans window.__codequestMusique.
+const WEB_FETCH := """(() => {
+	const s = window.__codequestMusique = {state: 1, received: 0, data: null, error: '', abort: new AbortController()};
+	fetch(%s, {signal: s.abort.signal}).then(async (response) => {
+		if (!response.ok) {
+			throw new Error('HTTP ' + response.status);
+		}
+		const reader = response.body.getReader();
+		const chunks = [];
+		for (;;) {
+			const {done, value} = await reader.read();
+			if (done) {
+				break;
+			}
+			chunks.push(value);
+			s.received += value.length;
+		}
+		const data = new Uint8Array(s.received);
+		let offset = 0;
+		for (const chunk of chunks) {
+			data.set(chunk, offset);
+			offset += chunk.length;
+		}
+		s.data = data;
+		s.state = 2;
+	}).catch((error) => {
+		s.state = -1;
+		s.error = String(error);
+	});
+	return true;
+})()"""
+## Un champ de l'état du téléchargement par le navigateur (un échec s'il n'a pas démarré).
+const WEB_STATE := "(window.__codequestMusique || {state: -1, received: 0, error: 'pas de téléchargement'}).%s"
+## Reprend le paquet reçu par le navigateur (PackedByteArray) et le lâche côté navigateur.
+const WEB_TAKE := "(() => { const s = window.__codequestMusique; const data = s.data; s.data = null; return data; })()"
 
 var _players: Array[AudioStreamPlayer] = []
 var _active: AudioStreamPlayer
@@ -175,6 +211,11 @@ func pack_failures() -> int:
 	return _pack_tries
 
 
+## Octets du second paquet reçus jusqu'ici, pendant le téléchargement en cours ou une fois reçu.
+func pack_received() -> int:
+	return _pack_bytes
+
+
 ## Lecteur de la piste en cours, pour les tests.
 func active_player() -> AudioStreamPlayer:
 	return _active
@@ -259,34 +300,38 @@ func _fetch_web_pack() -> void:
 
 
 ## Télécharge le second paquet de musique depuis url, puis le monte (load_pack). En cas d'échec, nouvelle tentative
-## plus tard (PACK_RETRY). Le web l'appelle seul ; music_test, avec une adresse morte.
+## plus tard (PACK_RETRY). Le web l'appelle seul ; music_test, avec un serveur local et une adresse morte.
+##
+## Sur le web, c'est le navigateur qui télécharge (WEB_FETCH) : il lit la réponse jusqu'au bout au rythme du réseau,
+## et le jeu la reprend d'un bloc. HTTPRequest ne reprend qu'un morceau du navigateur par image : dans la mesure, il
+## finissait de 4 à 13 s après le réseau. Il servirait aussi mal le web pour une autre raison : la réponse n'y a jamais
+## de longueur connue, et HTTPRequest efface alors un fichier reçu par download_file juste avant de signaler la fin
+## (Godot 4.7, scene/main/http_request.cpp). Ailleurs (tests), HTTPRequest, avec le corps en mémoire.
 ##
 ## Le paquet est écrit dans le dossier de cache, pas dans user:// : sur le web, seul user:// (/userfs) est recopié
 ## dans IndexedDB. Le cache (/home/web_user/.cache) y reste en mémoire (MEMFS), comme index.pck. Dans user://, ses
-## 10 Mo seraient recopiés dans IndexedDB à chaque téléchargement, et relus en entier à chaque lancement, avant le
+## 11 Mo seraient recopiés dans IndexedDB à chaque téléchargement, et relus en entier à chaque lancement, avant le
 ## menu. Le navigateur garde de toute façon sa copie (cache HTTP, revalidée par ETag) : la visite suivante ne le
 ## retélécharge que s'il a changé.
 func fetch_pack(url: String) -> void:
 	_pack_url = url
-	if not _http:
-		_http = HTTPRequest.new()
-		_http.name = "PaquetMusique"
-		# Le navigateur décode déjà la réponse (brotli, gzip) : avec accept_gzip, HTTPRequest décoderait une seconde fois
-		# un corps marqué gzip, et échouerait.
-		_http.accept_gzip = false
-		# Jusqu'à 1 Mo lu par image (64 Ko par défaut) : le téléchargement suit le réseau, même à faible cadence.
-		_http.download_chunk_size = 1 << 20
-		# Le corps arrive en mémoire, et _on_pack_downloaded l'écrit : pas de download_file. Sur le web, la réponse n'a
-		# jamais de longueur connue, et HTTPRequest efface alors le fichier reçu juste avant de signaler la fin (Godot
-		# 4.7, scene/main/http_request.cpp : download_complete n'est posé que si la longueur est connue).
-		_http.request_completed.connect(_on_pack_downloaded)
-		add_child(_http)
-	# Hors du web (tests seulement), dans user://.
 	var folder := OS.get_cache_dir() if OS.has_feature("web") else OS.get_user_data_dir()
 	DirAccess.make_dir_recursive_absolute(folder)
 	_pack_path = folder.path_join(PACK_FILE)
 	_pack_bytes = 0
 	_pack_idle = 0.0
+	if OS.has_feature("web"):
+		JavaScriptBridge.eval(WEB_FETCH % JSON.stringify(url), true)
+		set_process(true)
+		return
+	if not _http:
+		_http = HTTPRequest.new()
+		_http.name = "PaquetMusique"
+		# Le corps est déjà décodé s'il arrive compressé par un navigateur : HTTPRequest ne doit pas le décoder encore.
+		_http.accept_gzip = false
+		_http.download_chunk_size = 1 << 20
+		_http.request_completed.connect(_on_pack_downloaded)
+		add_child(_http)
 	if _http.request(url) == OK:
 		set_process(true)
 	else:
@@ -314,7 +359,13 @@ func _on_pack_downloaded(result: int, code: int, _headers: PackedStringArray, bo
 	if result != HTTPRequest.RESULT_SUCCESS or code != 200:
 		push_warning("Musique : %s non reçu (résultat %d, code HTTP %d)" % [_pack_url, result, code])
 		_retry_pack()
-		return
+	else:
+		_store_pack(body)
+
+
+## Écrit le paquet reçu, puis le monte ; sinon, nouvelle tentative.
+func _store_pack(body: PackedByteArray) -> void:
+	_pack_bytes = body.size()
 	var file := FileAccess.open(_pack_path, FileAccess.WRITE)
 	if not file:
 		push_warning("Musique : impossible d'écrire %s (%s)" % [_pack_path, error_string(FileAccess.get_open_error())])
@@ -335,10 +386,24 @@ func _retry_pack() -> void:
 	get_tree().create_timer(delay, true).timeout.connect(fetch_pack.bind(_pack_url))
 
 
-## Surveille le téléchargement en cours : sans un octet reçu pendant PACK_STALL secondes, il est relancé. Une image
-## compte au plus une demi-seconde : le chargement d'un lieu, qui bloque l'image, ne passe pas pour un blocage.
+## Suit le téléchargement en cours. Sans un octet reçu pendant PACK_STALL secondes, il est relancé. Une image compte au
+## plus une demi-seconde : le chargement d'un lieu, qui bloque l'image, ne passe pas pour un blocage.
 func _process(delta: float) -> void:
-	var bytes := _http.get_downloaded_bytes()
+	var bytes := 0
+	if OS.has_feature("web"):
+		var state := int(JavaScriptBridge.eval(WEB_STATE % "state", true))
+		if state == 2:
+			set_process(false)
+			var body: Variant = JavaScriptBridge.eval(WEB_TAKE, true)
+			_store_pack(body if body is PackedByteArray else PackedByteArray())
+			return
+		if state < 0:
+			push_warning("Musique : %s non reçu (%s)" % [_pack_url, JavaScriptBridge.eval(WEB_STATE % "error", true)])
+			_retry_pack()
+			return
+		bytes = int(JavaScriptBridge.eval(WEB_STATE % "received", true))
+	else:
+		bytes = _http.get_downloaded_bytes()
 	if bytes != _pack_bytes:
 		_pack_bytes = bytes
 		_pack_idle = 0.0
@@ -346,7 +411,10 @@ func _process(delta: float) -> void:
 	_pack_idle += minf(delta, 0.5)
 	if _pack_idle >= PACK_STALL:
 		push_warning("Musique : %s ne reçoit plus rien" % _pack_url)
-		_http.cancel_request()
+		if OS.has_feature("web"):
+			JavaScriptBridge.eval("window.__codequestMusique.abort.abort()", true)
+		else:
+			_http.cancel_request()
 		_retry_pack()
 
 
