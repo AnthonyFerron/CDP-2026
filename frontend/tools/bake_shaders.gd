@@ -12,7 +12,9 @@ extends SceneTree
 ## ponctuelles) : deux lieux éclairés de la même façon compilent les mêmes programmes.
 ##
 ## À relancer après l'ajout d'un matériau, d'un shader ou d'un lieu :
-##   cd frontend && godot --headless --path . --script res://tools/bake_shaders.gd
+##   cd frontend && godot --headless --fixed-fps 60 --path . --script res://tools/bake_shaders.gd
+## --fixed-fps 60 rend le relevé indépendant de la charge de la machine : certains lieux préparent leur décor au fil
+## du temps (regroupement du hub), et le relevé se fait au bout de SETTLE_FRAMES images.
 ## Avec « -- --check », rien n'est écrit : le script compare le fichier au calcul, et sort en erreur s'ils diffèrent.
 
 const PATH := "res://assets/shader_warm_list.tres"
