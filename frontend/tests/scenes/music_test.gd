@@ -26,6 +26,7 @@ func _run() -> void:
 	motion.relative = Vector2(5, 0)
 	Input.parse_input_event(motion)
 	await wait(3)
+	await settle()
 	check("un mouvement de souris ne compte pas comme un geste", not music.is_playing())
 	var click := InputEventMouseButton.new()
 	click.button_index = MOUSE_BUTTON_LEFT
@@ -33,10 +34,12 @@ func _run() -> void:
 	click.position = Vector2(4, 4)
 	Input.parse_input_event(click)
 	await wait(2)
+	await settle()
 	click = click.duplicate()
 	click.pressed = false
 	Input.parse_input_event(click)
 	await wait(8)
+	await settle()
 	_check_track("menu principal, apres le premier clic", &"menu")
 	# Fondu d'entrée : le volume monte en 1,5 s jusqu'au gain de la piste.
 	var player: AudioStreamPlayer = music.active_player()
@@ -59,11 +62,14 @@ func _run() -> void:
 	await wait(10)
 	_check_track("hub dehors apres la sortie du bunker", &"hub")
 	var hub_player: AudioStreamPlayer = music.active_player()
+	var hub_playback := hub_player.get_stream_playback()
 	var position := hub_player.get_playback_position()
 	await level._travel(true)
 	await level._travel(false)
 	await wait(10)
-	check("le thème du hub continue d'une porte du bunker a l'autre", music.active_player() == hub_player and hub_player.get_playback_position() > position)
+	var advanced: bool = await _advances(hub_player, position)
+	check("le thème du hub continue d'une porte du bunker a l'autre (%.3f s, puis %.3f s)" % [position, hub_player.get_playback_position()],
+		_same_playback(hub_player, hub_playback) and advanced)
 
 	# Chaque lieu a sa piste ; revenir dans le même lieu ne la relance pas.
 	for zone: StringName in state.ZONE_ORDER:
@@ -71,11 +77,14 @@ func _run() -> void:
 		await wait(30)
 		_check_track(String(zone), zone)
 	var village_player: AudioStreamPlayer = music.active_player()
+	var village_playback := village_player.get_stream_playback()
 	await wait(30)
 	position = village_player.get_playback_position()
 	change_scene_to_file(state.ZONE_SCENES[&"village"])
 	await wait(30)
-	check("le village rechargé ne relance pas sa piste", music.active_player() == village_player and village_player.get_playback_position() > position)
+	advanced = await _advances(village_player, position)
+	check("le village rechargé ne relance pas sa piste (%.3f s, puis %.3f s)" % [position, village_player.get_playback_position()],
+		_same_playback(village_player, village_playback) and advanced)
 
 	# Bonne fin : la victoire joue pendant la cinématique, puis en boucle pendant l'épilogue au hub.
 	for zone: StringName in state.ZONE_ORDER:
@@ -116,8 +125,10 @@ func _run() -> void:
 	state.erupted.connect(note, CONNECT_ONE_SHOT)
 	state.time_left = 0.05
 	var defeat_player: AudioStreamPlayer
-	var deadline := Time.get_ticks_msec() + 45000
-	while Time.get_ticks_msec() < deadline:
+	# Limite en temps de jeu (45 s d'images physiques), comme la cinématique et ses minuteries : sur un serveur
+	# chargé, le jeu tourne moins vite que l'horloge, et le chargement du hub puis du menu bloque l'image.
+	var deadline := Engine.get_physics_frames() + 45 * Engine.physics_ticks_per_second
+	while Engine.get_physics_frames() < deadline:
 		await process_frame
 		note.call()
 		var track: StringName = music.current_track()
@@ -130,6 +141,22 @@ func _run() -> void:
 	check("eruption : arret, defaite, puis menu (%s)" % [heard], heard == [&"plaine", &"arret", &"defaite", &"menu"])
 	_check_track("menu principal apres l'eruption", &"menu")
 	finish()
+
+
+## La piste continue sans être relancée : le même lecteur reste actif, et il joue toujours la même lecture. play() et
+## seek() en créeraient une nouvelle (get_stream_playback), même si la position repartait au-delà de l'ancienne.
+func _same_playback(player: AudioStreamPlayer, playback: AudioStreamPlayback) -> bool:
+	return music.active_player() == player and player.playing and player.get_stream_playback() == playback
+
+
+## Vrai quand la position de lecture dépasse position. Le mélangeur tourne sur son propre fil, à l'horloge : sur un
+## serveur chargé, il peut ne rien mélanger pendant quelques secondes (position figée à 0,096 s pendant les deux
+## fondus d'une porte du bunker à l'autre), sans que la piste soit relancée. On lui laisse 10 s pour avancer.
+func _advances(player: AudioStreamPlayer, position: float) -> bool:
+	var deadline := Time.get_ticks_msec() + 10000
+	while player.get_playback_position() <= position and Time.get_ticks_msec() < deadline:
+		await process_frame
+	return player.get_playback_position() > position
 
 
 func _check_track(where: String, track: StringName) -> void:
