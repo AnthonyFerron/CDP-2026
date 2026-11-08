@@ -133,6 +133,13 @@ la qualité tout seul, sur le web seulement (en natif : option `--qualite-auto` 
 
 Test : `tests/scenes/quality_test.gd -- --qualite-auto` (dans `run_all.sh`), images lentes simulées par `forced_ms`.
 
+Village (8 novembre) : au cran 0, le sol s'éclairait par taches à moins de 10 m de la caméra, et semblait donc plus
+sombre aux crans 4 à 6. Le soleil, à 12,6°, jette des ombres de 45 à 60 m (talus, arbres, maisons), et la carte
+d'ombre de chaque découpe ne garde que les objets à moins de `directional_shadow_pancake_size` (20 m par défaut) :
+la première découpe les perdait. Avec 60 m, les crans 0 et 4 donnent la même image. Aux crans 5 et 6, sans ombre,
+le soleil passe dans la passe de base du rendu Compatibility : il y éclaire un peu moins que dans sa passe d'ombre
+additive (murs plus orangés), et éclaire tout le sol. Voir `agents/village/PROBLEMES.md`, n° 42.
+
 ## Livraison web
 
 - `frontend/Dockerfile` : `.wasm`, `.pck`, `.js` et `.html` du jeu compressés au build, en brotli 9 et gzip 9 :
