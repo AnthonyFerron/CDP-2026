@@ -158,17 +158,17 @@ Captures et journaux : `mesures/ch_prod_1/`, `mesures/wk_prod_1/` et `mesures/ff
 
 ### Variante avec sonde : temps exacts
 
-| | Chromium 156, sans écran | Chromium 156, fenêtre | WebKit 27.2, sans écran | WebKit 27.2, fenêtre | Firefox 157, fenêtre |
-| --- | --- | --- | --- | --- | --- |
-| Menu affiché | 4,2 s | 6,6 s | 4,6 s | 4,3 s | 5,3 s |
-| `musique.pck` monté | 4,7 s | 8,1 s | 5,9 s | 5,8 s | 8,0 s |
-| Bunker : scène | 12,9 s | 7,5 s | 12,7 s | 14,8 s | plantage |
-| Bunker : prête | 24,4 s | 21,2 s | 17,0 s | 18,9 s | |
-| Plaine : scène | 47,9 s | non valable (affichage perdu) | 19,9 s | 16,9 s | |
-| Plaine : prête | 139,9 s | non valable | 25,1 s | 20,7 s | |
+| | Chromium 156, sans écran | Chromium 156, sans écran, export final | Chromium 156, fenêtre | WebKit 27.2, sans écran | WebKit 27.2, fenêtre | Firefox 157, fenêtre |
+| --- | --- | --- | --- | --- | --- | --- |
+| Menu affiché | 4,2 s | 4,3 s | 6,6 s | 4,6 s | 4,3 s | 5,3 s |
+| `musique.pck` monté | 4,7 s | 4,7 s | 8,1 s | 5,9 s | 5,8 s | 8,0 s |
+| Bunker : scène | 12,9 s | 8,6 s | 7,5 s | 12,7 s | 14,8 s | plantage |
+| Bunker : prête | 24,4 s | 19,0 s | 21,2 s | 17,0 s | 18,9 s | |
+| Plaine : scène | 47,9 s | 19,1 s | non valable (affichage perdu) | 19,9 s | 16,9 s | |
+| Plaine : prête | 139,9 s | 69,7 s | non valable | 25,1 s | 20,7 s | |
 
 - Le menu et le second paquet arrivent dans les mêmes temps dans les trois navigateurs : quelques secondes, surtout la compilation de `index.wasm` et le démarrage du moteur.
-- Les chargements de lieux varient du simple au triple d'un passage à l'autre dans Chromium sans écran (Plaine : 140 s ici, alors que le serveur était chargé par d'autres mesures). Ils ne disent rien de l'écart entre navigateurs sur un vrai PC.
+- Les chargements de lieux varient du simple au double d'un passage à l'autre dans Chromium sans écran (Plaine prête en 140 s, puis en 70 s, selon la charge du serveur). Ils ne disent rien de l'écart entre navigateurs sur un vrai PC.
 - Firefox, sur ce banc, plante avant le bunker (voir plus haut).
 
 Captures et journaux : `mesures/ch_sonde_2/` (sans écran), `mesures/ch_sonde_1/` (fenêtre), `mesures/wk_sonde_2/`, `mesures/wk_sonde_3/`, `mesures/ff_sonde_6/` (llvmpipe) et `mesures/ff_softpipe/` (softpipe).
