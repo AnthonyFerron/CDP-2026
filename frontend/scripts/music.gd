@@ -276,12 +276,15 @@ func fetch_pack(url: String) -> void:
 		_http.accept_gzip = false
 		# Jusqu'à 1 Mo lu par image (64 Ko par défaut) : le téléchargement suit le réseau, même à faible cadence.
 		_http.download_chunk_size = 1 << 20
+		# Le corps arrive en mémoire, et _on_pack_downloaded l'écrit : pas de download_file. Sur le web, la réponse n'a
+		# jamais de longueur connue, et HTTPRequest efface alors le fichier reçu juste avant de signaler la fin (Godot
+		# 4.7, scene/main/http_request.cpp : download_complete n'est posé que si la longueur est connue).
 		_http.request_completed.connect(_on_pack_downloaded)
 		add_child(_http)
-	var folder := OS.get_cache_dir()
+	# Hors du web (tests seulement), dans user://.
+	var folder := OS.get_cache_dir() if OS.has_feature("web") else OS.get_user_data_dir()
 	DirAccess.make_dir_recursive_absolute(folder)
 	_pack_path = folder.path_join(PACK_FILE)
-	_http.download_file = _pack_path
 	_pack_bytes = 0
 	_pack_idle = 0.0
 	if _http.request(url) == OK:
@@ -306,12 +309,21 @@ func load_pack(path: String) -> bool:
 	return true
 
 
-func _on_pack_downloaded(result: int, code: int, _headers: PackedStringArray, _body: PackedByteArray) -> void:
+func _on_pack_downloaded(result: int, code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
 	set_process(false)
 	if result != HTTPRequest.RESULT_SUCCESS or code != 200:
 		push_warning("Musique : %s non reçu (résultat %d, code HTTP %d)" % [_pack_url, result, code])
 		_retry_pack()
-	elif not load_pack(_pack_path):
+		return
+	var file := FileAccess.open(_pack_path, FileAccess.WRITE)
+	if not file:
+		push_warning("Musique : impossible d'écrire %s (%s)" % [_pack_path, error_string(FileAccess.get_open_error())])
+		_retry_pack()
+		return
+	file.store_buffer(body)
+	var written := file.get_error() == OK
+	file.close()
+	if not written or not load_pack(_pack_path):
 		_retry_pack()
 
 
