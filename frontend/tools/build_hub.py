@@ -1579,33 +1579,79 @@ def build_landmarks(scene, rng):
     furniture(scene, "nature_kit/statue_obelisk", (-45.0, 0.0, -36.0), 0.0, 3.4, height=3.0)
 
 
+# Mine d'argent : entrée de la galerie, dans un tertre de falaise au pied des montagnes du nord-est. Repère de l'entrée :
+# MINE_MOUTH au ras de la façade, u le long de la façade (vers la droite quand on regarde l'entrée), v vers le dehors ;
+# la façade regarde le bout de la ruelle de la mine (hub_terrain.gd : ALLEYS, 79,5 ; -38).
+MINE_MOUTH = (82.6, -39.6)
+MINE_YAW = -60.0
+# Côté des blocs de falaise (nature_kit, cubes de 1 m), et enfoncement dans le sol, qui reste plat sur le replat de la
+# mine (LANDMARKS de hub_terrain.gd : 84, -40, rayon 13).
+MINE_BLOCK = 4.0
+MINE_SINK = 0.3
+# Profondeur de la façade percée (cliff_cave_rock : face avant à z = 0,5, face arrière à z = 0,33), et fond de la galerie,
+# bouché par l'éboulis : le boisage et les planches tiennent entre les deux.
+MINE_FACADE = 0.17 * MINE_BLOCK
+MINE_BACK = 2.4
+
+
+def mine_at(u, v, y=0.0):
+    c, s = math.cos(math.radians(MINE_YAW)), math.sin(math.radians(MINE_YAW))
+    return (MINE_MOUTH[0] + c * u + s * v, y, MINE_MOUTH[1] - s * u + c * v)
+
+
+def mine_box(scene, u0, u1, v0, v1, y0, y1):
+    """Collision d'un pavé du tertre, donné dans le repère de l'entrée."""
+    scene.add_box(mine_at((u0 + u1) / 2, (v0 + v1) / 2, (y0 + y1) / 2), (u1 - u0, y1 - y0, v1 - v0), MINE_YAW)
+
+
 def build_mine(scene, rng):
-    """Mine d'argent au pied des montagnes, au nord-est : galerie boisée sous un tertre de roche, effondrée."""
-    mx, mz = 86.0, -42.0
-    # Tertre de roche autour de l'entrée, qui regarde le village : deux étages de gros blocs.
-    for index in range(12):
-        angle = math.radians(-20 + index * 30)
-        if index in (5, 6):
-            continue
-        for ring, (radius, y, scale) in enumerate(((7.0, 0.0, 8.0), (4.0, 3.2, 8.5))):
-            x, z = mx + 2.0 + math.cos(angle) * radius, mz - 2.0 + math.sin(angle) * radius
-            scene.add("castle_kit/rocks-large", (x, y, z), rng.uniform(0, 360), scale * rng.uniform(0.9, 1.1))
-        x, z = mx + 2.0 + math.cos(angle) * 7.0, mz - 2.0 + math.sin(angle) * 7.0
-        scene.add_box((x, 2.4, z), (5.0, 4.8, 5.0))
-    scene.add("castle_kit/rocks-large", (mx + 2.0, 5.6, mz - 2.0), 30.0, 9.0)
-    scene.add_box((mx + 2.0, 3.0, mz - 2.0), (8.0, 6.0, 8.0))
-    # Boisage de l'entrée, sous le tertre, et l'éboulis qui la bouche.
-    for offset in (0.0, 1.6):
-        furniture(scene, "mini_dungeon/wood-structure", (mx - 2.6 + offset, 0.0, mz + 2.6 - offset), -45.0, 4.6, height=4.6)
-    scene.add_box((mx - 1.6, 2.3, mz + 1.6), (5.0, 4.6, 1.4), -45.0)
-    for x, z in ((mx - 2.2, mz + 2.2), (mx - 1.2, mz + 1.4), (mx - 3.0, mz + 1.6)):
-        furniture(scene, "survival_kit/resource-stone-large", (x, 0.0, z), rng.uniform(0, 360), 6.0, height=0.9)
-    # Chariot de minerai renversé, outils et caisses abandonnés devant.
-    furniture(scene, "fantasy_town_kit/cart", (mx - 9.0, 0.0, mz + 6.5), 30.0, 2.6, height=1.4, roll=90.0)
-    for x, z, yaw in ((mx - 5.0, mz + 7.0, 20.0), (mx - 6.0, mz + 8.0, 70.0)):
-        furniture(scene, "survival_kit/tool-pickaxe", (x, 0.0, z), yaw, 4.0, tilt=90.0)
-    for x, z in ((mx - 9.5, mz + 2.0), (mx - 9.0, mz + 3.4)):
-        furniture(scene, "survival_kit/box-large", (x, 0.0, z), 30.0, 3.6, height=0.9)
+    """Mine d'argent au pied des montagnes, au nord-est : l'entrée d'une galerie creusée dans un tertre de falaise, son
+    boisage, et des planches clouées en travers par ordre du roi Codeon V ; derrière, l'éboulis de la guerre."""
+    size, sink = MINE_BLOCK, MINE_SINK
+    top = size - sink
+    block = "nature_kit/cliff_block_stone"
+    # Cœur du tertre : la façade de pierre taillée, percée de l'entrée, puis la galerie, entre deux parois et jusqu'au
+    # bloc du fond. Les rochers l'habillent ; seule la façade reste à nu.
+    scene.add("nature_kit/cliff_cave_stone", mine_at(0.0, -size / 2, -sink), MINE_YAW, size)
+    gallery = MINE_BACK - MINE_FACADE
+    for u in (-size / 2 - 0.3, size / 2 + 0.3):
+        scene.add(block, mine_at(u, -MINE_FACADE - gallery / 2, -sink), MINE_YAW, (0.6, size, gallery))
+    depth = 1.5 * size - MINE_BACK
+    scene.add(block, mine_at(0.0, -MINE_BACK - depth / 2, -sink), MINE_YAW, (size, size, depth))
+    # Collisions du cœur : blocs pleins, galerie fermée au droit des planches, montants de la façade.
+    half = size * 1.5
+    mine_box(scene, -half, -size / 2, -size, 0.0, 0.0, top)
+    mine_box(scene, size / 2, half, -size, 0.0, 0.0, top)
+    mine_box(scene, -size / 2, size / 2, -1.5 * size, -MINE_FACADE - 0.05, 0.0, top)
+    for u0, u1 in ((-size / 2, -0.4 * size), (0.4 * size, size / 2)):
+        mine_box(scene, u0, u1, -MINE_FACADE - 0.05, 0.0, 0.0, top)
+    # Rochers du tertre, comme celui du bunker voisin : deux qui encadrent la façade, puis les flancs et le dos, tous
+    # posés au sol avec leur collision ; la crête repose sur le cœur, au-dessus de la façade, hors d'atteinte.
+    for u, v, yaw, scale in ((-5.6, 0.0, 15.0, 6.0), (5.6, -0.2, -30.0, 6.0), (-7.4, -5.4, 60.0, 7.5), (7.4, -5.6, -50.0, 7.5),
+                             (-3.4, -9.6, 100.0, 8.0), (3.8, -9.2, 160.0, 8.0)):
+        scene.add("castle_kit/rocks-large", mine_at(u, v, -0.4), MINE_YAW + yaw, scale)
+        scene.add_box(mine_at(u, v, 1.2), (0.55 * 1.2 * scale, 2.4, 0.55 * 1.35 * scale), MINE_YAW + yaw)
+    scene.add("castle_kit/rocks-large", mine_at(-0.2, -3.0, top), MINE_YAW + 10.0, 5.5)
+    # Boisage de la galerie : un cadre juste derrière la façade, un autre au fond, à moitié pris dans l'éboulis.
+    furniture(scene, "mini_dungeon/wood-support", mine_at(0.0, -MINE_FACADE - 0.4), MINE_YAW, 2.7)
+    furniture(scene, "mini_dungeon/wood-support", mine_at(0.1, -MINE_BACK + 0.35), MINE_YAW, 2.5)
+    # Éboulis qui bouche la galerie, contre le bloc du fond.
+    furniture(scene, "mini_dungeon/rocks", mine_at(0.0, -MINE_BACK + 0.6), MINE_YAW + 15.0, (2.4, 4.4, 1.1))
+    furniture(scene, "mini_dungeon/stones", mine_at(-0.7, -MINE_BACK + 1.05), MINE_YAW + 40.0, 1.2)
+    # Planches clouées en travers sur le premier cadre, et l'écriteau de l'ordre du roi.
+    for y, roll in ((0.25, 0.0), (0.95, 0.0), (1.65, 0.0)):
+        furniture(scene, "fantasy_town_kit/planks-half", mine_at(0.0, -MINE_FACADE - 0.06, y), MINE_YAW + 90.0,
+                  (1.0, 1.0, 3.6), tilt=0.0, roll=90.0)
+    scene.board("MineOrder", mine_at(0.0, -MINE_FACADE - 0.03), MINE_YAW,
+                "Fermée par ordre\ndu roi Codeon V", style=0, mount=1, size=(1.15, 0.5), height=1.3, line=0.1)
+    # Devant l'entrée : le wagonnet du minerai, ses outils et des caisses abandonnés.
+    furniture(scene, "fantasy_town_kit/cart", mine_at(-4.2, 5.0), MINE_YAW + 75.0, 2.6, height=1.4)
+    for x, z, yaw, model in ((-2.4, 4.4, 20.0, "survival_kit/tool-pickaxe"), (-2.8, 6.0, 75.0, "survival_kit/tool-shovel")):
+        furniture(scene, model, mine_at(x, z), MINE_YAW + yaw, 4.0, tilt=90.0)
+    furniture(scene, "survival_kit/box-large", mine_at(5.0, 5.0), MINE_YAW + 10.0, 3.6, height=0.9)
+    furniture(scene, "survival_kit/box-large", mine_at(5.6, 6.3), MINE_YAW - 15.0, 3.6, height=0.9)
+    # Déblais tirés de la galerie, en tas sur le côté.
+    furniture(scene, "mini_dungeon/stones", mine_at(-7.0, 4.6), MINE_YAW + 70.0, 2.6, height=0.9)
 
 
 # ---------------------------------------------------------------------------------------------------------------

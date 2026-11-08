@@ -37,7 +37,7 @@ Chaque ligne se vérifie : marche (grille `walk_grid.gd`, audit `hub_audit.gd`),
 
 ## Lieux du pourtour (meublés, enseigne SignBoard sous un Readable)
 - École (2), taverne (1), chapelle (3) et cimetière, mémorial (Readable, inscription sur l'obélisque), forge (1), ferme (2) et champ, enclos, foin.
-- Mine d'argent (tertre, boisage, éboulis, chariot, outils, caisses), panneau.
+- Mine d'argent, refaite le 8 novembre : façade de pierre taillée percée de l'entrée (nature_kit cliff_cave_stone) dans un tertre de rochers posés au sol, boisage de la galerie, planches clouées en travers avec l'écriteau « Fermée par ordre du roi Codeon V », éboulis au fond ; wagonnet, outils, caisses et déblais devant ; panneau.
 - Boulangerie (1), moulin (2) et sa roue dans le courant (2), lavoir (1), écuries royales et enclos (2), caserne et cour d'entraînement (3), herboristerie et jardin des simples (3), scriptorium (4), observatoire du Mont Sam Altan (4), halle du marché (2), verger du roi (2).
 
 ## Jardin du roi
