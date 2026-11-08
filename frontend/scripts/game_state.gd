@@ -117,11 +117,21 @@ func _isolate_test_saves() -> void:
 	if get_tree().get_script() == null:
 		return
 	for name in DirAccess.get_directories_at(TEST_SAVE_DIR):
-		if name.is_valid_int() and not OS.is_process_running(name.to_int()):
+		if name.is_valid_int() and not _process_exists(name.to_int()):
 			_remove_dir(TEST_SAVE_DIR + name + "/")
 	_save_dir = TEST_SAVE_DIR + "%d/" % OS.get_process_id()
 	DirAccess.make_dir_recursive_absolute(_save_dir)
 	_save_path = profile_save_path("")
+
+
+## Le processus existe-t-il encore ? Sous Linux, on regarde /proc : OS.is_process_running ne connaît que les
+## processus fils, et affichait une erreur (_check_pid_is_running) pour chaque test lancé par un autre processus.
+func _process_exists(pid: int) -> bool:
+	if pid == OS.get_process_id():
+		return true
+	if OS.get_name() == "Linux":
+		return DirAccess.dir_exists_absolute("/proc/%d" % pid)
+	return OS.is_process_running(pid)
 
 
 func _remove_dir(path: String) -> void:
