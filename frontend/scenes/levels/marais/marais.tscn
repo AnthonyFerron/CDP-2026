@@ -61,6 +61,7 @@
 [ext_resource type="Script" path="res://scenes/levels/marais/marais_life.gd" id="59_life"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/fish-large.glb" id="60_fish"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/lantern-candle.glb" id="61_hanging_lantern"]
+[ext_resource type="Resource" path="res://scenes/levels/marais/marais_bake.res" id="62_bake"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_night"]
 sky_top_color = Color(0.03, 0.045, 0.07, 1)
@@ -329,6 +330,7 @@ directional_shadow_max_distance = 50.0
 [node name="Terrain" type="StaticBody3D" parent="."]
 script = ExtResource("2_terrain")
 ground_material = SubResource("ShaderMaterial_ground")
+bake = ExtResource("62_bake")
 
 [node name="Water" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_water")

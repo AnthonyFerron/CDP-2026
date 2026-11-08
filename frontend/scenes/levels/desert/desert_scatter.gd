@@ -23,6 +23,12 @@ extends Node3D
 @export var bone_count := 48
 ## Distance à laquelle les petits détails disparaissent.
 @export var detail_range := 70.0
+## Cactus, rochers et ruines dispersés calculés d'avance (tools/bake_lieux.gd, desert_bake.res) : positions et
+## collisions. Sans eux, ou s'ils ne correspondent plus aux réglages ou au sol, ils sont calculés au chargement.
+@export var bake: LevelBake
+
+## Nom du décor dans le calcul d'avance du lieu.
+const BAKE_PART := "desert/decor"
 
 ## Épaves de machines de siège, sans toit (catapulte, baliste, trébuchet) : position (x, z) et échelle.
 ## Leur cap est tiré au hasard ; elles sont à moitié ensablées.
@@ -92,16 +98,67 @@ func _ready() -> void:
 	# Le terrain se construit avant ses voisins : il faut ses hauteurs pour poser le décor.
 	if not terrain.is_node_ready():
 		await terrain.ready
+	var signature := LevelBake.signature_of(self, [LevelBake.signature_of(terrain)])
+	var scripts: Array[Script] = [get_script(), terrain.get_script()]
+	var plan: Variant = bake.data(BAKE_PART, signature, scripts) if bake and terrain.baked else null
+	if plan == null:
+		plan = _plan()
+		LevelBake.record(BAKE_PART, signature, scripts, plan)
 	_rng.seed = 5814
-	# Rayons de collision à l'échelle 1 : tige des cactus, corps des rochers, colonnes et briques couchées.
-	_scatter(cactus_models, cactus_count, Vector2(3.0, 5.0), true, 0.17, false, CACTUS_HEIGHTS)
-	_scatter(rock_models, rock_count, Vector2(2.0, 5.0), true, 0.3, false, ROCK_HEIGHTS)
-	_scatter(ruin_models, ruin_count, Vector2(2.5, 3.5), true, 0.32, true)
+	_rng.state = plan[3]
+	var model_lists: Array = [cactus_models, rock_models, ruin_models]
+	for index in model_lists.size():
+		_build(model_lists[index], plan[index])
 	_add_wrecks()
 	_add_props()
 	_add_bones()
 	_add_border_rocks()
 	_add_quicksands()
+
+
+## Ce que le décor calculait au chargement : pour les cactus, les rochers et les ruines, les formes de collision
+## ([genre, mesure, Transform3D], voir _build) et les copies de chaque modèle (une liste de Transform3D par modèle),
+## puis l'état du tirage, que la suite du décor reprend. C'est la partie lente, calculée d'avance par
+## tools/bake_lieux.gd.
+func _plan() -> Array:
+	_rng.seed = 5814
+	# Rayons de collision à l'échelle 1 : tige des cactus, corps des rochers, colonnes et briques couchées.
+	var plan := [
+		_scatter(cactus_models, cactus_count, Vector2(3.0, 5.0), true, 0.17, false, CACTUS_HEIGHTS),
+		_scatter(rock_models, rock_count, Vector2(2.0, 5.0), true, 0.3, false, ROCK_HEIGHTS),
+		_scatter(ruin_models, ruin_count, Vector2(2.5, 3.5), true, 0.32, true),
+	]
+	plan.append(_rng.state)
+	return plan
+
+
+## Pose une étape du décor dispersé : son corps et ses formes de collision (enveloppe « convex », boîte « box »,
+## cylindre « cylinder » : rayon et hauteur), puis les copies de chaque modèle.
+func _build(models: Array, step: Array) -> void:
+	var body := StaticBody3D.new()
+	add_child(body)
+	for item: Array in step[0]:
+		var collision := CollisionShape3D.new()
+		match item[0]:
+			"convex":
+				var hull := ConvexPolygonShape3D.new()
+				hull.points = item[1]
+				collision.shape = hull
+			"box":
+				var box := BoxShape3D.new()
+				box.size = item[1]
+				collision.shape = box
+			_:
+				var cylinder := CylinderShape3D.new()
+				cylinder.radius = item[1].x
+				cylinder.height = item[1].y
+				collision.shape = cylinder
+		collision.transform = item[2]
+		body.add_child(collision)
+	for index in models.size():
+		var transforms: Array[Transform3D] = []
+		transforms.assign(step[1][index])
+		_add_multimesh(_load_mesh(models[index]), transforms)
 
 
 ## Point libre : hors de l'esplanade, du chemin et de ses obélisques, de la muraille, des replats du décor,
@@ -129,11 +186,9 @@ func is_free(spot: Vector2, margin: float) -> bool:
 	return Vector2(spot).length() < DesertTerrain.LIMIT_RADIUS - 1.5
 
 
-func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, solid: bool, radius: float, tilted := false, heights: Array[float] = []) -> void:
-	var body: StaticBody3D
-	if solid:
-		body = StaticBody3D.new()
-		add_child(body)
+## Disperse des modèles : rend [formes de collision, copies de chaque modèle] (voir _plan et _build).
+func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, solid: bool, radius: float, tilted := false, heights: Array[float] = []) -> Array:
+	var shapes: Array = []
 	var groups: Array[Array] = []
 	for model in models:
 		groups.append([])
@@ -177,7 +232,6 @@ func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, soli
 			origin.y += 0.3 * scale_factor
 		groups[group].append(Transform3D(basis.scaled(Vector3.ONE * scale_factor), origin))
 		if solid:
-			var collision := CollisionShape3D.new()
 			if tilted and group > 0 and group < hulls.size() and not hulls[group].is_empty():
 				# Tas de briques : un prisme droit sur l'emprise de leur enveloppe, de la base au sommet ; la pleine
 				# enveloppe, en pente douce au pied, laissait une marche de 0,42 m sur la pente d'une dune.
@@ -189,39 +243,24 @@ func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, soli
 					if point.y >= top * 0.15:
 						prism.append(basis * Vector3(point.x, -0.1, point.z) * scale_factor)
 						prism.append(basis * Vector3(point.x, top, point.z) * scale_factor)
-				var prism_shape := ConvexPolygonShape3D.new()
-				prism_shape.points = prism
-				collision.shape = prism_shape
-				collision.position = origin
+				shapes.append(["convex", prism, Transform3D(Basis(), origin)])
 			elif tilted and group < RUIN_BOXES.size() and (group >= hulls.size() or hulls[group].is_empty()):
 				# Faute d'enveloppe, une boîte tournée comme la ruine, sur toute sa longueur.
-				var box := BoxShape3D.new()
-				box.size = RUIN_BOXES[group] * scale_factor
-				collision.shape = box
-				collision.transform = Transform3D(basis, origin + basis * Vector3(0.0, RUIN_BOXES[group].y * 0.5 * scale_factor, 0.0))
+				shapes.append(["box", RUIN_BOXES[group] * scale_factor,
+					Transform3D(basis, origin + basis * Vector3(0.0, RUIN_BOXES[group].y * 0.5 * scale_factor, 0.0))])
 			elif group < hulls.size() and not hulls[group].is_empty():
 				# L'enveloppe du modèle, tournée et mise à l'échelle comme lui : pas de mur invisible autour.
 				var points := PackedVector3Array()
 				var xform := Transform3D(basis.scaled(Vector3.ONE * scale_factor), Vector3.ZERO)
 				for point in hulls[group]:
 					points.append(xform * point)
-				var hull_shape := ConvexPolygonShape3D.new()
-				hull_shape.points = points
-				collision.shape = hull_shape
-				collision.position = origin
+				shapes.append(["convex", points, Transform3D(Basis(), origin)])
 			else:
 				var height := (heights[group] if group < heights.size() else 0.5) * scale_factor + 0.15
-				var shape := CylinderShape3D.new()
-				shape.radius = radius * scale_factor
-				shape.height = height
-				collision.shape = shape
-				collision.position = origin + Vector3.UP * height * 0.5
-			body.add_child(collision)
+				shapes.append(["cylinder", Vector2(radius * scale_factor, height),
+					Transform3D(Basis(), origin + Vector3.UP * height * 0.5)])
 		placed += 1
-	for index in models.size():
-		var transforms: Array[Transform3D] = []
-		transforms.assign(groups[index])
-		_add_multimesh(_load_mesh(models[index]), transforms)
+	return [shapes, groups]
 
 
 func _overlaps(spot: Vector2, reach: float) -> bool:

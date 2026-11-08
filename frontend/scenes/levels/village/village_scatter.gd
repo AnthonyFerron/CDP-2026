@@ -15,6 +15,12 @@ extends Node3D
 @export var border_tree_count := 60
 @export var rock_count := 40
 @export var detail_range := 55.0
+## Positions et collisions du décor calculées d'avance (tools/bake_lieux.gd, village_bake.res). Sans elles, ou si
+## elles ne correspondent plus aux réglages ou au sol, le décor est calculé au chargement, comme avant.
+@export var bake: LevelBake
+
+## Nom du décor dans le calcul d'avance du lieu.
+const BAKE_PART := "village/decor"
 
 ## Côté des cases de détails qui s'effacent au loin, et largeur du fondu, en mètres.
 const CHUNK_SIZE := 32.0
@@ -36,15 +42,55 @@ func _ready() -> void:
 	# Le terrain se construit avant ses voisins : il faut ses hauteurs pour poser le décor.
 	if not terrain.is_node_ready():
 		await terrain.ready
+	var signature := LevelBake.signature_of(self, [LevelBake.signature_of(terrain)])
+	var scripts: Array[Script] = [get_script(), terrain.get_script()]
+	var plan: Variant = bake.data(BAKE_PART, signature, scripts) if bake and terrain.baked else null
+	if plan == null:
+		plan = _plan()
+		LevelBake.record(BAKE_PART, signature, scripts, plan)
+	# Chaque étape : son corps de collision (s'il en a un), ses formes, puis les copies de chaque modèle.
+	var steps: Array = [[grass_models, false, ""], [rubble_models, false, ""], [tree_models, true, ""],
+		[rock_models, true, ""], [tree_models, true, "BorderTrees"]]
+	for index in steps.size():
+		_build(steps[index][0], plan[index], steps[index][1], steps[index][2])
+
+
+## Ce que le décor calculait au chargement : pour chaque étape (herbes, gravats, arbres, rochers, arbres de la
+## bordure), les formes de collision ([points, origine]) et les copies de chaque modèle (une liste de Transform3D par
+## modèle). C'est la partie lente, calculée d'avance par tools/bake_lieux.gd.
+func _plan() -> Array:
 	_rng.seed = 5815
-	_scatter(grass_models, grass_count, Vector2(2.5, 4.5), 0.0, false)
-	# Sans collision, les gravats restent sous la cheville (0,3 m au plus) : on marche dessus sans les traverser.
-	_scatter(rubble_models, rubble_count, Vector2(0.45, 0.6), 0.0, false)
-	# Les arbres et les rochers ont la collision de ce qu'on en touche : le tronc, mais aussi les branches basses des
-	# pins et le feuillage des arbres grêles, à hauteur de tête.
-	_scatter(tree_models, tree_count, Vector2(3.5, 5.5), true, true)
-	_scatter(rock_models, rock_count, Vector2(2.0, 4.0), true, true, true)
-	_add_border_trees()
+	return [
+		_scatter(grass_models, grass_count, Vector2(2.5, 4.5), 0.0, false),
+		# Sans collision, les gravats restent sous la cheville (0,3 m au plus) : on marche dessus sans les traverser.
+		_scatter(rubble_models, rubble_count, Vector2(0.45, 0.6), 0.0, false),
+		# Les arbres et les rochers ont la collision de ce qu'on en touche : le tronc, mais aussi les branches basses des
+		# pins et le feuillage des arbres grêles, à hauteur de tête.
+		_scatter(tree_models, tree_count, Vector2(3.5, 5.5), true, true),
+		_scatter(rock_models, rock_count, Vector2(2.0, 4.0), true, true, true),
+		_add_border_trees(),
+	]
+
+
+## Pose une étape du décor : son corps et ses formes de collision, puis les copies de chaque modèle. Les copies des
+## modèles solides restent toujours visibles ; les autres s'effacent au loin, case par case.
+func _build(models: Array[PackedScene], step: Array, solid: bool, body_name: String) -> void:
+	if solid:
+		var body := StaticBody3D.new()
+		if not body_name.is_empty():
+			body.name = body_name
+		add_child(body)
+		for item: Array in step[0]:
+			var shape := ConvexPolygonShape3D.new()
+			shape.points = item[0]
+			var collision := CollisionShape3D.new()
+			collision.shape = shape
+			collision.position = item[1]
+			body.add_child(collision)
+	for index in models.size():
+		var transforms: Array[Transform3D] = []
+		transforms.assign(step[1][index])
+		_add_multimesh(_load_mesh(models[index]), transforms, solid)
 
 
 func _is_free(spot: Vector2, outside_town: bool) -> bool:
@@ -62,13 +108,10 @@ func _is_free(spot: Vector2, outside_town: bool) -> bool:
 	return true
 
 
-## Disperse des modèles, avec ou sans collision.
+## Disperse des modèles, avec ou sans collision : rend [formes de collision, copies de chaque modèle] (voir _plan).
 func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, solid: bool, outside_town: bool,
-		climbable := false) -> void:
-	var body: StaticBody3D
-	if solid:
-		body = StaticBody3D.new()
-		add_child(body)
+		climbable := false) -> Array:
+	var shapes: Array = []
 	var meshes: Array[Mesh] = []
 	var groups: Array[Array] = []
 	for model in models:
@@ -91,19 +134,15 @@ func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, soli
 		if kept:
 			groups[placed % groups.size()].append(Transform3D(basis, origin))
 		if solid and kept:
-			_add_solid(body, meshes[placed % meshes.size()], Transform3D(basis, origin), climbable)
+			_add_solid(shapes, meshes[placed % meshes.size()], Transform3D(basis, origin), climbable)
 		placed += 1
-	for index in models.size():
-		var transforms: Array[Transform3D] = []
-		transforms.assign(groups[index])
-		_add_multimesh(meshes[index], transforms, solid)
+	return [shapes, groups]
 
 
-func _add_border_trees() -> void:
+## Arbres de la bordure, sur le talus : rend [formes de collision, copies de chaque modèle] (voir _plan).
+func _add_border_trees() -> Array:
 	# Le joueur peut gravir le talus : les arbres de la bordure ont aussi leur collision au tronc.
-	var body := StaticBody3D.new()
-	body.name = "BorderTrees"
-	add_child(body)
+	var shapes: Array = []
 	var meshes: Array[Mesh] = []
 	var groups: Array[Array] = []
 	for model in tree_models:
@@ -118,20 +157,17 @@ func _add_border_trees() -> void:
 		var basis := Basis(Vector3.UP, yaw).scaled(Vector3.ONE * scale_factor)
 		var origin := Vector3(spot.x, terrain.footing_height(spot.x, spot.y) - 0.1, spot.y)
 		groups[i % groups.size()].append(Transform3D(basis, origin))
-		_add_solid(body, meshes[i % meshes.size()], Transform3D(basis, origin))
-	for index in tree_models.size():
-		var transforms: Array[Transform3D] = []
-		transforms.assign(groups[index])
-		_add_multimesh(meshes[index], transforms, true)
+		_add_solid(shapes, meshes[i % meshes.size()], Transform3D(basis, origin))
+	return [shapes, groups]
 
 
-## Collision d'un arbre ou d'un rocher posé par placement : l'emprise de sa forme entre ANKLE et TOUCH_HEIGHT au-dessus
+## Collision d'un arbre ou d'un rocher posé par placement, ajoutée à shapes ([points, origine]) : l'emprise de sa forme entre ANKLE et TOUCH_HEIGHT au-dessus
 ## du sol (ses triangles coupés à ces deux hauteurs), dressée en colonne. Un cylindre au tronc laissait entrer dans les
 ## branches basses des pins, qui tombent jusqu'au sol, et dans le feuillage des arbres grêles ; plus large, il aurait
 ## fait des murs invisibles. Les hauteurs se mesurent au-dessus du sol sous chaque sommet : sur le talus, la couronne
 ## d'un grand arbre passe haut au-dessus du joueur qui descend, et les branches basses tournées vers le replat restent
 ## à hauteur d'homme. Un rocher (climbable) garde sa forme au-dessus de la cheville, sans colonne : on y grimpe.
-func _add_solid(body: StaticBody3D, mesh: Mesh, placement: Transform3D, climbable := false) -> void:
+func _add_solid(shapes: Array, mesh: Mesh, placement: Transform3D, climbable := false) -> void:
 	if not _vertices.has(mesh):
 		_vertices[mesh] = mesh.get_faces()
 	var faces: PackedVector3Array = _vertices[mesh]
@@ -176,12 +212,7 @@ func _add_solid(body: StaticBody3D, mesh: Mesh, placement: Transform3D, climbabl
 					_add_column(points, a.lerp(b, weight), lerpf(grounds[side], grounds[next], weight))
 	if points.size() < 8:
 		return
-	var shape := ConvexPolygonShape3D.new()
-	shape.points = points
-	var collision := CollisionShape3D.new()
-	collision.shape = shape
-	collision.position = placement.origin
-	body.add_child(collision)
+	shapes.append([points, placement.origin])
 
 
 ## Point d'un rocher et son aplomb sous le sol.

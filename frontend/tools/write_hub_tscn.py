@@ -61,6 +61,8 @@ EXT = [
     ("Script", "res://scenes/levels/hub/hub_river.gd", "52_river"),
     ("Shader", "res://scenes/levels/hub/hub_water.gdshader", "53_water"),
     ("Script", "res://scenes/levels/hub/hub_sounds.gd", "54_sounds"),
+    # Sol et décor dispersé calculés d'avance (tools/bake_lieux.gd).
+    ("Resource", "res://scenes/levels/hub/hub_bake.res", "55_bake"),
 ]
 
 
@@ -890,7 +892,8 @@ def main():
         "light_color = Color(1, 0.9, 0.78, 1)", "light_energy = 0.55", "shadow_enabled = true",
         "shadow_normal_bias = 4.0", "directional_shadow_mode = 1", "directional_shadow_split_1 = 0.2",
         "directional_shadow_max_distance = 50.0"])
-    node(lines, "Terrain", "StaticBody3D", props=['script = ExtResource("2_terrain")', 'ground_material = SubResource("ShaderMaterial_ground")'])
+    node(lines, "Terrain", "StaticBody3D", props=['script = ExtResource("2_terrain")', 'ground_material = SubResource("ShaderMaterial_ground")',
+                                                    'bake = ExtResource("55_bake")'])
     lines += [
         '[node name="Scatter" type="Node3D" parent="." node_paths=PackedStringArray("terrain")]',
         'script = ExtResource("3_scatter")',
@@ -899,6 +902,7 @@ def main():
         'bush_models = Array[PackedScene]([ExtResource("25_bush"), ExtResource("26_bush_large")])',
         'rock_models = Array[PackedScene]([ExtResource("27_rock"), ExtResource("28_rocks")])',
         'flower_models = Array[PackedScene]([ExtResource("29_flower_red"), ExtResource("30_flower_yellow"), ExtResource("31_flower_purple")])',
+        'bake = ExtResource("55_bake")',
         "",
         '[node name="River" type="Node3D" parent="." node_paths=PackedStringArray("terrain")]',
         'script = ExtResource("52_river")',

@@ -51,8 +51,16 @@ const COLOR_RIDGE := Color(0.78, 0.55, 0.32)
 const COLOR_MUD := Color(0.5, 0.36, 0.24)
 
 @export var ground_material: Material
+## Hauteurs et couleurs du sol calculées d'avance (tools/bake_lieux.gd, desert_bake.res). Sans elles, ou si elles ne
+## correspondent plus aux réglages, le sol est calculé au chargement, comme avant.
+@export var bake: LevelBake
+
+## Nom du sol dans le calcul d'avance du lieu.
+const BAKE_PART := "desert/sol"
 
 var _dunes := FastNoiseLite.new()
+## Vrai si le sol vient du calcul d'avance : le décor dispersé peut alors lire le sien.
+var baked := false
 
 
 ## Hauteurs aux sommets de la grille du maillage.
@@ -131,50 +139,26 @@ func _face_color(x: float, z: float, normal: Vector3) -> Color:
 
 func _build() -> void:
 	var cells := int(SIZE / CELL_SIZE)
-	var vertices := PackedVector3Array()
-	var normals := PackedVector3Array()
-	var colors := PackedColorArray()
-	for array: Variant in [vertices, normals, colors]:
-		array.resize(cells * cells * 6)
-
-	var heights := PackedFloat32Array()
-	heights.resize((cells + 1) * (cells + 1))
 	_cells = cells
-	for row in cells + 1:
-		for column in cells + 1:
-			heights[row * (cells + 1) + column] = height_at(
-				column * CELL_SIZE - SIZE * 0.5, row * CELL_SIZE - SIZE * 0.5
-			)
-
-	var index := 0
-	for row in cells:
-		for column in cells:
-			var x := column * CELL_SIZE - SIZE * 0.5
-			var z := row * CELL_SIZE - SIZE * 0.5
-			var first := row * (cells + 1) + column
-			var points: Array[Vector3] = [
-				Vector3(x, heights[first], z),
-				Vector3(x + CELL_SIZE, heights[first + 1], z),
-				Vector3(x, heights[first + cells + 1], z + CELL_SIZE),
-				Vector3(x + CELL_SIZE, heights[first + cells + 2], z + CELL_SIZE),
-			]
-			for triangle: Array in [[0, 1, 2], [1, 3, 2]]:
-				var a := points[triangle[0]]
-				var b := points[triangle[1]]
-				var c := points[triangle[2]]
-				var normal := (c - a).cross(b - a).normalized()
-				var color := _face_color(x + CELL_SIZE * 0.5, z + CELL_SIZE * 0.5, normal)
-				for vertex in [a, b, c]:
-					vertices[index] = vertex
-					normals[index] = normal
-					colors[index] = color
-					index += 1
+	var signature := LevelBake.signature_of(self)
+	var scripts: Array[Script] = [get_script()]
+	var grid: Variant = bake.data(BAKE_PART, signature, scripts) if bake else null
+	baked = grid != null and TerrainGrid.spot_check(grid[0], cells, cells, -SIZE * 0.5, -SIZE * 0.5, CELL_SIZE, height_at)
+	if grid != null and not baked:
+		push_warning("Calcul d'avance « %s » périmé (relief changé), relancer tools/bake_lieux.gd" % BAKE_PART)
+	if not baked:
+		grid = _compute_grid(cells)
+		LevelBake.record(BAKE_PART, signature, scripts, grid)
+	var heights: PackedFloat32Array = grid[0]
+	# Une couleur par triangle : elle dépend de sa pente.
+	var surface := TerrainGrid.assemble(heights, grid[1], cells, cells, -SIZE * 0.5, -SIZE * 0.5, CELL_SIZE, true)
+	var vertices: PackedVector3Array = surface[0]
 
 	var arrays := []
 	arrays.resize(Mesh.ARRAY_MAX)
 	arrays[Mesh.ARRAY_VERTEX] = vertices
-	arrays[Mesh.ARRAY_NORMAL] = normals
-	arrays[Mesh.ARRAY_COLOR] = colors
+	arrays[Mesh.ARRAY_NORMAL] = surface[1]
+	arrays[Mesh.ARRAY_COLOR] = surface[2]
 	var mesh := ArrayMesh.new()
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
 	mesh.surface_set_material(0, ground_material)
@@ -190,6 +174,33 @@ func _build() -> void:
 	collision.shape = shape
 	add_child(collision)
 	_build_limit()
+
+
+## Ce que le chargement calculait : la hauteur de chaque sommet de la grille et la couleur de chaque triangle, selon
+## sa pente (octets RGBA8, TerrainGrid). C'est la partie lente, calculée d'avance par tools/bake_lieux.gd.
+func _compute_grid(cells: int) -> Array:
+	var heights := PackedFloat32Array()
+	heights.resize((cells + 1) * (cells + 1))
+	for row in cells + 1:
+		for column in cells + 1:
+			heights[row * (cells + 1) + column] = height_at(
+				column * CELL_SIZE - SIZE * 0.5, row * CELL_SIZE - SIZE * 0.5
+			)
+	var colors := PackedColorArray()
+	colors.resize(cells * cells * 2)
+	for row in cells:
+		for column in cells:
+			var x := column * CELL_SIZE - SIZE * 0.5
+			var z := row * CELL_SIZE - SIZE * 0.5
+			var first := row * (cells + 1) + column
+			var p0 := Vector3(x, heights[first], z)
+			var p1 := Vector3(x + CELL_SIZE, heights[first + 1], z)
+			var p2 := Vector3(x, heights[first + cells + 1], z + CELL_SIZE)
+			var p3 := Vector3(x + CELL_SIZE, heights[first + cells + 2], z + CELL_SIZE)
+			var face := (row * cells + column) * 2
+			colors[face] = _face_color(x + CELL_SIZE * 0.5, z + CELL_SIZE * 0.5, (p2 - p0).cross(p1 - p0).normalized())
+			colors[face + 1] = _face_color(x + CELL_SIZE * 0.5, z + CELL_SIZE * 0.5, (p2 - p1).cross(p3 - p1).normalized())
+	return [heights, TerrainGrid.colors_to_bytes(colors)]
 
 
 ## Mur invisible en anneau, haut de 40 m, au pied des crêtes : on ne sort pas de la zone, même en sautant d'un rocher.

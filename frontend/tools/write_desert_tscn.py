@@ -61,6 +61,8 @@ EXT = [
     ("Script", "res://scenes/levels/desert/desert_whirlwinds.gd", "39_whirlwinds"),
     ("Script", "res://scenes/levels/hub/volcano.gd", "90_volcano"),
     ("Shader", "res://scenes/levels/desert/chest_sand.gdshader", "91_chest_sand"),
+    # Sol et décor dispersé calculés d'avance (tools/bake_lieux.gd).
+    ("Resource", "res://scenes/levels/desert/desert_bake.res", "92_bake"),
 ]
 
 SUBRESOURCES = """
@@ -592,7 +594,8 @@ def main():
 
     node(lines, "Exterior", "Node3D")
     node(lines, "Terrain", "StaticBody3D", "Exterior", props=[
-        'script = ExtResource("2_terrain")', 'ground_material = SubResource("ShaderMaterial_sand")'])
+        'script = ExtResource("2_terrain")', 'ground_material = SubResource("ShaderMaterial_sand")',
+        'bake = ExtResource("92_bake")'])
     lines += [
         '[node name="Scatter" type="Node3D" parent="Exterior" node_paths=PackedStringArray("terrain")]',
         'script = ExtResource("3_scatter")',
@@ -604,6 +607,7 @@ def main():
         'prop_models = Array[PackedScene]([ExtResource("29_spear"), ExtResource("30_shield"), ExtResource("31_sword"), ExtResource("32_pot"), ExtResource("33_wheel"), ExtResource("34_barrel"), ExtResource("35_skeleton")])',
         "cactus_count = 34",
         'quicksand_material = SubResource("ShaderMaterial_quicksand")',
+        'bake = ExtResource("92_bake")',
         "",
     ]
     node(lines, "Ruins", parent="Exterior", instance="6_ruins")

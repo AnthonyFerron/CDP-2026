@@ -30,6 +30,16 @@ RUN set -eu; \
     curl -fsSL -o /licences/GODOT_LICENSE.txt "$base/LICENSE.txt"; \
     curl -fsSL -o /licences/GODOT_COPYRIGHT.txt "$base/COPYRIGHT.txt"
 
+# Le moteur (index.wasm, 38,8 Mo) vient tel quel du modèle d'export : il est compressé ici, au plus fort (brotli 11 :
+# 6,9 Mo au lieu de 7,9 au niveau 9, environ 100 s de calcul), dans une couche gardée en cache tant que Godot ne change
+# pas. Après l'export, cette compression n'est reprise que si index.wasm est identique au fichier du modèle, octet pour
+# octet. Voir docs/chargements-lieux.md.
+RUN set -eu; \
+    templates="/root/.local/share/godot/export_templates/${GODOT_VERSION}.stable"; \
+    mkdir -p /wasm; \
+    unzip -q -j "$templates/web_release.zip" '*.wasm' -d /wasm; \
+    for wasm in /wasm/*.wasm; do brotli -k -q 11 "$wasm"; gzip -k -9 -n "$wasm"; done
+
 COPY frontend /game
 COPY LICENCES.md /licences/
 
@@ -46,9 +56,25 @@ RUN mkdir -p /game/build/web \
     && test -f /game/build/web/musique.pck \
     && cp /licences/* /game/build/web/
 
-# Compressé une fois ici, mieux et sans coût à chaque requête : Caddy sert directement les .br et .gz du jeu.
-RUN find /game/build/web -type f \( -name '*.wasm' -o -name '*.pck' -o -name '*.js' -o -name '*.html' \) \
-        -exec gzip -k -9 {} \; -exec brotli -k -q 9 {} \;
+# Compressé une fois ici, mieux et sans coût à chaque requête : Caddy sert directement les .br et .gz du jeu. Le moteur
+# reprend la compression faite plus haut s'il n'a pas changé. gzip -n n'écrit ni nom ni date dans le fichier : un même
+# fichier donne le même .gz d'une version à l'autre.
+# Puis chaque fichier prend une date tirée de son contenu : Caddy calcule l'ETag de la date et de la taille, et un
+# fichier inchangé d'une version à l'autre (le moteur, la musique) garde ainsi le même ETag. Le joueur qui revient
+# après un déploiement reçoit « 304 Not Modified » au lieu de tout retélécharger. Ces dates ne servent qu'à cela : un
+# navigateur qui a un ETag le présente (If-None-Match), et la date (If-Modified-Since) n'est alors pas regardée.
+RUN set -eu; \
+    cd /game/build/web; \
+    for wasm in /wasm/*.wasm; do \
+        if cmp -s index.wasm "$wasm"; then cp "$wasm.br" index.wasm.br; cp "$wasm.gz" index.wasm.gz; fi; \
+    done; \
+    for file in $(find . -type f \( -name '*.wasm' -o -name '*.pck' -o -name '*.js' -o -name '*.html' \)); do \
+        [ -e "$file.br" ] || brotli -k -q 9 "$file"; \
+        [ -e "$file.gz" ] || gzip -k -9 -n "$file"; \
+    done; \
+    for file in $(find . -type f); do \
+        touch -d "@$(( 0x$(sha256sum "$file" | cut -c1-7) + 946684800 ))" "$file"; \
+    done
 
 FROM caddy:2
 

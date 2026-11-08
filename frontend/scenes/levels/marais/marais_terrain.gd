@@ -44,8 +44,16 @@ const COLOR_GRASS := Color(0.22, 0.3, 0.15)
 const COLOR_BANK := Color(0.14, 0.17, 0.11)
 
 @export var ground_material: Material
+## Hauteurs et couleurs du sol calculées d'avance (tools/bake_lieux.gd, marais_bake.res). Sans elles, ou si elles ne
+## correspondent plus aux réglages, le sol est calculé au chargement, comme avant.
+@export var bake: LevelBake
+
+## Nom du sol dans le calcul d'avance du lieu.
+const BAKE_PART := "marais/sol"
 
 var _relief := FastNoiseLite.new()
+## Vrai si le sol vient du calcul d'avance.
+var baked := false
 
 
 ## Hauteurs aux sommets de la grille du maillage.
@@ -97,51 +105,25 @@ func _face_color(x: float, z: float, height: float) -> Color:
 
 func _build() -> void:
 	var cells := int(SIZE / CELL_SIZE)
-	var vertices := PackedVector3Array()
-	var normals := PackedVector3Array()
-	var colors := PackedColorArray()
-	for array: Variant in [vertices, normals, colors]:
-		array.resize(cells * cells * 6)
-
-	var heights := PackedFloat32Array()
-	heights.resize((cells + 1) * (cells + 1))
 	_cells = cells
-	for row in cells + 1:
-		for column in cells + 1:
-			heights[row * (cells + 1) + column] = height_at(
-				column * CELL_SIZE - SIZE * 0.5, row * CELL_SIZE - SIZE * 0.5
-			)
-
-	var index := 0
-	for row in cells:
-		for column in cells:
-			var x := column * CELL_SIZE - SIZE * 0.5
-			var z := row * CELL_SIZE - SIZE * 0.5
-			var first := row * (cells + 1) + column
-			var points: Array[Vector3] = [
-				Vector3(x, heights[first], z),
-				Vector3(x + CELL_SIZE, heights[first + 1], z),
-				Vector3(x, heights[first + cells + 1], z + CELL_SIZE),
-				Vector3(x + CELL_SIZE, heights[first + cells + 2], z + CELL_SIZE),
-			]
-			var center_height := (points[0].y + points[1].y + points[2].y + points[3].y) * 0.25
-			var color := _face_color(x + CELL_SIZE * 0.5, z + CELL_SIZE * 0.5, center_height)
-			for triangle: Array in [[0, 1, 2], [1, 3, 2]]:
-				var a := points[triangle[0]]
-				var b := points[triangle[1]]
-				var c := points[triangle[2]]
-				var normal := (c - a).cross(b - a).normalized()
-				for vertex in [a, b, c]:
-					vertices[index] = vertex
-					normals[index] = normal
-					colors[index] = color
-					index += 1
+	var signature := LevelBake.signature_of(self)
+	var scripts: Array[Script] = [get_script()]
+	var grid: Variant = bake.data(BAKE_PART, signature, scripts) if bake else null
+	baked = grid != null and TerrainGrid.spot_check(grid[0], cells, cells, -SIZE * 0.5, -SIZE * 0.5, CELL_SIZE, height_at)
+	if grid != null and not baked:
+		push_warning("Calcul d'avance « %s » périmé (relief changé), relancer tools/bake_lieux.gd" % BAKE_PART)
+	if not baked:
+		grid = _compute_grid(cells)
+		LevelBake.record(BAKE_PART, signature, scripts, grid)
+	var heights: PackedFloat32Array = grid[0]
+	var surface := TerrainGrid.assemble(heights, grid[1], cells, cells, -SIZE * 0.5, -SIZE * 0.5, CELL_SIZE)
+	var vertices: PackedVector3Array = surface[0]
 
 	var arrays := []
 	arrays.resize(Mesh.ARRAY_MAX)
 	arrays[Mesh.ARRAY_VERTEX] = vertices
-	arrays[Mesh.ARRAY_NORMAL] = normals
-	arrays[Mesh.ARRAY_COLOR] = colors
+	arrays[Mesh.ARRAY_NORMAL] = surface[1]
+	arrays[Mesh.ARRAY_COLOR] = surface[2]
 	var mesh := ArrayMesh.new()
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
 	mesh.surface_set_material(0, ground_material)
@@ -157,6 +139,28 @@ func _build() -> void:
 	collision.shape = shape
 	add_child(collision)
 	_build_limit()
+
+
+## Ce que le chargement calculait : la hauteur de chaque sommet de la grille et la couleur de chaque case (octets
+## RGBA8, TerrainGrid). C'est la partie lente, calculée d'avance par tools/bake_lieux.gd.
+func _compute_grid(cells: int) -> Array:
+	var heights := PackedFloat32Array()
+	heights.resize((cells + 1) * (cells + 1))
+	for row in cells + 1:
+		for column in cells + 1:
+			heights[row * (cells + 1) + column] = height_at(
+				column * CELL_SIZE - SIZE * 0.5, row * CELL_SIZE - SIZE * 0.5
+			)
+	var colors := PackedColorArray()
+	colors.resize(cells * cells)
+	for row in cells:
+		for column in cells:
+			var x := column * CELL_SIZE - SIZE * 0.5
+			var z := row * CELL_SIZE - SIZE * 0.5
+			var first := row * (cells + 1) + column
+			var center_height := (heights[first] + heights[first + 1] + heights[first + cells + 1] + heights[first + cells + 2]) * 0.25
+			colors[row * cells + column] = _face_color(x + CELL_SIZE * 0.5, z + CELL_SIZE * 0.5, center_height)
+	return [heights, TerrainGrid.colors_to_bytes(colors)]
 
 
 ## Mur invisible en cercle, de la vase jusqu'à 35 m de haut : les pas comme les sauts s'y arrêtent.

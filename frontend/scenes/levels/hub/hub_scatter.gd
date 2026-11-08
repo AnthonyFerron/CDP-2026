@@ -23,6 +23,12 @@ extends Node3D
 ## Côté des cases de la grille qui découpe les petits détails : chaque case a son propre MultiMesh, et sa propre
 ## distance de visibilité, mesurée jusqu'à elle et non jusqu'au milieu de la carte.
 @export var chunk_size := 32.0
+## Positions et collisions du décor calculées d'avance (tools/bake_lieux.gd, hub_bake.res). Sans elles, ou si elles ne
+## correspondent plus aux réglages ou au sol, le décor est calculé au chargement, comme avant.
+@export var bake: LevelBake
+
+## Nom du décor dans le calcul d'avance du lieu.
+const BAKE_PART := "hub/decor"
 
 var _rng := RandomNumberGenerator.new()
 var _flowers: Array[MultiMesh] = []
@@ -32,13 +38,58 @@ func _ready() -> void:
 	# Le terrain se construit avant ses voisins : il faut ses hauteurs pour poser le décor.
 	if not terrain.is_node_ready():
 		await terrain.ready
-	_rng.seed = 5800
-	_scatter(tree_models, tree_count, Vector2(4.0, 5.4), tree_radii, 0.45, 0.12)
-	_add_forest()
-	_scatter(bush_models, bush_count, Vector2(3.0, 5.0), [], 0.7, 0.05)
-	_scatter(rock_models, rock_count, Vector2(2.0, 4.0), rock_radii, 0.7, 0.1)
-	_flowers = _scatter(flower_models, flower_count, Vector2(2.0, 3.0), [], 0.6, 0.0)
+	var signature := LevelBake.signature_of(self, [LevelBake.signature_of(terrain)])
+	var scripts: Array[Script] = [get_script(), terrain.get_script()]
+	var plan: Variant = bake.data(BAKE_PART, signature, scripts) if bake and terrain.baked else null
+	if plan == null:
+		plan = _plan()
+		LevelBake.record(BAKE_PART, signature, scripts, plan)
+	_build(tree_models, plan[0])
+	for index in tree_models.size():
+		var transforms: Array[Transform3D] = []
+		transforms.assign(plan[1][index])
+		_add_multimesh(_load_mesh(tree_models[index]), transforms, true)
+	_build(bush_models, plan[2])
+	_build(rock_models, plan[3])
+	_flowers = _build(flower_models, plan[4])
 	set_life(0.0)
+
+
+## Ce que le décor calculait au chargement : pour les arbres, les buissons, les rochers et les fleurs, les collisions
+## ([rayon, hauteur, position] d'un cylindre) et les copies de chaque modèle (une liste de Transform3D par modèle) ;
+## pour la forêt des montagnes, ses copies seules. C'est la partie lente, calculée d'avance par tools/bake_lieux.gd.
+func _plan() -> Array:
+	_rng.seed = 5800
+	return [
+		_scatter(tree_models, tree_count, Vector2(4.0, 5.4), tree_radii, 0.45, 0.12),
+		_add_forest(),
+		_scatter(bush_models, bush_count, Vector2(3.0, 5.0), [], 0.7, 0.05),
+		_scatter(rock_models, rock_count, Vector2(2.0, 4.0), rock_radii, 0.7, 0.1),
+		_scatter(flower_models, flower_count, Vector2(2.0, 3.0), [], 0.6, 0.0),
+	]
+
+
+## Pose une étape du décor : son corps et ses cylindres de collision (s'il en a), puis les copies de chaque modèle,
+## d'un seul MultiMesh pour les modèles solides, par cases sinon. Rend les MultiMesh.
+func _build(models: Array[PackedScene], step: Array) -> Array[MultiMesh]:
+	var solid: bool = step[2]
+	if solid:
+		var body := StaticBody3D.new()
+		add_child(body)
+		for item: Array in step[0]:
+			var shape := CylinderShape3D.new()
+			shape.radius = item[0]
+			shape.height = item[1]
+			var collision := CollisionShape3D.new()
+			collision.shape = shape
+			collision.position = item[2]
+			body.add_child(collision)
+	var multimeshes: Array[MultiMesh] = []
+	for index in models.size():
+		var transforms: Array[Transform3D] = []
+		transforms.assign(step[1][index])
+		multimeshes.append_array(_add_multimeshes(_load_mesh(models[index]), transforms, solid))
+	return multimeshes
 
 
 ## Affiche une part des fleurs, de 0 (aucune) à 1 (toutes).
@@ -72,17 +123,16 @@ func _is_free(spot: Vector2, margin: float) -> bool:
 ## Disperse des modèles sur le plateau. Un rayon par modèle leur donne une collision à leur taille ;
 ## sans rayon, ils se traversent. Les pentes trop fortes sont évitées, et chaque pied s'enfonce un peu
 ## pour ne jamais flotter.
-func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, radii: Array, max_slope: float, sink: float) -> Array[MultiMesh]:
-	var body: StaticBody3D
-	if not radii.is_empty():
-		body = StaticBody3D.new()
-		add_child(body)
+## Rend [cylindres de collision, copies de chaque modèle, vrai s'il a une collision] (voir _plan et _build).
+func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, radii: Array, max_slope: float, sink: float) -> Array:
+	var solid := not radii.is_empty()
+	var shapes: Array = []
 	var groups: Array[Array] = []
 	# Hauteur de chaque modèle : la collision d'un rocher s'arrête à son sommet (celle d'un arbre, à 3 m).
 	var heights: Array[float] = []
 	for model in models:
 		groups.append([])
-		heights.append(_load_mesh(model).get_aabb().size.y if body else 0.0)
+		heights.append(_load_mesh(model).get_aabb().size.y if solid else 0.0)
 	var placed := 0
 	for attempt in count * 12:
 		if placed >= count:
@@ -100,25 +150,19 @@ func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, radi
 		var origin := Vector3(spot.x, ground - sink * scale_factor - slope * 0.6, spot.y)
 		var basis := Basis(Vector3.UP, _rng.randf() * TAU).scaled(Vector3.ONE * scale_factor)
 		groups[model].append(Transform3D(basis, origin))
-		if body:
+		if solid:
+			# Rayon et hauteur tels que le cylindre les garde (en simple précision) : sa position en dépend.
 			var shape := CylinderShape3D.new()
 			shape.radius = float(radii[model % radii.size()]) * scale_factor
 			shape.height = clampf(heights[model] * scale_factor, 0.6, 3.0)
-			var collision := CollisionShape3D.new()
-			collision.shape = shape
-			collision.position = Vector3(spot.x, ground + shape.height * 0.5, spot.y)
-			body.add_child(collision)
+			shapes.append([shape.radius, shape.height, Vector3(spot.x, ground + shape.height * 0.5, spot.y)])
 		placed += 1
-	var multimeshes: Array[MultiMesh] = []
-	for index in models.size():
-		var transforms: Array[Transform3D] = []
-		transforms.assign(groups[index])
-		multimeshes.append_array(_add_multimeshes(_load_mesh(models[index]), transforms, body != null))
-	return multimeshes
+	return [shapes, groups, solid]
 
 
-## Forêt sur les pentes des montagnes, au-delà de la limite du joueur : elle ferme l'horizon.
-func _add_forest() -> void:
+## Forêt sur les pentes des montagnes, au-delà de la limite du joueur : elle ferme l'horizon. Rend les copies de
+## chaque modèle.
+func _add_forest() -> Array:
 	var groups: Array[Array] = []
 	for model in tree_models:
 		groups.append([])
@@ -135,10 +179,7 @@ func _add_forest() -> void:
 		var basis := Basis(Vector3.UP, _rng.randf() * TAU).scaled(Vector3.ONE * scale_factor)
 		groups[placed % groups.size()].append(Transform3D(basis, Vector3(spot.x, ground, spot.y)))
 		placed += 1
-	for index in tree_models.size():
-		var transforms: Array[Transform3D] = []
-		transforms.assign(groups[index])
-		_add_multimesh(_load_mesh(tree_models[index]), transforms, true)
+	return groups
 
 
 ## Place les instances d'un modèle : d'un seul MultiMesh s'il reste toujours visible (arbres, rochers), sinon par

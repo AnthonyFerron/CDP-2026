@@ -72,6 +72,8 @@ EXT = [
     ("Script", "res://scenes/levels/marais/marais_life.gd", "59_life"),
     ("PackedScene", K + "survival_kit/fish-large.glb", "60_fish"),
     ("PackedScene", K + "graveyard_kit/lantern-candle.glb", "61_hanging_lantern"),
+    # Sol calculé d'avance (tools/bake_lieux.gd).
+    ("Resource", "res://scenes/levels/marais/marais_bake.res", "62_bake"),
 ]
 # Pierres levées (comme build_stones dans tools/build_marais.py) : les corbeaux se posent sur trois d'entre elles.
 STONE_TOPS = [(-30.0 + math.cos(math.tau * i / 7 + 0.3) * 2.7, -44.0 + math.sin(math.tau * i / 7 + 0.3) * 2.7) for i in (0, 2, 5)]
@@ -522,7 +524,8 @@ def main():
         "shadow_normal_bias = 4.0", "directional_shadow_mode = 1", "directional_shadow_split_1 = 0.2",
         "directional_shadow_max_distance = 50.0"])
     node(lines, "Terrain", "StaticBody3D", props=[
-        'script = ExtResource("2_terrain")', 'ground_material = SubResource("ShaderMaterial_ground")'])
+        'script = ExtResource("2_terrain")', 'ground_material = SubResource("ShaderMaterial_ground")',
+        'bake = ExtResource("62_bake")'])
     node(lines, "Water", "MeshInstance3D", props=['mesh = SubResource("PlaneMesh_water")', "cast_shadow = 0"])
     # Brume qui roule au ras de l'eau, en deux nappes : l'une sous les pontons, l'autre à hauteur de genou.
     node(lines, "GroundFog", "Node3D")
