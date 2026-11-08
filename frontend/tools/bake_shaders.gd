@@ -108,7 +108,7 @@ func _group(scene: Node, place: String, inside: bool) -> Dictionary:
 	var context := "fog=%s suns=%s omni=%s" % [fog, suns.map(func(s: Dictionary) -> String:
 		return "%s/%s/%s" % [s.shadow, s.mode, s.blend]), omni]
 	var group := {"place": place, "inside": inside, "environment": _environment(environment, fog), "suns": suns,
-		"omni": omni, "materials": [], "usages": PackedByteArray(), "process": [], "labels": []}
+		"omni": omni, "materials": [], "usages": PackedByteArray(), "process": [], "labels": [], "entries": []}
 	for node in _walk(scene):
 		if not node is GeometryInstance3D or _is_inside(node) != inside:
 			continue
@@ -140,9 +140,16 @@ func _group(scene: Node, place: String, inside: bool) -> Dictionary:
 			materials.append(geometry.material_overlay)
 		for material in materials:
 			_add(group, context, material, usage, "materials")
-	var empty: bool = (group.materials as Array).is_empty() and (group.process as Array).is_empty() \
-		and (group.labels as Array).is_empty()
-	return {} if empty else group
+	# Ordre stable d'un passage à l'autre : les scripts des lieux ne créent pas toujours leurs nœuds dans le même ordre.
+	var entries: Array = group.entries
+	entries.sort_custom(func(a: Array, b: Array) -> bool: return a[0] < b[0])
+	group.erase("entries")
+	for entry in entries:
+		_fingerprint.append(entry[0])
+		(group[entry[1]] as Array).append(entry[2])
+		if entry[1] == "materials":
+			group.usages.append(entry[3])
+	return {} if entries.is_empty() else group
 
 
 func _add(group: Dictionary, context: String, material: Material, usage: int, field: String) -> void:
@@ -152,10 +159,8 @@ func _add(group: Dictionary, context: String, material: Material, usage: int, fi
 	if _seen.has(line):
 		return
 	_seen[line] = true
-	_fingerprint.append("%s/%s: %s" % [group.place, "int" if group.inside else "ext", line.strip_edges()])
-	(group[field] as Array).append(_stripped(material) if field == "materials" else material.duplicate(true))
-	if field == "materials":
-		group.usages.append(usage)
+	(group.entries as Array).append(["%s/%s: %s" % [group.place, "int" if group.inside else "ext", line.strip_edges()],
+		field, _canonical(material) if field == "materials" else material.duplicate(true), usage])
 
 
 func _add_label(group: Dictionary, context: String, label: Label3D) -> void:
@@ -169,8 +174,7 @@ func _add_label(group: Dictionary, context: String, label: Label3D) -> void:
 	if _seen.has(key):
 		return
 	_seen[key] = true
-	_fingerprint.append("%s/%s: %s" % [group.place, "int" if group.inside else "ext", key])
-	(group.labels as Array).append(settings)
+	(group.entries as Array).append(["%s/%s: %s" % [group.place, "int" if group.inside else "ext", key], "labels", settings, 0])
 
 
 ## Clé du shader qu'un matériau compile : le fichier du shader, ou les réglages qui choisissent le code généré
@@ -199,21 +203,22 @@ func _key(material: Material) -> String:
 	return " ".join(parts)
 
 
-## Copie sans textures : elles ne changent pas le code des shaders, et le menu n'a pas à les charger.
-func _stripped(material: Material) -> Material:
-	var copy := material.duplicate() as Material
-	if copy is ShaderMaterial and (copy as ShaderMaterial).shader:
-		var shader_material := copy as ShaderMaterial
-		for uniform in shader_material.shader.get_shader_uniform_list():
-			if shader_material.get_shader_parameter(uniform.name) is Texture:
-				shader_material.set_shader_parameter(uniform.name, null)
+## Matériau réduit à ce qui choisit son shader : le même shader sans paramètres, ou un matériau neuf de la même classe
+## avec les seuls réglages de la clé. Couleurs, nombres et textures ne changent pas le code des shaders, et le menu n'a
+## pas à charger les textures. Deux matériaux de même clé donnent la même copie.
+func _canonical(material: Material) -> Material:
+	var copy: Material
+	if material is ShaderMaterial:
+		copy = ShaderMaterial.new()
+		(copy as ShaderMaterial).shader = (material as ShaderMaterial).shader
 	else:
-		for property in copy.get_property_list():
-			if property.type == TYPE_OBJECT and property.usage & PROPERTY_USAGE_STORAGE and copy.get(property.name) is Texture:
-				copy.set(property.name, null)
-	copy.resource_name = ""
-	if copy.next_pass:
-		copy.next_pass = _stripped(copy.next_pass)
+		copy = ClassDB.instantiate(material.get_class()) as Material
+		for property in material.get_property_list():
+			if property.usage & PROPERTY_USAGE_STORAGE and (property.type == TYPE_INT or property.type == TYPE_BOOL) \
+					and property.name != "resource_local_to_scene":
+				copy.set(property.name, material.get(property.name))
+	if material.next_pass:
+		copy.next_pass = _canonical(material.next_pass)
 	return copy
 
 
