@@ -25,11 +25,14 @@ func action(name: String) -> void:
 	event.pressed = true
 	Input.parse_input_event(event)
 	await wait(2)
+	# Les entrées ne sont vidées qu'au début d'une image : sous charge, wait(2) peut finir dans la même (settle()).
+	await settle()
 	var release := InputEventAction.new()
 	release.action = name
 	release.pressed = false
 	Input.parse_input_event(release)
 	await wait(2)
+	await settle()
 
 func _run() -> void:
 	var account: Node = root.get_node("Account")
