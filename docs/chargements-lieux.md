@@ -173,9 +173,20 @@ Suite complète (`frontend/tests/scenes/run_all.sh`), sur la branche à jour de 
 - `run_tests` : 51 réussis, 0 échec ;
 - aucun avertissement « Calcul d'avance … périmé » dans les journaux : chaque lieu a lu ses données.
 
-Fusion d'essai avec `fix/sondes-saut` (agent des sauts) : aucun conflit, `bake_lieux_check` reste à jour (ses
-changements portent sur les scènes générées, pas sur les sols ni le décor dispersé) et les générateurs ne
-produisent aucune dérive.
+Fusion d'essai avec `fix/sondes-saut` (agent des sauts), avant qu'elle n'entre dans `dev` : aucun conflit,
+`bake_lieux_check` reste à jour (ses changements portent sur les scènes générées, pas sur les sols ni le décor
+dispersé) et les générateurs ne produisent aucune dérive. La branche a ensuite reçu `dev` (83e4482 : sauts, sons,
+interface) : un seul conflit, dans `write_hub_tscn.py` (une ressource ajoutée de chaque côté), résolu en gardant les
+deux ; `hub.tscn` régénéré est celui de `dev` plus les trois lignes du calcul d'avance, et `bake_lieux_check` reste à
+jour. Sur la branche fusionnée :
+
+- empreintes de `dev` (83e4482) et de la branche identiques pour les quatre lieux, lignes comprises (Village
+  `8c4132c6…`, Désert `de52a41c…`, Marais `ae84ae8f…`, hub `df6a632c…`) ;
+- suite complète : les trois contrôles à jour, 0 échec partout (`music_test`, `hub_test` et le nouveau `sound_test`
+  compris) sauf les 2 échecs voulus de `hub_walk_0` et `hub_walk_4`, `run_tests` à 51 réussis, aucun avertissement
+  de calcul d'avance ;
+- export de production refait : en-têtes identiques à l'image en service, `index.wasm` garde son ETag, revalidation
+  en `304`.
 
 ## Mesures
 
@@ -258,6 +269,7 @@ Trois gains relevés par l'agent de la musique (`docs/musique-differee.md`, « a
   recule d'une version à l'autre ne gêne pas. Vérifié sur deux constructions de suite, dont seul le paquet du jeu
   changeait : `index.wasm`, `musique.pck`, `index.js` et l'icône gardent leur ETag, en brotli comme sans compression ;
   `index.pck` et `index.html` (qui porte la taille du paquet) en changent. Une revalidation reçoit `304 Not Modified`.
+  `musique.pck` change dès que `project.godot` change : Godot met les réglages du projet dans chaque paquet.
 - **Une icône plus légère.** L'icône du projet (`assets/ui/codequest_icon.png`) passe de 512 à 256 pixels de côté
   (65 Ko au lieu de 225 Ko). Elle n'est affichée qu'en favicon, en icône d'écran d'accueil (180 pixels) et en icône de
   l'exécutable Windows (256 pixels au plus) : rien ne change à l'écran. Godot la copie brute dans chaque paquet et en
