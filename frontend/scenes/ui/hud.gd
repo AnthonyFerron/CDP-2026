@@ -13,7 +13,9 @@ extends CanvasLayer
 ## passent par-dessus.
 ##
 ## Coût par image : le chronomètre ne réécrit son texte qu'une fois par seconde, et les cartouches ne se redessinent
-## que quand leur texte change.
+## que quand leur texte change. Ils sont faits de quadrilatères (draw_primitive, draw_line épais) : le rendu
+## Compatibility les regroupe en un appel de dessin par cartouche, là où chaque polygone (draw_polygon, draw_polyline,
+## Ornate.diamond) en coûte un.
 
 signal reader_closed
 
@@ -298,12 +300,11 @@ func _fit_reader_plaque() -> void:
 ## Cartouche de l'invite et des messages : un petit cadre des menus, double bordure dorée, coins coupés et losanges.
 func _draw_plate(plate: Control) -> void:
 	var rect := Rect2(Vector2.ZERO, plate.size)
-	var outer := Ornate.chamfered(rect, 14.0)
-	plate.draw_colored_polygon(outer, PLATE_FILL)
-	plate.draw_polyline(Ornate.closed(outer), Ornate.GOLD, 3.0)
-	plate.draw_polyline(Ornate.closed(Ornate.chamfered(rect.grow(-7.0), 9.0)), Ornate.GOLD_DARK, 1.5)
-	Ornate.diamond(plate, Vector2(0.0, rect.size.y / 2.0), 9.0)
-	Ornate.diamond(plate, Vector2(rect.size.x, rect.size.y / 2.0), 9.0)
+	_fill_chamfered(plate, rect, 14.0, PLATE_FILL)
+	_outline(plate, Ornate.chamfered(rect, 14.0), Ornate.GOLD, 3.0)
+	_outline(plate, Ornate.chamfered(rect.grow(-7.0), 9.0), Ornate.GOLD_DARK, 1.5)
+	_diamond(plate, Vector2(0.0, rect.size.y / 2.0), 9.0)
+	_diamond(plate, Vector2(rect.size.x, rect.size.y / 2.0), 9.0)
 
 
 ## Plaque hexagonale des titres des menus (Ornate.plaque), sans son texte : celui-ci est un Label posé dessus.
@@ -311,14 +312,45 @@ func _draw_plaque(item: Control, top: Color, low: Color, border: Color, with_dia
 	var rect := Rect2(Vector2.ZERO, item.size)
 	var center := rect.get_center()
 	var shape := Ornate.hexagon(rect, rect.size.y * 0.42)
-	item.draw_polygon(shape, PackedColorArray([top, top, top.lerp(low, 0.5), low, low, top.lerp(low, 0.5)]))
-	item.draw_polyline(Ornate.closed(shape), border, 4.0)
+	# Points : haut gauche, haut droite, droite, bas droite, bas gauche, gauche. Deux trapèzes, en dégradé.
+	var middle := top.lerp(low, 0.5)
+	item.draw_primitive(PackedVector2Array([shape[5], shape[0], shape[1], shape[2]]), PackedColorArray([middle, top, top, middle]), PackedVector2Array())
+	item.draw_primitive(PackedVector2Array([shape[5], shape[2], shape[3], shape[4]]), PackedColorArray([middle, middle, low, low]), PackedVector2Array())
+	_outline(item, shape, border, 4.0)
 	var inset := PackedVector2Array()
 	for point in shape:
 		inset.append(center + (point - center) * Vector2(0.97, 0.8))
-	item.draw_polyline(Ornate.closed(inset), Ornate.GOLD_DARK, 2.0)
+	_outline(item, inset, Ornate.GOLD_DARK, 2.0)
 	if with_diamond:
-		Ornate.diamond(item, Vector2(center.x, rect.end.y), 11.0)
+		_diamond(item, Vector2(center.x, rect.end.y), 11.0)
+
+
+## Fond d'un rectangle à coins coupés, en trois quadrilatères.
+func _fill_chamfered(item: CanvasItem, rect: Rect2, cut: float, color: Color) -> void:
+	var a := rect.position
+	var b := rect.end
+	var colors := PackedColorArray([color])
+	var none := PackedVector2Array()
+	item.draw_primitive(PackedVector2Array([Vector2(a.x + cut, a.y), Vector2(b.x - cut, a.y), Vector2(b.x, a.y + cut), Vector2(a.x, a.y + cut)]), colors, none)
+	item.draw_primitive(PackedVector2Array([Vector2(a.x, a.y + cut), Vector2(b.x, a.y + cut), Vector2(b.x, b.y - cut), Vector2(a.x, b.y - cut)]), colors, none)
+	item.draw_primitive(PackedVector2Array([Vector2(a.x, b.y - cut), Vector2(b.x, b.y - cut), Vector2(b.x - cut, b.y), Vector2(a.x + cut, b.y)]), colors, none)
+
+
+## Contour fermé, un trait épais par côté, prolongé aux coins pour qu'ils se rejoignent.
+func _outline(item: CanvasItem, points: PackedVector2Array, color: Color, width: float) -> void:
+	for index in points.size():
+		var a := points[index]
+		var b := points[(index + 1) % points.size()]
+		var along := (b - a).normalized() * width * 0.3
+		item.draw_line(a - along, b + along, color, width)
+
+
+## Losange des menus (Ornate.diamond) : bord clair, fond sombre et cœur doré.
+func _diamond(item: CanvasItem, center: Vector2, radius: float) -> void:
+	for layer: Array in [[radius + 1.5, Ornate.GOLD_LIGHT], [radius - 0.5, Ornate.GOLD_DARK], [radius * 0.62, Ornate.GOLD]]:
+		var r: float = layer[0]
+		item.draw_primitive(PackedVector2Array([center + Vector2(0, -r), center + Vector2(r, 0), center + Vector2(0, r), center + Vector2(-r, 0)]),
+			PackedColorArray([layer[1]]), PackedVector2Array())
 
 
 func _draw_reader_plaque() -> void:
