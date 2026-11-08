@@ -21,5 +21,5 @@ Avant chaque nouvelle tâche, l'agent fusionne `dev` dans sa branche (`git merge
 ## Tâches transversales (à confier à un agent libre, une à la fois, fichiers réservés indiqués)
 
 - **HUD** (`scenes/ui/hud.*`) : invite, messages, lecteur de textes et chronomètre dans le style des menus.
-- **Sons** (`tools/generate_sounds.py`) : sons d'interface (clic, ouverture de panneau), pas sur bois et sur pierre, eau de rivière, ambiance de parc ; toujours synthétisés.
+- **Sons** (`tools/generate_sounds.py`) : sons d'interface (clic, ouverture de panneau), pas sur bois et sur pierre, eau de rivière, ambiance de parc ; toujours synthétisés. Fait le 8 novembre : voir `docs/sons.md`.
 - **Accueil animé** (`scenes/ui/menus/*`) : légère animation du fond (lune, étoiles, brume), transitions entre écrans.

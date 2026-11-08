@@ -60,8 +60,9 @@ EXT = [
     ("PackedScene", "res://scenes/levels/hub/hub_bunker.tscn", "51_bunker"),
     ("Script", "res://scenes/levels/hub/hub_river.gd", "52_river"),
     ("Shader", "res://scenes/levels/hub/hub_water.gdshader", "53_water"),
+    ("Script", "res://scenes/levels/hub/hub_sounds.gd", "54_sounds"),
     # Sol et décor dispersé calculés d'avance (tools/bake_lieux.gd).
-    ("Resource", "res://scenes/levels/hub/hub_bake.res", "54_bake"),
+    ("Resource", "res://scenes/levels/hub/hub_bake.res", "55_bake"),
 ]
 
 
@@ -892,7 +893,7 @@ def main():
         "shadow_normal_bias = 4.0", "directional_shadow_mode = 1", "directional_shadow_split_1 = 0.2",
         "directional_shadow_max_distance = 50.0"])
     node(lines, "Terrain", "StaticBody3D", props=['script = ExtResource("2_terrain")', 'ground_material = SubResource("ShaderMaterial_ground")',
-                                                    'bake = ExtResource("54_bake")'])
+                                                    'bake = ExtResource("55_bake")'])
     lines += [
         '[node name="Scatter" type="Node3D" parent="." node_paths=PackedStringArray("terrain")]',
         'script = ExtResource("3_scatter")',
@@ -901,7 +902,7 @@ def main():
         'bush_models = Array[PackedScene]([ExtResource("25_bush"), ExtResource("26_bush_large")])',
         'rock_models = Array[PackedScene]([ExtResource("27_rock"), ExtResource("28_rocks")])',
         'flower_models = Array[PackedScene]([ExtResource("29_flower_red"), ExtResource("30_flower_yellow"), ExtResource("31_flower_purple")])',
-        'bake = ExtResource("54_bake")',
+        'bake = ExtResource("55_bake")',
         "",
         '[node name="River" type="Node3D" parent="." node_paths=PackedStringArray("terrain")]',
         'script = ExtResource("52_river")',
@@ -976,6 +977,9 @@ def main():
     node(lines, "RepairSound", "AudioStreamPlayer", props=['stream = ExtResource("46_rumble")', "volume_db = -4.0"])
     node(lines, "TremorSound", "AudioStreamPlayer", props=['stream = ExtResource("46_rumble")', "volume_db = -9.0", "pitch_scale = 0.6"])
     node(lines, "Ambience", "AudioStreamPlayer", props=['stream = ExtResource("40_ambience")', "volume_db = -8.0", "autoplay = true"])
+    # Eau de la rivière, feuillage et oiseaux du jardin du roi, roue du moulin : des sources dans l'espace, qui suivent
+    # l'auditeur et les livres posés (hub_sounds.gd).
+    node(lines, "Sounds", "Node3D", props=['script = ExtResource("54_sounds")'])
     node(lines, "Hud", instance="8_hud")
     # Les apparats du roi et de Merlon sont accrochés aux os de leur modèle importé. Sans ces marqueurs
     # (« enfants modifiables »), l'export, qui convertit la scène en binaire, les perd : le jeu en ligne les montrait

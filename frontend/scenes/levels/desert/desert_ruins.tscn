@@ -2597,13 +2597,13 @@ transform = Transform3D(1.26883, 0, 0.59167, 0, 1.4, 0, -0.59167, 0, 1.26883, 14
 transform = Transform3D(0.41042, 0, 1.12763, 0, 1.2, 0, -1.12763, 0, 0.41042, 15.9, 0, -16.2)
 
 [node name="pot_87" parent="Models" instance=ExtResource("14_model")]
-transform = Transform3D(-0.67183, 0, -1.3541, 0, 1.51161, 0, 1.3541, 0, -0.67183, 18.3359, 0, -15.6817)
+transform = Transform3D(-0.67183, 0, -1.3541, 0, 1.51161, 0, 1.3541, 0, -0.67183, 17.6859, 0, -14.3317)
 
 [node name="plate_broken_88" parent="Models" instance=ExtResource("15_model")]
-transform = Transform3D(1.03304, 0, -1.22181, 0, 1.6, 0, 1.22181, 0, 1.03304, 19.0551, 0, -16.7927)
+transform = Transform3D(1.03304, 0, -1.22181, 0, 1.6, 0, 1.22181, 0, 1.03304, 18.4051, 0, -15.4427)
 
 [node name="plate_broken_89" parent="Models" instance=ExtResource("15_model")]
-transform = Transform3D(1.53414, 0, 0.45434, 0, 1.6, 0, -0.45434, 0, 1.53414, 17.1519, 0, -16.2592)
+transform = Transform3D(1.53414, 0, 0.45434, 0, 1.6, 0, -0.45434, 0, 1.53414, 16.502, 0, -14.9092)
 
 [node name="wall_gate_90" parent="Models" instance=ExtResource("1_model")]
 transform = Transform3D(6, 0, 0, 0, 6, 0, 0, 0, 6, 0, -2, -29)
@@ -3156,7 +3156,7 @@ transform = Transform3D(0.34202, 0, 0.93969, 0, 1, 0, -0.93969, 0, 0.34202, 15.9
 shape = SubResource("BoxShape3D_32")
 
 [node name="Box53" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.44445, 0, -0.8958, 0, 1, 0, 0.8958, 0, -0.44445, 18.3291, 0.325, -15.685)
+transform = Transform3D(-0.44445, 0, -0.8958, 0, 1, 0, 0.8958, 0, -0.44445, 17.6791, 0.325, -14.335)
 shape = SubResource("BoxShape3D_33")
 
 [node name="Box54" type="CollisionShape3D" parent="Collision"]

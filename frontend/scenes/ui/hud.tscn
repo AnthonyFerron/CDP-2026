@@ -1,22 +1,16 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scenes/ui/hud.gd" id="1_hud"]
+[ext_resource type="FontFile" path="res://assets/fonts/Lora.ttf" id="2_lora"]
+[ext_resource type="FontVariation" path="res://ui/cinzel_bold.tres" id="3_cinzel"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_reader"]
-content_margin_left = 48
-content_margin_top = 36
-content_margin_right = 48
-content_margin_bottom = 36
-bg_color = Color(0.11, 0.08, 0.06, 0.95)
-border_width_left = 5
-border_width_top = 5
-border_width_right = 5
-border_width_bottom = 5
-border_color = Color(0.62, 0.42, 0.2, 1)
-corner_radius_top_left = 9
-corner_radius_top_right = 9
-corner_radius_bottom_right = 9
-corner_radius_bottom_left = 9
+[sub_resource type="FontVariation" id="FontVariation_tabular"]
+base_font = ExtResource("2_lora")
+opentype_features = {
+1953396077: 1
+}
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_reader"]
 
 [node name="Hud" type="CanvasLayer"]
 script = ExtResource("1_hud")
@@ -28,44 +22,77 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -3
-offset_top = -3
-offset_right = 3
-offset_bottom = 3
+offset_left = -5.0
+offset_top = -5.0
+offset_right = 5.0
+offset_bottom = 5.0
 grow_horizontal = 2
 grow_vertical = 2
+rotation = 0.7853982
+pivot_offset = Vector2(5, 5)
 mouse_filter = 2
-color = Color(1, 0.95, 0.85, 0.75)
+color = Color(1, 0.85, 0.48, 0.9)
 
-[node name="Message" type="Label" parent="."]
-unique_name_in_owner = true
-anchors_preset = 10
-anchor_right = 1.0
-offset_left = 160.0
-offset_top = 48
-offset_right = -160.0
-offset_bottom = 108
+[node name="Outline" type="ColorRect" parent="Crosshair"]
+show_behind_parent = true
+layout_mode = 0
+offset_left = -2.0
+offset_top = -2.0
+offset_right = 12.0
+offset_bottom = 12.0
+mouse_filter = 2
+color = Color(0.1, 0.05, 0.04, 0.6)
+
+[node name="MessagePlate" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -300.0
+offset_top = 88.0
+offset_right = 300.0
+offset_bottom = 156.0
 grow_horizontal = 2
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 9
-theme_override_font_sizes/font_size = 36
+mouse_filter = 2
+
+[node name="Message" type="Label" parent="MessagePlate"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 40.0
+offset_top = 14.0
+offset_right = 560.0
+offset_bottom = 54.0
+theme_override_colors/font_color = Color(0.98, 0.92, 0.8, 1)
+theme_override_fonts/font = ExtResource("2_lora")
+theme_override_font_sizes/font_size = 30
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="Prompt" type="Label" parent="."]
-unique_name_in_owner = true
-anchors_preset = 12
+[node name="PromptPlate" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 7
+anchor_left = 0.5
 anchor_top = 1.0
-anchor_right = 1.0
+anchor_right = 0.5
 anchor_bottom = 1.0
-offset_top = -144
-offset_bottom = -84
+offset_left = -200.0
+offset_top = -156.0
+offset_right = 200.0
+offset_bottom = -92.0
 grow_horizontal = 2
 grow_vertical = 0
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 9
-theme_override_font_sizes/font_size = 33
-horizontal_alignment = 1
+mouse_filter = 2
+
+[node name="Prompt" type="Label" parent="PromptPlate"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 88.0
+offset_right = 378.0
+offset_bottom = 64.0
+theme_override_colors/font_color = Color(0.98, 0.92, 0.8, 1)
+theme_override_fonts/font = ExtResource("2_lora")
+theme_override_font_sizes/font_size = 30
+vertical_alignment = 1
 
 [node name="Reader" type="CenterContainer" parent="."]
 unique_name_in_owner = true
@@ -76,65 +103,92 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Panel" type="PanelContainer" parent="Reader"]
-custom_minimum_size = Vector2(960, 0)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_reader")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_reader")
 
-[node name="Content" type="VBoxContainer" parent="Reader/Panel"]
+[node name="Backing" type="MarginContainer" parent="Reader/Panel"]
 layout_mode = 2
-theme_override_constants/separation = 24
+mouse_filter = 2
+theme_override_constants/margin_top = 38
 
-[node name="ReaderTitle" type="Label" parent="Reader/Panel/Content"]
-theme_type_variation = &"TitleLabel"
+[node name="Margin" type="MarginContainer" parent="Reader/Panel"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 72
+theme_override_constants/margin_right = 72
+theme_override_constants/margin_bottom = 44
+
+[node name="Content" type="VBoxContainer" parent="Reader/Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="ReaderTitle" type="Label" parent="Reader/Panel/Margin/Content"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 76)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.75, 0.4, 1)
-theme_override_font_sizes/font_size = 42
+theme_override_colors/font_color = Color(0.98, 0.92, 0.8, 1)
+theme_override_fonts/font = ExtResource("3_cinzel")
+theme_override_font_sizes/font_size = 40
 horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="ReaderBody" type="Label" parent="Reader/Panel/Content"]
+[node name="ReaderBody" type="Label" parent="Reader/Panel/Margin/Content"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(864, 0)
+custom_minimum_size = Vector2(976, 0)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.92, 0.8, 1)
+theme_override_fonts/font = ExtResource("2_lora")
 theme_override_font_sizes/font_size = 30
 autowrap_mode = 3
 
-[node name="Hint" type="Label" parent="Reader/Panel/Content"]
+[node name="Hint" type="HBoxContainer" parent="Reader/Panel/Margin/Content"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.7, 0.65, 0.6, 1)
-theme_override_font_sizes/font_size = 24
-text = "[E] Fermer"
-horizontal_alignment = 1
+theme_override_constants/separation = 14
+alignment = 1
 
-[node name="Timer" type="Label" parent="."]
-unique_name_in_owner = true
+[node name="Close" type="Label" parent="Reader/Panel/Margin/Content/Hint"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.64, 0.55, 1)
+theme_override_fonts/font = ExtResource("2_lora")
+theme_override_font_sizes/font_size = 26
+text = "Fermer"
+vertical_alignment = 1
+
+[node name="Clock" type="CanvasLayer" parent="."]
+layer = 3
+
+[node name="TimerPlate" type="Control" parent="Clock"]
+layout_mode = 3
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -540
-offset_top = 30
-offset_right = -36
-offset_bottom = 84
+offset_left = -478.0
+offset_top = 12.0
+offset_right = -18.0
+offset_bottom = 66.0
 grow_horizontal = 0
-theme_override_colors/font_color = Color(1, 0.85, 0.65, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 9
-theme_override_font_sizes/font_size = 33
-horizontal_alignment = 2
+mouse_filter = 2
+
+[node name="Timer" type="Label" parent="Clock/TimerPlate"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.98, 0.92, 0.8, 1)
+theme_override_fonts/font = SubResource("FontVariation_tabular")
+theme_override_font_sizes/font_size = 30
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Penalty" type="Label" parent="."]
 unique_name_in_owner = true
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -540
-offset_top = 84
-offset_right = -36
-offset_bottom = 138
-grow_horizontal = 0
+offset_right = 200.0
+offset_bottom = 56.0
 theme_override_colors/font_color = Color(1, 0.3, 0.2, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 9
+theme_override_fonts/font = ExtResource("2_lora")
 theme_override_font_sizes/font_size = 36
 text = "−5:00"
 horizontal_alignment = 2

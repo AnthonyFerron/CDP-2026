@@ -85,6 +85,8 @@ var _blue: ColorRect
 func _ready() -> void:
 	_build()
 	_root.hide()
+	# Parchemin et clochette à l'ouverture, parchemin replié à la fermeture (scripts/ui_sounds.gd).
+	UiSounds.watch(_root)
 	_validate.pressed.connect(_on_validate_pressed)
 	_answer.text_submitted.connect(func(_text: String) -> void: _on_validate_pressed())
 	_close.pressed.connect(_on_close_pressed)
@@ -378,7 +380,7 @@ func _build() -> void:
 		Ornate.place(_root, hint, Vector2(x + 138, 960), Vector2(140, 40))
 		x += 300.0
 	var close := HINTS_SCRIPT.CloseButton.new() as Button
-	# Dans le coin du cadre, sous le chronomètre du HUD (y = 30 à 84) : posée à cheval sur le bord, elle le cachait.
+	# Dans le coin du cadre, sous le chronomètre du HUD (y = 12 à 66) : posée à cheval sur le bord, elle le cachait.
 	Ornate.place(frame, close, Vector2(1700, 40), Vector2(80, 80))
 	_close = close
 	_own(_close, "Close")

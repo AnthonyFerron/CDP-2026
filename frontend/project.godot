@@ -33,6 +33,7 @@ Transition="*res://scripts/transition.gd"
 GameSync="*res://scripts/game_sync.gd"
 DebugMenu="*res://scenes/debug/debug_menu.tscn"
 Music="*res://scripts/music.gd"
+UiSounds="*res://scripts/ui_sounds.gd"
 RenderQuality="*res://scripts/render_quality.gd"
 
 [cdp]

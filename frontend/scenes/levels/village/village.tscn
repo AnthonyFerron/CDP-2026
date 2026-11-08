@@ -834,7 +834,7 @@ line_height = 0.12
 double_sided = true
 
 [node name="Slate" type="Node3D" parent="Lore"]
-transform = Transform3D(6.12323e-17, 0, -1, 0, 1, 0, 1, 0, 6.12323e-17, 4.9, 0, 28.6)
+transform = Transform3D(6.12323e-17, 0, -1, 0, 1, 0, 1, 0, 6.12323e-17, 4.55, 0, 28.6)
 script = ExtResource("57_readable")
 title = "L'ardoise de la boulangère"
 body = "Pain de seigle : deux sous. Pain blanc : trois sous. Plus de farine depuis que le meunier a fui. La dernière fournée est pour les gardes du rempart : qu'ils tiennent jusqu'au soir."

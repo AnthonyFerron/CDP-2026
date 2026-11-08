@@ -281,7 +281,9 @@ LORE = [
      "abandonnez la barricade et rejoignez le bunker du roi, près du château.",
      dict(text="Ordre du capitaine\nde la garde", style=2, mount=0, board_size=(1.0, 0.7), board_height=1.35,
           line_height=0.12, double_sided=True)),
-    ("Slate", (4.9, 0.0, 28.6), -90.0, "L'ardoise de la boulangère",
+    # L'ardoise se tient à 1 m du mur de la boulangerie : à 0,6 m, le joueur qui sautait dessus tombait dans la fente
+    # entre sa planche et le mur (sonde de saut) et y restait calé, sans sol sous les pieds pour ressauter.
+    ("Slate", (4.55, 0.0, 28.6), -90.0, "L'ardoise de la boulangère",
      "Pain de seigle : deux sous. Pain blanc : trois sous. Plus de farine depuis que le meunier a fui. La dernière "
      "fournée est pour les gardes du rempart : qu'ils tiennent jusqu'au soir.",
      dict(text="Pain de seigle : 2 sous\nPain blanc : 3 sous", style=3, mount=0, board_size=(0.85, 0.62),
