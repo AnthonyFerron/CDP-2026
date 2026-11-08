@@ -3,13 +3,16 @@ class_name HubScatter
 extends Node3D
 ## Habille le hub : arbres, buissons, rochers, et des fleurs dont le nombre suit les livres rapportés.
 ## Les placements sont reproductibles, posés sur le sol tel qu'il est maillé, et les petits détails
-## disparaissent au loin.
+## disparaissent au loin. Le feuillage des arbres, de la forêt et des buissons est sec et gris tant que les cendres
+## couvrent la vallée : chaque livre posé en fait reverdir un quart (HubFoliage).
 
 @export var terrain: HubTerrain
 @export var tree_models: Array[PackedScene]
 @export var bush_models: Array[PackedScene]
 @export var rock_models: Array[PackedScene]
 @export var flower_models: Array[PackedScene]
+## Shader du feuillage qui reprend vie (hub_foliage.gdshader).
+@export var foliage_shader: Shader
 ## Rayon de la collision de chaque arbre, et de chaque rocher, à l'échelle 1 : le tronc, ou les branches basses des
 ## arbres touffus (tree_fat, le sapin de mini_forest), dont le feuillage descend sous la hauteur des yeux.
 @export var tree_radii: Array[float] = [0.07, 0.07, 0.27, 0.36, 0.06]
@@ -32,24 +35,26 @@ const BAKE_PART := "hub/decor"
 
 var _rng := RandomNumberGenerator.new()
 var _flowers: Array[MultiMesh] = []
+var _foliage: HubFoliage
 
 
 func _ready() -> void:
 	# Le terrain se construit avant ses voisins : il faut ses hauteurs pour poser le décor.
 	if not terrain.is_node_ready():
 		await terrain.ready
+	_foliage = HubFoliage.new(foliage_shader)
 	var signature := LevelBake.signature_of(self, [LevelBake.signature_of(terrain)])
 	var scripts: Array[Script] = [get_script(), terrain.get_script()]
 	var plan: Variant = bake.data(BAKE_PART, signature, scripts) if bake and terrain.baked else null
 	if plan == null:
 		plan = _plan()
 		LevelBake.record(BAKE_PART, signature, scripts, plan)
-	_build(tree_models, plan[0])
+	_build(tree_models, plan[0], true)
 	for index in tree_models.size():
 		var transforms: Array[Transform3D] = []
 		transforms.assign(plan[1][index])
-		_add_multimesh(_load_mesh(tree_models[index]), transforms, true)
-	_build(bush_models, plan[2])
+		_add_multimesh(_load_mesh(tree_models[index]), transforms, true, true)
+	_build(bush_models, plan[2], true)
 	_build(rock_models, plan[3])
 	_flowers = _build(flower_models, plan[4])
 	set_life(0.0)
@@ -70,8 +75,9 @@ func _plan() -> Array:
 
 
 ## Pose une étape du décor : son corps et ses cylindres de collision (s'il en a), puis les copies de chaque modèle,
-## d'un seul MultiMesh pour les modèles solides, par cases sinon. Rend les MultiMesh.
-func _build(models: Array[PackedScene], step: Array) -> Array[MultiMesh]:
+## d'un seul MultiMesh pour les modèles solides, par cases sinon. wither : leur feuillage reprend vie avec les livres.
+## Rend les MultiMesh.
+func _build(models: Array[PackedScene], step: Array, wither := false) -> Array[MultiMesh]:
 	var solid: bool = step[2]
 	if solid:
 		var body := StaticBody3D.new()
@@ -88,14 +94,16 @@ func _build(models: Array[PackedScene], step: Array) -> Array[MultiMesh]:
 	for index in models.size():
 		var transforms: Array[Transform3D] = []
 		transforms.assign(step[1][index])
-		multimeshes.append_array(_add_multimeshes(_load_mesh(models[index]), transforms, solid))
+		multimeshes.append_array(_add_multimeshes(_load_mesh(models[index]), transforms, solid, wither))
 	return multimeshes
 
 
-## Affiche une part des fleurs, de 0 (aucune) à 1 (toutes).
+## Affiche une part des fleurs, de 0 (aucune) à 1 (toutes), et fait reverdir le feuillage dont le palier est atteint.
 func set_life(life: float) -> void:
 	for multimesh in _flowers:
 		multimesh.visible_instance_count = int(multimesh.instance_count * clampf(life, 0.0, 1.0))
+	if _foliage:
+		_foliage.set_life(life)
 
 
 func _is_free(spot: Vector2, margin: float) -> bool:
@@ -184,10 +192,10 @@ func _add_forest() -> Array:
 
 ## Place les instances d'un modèle : d'un seul MultiMesh s'il reste toujours visible (arbres, rochers), sinon par
 ## cases de chunk_size mètres, chacune effacée au loin selon sa propre distance à la caméra. Renvoie les MultiMesh.
-func _add_multimeshes(mesh: Mesh, transforms: Array[Transform3D], always_visible: bool) -> Array[MultiMesh]:
+func _add_multimeshes(mesh: Mesh, transforms: Array[Transform3D], always_visible: bool, wither := false) -> Array[MultiMesh]:
 	var result: Array[MultiMesh] = []
 	if always_visible:
-		result.append(_add_multimesh(mesh, transforms, true).multimesh)
+		result.append(_add_multimesh(mesh, transforms, true, wither).multimesh)
 		return result
 	var cells := {}
 	for transform in transforms:
@@ -197,17 +205,21 @@ func _add_multimeshes(mesh: Mesh, transforms: Array[Transform3D], always_visible
 			cells[cell] = list
 		cells[cell].append(transform)
 	for cell: Vector2i in cells:
-		result.append(_add_multimesh(mesh, cells[cell], false).multimesh)
+		result.append(_add_multimesh(mesh, cells[cell], false, wither).multimesh)
 	return result
 
 
-func _add_multimesh(mesh: Mesh, transforms: Array[Transform3D], always_visible: bool) -> MultiMeshInstance3D:
+## wither : le feuillage du modèle passe par le shader de la vie du hub, et chaque copie porte son palier de vie.
+func _add_multimesh(mesh: Mesh, transforms: Array[Transform3D], always_visible: bool, wither := false) -> MultiMeshInstance3D:
 	var multimesh := MultiMesh.new()
 	multimesh.transform_format = MultiMesh.TRANSFORM_3D
-	multimesh.mesh = mesh
+	multimesh.use_custom_data = wither
+	multimesh.mesh = _foliage.mesh(mesh) if wither else mesh
 	multimesh.instance_count = transforms.size()
 	for index in transforms.size():
 		multimesh.set_instance_transform(index, transforms[index])
+	if wither:
+		HubFoliage.mark(multimesh, terrain)
 	var instance := MultiMeshInstance3D.new()
 	instance.multimesh = multimesh
 	if not always_visible:

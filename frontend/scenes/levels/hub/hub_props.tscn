@@ -159,16 +159,34 @@
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/tree_fat.glb" id="157_model"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/tree_oak.glb" id="158_model"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/hedge-large.glb" id="159_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/stump_round.glb" id="160_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/hedge.glb" id="161_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/flower_redA.glb" id="162_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/flower_yellowA.glb" id="163_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/flower_purpleA.glb" id="164_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/bench-damaged.glb" id="165_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/statue_block.glb" id="166_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_arena/statue.glb" id="167_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/statue_columnDamaged.glb" id="168_model"]
-[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/canoe.glb" id="169_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/tree_default_fall.glb" id="160_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/tree_oak_fall.glb" id="161_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/stump_round.glb" id="162_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/hedge.glb" id="163_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/flower_redA.glb" id="164_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/flower_yellowA.glb" id="165_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/flower_purpleA.glb" id="166_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/bench-damaged.glb" id="167_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/statue_block.glb" id="168_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/mini_arena/statue.glb" id="169_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/statue_columnDamaged.glb" id="170_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/canoe.glb" id="171_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/grass.glb" id="172_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/grass_large.glb" id="173_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/grass_leafs.glb" id="174_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/grass_leafsLarge.glb" id="175_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/plant_bushDetailed.glb" id="176_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/plant_bushSmall.glb" id="177_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/flower_redB.glb" id="178_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/flower_yellowB.glb" id="179_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/flower_purpleB.glb" id="180_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/flower_redC.glb" id="181_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/flower_yellowC.glb" id="182_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/flower_purpleC.glb" id="183_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/mushroom_redGroup.glb" id="184_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/mushroom_tanGroup.glb" id="185_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/debris-wood.glb" id="186_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/nature_kit/log_large.glb" id="187_model"]
 [ext_resource type="Script" path="res://scenes/levels/hub/hub_batch.gd" id="1_script"]
 [ext_resource type="Script" path="res://scenes/levels/hub/hub_lamp.gd" id="2_script"]
 [ext_resource type="Script" path="res://scripts/readable.gd" id="3_script"]
@@ -2119,55 +2137,46 @@ transform = Transform3D(0, 0, -2, 0, 2, 0, 2, 0, 0, 36.8, 0, -52.57)
 [node name="hedge_large_3758" parent="Fixed" instance=ExtResource("159_model")]
 transform = Transform3D(0, 0, -2, 0, 2, 0, 2, 0, 0, 34.9333, 0, -52.57)
 
-[node name="tree_default_3759" parent="Fixed" instance=ExtResource("156_model")]
-transform = Transform3D(4.21684, 0, 1.2563, 0, 4.4, 0, -1.2563, 0, 4.21684, 49.7789, 0, -60.9937)
-
-[node name="tree_oak_3760" parent="Fixed" instance=ExtResource("158_model")]
-transform = Transform3D(-4.39711, 0, 0.15932, 0, 4.4, 0, -0.15932, 0, -4.39711, 49.822, 0, -55.9992)
-
-[node name="tree_default_3761" parent="Fixed" instance=ExtResource("156_model")]
-transform = Transform3D(-2.8478, 0, 3.08707, 0, 4.2, 0, -3.08707, 0, -2.8478, 35.0142, 0, -75.5846)
-
-[node name="lantern_3762" parent="Fixed" instance=ExtResource("26_model")]
+[node name="lantern_3765" parent="Fixed" instance=ExtResource("26_model")]
 transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 40.4, 0, -55)
 
-[node name="lantern_3763" parent="Fixed" instance=ExtResource("26_model")]
+[node name="lantern_3766" parent="Fixed" instance=ExtResource("26_model")]
 transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 43.6, 0, -64)
 
-[node name="lantern_3764" parent="Fixed" instance=ExtResource("26_model")]
+[node name="lantern_3767" parent="Fixed" instance=ExtResource("26_model")]
 transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 40.4, 0, -77)
 
-[node name="lantern_3765" parent="Fixed" instance=ExtResource("26_model")]
+[node name="lantern_3768" parent="Fixed" instance=ExtResource("26_model")]
 transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 40.4, 0, -87)
 
-[node name="lantern_3766" parent="Fixed" instance=ExtResource("26_model")]
+[node name="lantern_3769" parent="Fixed" instance=ExtResource("26_model")]
 transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 32.6, 0, -60)
 
-[node name="lantern_3767" parent="Fixed" instance=ExtResource("26_model")]
+[node name="lantern_3770" parent="Fixed" instance=ExtResource("26_model")]
 transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 32.6, 0, -79)
 
-[node name="lantern_3768" parent="Fixed" instance=ExtResource("26_model")]
+[node name="lantern_3771" parent="Fixed" instance=ExtResource("26_model")]
 transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 49, 0, -67.8)
 
-[node name="canoe_3910" parent="Fixed" instance=ExtResource("169_model")]
+[node name="canoe_3913" parent="Fixed" instance=ExtResource("171_model")]
 transform = Transform3D(0.41676, 0, 2.36354, 0, 2.4, 0, -2.36354, 0, 0.41676, 42.9979, 0, -88.9882)
 
-[node name="lantern_3911" parent="Fixed" instance=ExtResource("26_model")]
+[node name="lantern_4033" parent="Fixed" instance=ExtResource("26_model")]
 transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, -41, 0, -51.5)
 
-[node name="lantern_3912" parent="Fixed" instance=ExtResource("26_model")]
+[node name="lantern_4034" parent="Fixed" instance=ExtResource("26_model")]
 transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, -55.2, 0, 24.6)
 
-[node name="lantern_3913" parent="Fixed" instance=ExtResource("26_model")]
+[node name="lantern_4035" parent="Fixed" instance=ExtResource("26_model")]
 transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, -57, 0, -7)
 
-[node name="lantern_3914" parent="Fixed" instance=ExtResource("26_model")]
+[node name="lantern_4036" parent="Fixed" instance=ExtResource("26_model")]
 transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, -20, 0, 58)
 
-[node name="lantern_3915" parent="Fixed" instance=ExtResource("26_model")]
+[node name="lantern_4037" parent="Fixed" instance=ExtResource("26_model")]
 transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 8, 0, 68)
 
-[node name="lantern_3916" parent="Fixed" instance=ExtResource("26_model")]
+[node name="lantern_4038" parent="Fixed" instance=ExtResource("26_model")]
 transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 74.8, 0, -16)
 
 [node name="Collision" type="StaticBody3D" parent="Fixed"]
@@ -3164,67 +3173,55 @@ shape = SubResource("BoxShape3D_310")
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 34.9333, 0.6, -52)
 shape = SubResource("BoxShape3D_310")
 
-[node name="Box2194" type="CollisionShape3D" parent="Fixed/Collision"]
-transform = Transform3D(0.95837, 0, 0.28552, 0, 1, 0, -0.28552, 0, 0.95837, 49.8, 2, -61)
-shape = SubResource("BoxShape3D_311")
-
-[node name="Box2195" type="CollisionShape3D" parent="Fixed/Collision"]
-transform = Transform3D(-0.99934, 0, 0.03621, 0, 1, 0, -0.03621, 0, -0.99934, 49.8, 2, -56)
-shape = SubResource("BoxShape3D_312")
-
-[node name="Box2196" type="CollisionShape3D" parent="Fixed/Collision"]
-transform = Transform3D(-0.67805, 0, 0.73502, 0, 1, 0, -0.73502, 0, -0.67805, 35, 2, -75.6)
-shape = SubResource("BoxShape3D_313")
-
-[node name="Box2197" type="CollisionShape3D" parent="Fixed/Collision"]
+[node name="Box2200" type="CollisionShape3D" parent="Fixed/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 40.4, 1, -55)
 shape = SubResource("BoxShape3D_26")
 
-[node name="Box2198" type="CollisionShape3D" parent="Fixed/Collision"]
+[node name="Box2201" type="CollisionShape3D" parent="Fixed/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 43.6, 1, -64)
 shape = SubResource("BoxShape3D_26")
 
-[node name="Box2199" type="CollisionShape3D" parent="Fixed/Collision"]
+[node name="Box2202" type="CollisionShape3D" parent="Fixed/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 40.4, 1, -77)
 shape = SubResource("BoxShape3D_26")
 
-[node name="Box2200" type="CollisionShape3D" parent="Fixed/Collision"]
+[node name="Box2203" type="CollisionShape3D" parent="Fixed/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 40.4, 1, -87)
 shape = SubResource("BoxShape3D_26")
 
-[node name="Box2201" type="CollisionShape3D" parent="Fixed/Collision"]
+[node name="Box2204" type="CollisionShape3D" parent="Fixed/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 32.6, 1, -60)
 shape = SubResource("BoxShape3D_26")
 
-[node name="Box2202" type="CollisionShape3D" parent="Fixed/Collision"]
+[node name="Box2205" type="CollisionShape3D" parent="Fixed/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 32.6, 1, -79)
 shape = SubResource("BoxShape3D_26")
 
-[node name="Box2203" type="CollisionShape3D" parent="Fixed/Collision"]
+[node name="Box2206" type="CollisionShape3D" parent="Fixed/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 49, 1, -67.8)
 shape = SubResource("BoxShape3D_26")
 
-[node name="Box2272" type="CollisionShape3D" parent="Fixed/Collision"]
+[node name="Box2275" type="CollisionShape3D" parent="Fixed/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -41, 1, -51.5)
 shape = SubResource("BoxShape3D_26")
 
-[node name="Box2273" type="CollisionShape3D" parent="Fixed/Collision"]
+[node name="Box2276" type="CollisionShape3D" parent="Fixed/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -55.2, 1, 24.6)
 shape = SubResource("BoxShape3D_26")
 
-[node name="Box2274" type="CollisionShape3D" parent="Fixed/Collision"]
+[node name="Box2277" type="CollisionShape3D" parent="Fixed/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -57, 1, -7)
 shape = SubResource("BoxShape3D_26")
 
-[node name="Box2275" type="CollisionShape3D" parent="Fixed/Collision"]
+[node name="Box2278" type="CollisionShape3D" parent="Fixed/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -20, 1, 58)
 shape = SubResource("BoxShape3D_26")
 
-[node name="Box2276" type="CollisionShape3D" parent="Fixed/Collision"]
+[node name="Box2279" type="CollisionShape3D" parent="Fixed/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 8, 1, 68)
 shape = SubResource("BoxShape3D_26")
 
-[node name="Box2277" type="CollisionShape3D" parent="Fixed/Collision"]
+[node name="Box2280" type="CollisionShape3D" parent="Fixed/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 74.8, 1, -16)
 shape = SubResource("BoxShape3D_26")
 
@@ -21806,362 +21803,415 @@ shape = SubResource("BoxShape3D_202")
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 25, 0.5, 79.4)
 shape = SubResource("BoxShape3D_202")
 
+[node name="ParkTrees" type="Node3D" parent="Repairs"]
+metadata/stage = 2
+
+[node name="Ruins" type="Node3D" parent="Repairs/ParkTrees"]
+
+[node name="tree_default_fall_3759" parent="Repairs/ParkTrees/Ruins" instance=ExtResource("160_model")]
+transform = Transform3D(4.21684, 0, 1.2563, 0, 4.4, 0, -1.2563, 0, 4.21684, 49.7789, 0, -60.9937)
+
+[node name="tree_oak_fall_3760" parent="Repairs/ParkTrees/Ruins" instance=ExtResource("161_model")]
+transform = Transform3D(-4.39711, 0, 0.15932, 0, 4.4, 0, -0.15932, 0, -4.39711, 49.822, 0, -55.9992)
+
+[node name="tree_default_fall_3761" parent="Repairs/ParkTrees/Ruins" instance=ExtResource("160_model")]
+transform = Transform3D(-2.8478, 0, 3.08707, 0, 4.2, 0, -3.08707, 0, -2.8478, 35.0142, 0, -75.5846)
+
+[node name="Collision" type="StaticBody3D" parent="Repairs/ParkTrees/Ruins"]
+
+[node name="Box2194" type="CollisionShape3D" parent="Repairs/ParkTrees/Ruins/Collision"]
+transform = Transform3D(0.95837, 0, 0.28552, 0, 1, 0, -0.28552, 0, 0.95837, 49.8, 2, -61)
+shape = SubResource("BoxShape3D_311")
+
+[node name="Box2195" type="CollisionShape3D" parent="Repairs/ParkTrees/Ruins/Collision"]
+transform = Transform3D(-0.99934, 0, 0.03621, 0, 1, 0, -0.03621, 0, -0.99934, 49.8, 2, -56)
+shape = SubResource("BoxShape3D_312")
+
+[node name="Box2196" type="CollisionShape3D" parent="Repairs/ParkTrees/Ruins/Collision"]
+transform = Transform3D(-0.67805, 0, 0.73502, 0, 1, 0, -0.73502, 0, -0.67805, 35, 2, -75.6)
+shape = SubResource("BoxShape3D_313")
+
+[node name="Rebuilt" type="Node3D" parent="Repairs/ParkTrees"]
+
+[node name="tree_default_3762" parent="Repairs/ParkTrees/Rebuilt" instance=ExtResource("156_model")]
+transform = Transform3D(4.21684, 0, 1.2563, 0, 4.4, 0, -1.2563, 0, 4.21684, 49.7789, 0, -60.9937)
+
+[node name="tree_oak_3763" parent="Repairs/ParkTrees/Rebuilt" instance=ExtResource("158_model")]
+transform = Transform3D(-4.39711, 0, 0.15932, 0, 4.4, 0, -0.15932, 0, -4.39711, 49.822, 0, -55.9992)
+
+[node name="tree_default_3764" parent="Repairs/ParkTrees/Rebuilt" instance=ExtResource("156_model")]
+transform = Transform3D(-2.8478, 0, 3.08707, 0, 4.2, 0, -3.08707, 0, -2.8478, 35.0142, 0, -75.5846)
+
+[node name="Collision" type="StaticBody3D" parent="Repairs/ParkTrees/Rebuilt"]
+
+[node name="Box2197" type="CollisionShape3D" parent="Repairs/ParkTrees/Rebuilt/Collision"]
+transform = Transform3D(0.95837, 0, 0.28552, 0, 1, 0, -0.28552, 0, 0.95837, 49.8, 2, -61)
+shape = SubResource("BoxShape3D_311")
+
+[node name="Box2198" type="CollisionShape3D" parent="Repairs/ParkTrees/Rebuilt/Collision"]
+transform = Transform3D(-0.99934, 0, 0.03621, 0, 1, 0, -0.03621, 0, -0.99934, 49.8, 2, -56)
+shape = SubResource("BoxShape3D_312")
+
+[node name="Box2199" type="CollisionShape3D" parent="Repairs/ParkTrees/Rebuilt/Collision"]
+transform = Transform3D(-0.67805, 0, 0.73502, 0, 1, 0, -0.73502, 0, -0.67805, 35, 2, -75.6)
+shape = SubResource("BoxShape3D_313")
+
 [node name="ParkBeds" type="Node3D" parent="Repairs"]
 metadata/stage = 1
 
 [node name="Ruins" type="Node3D" parent="Repairs/ParkBeds"]
 
-[node name="crops_dirtRow_3769" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
+[node name="crops_dirtRow_3772" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 35.3, 0, -58.7)
 
-[node name="crops_dirtRow_3770" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
+[node name="crops_dirtRow_3773" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 36.7, 0, -57.3)
 
-[node name="crops_dirtRow_3771" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
+[node name="crops_dirtRow_3774" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 36.7, 0, -58.7)
 
-[node name="crops_dirtRow_3772" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
+[node name="crops_dirtRow_3775" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 35.3, 0, -57.3)
 
-[node name="stump_round_3773" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("160_model")]
+[node name="stump_round_3776" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("162_model")]
 transform = Transform3D(-1.93067, 0, 0.52202, 0, 2, 0, -0.52202, 0, -1.93067, 36, 0, -58)
 
-[node name="crops_dirtRow_3774" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
+[node name="crops_dirtRow_3777" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 35.3, 0, -64.7)
 
-[node name="crops_dirtRow_3775" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
+[node name="crops_dirtRow_3778" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 36.7, 0, -63.3)
 
-[node name="crops_dirtRow_3776" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
+[node name="crops_dirtRow_3779" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 36.7, 0, -64.7)
 
-[node name="crops_dirtRow_3777" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
+[node name="crops_dirtRow_3780" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 35.3, 0, -63.3)
 
-[node name="stump_round_3778" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("160_model")]
+[node name="stump_round_3781" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("162_model")]
 transform = Transform3D(0.61775, 0, 1.90221, 0, 2, 0, -1.90221, 0, 0.61775, 36, 0, -64)
 
-[node name="crops_dirtRow_3779" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
+[node name="crops_dirtRow_3782" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 47.3, 0, -58.7)
 
-[node name="crops_dirtRow_3780" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
+[node name="crops_dirtRow_3783" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 48.7, 0, -57.3)
 
-[node name="crops_dirtRow_3781" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
+[node name="crops_dirtRow_3784" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 48.7, 0, -58.7)
 
-[node name="crops_dirtRow_3782" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
+[node name="crops_dirtRow_3785" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 47.3, 0, -57.3)
 
-[node name="stump_round_3783" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("160_model")]
+[node name="stump_round_3786" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("162_model")]
 transform = Transform3D(-0.51629, 0, 1.93221, 0, 2, 0, -1.93221, 0, -0.51629, 48, 0, -58)
 
-[node name="crops_dirtRow_3784" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
+[node name="crops_dirtRow_3787" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 47.3, 0, -64.7)
 
-[node name="crops_dirtRow_3785" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
+[node name="crops_dirtRow_3788" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 48.7, 0, -63.3)
 
-[node name="crops_dirtRow_3786" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
+[node name="crops_dirtRow_3789" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 48.7, 0, -64.7)
 
-[node name="crops_dirtRow_3787" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
+[node name="crops_dirtRow_3790" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 47.3, 0, -63.3)
 
-[node name="stump_round_3788" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("160_model")]
+[node name="stump_round_3791" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("162_model")]
 transform = Transform3D(1.52899, 0, -1.28926, 0, 2, 0, 1.28926, 0, 1.52899, 48, 0, -64)
 
-[node name="crops_dirtRow_3789" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
+[node name="crops_dirtRow_3792" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 46.9, 0, -77.1)
 
-[node name="crops_dirtRow_3790" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
+[node name="crops_dirtRow_3793" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 48.3, 0, -75.7)
 
-[node name="crops_dirtRow_3791" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
+[node name="crops_dirtRow_3794" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 48.3, 0, -77.1)
 
-[node name="crops_dirtRow_3792" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
+[node name="crops_dirtRow_3795" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("110_model")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 46.9, 0, -75.7)
 
-[node name="stump_round_3793" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("160_model")]
+[node name="stump_round_3796" parent="Repairs/ParkBeds/Ruins" instance=ExtResource("162_model")]
 transform = Transform3D(-0.67101, 0, 1.88408, 0, 2, 0, -1.88408, 0, -0.67101, 47.6, 0, -76.4)
 
 [node name="Rebuilt" type="Node3D" parent="Repairs/ParkBeds"]
 
-[node name="hedge_3794" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("161_model")]
+[node name="hedge_3797" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
 transform = Transform3D(1, 0, 0, 0, 1.6, 0, 0, 0, 3.6, 33.725, 0, -58)
 
-[node name="hedge_3795" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("161_model")]
+[node name="hedge_3798" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
 transform = Transform3D(0, 0, 3.6, 0, 1.6, 0, -1, 0, 0, 36, 0, -59.525)
 
-[node name="hedge_3796" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("161_model")]
+[node name="hedge_3799" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
 transform = Transform3D(1, 0, 0, 0, 1.6, 0, 0, 0, 3.6, 37.525, 0, -58)
 
-[node name="hedge_3797" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("161_model")]
+[node name="hedge_3800" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
 transform = Transform3D(0, 0, 3.6, 0, 1.6, 0, -1, 0, 0, 36, 0, -55.725)
 
-[node name="flower_redA_3798" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("162_model")]
+[node name="flower_redA_3801" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("164_model")]
 transform = Transform3D(-1.22735, 0, -2.29208, 0, 2.6, 0, 2.29208, 0, -1.22735, 34.9, 0, -59.1)
 
-[node name="flower_yellowA_3799" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
+[node name="flower_yellowA_3802" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("165_model")]
 transform = Transform3D(-0.73026, 0, 2.49534, 0, 2.6, 0, -2.49534, 0, -0.73026, 36, 0, -59.1)
 
-[node name="flower_purpleA_3800" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("164_model")]
+[node name="flower_purpleA_3803" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("166_model")]
 transform = Transform3D(1.11276, 0, 2.34984, 0, 2.6, 0, -2.34984, 0, 1.11276, 37.1, 0, -59.1)
 
-[node name="flower_redA_3801" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("162_model")]
+[node name="flower_redA_3804" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("164_model")]
 transform = Transform3D(-1.96792, 0, -1.6992, 0, 2.6, 0, 1.6992, 0, -1.96792, 34.9, 0, -58)
 
-[node name="flower_yellowA_3802" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
+[node name="flower_yellowA_3805" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("165_model")]
 transform = Transform3D(-1.50876, 0, 2.11746, 0, 2.6, 0, -2.11746, 0, -1.50876, 36, 0, -58)
 
-[node name="flower_purpleA_3803" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("164_model")]
+[node name="flower_purpleA_3806" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("166_model")]
 transform = Transform3D(2.40342, 0, 0.99175, 0, 2.6, 0, -0.99175, 0, 2.40342, 37.1, 0, -58)
 
-[node name="flower_redA_3804" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("162_model")]
+[node name="flower_redA_3807" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("164_model")]
 transform = Transform3D(2.55792, 0, 0.46586, 0, 2.6, 0, -0.46586, 0, 2.55792, 34.9, 0, -56.9)
 
-[node name="flower_yellowA_3805" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
+[node name="flower_yellowA_3808" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("165_model")]
 transform = Transform3D(2.32794, 0, 1.15788, 0, 2.6, 0, -1.15788, 0, 2.32794, 36, 0, -56.9)
 
-[node name="flower_purpleA_3806" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("164_model")]
+[node name="flower_purpleA_3809" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("166_model")]
 transform = Transform3D(-1.23295, 0, 2.28907, 0, 2.6, 0, -2.28907, 0, -1.23295, 37.1, 0, -56.9)
 
-[node name="hedge_3807" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("161_model")]
+[node name="hedge_3810" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
 transform = Transform3D(1, 0, 0, 0, 1.6, 0, 0, 0, 3.6, 33.725, 0, -64)
 
-[node name="hedge_3808" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("161_model")]
+[node name="hedge_3811" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
 transform = Transform3D(0, 0, 3.6, 0, 1.6, 0, -1, 0, 0, 36, 0, -65.525)
 
-[node name="hedge_3809" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("161_model")]
+[node name="hedge_3812" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
 transform = Transform3D(1, 0, 0, 0, 1.6, 0, 0, 0, 3.6, 37.525, 0, -64)
 
-[node name="hedge_3810" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("161_model")]
+[node name="hedge_3813" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
 transform = Transform3D(0, 0, 3.6, 0, 1.6, 0, -1, 0, 0, 36, 0, -61.725)
 
-[node name="flower_redA_3811" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("162_model")]
+[node name="flower_redA_3814" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("164_model")]
 transform = Transform3D(-1.79668, 0, -1.87934, 0, 2.6, 0, 1.87934, 0, -1.79668, 34.9, 0, -65.1)
 
-[node name="flower_yellowA_3812" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
+[node name="flower_yellowA_3815" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("165_model")]
 transform = Transform3D(1.45639, 0, -2.15382, 0, 2.6, 0, 2.15382, 0, 1.45639, 36, 0, -65.1)
 
-[node name="flower_purpleA_3813" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("164_model")]
+[node name="flower_purpleA_3816" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("166_model")]
 transform = Transform3D(-0.80203, 0, 2.47321, 0, 2.6, 0, -2.47321, 0, -0.80203, 37.1, 0, -65.1)
 
-[node name="flower_redA_3814" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("162_model")]
+[node name="flower_redA_3817" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("164_model")]
 transform = Transform3D(0.4368, 0, -2.56305, 0, 2.6, 0, 2.56305, 0, 0.4368, 34.9, 0, -64)
 
-[node name="flower_yellowA_3815" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
+[node name="flower_yellowA_3818" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("165_model")]
 transform = Transform3D(2.04344, 0, 1.6076, 0, 2.6, 0, -1.6076, 0, 2.04344, 36, 0, -64)
 
-[node name="flower_purpleA_3816" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("164_model")]
+[node name="flower_purpleA_3819" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("166_model")]
 transform = Transform3D(-1.92988, 0, 1.74229, 0, 2.6, 0, -1.74229, 0, -1.92988, 37.1, 0, -64)
 
-[node name="flower_redA_3817" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("162_model")]
+[node name="flower_redA_3820" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("164_model")]
 transform = Transform3D(2.25649, 0, 1.2916, 0, 2.6, 0, -1.2916, 0, 2.25649, 34.9, 0, -62.9)
 
-[node name="flower_yellowA_3818" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
+[node name="flower_yellowA_3821" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("165_model")]
 transform = Transform3D(2.38976, 0, -1.02423, 0, 2.6, 0, 1.02423, 0, 2.38976, 36, 0, -62.9)
 
-[node name="flower_purpleA_3819" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("164_model")]
+[node name="flower_purpleA_3822" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("166_model")]
 transform = Transform3D(-2.57165, 0, 0.38289, 0, 2.6, 0, -0.38289, 0, -2.57165, 37.1, 0, -62.9)
 
-[node name="hedge_3820" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("161_model")]
+[node name="hedge_3823" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
 transform = Transform3D(1, 0, 0, 0, 1.6, 0, 0, 0, 3.6, 45.725, 0, -58)
 
-[node name="hedge_3821" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("161_model")]
+[node name="hedge_3824" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
 transform = Transform3D(0, 0, 3.6, 0, 1.6, 0, -1, 0, 0, 48, 0, -59.525)
 
-[node name="hedge_3822" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("161_model")]
+[node name="hedge_3825" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
 transform = Transform3D(1, 0, 0, 0, 1.6, 0, 0, 0, 3.6, 49.525, 0, -58)
 
-[node name="hedge_3823" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("161_model")]
+[node name="hedge_3826" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
 transform = Transform3D(0, 0, 3.6, 0, 1.6, 0, -1, 0, 0, 48, 0, -55.725)
 
-[node name="flower_redA_3824" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("162_model")]
+[node name="flower_redA_3827" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("164_model")]
 transform = Transform3D(-2.15963, 0, 1.44775, 0, 2.6, 0, -1.44775, 0, -2.15963, 46.9, 0, -59.1)
 
-[node name="flower_yellowA_3825" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
+[node name="flower_yellowA_3828" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("165_model")]
 transform = Transform3D(-2.48703, 0, 0.75808, 0, 2.6, 0, -0.75808, 0, -2.48703, 48, 0, -59.1)
 
-[node name="flower_purpleA_3826" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("164_model")]
+[node name="flower_purpleA_3829" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("166_model")]
 transform = Transform3D(-1.01288, 0, -2.39459, 0, 2.6, 0, 2.39459, 0, -1.01288, 49.1, 0, -59.1)
 
-[node name="flower_redA_3827" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("162_model")]
+[node name="flower_redA_3830" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("164_model")]
 transform = Transform3D(1.13763, 0, 2.3379, 0, 2.6, 0, -2.3379, 0, 1.13763, 46.9, 0, -58)
 
-[node name="flower_yellowA_3828" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
+[node name="flower_yellowA_3831" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("165_model")]
 transform = Transform3D(-2.09184, 0, 1.54409, 0, 2.6, 0, -1.54409, 0, -2.09184, 48, 0, -58)
 
-[node name="flower_purpleA_3829" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("164_model")]
+[node name="flower_purpleA_3832" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("166_model")]
 transform = Transform3D(2.57842, 0, -0.33427, 0, 2.6, 0, 0.33427, 0, 2.57842, 49.1, 0, -58)
 
-[node name="flower_redA_3830" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("162_model")]
+[node name="flower_redA_3833" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("164_model")]
 transform = Transform3D(-0.04555, 0, 2.5996, 0, 2.6, 0, -2.5996, 0, -0.04555, 46.9, 0, -56.9)
 
-[node name="flower_yellowA_3831" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
+[node name="flower_yellowA_3834" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("165_model")]
 transform = Transform3D(2.49568, 0, 0.72909, 0, 2.6, 0, -0.72909, 0, 2.49568, 48, 0, -56.9)
 
-[node name="flower_purpleA_3832" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("164_model")]
+[node name="flower_purpleA_3835" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("166_model")]
 transform = Transform3D(2.01832, 0, 1.63902, 0, 2.6, 0, -1.63902, 0, 2.01832, 49.1, 0, -56.9)
 
-[node name="hedge_3833" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("161_model")]
+[node name="hedge_3836" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
 transform = Transform3D(1, 0, 0, 0, 1.6, 0, 0, 0, 3.6, 45.725, 0, -64)
 
-[node name="hedge_3834" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("161_model")]
+[node name="hedge_3837" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
 transform = Transform3D(0, 0, 3.6, 0, 1.6, 0, -1, 0, 0, 48, 0, -65.525)
 
-[node name="hedge_3835" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("161_model")]
+[node name="hedge_3838" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
 transform = Transform3D(1, 0, 0, 0, 1.6, 0, 0, 0, 3.6, 49.525, 0, -64)
 
-[node name="hedge_3836" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("161_model")]
+[node name="hedge_3839" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
 transform = Transform3D(0, 0, 3.6, 0, 1.6, 0, -1, 0, 0, 48, 0, -61.725)
 
-[node name="flower_redA_3837" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("162_model")]
+[node name="flower_redA_3840" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("164_model")]
 transform = Transform3D(1.56972, 0, 2.07267, 0, 2.6, 0, -2.07267, 0, 1.56972, 46.9, 0, -65.1)
 
-[node name="flower_yellowA_3838" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
+[node name="flower_yellowA_3841" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("165_model")]
 transform = Transform3D(-2.31633, 0, 1.18094, 0, 2.6, 0, -1.18094, 0, -2.31633, 48, 0, -65.1)
 
-[node name="flower_purpleA_3839" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("164_model")]
+[node name="flower_purpleA_3842" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("166_model")]
 transform = Transform3D(1.83388, 0, -1.84307, 0, 2.6, 0, 1.84307, 0, 1.83388, 49.1, 0, -65.1)
 
-[node name="flower_redA_3840" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("162_model")]
+[node name="flower_redA_3843" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("164_model")]
 transform = Transform3D(0.89482, 0, 2.44117, 0, 2.6, 0, -2.44117, 0, 0.89482, 46.9, 0, -64)
 
-[node name="flower_yellowA_3841" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
+[node name="flower_yellowA_3844" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("165_model")]
 transform = Transform3D(-2.0072, 0, 1.65262, 0, 2.6, 0, -1.65262, 0, -2.0072, 48, 0, -64)
 
-[node name="flower_purpleA_3842" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("164_model")]
+[node name="flower_purpleA_3845" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("166_model")]
 transform = Transform3D(2.16828, 0, -1.43476, 0, 2.6, 0, 1.43476, 0, 2.16828, 49.1, 0, -64)
 
-[node name="flower_redA_3843" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("162_model")]
+[node name="flower_redA_3846" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("164_model")]
 transform = Transform3D(-2.12491, 0, 1.49825, 0, 2.6, 0, -1.49825, 0, -2.12491, 46.9, 0, -62.9)
 
-[node name="flower_yellowA_3844" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
+[node name="flower_yellowA_3847" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("165_model")]
 transform = Transform3D(-2.07722, 0, 1.5637, 0, 2.6, 0, -1.5637, 0, -2.07722, 48, 0, -62.9)
 
-[node name="flower_purpleA_3845" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("164_model")]
+[node name="flower_purpleA_3848" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("166_model")]
 transform = Transform3D(-0.12422, 0, -2.59703, 0, 2.6, 0, 2.59703, 0, -0.12422, 49.1, 0, -62.9)
 
-[node name="hedge_3846" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("161_model")]
+[node name="hedge_3849" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
 transform = Transform3D(1, 0, 0, 0, 1.6, 0, 0, 0, 3.6, 45.325, 0, -76.4)
 
-[node name="hedge_3847" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("161_model")]
+[node name="hedge_3850" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
 transform = Transform3D(0, 0, 3.6, 0, 1.6, 0, -1, 0, 0, 47.6, 0, -77.925)
 
-[node name="hedge_3848" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("161_model")]
+[node name="hedge_3851" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
 transform = Transform3D(1, 0, 0, 0, 1.6, 0, 0, 0, 3.6, 49.125, 0, -76.4)
 
-[node name="hedge_3849" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("161_model")]
+[node name="hedge_3852" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
 transform = Transform3D(0, 0, 3.6, 0, 1.6, 0, -1, 0, 0, 47.6, 0, -74.125)
 
-[node name="flower_purpleA_3850" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("164_model")]
+[node name="flower_purpleA_3853" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("166_model")]
 transform = Transform3D(-1.37792, 0, -2.20484, 0, 2.6, 0, 2.20484, 0, -1.37792, 46.5, 0, -77.5)
 
-[node name="flower_redA_3851" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("162_model")]
+[node name="flower_redA_3854" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("164_model")]
 transform = Transform3D(-2.44778, 0, 0.87656, 0, 2.6, 0, -0.87656, 0, -2.44778, 47.6, 0, -77.5)
 
-[node name="flower_yellowA_3852" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
+[node name="flower_yellowA_3855" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("165_model")]
 transform = Transform3D(-1.41803, 0, -2.17926, 0, 2.6, 0, 2.17926, 0, -1.41803, 48.7, 0, -77.5)
 
-[node name="flower_purpleA_3853" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("164_model")]
+[node name="flower_purpleA_3856" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("166_model")]
 transform = Transform3D(1.07282, 0, -2.36834, 0, 2.6, 0, 2.36834, 0, 1.07282, 46.5, 0, -76.4)
 
-[node name="flower_redA_3854" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("162_model")]
+[node name="flower_redA_3857" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("164_model")]
 transform = Transform3D(1.85104, 0, 1.82583, 0, 2.6, 0, -1.82583, 0, 1.85104, 47.6, 0, -76.4)
 
-[node name="flower_yellowA_3855" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
+[node name="flower_yellowA_3858" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("165_model")]
 transform = Transform3D(0.64049, 0, 2.51988, 0, 2.6, 0, -2.51988, 0, 0.64049, 48.7, 0, -76.4)
 
-[node name="flower_purpleA_3856" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("164_model")]
+[node name="flower_purpleA_3859" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("166_model")]
 transform = Transform3D(-0.9048, 0, 2.43749, 0, 2.6, 0, -2.43749, 0, -0.9048, 46.5, 0, -75.3)
 
-[node name="flower_redA_3857" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("162_model")]
+[node name="flower_redA_3860" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("164_model")]
 transform = Transform3D(1.86263, 0, -1.814, 0, 2.6, 0, 1.814, 0, 1.86263, 47.6, 0, -75.3)
 
-[node name="flower_yellowA_3858" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("163_model")]
+[node name="flower_yellowA_3861" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("165_model")]
 transform = Transform3D(2.27605, 0, 1.25681, 0, 2.6, 0, -1.25681, 0, 2.27605, 48.7, 0, -75.3)
 
 [node name="Collision" type="StaticBody3D" parent="Repairs/ParkBeds/Rebuilt"]
 
-[node name="Box2204" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
+[node name="Box2207" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 34.1, 0.2, -58)
 shape = SubResource("BoxShape3D_314")
 
-[node name="Box2205" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
+[node name="Box2208" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 36, 0.2, -59.9)
 shape = SubResource("BoxShape3D_315")
 
-[node name="Box2206" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
+[node name="Box2209" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 37.9, 0.2, -58)
 shape = SubResource("BoxShape3D_314")
 
-[node name="Box2207" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
+[node name="Box2210" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 36, 0.2, -56.1)
 shape = SubResource("BoxShape3D_315")
 
-[node name="Box2208" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
+[node name="Box2211" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 34.1, 0.2, -64)
 shape = SubResource("BoxShape3D_314")
 
-[node name="Box2209" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
+[node name="Box2212" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 36, 0.2, -65.9)
 shape = SubResource("BoxShape3D_315")
 
-[node name="Box2210" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
+[node name="Box2213" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 37.9, 0.2, -64)
 shape = SubResource("BoxShape3D_314")
 
-[node name="Box2211" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
+[node name="Box2214" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 36, 0.2, -62.1)
 shape = SubResource("BoxShape3D_315")
 
-[node name="Box2212" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
+[node name="Box2215" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 46.1, 0.2, -58)
 shape = SubResource("BoxShape3D_314")
 
-[node name="Box2213" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
+[node name="Box2216" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 48, 0.2, -59.9)
 shape = SubResource("BoxShape3D_315")
 
-[node name="Box2214" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
+[node name="Box2217" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 49.9, 0.2, -58)
 shape = SubResource("BoxShape3D_314")
 
-[node name="Box2215" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
+[node name="Box2218" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 48, 0.2, -56.1)
 shape = SubResource("BoxShape3D_315")
 
-[node name="Box2216" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
+[node name="Box2219" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 46.1, 0.2, -64)
 shape = SubResource("BoxShape3D_314")
 
-[node name="Box2217" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
+[node name="Box2220" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 48, 0.2, -65.9)
 shape = SubResource("BoxShape3D_315")
 
-[node name="Box2218" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
+[node name="Box2221" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 49.9, 0.2, -64)
 shape = SubResource("BoxShape3D_314")
 
-[node name="Box2219" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
+[node name="Box2222" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 48, 0.2, -62.1)
 shape = SubResource("BoxShape3D_315")
 
-[node name="Box2220" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
+[node name="Box2223" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 45.7, 0.2, -76.4)
 shape = SubResource("BoxShape3D_314")
 
-[node name="Box2221" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
+[node name="Box2224" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 47.6, 0.2, -78.3)
 shape = SubResource("BoxShape3D_315")
 
-[node name="Box2222" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
+[node name="Box2225" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 49.5, 0.2, -76.4)
 shape = SubResource("BoxShape3D_314")
 
-[node name="Box2223" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
+[node name="Box2226" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 47.6, 0.2, -74.5)
 shape = SubResource("BoxShape3D_315")
 
@@ -22170,93 +22220,93 @@ metadata/stage = 1
 
 [node name="Ruins" type="Node3D" parent="Repairs/ParkBenches"]
 
-[node name="bench_damaged_3859" parent="Repairs/ParkBenches/Ruins" instance=ExtResource("165_model")]
+[node name="bench_damaged_3862" parent="Repairs/ParkBenches/Ruins" instance=ExtResource("167_model")]
 transform = Transform3D(-0.37076, 0, 2.16853, 0, 2.2, 0, -2.16853, 0, -0.37076, 39.7817, 0, -60.0415)
 
-[node name="bench_damaged_3860" parent="Repairs/ParkBenches/Ruins" instance=ExtResource("165_model")]
+[node name="bench_damaged_3863" parent="Repairs/ParkBenches/Ruins" instance=ExtResource("167_model")]
 transform = Transform3D(0, -0.48417, -2.14606, 2.2, 0, 0, 0, -2.14606, 0.48417, 44.3342, 0.914, -59.4552)
 
-[node name="bench_damaged_3861" parent="Repairs/ParkBenches/Ruins" instance=ExtResource("165_model")]
+[node name="bench_damaged_3864" parent="Repairs/ParkBenches/Ruins" instance=ExtResource("167_model")]
 transform = Transform3D(-0.36619, 0, 2.16931, 0, 2.2, 0, -2.16931, 0, -0.36619, 39.7818, 0, -82.0416)
 
-[node name="bench_damaged_3862" parent="Repairs/ParkBenches/Ruins" instance=ExtResource("165_model")]
+[node name="bench_damaged_3865" parent="Repairs/ParkBenches/Ruins" instance=ExtResource("167_model")]
 transform = Transform3D(-0.5123, 0, -2.13952, 0, 2.2, 0, 2.13952, 0, -0.5123, 43.6005, 0, -78.3547)
 
-[node name="bench_damaged_3863" parent="Repairs/ParkBenches/Ruins" instance=ExtResource("165_model")]
+[node name="bench_damaged_3866" parent="Repairs/ParkBenches/Ruins" instance=ExtResource("167_model")]
 transform = Transform3D(-0.28009, 0, 2.1821, 0, 2.2, 0, -2.1821, 0, -0.28009, 33.1835, 0, -67.6422)
 
-[node name="bench_damaged_3864" parent="Repairs/ParkBenches/Ruins" instance=ExtResource("165_model")]
+[node name="bench_damaged_3867" parent="Repairs/ParkBenches/Ruins" instance=ExtResource("167_model")]
 transform = Transform3D(-0, 2.19007, 0.20881, 2.2, 0, 0, -0, 0.20881, -2.19007, 49.8405, 0.914, -72.6423)
 
 [node name="Collision" type="StaticBody3D" parent="Repairs/ParkBenches/Ruins"]
 
-[node name="Box2224" type="CollisionShape3D" parent="Repairs/ParkBenches/Ruins/Collision"]
+[node name="Box2227" type="CollisionShape3D" parent="Repairs/ParkBenches/Ruins/Collision"]
 transform = Transform3D(-0.16853, 0, 0.9857, 0, 1, 0, -0.9857, 0, -0.16853, 39.8, 0.45, -60)
 shape = SubResource("BoxShape3D_316")
 
-[node name="Box2225" type="CollisionShape3D" parent="Repairs/ParkBenches/Ruins/Collision"]
+[node name="Box2228" type="CollisionShape3D" parent="Repairs/ParkBenches/Ruins/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 44.2, 0.87, -60)
 shape = SubResource("BoxShape3D_317")
 
-[node name="Box2226" type="CollisionShape3D" parent="Repairs/ParkBenches/Ruins/Collision"]
+[node name="Box2229" type="CollisionShape3D" parent="Repairs/ParkBenches/Ruins/Collision"]
 transform = Transform3D(-0.16645, 0, 0.98605, 0, 1, 0, -0.98605, 0, -0.16645, 39.8, 0.45, -82)
 shape = SubResource("BoxShape3D_316")
 
-[node name="Box2227" type="CollisionShape3D" parent="Repairs/ParkBenches/Ruins/Collision"]
+[node name="Box2230" type="CollisionShape3D" parent="Repairs/ParkBenches/Ruins/Collision"]
 transform = Transform3D(-0.23287, 0, -0.97251, 0, 1, 0, 0.97251, 0, -0.23287, 43.6, 0.45, -78.4)
 shape = SubResource("BoxShape3D_316")
 
-[node name="Box2228" type="CollisionShape3D" parent="Repairs/ParkBenches/Ruins/Collision"]
+[node name="Box2231" type="CollisionShape3D" parent="Repairs/ParkBenches/Ruins/Collision"]
 transform = Transform3D(-0.12731, 0, 0.99186, 0, 1, 0, -0.99186, 0, -0.12731, 33.2, 0.45, -67.6)
 shape = SubResource("BoxShape3D_316")
 
-[node name="Box2229" type="CollisionShape3D" parent="Repairs/ParkBenches/Ruins/Collision"]
+[node name="Box2232" type="CollisionShape3D" parent="Repairs/ParkBenches/Ruins/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 50.4, 0.87, -72.6)
 shape = SubResource("BoxShape3D_318")
 
 [node name="Rebuilt" type="Node3D" parent="Repairs/ParkBenches"]
 
-[node name="bench_3865" parent="Repairs/ParkBenches/Rebuilt" instance=ExtResource("97_model")]
+[node name="bench_3868" parent="Repairs/ParkBenches/Rebuilt" instance=ExtResource("97_model")]
 transform = Transform3D(0, 0, 2.2, 0, 2.2, 0, -2.2, 0, 0, 39.8, 0, -59.989)
 
-[node name="bench_3866" parent="Repairs/ParkBenches/Rebuilt" instance=ExtResource("97_model")]
+[node name="bench_3869" parent="Repairs/ParkBenches/Rebuilt" instance=ExtResource("97_model")]
 transform = Transform3D(0, 0, -2.2, 0, 2.2, 0, 2.2, 0, 0, 44.2, 0, -60.011)
 
-[node name="bench_3867" parent="Repairs/ParkBenches/Rebuilt" instance=ExtResource("97_model")]
+[node name="bench_3870" parent="Repairs/ParkBenches/Rebuilt" instance=ExtResource("97_model")]
 transform = Transform3D(0, 0, 2.2, 0, 2.2, 0, -2.2, 0, 0, 39.8, 0, -81.989)
 
-[node name="bench_3868" parent="Repairs/ParkBenches/Rebuilt" instance=ExtResource("97_model")]
+[node name="bench_3871" parent="Repairs/ParkBenches/Rebuilt" instance=ExtResource("97_model")]
 transform = Transform3D(0, 0, -2.2, 0, 2.2, 0, 2.2, 0, 0, 43.6, 0, -78.411)
 
-[node name="bench_3869" parent="Repairs/ParkBenches/Rebuilt" instance=ExtResource("97_model")]
+[node name="bench_3872" parent="Repairs/ParkBenches/Rebuilt" instance=ExtResource("97_model")]
 transform = Transform3D(0, 0, 2.2, 0, 2.2, 0, -2.2, 0, 0, 33.2, 0, -67.589)
 
-[node name="bench_3870" parent="Repairs/ParkBenches/Rebuilt" instance=ExtResource("97_model")]
+[node name="bench_3873" parent="Repairs/ParkBenches/Rebuilt" instance=ExtResource("97_model")]
 transform = Transform3D(-2.2, 0, 0, 0, 2.2, 0, -0, 0, -2.2, 50.411, 0, -72.6)
 
 [node name="Collision" type="StaticBody3D" parent="Repairs/ParkBenches/Rebuilt"]
 
-[node name="Box2230" type="CollisionShape3D" parent="Repairs/ParkBenches/Rebuilt/Collision"]
+[node name="Box2233" type="CollisionShape3D" parent="Repairs/ParkBenches/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 39.8, 0.5, -60)
 shape = SubResource("BoxShape3D_319")
 
-[node name="Box2231" type="CollisionShape3D" parent="Repairs/ParkBenches/Rebuilt/Collision"]
+[node name="Box2234" type="CollisionShape3D" parent="Repairs/ParkBenches/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 44.2, 0.5, -60)
 shape = SubResource("BoxShape3D_319")
 
-[node name="Box2232" type="CollisionShape3D" parent="Repairs/ParkBenches/Rebuilt/Collision"]
+[node name="Box2235" type="CollisionShape3D" parent="Repairs/ParkBenches/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 39.8, 0.5, -82)
 shape = SubResource("BoxShape3D_319")
 
-[node name="Box2233" type="CollisionShape3D" parent="Repairs/ParkBenches/Rebuilt/Collision"]
+[node name="Box2236" type="CollisionShape3D" parent="Repairs/ParkBenches/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 43.6, 0.5, -78.4)
 shape = SubResource("BoxShape3D_319")
 
-[node name="Box2234" type="CollisionShape3D" parent="Repairs/ParkBenches/Rebuilt/Collision"]
+[node name="Box2237" type="CollisionShape3D" parent="Repairs/ParkBenches/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 33.2, 0.5, -67.6)
 shape = SubResource("BoxShape3D_319")
 
-[node name="Box2235" type="CollisionShape3D" parent="Repairs/ParkBenches/Rebuilt/Collision"]
+[node name="Box2238" type="CollisionShape3D" parent="Repairs/ParkBenches/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 50.4, 0.5, -72.6)
 shape = SubResource("BoxShape3D_284")
 
@@ -22265,121 +22315,121 @@ metadata/stage = 2
 
 [node name="Ruins" type="Node3D" parent="Repairs/ParkKings"]
 
-[node name="statue_block_3871" parent="Repairs/ParkKings/Ruins" instance=ExtResource("166_model")]
+[node name="statue_block_3874" parent="Repairs/ParkKings/Ruins" instance=ExtResource("168_model")]
 transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, 0, 0, 2.4, 39.188, 0, -56.012)
 
-[node name="statue_3872" parent="Repairs/ParkKings/Ruins" instance=ExtResource("167_model")]
+[node name="statue_3875" parent="Repairs/ParkKings/Ruins" instance=ExtResource("169_model")]
 transform = Transform3D(0.45258, 1.53466, 0, 0, 0, -1.6, -1.53466, 0.45258, 0, 36.5772, 0.56, -55.9933)
 
-[node name="statue_block_3873" parent="Repairs/ParkKings/Ruins" instance=ExtResource("166_model")]
+[node name="statue_block_3876" parent="Repairs/ParkKings/Ruins" instance=ExtResource("168_model")]
 transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, 0, 0, 2.4, 44.788, 0, -56.012)
 
-[node name="statue_3874" parent="Repairs/ParkKings/Ruins" instance=ExtResource("167_model")]
+[node name="statue_3877" parent="Repairs/ParkKings/Ruins" instance=ExtResource("169_model")]
 transform = Transform3D(-0.47627, 1.52747, 0, 0, 0, -1.6, -1.52747, -0.47627, -0, 45.3866, 0.56, -55.3756)
 
-[node name="statue_block_3875" parent="Repairs/ParkKings/Ruins" instance=ExtResource("166_model")]
+[node name="statue_block_3878" parent="Repairs/ParkKings/Ruins" instance=ExtResource("168_model")]
 transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, 0, 0, 2.4, 39.188, 0, -61.512)
 
-[node name="statue_3876" parent="Repairs/ParkKings/Ruins" instance=ExtResource("167_model")]
+[node name="statue_3879" parent="Repairs/ParkKings/Ruins" instance=ExtResource("169_model")]
 transform = Transform3D(-0.15066, 1.59289, 0, 0, 0, -1.6, -1.59289, -0.15066, -0, 36.5415, 0.56, -61.0919)
 
-[node name="statue_block_3877" parent="Repairs/ParkKings/Ruins" instance=ExtResource("166_model")]
+[node name="statue_block_3880" parent="Repairs/ParkKings/Ruins" instance=ExtResource("168_model")]
 transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, 0, 0, 2.4, 44.788, 0, -61.512)
 
-[node name="statue_3878" parent="Repairs/ParkKings/Ruins" instance=ExtResource("167_model")]
+[node name="statue_3881" parent="Repairs/ParkKings/Ruins" instance=ExtResource("169_model")]
 transform = Transform3D(0.26056, 1.57864, 0, 0, 0, -1.6, -1.57864, 0.26056, 0, 45.3489, 0.56, -61.3654)
 
 [node name="Collision" type="StaticBody3D" parent="Repairs/ParkKings/Ruins"]
 
-[node name="Box2236" type="CollisionShape3D" parent="Repairs/ParkKings/Ruins/Collision"]
+[node name="Box2239" type="CollisionShape3D" parent="Repairs/ParkKings/Ruins/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 39.2, 0.475, -56)
 shape = SubResource("BoxShape3D_320")
 
-[node name="Box2237" type="CollisionShape3D" parent="Repairs/ParkKings/Ruins/Collision"]
+[node name="Box2240" type="CollisionShape3D" parent="Repairs/ParkKings/Ruins/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 37.6, 0.552, -55.7)
 shape = SubResource("BoxShape3D_321")
 
-[node name="Box2238" type="CollisionShape3D" parent="Repairs/ParkKings/Ruins/Collision"]
+[node name="Box2241" type="CollisionShape3D" parent="Repairs/ParkKings/Ruins/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 44.8, 0.475, -56)
 shape = SubResource("BoxShape3D_320")
 
-[node name="Box2239" type="CollisionShape3D" parent="Repairs/ParkKings/Ruins/Collision"]
+[node name="Box2242" type="CollisionShape3D" parent="Repairs/ParkKings/Ruins/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 46.4, 0.552, -55.7)
 shape = SubResource("BoxShape3D_322")
 
-[node name="Box2240" type="CollisionShape3D" parent="Repairs/ParkKings/Ruins/Collision"]
+[node name="Box2243" type="CollisionShape3D" parent="Repairs/ParkKings/Ruins/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 39.2, 0.475, -61.5)
 shape = SubResource("BoxShape3D_320")
 
-[node name="Box2241" type="CollisionShape3D" parent="Repairs/ParkKings/Ruins/Collision"]
+[node name="Box2244" type="CollisionShape3D" parent="Repairs/ParkKings/Ruins/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 37.6, 0.552, -61.2)
 shape = SubResource("BoxShape3D_323")
 
-[node name="Box2242" type="CollisionShape3D" parent="Repairs/ParkKings/Ruins/Collision"]
+[node name="Box2245" type="CollisionShape3D" parent="Repairs/ParkKings/Ruins/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 44.8, 0.475, -61.5)
 shape = SubResource("BoxShape3D_320")
 
-[node name="Box2243" type="CollisionShape3D" parent="Repairs/ParkKings/Ruins/Collision"]
+[node name="Box2246" type="CollisionShape3D" parent="Repairs/ParkKings/Ruins/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 46.4, 0.552, -61.2)
 shape = SubResource("BoxShape3D_324")
 
 [node name="Rebuilt" type="Node3D" parent="Repairs/ParkKings"]
 
-[node name="statue_block_3879" parent="Repairs/ParkKings/Rebuilt" instance=ExtResource("166_model")]
+[node name="statue_block_3882" parent="Repairs/ParkKings/Rebuilt" instance=ExtResource("168_model")]
 transform = Transform3D(3.2, 0, 0, 0, 3.2, 0, 0, 0, 3.2, 39.184, 0, -56.016)
 
-[node name="statue_3880" parent="Repairs/ParkKings/Rebuilt" instance=ExtResource("167_model")]
+[node name="statue_3883" parent="Repairs/ParkKings/Rebuilt" instance=ExtResource("169_model")]
 transform = Transform3D(0, 0, 1.6, 0, 1.6, 0, -1.6, 0, 0, 39.192, 1.248, -55.992)
 
-[node name="statue_block_3881" parent="Repairs/ParkKings/Rebuilt" instance=ExtResource("166_model")]
+[node name="statue_block_3884" parent="Repairs/ParkKings/Rebuilt" instance=ExtResource("168_model")]
 transform = Transform3D(3.2, 0, 0, 0, 3.2, 0, 0, 0, 3.2, 44.784, 0, -56.016)
 
-[node name="statue_3882" parent="Repairs/ParkKings/Rebuilt" instance=ExtResource("167_model")]
+[node name="statue_3885" parent="Repairs/ParkKings/Rebuilt" instance=ExtResource("169_model")]
 transform = Transform3D(0, 0, -1.6, 0, 1.6, 0, 1.6, 0, 0, 44.808, 1.248, -56.008)
 
-[node name="statue_block_3883" parent="Repairs/ParkKings/Rebuilt" instance=ExtResource("166_model")]
+[node name="statue_block_3886" parent="Repairs/ParkKings/Rebuilt" instance=ExtResource("168_model")]
 transform = Transform3D(3.2, 0, 0, 0, 3.2, 0, 0, 0, 3.2, 39.184, 0, -61.516)
 
-[node name="statue_3884" parent="Repairs/ParkKings/Rebuilt" instance=ExtResource("167_model")]
+[node name="statue_3887" parent="Repairs/ParkKings/Rebuilt" instance=ExtResource("169_model")]
 transform = Transform3D(0, 0, 1.6, 0, 1.6, 0, -1.6, 0, 0, 39.192, 1.248, -61.492)
 
-[node name="statue_block_3885" parent="Repairs/ParkKings/Rebuilt" instance=ExtResource("166_model")]
+[node name="statue_block_3888" parent="Repairs/ParkKings/Rebuilt" instance=ExtResource("168_model")]
 transform = Transform3D(3.2, 0, 0, 0, 3.2, 0, 0, 0, 3.2, 44.784, 0, -61.516)
 
-[node name="statue_3886" parent="Repairs/ParkKings/Rebuilt" instance=ExtResource("167_model")]
+[node name="statue_3889" parent="Repairs/ParkKings/Rebuilt" instance=ExtResource("169_model")]
 transform = Transform3D(0, 0, -1.6, 0, 1.6, 0, 1.6, 0, 0, 44.808, 1.248, -61.508)
 
 [node name="Collision" type="StaticBody3D" parent="Repairs/ParkKings/Rebuilt"]
 
-[node name="Box2244" type="CollisionShape3D" parent="Repairs/ParkKings/Rebuilt/Collision"]
+[node name="Box2247" type="CollisionShape3D" parent="Repairs/ParkKings/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 39.2, 0.625, -56)
 shape = SubResource("BoxShape3D_325")
 
-[node name="Box2245" type="CollisionShape3D" parent="Repairs/ParkKings/Rebuilt/Collision"]
+[node name="Box2248" type="CollisionShape3D" parent="Repairs/ParkKings/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 39.2, 2.298, -56)
 shape = SubResource("BoxShape3D_326")
 
-[node name="Box2246" type="CollisionShape3D" parent="Repairs/ParkKings/Rebuilt/Collision"]
+[node name="Box2249" type="CollisionShape3D" parent="Repairs/ParkKings/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 44.8, 0.625, -56)
 shape = SubResource("BoxShape3D_325")
 
-[node name="Box2247" type="CollisionShape3D" parent="Repairs/ParkKings/Rebuilt/Collision"]
+[node name="Box2250" type="CollisionShape3D" parent="Repairs/ParkKings/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 44.8, 2.298, -56)
 shape = SubResource("BoxShape3D_326")
 
-[node name="Box2248" type="CollisionShape3D" parent="Repairs/ParkKings/Rebuilt/Collision"]
+[node name="Box2251" type="CollisionShape3D" parent="Repairs/ParkKings/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 39.2, 0.625, -61.5)
 shape = SubResource("BoxShape3D_325")
 
-[node name="Box2249" type="CollisionShape3D" parent="Repairs/ParkKings/Rebuilt/Collision"]
+[node name="Box2252" type="CollisionShape3D" parent="Repairs/ParkKings/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 39.2, 2.298, -61.5)
 shape = SubResource("BoxShape3D_326")
 
-[node name="Box2250" type="CollisionShape3D" parent="Repairs/ParkKings/Rebuilt/Collision"]
+[node name="Box2253" type="CollisionShape3D" parent="Repairs/ParkKings/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 44.8, 0.625, -61.5)
 shape = SubResource("BoxShape3D_325")
 
-[node name="Box2251" type="CollisionShape3D" parent="Repairs/ParkKings/Rebuilt/Collision"]
+[node name="Box2254" type="CollisionShape3D" parent="Repairs/ParkKings/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 44.8, 2.298, -61.5)
 shape = SubResource("BoxShape3D_326")
 
@@ -22388,64 +22438,64 @@ metadata/stage = 4
 
 [node name="Ruins" type="Node3D" parent="Repairs/ParkStatue"]
 
-[node name="statue_block_3887" parent="Repairs/ParkStatue/Ruins" instance=ExtResource("166_model")]
+[node name="statue_block_3890" parent="Repairs/ParkStatue/Ruins" instance=ExtResource("168_model")]
 transform = Transform3D(6, 0, 0, 0, 6, 0, 0, 0, 6, 41.97, 0, -70.03)
 
-[node name="statue_columnDamaged_3888" parent="Repairs/ParkStatue/Ruins" instance=ExtResource("168_model")]
+[node name="statue_columnDamaged_3891" parent="Repairs/ParkStatue/Ruins" instance=ExtResource("170_model")]
 transform = Transform3D(2.81908, 0, 1.02606, 0, 3, 0, -1.02606, 0, 2.81908, 42.3808, 2.34, -70.309)
 
-[node name="statue_3889" parent="Repairs/ParkStatue/Ruins" instance=ExtResource("167_model")]
+[node name="statue_3892" parent="Repairs/ParkStatue/Ruins" instance=ExtResource("169_model")]
 transform = Transform3D(1.53209, 1.28558, 0, 0, 0, -2, -1.28558, 1.53209, 0, 44.0374, 0.7, -69.0124)
 
 [node name="Collision" type="StaticBody3D" parent="Repairs/ParkStatue/Ruins"]
 
-[node name="Box2252" type="CollisionShape3D" parent="Repairs/ParkStatue/Ruins/Collision"]
+[node name="Box2255" type="CollisionShape3D" parent="Repairs/ParkStatue/Ruins/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 42, 1.15, -70)
 shape = SubResource("BoxShape3D_327")
 
-[node name="Box2253" type="CollisionShape3D" parent="Repairs/ParkStatue/Ruins/Collision"]
+[node name="Box2256" type="CollisionShape3D" parent="Repairs/ParkStatue/Ruins/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 44.9, 0.69, -68)
 shape = SubResource("BoxShape3D_328")
 
 [node name="Rebuilt" type="Node3D" parent="Repairs/ParkStatue"]
 
-[node name="statue_block_3890" parent="Repairs/ParkStatue/Rebuilt" instance=ExtResource("166_model")]
+[node name="statue_block_3893" parent="Repairs/ParkStatue/Rebuilt" instance=ExtResource("168_model")]
 transform = Transform3D(6, 0, 0, 0, 6, 0, 0, 0, 6, 41.97, 0, -70.03)
 
-[node name="statue_3891" parent="Repairs/ParkStatue/Rebuilt" instance=ExtResource("167_model")]
+[node name="statue_3894" parent="Repairs/ParkStatue/Rebuilt" instance=ExtResource("169_model")]
 transform = Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, 41.987, 2.34, -70.013)
 
-[node name="trophy_3892" parent="Repairs/ParkStatue/Rebuilt" instance=ExtResource("94_model")]
+[node name="trophy_3895" parent="Repairs/ParkStatue/Rebuilt" instance=ExtResource("94_model")]
 transform = Transform3D(1.13137, 0, 1.13137, 0, 1.6, 0, -1.13137, 0, 1.13137, 39.84, 0, -72.16)
 
-[node name="trophy_3893" parent="Repairs/ParkStatue/Rebuilt" instance=ExtResource("94_model")]
+[node name="trophy_3896" parent="Repairs/ParkStatue/Rebuilt" instance=ExtResource("94_model")]
 transform = Transform3D(1.13137, 0, -1.13137, 0, 1.6, 0, 1.13137, 0, 1.13137, 44.16, 0, -72.16)
 
-[node name="trophy_3894" parent="Repairs/ParkStatue/Rebuilt" instance=ExtResource("94_model")]
+[node name="trophy_3897" parent="Repairs/ParkStatue/Rebuilt" instance=ExtResource("94_model")]
 transform = Transform3D(-1.13137, 0, 1.13137, 0, 1.6, 0, -1.13137, 0, -1.13137, 39.84, 0, -67.84)
 
-[node name="trophy_3895" parent="Repairs/ParkStatue/Rebuilt" instance=ExtResource("94_model")]
+[node name="trophy_3898" parent="Repairs/ParkStatue/Rebuilt" instance=ExtResource("94_model")]
 transform = Transform3D(-1.13137, 0, -1.13137, 0, 1.6, 0, 1.13137, 0, -1.13137, 44.16, 0, -67.84)
 
 [node name="Collision" type="StaticBody3D" parent="Repairs/ParkStatue/Rebuilt"]
 
-[node name="Box2254" type="CollisionShape3D" parent="Repairs/ParkStatue/Rebuilt/Collision"]
+[node name="Box2257" type="CollisionShape3D" parent="Repairs/ParkStatue/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 42, 1.15, -70)
 shape = SubResource("BoxShape3D_327")
 
-[node name="Box2255" type="CollisionShape3D" parent="Repairs/ParkStatue/Rebuilt/Collision"]
+[node name="Box2258" type="CollisionShape3D" parent="Repairs/ParkStatue/Rebuilt/Collision"]
 transform = Transform3D(0.70711, 0, 0.70711, 0, 1, 0, -0.70711, 0, 0.70711, 39.84, 0.4, -72.16)
 shape = SubResource("BoxShape3D_329")
 
-[node name="Box2256" type="CollisionShape3D" parent="Repairs/ParkStatue/Rebuilt/Collision"]
+[node name="Box2259" type="CollisionShape3D" parent="Repairs/ParkStatue/Rebuilt/Collision"]
 transform = Transform3D(0.70711, 0, -0.70711, 0, 1, 0, 0.70711, 0, 0.70711, 44.16, 0.4, -72.16)
 shape = SubResource("BoxShape3D_329")
 
-[node name="Box2257" type="CollisionShape3D" parent="Repairs/ParkStatue/Rebuilt/Collision"]
+[node name="Box2260" type="CollisionShape3D" parent="Repairs/ParkStatue/Rebuilt/Collision"]
 transform = Transform3D(-0.70711, 0, 0.70711, 0, 1, 0, -0.70711, 0, -0.70711, 39.84, 0.4, -67.84)
 shape = SubResource("BoxShape3D_329")
 
-[node name="Box2258" type="CollisionShape3D" parent="Repairs/ParkStatue/Rebuilt/Collision"]
+[node name="Box2261" type="CollisionShape3D" parent="Repairs/ParkStatue/Rebuilt/Collision"]
 transform = Transform3D(-0.70711, 0, -0.70711, 0, 1, 0, 0.70711, 0, -0.70711, 44.16, 0.4, -67.84)
 shape = SubResource("BoxShape3D_329")
 
@@ -22454,105 +22504,517 @@ metadata/stage = 3
 
 [node name="Ruins" type="Node3D" parent="Repairs/ParkKiosk"]
 
-[node name="tower_hexagon_top_3896" parent="Repairs/ParkKiosk/Ruins" instance=ExtResource("63_model")]
+[node name="tower_hexagon_top_3899" parent="Repairs/ParkKiosk/Ruins" instance=ExtResource("63_model")]
 transform = Transform3D(6, 0, 0, 0, 2, 0, 0, 0, 6, 36, 0, -82)
 
-[node name="statue_columnDamaged_3897" parent="Repairs/ParkKiosk/Ruins" instance=ExtResource("168_model")]
+[node name="statue_columnDamaged_3900" parent="Repairs/ParkKiosk/Ruins" instance=ExtResource("170_model")]
 transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 37.9809, 0, -81.011)
 
-[node name="statue_column_3898" parent="Repairs/ParkKiosk/Ruins" instance=ExtResource("96_model")]
+[node name="statue_column_3901" parent="Repairs/ParkKiosk/Ruins" instance=ExtResource("96_model")]
 transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 35.989, 0, -80.011)
 
-[node name="statue_column_3899" parent="Repairs/ParkKiosk/Ruins" instance=ExtResource("96_model")]
+[node name="statue_column_3902" parent="Repairs/ParkKiosk/Ruins" instance=ExtResource("96_model")]
 transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 33.9971, 0, -81.011)
 
-[node name="statue_columnDamaged_3900" parent="Repairs/ParkKiosk/Ruins" instance=ExtResource("168_model")]
+[node name="statue_columnDamaged_3903" parent="Repairs/ParkKiosk/Ruins" instance=ExtResource("170_model")]
 transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 33.9971, 0, -83.011)
 
-[node name="statue_column_3901" parent="Repairs/ParkKiosk/Ruins" instance=ExtResource("96_model")]
+[node name="statue_column_3904" parent="Repairs/ParkKiosk/Ruins" instance=ExtResource("96_model")]
 transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 37.9809, 0, -83.011)
 
-[node name="tower_hexagon_roof_3902" parent="Repairs/ParkKiosk/Ruins" instance=ExtResource("64_model")]
+[node name="tower_hexagon_roof_3905" parent="Repairs/ParkKiosk/Ruins" instance=ExtResource("64_model")]
 transform = Transform3D(2.57115, 1.72763, 1.04801, 0, 0.82085, -3.75877, -3.06418, 1.44965, 0.87939, 39.4, 0, -79.6)
 
 [node name="Collision" type="StaticBody3D" parent="Repairs/ParkKiosk/Ruins"]
 
-[node name="Box2259" type="CollisionShape3D" parent="Repairs/ParkKiosk/Ruins/Collision"]
+[node name="Box2262" type="CollisionShape3D" parent="Repairs/ParkKiosk/Ruins/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 36, 0.13, -82)
 shape = SubResource("BoxShape3D_330")
 
-[node name="Box2260" type="CollisionShape3D" parent="Repairs/ParkKiosk/Ruins/Collision"]
+[node name="Box2263" type="CollisionShape3D" parent="Repairs/ParkKiosk/Ruins/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 37.9919, 0.75, -81)
 shape = SubResource("BoxShape3D_331")
 
-[node name="Box2261" type="CollisionShape3D" parent="Repairs/ParkKiosk/Ruins/Collision"]
+[node name="Box2264" type="CollisionShape3D" parent="Repairs/ParkKiosk/Ruins/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 36, 1.1, -80)
 shape = SubResource("BoxShape3D_332")
 
-[node name="Box2262" type="CollisionShape3D" parent="Repairs/ParkKiosk/Ruins/Collision"]
+[node name="Box2265" type="CollisionShape3D" parent="Repairs/ParkKiosk/Ruins/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 34.0081, 1.1, -81)
 shape = SubResource("BoxShape3D_332")
 
-[node name="Box2263" type="CollisionShape3D" parent="Repairs/ParkKiosk/Ruins/Collision"]
+[node name="Box2266" type="CollisionShape3D" parent="Repairs/ParkKiosk/Ruins/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 34.0081, 0.75, -83)
 shape = SubResource("BoxShape3D_331")
 
-[node name="Box2264" type="CollisionShape3D" parent="Repairs/ParkKiosk/Ruins/Collision"]
+[node name="Box2267" type="CollisionShape3D" parent="Repairs/ParkKiosk/Ruins/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 37.9919, 1.1, -83)
 shape = SubResource("BoxShape3D_332")
 
-[node name="Box2265" type="CollisionShape3D" parent="Repairs/ParkKiosk/Ruins/Collision"]
+[node name="Box2268" type="CollisionShape3D" parent="Repairs/ParkKiosk/Ruins/Collision"]
 transform = Transform3D(0.64279, 0, 0.76604, 0, 1, 0, -0.76604, 0, 0.64279, 39.4, 0.9, -79.6)
 shape = SubResource("BoxShape3D_333")
 
 [node name="Rebuilt" type="Node3D" parent="Repairs/ParkKiosk"]
 
-[node name="tower_hexagon_top_3903" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("63_model")]
+[node name="tower_hexagon_top_3906" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("63_model")]
 transform = Transform3D(6, 0, 0, 0, 2, 0, 0, 0, 6, 36, 0, -82)
 
-[node name="statue_column_3904" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("96_model")]
+[node name="statue_column_3907" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("96_model")]
 transform = Transform3D(1.1, 0, 1.90526, 0, 3.53, 0, -1.90526, 0, 1.1, 37.4572, 0.17, -81.146)
 
-[node name="statue_column_3905" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("96_model")]
+[node name="statue_column_3908" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("96_model")]
 transform = Transform3D(1.1, 0, -1.90526, 0, 3.53, 0, 1.90526, 0, 1.1, 34.5318, 0.17, -81.165)
 
-[node name="statue_column_3906" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("96_model")]
+[node name="statue_column_3909" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("96_model")]
 transform = Transform3D(-1.1, 0, -1.90526, 0, 3.53, 0, 1.90526, 0, -1.1, 34.5428, 0.17, -82.854)
 
-[node name="statue_column_3907" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("96_model")]
+[node name="statue_column_3910" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("96_model")]
 transform = Transform3D(-2.2, 0, -0, 0, 3.53, 0, 0, 0, -2.2, 36.011, 0.17, -83.689)
 
-[node name="statue_column_3908" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("96_model")]
+[node name="statue_column_3911" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("96_model")]
 transform = Transform3D(-1.1, 0, 1.90526, 0, 3.53, 0, -1.90526, 0, -1.1, 37.4682, 0.17, -82.835)
 
-[node name="tower_hexagon_roof_3909" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("64_model")]
+[node name="tower_hexagon_roof_3912" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("64_model")]
 transform = Transform3D(5.6, 0, 0, 0, 2.6, 0, 0, 0, 5.6, 36, 3.66, -82)
 
 [node name="Collision" type="StaticBody3D" parent="Repairs/ParkKiosk/Rebuilt"]
 
-[node name="Box2266" type="CollisionShape3D" parent="Repairs/ParkKiosk/Rebuilt/Collision"]
+[node name="Box2269" type="CollisionShape3D" parent="Repairs/ParkKiosk/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 36, 0.13, -82)
 shape = SubResource("BoxShape3D_330")
 
-[node name="Box2267" type="CollisionShape3D" parent="Repairs/ParkKiosk/Rebuilt/Collision"]
+[node name="Box2270" type="CollisionShape3D" parent="Repairs/ParkKiosk/Rebuilt/Collision"]
 transform = Transform3D(0.5, 0, 0.86603, 0, 1, 0, -0.86603, 0, 0.5, 37.4722, 1.935, -81.15)
 shape = SubResource("BoxShape3D_334")
 
-[node name="Box2268" type="CollisionShape3D" parent="Repairs/ParkKiosk/Rebuilt/Collision"]
+[node name="Box2271" type="CollisionShape3D" parent="Repairs/ParkKiosk/Rebuilt/Collision"]
 transform = Transform3D(0.5, 0, -0.86603, 0, 1, 0, 0.86603, 0, 0.5, 34.5278, 1.935, -81.15)
 shape = SubResource("BoxShape3D_334")
 
-[node name="Box2269" type="CollisionShape3D" parent="Repairs/ParkKiosk/Rebuilt/Collision"]
+[node name="Box2272" type="CollisionShape3D" parent="Repairs/ParkKiosk/Rebuilt/Collision"]
 transform = Transform3D(-0.5, 0, -0.86603, 0, 1, 0, 0.86603, 0, -0.5, 34.5278, 1.935, -82.85)
 shape = SubResource("BoxShape3D_334")
 
-[node name="Box2270" type="CollisionShape3D" parent="Repairs/ParkKiosk/Rebuilt/Collision"]
+[node name="Box2273" type="CollisionShape3D" parent="Repairs/ParkKiosk/Rebuilt/Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 36, 1.935, -83.7)
 shape = SubResource("BoxShape3D_334")
 
-[node name="Box2271" type="CollisionShape3D" parent="Repairs/ParkKiosk/Rebuilt/Collision"]
+[node name="Box2274" type="CollisionShape3D" parent="Repairs/ParkKiosk/Rebuilt/Collision"]
 transform = Transform3D(-0.5, 0, 0.86603, 0, 1, 0, -0.86603, 0, -0.5, 37.4722, 1.935, -82.85)
 shape = SubResource("BoxShape3D_334")
+
+[node name="ParkGrass" type="Node3D" parent="Repairs"]
+metadata/stage = 1
+
+[node name="Rebuilt" type="Node3D" parent="Repairs/ParkGrass"]
+
+[node name="grass_3914" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("172_model")]
+transform = Transform3D(-2.63842, 0, -0.35999, 0, 2.66286, 0, 0.35999, 0, -2.63842, 48.1947, -0.02, -54.6835)
+
+[node name="grass_large_3915" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("173_model")]
+transform = Transform3D(1.92852, 0, 2.09339, 0, 2.84631, 0, -2.09339, 0, 1.92852, 39.381, -0.02, -84.6597)
+
+[node name="grass_leafs_3916" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("174_model")]
+transform = Transform3D(0.36167, 0, -2.4489, 0, 2.47546, 0, 2.4489, 0, 0.36167, 35.2577, -0.02, -77.7522)
+
+[node name="grass_leafsLarge_3917" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("175_model")]
+transform = Transform3D(-2.96741, 0, 1.44996, 0, 3.30272, 0, -1.44996, 0, -2.96741, 33.1046, -0.02, -63.5166)
+
+[node name="grass_3918" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("172_model")]
+transform = Transform3D(0.84833, 0, -2.40356, 0, 2.54887, 0, 2.40356, 0, 0.84833, 38.4611, -0.02, -77.587)
+
+[node name="grass_large_3919" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("173_model")]
+transform = Transform3D(-1.56675, 0, -1.85163, 0, 2.42554, 0, 1.85163, 0, -1.56675, 33.4983, -0.02, -73.4577)
+
+[node name="grass_leafs_3920" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("174_model")]
+transform = Transform3D(-3.11245, 0, -0.97019, 0, 3.26016, 0, 0.97019, 0, -3.11245, 33.5904, -0.02, -73.7418)
+
+[node name="grass_leafsLarge_3921" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("175_model")]
+transform = Transform3D(-1.12252, 0, -2.29158, 0, 2.55174, 0, 2.29158, 0, -1.12252, 34.0276, -0.02, -85.5028)
+
+[node name="grass_3922" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("172_model")]
+transform = Transform3D(-0.84682, 0, -2.50419, 0, 2.64349, 0, 2.50419, 0, -0.84682, 38.7094, -0.02, -58.6032)
+
+[node name="grass_large_3923" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("173_model")]
+transform = Transform3D(0.3527, 0, 2.51519, 0, 2.5398, 0, -2.51519, 0, 0.3527, 38.8115, -0.02, -78.1975)
+
+[node name="grass_leafs_3924" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("174_model")]
+transform = Transform3D(1.59633, 0, 2.46078, 0, 2.93321, 0, -2.46078, 0, 1.59633, 37.7241, -0.02, -85.503)
+
+[node name="grass_leafsLarge_3925" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("175_model")]
+transform = Transform3D(-3.35061, 0, 0.01472, 0, 3.35064, 0, -0.01472, 0, -3.35061, 49.1226, -0.02, -53.9286)
+
+[node name="grass_3926" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("172_model")]
+transform = Transform3D(-1.24867, 0, 3.0961, 0, 3.33841, 0, -3.0961, 0, -1.24867, 35.7112, -0.02, -55.3034)
+
+[node name="grass_large_3927" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("173_model")]
+transform = Transform3D(-2.60537, 0, -1.8108, 0, 3.17284, 0, 1.8108, 0, -2.60537, 39.6625, -0.02, -53.7587)
+
+[node name="grass_leafs_3928" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("174_model")]
+transform = Transform3D(-1.64826, 0, -2.76952, 0, 3.22289, 0, 2.76952, 0, -1.64826, 39.6231, -0.02, -53.7106)
+
+[node name="grass_leafsLarge_3929" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("175_model")]
+transform = Transform3D(-2.78974, 0, -1.66752, 0, 3.25011, 0, 1.66752, 0, -2.78974, 39.2895, -0.02, -78.7996)
+
+[node name="grass_3930" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("172_model")]
+transform = Transform3D(0.61751, 0, -2.38436, 0, 2.46302, 0, 2.38436, 0, 0.61751, 45.976, -0.02, -54.0433)
+
+[node name="grass_large_3931" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("173_model")]
+transform = Transform3D(1.30143, 0, -2.55606, 0, 2.8683, 0, 2.55606, 0, 1.30143, 33.711, -0.02, -60.1107)
+
+[node name="grass_leafs_3932" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("174_model")]
+transform = Transform3D(-1.54315, 0, 2.92356, 0, 3.30583, 0, -2.92356, 0, -1.54315, 33.2286, -0.02, -55.1751)
+
+[node name="grass_leafsLarge_3933" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("175_model")]
+transform = Transform3D(2.70556, 0, -0.00844, 0, 2.70557, 0, 0.00844, 0, 2.70556, 33.0871, -0.02, -65.2637)
+
+[node name="grass_3934" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("172_model")]
+transform = Transform3D(3.02441, 0, 0.39522, 0, 3.05013, 0, -0.39522, 0, 3.02441, 34.8131, -0.02, -61.3189)
+
+[node name="grass_large_3935" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("173_model")]
+transform = Transform3D(1.51673, 0, 1.87938, 0, 2.41506, 0, -1.87938, 0, 1.51673, 33.6959, -0.02, -56.3445)
+
+[node name="grass_leafs_3936" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("174_model")]
+transform = Transform3D(-1.38481, 0, 2.10693, 0, 2.52128, 0, -2.10693, 0, -1.38481, 39.5297, -0.02, -79.7343)
+
+[node name="grass_leafsLarge_3937" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("175_model")]
+transform = Transform3D(1.04027, 0, 2.70514, 0, 2.89827, 0, -2.70514, 0, 1.04027, 39.1895, -0.02, -79.3665)
+
+[node name="grass_3938" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("172_model")]
+transform = Transform3D(2.54932, 0, 1.19788, 0, 2.81672, 0, -1.19788, 0, 2.54932, 35.7578, -0.02, -54.8182)
+
+[node name="grass_large_3939" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("173_model")]
+transform = Transform3D(-2.21474, 0, 2.47944, 0, 3.32456, 0, -2.47944, 0, -2.21474, 49.8756, -0.02, -53.862)
+
+[node name="grass_leafs_3940" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("174_model")]
+transform = Transform3D(-2.51424, 0, 0.87969, 0, 2.66369, 0, -0.87969, 0, -2.51424, 38.6838, -0.02, -78.4056)
+
+[node name="grass_leafsLarge_3941" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("175_model")]
+transform = Transform3D(3.03225, 0, 0.20007, 0, 3.03884, 0, -0.20007, 0, 3.03225, 50.0543, -0.02, -77.8247)
+
+[node name="grass_3942" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("172_model")]
+transform = Transform3D(-2.06053, 0, -1.65276, 0, 2.64147, 0, 1.65276, 0, -2.06053, 38.7123, -0.02, -85.9991)
+
+[node name="grass_large_3943" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("173_model")]
+transform = Transform3D(-1.87386, 0, -1.5765, 0, 2.44881, 0, 1.5765, 0, -1.87386, 34.1113, -0.02, -61.2876)
+
+[node name="grass_leafs_3944" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("174_model")]
+transform = Transform3D(3.08309, 0, 1.3254, 0, 3.35591, 0, -1.3254, 0, 3.08309, 49.5714, -0.02, -54.3123)
+
+[node name="grass_leafsLarge_3945" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("175_model")]
+transform = Transform3D(-2.57783, 0, -1.41532, 0, 2.9408, 0, 1.41532, 0, -2.57783, 38.233, -0.02, -77.3377)
+
+[node name="grass_3946" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("172_model")]
+transform = Transform3D(1.7993, 0, -2.27426, 0, 2.89996, 0, 2.27426, 0, 1.7993, 33.2923, -0.02, -59.0621)
+
+[node name="grass_large_3947" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("173_model")]
+transform = Transform3D(-1.35012, 0, 2.50617, 0, 2.8467, 0, -2.50617, 0, -1.35012, 36.7261, -0.02, -77.7183)
+
+[node name="grass_leafs_3948" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("174_model")]
+transform = Transform3D(3.09341, 0, -0.4985, 0, 3.13332, 0, 0.4985, 0, 3.09341, 35.3865, -0.02, -76.9887)
+
+[node name="grass_leafsLarge_3949" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("175_model")]
+transform = Transform3D(-2.50308, 0, 1.98474, 0, 3.19447, 0, -1.98474, 0, -2.50308, 35.3874, -0.02, -54.8271)
+
+[node name="grass_3950" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("172_model")]
+transform = Transform3D(0.24318, 0, -2.9036, 0, 2.91376, 0, 2.9036, 0, 0.24318, 35.5775, -0.02, -53.8218)
+
+[node name="grass_large_3951" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("173_model")]
+transform = Transform3D(-2.21073, 0, 1.34909, 0, 2.58986, 0, -1.34909, 0, -2.21073, 38.0622, -0.02, -85.4197)
+
+[node name="grass_leafs_3952" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("174_model")]
+transform = Transform3D(0.89012, 0, 2.48351, 0, 2.63821, 0, -2.48351, 0, 0.89012, 47.5223, -0.02, -54.0395)
+
+[node name="grass_leafsLarge_3953" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("175_model")]
+transform = Transform3D(-1.92302, 0, 2.51157, 0, 3.16322, 0, -2.51157, 0, -1.92302, 37.7546, -0.02, -76.6846)
+
+[node name="grass_3954" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("172_model")]
+transform = Transform3D(2.66149, 0, 0.88497, 0, 2.80476, 0, -0.88497, 0, 2.66149, 39.1075, -0.02, -85.2537)
+
+[node name="grass_large_3955" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("173_model")]
+transform = Transform3D(1.56141, 0, 1.99666, 0, 2.53469, 0, -1.99666, 0, 1.56141, 33.116, -0.02, -72.7579)
+
+[node name="grass_leafs_3956" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("174_model")]
+transform = Transform3D(-1.00817, 0, 2.63986, 0, 2.82582, 0, -2.63986, 0, -1.00817, 33.0332, -0.02, -75.7996)
+
+[node name="grass_leafsLarge_3957" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("175_model")]
+transform = Transform3D(-2.30433, 0, 1.21545, 0, 2.60524, 0, -1.21545, 0, -2.30433, 37.6005, -0.02, -78.1884)
+
+[node name="grass_3958" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("172_model")]
+transform = Transform3D(2.69769, 0, 1.47626, 0, 3.0752, 0, -1.47626, 0, 2.69769, 50.2317, -0.02, -78.8373)
+
+[node name="grass_large_3959" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("173_model")]
+transform = Transform3D(-0.45401, 0, -2.81085, 0, 2.84728, 0, 2.81085, 0, -0.45401, 39.3362, -0.02, -58.1101)
+
+[node name="ParkShrubs" type="Node3D" parent="Repairs"]
+metadata/stage = 2
+
+[node name="Rebuilt" type="Node3D" parent="Repairs/ParkShrubs"]
+
+[node name="plant_bush_3960" parent="Repairs/ParkShrubs/Rebuilt" instance=ExtResource("140_model")]
+transform = Transform3D(-0.99105, 0, 2.5669, 0, 2.75158, 0, -2.5669, 0, -0.99105, 50.993, -0.02, -78.7352)
+
+[node name="plant_bushDetailed_3961" parent="Repairs/ParkShrubs/Rebuilt" instance=ExtResource("176_model")]
+transform = Transform3D(2.91515, 0, 0.54227, 0, 2.96515, 0, -0.54227, 0, 2.91515, 50.8787, -0.02, -75.5117)
+
+[node name="plant_bushLarge_3962" parent="Repairs/ParkShrubs/Rebuilt" instance=ExtResource("85_model")]
+transform = Transform3D(2.67157, 0, -0.2526, 0, 2.68349, 0, 0.2526, 0, 2.67157, 51.2341, -0.02, -59.7128)
+
+[node name="plant_bushSmall_3963" parent="Repairs/ParkShrubs/Rebuilt" instance=ExtResource("177_model")]
+transform = Transform3D(2.39416, 0, 1.45159, 0, 2.79985, 0, -1.45159, 0, 2.39416, 50.8894, -0.02, -56.923)
+
+[node name="plant_bush_3964" parent="Repairs/ParkShrubs/Rebuilt" instance=ExtResource("140_model")]
+transform = Transform3D(-0.71015, 0, 3.31214, 0, 3.38741, 0, -3.31214, 0, -0.71015, 51.2222, -0.02, -53.6985)
+
+[node name="plant_bushDetailed_3965" parent="Repairs/ParkShrubs/Rebuilt" instance=ExtResource("176_model")]
+transform = Transform3D(-0.00363, 0, -2.61025, 0, 2.61025, 0, 2.61025, 0, -0.00363, 34.5267, -0.02, -53.1408)
+
+[node name="plant_bushLarge_3966" parent="Repairs/ParkShrubs/Rebuilt" instance=ExtResource("85_model")]
+transform = Transform3D(0.24515, 0, 3.03427, 0, 3.04416, 0, -3.03427, 0, 0.24515, 37.5589, -0.02, -52.791)
+
+[node name="plant_bushSmall_3967" parent="Repairs/ParkShrubs/Rebuilt" instance=ExtResource("177_model")]
+transform = Transform3D(0.09742, 0, 2.8653, 0, 2.86695, 0, -2.8653, 0, 0.09742, 47.2456, -0.02, -53.0267)
+
+[node name="plant_bush_3968" parent="Repairs/ParkShrubs/Rebuilt" instance=ExtResource("140_model")]
+transform = Transform3D(1.75173, 0, -2.5882, 0, 3.12527, 0, 2.5882, 0, 1.75173, 50.5435, -0.02, -52.9027)
+
+[node name="ParkMeadow" type="Node3D" parent="Repairs"]
+metadata/stage = 3
+
+[node name="Rebuilt" type="Node3D" parent="Repairs/ParkMeadow"]
+
+[node name="flower_redB_3969" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("178_model")]
+transform = Transform3D(-2.78724, 0, 0.08323, 0, 2.78849, 0, -0.08323, 0, -2.78724, 48.2664, -0.02, -54.8721)
+
+[node name="flower_yellowB_3970" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("179_model")]
+transform = Transform3D(-2.59313, 0, 0.0235, 0, 2.59324, 0, -0.0235, 0, -2.59313, 39.8607, -0.02, -78.8002)
+
+[node name="flower_purpleB_3971" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("180_model")]
+transform = Transform3D(2.10725, 0, 0.97822, 0, 2.32323, 0, -0.97822, 0, 2.10725, 33.3019, -0.02, -73.3695)
+
+[node name="flower_redC_3972" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("181_model")]
+transform = Transform3D(0.99773, 0, 2.02986, 0, 2.26181, 0, -2.02986, 0, 0.99773, 33.1402, -0.02, -73.3172)
+
+[node name="flower_yellowC_3973" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("182_model")]
+transform = Transform3D(0.97866, 0, -2.47093, 0, 2.65768, 0, 2.47093, 0, 0.97866, 35.4939, -0.02, -54.3671)
+
+[node name="flower_purpleC_3974" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("183_model")]
+transform = Transform3D(2.04974, 0, 0.98213, 0, 2.27289, 0, -0.98213, 0, 2.04974, 33.1445, -0.02, -54.4901)
+
+[node name="mushroom_redGroup_3975" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("184_model")]
+transform = Transform3D(-0.56901, 0, -2.50725, 0, 2.57101, 0, 2.50725, 0, -0.56901, 49.9988, -0.02, -74.9422)
+
+[node name="flower_yellowA_3976" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("165_model")]
+transform = Transform3D(0.88941, 0, 2.64582, 0, 2.79131, 0, -2.64582, 0, 0.88941, 33.3894, -0.02, -54.8038)
+
+[node name="mushroom_tanGroup_3977" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("185_model")]
+transform = Transform3D(-1.66214, 0, -2.0144, 0, 2.61161, 0, 2.0144, 0, -1.66214, 49.4959, -0.02, -79.0423)
+
+[node name="flower_redB_3978" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("178_model")]
+transform = Transform3D(1.17837, 0, 1.85906, 0, 2.20106, 0, -1.85906, 0, 1.17837, 47.4667, -0.02, -53.8649)
+
+[node name="flower_yellowB_3979" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("179_model")]
+transform = Transform3D(-2.44107, 0, -1.12587, 0, 2.6882, 0, 1.12587, 0, -2.44107, 33.3655, -0.02, -57.0168)
+
+[node name="flower_purpleB_3980" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("180_model")]
+transform = Transform3D(-2.05535, 0, -1.58736, 0, 2.59695, 0, 1.58736, 0, -2.05535, 33.3359, -0.02, -53.9293)
+
+[node name="flower_redC_3981" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("181_model")]
+transform = Transform3D(2.61494, 0, -1.46975, 0, 2.99968, 0, 1.46975, 0, 2.61494, 45.5907, -0.02, -78.3572)
+
+[node name="flower_yellowC_3982" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("182_model")]
+transform = Transform3D(-2.49681, 0, -0.31473, 0, 2.51657, 0, 0.31473, 0, -2.49681, 39.1979, -0.02, -85.133)
+
+[node name="flower_purpleC_3983" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("183_model")]
+transform = Transform3D(0.53106, 0, 2.68075, 0, 2.73284, 0, -2.68075, 0, 0.53106, 49.4449, -0.02, -79.06)
+
+[node name="mushroom_redGroup_3984" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("184_model")]
+transform = Transform3D(0.12854, 0, 2.28345, 0, 2.28707, 0, -2.28345, 0, 0.12854, 35.7136, -0.02, -54.7821)
+
+[node name="flower_yellowA_3985" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("165_model")]
+transform = Transform3D(1.93002, 0, -1.76246, 0, 2.61366, 0, 1.76246, 0, 1.93002, 50.3076, -0.02, -66.1212)
+
+[node name="mushroom_tanGroup_3986" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("185_model")]
+transform = Transform3D(-2.44984, 0, 0.00295, 0, 2.44984, 0, -0.00295, 0, -2.44984, 35.3129, -0.02, -77.7807)
+
+[node name="flower_redB_3987" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("178_model")]
+transform = Transform3D(-1.47816, 0, -1.89383, 0, 2.4024, 0, 1.89383, 0, -1.47816, 35.0483, -0.02, -53.7228)
+
+[node name="flower_yellowB_3988" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("179_model")]
+transform = Transform3D(2.42146, 0, -1.65444, 0, 2.93269, 0, 1.65444, 0, 2.42146, 49.2451, -0.02, -54.1064)
+
+[node name="flower_purpleB_3989" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("180_model")]
+transform = Transform3D(-2.63995, 0, 0.83006, 0, 2.76736, 0, -0.83006, 0, -2.63995, 34.2561, -0.02, -86.0649)
+
+[node name="flower_redC_3990" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("181_model")]
+transform = Transform3D(1.32354, 0, -1.84587, 0, 2.27134, 0, 1.84587, 0, 1.32354, 50.1615, -0.02, -79.4477)
+
+[node name="flower_yellowC_3991" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("182_model")]
+transform = Transform3D(2.78078, 0, 0.28453, 0, 2.7953, 0, -0.28453, 0, 2.78078, 37.6195, -0.02, -85.8592)
+
+[node name="flower_purpleC_3992" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("183_model")]
+transform = Transform3D(2.27619, 0, 1.28716, 0, 2.61492, 0, -1.28716, 0, 2.27619, 34.0521, -0.02, -54.0258)
+
+[node name="mushroom_redGroup_3993" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("184_model")]
+transform = Transform3D(-2.5019, 0, 0.35018, 0, 2.52629, 0, -0.35018, 0, -2.5019, 39.353, -0.02, -58.1278)
+
+[node name="flower_yellowA_3994" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("165_model")]
+transform = Transform3D(0.49509, 0, -2.78479, 0, 2.82846, 0, 2.78479, 0, 0.49509, 49.3763, -0.02, -66.9378)
+
+[node name="mushroom_tanGroup_3995" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("185_model")]
+transform = Transform3D(0.84554, 0, -2.53625, 0, 2.67348, 0, 2.53625, 0, 0.84554, 48.9283, -0.02, -54.0601)
+
+[node name="flower_redB_3996" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("178_model")]
+transform = Transform3D(-1.81262, 0, 1.26005, 0, 2.20756, 0, -1.26005, 0, -1.81262, 33.7819, -0.02, -74.1444)
+
+[node name="flower_yellowB_3997" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("179_model")]
+transform = Transform3D(-0.2237, 0, -2.92264, 0, 2.93118, 0, 2.92264, 0, -0.2237, 34.3299, -0.02, -61.5285)
+
+[node name="flower_purpleB_3998" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("180_model")]
+transform = Transform3D(-0.74642, 0, -2.37039, 0, 2.48513, 0, 2.37039, 0, -0.74642, 34.6476, -0.02, -53.7628)
+
+[node name="flower_redC_3999" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("181_model")]
+transform = Transform3D(0.48188, 0, 2.91629, 0, 2.95583, 0, -2.91629, 0, 0.48188, 37.9453, -0.02, -85.6657)
+
+[node name="flower_yellowC_4000" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("182_model")]
+transform = Transform3D(1.50719, 0, -2.20455, 0, 2.67052, 0, 2.20455, 0, 1.50719, 33.0375, -0.02, -54.6172)
+
+[node name="flower_purpleC_4001" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("183_model")]
+transform = Transform3D(-2.00047, 0, -1.23604, 0, 2.35153, 0, 1.23604, 0, -2.00047, 33.5904, -0.02, -55.7646)
+
+[node name="mushroom_redGroup_4002" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("184_model")]
+transform = Transform3D(0.44317, 0, 2.37081, 0, 2.41188, 0, -2.37081, 0, 0.44317, 34.0287, -0.02, -74.4897)
+
+[node name="flower_yellowA_4003" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("165_model")]
+transform = Transform3D(2.42355, 0, 0.88526, 0, 2.58017, 0, -0.88526, 0, 2.42355, 33.0711, -0.02, -73.1934)
+
+[node name="mushroom_tanGroup_4004" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("185_model")]
+transform = Transform3D(-0.09452, 0, -2.82578, 0, 2.82736, 0, 2.82578, 0, -0.09452, 33.2202, -0.02, -58.3654)
+
+[node name="flower_redB_4005" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("178_model")]
+transform = Transform3D(-0.73264, 0, -2.40336, 0, 2.51255, 0, 2.40336, 0, -0.73264, 33.5356, -0.02, -74.0406)
+
+[node name="flower_yellowB_4006" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("179_model")]
+transform = Transform3D(0.8339, 0, -2.8533, 0, 2.97266, 0, 2.8533, 0, 0.8339, 34.7976, -0.02, -77.7138)
+
+[node name="flower_purpleB_4007" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("180_model")]
+transform = Transform3D(-2.54707, 0, -0.28986, 0, 2.56351, 0, 0.28986, 0, -2.54707, 39.6087, -0.02, -85.6634)
+
+[node name="flower_redC_4008" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("181_model")]
+transform = Transform3D(-2.28063, 0, -0.12784, 0, 2.28421, 0, 0.12784, 0, -2.28063, 33.8113, -0.02, -77.7291)
+
+[node name="flower_yellowC_4009" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("182_model")]
+transform = Transform3D(-1.84513, 0, 1.91574, 0, 2.65981, 0, -1.91574, 0, -1.84513, 36.4088, -0.02, -77.7025)
+
+[node name="flower_purpleC_4010" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("183_model")]
+transform = Transform3D(1.35343, 0, 2.01944, 0, 2.43103, 0, -2.01944, 0, 1.35343, 33.1286, -0.02, -85.1164)
+
+[node name="mushroom_redGroup_4011" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("184_model")]
+transform = Transform3D(-0.83713, 0, -2.87385, 0, 2.99329, 0, 2.87385, 0, -0.83713, 36.0467, -0.02, -76.9637)
+
+[node name="flower_yellowA_4012" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("165_model")]
+transform = Transform3D(2.00405, 0, 2.13611, 0, 2.92903, 0, -2.13611, 0, 2.00405, 35.8175, -0.02, -54.2913)
+
+[node name="mushroom_tanGroup_4013" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("185_model")]
+transform = Transform3D(1.0837, 0, 2.73059, 0, 2.93778, 0, -2.73059, 0, 1.0837, 39.8732, -0.02, -78.7558)
+
+[node name="flower_redB_4014" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("178_model")]
+transform = Transform3D(-0.41028, 0, -2.86429, 0, 2.89353, 0, 2.86429, 0, -0.41028, 38.8171, -0.02, -84.5831)
+
+[node name="flower_yellowB_4015" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("179_model")]
+transform = Transform3D(2.01209, 0, 1.02154, 0, 2.25656, 0, -1.02154, 0, 2.01209, 44.6327, -0.02, -53.7859)
+
+[node name="flower_purpleB_4016" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("180_model")]
+transform = Transform3D(-2.75492, 0, 1.13348, 0, 2.97899, 0, -1.13348, 0, -2.75492, 33.0033, -0.02, -57.0102)
+
+[node name="flower_redC_4017" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("181_model")]
+transform = Transform3D(-1.27873, 0, -1.95121, 0, 2.33289, 0, 1.95121, 0, -1.27873, 34.4229, -0.02, -55.1784)
+
+[node name="flower_yellowC_4018" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("182_model")]
+transform = Transform3D(1.68542, 0, 2.1284, 0, 2.71491, 0, -2.1284, 0, 1.68542, 33.6011, -0.02, -77.1169)
+
+[node name="flower_purpleC_4019" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("183_model")]
+transform = Transform3D(-1.99808, 0, -1.87179, 0, 2.73787, 0, 1.87179, 0, -1.99808, 39.3329, -0.02, -85.0485)
+
+[node name="mushroom_redGroup_4020" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("184_model")]
+transform = Transform3D(0.22683, 0, -2.41183, 0, 2.42247, 0, 2.41183, 0, 0.22683, 36.8783, -0.02, -86.0164)
+
+[node name="flower_yellowA_4021" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("165_model")]
+transform = Transform3D(2.70816, 0, 0.23438, 0, 2.71829, 0, -0.23438, 0, 2.70816, 36.0967, -0.02, -53.8481)
+
+[node name="mushroom_tanGroup_4022" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("185_model")]
+transform = Transform3D(-2.32516, 0, -1.18182, 0, 2.60827, 0, 1.18182, 0, -2.32516, 45.5892, -0.02, -78.5824)
+
+[node name="flower_redB_4023" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("178_model")]
+transform = Transform3D(2.4643, 0, -0.81218, 0, 2.59469, 0, 0.81218, 0, 2.4643, 49.6071, -0.02, -79.1901)
+
+[node name="flower_yellowB_4024" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("179_model")]
+transform = Transform3D(2.97476, 0, 0.09469, 0, 2.97626, 0, -0.09469, 0, 2.97476, 50.1046, -0.02, -79.6419)
+
+[node name="flower_purpleB_4025" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("180_model")]
+transform = Transform3D(-0.61507, 0, 2.42139, 0, 2.49829, 0, -2.42139, 0, -0.61507, 34.268, -0.02, -77.6028)
+
+[node name="flower_redC_4026" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("181_model")]
+transform = Transform3D(-0.7327, 0, -2.45283, 0, 2.55992, 0, 2.45283, 0, -0.7327, 34.6947, -0.02, -78.0637)
+
+[node name="flower_yellowC_4027" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("182_model")]
+transform = Transform3D(2.00016, 0, 1.89613, 0, 2.75607, 0, -1.89613, 0, 2.00016, 45.5536, -0.02, -78.6218)
+
+[node name="flower_purpleC_4028" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("183_model")]
+transform = Transform3D(0.88503, 0, 2.36309, 0, 2.52338, 0, -2.36309, 0, 0.88503, 33.0879, -0.02, -75.6683)
+
+[node name="mushroom_redGroup_4029" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("184_model")]
+transform = Transform3D(-1.58326, 0, 1.69709, 0, 2.32096, 0, -1.69709, 0, -1.58326, 38.1108, -0.02, -85.9312)
+
+[node name="flower_yellowA_4030" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("165_model")]
+transform = Transform3D(2.34163, 0, 1.65207, 0, 2.86576, 0, -1.65207, 0, 2.34163, 44.244, -0.02, -53.6723)
+
+[node name="mushroom_tanGroup_4031" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("185_model")]
+transform = Transform3D(-2.24636, 0, 1.43002, 0, 2.6629, 0, -1.43002, 0, -2.24636, 38.0929, -0.02, -85.9695)
+
+[node name="flower_redB_4032" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("178_model")]
+transform = Transform3D(2.49854, 0, -1.61243, 0, 2.97365, 0, 1.61243, 0, 2.49854, 33.9403, -0.02, -74.0859)
+
+[node name="RiverDebris1" type="Node3D" parent="Repairs"]
+metadata/stage = 1
+
+[node name="Ruins" type="Node3D" parent="Repairs/RiverDebris1"]
+
+[node name="log_4039" parent="Repairs/RiverDebris1/Ruins" instance=ExtResource("2_model")]
+transform = Transform3D(1.05209, 0, 2.15711, 0, 2.4, 0, -2.15711, 0, 1.05209, 61.4, -1.42, -8.6)
+
+[node name="debris_wood_4040" parent="Repairs/RiverDebris1/Ruins" instance=ExtResource("186_model")]
+transform = Transform3D(2.06732, 0, 0.75244, 0, 2.2, 0, -0.75244, 0, 2.06732, 63.6, -1.2, -5.8)
+
+[node name="resource_planks_4041" parent="Repairs/RiverDebris1/Ruins" instance=ExtResource("25_model")]
+transform = Transform3D(-0.82085, 0, 2.25526, 0, 2.4, 0, -2.25526, 0, -0.82085, 65, -1.24, 7.4)
+
+[node name="log_large_4042" parent="Repairs/RiverDebris1/Ruins" instance=ExtResource("187_model")]
+transform = Transform3D(1.66893, 0, 0.67429, 0, 1.8, 0, -0.67429, 0, 1.66893, 64.6, -1.5, 12.8)
+
+[node name="resource_planks_4043" parent="Repairs/RiverDebris1/Ruins" instance=ExtResource("25_model")]
+transform = Transform3D(1.22567, 0, 1.02846, 0, 1.6, 0, -1.02846, 0, 1.22567, 46.6, -0.74, -84)
+
+[node name="RiverDebris2" type="Node3D" parent="Repairs"]
+metadata/stage = 2
+
+[node name="Ruins" type="Node3D" parent="Repairs/RiverDebris2"]
+
+[node name="log_4044" parent="Repairs/RiverDebris2/Ruins" instance=ExtResource("2_model")]
+transform = Transform3D(-0.41676, 0, 2.36354, 0, 2.4, 0, -2.36354, 0, -0.41676, 62.2, -1.42, -74)
+
+[node name="debris_wood_4045" parent="Repairs/RiverDebris2/Ruins" instance=ExtResource("186_model")]
+transform = Transform3D(0.5694, 0, 2.12504, 0, 2.2, 0, -2.12504, 0, 0.5694, 61.6, -1.2, -57.6)
+
+[node name="log_4046" parent="Repairs/RiverDebris2/Ruins" instance=ExtResource("2_model")]
+transform = Transform3D(-2.06732, 0, 0.75244, 0, 2.2, 0, -0.75244, 0, -2.06732, 67.4, -1.42, 21.6)
+
+[node name="debris_wood_4047" parent="Repairs/RiverDebris2/Ruins" instance=ExtResource("186_model")]
+transform = Transform3D(2.36354, 0, 0.41676, 0, 2.4, 0, -0.41676, 0, 2.36354, 70.8, -1.2, 29.6)
+
+[node name="log_large_4048" parent="Repairs/RiverDebris2/Ruins" instance=ExtResource("187_model")]
+transform = Transform3D(0.41411, 0, 1.54548, 0, 1.6, 0, -1.54548, 0, 0.41411, 60.6, -1.5, -40)
 
 [node name="Lamp" type="Node3D" parent="Repairs/House00/Rebuilt"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.2, 3, -22.2)

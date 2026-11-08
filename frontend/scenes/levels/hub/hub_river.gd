@@ -1,7 +1,8 @@
 class_name HubRiver
 extends Node3D
 ## La rivière et l'étang du jardin : l'eau qui coule, des berges qu'on ne franchit que par les ponts, et la vie
-## des rives (roseaux, pierres, nénuphars), dont les nénuphars reviennent avec les livres.
+## des rives (roseaux, pierres, nénuphars), qui revient avec les livres : les roseaux secs reverdissent un quart par
+## livre, d'abord au ras de l'eau (HubFoliage), et les nénuphars se multiplient.
 ## Tout suit le tracé de HubTerrain : la rivière y est creusée, ses ponts y sont déclarés.
 
 @export var terrain: HubTerrain
@@ -10,6 +11,8 @@ extends Node3D
 @export var reed_models: Array[PackedScene]
 @export var rock_models: Array[PackedScene]
 @export var lily_models: Array[PackedScene]
+## Shader du feuillage qui reprend vie (hub_foliage.gdshader).
+@export var foliage_shader: Shader
 @export var reed_count := 420
 @export var rock_count := 220
 @export var lily_count := 160
@@ -28,12 +31,14 @@ const JUMP_REACH := 10.0
 
 var _rng := RandomNumberGenerator.new()
 var _lilies: Array[MultiMesh] = []
+var _foliage: HubFoliage
 
 
 func _ready() -> void:
 	if not terrain.is_node_ready():
 		await terrain.ready
 	_rng.seed = 5830
+	_foliage = HubFoliage.new(foliage_shader)
 	_build_river_water()
 	_build_ponds()
 	_build_banks()
@@ -48,6 +53,8 @@ func set_life(life: float) -> void:
 			material.set_shader_parameter("life", life)
 	for multimesh in _lilies:
 		multimesh.visible_instance_count = int(multimesh.instance_count * clampf(0.1 + life * 0.9, 0.0, 1.0))
+	if _foliage:
+		_foliage.set_life(life)
 
 
 ## Tracé de la rivière prolongé à chaque bout sous la berge, avec la direction et la normale de chaque point.
@@ -284,11 +291,11 @@ func _build_life() -> void:
 		var group := _rng.randi() % lilies.size()
 		lilies[group].append(Transform3D(Basis(Vector3.UP, _rng.randf() * TAU).scaled(Vector3.ONE * _rng.randf_range(2.0, 3.4)), Vector3(spot.x, level + 0.02, spot.y)))
 	for index in reed_models.size():
-		_add_multimeshes(reed_models[index], reeds[index])
+		_add_multimeshes(reed_models[index], reeds[index], 1)
 	for index in rock_models.size():
 		_add_multimeshes(rock_models[index], rocks[index])
 	for index in lily_models.size():
-		_lilies.append_array(_add_multimeshes(lily_models[index], lilies[index]))
+		_lilies.append_array(_add_multimeshes(lily_models[index], lilies[index], 2))
 
 
 func _groups(models: Array[PackedScene]) -> Array[Array]:
@@ -299,8 +306,11 @@ func _groups(models: Array[PackedScene]) -> Array[Array]:
 
 
 ## Instances d'un modèle par cases de 32 m : chaque case s'efface au loin selon sa propre distance à la caméra.
-func _add_multimeshes(model: PackedScene, transforms: Array) -> Array[MultiMesh]:
+## wither : 1, son feuillage reprend vie avec les livres ; 2, le modèle entier (un nénuphar et sa fleur).
+func _add_multimeshes(model: PackedScene, transforms: Array, wither := 0) -> Array[MultiMesh]:
 	var mesh := _load_mesh(model)
+	if wither > 0:
+		mesh = _foliage.mesh(mesh, wither == 2)
 	var cells := {}
 	for transform: Transform3D in transforms:
 		var cell := Vector2i(floori(transform.origin.x / 32.0), floori(transform.origin.z / 32.0))
@@ -309,17 +319,20 @@ func _add_multimeshes(model: PackedScene, transforms: Array) -> Array[MultiMesh]
 		cells[cell].append(transform)
 	var result: Array[MultiMesh] = []
 	for cell: Vector2i in cells:
-		result.append(_add_multimesh(mesh, cells[cell]).multimesh)
+		result.append(_add_multimesh(mesh, cells[cell], wither > 0).multimesh)
 	return result
 
 
-func _add_multimesh(mesh: Mesh, transforms: Array) -> MultiMeshInstance3D:
+func _add_multimesh(mesh: Mesh, transforms: Array, wither := false) -> MultiMeshInstance3D:
 	var multimesh := MultiMesh.new()
 	multimesh.transform_format = MultiMesh.TRANSFORM_3D
+	multimesh.use_custom_data = wither
 	multimesh.mesh = mesh
 	multimesh.instance_count = transforms.size()
 	for index in transforms.size():
 		multimesh.set_instance_transform(index, transforms[index])
+	if wither:
+		HubFoliage.mark(multimesh, terrain)
 	var instance := MultiMeshInstance3D.new()
 	instance.multimesh = multimesh
 	instance.visibility_range_end = detail_range
