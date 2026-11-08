@@ -4,7 +4,7 @@ extends Node3D
 ## redevenue vive et des libellules rasent l'eau ; au quatrième, des papillons volent au-dessus du jardin du roi et
 ## des berges fleuries. Le hub sinistré n'en a aucune.
 ##
-## Les insectes volent dans leur shader (hub_insect.gdshader) : un MultiMesh par case de 32 m et par espèce, effacé
+## Les insectes volent dans leur shader (hub_insect.gdshader) : un MultiMesh par case de 64 m et par espèce, effacé
 ## au-delà de RANGE mètres, sans ombre ni calcul du processeur. Le poisson est un seul modèle Kenney, montré le temps
 ## d'un saut, près de l'auditeur.
 
@@ -12,8 +12,9 @@ extends Node3D
 @export var insect_shader: Shader
 @export var fish_model: PackedScene
 
-const CELL := 32.0
-const RANGE := 45.0
+## Cases des essaims : larges, le jardin du roi tient dans deux, un appel de dessin chacune.
+const CELL := 64.0
+const RANGE := 50.0
 const BUTTERFLY_COUNT := 60
 ## Parterres du jardin du roi (tools/build_hub.py, build_park) : la plupart des papillons y butinent.
 const FLOWER_BEDS: Array[Vector2] = [Vector2(36.0, -58.0), Vector2(36.0, -64.0), Vector2(48.0, -58.0), Vector2(48.0, -64.0), Vector2(47.6, -76.4)]

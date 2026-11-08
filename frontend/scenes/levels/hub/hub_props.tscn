@@ -22133,6 +22133,144 @@ transform = Transform3D(1.86263, 0, -1.814, 0, 2.6, 0, 1.814, 0, 1.86263, 47.6, 
 [node name="flower_yellowA_3861" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("165_model")]
 transform = Transform3D(2.27605, 0, 1.25681, 0, 2.6, 0, -1.25681, 0, 2.27605, 48.7, 0, -75.3)
 
+[node name="grass_3914" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("172_model")]
+transform = Transform3D(-2.63842, 0, -0.35999, 0, 2.66286, 0, 0.35999, 0, -2.63842, 48.1947, -0.02, -54.6835)
+
+[node name="grass_large_3915" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("173_model")]
+transform = Transform3D(1.92852, 0, 2.09339, 0, 2.84631, 0, -2.09339, 0, 1.92852, 39.381, -0.02, -84.6597)
+
+[node name="grass_leafs_3916" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("174_model")]
+transform = Transform3D(0.36167, 0, -2.4489, 0, 2.47546, 0, 2.4489, 0, 0.36167, 35.2577, -0.02, -77.7522)
+
+[node name="grass_leafsLarge_3917" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("175_model")]
+transform = Transform3D(-2.96741, 0, 1.44996, 0, 3.30272, 0, -1.44996, 0, -2.96741, 33.1046, -0.02, -63.5166)
+
+[node name="grass_3918" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("172_model")]
+transform = Transform3D(0.84833, 0, -2.40356, 0, 2.54887, 0, 2.40356, 0, 0.84833, 38.4611, -0.02, -77.587)
+
+[node name="grass_large_3919" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("173_model")]
+transform = Transform3D(-1.56675, 0, -1.85163, 0, 2.42554, 0, 1.85163, 0, -1.56675, 33.4983, -0.02, -73.4577)
+
+[node name="grass_leafs_3920" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("174_model")]
+transform = Transform3D(-3.11245, 0, -0.97019, 0, 3.26016, 0, 0.97019, 0, -3.11245, 33.5904, -0.02, -73.7418)
+
+[node name="grass_leafsLarge_3921" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("175_model")]
+transform = Transform3D(-1.12252, 0, -2.29158, 0, 2.55174, 0, 2.29158, 0, -1.12252, 34.0276, -0.02, -85.5028)
+
+[node name="grass_3922" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("172_model")]
+transform = Transform3D(-0.84682, 0, -2.50419, 0, 2.64349, 0, 2.50419, 0, -0.84682, 38.7094, -0.02, -58.6032)
+
+[node name="grass_large_3923" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("173_model")]
+transform = Transform3D(0.3527, 0, 2.51519, 0, 2.5398, 0, -2.51519, 0, 0.3527, 38.8115, -0.02, -78.1975)
+
+[node name="grass_leafs_3924" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("174_model")]
+transform = Transform3D(1.59633, 0, 2.46078, 0, 2.93321, 0, -2.46078, 0, 1.59633, 37.7241, -0.02, -85.503)
+
+[node name="grass_leafsLarge_3925" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("175_model")]
+transform = Transform3D(-3.35061, 0, 0.01472, 0, 3.35064, 0, -0.01472, 0, -3.35061, 49.1226, -0.02, -53.9286)
+
+[node name="grass_3926" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("172_model")]
+transform = Transform3D(-1.24867, 0, 3.0961, 0, 3.33841, 0, -3.0961, 0, -1.24867, 35.7112, -0.02, -55.3034)
+
+[node name="grass_large_3927" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("173_model")]
+transform = Transform3D(-2.60537, 0, -1.8108, 0, 3.17284, 0, 1.8108, 0, -2.60537, 39.6625, -0.02, -53.7587)
+
+[node name="grass_leafs_3928" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("174_model")]
+transform = Transform3D(-1.64826, 0, -2.76952, 0, 3.22289, 0, 2.76952, 0, -1.64826, 39.6231, -0.02, -53.7106)
+
+[node name="grass_leafsLarge_3929" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("175_model")]
+transform = Transform3D(-2.78974, 0, -1.66752, 0, 3.25011, 0, 1.66752, 0, -2.78974, 39.2895, -0.02, -78.7996)
+
+[node name="grass_3930" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("172_model")]
+transform = Transform3D(0.61751, 0, -2.38436, 0, 2.46302, 0, 2.38436, 0, 0.61751, 45.976, -0.02, -54.0433)
+
+[node name="grass_large_3931" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("173_model")]
+transform = Transform3D(1.30143, 0, -2.55606, 0, 2.8683, 0, 2.55606, 0, 1.30143, 33.711, -0.02, -60.1107)
+
+[node name="grass_leafs_3932" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("174_model")]
+transform = Transform3D(-1.54315, 0, 2.92356, 0, 3.30583, 0, -2.92356, 0, -1.54315, 33.2286, -0.02, -55.1751)
+
+[node name="grass_leafsLarge_3933" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("175_model")]
+transform = Transform3D(2.70556, 0, -0.00844, 0, 2.70557, 0, 0.00844, 0, 2.70556, 33.0871, -0.02, -65.2637)
+
+[node name="grass_3934" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("172_model")]
+transform = Transform3D(3.02441, 0, 0.39522, 0, 3.05013, 0, -0.39522, 0, 3.02441, 34.8131, -0.02, -61.3189)
+
+[node name="grass_large_3935" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("173_model")]
+transform = Transform3D(1.51673, 0, 1.87938, 0, 2.41506, 0, -1.87938, 0, 1.51673, 33.6959, -0.02, -56.3445)
+
+[node name="grass_leafs_3936" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("174_model")]
+transform = Transform3D(-1.38481, 0, 2.10693, 0, 2.52128, 0, -2.10693, 0, -1.38481, 39.5297, -0.02, -79.7343)
+
+[node name="grass_leafsLarge_3937" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("175_model")]
+transform = Transform3D(1.04027, 0, 2.70514, 0, 2.89827, 0, -2.70514, 0, 1.04027, 39.1895, -0.02, -79.3665)
+
+[node name="grass_3938" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("172_model")]
+transform = Transform3D(2.54932, 0, 1.19788, 0, 2.81672, 0, -1.19788, 0, 2.54932, 35.7578, -0.02, -54.8182)
+
+[node name="grass_large_3939" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("173_model")]
+transform = Transform3D(-2.21474, 0, 2.47944, 0, 3.32456, 0, -2.47944, 0, -2.21474, 49.8756, -0.02, -53.862)
+
+[node name="grass_leafs_3940" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("174_model")]
+transform = Transform3D(-2.51424, 0, 0.87969, 0, 2.66369, 0, -0.87969, 0, -2.51424, 38.6838, -0.02, -78.4056)
+
+[node name="grass_leafsLarge_3941" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("175_model")]
+transform = Transform3D(3.03225, 0, 0.20007, 0, 3.03884, 0, -0.20007, 0, 3.03225, 50.0543, -0.02, -77.8247)
+
+[node name="grass_3942" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("172_model")]
+transform = Transform3D(-2.06053, 0, -1.65276, 0, 2.64147, 0, 1.65276, 0, -2.06053, 38.7123, -0.02, -85.9991)
+
+[node name="grass_large_3943" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("173_model")]
+transform = Transform3D(-1.87386, 0, -1.5765, 0, 2.44881, 0, 1.5765, 0, -1.87386, 34.1113, -0.02, -61.2876)
+
+[node name="grass_leafs_3944" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("174_model")]
+transform = Transform3D(3.08309, 0, 1.3254, 0, 3.35591, 0, -1.3254, 0, 3.08309, 49.5714, -0.02, -54.3123)
+
+[node name="grass_leafsLarge_3945" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("175_model")]
+transform = Transform3D(-2.57783, 0, -1.41532, 0, 2.9408, 0, 1.41532, 0, -2.57783, 38.233, -0.02, -77.3377)
+
+[node name="grass_3946" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("172_model")]
+transform = Transform3D(1.7993, 0, -2.27426, 0, 2.89996, 0, 2.27426, 0, 1.7993, 33.2923, -0.02, -59.0621)
+
+[node name="grass_large_3947" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("173_model")]
+transform = Transform3D(-1.35012, 0, 2.50617, 0, 2.8467, 0, -2.50617, 0, -1.35012, 36.7261, -0.02, -77.7183)
+
+[node name="grass_leafs_3948" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("174_model")]
+transform = Transform3D(3.09341, 0, -0.4985, 0, 3.13332, 0, 0.4985, 0, 3.09341, 35.3865, -0.02, -76.9887)
+
+[node name="grass_leafsLarge_3949" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("175_model")]
+transform = Transform3D(-2.50308, 0, 1.98474, 0, 3.19447, 0, -1.98474, 0, -2.50308, 35.3874, -0.02, -54.8271)
+
+[node name="grass_3950" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("172_model")]
+transform = Transform3D(0.24318, 0, -2.9036, 0, 2.91376, 0, 2.9036, 0, 0.24318, 35.5775, -0.02, -53.8218)
+
+[node name="grass_large_3951" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("173_model")]
+transform = Transform3D(-2.21073, 0, 1.34909, 0, 2.58986, 0, -1.34909, 0, -2.21073, 38.0622, -0.02, -85.4197)
+
+[node name="grass_leafs_3952" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("174_model")]
+transform = Transform3D(0.89012, 0, 2.48351, 0, 2.63821, 0, -2.48351, 0, 0.89012, 47.5223, -0.02, -54.0395)
+
+[node name="grass_leafsLarge_3953" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("175_model")]
+transform = Transform3D(-1.92302, 0, 2.51157, 0, 3.16322, 0, -2.51157, 0, -1.92302, 37.7546, -0.02, -76.6846)
+
+[node name="grass_3954" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("172_model")]
+transform = Transform3D(2.66149, 0, 0.88497, 0, 2.80476, 0, -0.88497, 0, 2.66149, 39.1075, -0.02, -85.2537)
+
+[node name="grass_large_3955" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("173_model")]
+transform = Transform3D(1.56141, 0, 1.99666, 0, 2.53469, 0, -1.99666, 0, 1.56141, 33.116, -0.02, -72.7579)
+
+[node name="grass_leafs_3956" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("174_model")]
+transform = Transform3D(-1.00817, 0, 2.63986, 0, 2.82582, 0, -2.63986, 0, -1.00817, 33.0332, -0.02, -75.7996)
+
+[node name="grass_leafsLarge_3957" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("175_model")]
+transform = Transform3D(-2.30433, 0, 1.21545, 0, 2.60524, 0, -1.21545, 0, -2.30433, 37.6005, -0.02, -78.1884)
+
+[node name="grass_3958" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("172_model")]
+transform = Transform3D(2.69769, 0, 1.47626, 0, 3.0752, 0, -1.47626, 0, 2.69769, 50.2317, -0.02, -78.8373)
+
+[node name="grass_large_3959" parent="Repairs/ParkBeds/Rebuilt" instance=ExtResource("173_model")]
+transform = Transform3D(-0.45401, 0, -2.81085, 0, 2.84728, 0, 2.81085, 0, -0.45401, 39.3362, -0.02, -58.1101)
+
 [node name="Collision" type="StaticBody3D" parent="Repairs/ParkBeds/Rebuilt"]
 
 [node name="Box2207" type="CollisionShape3D" parent="Repairs/ParkBeds/Rebuilt/Collision"]
@@ -22399,6 +22537,33 @@ transform = Transform3D(3.2, 0, 0, 0, 3.2, 0, 0, 0, 3.2, 44.784, 0, -61.516)
 [node name="statue_3889" parent="Repairs/ParkKings/Rebuilt" instance=ExtResource("169_model")]
 transform = Transform3D(0, 0, -1.6, 0, 1.6, 0, 1.6, 0, 0, 44.808, 1.248, -61.508)
 
+[node name="plant_bush_3960" parent="Repairs/ParkKings/Rebuilt" instance=ExtResource("140_model")]
+transform = Transform3D(-0.99105, 0, 2.5669, 0, 2.75158, 0, -2.5669, 0, -0.99105, 50.993, -0.02, -78.7352)
+
+[node name="plant_bushDetailed_3961" parent="Repairs/ParkKings/Rebuilt" instance=ExtResource("176_model")]
+transform = Transform3D(2.91515, 0, 0.54227, 0, 2.96515, 0, -0.54227, 0, 2.91515, 50.8787, -0.02, -75.5117)
+
+[node name="plant_bushLarge_3962" parent="Repairs/ParkKings/Rebuilt" instance=ExtResource("85_model")]
+transform = Transform3D(2.67157, 0, -0.2526, 0, 2.68349, 0, 0.2526, 0, 2.67157, 51.2341, -0.02, -59.7128)
+
+[node name="plant_bushSmall_3963" parent="Repairs/ParkKings/Rebuilt" instance=ExtResource("177_model")]
+transform = Transform3D(2.39416, 0, 1.45159, 0, 2.79985, 0, -1.45159, 0, 2.39416, 50.8894, -0.02, -56.923)
+
+[node name="plant_bush_3964" parent="Repairs/ParkKings/Rebuilt" instance=ExtResource("140_model")]
+transform = Transform3D(-0.71015, 0, 3.31214, 0, 3.38741, 0, -3.31214, 0, -0.71015, 51.2222, -0.02, -53.6985)
+
+[node name="plant_bushDetailed_3965" parent="Repairs/ParkKings/Rebuilt" instance=ExtResource("176_model")]
+transform = Transform3D(-0.00363, 0, -2.61025, 0, 2.61025, 0, 2.61025, 0, -0.00363, 34.5267, -0.02, -53.1408)
+
+[node name="plant_bushLarge_3966" parent="Repairs/ParkKings/Rebuilt" instance=ExtResource("85_model")]
+transform = Transform3D(0.24515, 0, 3.03427, 0, 3.04416, 0, -3.03427, 0, 0.24515, 37.5589, -0.02, -52.791)
+
+[node name="plant_bushSmall_3967" parent="Repairs/ParkKings/Rebuilt" instance=ExtResource("177_model")]
+transform = Transform3D(0.09742, 0, 2.8653, 0, 2.86695, 0, -2.8653, 0, 0.09742, 47.2456, -0.02, -53.0267)
+
+[node name="plant_bush_3968" parent="Repairs/ParkKings/Rebuilt" instance=ExtResource("140_model")]
+transform = Transform3D(1.75173, 0, -2.5882, 0, 3.12527, 0, 2.5882, 0, 1.75173, 50.5435, -0.02, -52.9027)
+
 [node name="Collision" type="StaticBody3D" parent="Repairs/ParkKings/Rebuilt"]
 
 [node name="Box2247" type="CollisionShape3D" parent="Repairs/ParkKings/Rebuilt/Collision"]
@@ -22578,6 +22743,198 @@ transform = Transform3D(-1.1, 0, 1.90526, 0, 3.53, 0, -1.90526, 0, -1.1, 37.4682
 [node name="tower_hexagon_roof_3912" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("64_model")]
 transform = Transform3D(5.6, 0, 0, 0, 2.6, 0, 0, 0, 5.6, 36, 3.66, -82)
 
+[node name="flower_redB_3969" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("178_model")]
+transform = Transform3D(-2.78724, 0, 0.08323, 0, 2.78849, 0, -0.08323, 0, -2.78724, 48.2664, -0.02, -54.8721)
+
+[node name="flower_yellowB_3970" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("179_model")]
+transform = Transform3D(-2.59313, 0, 0.0235, 0, 2.59324, 0, -0.0235, 0, -2.59313, 39.8607, -0.02, -78.8002)
+
+[node name="flower_purpleB_3971" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("180_model")]
+transform = Transform3D(2.10725, 0, 0.97822, 0, 2.32323, 0, -0.97822, 0, 2.10725, 33.3019, -0.02, -73.3695)
+
+[node name="flower_redC_3972" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("181_model")]
+transform = Transform3D(0.99773, 0, 2.02986, 0, 2.26181, 0, -2.02986, 0, 0.99773, 33.1402, -0.02, -73.3172)
+
+[node name="flower_yellowC_3973" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("182_model")]
+transform = Transform3D(0.97866, 0, -2.47093, 0, 2.65768, 0, 2.47093, 0, 0.97866, 35.4939, -0.02, -54.3671)
+
+[node name="flower_purpleC_3974" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("183_model")]
+transform = Transform3D(2.04974, 0, 0.98213, 0, 2.27289, 0, -0.98213, 0, 2.04974, 33.1445, -0.02, -54.4901)
+
+[node name="mushroom_redGroup_3975" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("184_model")]
+transform = Transform3D(-0.56901, 0, -2.50725, 0, 2.57101, 0, 2.50725, 0, -0.56901, 49.9988, -0.02, -74.9422)
+
+[node name="flower_yellowA_3976" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("165_model")]
+transform = Transform3D(0.88941, 0, 2.64582, 0, 2.79131, 0, -2.64582, 0, 0.88941, 33.3894, -0.02, -54.8038)
+
+[node name="mushroom_tanGroup_3977" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("185_model")]
+transform = Transform3D(-1.66214, 0, -2.0144, 0, 2.61161, 0, 2.0144, 0, -1.66214, 49.4959, -0.02, -79.0423)
+
+[node name="flower_redB_3978" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("178_model")]
+transform = Transform3D(1.17837, 0, 1.85906, 0, 2.20106, 0, -1.85906, 0, 1.17837, 47.4667, -0.02, -53.8649)
+
+[node name="flower_yellowB_3979" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("179_model")]
+transform = Transform3D(-2.44107, 0, -1.12587, 0, 2.6882, 0, 1.12587, 0, -2.44107, 33.3655, -0.02, -57.0168)
+
+[node name="flower_purpleB_3980" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("180_model")]
+transform = Transform3D(-2.05535, 0, -1.58736, 0, 2.59695, 0, 1.58736, 0, -2.05535, 33.3359, -0.02, -53.9293)
+
+[node name="flower_redC_3981" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("181_model")]
+transform = Transform3D(2.61494, 0, -1.46975, 0, 2.99968, 0, 1.46975, 0, 2.61494, 45.5907, -0.02, -78.3572)
+
+[node name="flower_yellowC_3982" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("182_model")]
+transform = Transform3D(-2.49681, 0, -0.31473, 0, 2.51657, 0, 0.31473, 0, -2.49681, 39.1979, -0.02, -85.133)
+
+[node name="flower_purpleC_3983" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("183_model")]
+transform = Transform3D(0.53106, 0, 2.68075, 0, 2.73284, 0, -2.68075, 0, 0.53106, 49.4449, -0.02, -79.06)
+
+[node name="mushroom_redGroup_3984" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("184_model")]
+transform = Transform3D(0.12854, 0, 2.28345, 0, 2.28707, 0, -2.28345, 0, 0.12854, 35.7136, -0.02, -54.7821)
+
+[node name="flower_yellowA_3985" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("165_model")]
+transform = Transform3D(1.93002, 0, -1.76246, 0, 2.61366, 0, 1.76246, 0, 1.93002, 50.3076, -0.02, -66.1212)
+
+[node name="mushroom_tanGroup_3986" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("185_model")]
+transform = Transform3D(-2.44984, 0, 0.00295, 0, 2.44984, 0, -0.00295, 0, -2.44984, 35.3129, -0.02, -77.7807)
+
+[node name="flower_redB_3987" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("178_model")]
+transform = Transform3D(-1.47816, 0, -1.89383, 0, 2.4024, 0, 1.89383, 0, -1.47816, 35.0483, -0.02, -53.7228)
+
+[node name="flower_yellowB_3988" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("179_model")]
+transform = Transform3D(2.42146, 0, -1.65444, 0, 2.93269, 0, 1.65444, 0, 2.42146, 49.2451, -0.02, -54.1064)
+
+[node name="flower_purpleB_3989" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("180_model")]
+transform = Transform3D(-2.63995, 0, 0.83006, 0, 2.76736, 0, -0.83006, 0, -2.63995, 34.2561, -0.02, -86.0649)
+
+[node name="flower_redC_3990" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("181_model")]
+transform = Transform3D(1.32354, 0, -1.84587, 0, 2.27134, 0, 1.84587, 0, 1.32354, 50.1615, -0.02, -79.4477)
+
+[node name="flower_yellowC_3991" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("182_model")]
+transform = Transform3D(2.78078, 0, 0.28453, 0, 2.7953, 0, -0.28453, 0, 2.78078, 37.6195, -0.02, -85.8592)
+
+[node name="flower_purpleC_3992" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("183_model")]
+transform = Transform3D(2.27619, 0, 1.28716, 0, 2.61492, 0, -1.28716, 0, 2.27619, 34.0521, -0.02, -54.0258)
+
+[node name="mushroom_redGroup_3993" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("184_model")]
+transform = Transform3D(-2.5019, 0, 0.35018, 0, 2.52629, 0, -0.35018, 0, -2.5019, 39.353, -0.02, -58.1278)
+
+[node name="flower_yellowA_3994" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("165_model")]
+transform = Transform3D(0.49509, 0, -2.78479, 0, 2.82846, 0, 2.78479, 0, 0.49509, 49.3763, -0.02, -66.9378)
+
+[node name="mushroom_tanGroup_3995" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("185_model")]
+transform = Transform3D(0.84554, 0, -2.53625, 0, 2.67348, 0, 2.53625, 0, 0.84554, 48.9283, -0.02, -54.0601)
+
+[node name="flower_redB_3996" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("178_model")]
+transform = Transform3D(-1.81262, 0, 1.26005, 0, 2.20756, 0, -1.26005, 0, -1.81262, 33.7819, -0.02, -74.1444)
+
+[node name="flower_yellowB_3997" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("179_model")]
+transform = Transform3D(-0.2237, 0, -2.92264, 0, 2.93118, 0, 2.92264, 0, -0.2237, 34.3299, -0.02, -61.5285)
+
+[node name="flower_purpleB_3998" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("180_model")]
+transform = Transform3D(-0.74642, 0, -2.37039, 0, 2.48513, 0, 2.37039, 0, -0.74642, 34.6476, -0.02, -53.7628)
+
+[node name="flower_redC_3999" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("181_model")]
+transform = Transform3D(0.48188, 0, 2.91629, 0, 2.95583, 0, -2.91629, 0, 0.48188, 37.9453, -0.02, -85.6657)
+
+[node name="flower_yellowC_4000" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("182_model")]
+transform = Transform3D(1.50719, 0, -2.20455, 0, 2.67052, 0, 2.20455, 0, 1.50719, 33.0375, -0.02, -54.6172)
+
+[node name="flower_purpleC_4001" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("183_model")]
+transform = Transform3D(-2.00047, 0, -1.23604, 0, 2.35153, 0, 1.23604, 0, -2.00047, 33.5904, -0.02, -55.7646)
+
+[node name="mushroom_redGroup_4002" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("184_model")]
+transform = Transform3D(0.44317, 0, 2.37081, 0, 2.41188, 0, -2.37081, 0, 0.44317, 34.0287, -0.02, -74.4897)
+
+[node name="flower_yellowA_4003" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("165_model")]
+transform = Transform3D(2.42355, 0, 0.88526, 0, 2.58017, 0, -0.88526, 0, 2.42355, 33.0711, -0.02, -73.1934)
+
+[node name="mushroom_tanGroup_4004" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("185_model")]
+transform = Transform3D(-0.09452, 0, -2.82578, 0, 2.82736, 0, 2.82578, 0, -0.09452, 33.2202, -0.02, -58.3654)
+
+[node name="flower_redB_4005" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("178_model")]
+transform = Transform3D(-0.73264, 0, -2.40336, 0, 2.51255, 0, 2.40336, 0, -0.73264, 33.5356, -0.02, -74.0406)
+
+[node name="flower_yellowB_4006" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("179_model")]
+transform = Transform3D(0.8339, 0, -2.8533, 0, 2.97266, 0, 2.8533, 0, 0.8339, 34.7976, -0.02, -77.7138)
+
+[node name="flower_purpleB_4007" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("180_model")]
+transform = Transform3D(-2.54707, 0, -0.28986, 0, 2.56351, 0, 0.28986, 0, -2.54707, 39.6087, -0.02, -85.6634)
+
+[node name="flower_redC_4008" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("181_model")]
+transform = Transform3D(-2.28063, 0, -0.12784, 0, 2.28421, 0, 0.12784, 0, -2.28063, 33.8113, -0.02, -77.7291)
+
+[node name="flower_yellowC_4009" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("182_model")]
+transform = Transform3D(-1.84513, 0, 1.91574, 0, 2.65981, 0, -1.91574, 0, -1.84513, 36.4088, -0.02, -77.7025)
+
+[node name="flower_purpleC_4010" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("183_model")]
+transform = Transform3D(1.35343, 0, 2.01944, 0, 2.43103, 0, -2.01944, 0, 1.35343, 33.1286, -0.02, -85.1164)
+
+[node name="mushroom_redGroup_4011" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("184_model")]
+transform = Transform3D(-0.83713, 0, -2.87385, 0, 2.99329, 0, 2.87385, 0, -0.83713, 36.0467, -0.02, -76.9637)
+
+[node name="flower_yellowA_4012" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("165_model")]
+transform = Transform3D(2.00405, 0, 2.13611, 0, 2.92903, 0, -2.13611, 0, 2.00405, 35.8175, -0.02, -54.2913)
+
+[node name="mushroom_tanGroup_4013" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("185_model")]
+transform = Transform3D(1.0837, 0, 2.73059, 0, 2.93778, 0, -2.73059, 0, 1.0837, 39.8732, -0.02, -78.7558)
+
+[node name="flower_redB_4014" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("178_model")]
+transform = Transform3D(-0.41028, 0, -2.86429, 0, 2.89353, 0, 2.86429, 0, -0.41028, 38.8171, -0.02, -84.5831)
+
+[node name="flower_yellowB_4015" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("179_model")]
+transform = Transform3D(2.01209, 0, 1.02154, 0, 2.25656, 0, -1.02154, 0, 2.01209, 44.6327, -0.02, -53.7859)
+
+[node name="flower_purpleB_4016" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("180_model")]
+transform = Transform3D(-2.75492, 0, 1.13348, 0, 2.97899, 0, -1.13348, 0, -2.75492, 33.0033, -0.02, -57.0102)
+
+[node name="flower_redC_4017" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("181_model")]
+transform = Transform3D(-1.27873, 0, -1.95121, 0, 2.33289, 0, 1.95121, 0, -1.27873, 34.4229, -0.02, -55.1784)
+
+[node name="flower_yellowC_4018" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("182_model")]
+transform = Transform3D(1.68542, 0, 2.1284, 0, 2.71491, 0, -2.1284, 0, 1.68542, 33.6011, -0.02, -77.1169)
+
+[node name="flower_purpleC_4019" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("183_model")]
+transform = Transform3D(-1.99808, 0, -1.87179, 0, 2.73787, 0, 1.87179, 0, -1.99808, 39.3329, -0.02, -85.0485)
+
+[node name="mushroom_redGroup_4020" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("184_model")]
+transform = Transform3D(0.22683, 0, -2.41183, 0, 2.42247, 0, 2.41183, 0, 0.22683, 36.8783, -0.02, -86.0164)
+
+[node name="flower_yellowA_4021" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("165_model")]
+transform = Transform3D(2.70816, 0, 0.23438, 0, 2.71829, 0, -0.23438, 0, 2.70816, 36.0967, -0.02, -53.8481)
+
+[node name="mushroom_tanGroup_4022" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("185_model")]
+transform = Transform3D(-2.32516, 0, -1.18182, 0, 2.60827, 0, 1.18182, 0, -2.32516, 45.5892, -0.02, -78.5824)
+
+[node name="flower_redB_4023" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("178_model")]
+transform = Transform3D(2.4643, 0, -0.81218, 0, 2.59469, 0, 0.81218, 0, 2.4643, 49.6071, -0.02, -79.1901)
+
+[node name="flower_yellowB_4024" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("179_model")]
+transform = Transform3D(2.97476, 0, 0.09469, 0, 2.97626, 0, -0.09469, 0, 2.97476, 50.1046, -0.02, -79.6419)
+
+[node name="flower_purpleB_4025" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("180_model")]
+transform = Transform3D(-0.61507, 0, 2.42139, 0, 2.49829, 0, -2.42139, 0, -0.61507, 34.268, -0.02, -77.6028)
+
+[node name="flower_redC_4026" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("181_model")]
+transform = Transform3D(-0.7327, 0, -2.45283, 0, 2.55992, 0, 2.45283, 0, -0.7327, 34.6947, -0.02, -78.0637)
+
+[node name="flower_yellowC_4027" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("182_model")]
+transform = Transform3D(2.00016, 0, 1.89613, 0, 2.75607, 0, -1.89613, 0, 2.00016, 45.5536, -0.02, -78.6218)
+
+[node name="flower_purpleC_4028" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("183_model")]
+transform = Transform3D(0.88503, 0, 2.36309, 0, 2.52338, 0, -2.36309, 0, 0.88503, 33.0879, -0.02, -75.6683)
+
+[node name="mushroom_redGroup_4029" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("184_model")]
+transform = Transform3D(-1.58326, 0, 1.69709, 0, 2.32096, 0, -1.69709, 0, -1.58326, 38.1108, -0.02, -85.9312)
+
+[node name="flower_yellowA_4030" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("165_model")]
+transform = Transform3D(2.34163, 0, 1.65207, 0, 2.86576, 0, -1.65207, 0, 2.34163, 44.244, -0.02, -53.6723)
+
+[node name="mushroom_tanGroup_4031" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("185_model")]
+transform = Transform3D(-2.24636, 0, 1.43002, 0, 2.6629, 0, -1.43002, 0, -2.24636, 38.0929, -0.02, -85.9695)
+
+[node name="flower_redB_4032" parent="Repairs/ParkKiosk/Rebuilt" instance=ExtResource("178_model")]
+transform = Transform3D(2.49854, 0, -1.61243, 0, 2.97365, 0, 1.61243, 0, 2.49854, 33.9403, -0.02, -74.0859)
+
 [node name="Collision" type="StaticBody3D" parent="Repairs/ParkKiosk/Rebuilt"]
 
 [node name="Box2269" type="CollisionShape3D" parent="Repairs/ParkKiosk/Rebuilt/Collision"]
@@ -22603,378 +22960,6 @@ shape = SubResource("BoxShape3D_334")
 [node name="Box2274" type="CollisionShape3D" parent="Repairs/ParkKiosk/Rebuilt/Collision"]
 transform = Transform3D(-0.5, 0, 0.86603, 0, 1, 0, -0.86603, 0, -0.5, 37.4722, 1.935, -82.85)
 shape = SubResource("BoxShape3D_334")
-
-[node name="ParkGrass" type="Node3D" parent="Repairs"]
-metadata/stage = 1
-
-[node name="Rebuilt" type="Node3D" parent="Repairs/ParkGrass"]
-
-[node name="grass_3914" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("172_model")]
-transform = Transform3D(-2.63842, 0, -0.35999, 0, 2.66286, 0, 0.35999, 0, -2.63842, 48.1947, -0.02, -54.6835)
-
-[node name="grass_large_3915" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("173_model")]
-transform = Transform3D(1.92852, 0, 2.09339, 0, 2.84631, 0, -2.09339, 0, 1.92852, 39.381, -0.02, -84.6597)
-
-[node name="grass_leafs_3916" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("174_model")]
-transform = Transform3D(0.36167, 0, -2.4489, 0, 2.47546, 0, 2.4489, 0, 0.36167, 35.2577, -0.02, -77.7522)
-
-[node name="grass_leafsLarge_3917" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("175_model")]
-transform = Transform3D(-2.96741, 0, 1.44996, 0, 3.30272, 0, -1.44996, 0, -2.96741, 33.1046, -0.02, -63.5166)
-
-[node name="grass_3918" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("172_model")]
-transform = Transform3D(0.84833, 0, -2.40356, 0, 2.54887, 0, 2.40356, 0, 0.84833, 38.4611, -0.02, -77.587)
-
-[node name="grass_large_3919" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("173_model")]
-transform = Transform3D(-1.56675, 0, -1.85163, 0, 2.42554, 0, 1.85163, 0, -1.56675, 33.4983, -0.02, -73.4577)
-
-[node name="grass_leafs_3920" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("174_model")]
-transform = Transform3D(-3.11245, 0, -0.97019, 0, 3.26016, 0, 0.97019, 0, -3.11245, 33.5904, -0.02, -73.7418)
-
-[node name="grass_leafsLarge_3921" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("175_model")]
-transform = Transform3D(-1.12252, 0, -2.29158, 0, 2.55174, 0, 2.29158, 0, -1.12252, 34.0276, -0.02, -85.5028)
-
-[node name="grass_3922" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("172_model")]
-transform = Transform3D(-0.84682, 0, -2.50419, 0, 2.64349, 0, 2.50419, 0, -0.84682, 38.7094, -0.02, -58.6032)
-
-[node name="grass_large_3923" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("173_model")]
-transform = Transform3D(0.3527, 0, 2.51519, 0, 2.5398, 0, -2.51519, 0, 0.3527, 38.8115, -0.02, -78.1975)
-
-[node name="grass_leafs_3924" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("174_model")]
-transform = Transform3D(1.59633, 0, 2.46078, 0, 2.93321, 0, -2.46078, 0, 1.59633, 37.7241, -0.02, -85.503)
-
-[node name="grass_leafsLarge_3925" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("175_model")]
-transform = Transform3D(-3.35061, 0, 0.01472, 0, 3.35064, 0, -0.01472, 0, -3.35061, 49.1226, -0.02, -53.9286)
-
-[node name="grass_3926" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("172_model")]
-transform = Transform3D(-1.24867, 0, 3.0961, 0, 3.33841, 0, -3.0961, 0, -1.24867, 35.7112, -0.02, -55.3034)
-
-[node name="grass_large_3927" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("173_model")]
-transform = Transform3D(-2.60537, 0, -1.8108, 0, 3.17284, 0, 1.8108, 0, -2.60537, 39.6625, -0.02, -53.7587)
-
-[node name="grass_leafs_3928" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("174_model")]
-transform = Transform3D(-1.64826, 0, -2.76952, 0, 3.22289, 0, 2.76952, 0, -1.64826, 39.6231, -0.02, -53.7106)
-
-[node name="grass_leafsLarge_3929" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("175_model")]
-transform = Transform3D(-2.78974, 0, -1.66752, 0, 3.25011, 0, 1.66752, 0, -2.78974, 39.2895, -0.02, -78.7996)
-
-[node name="grass_3930" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("172_model")]
-transform = Transform3D(0.61751, 0, -2.38436, 0, 2.46302, 0, 2.38436, 0, 0.61751, 45.976, -0.02, -54.0433)
-
-[node name="grass_large_3931" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("173_model")]
-transform = Transform3D(1.30143, 0, -2.55606, 0, 2.8683, 0, 2.55606, 0, 1.30143, 33.711, -0.02, -60.1107)
-
-[node name="grass_leafs_3932" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("174_model")]
-transform = Transform3D(-1.54315, 0, 2.92356, 0, 3.30583, 0, -2.92356, 0, -1.54315, 33.2286, -0.02, -55.1751)
-
-[node name="grass_leafsLarge_3933" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("175_model")]
-transform = Transform3D(2.70556, 0, -0.00844, 0, 2.70557, 0, 0.00844, 0, 2.70556, 33.0871, -0.02, -65.2637)
-
-[node name="grass_3934" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("172_model")]
-transform = Transform3D(3.02441, 0, 0.39522, 0, 3.05013, 0, -0.39522, 0, 3.02441, 34.8131, -0.02, -61.3189)
-
-[node name="grass_large_3935" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("173_model")]
-transform = Transform3D(1.51673, 0, 1.87938, 0, 2.41506, 0, -1.87938, 0, 1.51673, 33.6959, -0.02, -56.3445)
-
-[node name="grass_leafs_3936" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("174_model")]
-transform = Transform3D(-1.38481, 0, 2.10693, 0, 2.52128, 0, -2.10693, 0, -1.38481, 39.5297, -0.02, -79.7343)
-
-[node name="grass_leafsLarge_3937" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("175_model")]
-transform = Transform3D(1.04027, 0, 2.70514, 0, 2.89827, 0, -2.70514, 0, 1.04027, 39.1895, -0.02, -79.3665)
-
-[node name="grass_3938" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("172_model")]
-transform = Transform3D(2.54932, 0, 1.19788, 0, 2.81672, 0, -1.19788, 0, 2.54932, 35.7578, -0.02, -54.8182)
-
-[node name="grass_large_3939" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("173_model")]
-transform = Transform3D(-2.21474, 0, 2.47944, 0, 3.32456, 0, -2.47944, 0, -2.21474, 49.8756, -0.02, -53.862)
-
-[node name="grass_leafs_3940" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("174_model")]
-transform = Transform3D(-2.51424, 0, 0.87969, 0, 2.66369, 0, -0.87969, 0, -2.51424, 38.6838, -0.02, -78.4056)
-
-[node name="grass_leafsLarge_3941" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("175_model")]
-transform = Transform3D(3.03225, 0, 0.20007, 0, 3.03884, 0, -0.20007, 0, 3.03225, 50.0543, -0.02, -77.8247)
-
-[node name="grass_3942" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("172_model")]
-transform = Transform3D(-2.06053, 0, -1.65276, 0, 2.64147, 0, 1.65276, 0, -2.06053, 38.7123, -0.02, -85.9991)
-
-[node name="grass_large_3943" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("173_model")]
-transform = Transform3D(-1.87386, 0, -1.5765, 0, 2.44881, 0, 1.5765, 0, -1.87386, 34.1113, -0.02, -61.2876)
-
-[node name="grass_leafs_3944" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("174_model")]
-transform = Transform3D(3.08309, 0, 1.3254, 0, 3.35591, 0, -1.3254, 0, 3.08309, 49.5714, -0.02, -54.3123)
-
-[node name="grass_leafsLarge_3945" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("175_model")]
-transform = Transform3D(-2.57783, 0, -1.41532, 0, 2.9408, 0, 1.41532, 0, -2.57783, 38.233, -0.02, -77.3377)
-
-[node name="grass_3946" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("172_model")]
-transform = Transform3D(1.7993, 0, -2.27426, 0, 2.89996, 0, 2.27426, 0, 1.7993, 33.2923, -0.02, -59.0621)
-
-[node name="grass_large_3947" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("173_model")]
-transform = Transform3D(-1.35012, 0, 2.50617, 0, 2.8467, 0, -2.50617, 0, -1.35012, 36.7261, -0.02, -77.7183)
-
-[node name="grass_leafs_3948" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("174_model")]
-transform = Transform3D(3.09341, 0, -0.4985, 0, 3.13332, 0, 0.4985, 0, 3.09341, 35.3865, -0.02, -76.9887)
-
-[node name="grass_leafsLarge_3949" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("175_model")]
-transform = Transform3D(-2.50308, 0, 1.98474, 0, 3.19447, 0, -1.98474, 0, -2.50308, 35.3874, -0.02, -54.8271)
-
-[node name="grass_3950" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("172_model")]
-transform = Transform3D(0.24318, 0, -2.9036, 0, 2.91376, 0, 2.9036, 0, 0.24318, 35.5775, -0.02, -53.8218)
-
-[node name="grass_large_3951" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("173_model")]
-transform = Transform3D(-2.21073, 0, 1.34909, 0, 2.58986, 0, -1.34909, 0, -2.21073, 38.0622, -0.02, -85.4197)
-
-[node name="grass_leafs_3952" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("174_model")]
-transform = Transform3D(0.89012, 0, 2.48351, 0, 2.63821, 0, -2.48351, 0, 0.89012, 47.5223, -0.02, -54.0395)
-
-[node name="grass_leafsLarge_3953" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("175_model")]
-transform = Transform3D(-1.92302, 0, 2.51157, 0, 3.16322, 0, -2.51157, 0, -1.92302, 37.7546, -0.02, -76.6846)
-
-[node name="grass_3954" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("172_model")]
-transform = Transform3D(2.66149, 0, 0.88497, 0, 2.80476, 0, -0.88497, 0, 2.66149, 39.1075, -0.02, -85.2537)
-
-[node name="grass_large_3955" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("173_model")]
-transform = Transform3D(1.56141, 0, 1.99666, 0, 2.53469, 0, -1.99666, 0, 1.56141, 33.116, -0.02, -72.7579)
-
-[node name="grass_leafs_3956" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("174_model")]
-transform = Transform3D(-1.00817, 0, 2.63986, 0, 2.82582, 0, -2.63986, 0, -1.00817, 33.0332, -0.02, -75.7996)
-
-[node name="grass_leafsLarge_3957" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("175_model")]
-transform = Transform3D(-2.30433, 0, 1.21545, 0, 2.60524, 0, -1.21545, 0, -2.30433, 37.6005, -0.02, -78.1884)
-
-[node name="grass_3958" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("172_model")]
-transform = Transform3D(2.69769, 0, 1.47626, 0, 3.0752, 0, -1.47626, 0, 2.69769, 50.2317, -0.02, -78.8373)
-
-[node name="grass_large_3959" parent="Repairs/ParkGrass/Rebuilt" instance=ExtResource("173_model")]
-transform = Transform3D(-0.45401, 0, -2.81085, 0, 2.84728, 0, 2.81085, 0, -0.45401, 39.3362, -0.02, -58.1101)
-
-[node name="ParkShrubs" type="Node3D" parent="Repairs"]
-metadata/stage = 2
-
-[node name="Rebuilt" type="Node3D" parent="Repairs/ParkShrubs"]
-
-[node name="plant_bush_3960" parent="Repairs/ParkShrubs/Rebuilt" instance=ExtResource("140_model")]
-transform = Transform3D(-0.99105, 0, 2.5669, 0, 2.75158, 0, -2.5669, 0, -0.99105, 50.993, -0.02, -78.7352)
-
-[node name="plant_bushDetailed_3961" parent="Repairs/ParkShrubs/Rebuilt" instance=ExtResource("176_model")]
-transform = Transform3D(2.91515, 0, 0.54227, 0, 2.96515, 0, -0.54227, 0, 2.91515, 50.8787, -0.02, -75.5117)
-
-[node name="plant_bushLarge_3962" parent="Repairs/ParkShrubs/Rebuilt" instance=ExtResource("85_model")]
-transform = Transform3D(2.67157, 0, -0.2526, 0, 2.68349, 0, 0.2526, 0, 2.67157, 51.2341, -0.02, -59.7128)
-
-[node name="plant_bushSmall_3963" parent="Repairs/ParkShrubs/Rebuilt" instance=ExtResource("177_model")]
-transform = Transform3D(2.39416, 0, 1.45159, 0, 2.79985, 0, -1.45159, 0, 2.39416, 50.8894, -0.02, -56.923)
-
-[node name="plant_bush_3964" parent="Repairs/ParkShrubs/Rebuilt" instance=ExtResource("140_model")]
-transform = Transform3D(-0.71015, 0, 3.31214, 0, 3.38741, 0, -3.31214, 0, -0.71015, 51.2222, -0.02, -53.6985)
-
-[node name="plant_bushDetailed_3965" parent="Repairs/ParkShrubs/Rebuilt" instance=ExtResource("176_model")]
-transform = Transform3D(-0.00363, 0, -2.61025, 0, 2.61025, 0, 2.61025, 0, -0.00363, 34.5267, -0.02, -53.1408)
-
-[node name="plant_bushLarge_3966" parent="Repairs/ParkShrubs/Rebuilt" instance=ExtResource("85_model")]
-transform = Transform3D(0.24515, 0, 3.03427, 0, 3.04416, 0, -3.03427, 0, 0.24515, 37.5589, -0.02, -52.791)
-
-[node name="plant_bushSmall_3967" parent="Repairs/ParkShrubs/Rebuilt" instance=ExtResource("177_model")]
-transform = Transform3D(0.09742, 0, 2.8653, 0, 2.86695, 0, -2.8653, 0, 0.09742, 47.2456, -0.02, -53.0267)
-
-[node name="plant_bush_3968" parent="Repairs/ParkShrubs/Rebuilt" instance=ExtResource("140_model")]
-transform = Transform3D(1.75173, 0, -2.5882, 0, 3.12527, 0, 2.5882, 0, 1.75173, 50.5435, -0.02, -52.9027)
-
-[node name="ParkMeadow" type="Node3D" parent="Repairs"]
-metadata/stage = 3
-
-[node name="Rebuilt" type="Node3D" parent="Repairs/ParkMeadow"]
-
-[node name="flower_redB_3969" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("178_model")]
-transform = Transform3D(-2.78724, 0, 0.08323, 0, 2.78849, 0, -0.08323, 0, -2.78724, 48.2664, -0.02, -54.8721)
-
-[node name="flower_yellowB_3970" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("179_model")]
-transform = Transform3D(-2.59313, 0, 0.0235, 0, 2.59324, 0, -0.0235, 0, -2.59313, 39.8607, -0.02, -78.8002)
-
-[node name="flower_purpleB_3971" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("180_model")]
-transform = Transform3D(2.10725, 0, 0.97822, 0, 2.32323, 0, -0.97822, 0, 2.10725, 33.3019, -0.02, -73.3695)
-
-[node name="flower_redC_3972" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("181_model")]
-transform = Transform3D(0.99773, 0, 2.02986, 0, 2.26181, 0, -2.02986, 0, 0.99773, 33.1402, -0.02, -73.3172)
-
-[node name="flower_yellowC_3973" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("182_model")]
-transform = Transform3D(0.97866, 0, -2.47093, 0, 2.65768, 0, 2.47093, 0, 0.97866, 35.4939, -0.02, -54.3671)
-
-[node name="flower_purpleC_3974" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("183_model")]
-transform = Transform3D(2.04974, 0, 0.98213, 0, 2.27289, 0, -0.98213, 0, 2.04974, 33.1445, -0.02, -54.4901)
-
-[node name="mushroom_redGroup_3975" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("184_model")]
-transform = Transform3D(-0.56901, 0, -2.50725, 0, 2.57101, 0, 2.50725, 0, -0.56901, 49.9988, -0.02, -74.9422)
-
-[node name="flower_yellowA_3976" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("165_model")]
-transform = Transform3D(0.88941, 0, 2.64582, 0, 2.79131, 0, -2.64582, 0, 0.88941, 33.3894, -0.02, -54.8038)
-
-[node name="mushroom_tanGroup_3977" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("185_model")]
-transform = Transform3D(-1.66214, 0, -2.0144, 0, 2.61161, 0, 2.0144, 0, -1.66214, 49.4959, -0.02, -79.0423)
-
-[node name="flower_redB_3978" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("178_model")]
-transform = Transform3D(1.17837, 0, 1.85906, 0, 2.20106, 0, -1.85906, 0, 1.17837, 47.4667, -0.02, -53.8649)
-
-[node name="flower_yellowB_3979" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("179_model")]
-transform = Transform3D(-2.44107, 0, -1.12587, 0, 2.6882, 0, 1.12587, 0, -2.44107, 33.3655, -0.02, -57.0168)
-
-[node name="flower_purpleB_3980" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("180_model")]
-transform = Transform3D(-2.05535, 0, -1.58736, 0, 2.59695, 0, 1.58736, 0, -2.05535, 33.3359, -0.02, -53.9293)
-
-[node name="flower_redC_3981" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("181_model")]
-transform = Transform3D(2.61494, 0, -1.46975, 0, 2.99968, 0, 1.46975, 0, 2.61494, 45.5907, -0.02, -78.3572)
-
-[node name="flower_yellowC_3982" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("182_model")]
-transform = Transform3D(-2.49681, 0, -0.31473, 0, 2.51657, 0, 0.31473, 0, -2.49681, 39.1979, -0.02, -85.133)
-
-[node name="flower_purpleC_3983" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("183_model")]
-transform = Transform3D(0.53106, 0, 2.68075, 0, 2.73284, 0, -2.68075, 0, 0.53106, 49.4449, -0.02, -79.06)
-
-[node name="mushroom_redGroup_3984" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("184_model")]
-transform = Transform3D(0.12854, 0, 2.28345, 0, 2.28707, 0, -2.28345, 0, 0.12854, 35.7136, -0.02, -54.7821)
-
-[node name="flower_yellowA_3985" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("165_model")]
-transform = Transform3D(1.93002, 0, -1.76246, 0, 2.61366, 0, 1.76246, 0, 1.93002, 50.3076, -0.02, -66.1212)
-
-[node name="mushroom_tanGroup_3986" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("185_model")]
-transform = Transform3D(-2.44984, 0, 0.00295, 0, 2.44984, 0, -0.00295, 0, -2.44984, 35.3129, -0.02, -77.7807)
-
-[node name="flower_redB_3987" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("178_model")]
-transform = Transform3D(-1.47816, 0, -1.89383, 0, 2.4024, 0, 1.89383, 0, -1.47816, 35.0483, -0.02, -53.7228)
-
-[node name="flower_yellowB_3988" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("179_model")]
-transform = Transform3D(2.42146, 0, -1.65444, 0, 2.93269, 0, 1.65444, 0, 2.42146, 49.2451, -0.02, -54.1064)
-
-[node name="flower_purpleB_3989" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("180_model")]
-transform = Transform3D(-2.63995, 0, 0.83006, 0, 2.76736, 0, -0.83006, 0, -2.63995, 34.2561, -0.02, -86.0649)
-
-[node name="flower_redC_3990" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("181_model")]
-transform = Transform3D(1.32354, 0, -1.84587, 0, 2.27134, 0, 1.84587, 0, 1.32354, 50.1615, -0.02, -79.4477)
-
-[node name="flower_yellowC_3991" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("182_model")]
-transform = Transform3D(2.78078, 0, 0.28453, 0, 2.7953, 0, -0.28453, 0, 2.78078, 37.6195, -0.02, -85.8592)
-
-[node name="flower_purpleC_3992" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("183_model")]
-transform = Transform3D(2.27619, 0, 1.28716, 0, 2.61492, 0, -1.28716, 0, 2.27619, 34.0521, -0.02, -54.0258)
-
-[node name="mushroom_redGroup_3993" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("184_model")]
-transform = Transform3D(-2.5019, 0, 0.35018, 0, 2.52629, 0, -0.35018, 0, -2.5019, 39.353, -0.02, -58.1278)
-
-[node name="flower_yellowA_3994" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("165_model")]
-transform = Transform3D(0.49509, 0, -2.78479, 0, 2.82846, 0, 2.78479, 0, 0.49509, 49.3763, -0.02, -66.9378)
-
-[node name="mushroom_tanGroup_3995" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("185_model")]
-transform = Transform3D(0.84554, 0, -2.53625, 0, 2.67348, 0, 2.53625, 0, 0.84554, 48.9283, -0.02, -54.0601)
-
-[node name="flower_redB_3996" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("178_model")]
-transform = Transform3D(-1.81262, 0, 1.26005, 0, 2.20756, 0, -1.26005, 0, -1.81262, 33.7819, -0.02, -74.1444)
-
-[node name="flower_yellowB_3997" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("179_model")]
-transform = Transform3D(-0.2237, 0, -2.92264, 0, 2.93118, 0, 2.92264, 0, -0.2237, 34.3299, -0.02, -61.5285)
-
-[node name="flower_purpleB_3998" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("180_model")]
-transform = Transform3D(-0.74642, 0, -2.37039, 0, 2.48513, 0, 2.37039, 0, -0.74642, 34.6476, -0.02, -53.7628)
-
-[node name="flower_redC_3999" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("181_model")]
-transform = Transform3D(0.48188, 0, 2.91629, 0, 2.95583, 0, -2.91629, 0, 0.48188, 37.9453, -0.02, -85.6657)
-
-[node name="flower_yellowC_4000" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("182_model")]
-transform = Transform3D(1.50719, 0, -2.20455, 0, 2.67052, 0, 2.20455, 0, 1.50719, 33.0375, -0.02, -54.6172)
-
-[node name="flower_purpleC_4001" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("183_model")]
-transform = Transform3D(-2.00047, 0, -1.23604, 0, 2.35153, 0, 1.23604, 0, -2.00047, 33.5904, -0.02, -55.7646)
-
-[node name="mushroom_redGroup_4002" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("184_model")]
-transform = Transform3D(0.44317, 0, 2.37081, 0, 2.41188, 0, -2.37081, 0, 0.44317, 34.0287, -0.02, -74.4897)
-
-[node name="flower_yellowA_4003" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("165_model")]
-transform = Transform3D(2.42355, 0, 0.88526, 0, 2.58017, 0, -0.88526, 0, 2.42355, 33.0711, -0.02, -73.1934)
-
-[node name="mushroom_tanGroup_4004" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("185_model")]
-transform = Transform3D(-0.09452, 0, -2.82578, 0, 2.82736, 0, 2.82578, 0, -0.09452, 33.2202, -0.02, -58.3654)
-
-[node name="flower_redB_4005" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("178_model")]
-transform = Transform3D(-0.73264, 0, -2.40336, 0, 2.51255, 0, 2.40336, 0, -0.73264, 33.5356, -0.02, -74.0406)
-
-[node name="flower_yellowB_4006" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("179_model")]
-transform = Transform3D(0.8339, 0, -2.8533, 0, 2.97266, 0, 2.8533, 0, 0.8339, 34.7976, -0.02, -77.7138)
-
-[node name="flower_purpleB_4007" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("180_model")]
-transform = Transform3D(-2.54707, 0, -0.28986, 0, 2.56351, 0, 0.28986, 0, -2.54707, 39.6087, -0.02, -85.6634)
-
-[node name="flower_redC_4008" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("181_model")]
-transform = Transform3D(-2.28063, 0, -0.12784, 0, 2.28421, 0, 0.12784, 0, -2.28063, 33.8113, -0.02, -77.7291)
-
-[node name="flower_yellowC_4009" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("182_model")]
-transform = Transform3D(-1.84513, 0, 1.91574, 0, 2.65981, 0, -1.91574, 0, -1.84513, 36.4088, -0.02, -77.7025)
-
-[node name="flower_purpleC_4010" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("183_model")]
-transform = Transform3D(1.35343, 0, 2.01944, 0, 2.43103, 0, -2.01944, 0, 1.35343, 33.1286, -0.02, -85.1164)
-
-[node name="mushroom_redGroup_4011" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("184_model")]
-transform = Transform3D(-0.83713, 0, -2.87385, 0, 2.99329, 0, 2.87385, 0, -0.83713, 36.0467, -0.02, -76.9637)
-
-[node name="flower_yellowA_4012" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("165_model")]
-transform = Transform3D(2.00405, 0, 2.13611, 0, 2.92903, 0, -2.13611, 0, 2.00405, 35.8175, -0.02, -54.2913)
-
-[node name="mushroom_tanGroup_4013" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("185_model")]
-transform = Transform3D(1.0837, 0, 2.73059, 0, 2.93778, 0, -2.73059, 0, 1.0837, 39.8732, -0.02, -78.7558)
-
-[node name="flower_redB_4014" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("178_model")]
-transform = Transform3D(-0.41028, 0, -2.86429, 0, 2.89353, 0, 2.86429, 0, -0.41028, 38.8171, -0.02, -84.5831)
-
-[node name="flower_yellowB_4015" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("179_model")]
-transform = Transform3D(2.01209, 0, 1.02154, 0, 2.25656, 0, -1.02154, 0, 2.01209, 44.6327, -0.02, -53.7859)
-
-[node name="flower_purpleB_4016" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("180_model")]
-transform = Transform3D(-2.75492, 0, 1.13348, 0, 2.97899, 0, -1.13348, 0, -2.75492, 33.0033, -0.02, -57.0102)
-
-[node name="flower_redC_4017" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("181_model")]
-transform = Transform3D(-1.27873, 0, -1.95121, 0, 2.33289, 0, 1.95121, 0, -1.27873, 34.4229, -0.02, -55.1784)
-
-[node name="flower_yellowC_4018" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("182_model")]
-transform = Transform3D(1.68542, 0, 2.1284, 0, 2.71491, 0, -2.1284, 0, 1.68542, 33.6011, -0.02, -77.1169)
-
-[node name="flower_purpleC_4019" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("183_model")]
-transform = Transform3D(-1.99808, 0, -1.87179, 0, 2.73787, 0, 1.87179, 0, -1.99808, 39.3329, -0.02, -85.0485)
-
-[node name="mushroom_redGroup_4020" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("184_model")]
-transform = Transform3D(0.22683, 0, -2.41183, 0, 2.42247, 0, 2.41183, 0, 0.22683, 36.8783, -0.02, -86.0164)
-
-[node name="flower_yellowA_4021" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("165_model")]
-transform = Transform3D(2.70816, 0, 0.23438, 0, 2.71829, 0, -0.23438, 0, 2.70816, 36.0967, -0.02, -53.8481)
-
-[node name="mushroom_tanGroup_4022" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("185_model")]
-transform = Transform3D(-2.32516, 0, -1.18182, 0, 2.60827, 0, 1.18182, 0, -2.32516, 45.5892, -0.02, -78.5824)
-
-[node name="flower_redB_4023" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("178_model")]
-transform = Transform3D(2.4643, 0, -0.81218, 0, 2.59469, 0, 0.81218, 0, 2.4643, 49.6071, -0.02, -79.1901)
-
-[node name="flower_yellowB_4024" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("179_model")]
-transform = Transform3D(2.97476, 0, 0.09469, 0, 2.97626, 0, -0.09469, 0, 2.97476, 50.1046, -0.02, -79.6419)
-
-[node name="flower_purpleB_4025" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("180_model")]
-transform = Transform3D(-0.61507, 0, 2.42139, 0, 2.49829, 0, -2.42139, 0, -0.61507, 34.268, -0.02, -77.6028)
-
-[node name="flower_redC_4026" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("181_model")]
-transform = Transform3D(-0.7327, 0, -2.45283, 0, 2.55992, 0, 2.45283, 0, -0.7327, 34.6947, -0.02, -78.0637)
-
-[node name="flower_yellowC_4027" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("182_model")]
-transform = Transform3D(2.00016, 0, 1.89613, 0, 2.75607, 0, -1.89613, 0, 2.00016, 45.5536, -0.02, -78.6218)
-
-[node name="flower_purpleC_4028" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("183_model")]
-transform = Transform3D(0.88503, 0, 2.36309, 0, 2.52338, 0, -2.36309, 0, 0.88503, 33.0879, -0.02, -75.6683)
-
-[node name="mushroom_redGroup_4029" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("184_model")]
-transform = Transform3D(-1.58326, 0, 1.69709, 0, 2.32096, 0, -1.69709, 0, -1.58326, 38.1108, -0.02, -85.9312)
-
-[node name="flower_yellowA_4030" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("165_model")]
-transform = Transform3D(2.34163, 0, 1.65207, 0, 2.86576, 0, -1.65207, 0, 2.34163, 44.244, -0.02, -53.6723)
-
-[node name="mushroom_tanGroup_4031" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("185_model")]
-transform = Transform3D(-2.24636, 0, 1.43002, 0, 2.6629, 0, -1.43002, 0, -2.24636, 38.0929, -0.02, -85.9695)
-
-[node name="flower_redB_4032" parent="Repairs/ParkMeadow/Rebuilt" instance=ExtResource("178_model")]
-transform = Transform3D(2.49854, 0, -1.61243, 0, 2.97365, 0, 1.61243, 0, 2.49854, 33.9403, -0.02, -74.0859)
 
 [node name="RiverDebris1" type="Node3D" parent="Repairs"]
 metadata/stage = 1

@@ -2379,10 +2379,9 @@ def build_park(scene, rng):
             return False
         return all(math.hypot(x - bx, z - bz) > radius + margin for bx, bz, radius in blocked)
 
-    def scatter_lawn(name, stage, count, models, scales, seed):
+    def scatter_lawn(host, count, models, scales, seed):
         rng_life = random.Random(seed)
-        scene.repair(name, stage)
-        scene.rebuilt(name)
+        scene.rebuilt(host)
         placed = 0
         for attempt in range(count * 40):
             if placed >= count:
@@ -2394,11 +2393,13 @@ def build_park(scene, rng):
             placed += 1
         scene.group = "Fixed"
 
-    scatter_lawn("ParkGrass", 1, 46, ("nature_kit/grass", "nature_kit/grass_large", "nature_kit/grass_leafs", "nature_kit/grass_leafsLarge"),
+    # Chaque pousse va dans un élément du jardin reconstruit au même palier : le regroupement du décor (hub_batch.gd) la
+    # fond dans ses lots, sans lot ni ombre de plus. L'herbe avec les parterres (1), les buissons avec l'allée des
+    # rois (2), la prairie avec le kiosque (3).
+    scatter_lawn("ParkBeds", 46, ("nature_kit/grass", "nature_kit/grass_large", "nature_kit/grass_leafs", "nature_kit/grass_leafsLarge"),
                  (2.4, 3.4), 5823)
     # Buissons au pied des haies, côté jardin, tous les trois mètres environ, sauf devant les entrées.
-    scene.repair("ParkShrubs", 2)
-    scene.rebuilt("ParkShrubs")
+    scene.rebuilt("ParkKings")
     rng_shrubs = random.Random(5824)
     shrubs = ("nature_kit/plant_bush", "nature_kit/plant_bushDetailed", "nature_kit/plant_bushLarge", "nature_kit/plant_bushSmall")
     edges = [((x0 + 1.0, z0 + 1.5), (x0 + 1.0, z1 - 4.0)), ((x0 + 1.5, z0 + 1.0), (x1 - 1.5, z0 + 1.0)),
@@ -2417,7 +2418,7 @@ def build_park(scene, rng):
             scene.add(shrubs[placed % len(shrubs)], (x, -0.02, z), rng_shrubs.uniform(0, 360), rng_shrubs.uniform(2.6, 3.4))
             placed += 1
     scene.group = "Fixed"
-    scatter_lawn("ParkMeadow", 3, 64, ("nature_kit/flower_redB", "nature_kit/flower_yellowB", "nature_kit/flower_purpleB",
+    scatter_lawn("ParkKiosk", 64, ("nature_kit/flower_redB", "nature_kit/flower_yellowB", "nature_kit/flower_purpleB",
                                        "nature_kit/flower_redC", "nature_kit/flower_yellowC", "nature_kit/flower_purpleC",
                                        "nature_kit/mushroom_redGroup", "nature_kit/flower_yellowA", "nature_kit/mushroom_tanGroup"),
                  (2.2, 3.0), 5825)
