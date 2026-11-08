@@ -39,7 +39,7 @@ Chaque ligne est vérifiée à l'étape 4 de la passe (colonne Vérification : t
 | 33 | Mémorial des gardes | (12, 37.5) | stèle, plaque, lances, boucliers, bougies, fleurs ; Readable | audit |
 | 34 | L'ordre du capitaine | (-4.2, 35.2) | Readable sur parchemin | audit |
 | 35 | L'avis du maire | (-4.6, 13) | Readable, tableau d'affichage | audit |
-| 36 | L'ardoise de la boulangère | (4.9, 28.6) | Readable | audit |
+| 36 | L'ardoise de la boulangère | (4.55, 28.6) | Readable | audit |
 | 37 | Potagers | (-27.8, 25.5) et (-27.8, 35) | planches, clôture, épouvantail (bras avec collision), potager brûlé | grille de marche, entrées dans les maillages, `passe/epouvantail_apres.png` |
 | 38 | Puits | (-20, 29) | margelle, toit, seau, chat gris | grille de marche, captures |
 | 39 | Fils à linge | (-18.5, 36.4) et (-22.5, -3) | draps qui ondulent | captures |
