@@ -14,6 +14,8 @@ extends SceneTree
 const CHECK_PATH := "user://bake_lieux_check.res"
 const LEVELS := {
 	"village": "res://scenes/levels/village/village.tscn",
+	"desert": "res://scenes/levels/desert/desert.tscn",
+	"hub": "res://scenes/levels/hub/hub.tscn",
 }
 
 
@@ -40,7 +42,8 @@ func _run() -> void:
 		LevelBake.recorded = {}
 		LevelBake.recording = true
 		var level: Node = (load(LEVELS[place]) as PackedScene).instantiate()
-		root.add_child(level)
+		# Comme en jeu : la scène est la scène courante dès son _ready (le décor du Désert y cherche le joueur).
+		change_scene_to_node(level)
 		# Certains nœuds attendent leurs voisins (le décor attend le sol) : quelques images suffisent.
 		for frame in 5:
 			await process_frame

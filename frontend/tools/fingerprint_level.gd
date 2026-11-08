@@ -39,8 +39,9 @@ func _run() -> void:
 	# Les bêtes tirent leur départ au hasard : même tirage à chaque passage.
 	seed(5814)
 	var level: Node = (load(LEVELS[place]) as PackedScene).instantiate()
-	root.add_child(level)
-	current_scene = level
+	# Comme en jeu : la scène est la scène courante dès son _ready (le décor du Désert y cherche le joueur).
+	change_scene_to_node(level)
+	await process_frame
 	for frame in frames:
 		await process_frame
 	# Le regroupement du décor du hub se fait par tranches, au fil des images.
