@@ -78,10 +78,6 @@ func engrave(deadline := NO_DEADLINE) -> bool:
 	return true
 
 
-func is_engraved() -> bool:
-	return _engraved == RING_COUNT
-
-
 func code() -> String:
 	var result := ""
 	for index in letters:

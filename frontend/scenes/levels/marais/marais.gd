@@ -242,7 +242,10 @@ func _prepare_crypt(deadline: int) -> bool:
 		if not _crypt_batches[_crypt_stage - 1].step(deadline):
 			return false
 		_crypt_stage += 1
-	return _mechanism.engrave(deadline)
+	if not _mechanism.engrave(deadline):
+		return false
+	_crypt_batches.clear()
+	return true
 
 
 ## Finit d'un coup la préparation de la crypte, avant qu'on la voie : en y descendant (sous le noir du fondu), ou en

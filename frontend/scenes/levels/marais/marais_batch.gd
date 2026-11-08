@@ -49,6 +49,7 @@ var _built := 0
 var _merged: Array[MeshInstance3D] = []
 var _signatures := {}
 var _painted := {}
+var _count := 0
 var _done := false
 
 
@@ -105,6 +106,14 @@ func step(deadline: int) -> bool:
 		else:
 			item.free()
 	_prune(_root)
+	# Fini : rien n'est gardé (les lots tiennent leurs maillages et leurs matériaux).
+	_count = _merged.size()
+	_items.clear()
+	_merged.clear()
+	_groups.clear()
+	_keys.clear()
+	_signatures.clear()
+	_painted.clear()
 	_done = true
 	return true
 
@@ -114,7 +123,7 @@ func is_done() -> bool:
 
 
 func merged_count() -> int:
-	return _merged.size()
+	return _count
 
 
 func _collect(item: MeshInstance3D) -> void:
