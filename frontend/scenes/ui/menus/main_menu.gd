@@ -38,6 +38,8 @@ func _ready() -> void:
 	get_tree().paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	add_child(Ornate.Backdrop.new())
+	# Shaders des lieux compilés hors de l'écran pendant que le joueur est ici (jeu exporté seulement).
+	add_child(ShaderWarmup.new())
 	GameState.use_profile(Account.profile_id())
 	Account.session_changed.connect(func() -> void: _synced = false)
 	if not pending_notice.is_empty():
