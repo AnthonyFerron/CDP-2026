@@ -53,6 +53,7 @@
 [ext_resource type="Script" path="res://scenes/levels/village/village_cat.gd" id="65_cat"]
 [ext_resource type="Script" path="res://scenes/levels/village/village_life.gd" id="66_life"]
 [ext_resource type="Script" path="res://scenes/levels/hub/volcano.gd" id="90_volcano"]
+[ext_resource type="Resource" path="res://scenes/levels/village/village_bake.res" id="91_bake"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_dusk"]
 sky_top_color = Color(0.26, 0.28, 0.42, 1)
@@ -416,6 +417,7 @@ light_specular = 0.0
 [node name="Terrain" type="StaticBody3D" parent="."]
 script = ExtResource("2_terrain")
 ground_material = SubResource("ShaderMaterial_ground")
+bake = ExtResource("91_bake")
 
 [node name="Stream" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -38, -0.45, 0)
@@ -429,6 +431,7 @@ grass_models = Array[PackedScene]([ExtResource("20_grass"), ExtResource("21_gras
 rubble_models = Array[PackedScene]([ExtResource("23_bricks"), ExtResource("24_rocks_small"), ExtResource("25_debris_wood")])
 tree_models = Array[PackedScene]([ExtResource("26_tree_default"), ExtResource("27_tree_oak"), ExtResource("28_tree_thin"), ExtResource("29_pine")])
 rock_models = Array[PackedScene]([ExtResource("30_rock"), ExtResource("31_rocks_large")])
+bake = ExtResource("91_bake")
 
 [node name="Props" parent="." instance=ExtResource("6_props")]
 

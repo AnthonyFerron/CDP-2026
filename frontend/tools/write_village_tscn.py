@@ -66,6 +66,8 @@ EXT = [
     ("Script", "res://scenes/levels/village/village_cat.gd", "65_cat"),
     ("Script", "res://scenes/levels/village/village_life.gd", "66_life"),
     ("Script", "res://scenes/levels/hub/volcano.gd", "90_volcano"),
+    # Sol et décor dispersé calculés d'avance (tools/bake_lieux.gd).
+    ("Resource", "res://scenes/levels/village/village_bake.res", "91_bake"),
 ]
 
 SUBRESOURCES = """
@@ -409,7 +411,8 @@ def main():
     node(lines, "GroundBounce", "DirectionalLight3D", props=[
         "transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 20, 0)",
         "light_color = Color(0.86, 0.62, 0.44, 1)", "light_energy = 0.6", "light_specular = 0.0"])
-    node(lines, "Terrain", "StaticBody3D", props=['script = ExtResource("2_terrain")', 'ground_material = SubResource("ShaderMaterial_ground")'])
+    node(lines, "Terrain", "StaticBody3D", props=['script = ExtResource("2_terrain")', 'ground_material = SubResource("ShaderMaterial_ground")',
+                                                    'bake = ExtResource("91_bake")'])
     node(lines, "Stream", "MeshInstance3D", props=[
         "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -38, -0.45, 0)", 'mesh = SubResource("PlaneMesh_stream")',
         "cast_shadow = 0"])
@@ -421,6 +424,7 @@ def main():
         'rubble_models = Array[PackedScene]([ExtResource("23_bricks"), ExtResource("24_rocks_small"), ExtResource("25_debris_wood")])',
         'tree_models = Array[PackedScene]([ExtResource("26_tree_default"), ExtResource("27_tree_oak"), ExtResource("28_tree_thin"), ExtResource("29_pine")])',
         'rock_models = Array[PackedScene]([ExtResource("30_rock"), ExtResource("31_rocks_large")])',
+        'bake = ExtResource("91_bake")',
         "",
     ]
     node(lines, "Props", instance="6_props")
