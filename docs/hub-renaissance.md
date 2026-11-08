@@ -119,3 +119,36 @@ l'autre.
 - **Tournées des villageois** : 19,8 µs par image pour les cinq (mille images appelées à la suite, dans le jeu natif).
 - **Chargement** : les nœuds du hub passent de 6 037 à 6 101 (faune, villageois) ; le chargement mesuré par l'outil
   reste entre 3,8 et 4,1 s, avant comme après.
+
+## Contrôles
+
+- **Calcul d'avance** (`docs/chargements-lieux.md`) : `hub_scatter.gd` a changé (feuillage), donc la signature du
+  décor dispersé ; `hub_bake.res` est régénéré (`tools/bake_lieux.gd -- hub`), ses données sont les mêmes. Empreinte
+  du hub (`tools/fingerprint_level.gd`) avec le calcul d'avance, puis en calcul direct (script du décor modifié le
+  temps de la mesure) : dessin `174d31f5…` et collisions `91448397…` identiques, 5 341 lignes ; seules changent
+  l'intensité des braseros et du feu, qui vacillent (comme entre deux relevés du même code).
+- **Inventaire des shaders** (`tools/bake_shaders.gd`) régénéré : trois entrées du hub de plus (feuillage, en copies
+  avec et sans ombre ; insectes), et le matériau des sapins de mini_forest passe du hub à la Plaine, qui l'utilise
+  encore (au hub, leur feuillage passe désormais par le shader).
+- **Générateurs** : `build_hub.py` et `write_hub_tscn.py` relancés après la fusion de `dev` (88217ce, portes voûtées
+  d'`arch_fill()`) : aucune dérive.
+- **Sonde de saut** (`docs/agents/hub/hub_jump_probe.gd`) : rivière et berges (pas 1, à 12 m de l'eau) et jardin du
+  roi (pas 1, x de 26 à 56, z de -94 à -44), à 0 et 4 livres : 0 point où l'on reste coincé.
+- **Tournées des villageois** (sonde hors dépôt, `routes_check.gd`, après la fusion) : 0 obstacle sur les tronçons,
+  pauses libres, à 3,3 m au moins du milieu des chemins et à 4 m au moins des portes. Carte :
+  `.claude/captures/hub-renaissance/routes_final.png`.
+- **Épilogue** (`epilogue.gd`, hors dépôt) : après la cinématique, ils quittent le feu de 2 à 12 s ; Mira qui marche
+  s'arrête devant le joueur et se tourne vers lui, puis repart quand il s'éloigne.
+- **Export de production** (`frontend/Dockerfile`, paquet lancé en natif avec `--main-pack`, `pck_hub.gd` hors dépôt) :
+  à 0, 2 et 4 livres, le feuillage passe par son shader (75 surfaces), la faune, les éléments du jardin, les débris, les
+  cendres du sol et les villageois sont là ; à 4 livres, les tournées tournent. Aucun avertissement de calcul d'avance
+  périmé. Rien n'est préchargé hors des scènes : `include_filter` ne change pas.
+- **Captures** (hors dépôt, `.claude/captures/hub-renaissance/`) : `final/livres0` à `livres4` (jardin du roi de haut et
+  à hauteur d'homme, allée, étang, rivière au grand pont, au jardin, berge, rivière de haut, vallée) ; `epilogue2/`
+  (place, marché, portail, jardin, est, à 3, 12, 30, 60 et 100 s), `epilogue1/mira_salue.png` ; `faune4/` et `faune4b/`
+  (papillons, libellules, poisson).
+- **Suite complète** (`frontend/tests/scenes/run_all.sh`, branche fusionnée avec `dev`) : `bake_plaine_check`,
+  `bake_lieux_check` et `bake_shaders_check` à jour ; 0 échec partout (`hub_test`, `music_test` et `sound_test`
+  compris), sauf les 2 échecs voulus de `hub_walk_0` et `hub_walk_4` (« limite infranchissable (doit echouer) ») ;
+  `tree_collision_test` : hub 670 arbres, dont 301 dans la forêt des montagnes, hors d'atteinte (comme avant) ;
+  `run_tests` : 52 réussis, 0 échec ; aucun avertissement de calcul d'avance périmé.
