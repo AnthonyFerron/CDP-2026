@@ -36,7 +36,7 @@ Une limite invisible (`village_terrain.gd`, `LIMIT_RADIUS`, 72 m) ferme la zone 
 | --- | --- | --- |
 | L'avis du maire | (-4.6, 13), au bord de la place | La mairie garde les registres et les savoirs des anciens bâtisseurs |
 | L'ordre du capitaine | (-4.2, 35), à la porte | Tenir la porte, puis rejoindre le bunker du roi au signal |
-| L'ardoise de la boulangère | (4.9, 28.6), devant la boulangerie | Les prix du pain, la dernière fournée pour les gardes |
+| L'ardoise de la boulangère | (4.55, 28.6), devant la boulangerie | Les prix du pain, la dernière fournée pour les gardes |
 | Le mémorial des gardes | (12, 37.5), près de la porte | Les gardes ont tenu trois jours face aux guerriers de Vibelandia |
 
 Chaque texte est un `Readable` (lu avec E) qui porte son panneau `SignBoard` : le panneau n'affiche que le titre.
