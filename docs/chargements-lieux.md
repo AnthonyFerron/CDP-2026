@@ -75,11 +75,13 @@ Ce que les lieux calculaient à chaque chargement, de façon déterministe, est 
 | Hub | `hub/sol` | hauteurs (rivière et étangs creusés), distance au bord de l'eau, couleur de chaque case |
 | Hub | `hub/decor` | arbres, forêt, buissons, rochers, fleurs : positions et cylindres de collision |
 | Marais | `marais/sol` | hauteurs, couleur de chaque case |
+| Marais | `marais/decor` | jeu des planches des pontons, arbres (et leurs cylindres de collision), roseaux, nénuphars, fleurs, buissons, champignons, troncs noyés : positions |
 
 Les fichiers pèsent 1 344 Ko (Village, dont 1 127 Ko pour les points des collisions des arbres et des rochers), 323 Ko
 (Désert), 410 Ko (hub) et 117 Ko (Marais). Ils sont enregistrés sans compression : le paquet du jeu est compressé en
 entier pour le web, et brotli les ramène à 731 Ko pour les quatre lieux (845 Ko s'ils étaient déjà compressés par
-Godot).
+Godot). Le décor du Marais (`marais/decor`, 37 Ko) est venu ensuite : son fichier passe à 154 Ko, et le paquet du jeu
+grossit de 26 Ko en brotli (10 366 143 à 10 392 106 octets, export de mesure).
 
 Au chargement, chaque nœud lit sa partie, puis pose ses nœuds exactement comme avant : le maillage du sol, sa collision, les MultiMesh et les formes de collision du décor. Le calcul en direct est gardé : il sert si la partie manque ou ne correspond plus, et c'est lui que l'outil relève.
 
@@ -117,9 +119,35 @@ Les collisions écrites par les générateurs (`build_<lieu>.py`, les `*_props.t
 
 `MaraisLife` taillait chaque grenouille, chaque corbeau et chaque chauve-souris pièce par pièce (sphères, boîtes, matériaux), puis les fondait en un maillage (`MaraisBatch`) : 6 ms par grenouille. La première de chaque espèce est toujours taillée ainsi ; les suivantes sont des copies de ce modèle, prises avant qu'il soit placé, qui partagent ses maillages et ses matériaux. Chaque copie garde ses propres ailes et sa tête (vérifié : 6 corbeaux, 7 chauves-souris, 12 ailes distinctes).
 
+### Marais : la crypte après l'arrivée
+
+Le `_ready` de la racine du Marais (`marais.gd`) fondait tout le décor fixe (`MaraisBatch`) : 292 ms en natif, dont
+77 ms pour la crypte. Le mécanisme gravé (`ring_mechanism.gd`), lui aussi dans la crypte, taillait ses 26 lettres et
+gravait ses 5 cercles : 62 ms. Deux changements, au même résultat (empreintes identiques, plus bas) :
+
+- **Les signatures des matériaux.** Pour ranger chaque surface dans son lot, `MaraisBatch` décrit son matériau par ses
+  réglages : la liste de ses propriétés stockées (`get_property_list`), chacune avec sa valeur. Cette description
+  coûtait l'essentiel du regroupement (133 ms sur 285 ms) : 129 matériaux distincts dans le Marais (chaque modèle
+  Kenney a le sien), pour 12 descriptions distinctes. Elle n'est plus faite qu'une fois par état de matériau : l'état
+  est la valeur de chaque propriété de sa classe (lue directement), avec son script et ses métadonnées. Deux matériaux
+  dans le même état ont la même liste de propriétés stockées et les mêmes valeurs, donc la même description. Vérifié
+  sur les 129 matériaux : mêmes groupes. Le regroupement des bêtes (`MaraisLife`) en profite aussi (36 à 18 ms).
+- **La crypte se prépare après l'arrivée.** Cachée tant qu'on est dehors (`Interior` invisible), elle n'est plus
+  préparée au chargement. À partir de la première image où la partie n'est plus en pause (la transition se lève),
+  `marais.gd` la prépare par tranches : à chaque image, il enchaîne les pas jusqu'à dépasser 8 ms
+  (`CRYPT_BUDGET_MSEC`, comme le hub), dans l'ordre : la teinte des dalles, le regroupement du décor de la crypte,
+  des tombeaux des rois et des niches (`MaraisBatch.step`, un modèle examiné puis un lot bâti à la fois), puis les
+  lettres du mécanisme (`RingMechanism.engrave`, une lettre taillée puis un cercle gravé à la fois). Les collisions de la crypte ne sont pas touchées : celles du décor sont dans la scène, et le cône
+  du mécanisme est posé à son `_ready`, comme le socle et les cercles. En natif, la préparation tient en 8 à 18
+  images. Si le joueur descend avant (il lui faut traverser le marais), elle finit d'un coup sous le noir du fondu
+  (`_apply_location`), de même quand on ouvre le mécanisme. `is_done()` dit si elle est finie : l'outil d'empreinte et
+  l'inventaire des shaders (`bake_shaders.gd`) l'attendent.
+
+Le dehors, vu à l'arrivée, est toujours fondu au chargement.
+
 ### Ce qui n'a pas été précalculé
 
-- **Les regroupements du décor** (Marais, Plaine, ruines du Désert). Ils fondent des centaines de modèles en maillages : précalculés, ils copieraient toute leur géométrie dans le paquet, plusieurs mégaoctets de plus à télécharger avant le menu.
+- **Les regroupements du décor** (Marais, Plaine, ruines du Désert). Ils fondent des centaines de modèles en maillages : précalculés, ils copieraient toute leur géométrie dans le paquet, plusieurs mégaoctets de plus à télécharger avant le menu. Mesuré pour le Marais : les 103 maillages fondus du dehors font 237 401 sommets, 7,9 Mo enregistrés (2,5 Mo en gzip), ceux de la crypte 3,2 Mo (0,75 Mo en gzip).
 - **Les collisions des ruines du Désert** (enveloppes et triangles des modèles). Elles coûtent 18 ms, et elles dépendent de `desert_ruins.tscn`, que l'agent des sauts modifie.
 - **Le décor de la Plaine**, au tirage au hasard entremêlé sur une dizaine d'étapes. Son sol et sa zone de lave sont déjà calculés d'avance (`bake_plaine.gd`).
 
@@ -188,6 +216,32 @@ jour. Sur la branche fusionnée :
 - export de production refait : en-têtes identiques à l'image en service, `index.wasm` garde son ETag, revalidation
   en `304`.
 
+### Marais : la crypte après l'arrivée
+
+- **Empreintes** (`fingerprint_level.gd`, qui attend désormais aussi `is_done()` à la racine du lieu) : `dev` et la
+  branche donnent la même, ligne pour ligne (`9f9b00b9…`, 1 438 lignes : 764 de dessin, 629 collisions, 23
+  lumières), après chaque étape (crypte différée et signatures, décor calculé d'avance, nettoyage).
+- **Captures** (`cam_shots.gd`, mêmes 18 vues avant et après : dehors l'arrivée, le débarcadère, le campement, le
+  cimetière et son sud, l'îlot et la porte de la crypte, la vue haute ; dans la crypte l'escalier, l'entrée, la salle
+  du mécanisme et son sud, les tombeaux des rois, la chambre est, l'ossuaire, les gardiens, le mécanisme et ses
+  lettres), regardées une à une. Dans la crypte, aucun pixel ne change de plus de 24 (écart moyen de 0,1 à 1,3 sur
+  255 : le vacillement des cierges) ; les lettres du mécanisme sont les mêmes. Dehors, écart moyen de 0,07 à 3,5 :
+  lucioles (l'une passe devant la caméra à la porte de la crypte), feu de camp, feux follets, fumée du volcan, eau.
+- **Pendant la préparation** : la vue d'arrivée prise à la 2e image (crypte pas prête) et 18 images plus tard (prête)
+  ne diffère que par ce qui bouge (roseaux, lucioles, eau, fumée) : la préparation ne touche que la crypte, cachée.
+- **Sonde de saut** (`docs/agents/marais/marais_jump_probe.gd`, crypte, pas de 0,5 m) : énigme résolue, 1 904 cases,
+  30 464 sauts, 5 233 arrivées hors du sol accessible, 0 point coincé ; non résolue, 1 864 cases, 29 824 sauts, 5 275
+  arrivées, 0 point coincé. Les mêmes chiffres que la sonde du 8 novembre.
+- **Inventaire des shaders** (`bake_shaders.gd`, qui attend la crypte prête) : à jour, sans être régénéré.
+- **Générateurs** : `build_marais.py` ne change rien ; `write_marais_tscn.py` ajoute seulement la ligne du calcul
+  d'avance au décor dispersé, et relancé ne produit aucune dérive.
+- **Suite complète** (`frontend/tests/scenes/run_all.sh`, depuis la branche) : `bake_plaine_check`,
+  `bake_lieux_check` et `bake_shaders_check` à jour ; 0 échec partout, sauf `hub_walk_0` (les 2 échecs voulus,
+  « limite infranchissable (doit echouer) ») ; `marais_puzzle_test` à 0 échec ; `tree_collision_test` : Marais,
+  72 arbres, 0 sans collision ; `sound_test` à 0 ; `run_tests` à 52 réussis ; aucun avertissement de calcul d'avance.
+  `hub_walk_4` n'avait pas démarré dans son délai (les trois places Godot étaient prises par les autres agents) :
+  relancé seul, il a ses 2 échecs voulus, ni plus ni moins.
+
 ## Mesures
 
 ### En natif
@@ -250,6 +304,50 @@ Ce qu'on en retient :
 Relevés et outils : `.claude/captures/perf-chargements/` (hors dépôt) : `mesures/` (JSON de chaque mesure),
 `outils/perf_lieu.py`, `outils/driver/perf_driver.gd`, `outils/resume.py`, `outils/trace.py`.
 
+### Marais : la crypte après l'arrivée
+
+Mêmes outils, sur le travail décrit plus haut (« Marais : la crypte après l'arrivée » et `marais/decor`). « Avant » est
+`dev` (f2920f8) ; « après », la branche `perf/marais-etale`.
+
+**En natif**, `profile_load.gd` sans écran, avant et après en alternance, trois passages chacun ; médianes, en
+millisecondes. Le serveur était chargé par les autres agents (charge 8,5) ; au calme (charge 0,7), le `_ready` d'avant
+était de 542 à 546 ms.
+
+| Poste | Avant | Après |
+| --- | --- | --- |
+| `_ready` de toute la scène | 563 | 279 (-50 %) |
+| racine (`marais.gd`) : regroupements, particules | 317 | 134 |
+| dont regroupement du dehors (mesuré à part, en alternance, deux passages, charge 6 à 7) | 210 et 220 | 118 et 111 |
+| dont regroupement de la crypte (de même) | 80 et 86 | 0 (après l'arrivée ; 56 et 55 d'un bloc) |
+| mécanisme gravé | 61 | 0,8 (les lettres après l'arrivée) |
+| décor dispersé | 54 | 17 (calcul d'avance) |
+| vie (`MaraisLife`) | 35 | 18 (signatures) |
+| sol | 65 | 66 |
+| lecture de la scène | 527 | 564 (écart dû à la charge : le calcul d'avance n'a que 37 Ko de plus) |
+| total jusqu'au rythme stable | 1 164 | 892 |
+
+Après l'arrivée, la crypte demande 121 à 134 ms en tout au premier chargement (polices et matériaux à lire), 65 à 79
+ms quand ils sont déjà en mémoire. Par tranches, elle tient en 8 images (18 sous Xvfb, avec le dessin), la plus longue
+de 12 à 17 ms : une tranche s'arrête au premier pas qui dépasse 8 ms.
+
+**Dans Chromium**, le banc décrit plus haut, une mesure à la fois, préparation des shaders retirée, avant puis après,
+trois paires ; le serveur était chargé par les autres agents (charge 12 à 15).
+
+| Paire | Ajout et `_ready`, avant | après | Plus longue tâche, avant | après | Total, avant | après |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | 4,47 s | 3,44 s | 32,2 s | 33,2 s | 60,9 s | 62,4 s |
+| 2 | 4,65 s | 4,02 s | 32,8 s | 33,0 s | 64,8 s | 59,8 s |
+| 3 | 4,66 s | 3,43 s | 30,6 s | 31,3 s | 63,8 s | 56,9 s |
+
+L'ajout et les `_ready` baissent de 0,6 à 1,2 s (médiane 4,65 à 3,44 s, -26 %). Comme pour les autres lieux, le total
+reste fait de la très longue image où la pause se lève (31 à 33 s, rendu logiciel) : ses écarts d'une mesure à l'autre
+couvrent le gain. La lecture de la scène (3,6 à 4,8 s ici) ne change pas. Dans la console du jeu exporté, aucun
+avertissement : le décor dispersé est bien lu dans le calcul d'avance.
+
+Relevés : `.claude/captures/perf-marais/` (hors dépôt) : `profils/`, `mesures/` (JSON de chaque mesure), `outils/`
+(copies des outils de `perf-chargements`, et `gd/` : détail des regroupements, des signatures, du travail de la
+crypte).
+
 ## Téléchargement
 
 Trois gains relevés par l'agent de la musique (`docs/musique-differee.md`, « autres gains possibles ») :
@@ -295,9 +393,17 @@ Trois gains relevés par l'agent de la musique (`docs/musique-differee.md`, « a
 
 ## Ce qui reste
 
-- **Le regroupement du décor du Marais** (300 ms en natif, dont 87 ms pour la crypte) reste le plus gros poste du
-  chargement. Le précalculer copierait toute sa géométrie dans le paquet. Piste : regrouper la crypte, cachée tant
-  qu'on est dehors, après l'arrivée, par tranches, comme le hub (`hub_batch.gd`).
+- **Le regroupement du dehors du Marais** (environ 115 ms en natif, serveur chargé) reste le plus gros poste de sa
+  racine : surtout l'assemblage des maillages (`SurfaceTool`, 237 401 sommets), que seul un précalcul de toute la
+  géométrie (7,9 Mo) supprimerait. Piste : les cases à plus de 50 m de l'arrivée, dans la brume et hors de portée des
+  ombres de la lune, portent 44 % de ces sommets (22 % au-delà de 60 m). Elles pourraient être fondues après
+  l'arrivée, comme la crypte, mais un petit objet n'y suit pas la même règle avant et après (ombre, portée de 40 m
+  comptée depuis le centre de son lot) : il faudrait ne différer que les lots de grands objets, ou prouver qu'aucun
+  petit lot ne se voit depuis l'arrivée, et le vérifier par des captures prises pendant ce travail.
+- **Le sol du Marais** (environ 65 ms : assemblage du maillage et collision bâtie par Jolt), à son `_ready`.
+- **Les signatures des matériaux du hub et de la Plaine** : `hub_batch.gd` et `plaine_batch.gd` décrivent leurs
+  matériaux comme le faisait `MaraisBatch` (`get_property_list` par matériau). La mémoire par état de matériau de
+  `MaraisBatch` (« Marais : la crypte après l'arrivée ») s'y applique telle quelle.
 - **La Plaine** : son décor dispersé (112 ms) et son regroupement (174 ms) se calculent toujours au chargement. Le
   décor tire au hasard sur une dizaine d'étapes entremêlées : le précalculer demande de le découper comme les autres.
 - **Les collisions des arbres du Village** : Jolt bâtit chaque enveloppe convexe depuis tous les points de son emprise

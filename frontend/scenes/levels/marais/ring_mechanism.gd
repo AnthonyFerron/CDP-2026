@@ -21,23 +21,61 @@ const ENGRAVING_FONT: Font = preload("res://ui/cinzel_bold.tres")
 ## Taille d'un pixel de lettre sur le cercle intérieur, et ce qu'elle gagne à chaque cercle vers l'extérieur.
 const LETTER_PIXEL := 0.0035
 const LETTER_PIXEL_STEP := 0.0004
+## Échéance d'une gravure d'un bloc (µs) : jamais atteinte.
+const NO_DEADLINE := 9223372036854775807
 
 @export var stone_color := Color(0.32, 0.3, 0.3)
 @export var letter_color := Color(0.82, 0.68, 0.38)
 
 ## Lettre désignée par le repère sur chaque cercle, de l'intérieur vers l'extérieur.
 var letters: Array[int] = []
+## Gravure des lettres remise à plus tard (engrave) : le Marais, dont la crypte est cachée à l'arrivée, la fait après,
+## quelques millisecondes par image. Sinon elle se fait au _ready. Les cercles, le socle et la collision sont posés au
+## _ready dans les deux cas ; les cercles tournent et s'illuminent avant comme après la gravure.
+var engrave_later := false
 
 var _rings: Array[Node3D] = []
 var _tweens: Array[Tween] = []
 var _letter_material: StandardMaterial3D
 var _glow_materials: Array[StandardMaterial3D] = []
+## Les 26 lettres, taillées une fois (le maillage d'un texte se calcule à sa première lecture), puis le nombre de
+## lettres taillées et de cercles gravés.
+var _glyphs: Array[TextMesh] = []
+var _cut := 0
+var _engraved := 0
 
 
 func _ready() -> void:
 	letters.resize(RING_COUNT)
 	letters.fill(0)
 	_build()
+	if not engrave_later:
+		engrave()
+
+
+## Grave les lettres jusqu'à l'instant deadline (Time.get_ticks_usec), au moins d'un pas : chaque lettre est taillée,
+## puis chaque cercle reçoit les siennes, en un seul maillage. Rend vrai quand tout est gravé.
+func engrave(deadline := NO_DEADLINE) -> bool:
+	if _glyphs.is_empty():
+		for index in LETTERS.length():
+			var glyph := TextMesh.new()
+			glyph.font = ENGRAVING_FONT
+			glyph.text = LETTERS[index]
+			glyph.font_size = 64
+			glyph.pixel_size = LETTER_PIXEL
+			glyph.depth = 0.0
+			_glyphs.append(glyph)
+	while _cut < _glyphs.size():
+		_glyphs[_cut].get_aabb()
+		_cut += 1
+		if Time.get_ticks_usec() >= deadline:
+			return false
+	while _engraved < RING_COUNT:
+		_engrave_ring(_engraved)
+		_engraved += 1
+		if Time.get_ticks_usec() >= deadline:
+			return false
+	return true
 
 
 func code() -> String:
@@ -111,16 +149,7 @@ func _build() -> void:
 	plinth.position.y = PLINTH_HEIGHT * 0.5
 	add_child(plinth)
 
-	# Les 26 lettres sont taillées une fois : chaque cercle les reprend, à sa taille.
-	var glyphs: Array[TextMesh] = []
-	for index in LETTERS.length():
-		var glyph := TextMesh.new()
-		glyph.font = ENGRAVING_FONT
-		glyph.text = LETTERS[index]
-		glyph.font_size = 64
-		glyph.pixel_size = LETTER_PIXEL
-		glyph.depth = 0.0
-		glyphs.append(glyph)
+	# Les 26 lettres sont taillées une fois : chaque cercle les reprend, à sa taille (engrave).
 	for ring in RING_COUNT:
 		var pivot := Node3D.new()
 		add_child(pivot)
@@ -139,23 +168,6 @@ func _build() -> void:
 		disc.mesh = band
 		disc.position.y = PLINTH_HEIGHT + band.height * 0.5
 		pivot.add_child(disc)
-		# Les 26 lettres d'un cercle forment un seul maillage gravé (et non 26 textes) : un appel de dessin par cercle
-		# au lieu de vingt-six.
-		var tool := SurfaceTool.new()
-		var size := (LETTER_PIXEL + ring * LETTER_PIXEL_STEP) / LETTER_PIXEL
-		for index in LETTERS.length():
-			var angle := -index * TAU / LETTERS.length()
-			var radius := inner + RING_WIDTH * 0.5
-			# Gravée à 1 cm au-dessus de la pierre, couchée sur le cercle.
-			var place := Transform3D(Basis.from_euler(Vector3(-PI * 0.5, 0.0, -angle)).scaled(Vector3.ONE * size),
-				Vector3(sin(angle) * -radius, top + 0.01, cos(angle) * -radius))
-			tool.append_from(glyphs[index], 0, place)
-		var engraved := MeshInstance3D.new()
-		engraved.name = "Letters"
-		engraved.mesh = tool.commit()
-		engraved.mesh.surface_set_material(0, _letter_material)
-		engraved.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-		pivot.add_child(engraved)
 	# Repère fixe gravé dans le socle, au nord du mécanisme : un triangle doré couché, pointé vers le centre.
 	var arrow := PrismMesh.new()
 	arrow.size = Vector3(0.5, 0.45, 0.04)
@@ -195,3 +207,25 @@ func _build() -> void:
 		var body := StaticBody3D.new()
 		body.add_child(shape)
 		add_child(body)
+
+
+## Les 26 lettres d'un cercle forment un seul maillage gravé (et non 26 textes) : un appel de dessin par cercle au lieu
+## de vingt-six.
+func _engrave_ring(ring: int) -> void:
+	var inner := INNER_RADIUS + ring * RING_WIDTH
+	var top := ring_top(ring)
+	var tool := SurfaceTool.new()
+	var size := (LETTER_PIXEL + ring * LETTER_PIXEL_STEP) / LETTER_PIXEL
+	for index in LETTERS.length():
+		var angle := -index * TAU / LETTERS.length()
+		var radius := inner + RING_WIDTH * 0.5
+		# Gravée à 1 cm au-dessus de la pierre, couchée sur le cercle.
+		var place := Transform3D(Basis.from_euler(Vector3(-PI * 0.5, 0.0, -angle)).scaled(Vector3.ONE * size),
+			Vector3(sin(angle) * -radius, top + 0.01, cos(angle) * -radius))
+		tool.append_from(_glyphs[index], 0, place)
+	var engraved := MeshInstance3D.new()
+	engraved.name = "Letters"
+	engraved.mesh = tool.commit()
+	engraved.mesh.surface_set_material(0, _letter_material)
+	engraved.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	_rings[ring].add_child(engraved)
