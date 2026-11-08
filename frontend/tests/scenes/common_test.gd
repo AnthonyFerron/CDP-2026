@@ -18,6 +18,16 @@ func wait(frames: int) -> void:
 		await physics_frame
 
 
+## Attend que le jeu ait vu ce que le test vient de faire. Quand une image est lente (serveur chargé), Godot rattrape
+## le temps en enchaînant jusqu'à 8 images physiques dans la même image : wait(3) peut alors se finir sans qu'aucun
+## _process du jeu n'ait tourné (l'invite d'InteractionController, le HUD), et les entrées d'Input.parse_input_event ne
+## sont vidées qu'au début de l'image suivante. Trois débuts d'image (process_frame) : l'image en cours finit ses
+## _process, la suivante vide les entrées et passe ses _process. Au calme, cela dure quelques millisecondes.
+func settle() -> void:
+	for i in 3:
+		await process_frame
+
+
 func hud() -> Node:
 	return level.get_node("Hud")
 
@@ -37,11 +47,13 @@ func press(action: String) -> void:
 	event.pressed = true
 	Input.parse_input_event(event)
 	await wait(2)
+	await settle()
 	event = InputEventAction.new()
 	event.action = action
 	event.pressed = false
 	Input.parse_input_event(event)
 	await wait(3)
+	await settle()
 
 
 func hold(action: String, frames: int) -> void:
@@ -90,9 +102,12 @@ func face(target: Vector3) -> void:
 	var offset := target - player.global_position
 	player.get_node("CameraPivot").rotation.y = atan2(-offset.x, -offset.z)
 	await wait(3)
+	await settle()
 
 
 func use(expected: String) -> void:
+	# L'invite affichée est celle du dernier _process : elle doit avoir vu le joueur arrêté là, tourné ainsi.
+	await settle()
 	check("invite : " + prompt(), prompt().contains(expected))
 	await press("interact")
 

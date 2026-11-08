@@ -14,6 +14,20 @@ func place(x: float, z: float, look: Vector3) -> void:
 	await face(look)
 
 
+## Passage d'une porte fermée (deux fondus de 0,35 s, le joueur de l'autre côté entre les deux) : attend qu'il reprenne
+## la main, au plus 5 s de jeu, et vérifie qu'il est arrivé au point voulu, à moins d'un mètre.
+func arrive(target: Vector2, label: String) -> void:
+	var there := false
+	for i in 300:
+		await physics_frame
+		var flat := Vector2(player.global_position.x, player.global_position.z)
+		there = player.process_mode != Node.PROCESS_MODE_DISABLED and not level.get("_busy") and flat.distance_to(target) < 1.0
+		if there:
+			break
+	await wait(5)
+	check("%s (%s)" % [label, player.global_position.snappedf(0.1)], there)
+
+
 func _run() -> void:
 	var books := int(OS.get_cmdline_user_args()[0])
 	state = root.get_node("GameState")
@@ -28,13 +42,25 @@ func _run() -> void:
 	level = current_scene
 	player = level.get_node("Player")
 
+	# Chaque bâtiment : les 16 maisons, ceux du village (école, taverne, chapelle, forge, ferme), ceux des quartiers
+	# (boulangerie, moulin, écuries, caserne, herboristerie, scriptorium) et l'observatoire, dont la porte de bois
+	# fermée se passe avec E (closed_door), dans un sens puis dans l'autre.
 	var houses: Array = JSON.parse_string(FileAccess.get_file_as_string("res://tests/scenes/hub_houses.json"))
 	for index in houses.size():
+		var label := "maison %d (%s)" % [index, houses[index].get("name", "?")]
 		var door: Array = houses[index].door
 		var inside: Array = houses[index].inside
+		if houses[index].get("closed_door", false):
+			await place(door[0], door[1], Vector3(inside[0], 1.2, inside[1]))
+			await use("Entrer")
+			await arrive(Vector2(inside[0], inside[1]), label + " : entree par la porte")
+			await face(Vector3(door[0], 1.2, door[1]))
+			await use("Sortir")
+			await arrive(Vector2(door[0], door[1]), label + " : sortie par la porte")
+			continue
 		await place(door[0], door[1], Vector3(inside[0], 1, inside[1]))
-		await walk_to(Vector3(inside[0], 0, inside[1]), "maison %d : entree" % index, 300)
-		await walk_to(Vector3(door[0], 0, door[1]), "maison %d : sortie" % index, 300)
+		await walk_to(Vector3(inside[0], 0, inside[1]), label + " : entree", 300)
+		await walk_to(Vector3(door[0], 0, door[1]), label + " : sortie", 300)
 
 	var roads := {"plaine": Vector2(-38, -38), "desert": Vector2(38, -38), "marais": Vector2(38, 38), "village": Vector2(-38, 38), "bunker": Vector2(72, 0)}
 	for name: String in roads:

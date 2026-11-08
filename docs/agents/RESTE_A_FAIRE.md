@@ -42,7 +42,11 @@ Le journal complet de la nuit est sur le serveur, dans `~/cdp-work/JOURNAL.md`. 
 - **Dos des panneaux (`sign_board.gd`) :** il n'est éclairé que par la lumière ambiante. Les lieux le compensent par des lueurs ou par `double_sided`.
 - **Ombres de la Plaine :** le soleil en 2 tranches d'ombre réduirait les appels de dessin de 30 à 45 % dehors, mais fait du moiré au sol. Piste : adoucir le filtrage des ombres dans les réglages du projet.
 - **Regroupement :** `MaraisBatch` et `PlaineBatch` gagneraient à devenir un seul outil dans `scripts/`.
-- **`tests/scenes/hub_houses.json` :** il ne couvre pas les 6 nouveaux bâtiments ni l'observatoire, que vérifie aujourd'hui le `rooms_walk.gd` de l'agent du Hub (`docs/agents/hub/interieurs/`).
+- **Tests sous charge (8 novembre, `fix/tests-instables`) :** une attente `wait(n)` en images physiques suit bien les fondus et les minuteries (le temps de `_process` reste à une image physique du temps physique). Elle ne suffit pas pour :
+  - lire ce qu'un `_process` calcule juste après une action du test : sous charge, une image enchaîne jusqu'à 8 images physiques sans `_process` (hub_test « invite : » vide). `settle()` de `common_test.gd` est appelé par `face()`, `press()` et `use()` ;
+  - une entrée d'`Input.parse_input_event`, vidée seulement au début de l'image suivante (menu_test « pause ouverte », « indice ferme » ; hub_test « sortie refusee ») ;
+  - ce qui suit l'horloge : fil du mélangeur audio (music_test), limites en `Time.get_ticks_msec`.
+  - Reste à surveiller, sans échec relevé : `timer_test` « chronometre au rouge » (`wait(2)` puis la couleur du HUD, posée dans son `_process`) ; `quality_test` (limites de 20 s à l'horloge, larges).
 - **`tree_collision_test` :** il ne voit plus les arbres morts du Marais, fondus dans le décor ; la grille de marche du Marais les vérifie.
 - **Reste accepté :** Plaine, 1 732 cases sur le dessus d'objets non atteintes.
 
