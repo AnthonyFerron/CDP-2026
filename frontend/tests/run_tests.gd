@@ -132,6 +132,12 @@ func _files(directory: String, extension: String) -> Array[String]:
 # --- Unitaire ---------------------------------------------------------------------------------------------
 
 func _unit_tests() -> void:
+	# Sauvegardes et session de ce processus dans user://tests/<pid>/ : un autre Godot lancé à côté (test de connexion,
+	# autre agent) ne les lit ni ne les écrit. Le jeu garde user://sauvegarde.cfg et user://session.cfg.
+	var own_dir := GameState.TEST_SAVE_DIR + "%d/" % OS.get_process_id()
+	_check(GameState.data_dir() == own_dir and GameState.save_path().begins_with(own_dir) and Account.session_path() == own_dir + "session.cfg"
+		and GameState.SAVE_PATH == "user://sauvegarde.cfg" and Account.SESSION_PATH == "user://session.cfg",
+		"sauvegardes et session isolées dans le dossier du processus (%s)" % own_dir)
 	_check(not Account.is_logged_in(), "démarrage en invité")
 	_check(Api.base_url == (_api_argument if not _api_argument.is_empty() else Api.DEFAULT_BASE_URL),
 		"adresse de l'API : argument --api, sinon production (%s)" % Api.base_url)
@@ -167,12 +173,12 @@ func _unit_tests() -> void:
 	old.set_value("partie", "temps_restant", 3000.0)
 	old.set_value("partie", "eruption", false)
 	old.set_value("partie", "introduction", true)
-	old.save("user://sauvegarde_ancienne.cfg")
-	var read := GameState.read_save("user://sauvegarde_ancienne.cfg")
+	old.save(GameState.data_dir() + "sauvegarde_ancienne.cfg")
+	var read := GameState.read_save(GameState.data_dir() + "sauvegarde_ancienne.cfg")
 	_check(_same(read.books, [&"projenomicon"]) and read.fragments.is_empty() and read.current_level == &"hub"
 		and read.player_position == Vector3.ZERO and read.server_game_id == 0 and read.intro_done,
 		"ancienne sauvegarde lisible, nouveaux champs par défaut")
-	_check(GameState.read_save("user://absente.cfg").is_empty(), "sauvegarde absente : vide")
+	_check(GameState.read_save(GameState.data_dir() + "absente.cfg").is_empty(), "sauvegarde absente : vide")
 
 	# Fragments : bornes et doublons.
 	GameState.reset(false)
@@ -351,7 +357,7 @@ func _functional_tests() -> void:
 	_check(not too_soon.ok and not too_soon.error.is_empty(), "renvoi immédiat refusé (60 s) : %s" % too_soon.error)
 	var verified: Dictionary = await Account.verify_code(code)
 	_check(verified.ok and Account.is_online() and Account.user_id > 0 and Account.pseudo == pseudo, "session ouverte")
-	var session := FileAccess.get_file_as_string(Account.SESSION_PATH)
+	var session := FileAccess.get_file_as_string(Account.session_path())
 	_check(Account.token in session and not PASSWORD in session, "jeton gardé sur l'appareil, mot de passe jamais")
 	var duplicate: Dictionary = await Account.register("Autre joueur", email, PASSWORD)
 	_check(not duplicate.ok and "existe déjà" in duplicate.error, "adresse déjà utilisée : %s" % duplicate.error)
