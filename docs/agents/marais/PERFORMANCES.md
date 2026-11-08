@@ -74,6 +74,12 @@ crypte reçoit 7 lumières au plus, sous la limite de 8 par objet du rendu Compa
 trois décors prend 243 ms (Props 96, Grounded 81, crypte 66), le mécanisme gravé 66 ms, le reste va aux pontons, aux
 lanternes et aux bêtes. Le niveau se charge pendant la transition du portail.
 
+Depuis le 8 novembre (agent perf-marais, `docs/chargements-lieux.md`, « Marais : la crypte après l'arrivée ») : les
+signatures des matériaux ne sont plus calculées qu'une fois par état (le regroupement du dehors passe d'environ 215 à
+115 ms, serveur chargé), la crypte (teinte, regroupement, lettres du mécanisme) se prépare après l'arrivée, 8 ms par image, et les
+positions du décor dispersé sont calculées d'avance (`marais/decor`). Le rendu et les collisions sont les mêmes
+(empreintes identiques).
+
 ## Vérifications
 
 - Captures figées (particules, feux follets, bêtes et scintillement arrêtés) aux mêmes 32 points avant et après :
