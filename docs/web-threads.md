@@ -42,12 +42,14 @@ L'export avec fils d'exécution demande :
 - l'isolation (COOP et COEP) ;
 - `SharedArrayBuffer` et l'AudioWorklet.
 
-| Navigateur | Version minimale | Remarque |
-| --- | --- | --- |
-| Chrome, Edge, Opera | 92 | Vérifié ici (Chromium sans écran) |
-| Firefox | 79 | Mêmes en-têtes. Non testé ici |
-| Safari, macOS | 15.2 | Mêmes en-têtes. Non testé ici. Safari est le plus lent des trois pour WebGL 2 |
-| Safari, iOS et iPadOS | 15.2 | Non testé. Mémoire plus limitée. Le jeu reste fait pour l'ordinateur (clavier et souris) |
+Vérifié le 8 novembre, sur un serveur sans carte graphique (rendu logiciel), avec l'export identique à la production. Le détail, les causes et le banc sont dans `docs/navigateurs.md`.
+
+| Navigateur | Version minimale | Version vérifiée | Ce qui marche | Ce qui ne marche pas, ou n'a pas pu être vérifié |
+| --- | --- | --- | --- | --- |
+| Chrome, Edge, Opera | 92 | Chromium 156 | Isolation, menu, son au premier clic, `musique.pck` monté. Bunker, roi et Merlon (E), sortie, hub, Plaine et sa musique. Clavier (ZQSD/WASD, E, H, Échap), souris capturée, caméra à la souris | Rien de propre au jeu. Une fois, le processus graphique (SwiftShader) a planté au hub : écran noir, maintenant expliqué en français avec un bouton pour recharger |
+| Safari, macOS | 15.2 | WebKit 27.2 sous Linux (moteur de Safari) | Comme Chromium, **après correction du type des `.pck` dans le Caddyfile** : sans elle, le jeu ne démarrait pas si le paquet arrivait en gzip (HTTP, ou proxy sans brotli). Souris capturée | 16 erreurs WebGL au menu (`glBlitFramebuffer`), sans effet visible. Caméra à la souris non vérifiable avec l'outil. Safari lui-même (Mac) non testé |
+| Firefox | 79 | Firefox 157 | Isolation, menu, son au premier clic, `musique.pck` monté, écran d'introduction. Souris capturée et déplacements, sur une page de test | La partie n'a pas pu être vérifiée : le pilote OpenGL logiciel du banc (llvmpipe) plante Firefox au premier dessin du bunker. À essayer sur un vrai PC |
+| Safari, iOS et iPadOS | 15.2 | Non testé | | Mémoire plus limitée. Le jeu reste fait pour l'ordinateur (clavier et souris) |
 
 Le jeu ne démarre pas si la page n'est pas isolée :
 
@@ -55,7 +57,7 @@ Le jeu ne démarre pas si la page n'est pas isolée :
 - dans une iframe d'un autre site ;
 - en HTTP, sauf sur `localhost`.
 
-Godot affiche alors « The following features required to run Godot projects on the Web are missing: Cross Origin Isolation… ». Pour vérifier les en-têtes :
+La page du jeu (`frontend/web/shell.html`) affiche alors, en français, ce qui manque et ce que le joueur peut faire, puis le texte de Godot (« The following features required to run Godot projects on the Web are missing: Cross-Origin Isolation… »). Elle fait de même sans WebGL 2, et si l'affichage est perdu en cours de partie. Pour vérifier les en-têtes :
 
 ```
 curl -sI https://codequest.anthonyferron.com/ | grep -i cross-origin
