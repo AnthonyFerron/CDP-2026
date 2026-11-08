@@ -28,6 +28,16 @@ extends CharacterBody3D
 @export_range(-89.0, 0.0) var pitch_min_degrees := -70.0
 @export_range(0.0, 89.0) var pitch_max_degrees := 40.0
 
+@export_group("Manette")
+## Rotation de la caméra au stick droit poussé à fond, en radians par seconde : horizontale, puis verticale.
+@export var pad_turn_speed := 3.2
+@export var pad_pitch_speed := 2.0
+## Courbe du stick droit : au-dessus de 1, une petite inclinaison tourne lentement, pour viser finement ; à fond, la
+## pleine vitesse. La zone morte (0,15) est celle des actions look_* (project.godot).
+@export var pad_look_curve := 1.7
+## Inverser le haut et le bas du stick droit.
+@export var pad_invert_y := false
+
 @export_group("Sons")
 ## Pas sur le sol propre au lieu (herbe, cendre, sable, boue…), que le lieu peut changer en cours de route.
 @export var footstep_sounds: Array[AudioStream]
@@ -143,8 +153,9 @@ func _physics_process(delta: float) -> void:
 	elif Input.is_action_just_pressed("jump"):
 		velocity.y = jump_velocity
 
-	var look := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
-	if look != Vector2.ZERO:
+	# Flèches du clavier. Le stick droit, qui partage ces actions, tourne la caméra à chaque image (_process).
+	var look := Input.get_vector("look_left", "look_right", "look_up", "look_down")
+	if look != Vector2.ZERO and not Gamepad.active:
 		_rotate_camera(look * key_turn_speed * delta / mouse_sensitivity)
 
 	var input := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
@@ -164,6 +175,8 @@ func _physics_process(delta: float) -> void:
 
 func _process(delta: float) -> void:
 	_smooth_motion()
+	if Gamepad.active:
+		_pad_look(delta)
 	var turn := minf(turn_speed * delta, 1.0)
 	if first_person:
 		# Le corps, invisible mais dont l'ombre marche au sol, se tourne vers où il avance, et vers le regard à l'arrêt.
@@ -181,6 +194,16 @@ func _process(delta: float) -> void:
 	_bob += delta * (2.0 + speed * 1.6)
 	var swing := minf(speed / walk_speed, 1.0)
 	_held_book.position = HELD_BOOK_POSITION + Vector3(cos(_bob * 0.5) * 0.008 * swing, sin(_bob) * (0.004 + 0.012 * swing), 0.0)
+
+
+## Caméra au stick droit, à chaque image affichée : à 144 images par seconde, elle tourne sans à-coups.
+func _pad_look(delta: float) -> void:
+	var look := Input.get_vector("look_left", "look_right", "look_up", "look_down")
+	if look == Vector2.ZERO:
+		return
+	look = look.normalized() * pow(look.length(), pad_look_curve)
+	var pitch := pad_pitch_speed * (-1.0 if pad_invert_y else 1.0)
+	_rotate_camera(Vector2(look.x * pad_turn_speed, look.y * pitch) * delta / mouse_sensitivity)
 
 
 ## Place le visuel et la caméra entre les deux dernières positions physiques du corps.

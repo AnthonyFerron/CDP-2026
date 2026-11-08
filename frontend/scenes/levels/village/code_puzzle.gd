@@ -6,6 +6,9 @@ extends CanvasLayer
 ## trembler le dispositif ; les cinq codes résolus, il s'illumine d'une intense lumière bleutée.
 ## Le panneau est construit à l'exécution ; les nœuds Root, Answer, Validate, Feedback, Heading, Code, Question,
 ## Fragments et Close gardent leur nom unique (%Answer…), utilisé par les tests.
+## À la manette (scripts/gamepad.gd) : la croix passe des onglets au champ de réponse et à « Valider » ; A sur le champ
+## ouvre le clavier virtuel (PadKeyboard), qui rappelle la question ; Menu y valide la réponse ; B ferme ; le stick
+## droit fait défiler les fragments.
 
 ## Une réponse vient d'être validée pour l'épreuve donnée.
 signal answered(index: int, correct: bool)
@@ -158,6 +161,8 @@ func select(index: int) -> void:
 	_numbers.text = "\n".join(numbers)
 	_fit_code(numbers.size())
 	_question.text = code.question
+	# Rappelée en tête du clavier virtuel, qui recouvre la question.
+	_answer.set_meta(&"pad_context", code.question)
 	_answer.text = ""
 	_answer.editable = not solved[index]
 	_validate.disabled = solved[index]
@@ -366,19 +371,35 @@ func _build() -> void:
 	var scroll := ScrollContainer.new()
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	Ornate.place(notes, scroll, Vector2(30, 50), Vector2(486, 490))
+	Gamepad.scrollable(scroll)
 	_fragments = VBoxContainer.new()
 	_fragments.add_theme_constant_override("separation", 12)
 	scroll.add_child(_fragments)
 	_own(_fragments, "Fragments")
-	# Touches rappelées sous le bandeau du HUD.
+	# Touches rappelées sous le bandeau du HUD ; à la manette, ses boutons.
+	var keys := Ornate.place(_root, Control.new(), Vector2.ZERO, Vector2(1920, 1080))
+	keys.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	Gamepad.swap(keys, false)
 	var x := 720.0
 	for key: Array in [["Entrée", "valider"], ["Échap", "fermer"]]:
 		var cap := Ornate.KeyCap.new()
 		cap.text = key[0]
-		Ornate.place(_root, cap, Vector2(x, 950), Vector2(124, 56))
+		Ornate.place(keys, cap, Vector2(x, 950), Vector2(124, 56))
 		var hint := Ornate.label(key[1], 24, Ornate.MUTED)
-		Ornate.place(_root, hint, Vector2(x + 138, 960), Vector2(140, 40))
+		Ornate.place(keys, hint, Vector2(x + 138, 960), Vector2(140, 40))
 		x += 300.0
+	var buttons := Ornate.place(_root, Control.new(), Vector2.ZERO, Vector2(1920, 1080))
+	buttons.name = "PadKeys"
+	buttons.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	Gamepad.swap(buttons, true)
+	x = 560.0
+	for key: Array in [["A", "écrire, valider"], ["B", "fermer"], ["Stick droit", "fragments"]]:
+		var cap := Ornate.KeyCap.new()
+		cap.pad = key[0]
+		Ornate.place(buttons, cap, Vector2(x, 950), Vector2(56, 56))
+		var hint := Ornate.label(key[1], 24, Ornate.MUTED)
+		Ornate.place(buttons, hint, Vector2(x + 70, 960), Vector2(200, 40))
+		x += 290.0
 	var close := HINTS_SCRIPT.CloseButton.new() as Button
 	# Dans le coin du cadre, sous le chronomètre du HUD (y = 12 à 66) : posée à cheval sur le bord, elle le cachait.
 	Ornate.place(frame, close, Vector2(1700, 40), Vector2(80, 80))
@@ -427,7 +448,7 @@ class LanguageTab:
 
 	func _ready() -> void:
 		flat = true
-		focus_mode = Control.FOCUS_NONE
+		Gamepad.setup(self)
 		mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		mouse_entered.connect(queue_redraw)
 		mouse_exited.connect(queue_redraw)
@@ -449,13 +470,15 @@ class LanguageTab:
 		if selected:
 			fill = Color(0.86, 0.78, 0.6) if state != "solved" else Color(0.72, 0.86, 0.66)
 			text = Ornate.INK
-		elif is_hovered() and state != "sealed":
+		elif Gamepad.lit(self) and state != "sealed":
 			fill = fill.lightened(0.12)
 		if flash.a > 0.0:
 			border = flash
 			fill = fill.lerp(flash, 0.35)
 		draw_colored_polygon(shape, fill)
 		draw_polyline(shape, border, 4.0)
+		if Gamepad.focused(self):
+			Ornate.focus_ring(self, Rect2(Vector2.ZERO, size), &"chamfer", 22.0)
 		var badge := Vector2(34, size.y / 2)
 		Ornate.diamond(self, badge, 22, border if state != "sealed" else Color(0.4, 0.4, 0.42))
 		Ornate.centered_text(self, Ornate.SERIF, badge, str(number), 22, Ornate.INK)

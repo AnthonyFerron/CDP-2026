@@ -45,6 +45,8 @@ const KEY_GAP := 16.0
 const TITLE_HEIGHT := 76.0
 ## Touche entre crochets dans un message, comme « [I] » : la lettre est entourée d'une touche du clavier.
 const KEY_PATTERN := "\\[([^\\[\\]\\s]{1,8})\\]"
+## Action de chaque touche citée dans les messages : la manette en main, son bouton remplace la touche (Gamepad).
+const KEY_ACTIONS := {"E": &"interact", "I": &"inventory", "H": &"hint", "Échap": &"pause", "Espace": &"jump"}
 ## Fond des cartouches : celui des cadres des menus (Ornate.PANEL), un peu translucide pour laisser voir le jeu.
 const PLATE_FILL := Color(0.14, 0.08, 0.07, 0.86)
 ## Chronomètre au rouge : texte, bordure et dégradé de la plaque.
@@ -65,6 +67,8 @@ var _warning_text: Label
 var _prompt_key: Ornate.KeyCap
 var _message_keys: Array[Ornate.KeyCap] = []
 var _key_regex := RegEx.create_from_string(KEY_PATTERN)
+## Texte du message affiché, tel qu'il a été donné : il est remis en page quand le joueur change de manette à clavier.
+var _message_source := ""
 var _reader_frame: Ornate.Frame
 var _reader_plaque: Control
 ## Dernier état affiché du chronomètre : il ne change qu'une fois par seconde.
@@ -103,6 +107,8 @@ func _ready() -> void:
 	GameState.erupted.connect(_on_erupted)
 	# Avis de la synchronisation avec le serveur : connexion perdue ou rétablie, refus.
 	GameSync.notice.connect(show_message)
+	# Touches du clavier ou boutons de la manette, selon ce que le joueur vient de toucher.
+	Gamepad.watch(_on_pad_mode)
 	_refresh_timer()
 	# Partie perdue pendant un changement de lieu : la fin suit dès l'arrivée. Le hub la joue lui-même.
 	if GameState.has_erupted and not get_parent() is Hub:
@@ -194,6 +200,7 @@ func _build_frames() -> void:
 	_timer_plate.draw.connect(_draw_timer_plate)
 	_prompt_key = Ornate.KeyCap.new()
 	_prompt_key.text = "E"
+	_prompt_key.action = &"interact"
 	_prompt_key.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	Ornate.place(_prompt_plate, _prompt_key, Vector2(PROMPT_PADDING, (PROMPT_HEIGHT - KEY_SIZE.y) / 2.0), KEY_SIZE)
 	# Lecteur : le cadre doré des menus, posé 38 px sous le haut du panneau ; la plaque du titre est à cheval sur son
@@ -209,6 +216,7 @@ func _build_frames() -> void:
 	_reader_plaque.draw.connect(_draw_reader_plaque)
 	var close_key := Ornate.KeyCap.new()
 	close_key.text = "E"
+	close_key.action = &"interact"
 	close_key.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	close_key.custom_minimum_size = KEY_SIZE
 	var hint: Control = $Reader/Panel/Margin/Content/Hint
@@ -242,15 +250,28 @@ func _set_message_shown(value: bool) -> void:
 
 ## Met le message dans son cartouche, à la largeur du texte (au plus MESSAGE_MAX_WIDTH, au-delà il passe à la ligne).
 ## Chaque « [X] » devient la lettre X dans une touche du clavier, avec un peu d'espace autour.
+##
+## La manette en main, la touche devient le bouton lié à son action (KEY_ACTIONS) : une lettre (« Y ») s'écrit dans un
+## bouton rond ; un bouton dessiné (Affichage, Menu) prend la place de trois espaces insécables.
 func _layout_message(text: String) -> void:
+	_message_source = text
 	var keys: Array[Vector2i] = []
+	var glyphs: Array[String] = []
 	var shown := ""
 	var last := 0
 	for found in _key_regex.search_all(text):
 		shown += text.substr(last, found.get_start() - last) + "  "
 		var start := shown.length()
-		shown += found.get_string(1)
+		var key := found.get_string(1)
+		var glyph := Gamepad.button_name(KEY_ACTIONS[key]) if Gamepad.active and KEY_ACTIONS.has(key) else ""
+		if glyph.is_empty():
+			shown += key
+		elif Ornate.pad_glyph_has_letter(glyph):
+			shown += glyph
+		else:
+			shown += "\u00a0\u00a0\u00a0"
 		keys.append(Vector2i(start, shown.length()))
+		glyphs.append(glyph)
 		shown += "  "
 		last = found.get_end()
 	shown += text.substr(last)
@@ -281,6 +302,14 @@ func _layout_message(text: String) -> void:
 		var cap := _message_keys[index]
 		cap.position = _message.position + bounds.get_center() - size / 2.0
 		cap.size = size
+		cap.pad = glyphs[index]
+		cap.bare = Ornate.pad_glyph_has_letter(glyphs[index])
+		cap.queue_redraw()
+
+
+func _on_pad_mode(_pad: bool) -> void:
+	if _message.visible:
+		_layout_message(_message_source)
 
 
 ## La plaque du titre suit la largeur du titre, comme Ornate.plaque.

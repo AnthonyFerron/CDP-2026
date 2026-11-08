@@ -5,6 +5,7 @@ extends CanvasLayer
 ## cercle, du centre vers le bord : la lettre choisie, grande et lisible, entre deux flèches. « Valider » vérifie
 ## le mot. À l'erreur, les lettres rougissent et le panneau tremble ; à la réussite, les cercles verdissent et le
 ## panneau s'efface pendant que le tombeau s'ouvre.
+## À la manette (scripts/gamepad.gd) : la croix passe d'une flèche à l'autre, A tourne le cercle, B se relève.
 
 signal validated(correct: bool)
 signal closed
@@ -168,6 +169,11 @@ func _build() -> void:
 		right.direction = 1
 		Ornate.place(_frame, right, Vector2(x + 68, 256), Vector2(60, 50))
 		right.pressed.connect(turn.bind(ring, 1))
+		left.name = "Left%d" % ring
+		right.name = "Right%d" % ring
+		# À l'ouverture, la manette sélectionne la flèche qui avance le cercle intérieur.
+		if ring == 0:
+			right.set_meta(Gamepad.DEFAULT_META, true)
 	_feedback = Ornate.label("", 23, Ornate.MUTED)
 	_feedback.name = "Feedback"
 	_feedback.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -365,7 +371,7 @@ class ArrowButton:
 
 	func _ready() -> void:
 		flat = true
-		focus_mode = Control.FOCUS_NONE
+		Gamepad.setup(self)
 		mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		mouse_entered.connect(queue_redraw)
 		mouse_exited.connect(queue_redraw)
@@ -375,7 +381,7 @@ class ArrowButton:
 	func _draw() -> void:
 		var rect := Rect2(Vector2.ZERO, size)
 		var shape := Ornate.hexagon(rect, size.y * 0.3)
-		var lit := is_hovered()
+		var lit := Gamepad.lit(self)
 		var top := Color(0.5, 0.31, 0.13) if lit else Color(0.27, 0.16, 0.1)
 		var low := Color(0.3, 0.17, 0.07) if lit else Color(0.16, 0.09, 0.06)
 		if is_pressed():
@@ -387,3 +393,5 @@ class ArrowButton:
 		var d := float(direction)
 		var arrow := PackedVector2Array([c + Vector2(13 * d, 0), c + Vector2(-9 * d, -13), c + Vector2(-9 * d, 13)])
 		draw_colored_polygon(arrow, Ornate.CREAM if lit else Ornate.GOLD_LIGHT)
+		if Gamepad.focused(self):
+			Ornate.focus_ring(self, rect, &"chamfer", 10.0)

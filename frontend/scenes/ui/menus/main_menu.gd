@@ -9,6 +9,8 @@ extends Control
 ## Accueil connecté : nouvelle partie, charger la partie en cours (lue sur le serveur, donc reprise possible
 ## sur un autre appareil), classement, se déconnecter.
 ## Nouvelle partie et partie invitée passent par l'introduction, puis le jeu commence dans le bunker du hub.
+## À la manette (scripts/gamepad.gd) : la croix choisit un bouton, A valide, B revient à l'écran précédent ou ferme la
+## confirmation ; A sur un champ ouvre le clavier virtuel (PadKeyboard).
 
 const SCENE := "res://scenes/ui/menus/main_menu.tscn"
 const INTRO_TEXT := [
@@ -77,6 +79,22 @@ func show_screen(screen: StringName) -> void:
 
 func current_screen() -> StringName:
 	return _current
+
+
+## B de la manette : ferme la confirmation ouverte, sinon revient à l'écran précédent (le bouton « Retour » de l'écran).
+## Au clavier, Échap ne fait rien ici, comme avant.
+func _unhandled_input(event: InputEvent) -> void:
+	if not (event is InputEventJoypadButton and event.is_action_pressed("ui_cancel")) or not _screen:
+		return
+	var confirm := _screen.get_node_or_null(^"Confirm")
+	if confirm and not confirm.is_queued_for_deletion():
+		get_viewport().set_input_as_handled()
+		confirm.queue_free()
+		return
+	var back := _screen.find_child("Retour", true, false) as BaseButton
+	if back and back.is_visible_in_tree():
+		get_viewport().set_input_as_handled()
+		back.pressed.emit()
 
 
 func _hex(caption: String, position: Vector2, size: Vector2, icon_kind := "", highlighted := false, font_size := 48) -> Ornate.HexButton:
@@ -166,6 +184,12 @@ func _build_home() -> void:
 	var shortcuts := Ornate.label(Ornate.SHORTCUTS, 22, Ornate.MUTED)
 	shortcuts.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	Ornate.place(_screen, shortcuts, Vector2(560, 1012), Vector2(800, 34))
+	Gamepad.swap(shortcuts, false)
+	var pad_shortcuts := Ornate.label(Ornate.PAD_SHORTCUTS, 22, Ornate.MUTED)
+	pad_shortcuts.name = "PadShortcuts"
+	pad_shortcuts.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	Ornate.place(_screen, pad_shortcuts, Vector2(560, 1012), Vector2(800, 34))
+	Gamepad.swap(pad_shortcuts, true)
 	var text := _home_notice
 	if text.is_empty() and _syncing:
 		text = "Lecture de votre partie sur le serveur…"
@@ -302,6 +326,18 @@ func _confirm(text: String, accept: String, action: Callable) -> void:
 	ok.highlighted = true
 	Ornate.place(frame, ok, Vector2(420, 240), Vector2(320, 80))
 	ok.pressed.connect(action)
+	# À la manette, la sélection reste dans la fenêtre, et commence sur « Annuler » : l'action efface une partie.
+	shade.add_to_group(Gamepad.MODAL_GROUP)
+	cancel.set_meta(Gamepad.DEFAULT_META, true)
+	for pair: Array in [[cancel, ok], [ok, cancel]]:
+		var button: Control = pair[0]
+		var other: NodePath = button.get_path_to(pair[1])
+		button.focus_neighbor_left = other
+		button.focus_neighbor_right = other
+		button.focus_neighbor_top = ^"."
+		button.focus_neighbor_bottom = ^"."
+		button.focus_next = other
+		button.focus_previous = other
 
 
 # --- Connexion et création de compte ------------------------------------------------------------------------
@@ -512,6 +548,7 @@ func _build_leaderboard() -> void:
 	scroll.name = "Rows"
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	Ornate.place(frame, scroll, Vector2(76, 256), Vector2(1068, 480))
+	Gamepad.scrollable(scroll)
 	var rows := VBoxContainer.new()
 	rows.name = "List"
 	rows.size_flags_horizontal = Control.SIZE_EXPAND_FILL

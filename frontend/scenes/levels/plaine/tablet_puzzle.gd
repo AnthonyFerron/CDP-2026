@@ -4,6 +4,7 @@ extends CanvasLayer
 ## des cases de pierre gravées, et les fragments de parchemin retrouvés à y poser.
 ## On choisit un fragment, puis l'emplacement où le poser ; cliquer un emplacement rempli le libère.
 ## « Valider » ne s'active qu'une fois les six emplacements remplis, pour éviter une fausse erreur.
+## À la manette (scripts/gamepad.gd) : la croix passe d'une case ou d'un fragment à l'autre, A choisit ou pose, B quitte.
 ## Erreur : les cases rougissent. Réussite : elles passent au vert, puis le panneau s'efface.
 
 signal validated(correct: bool)
@@ -141,8 +142,18 @@ func validate() -> void:
 
 
 func _rebuild() -> void:
+	# À la manette, la sélection reste sur la même case, ou au même rang des fragments, une fois tout reconstruit.
+	var focus_slot := -1
+	var focus_card := -1
+	var owner := get_viewport().gui_get_focus_owner() if Gamepad.active else null
+	if owner and owner.get_parent() == _slot_list:
+		focus_slot = owner.get_meta(&"slot", -1)
+	elif owner and owner.get_parent() == _pool:
+		focus_card = owner.get_meta(&"rank", -1)
 	for child in _slot_list.get_children() + _pool.get_children():
 		child.queue_free()
+	var cells: Array[Control] = []
+	var cards: Array[Control] = []
 	for slot in SLOT_COUNT:
 		var fragment := _slots[slot]
 		var cell := StoneSlot.new()
@@ -152,7 +163,9 @@ func _rebuild() -> void:
 		cell.armed = _selected >= 0
 		cell.custom_minimum_size = Vector2(0, 88)
 		cell.pressed.connect(_on_slot_pressed.bind(slot))
+		cell.set_meta(&"slot", slot)
 		_slot_list.add_child(cell)
+		cells.append(cell)
 	var free: Array = _fragments.keys().filter(func(key: int) -> bool: return not _slots.has(key))
 	# Ordre fixe mais mélangé, pour que l'ordre de la liste ne donne pas la réponse.
 	free.sort_custom(func(a: int, b: int) -> bool: return (a * 7 + 3) % 11 < (b * 7 + 3) % 11)
@@ -164,7 +177,12 @@ func _rebuild() -> void:
 		card.button_pressed = fragment == _selected
 		card.custom_minimum_size = Vector2(0, 88)
 		card.pressed.connect(_on_fragment_pressed.bind(fragment))
+		card.set_meta(&"rank", cards.size())
 		_pool.add_child(card)
+		cards.append(card)
+	# À l'ouverture, la manette sélectionne d'abord un fragment à poser.
+	if not cards.is_empty():
+		cards[0].set_meta(Gamepad.DEFAULT_META, true)
 	if free.is_empty() and _fragments.size() == SLOT_COUNT and not _solved:
 		var done := Ornate.label("Les six fragments sont posés : relisez la discussion, puis validez.", 24, Ornate.MUTED)
 		done.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -172,6 +190,10 @@ func _rebuild() -> void:
 		_pool.add_child(done)
 	_validate.disabled = _solved or not is_complete()
 	_validate.queue_redraw()
+	if focus_slot >= 0:
+		Gamepad.focus(cells[focus_slot])
+	elif focus_card >= 0:
+		Gamepad.focus(cards[mini(focus_card, cards.size() - 1)] if not cards.is_empty() else (_validate if not _validate.disabled else cells[0]))
 
 
 func _on_fragment_pressed(fragment: int) -> void:
@@ -309,7 +331,7 @@ class StoneSlot:
 
 	func _ready() -> void:
 		flat = true
-		focus_mode = Control.FOCUS_NONE
+		Gamepad.setup(self)
 		mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		mouse_entered.connect(queue_redraw)
 		mouse_exited.connect(queue_redraw)
@@ -327,12 +349,14 @@ class StoneSlot:
 		elif mark == TabletPuzzle.Mark.RIGHT:
 			tint = tint.lerp(TabletPuzzle.RIGHT, 0.25)
 			line = TabletPuzzle.RIGHT
-		elif armed and is_hovered():
+		elif armed and Gamepad.lit(self):
 			tint = tint.lightened(0.12)
 			line = Ornate.GOLD_LIGHT
 		var low := tint.darkened(0.35)
 		draw_polygon(shape, PackedColorArray([tint, tint, tint.lerp(low, 0.5), low, low, low, tint.lerp(low, 0.5), tint]))
 		draw_polyline(Ornate.closed(shape), line, 3.0)
+		if Gamepad.focused(self):
+			Ornate.focus_ring(self, rect, &"chamfer", 14.0)
 		# Bordure gravée en creux, puis le médaillon du chiffre.
 		var inner := Ornate.chamfered(rect.grow(-7), 9)
 		draw_polyline(Ornate.closed(inner), TabletPuzzle.STONE_DARK, 2.0)
@@ -364,7 +388,7 @@ class ParchmentCard:
 
 	func _ready() -> void:
 		flat = true
-		focus_mode = Control.FOCUS_NONE
+		Gamepad.setup(self)
 		mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		mouse_entered.connect(queue_redraw)
 		mouse_exited.connect(queue_redraw)
@@ -387,11 +411,13 @@ class ParchmentCard:
 		for i in 3:
 			points.append(Vector2(random.randf_range(2, 6), lerpf(size.y - 8, 8, float(i) / 3)))
 		var chosen := button_pressed
-		var paper := Color(0.93, 0.85, 0.66) if not is_hovered() else Color(0.97, 0.9, 0.72)
+		var paper := Color(0.93, 0.85, 0.66) if not Gamepad.lit(self) else Color(0.97, 0.9, 0.72)
 		if chosen:
 			paper = Color(1.0, 0.82, 0.48)
 		draw_colored_polygon(points, paper)
 		draw_polyline(Ornate.closed(points), Ornate.GOLD if chosen else Color(0.55, 0.38, 0.2), 5.0 if chosen else 1.5)
+		if Gamepad.focused(self):
+			Ornate.focus_ring(self, Rect2(Vector2.ZERO, size), &"chamfer", 8.0)
 		var font := Ornate.TEXT
 		var font_size := TabletPuzzle.TEXT_SIZE
 		var width := size.x - 56.0
@@ -431,6 +457,7 @@ class CloseCross:
 
 	func _draw() -> void:
 		var shape := Ornate.chamfered(Rect2(Vector2.ZERO, size), size.x * 0.28)
-		draw_colored_polygon(shape, Color(0.36, 0.2, 0.09) if is_hovered() else Color(0.22, 0.12, 0.08))
-		draw_polyline(Ornate.closed(shape), Ornate.GOLD_LIGHT if is_hovered() else Ornate.GOLD, 5.0)
+		var lit := Gamepad.hovered(self)
+		draw_colored_polygon(shape, Color(0.36, 0.2, 0.09) if lit else Color(0.22, 0.12, 0.08))
+		draw_polyline(Ornate.closed(shape), Ornate.GOLD_LIGHT if lit else Ornate.GOLD, 5.0)
 		Ornate.icon(self, "close", size / 2, size.x * 0.3, Ornate.CREAM, 3.5)

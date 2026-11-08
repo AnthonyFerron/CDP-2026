@@ -2,7 +2,8 @@ extends CanvasLayer
 ## Indices, d'après la maquette : H ouvre la fenêtre « Indice » pendant le jeu, et la partie se fige le temps
 ## de la lire. Chaque zone a trois indices, de plus en plus précis sans jamais donner la solution : chaque
 ## nouvelle ouverture en révèle un de plus. Au hub, l'indice dit simplement où aller. À partir du troisième,
-## des flèches (souris, flèches du clavier, Q et D) font relire les précédents, sans rien révéler de plus.
+## des flèches (souris, flèches du clavier, Q et D, croix de la manette) font relire les précédents, sans rien révéler
+## de plus. À la manette : Y ouvre et referme, B ou A sur « Fermer » referme.
 
 ## Indices de chaque zone, du plus vague au plus précis.
 const ZONE_HINTS := {
@@ -107,6 +108,10 @@ func _ready() -> void:
 	_root.hide()
 	# Parchemin et clochette à l'ouverture, parchemin replié à la fermeture (scripts/ui_sounds.gd).
 	UiSounds.watch(_root)
+	# Les touches citées (« rouvrez avec H ») suivent la manette ou le clavier.
+	Gamepad.watch(func(_pad: bool) -> void:
+		if _root.visible:
+			_show(_index))
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -173,9 +178,10 @@ func browse(step: int) -> void:
 
 func _show(index: int) -> void:
 	_index = index
-	_body.text = _shown[index]
+	_body.text = Gamepad.adapt(_shown[index])
+	var reopen := Gamepad.button_name(&"hint") if Gamepad.active else "H"
 	_counter.text = "" if _total == 0 else "Indice %d sur %d" % [index + 1, _total] \
-		+ ("  ·  rouvrez avec H pour un indice plus précis" if _shown.size() < _total else "")
+		+ ("  ·  rouvrez avec %s pour un indice plus précis" % reopen if _shown.size() < _total else "")
 	_previous.disabled = index <= 0
 	_next.disabled = index >= _shown.size() - 1
 	_previous.queue_redraw()
@@ -215,8 +221,9 @@ class CloseButton:
 
 	func _draw() -> void:
 		var shape := Ornate.chamfered(Rect2(Vector2.ZERO, size), size.x * 0.28)
-		draw_colored_polygon(shape, Color(0.36, 0.2, 0.09) if is_hovered() else Color(0.22, 0.12, 0.08))
-		draw_polyline(Ornate.closed(shape), Ornate.GOLD_LIGHT if is_hovered() else Ornate.GOLD, 5.0)
+		var lit := Gamepad.hovered(self)
+		draw_colored_polygon(shape, Color(0.36, 0.2, 0.09) if lit else Color(0.22, 0.12, 0.08))
+		draw_polyline(Ornate.closed(shape), Ornate.GOLD_LIGHT if lit else Ornate.GOLD, 5.0)
 		Ornate.icon(self, "close", size / 2, size.x * 0.3, Ornate.CREAM, 3.5)
 
 
@@ -235,7 +242,7 @@ class ArrowButton:
 
 	func _draw() -> void:
 		var shape := Ornate.chamfered(Rect2(Vector2.ZERO, size), size.y * 0.28)
-		var lit := is_hovered() and not disabled
+		var lit := Gamepad.hovered(self) and not disabled
 		var fill := Color(0.24, 0.22, 0.24) if disabled else (Color(0.36, 0.2, 0.09) if lit else Color(0.22, 0.12, 0.08))
 		var border := Color(0.62, 0.62, 0.64) if disabled else (Ornate.GOLD_LIGHT if lit else Ornate.GOLD)
 		draw_colored_polygon(shape, fill)

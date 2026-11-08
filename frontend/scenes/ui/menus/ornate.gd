@@ -25,6 +25,16 @@ const KEYS := [["Z", "Avancer"], ["Q", "Aller à gauche"], ["S", "Reculer"], ["D
 const WIDE_KEYS := [["Espace", "Sauter"], ["Shift", "Courir"]]
 ## Raccourcis du jeu, rappelés en pied d'écran.
 const SHORTCUTS := "Échap : pause     F : plein écran"
+## Les mêmes à la manette (Gamepad), dans les menus.
+const PAD_SHORTCUTS := "A : valider     B : retour     Menu : pause en jeu"
+## Commandes à la manette, rappelées à la place des touches quand elle est en main : un bouton (nom de Gamepad.button_name,
+## ou l'action dont il faut lire le bouton) et ce qu'il fait. Même découpage que KEYS et WIDE_KEYS.
+const PAD_KEYS := [["Stick gauche", "Avancer, se tourner"], ["Stick droit", "Regarder"], [&"interact", "Interagir / Action"],
+	[&"hint", "Voir les indices"], [&"pause", "Pause"], [&"inventory", "Relire les fragments"]]
+const PAD_WIDE_KEYS := [[&"jump", "Sauter"], [&"sprint", "Courir (maintenir)"]]
+## Couleur de la lettre des quatre boutons de la manette, celle des manettes Xbox, éclaircie pour rester lisible sur le
+## fond sombre des touches.
+const PAD_COLORS := {"A": Color(0.6, 0.9, 0.45), "B": Color(1.0, 0.52, 0.42), "X": Color(0.55, 0.74, 1.0), "Y": Color(1.0, 0.86, 0.4)}
 
 
 ## Texte prêt à placer : Cinzel pour les titres, Lora pour le reste.
@@ -246,28 +256,150 @@ static func _book(item: CanvasItem, center: Vector2, s: float, color: Color) -> 
 			item.draw_line(center + Vector2(side * 0.2 * s, y * s), center + Vector2(side * 0.82 * s, (y + 0.03) * s), GOLD_DARK, 1.5)
 
 
-## Panneau des commandes : touches dorées et leur action, en deux groupes séparés d'un trait.
+## Panneau des commandes : touches dorées et leur action, en deux groupes séparés d'un trait. La manette en main, ses
+## boutons remplacent les touches (Gamepad), aux mêmes places.
 static func commands(frame: Control, top: float, step: float, wide_step: float, columns := Vector2(92, 196)) -> float:
+	var keyboard := _command_sheet(frame, "Clavier")
+	var pad := _command_sheet(frame, "Manette")
+	Gamepad.swap(keyboard, false)
+	Gamepad.swap(pad, true)
 	var y := top
-	for key in KEYS:
+	for index in KEYS.size():
 		var cap := KeyCap.new()
-		cap.text = key[0]
-		place(frame, cap, Vector2(columns.x, y), Vector2(52, 46))
-		var name := label(key[1], 28)
+		cap.text = KEYS[index][0]
+		place(keyboard, cap, Vector2(columns.x, y), Vector2(52, 46))
+		var name := label(KEYS[index][1], 28)
 		name.position = Vector2(columns.y, y + 2)
-		frame.add_child(name)
+		keyboard.add_child(name)
+		_pad_command(pad, PAD_KEYS[index], Vector2(columns.x, y), columns.y)
 		y += step
 	var line_y := y + 4.0
 	y += 30.0
-	for key in WIDE_KEYS:
+	for index in WIDE_KEYS.size():
 		var cap := KeyCap.new()
-		cap.text = key[0]
-		place(frame, cap, Vector2(columns.x - 12, y), Vector2(170, 52))
-		var name := label(key[1], 28)
+		cap.text = WIDE_KEYS[index][0]
+		place(keyboard, cap, Vector2(columns.x - 12, y), Vector2(170, 52))
+		var name := label(WIDE_KEYS[index][1], 28)
 		name.position = Vector2(columns.x + 212, y + 5)
-		frame.add_child(name)
+		keyboard.add_child(name)
+		_pad_command(pad, PAD_WIDE_KEYS[index], Vector2(columns.x, y + 3), columns.y)
 		y += wide_step
 	return line_y
+
+
+## Calque d'un jeu de commandes (clavier ou manette), à la taille du cadre.
+static func _command_sheet(frame: Control, sheet_name: String) -> Control:
+	var sheet := Control.new()
+	sheet.name = sheet_name
+	sheet.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	place(frame, sheet, Vector2.ZERO, frame.size)
+	return sheet
+
+
+static func _pad_command(sheet: Control, item: Array, at: Vector2, text_x: float) -> void:
+	var cap := KeyCap.new()
+	cap.pad = Gamepad.button_name(item[0]) if item[0] is StringName else item[0]
+	place(sheet, cap, at, Vector2(52, 46))
+	var name := label(item[1], 28)
+	name.position = Vector2(text_x, at.y + 2)
+	sheet.add_child(name)
+
+
+## Cadre doré du bouton sélectionné à la manette (Gamepad) : un liseré clair et son halo, à la forme du bouton, et deux
+## losanges qui le désignent, à gauche et à droite, pour les boutons larges. `kind` : &"hex" (boutons hexagonaux),
+## &"round" (boutons et champs arrondis, `cut` étant leur rayon), &"chamfer" (cases à coins coupés, `cut` étant le coin).
+static func focus_ring(item: CanvasItem, rect: Rect2, kind := &"chamfer", cut := 14.0) -> void:
+	if kind == &"round":
+		for layer: Array in [[Color(GOLD_LIGHT, 0.3), 9, 11.0], [GOLD_LIGHT, 3, 7.0]]:
+			var box := StyleBoxFlat.new()
+			box.draw_center = false
+			box.border_color = layer[0]
+			box.set_border_width_all(layer[1])
+			box.set_corner_radius_all(int(cut + layer[2]))
+			box.set_expand_margin_all(layer[2])
+			item.draw_style_box(box, rect)
+	else:
+		var outer := hexagon(rect.grow(9.0), (rect.size.y + 18.0) * 0.42) if kind == &"hex" else chamfered(rect.grow(7.0), cut + 4.0)
+		item.draw_polyline(closed(outer), Color(GOLD_LIGHT, 0.3), 9.0)
+		item.draw_polyline(closed(outer), GOLD_LIGHT, 3.0)
+	if rect.size.x >= 160.0:
+		var middle := rect.position.y + rect.size.y / 2.0
+		var gap := 26.0 if kind == &"hex" else 22.0
+		diamond(item, Vector2(rect.position.x - gap, middle), 9.0, GOLD_LIGHT)
+		diamond(item, Vector2(rect.end.x + gap, middle), 9.0, GOLD_LIGHT)
+
+
+## Bouton de la manette, dessiné dans le style des touches du clavier (KeyCap) : A, B, X et Y ronds, à la lettre de leur
+## couleur ; Menu et Affichage ronds, à leur dessin ; LB, RB, LT et RT en gâchette ; les sticks, une tête de stick ; la
+## croix directionnelle. Sans `with_label`, seule la forme est dessinée : un texte posé dessus écrit la lettre.
+static func pad_glyph(item: CanvasItem, rect: Rect2, glyph: String, with_label := true) -> void:
+	var center := rect.get_center()
+	var fill := Color(0.26, 0.14, 0.09)
+	var radius := minf(rect.size.x, rect.size.y) / 2.0 - 1.5
+	match glyph:
+		"LB", "RB", "LT", "RT":
+			var box := StyleBoxFlat.new()
+			box.bg_color = fill
+			box.border_color = GOLD
+			box.set_border_width_all(3)
+			var round := int(minf(rect.size.y * 0.5, 18.0))
+			box.corner_radius_top_left = round if glyph.begins_with("L") else 6
+			box.corner_radius_top_right = round if glyph.begins_with("R") else 6
+			box.corner_radius_bottom_left = 6
+			box.corner_radius_bottom_right = 6
+			box.shadow_color = Color(GOLD, 0.25)
+			box.shadow_size = 4
+			item.draw_style_box(box, rect)
+			if with_label:
+				centered_text(item, SERIF, center, glyph, int(clampf(rect.size.y * 0.46, 14.0, 24.0)), CREAM)
+			return
+		"Croix":
+			var arm := radius * 0.42
+			var cross := PackedVector2Array([center + Vector2(-arm, -radius), center + Vector2(arm, -radius), center + Vector2(arm, -arm),
+				center + Vector2(radius, -arm), center + Vector2(radius, arm), center + Vector2(arm, arm), center + Vector2(arm, radius),
+				center + Vector2(-arm, radius), center + Vector2(-arm, arm), center + Vector2(-radius, arm), center + Vector2(-radius, -arm),
+				center + Vector2(-arm, -arm)])
+			item.draw_colored_polygon(cross, fill)
+			item.draw_polyline(closed(cross), GOLD, 3.0)
+			return
+	if not glyph in ["A", "B", "X", "Y", "Menu", "Affichage", "L3", "R3", "Stick gauche", "Stick droit"]:
+		# Bouton inconnu : une touche ordinaire et son nom.
+		var key := StyleBoxFlat.new()
+		key.bg_color = fill
+		key.border_color = GOLD
+		key.set_border_width_all(3)
+		key.set_corner_radius_all(9)
+		item.draw_style_box(key, rect)
+		if with_label:
+			centered_text(item, SERIF, center, glyph, 22, CREAM)
+		return
+	item.draw_circle(center, radius + 3.0, Color(GOLD, 0.22))
+	item.draw_circle(center, radius, fill)
+	item.draw_arc(center, radius, 0.0, TAU, 40, GOLD, 3.0)
+	var s := radius
+	match glyph:
+		"Menu":
+			for row in 3:
+				var y := (row - 1) * 0.3 * s
+				item.draw_line(center + Vector2(-0.42 * s, y), center + Vector2(0.42 * s, y), CREAM, 3.0)
+		"Affichage":
+			item.draw_rect(Rect2(center + Vector2(-0.48 * s, -0.4 * s), Vector2(0.6 * s, 0.48 * s)), CREAM, false, 2.5)
+			item.draw_rect(Rect2(center + Vector2(-0.12 * s, -0.08 * s), Vector2(0.6 * s, 0.48 * s)), fill)
+			item.draw_rect(Rect2(center + Vector2(-0.12 * s, -0.08 * s), Vector2(0.6 * s, 0.48 * s)), CREAM, false, 2.5)
+		"L3", "R3", "Stick gauche", "Stick droit":
+			# Tête de stick : un disque bombé et sa lettre.
+			item.draw_circle(center, s * 0.62, Color(0.4, 0.24, 0.13))
+			item.draw_arc(center, s * 0.62, 0.0, TAU, 32, GOLD_LIGHT, 2.0)
+			var letter := "L" if glyph in ["L3", "Stick gauche"] else "R"
+			centered_text(item, SERIF, center, letter, int(clampf(s * 0.8, 12.0, 24.0)), CREAM)
+		_:
+			if with_label:
+				centered_text(item, SERIF, center + Vector2(0, 1), glyph, int(clampf(s * 1.15, 14.0, 30.0)), PAD_COLORS.get(glyph, CREAM))
+
+
+## Le bouton se dessine sans lettre (une lettre posée dessus l'écrit) : vrai pour les boutons à lettre.
+static func pad_glyph_has_letter(glyph: String) -> bool:
+	return glyph in ["A", "B", "X", "Y", "LB", "RB", "LT", "RT"]
 
 
 class Backdrop:
@@ -371,11 +503,31 @@ class Frame:
 
 class KeyCap:
 	extends Control
-	## Touche du clavier : un cadre doré arrondi et sa lettre.
+	## Touche du clavier : un cadre doré arrondi et sa lettre. Avec `action`, quand la manette est en main, le bouton de
+	## la manette lié à cette action remplace la touche (Gamepad) ; avec `pad`, ce bouton est toujours montré.
 
 	var text := ""
+	var action := &""
+	var pad := ""
+	## Seulement la forme du bouton de la manette : un texte posé dessus en écrit la lettre (messages du HUD).
+	var bare := false
+
+	func _ready() -> void:
+		add_to_group(Gamepad.GLYPH_GROUP)
+
+	## Bouton de la manette montré, ou "" pour la touche du clavier.
+	func glyph() -> String:
+		if pad != "":
+			return pad
+		if action != &"" and Gamepad.active:
+			return Gamepad.button_name(action)
+		return ""
 
 	func _draw() -> void:
+		var shown := glyph()
+		if shown != "":
+			Ornate.pad_glyph(self, Rect2(Vector2.ZERO, size), shown, not bare)
+			return
 		var box := StyleBoxFlat.new()
 		box.bg_color = Color(0.26, 0.14, 0.09)
 		box.border_color = Ornate.GOLD
@@ -399,7 +551,7 @@ class HexButton:
 
 	func _ready() -> void:
 		flat = true
-		focus_mode = Control.FOCUS_NONE
+		Gamepad.setup(self)
 		mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		mouse_entered.connect(queue_redraw)
 		mouse_exited.connect(queue_redraw)
@@ -409,7 +561,7 @@ class HexButton:
 	func _draw() -> void:
 		var h := size.y
 		var shape := Ornate.hexagon(Rect2(Vector2.ZERO, size), h * 0.42)
-		var lit := (highlighted or is_hovered()) and not disabled
+		var lit := (highlighted or Gamepad.lit(self)) and not disabled
 		var border := Ornate.GOLD_LIGHT if lit else Ornate.GOLD
 		var text_color := Ornate.CREAM
 		if disabled:
@@ -443,6 +595,8 @@ class HexButton:
 			Ornate.icon(self, icon_kind, icon_center, icon_size, text_color, 3.5)
 			text_center = Vector2(icon_center.x + icon_size + 24.0 + text_width / 2.0, center.y)
 		Ornate.centered_text(self, Ornate.SERIF, text_center, caption, font_size, text_color)
+		if Gamepad.focused(self):
+			Ornate.focus_ring(self, Rect2(Vector2.ZERO, size), &"hex")
 
 
 class PillButton:
@@ -455,15 +609,16 @@ class PillButton:
 
 	func _ready() -> void:
 		flat = true
-		focus_mode = Control.FOCUS_NONE
+		Gamepad.setup(self)
 		mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		mouse_entered.connect(queue_redraw)
 		mouse_exited.connect(queue_redraw)
 
 	func _draw() -> void:
 		var box := StyleBoxFlat.new()
-		box.bg_color = Color(0.36, 0.2, 0.09) if is_hovered() else Color(0.22, 0.12, 0.08)
-		box.border_color = Ornate.GOLD_LIGHT if is_hovered() else Ornate.GOLD
+		var lit := Gamepad.lit(self)
+		box.bg_color = Color(0.36, 0.2, 0.09) if lit else Color(0.22, 0.12, 0.08)
+		box.border_color = Ornate.GOLD_LIGHT if lit else Ornate.GOLD
 		box.set_border_width_all(4)
 		box.set_corner_radius_all(int(size.y * 0.32))
 		box.shadow_color = Color(Ornate.GOLD, 0.22)
@@ -477,6 +632,8 @@ class PillButton:
 			Ornate.icon(self, icon_kind, Vector2(x + icon_size, size.y / 2), icon_size, Ornate.CREAM, 3.0)
 			x += icon_size * 2.0 + 20.0
 		Ornate.centered_text(self, Ornate.SERIF, Vector2(x + text_width / 2.0, size.y / 2), caption, font_size, Ornate.CREAM)
+		if Gamepad.focused(self):
+			Ornate.focus_ring(self, Rect2(Vector2.ZERO, size), &"round", size.y * 0.32)
 
 
 class TextLink:
@@ -488,18 +645,21 @@ class TextLink:
 
 	func _ready() -> void:
 		flat = true
-		focus_mode = Control.FOCUS_NONE
+		Gamepad.setup(self)
 		mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		mouse_entered.connect(queue_redraw)
 		mouse_exited.connect(queue_redraw)
 		custom_minimum_size = Vector2(Ornate.TEXT.get_string_size(caption, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x + 8, font_size * 1.6)
 
 	func _draw() -> void:
-		var color := Ornate.GOLD_LIGHT if is_hovered() else Ornate.CREAM
+		var color := Ornate.GOLD_LIGHT if Gamepad.lit(self) else Ornate.CREAM
 		Ornate.centered_text(self, Ornate.TEXT, size / 2, caption, font_size, color)
 		var width := Ornate.TEXT.get_string_size(caption, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
 		var y := size.y / 2 + font_size * 0.55
 		draw_line(Vector2(size.x / 2 - width / 2, y), Vector2(size.x / 2 + width / 2, y), color, 2.0)
+		if Gamepad.focused(self):
+			var text_rect := Rect2(Vector2(size.x / 2 - width / 2 - 10, size.y / 2 - font_size * 0.8), Vector2(width + 20, font_size * 1.7))
+			Ornate.focus_ring(self, text_rect, &"round", 8.0)
 
 
 class Field:
@@ -530,6 +690,9 @@ class Field:
 		line.focus_entered.connect(queue_redraw)
 		line.focus_exited.connect(queue_redraw)
 		add_child(line)
+		# La manette atteint le champ, et A y ouvre le clavier virtuel (Gamepad, PadKeyboard).
+		Gamepad.track_text(line)
+		add_to_group(Gamepad.GLYPH_GROUP)
 		if secret:
 			_eye = Button.new()
 			_eye.flat = true
@@ -561,6 +724,8 @@ class Field:
 		Ornate.icon(self, icon_kind, Vector2(60, size.y / 2), size.y * 0.26, Ornate.CREAM, 3.0)
 		if secret and line:
 			Ornate.icon(self, "eye_off" if line.secret else "eye", Vector2(size.x - 50, size.y / 2), size.y * 0.24, Ornate.CREAM, 3.0)
+		if line and Gamepad.focused(line):
+			Ornate.focus_ring(self, Rect2(Vector2.ZERO, size), &"round", 14.0)
 
 
 class CodeBoxes:
@@ -600,6 +765,7 @@ class CodeBoxes:
 			edit.gui_input.connect(_on_box_input.bind(index))
 			edit.text_submitted.connect(func(_text: String) -> void: submitted.emit())
 			add_child(edit)
+			Gamepad.track_text(edit)
 			boxes.append(edit)
 
 	func code() -> String:
