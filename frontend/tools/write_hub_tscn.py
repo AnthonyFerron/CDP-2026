@@ -791,7 +791,7 @@ def hall(lines):
     node(lines, "Inscription", "Node3D", "Castle", props=[
         f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 0, {-HALL_HALF_DEPTH + 2.9:g})", f'script = {ext("10_readable")}',
         'title = "Le cercle des anciens bâtisseurs"',
-        'body = "Gravé dans le mur du fond, face à la porte : « Quatre livres, quatre savoirs. Posés autour du cercle, ils rendront la vie à Codia. » Les piédestaux attendent le Projenomicon, l\'Algonicon, le Logiconomicon et le Codonomicon ; chacun posé illumine son nom dans le cercle, et le rituel ne pourra commencer qu\'une fois les quatre réunis."',
+        'body = "Gravé dans le mur du fond, face à la porte : « Quatre livres, quatre savoirs. » Selon la légende, posés autour du cercle, ils rendront la vie à Codia. Les piédestaux attendent le Projenomicon, l\'Algonicon, le Logiconomicon et le Codonomicon ; chacun posé illumine son nom dans le cercle, et le rituel ne pourra commencer qu\'une fois les quatre réunis."',
         'prompt = "Lire l\'inscription"', "radius = 3.0"])
     # Sur deux lignes, entre les colonnes du mur du fond (x = ±2,4) et sous la rangée haute du donjon (y = 4,4), plus
     # épaisse que celle du bas : sur une ligne à 4,4 m, le haut des lettres rentrait dedans et les colonnes le coupaient.

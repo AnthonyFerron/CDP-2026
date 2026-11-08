@@ -61,7 +61,7 @@ func play_victory() -> void:
 	await get_tree().create_timer(1.0).timeout
 	# Au-dessus du château, pour qu'aucune tour ne cache le volcan.
 	await _move(Vector3(-34, 58, -86), _volcano_top(), 5.5, 44.0)
-	await _show_title("Le Mont Sam Altan s'est rendormi", "Les quatre livres sont réunis : les cendres se dissipent, les arbres reprennent vie et Codia renaît. Mais qui sait… peut-être que les secrets de Codia sont encore loin d'avoir tous été découverts.", Color(0.95, 0.85, 0.45))
+	await _show_title("Le Mont Sam Altan s'est rendormi", "Les quatre livres sont réunis : les cendres se dissipent, les arbres reprennent vie, Codia renaît et les survivants sortent enfin du bunker. Mais qui sait… peut-être que les secrets de Codia sont encore loin d'avoir tous été découverts.", Color(0.95, 0.85, 0.45))
 	finished.emit()
 
 

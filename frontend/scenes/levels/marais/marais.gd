@@ -376,7 +376,7 @@ func _shake(camera: Camera3D, duration: float) -> void:
 
 
 func _on_portal_refused() -> void:
-	_hud.show_message("Le portail reste éteint : trouvez le livre des marais.")
+	_hud.show_message("Le portail reste éteint : trouvez le livre des marais de Kernel Swamp.")
 
 
 func _on_portal_crossed() -> void:

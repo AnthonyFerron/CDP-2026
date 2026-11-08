@@ -23,7 +23,7 @@ const ZONE_HINTS := {
 	],
 	&"village": [
 		"Dix fragments de papier sont cachés dans la mairie, au rez-de-chaussée et dans le bureau du maire, à l'étage. Relisez-les avec I.",
-		"Les cinq codes du bureau se résolvent dans l'ordre. Lisez chaque programme ligne par ligne, dans l'ordre où il s'exécute.",
+		"Les cinq codes du bureau se résolvent dans l'ordre. Lisez chaque programme ligne par ligne, en notant la valeur de chaque variable à chaque étape.",
 		"Un commentaire HTML ne s'affiche pas. En CSS, un identifiant l'emporte sur une classe. Pour les autres, suivez chaque condition et chaque boucle pas à pas.",
 	],
 }

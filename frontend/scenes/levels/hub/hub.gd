@@ -582,7 +582,7 @@ func _ritual() -> void:
 	camera.look_at(center + Vector3(0.8, -1.8, 1.2))
 	camera.current = true
 	await _hud.fade(false)
-	_hud.show_message("Les survivants sortent du bunker. Merlon lève les mains au-dessus du cercle et prononce une ancienne incantation…")
+	_hud.show_message("Merlon lève les mains au-dessus du cercle et prononce une ancienne incantation…")
 	var beams := _raise_beams(center)
 	_raise_arms(1.2)
 	var orb: OmniLight3D = _merlon.find_child("OrbLight")

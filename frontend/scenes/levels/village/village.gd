@@ -14,7 +14,7 @@ const WINDMILL_SPEED := 0.05
 const WHEEL_SPEED := 0.12
 ## Deux fragments par code : le premier explique le langage, le second aide à trouver le résultat.
 const FRAGMENTS: Array[String] = [
-	"Notes de l'archiviste : en HTML, <ul> ouvre une liste à puces. Chaque élément s'écrit entre <li> et </li>, et le navigateur l'affiche sur sa propre ligne.",
+	"Notes de l'archiviste : en HTML, <ul> ouvre une liste à puces. Chaque élément de la liste s'écrit entre <li> et </li>, et le navigateur l'affiche sur sa propre ligne.",
 	"Griffonné dans une marge : tout ce qui est enfermé entre <!-- et --> n'est qu'un commentaire laissé au développeur. Le navigateur ne l'affiche jamais.",
 	"Leçon de style : en CSS, un nom seul vise une balise (p), un point vise une classe (.annonce), un dièse vise un identifiant (#maire). La propriété color fixe la couleur du texte.",
 	"Mot du peintre de la mairie : quand plusieurs règles CSS visent le même élément, la plus précise l'emporte. L'identifiant passe avant la classe, et la classe avant la balise.",
