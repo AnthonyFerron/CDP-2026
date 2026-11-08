@@ -8,7 +8,7 @@ Vérification du 8 novembre, sur `dev` (65bf07f) puis avec les corrections de la
 | --- | --- | --- | --- |
 | Chromium 156 | Oui | Oui : clavier, souris capturée, caméra à la souris, E, H, Échap, musique de chaque lieu | Rien de propre au jeu. Le processus graphique de Chromium a planté une fois au hub, avec un rendu logiciel |
 | WebKit 27.2 (moteur de Safari) | Oui, **après correction** : avant, le jeu ne démarrait pas quand le paquet arrivait en gzip | Oui : clavier, souris capturée, E, H, Échap, musique de la Plaine venue de `musique.pck` | Une erreur WebGL à chaque image (`glBlitFramebuffer`, présentation d'Emscripten), sans effet visible. Caméra à la souris non vérifiable avec l'outil |
-| Firefox 157 | Oui | Non vérifiable ici : le pilote OpenGL logiciel du banc (llvmpipe) plante Firefox au premier dessin du bunker | À vérifier sur un vrai PC |
+| Firefox 157 | Oui | Le bunker, avec un rendu logiciel plus lent (softpipe) : clavier, souris capturée, caméra à la souris, E, H, Échap, musique. Avec le rendu logiciel habituel (llvmpipe), Firefox plante au premier dessin du bunker | À essayer sur un vrai PC |
 
 Ce banc n'a pas de carte graphique : chaque navigateur y dessine en logiciel. Chromium utilise SwiftShader. Firefox et WebKit utilisent llvmpipe (Mesa 25.2.8). Safari sur Mac ou sur iPhone n'a pas pu être testé : WebKit sous Linux en est le moteur, pas le navigateur.
 
@@ -76,7 +76,17 @@ Ce banc n'a pas de carte graphique : chaque navigateur y dessine en logiciel. Ch
   - `musique.pck` téléchargé, repris et monté ;
   - écran d'introduction ;
   - aucune erreur JavaScript.
-- **Souris.** Le verrou de la souris et ses déplacements (`movementX`) ont été vérifiés dans Firefox sur une page de test, demandé à l'image suivante comme le fait Godot. Pas dans le jeu.
+- **Dans le jeu, avec softpipe** (`GALLIUM_DRIVER=softpipe`, rendu logiciel sans LLVM, une image toutes les quelques secondes) :
+  - le bunker s'affiche comme dans Chromium et WebKit, et l'introduction joue ;
+  - ZQSD/WASD déplacent le joueur, la souris capturée tourne la caméra ;
+  - H ouvre et referme les indices, Échap ouvre et referme la pause ;
+  - E auprès du roi ouvre son texte, E le referme ;
+  - aucune erreur JavaScript.
+  - Le parcours a été arrêté là : à ce rythme, le hub et la Plaine auraient pris plus d'une heure.
+  - Le jeu tourne donc dans Firefox : seul llvmpipe plante.
+- **Souris et images lentes.** Firefox n'accorde la souris que dans la seconde qui suit le clic ou la touche (« Request for pointer lock was denied because Element.requestPointerLock() was not called from inside a short running user-generated event handler »). Chromium laisse plusieurs secondes.
+  - Godot traite le clic à l'image suivante. Si une image dure plus d'une seconde, le clic ne capture pas la souris : vu avec softpipe, où il a fallu un second clic.
+  - Sur une machine normale, une image dure bien moins d'une seconde. Le joueur n'a qu'à recliquer.
 
 ### Chromium : processus graphique planté une fois
 
@@ -107,6 +117,7 @@ Ce banc n'a pas de carte graphique : chaque navigateur y dessine en logiciel. Ch
 - Firefox écrit 9 fois « The WebAssembly exception handling 'try' instruction is deprecated ».
 - Le moteur (Godot 4.7.2, compilé avec Emscripten 4.0.20) gère ses exceptions avec l'ancienne forme des instructions WebAssembly. Firefox l'accepte encore, et le signale.
 - Ce n'est qu'un avertissement, sans effet. Il partira avec un moteur compilé avec la nouvelle forme.
+- Dans le bunker, Firefox écrit aussi une trentaine de fois « getBufferSubData: Reading from a buffer with usage other than *_READ causes pipeline stalls », puis cesse de les compter. C'est un conseil de performance sur une lecture de tampon faite par le moteur, pas une erreur.
 
 ### Verrou de la souris dans un navigateur sans écran
 
@@ -160,7 +171,7 @@ Captures et journaux : `mesures/ch_prod_1/`, `mesures/wk_prod_1/` et `mesures/ff
 - Les chargements de lieux varient du simple au triple d'un passage à l'autre dans Chromium sans écran (Plaine : 140 s ici, alors que le serveur était chargé par d'autres mesures). Ils ne disent rien de l'écart entre navigateurs sur un vrai PC.
 - Firefox, sur ce banc, plante avant le bunker (voir plus haut).
 
-Captures et journaux : `mesures/ch_sonde_2/` (sans écran), `mesures/ch_sonde_1/` (fenêtre), `mesures/wk_sonde_2/`, `mesures/wk_sonde_3/` et `mesures/ff_sonde_6/`.
+Captures et journaux : `mesures/ch_sonde_2/` (sans écran), `mesures/ch_sonde_1/` (fenêtre), `mesures/wk_sonde_2/`, `mesures/wk_sonde_3/`, `mesures/ff_sonde_6/` (llvmpipe) et `mesures/ff_softpipe/` (softpipe).
 
 ## Le banc
 
