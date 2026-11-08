@@ -388,12 +388,17 @@ def main():
                   "size = Vector3(0.8, 0.8, 0.06)", ""]
     lines += ['[node name="Village" type="Node3D"]', 'script = ExtResource("1_village")', ""]
     node(lines, "WorldEnvironment", "WorldEnvironment", props=['environment = SubResource("Environment_village")'])
-    # Soleil couchant, bas sur l'horizon à l'ouest.
+    # Soleil couchant, bas sur l'horizon à l'ouest (12,6°) : le talus, les arbres et les maisons couvrent d'ombre
+    # tout le sol du bourg. Leurs ombres s'étirent jusqu'à 60 m (10 m de talus, 13 m d'arbre). La carte d'ombre de
+    # chaque découpe ne garde que les objets à moins de directional_shadow_pancake_size du devant de sa boîte (20 m
+    # par défaut) : dans la première découpe, à moins de 10 m de la caméra, les ombres lointaines manquaient, et le
+    # sol s'y éclairait par taches, qui suivaient le joueur. La seconde découpe et les ombres allégées de la qualité
+    # adaptative (cran 4) gardaient ces ombres : le sol semblait s'assombrir quand la qualité baissait.
     node(lines, "Sun", "DirectionalLight3D", props=[
         "transform = Transform3D(0.5, 0.19, -0.845, 0, 0.976, 0.218, 0.866, -0.109, 0.488, 0, 40, 0)",
         "light_color = Color(1, 0.72, 0.48, 1)", "light_energy = 1.1", "shadow_enabled = true",
         "shadow_normal_bias = 4.0", "directional_shadow_mode = 1", "directional_shadow_split_1 = 0.2",
-        "directional_shadow_max_distance = 50.0"])
+        "directional_shadow_max_distance = 50.0", "directional_shadow_pancake_size = 60.0"])
     # Lumière d'appoint du ciel, froide et sans ombre, venue de l'est : le côté des murs à l'ombre du soleil
     # couchant n'est plus noir.
     node(lines, "SkyFill", "DirectionalLight3D", props=[

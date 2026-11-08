@@ -399,6 +399,7 @@ shadow_normal_bias = 4.0
 directional_shadow_mode = 1
 directional_shadow_split_1 = 0.2
 directional_shadow_max_distance = 50.0
+directional_shadow_pancake_size = 60.0
 
 [node name="SkyFill" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.7071, -0.3590, 0.6092, 0.0000, 0.8615, 0.5077, -0.7071, 0.3590, -0.6092, 0, 30, 0)
