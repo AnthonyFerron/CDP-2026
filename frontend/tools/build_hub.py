@@ -58,6 +58,8 @@ MODEL_BOXES.update({
     "nature_kit/tree_oak": ((-0.31, 0.0, -0.37), (0.63, 1.23, 0.74)),
     "nature_kit/tree_fat": ((-0.37, 0.0, -0.32), (0.75, 1.14, 0.64)),
     "nature_kit/tree_thin_dark": ((-0.25, 0.0, -0.25), (0.68, 1.49, 0.62)),
+    "nature_kit/tree_default_fall": ((-0.37, 0.0, -0.32), (0.75, 1.7, 0.64)),
+    "nature_kit/tree_oak_fall": ((-0.31, 0.0, -0.37), (0.63, 1.23, 0.74)),
     "nature_kit/canoe": ((-0.14, 0.0, -0.57), (0.29, 0.17, 1.14)),
     # Intérieurs des nouveaux bâtiments.
     "food_kit/bowl": ((-0.27, 0.0, -0.31), (0.54, 0.23, 0.62)),
@@ -2425,10 +2427,18 @@ def build_park(scene, rng):
     hedge_line(scene, (x1, -63.4), (x1, z1))
     hedge_line(scene, (x1, z1), (cx + 2.4, z1))
     hedge_line(scene, (cx - 2.4, z1), (x0 + 5.0, z1))
-    # Arbres plantés le long des haies.
-    for index, z in enumerate((-61.0, -56.0)):
-        furniture(scene, "nature_kit/tree_oak" if index % 2 else "nature_kit/tree_default", (x1 - 2.2, 0.0, z), rng.uniform(0, 360), 4.4, height=4.0)
-    furniture(scene, "nature_kit/tree_default", (35.0, 0.0, -75.6), rng.uniform(0, 360), 4.2, height=4.0)
+    # Arbres plantés le long des haies : leurs feuilles ont roussi sous les cendres, ils reverdissent au deuxième livre,
+    # quand les oiseaux reviennent chanter au jardin (hub_sounds.gd).
+    trees = [("nature_kit/tree_oak" if index % 2 else "nature_kit/tree_default", (x1 - 2.2, 0.0, z), rng.uniform(0, 360), 4.4)
+             for index, z in enumerate((-61.0, -56.0))]
+    trees.append(("nature_kit/tree_default", (35.0, 0.0, -75.6), rng.uniform(0, 360), 4.2))
+    scene.repair("ParkTrees", 2)
+    for model, position, degrees, scale in trees:
+        furniture(scene, model + "_fall", position, degrees, scale, height=4.0)
+    scene.rebuilt("ParkTrees")
+    for model, position, degrees, scale in trees:
+        furniture(scene, model, position, degrees, scale, height=4.0)
+    scene.group = "Fixed"
     # Lanternes au bord des allées.
     for x, z in ((40.4, -55.0), (43.6, -64.0), (40.4, -77.0), (40.4, -87.0), (32.6, -60.0), (32.6, -79.0), (49.0, -67.8)):
         scene.add("fantasy_town_kit/lantern", (x, 0.0, z), 0.0, 2.2)
@@ -2528,6 +2538,109 @@ def build_park(scene, rng):
     # Étang : une barque échouée sur la rive.
     furniture(scene, "nature_kit/canoe", (43.0, 0.0, -89.0), 80.0, 2.4)
 
+    # La vie revient au jardin livre après livre, sur les pelouses, à l'écart des allées et de tout ce qui s'y dresse :
+    # l'herbe au premier livre, les buissons au pied des haies au deuxième, une prairie de fleurs sauvages et de
+    # champignons au troisième. Rien ne s'y bute : tout reste sous le genou, et les buissons sont contre les haies.
+    blocked = ([(x, z, 2.7) for x, z in beds] + [(x, z, 1.9) for x, z in kings] + [(x + (-1.6 if x < cx else 1.6), z + 0.3, 1.6) for x, z in kings]
+               + [(x, z, 1.7) for x, z, _ in benches] + [(position[0], position[2], 1.4) for _, position, _, _ in trees]
+               + [(x, z, 0.9) for x, z in ((40.4, -55.0), (43.6, -64.0), (40.4, -77.0), (40.4, -87.0), (32.6, -60.0), (32.6, -79.0), (49.0, -67.8))]
+               + [(kx, kz, 3.8), (47.4, -84.8, 5.6), (43.0, -89.0, 2.2), (cx + 2.9, cz + 2.0, 2.0)])
+
+    def lawn(x, z, margin=0.0):
+        if not (x0 + 1.6 < x < x1 - 1.6 and z0 + 1.6 < z < z1 - 1.6):
+            return False
+        for (ax, az), (bx, bz) in PARK_ALLEY_SEGMENTS:
+            if segment_distance(x, z, ax, az, bx, bz) < 1.9 + margin:
+                return False
+        ring = math.hypot(x - cx, z - cz)
+        if abs(ring - 6.0) < 1.9 + margin or ring < 4.4:
+            return False
+        return all(math.hypot(x - bx, z - bz) > radius + margin for bx, bz, radius in blocked)
+
+    def scatter_lawn(host, count, models, scales, seed):
+        rng_life = random.Random(seed)
+        scene.rebuilt(host)
+        placed = 0
+        for attempt in range(count * 40):
+            if placed >= count:
+                break
+            x, z = rng_life.uniform(x0, x1), rng_life.uniform(z0, z1)
+            if not lawn(x, z):
+                continue
+            scene.add(models[placed % len(models)], (x, -0.02, z), rng_life.uniform(0, 360), rng_life.uniform(*scales))
+            placed += 1
+        scene.group = "Fixed"
+
+    # Chaque pousse va dans un élément du jardin reconstruit au même palier : le regroupement du décor (hub_batch.gd) la
+    # fond dans ses lots, sans lot ni ombre de plus. L'herbe avec les parterres (1), les buissons avec l'allée des
+    # rois (2), la prairie avec le kiosque (3).
+    scatter_lawn("ParkBeds", 46, ("nature_kit/grass", "nature_kit/grass_large", "nature_kit/grass_leafs", "nature_kit/grass_leafsLarge"),
+                 (2.4, 3.4), 5823)
+    # Buissons au pied des haies, côté jardin, tous les trois mètres environ, sauf devant les entrées.
+    scene.rebuilt("ParkKings")
+    rng_shrubs = random.Random(5824)
+    shrubs = ("nature_kit/plant_bush", "nature_kit/plant_bushDetailed", "nature_kit/plant_bushLarge", "nature_kit/plant_bushSmall")
+    edges = [((x0 + 1.0, z0 + 1.5), (x0 + 1.0, z1 - 4.0)), ((x0 + 1.5, z0 + 1.0), (x1 - 1.5, z0 + 1.0)),
+             ((x1 - 1.0, z0 + 1.5), (x1 - 1.0, z1 - 1.5)), ((x0 + 5.5, z1 - 1.0), (x1 - 1.5, z1 - 1.0))]
+    placed = 0
+    for (ax, az), (bx, bz) in edges:
+        steps = int(math.hypot(bx - ax, bz - az) / 3.0)
+        for step in range(steps + 1):
+            t = step / max(steps, 1)
+            x, z = ax + (bx - ax) * t + rng_shrubs.uniform(-0.3, 0.3), az + (bz - az) * t + rng_shrubs.uniform(-0.3, 0.3)
+            gate = abs(x - cx) < 4.0 and z > z1 - 3.0 or abs(z + 66.0) < 4.0 and x > x1 - 3.0
+            near = any(math.hypot(x - bx2, z - bz2) < radius for bx2, bz2, radius in blocked)
+            path = any(segment_distance(x, z, sx, sz, ex, ez) < 1.7 for (sx, sz), (ex, ez) in PARK_ALLEY_SEGMENTS)
+            if gate or near or path:
+                continue
+            scene.add(shrubs[placed % len(shrubs)], (x, -0.02, z), rng_shrubs.uniform(0, 360), rng_shrubs.uniform(2.6, 3.4))
+            placed += 1
+    scene.group = "Fixed"
+    scatter_lawn("ParkKiosk", 64, ("nature_kit/flower_redB", "nature_kit/flower_yellowB", "nature_kit/flower_purpleB",
+                                       "nature_kit/flower_redC", "nature_kit/flower_yellowC", "nature_kit/flower_purpleC",
+                                       "nature_kit/mushroom_redGroup", "nature_kit/flower_yellowA", "nature_kit/mushroom_tanGroup"),
+                 (2.2, 3.0), 5825)
+
+
+# Allées du jardin, comme PARK_ALLEYS dans hub_terrain.gd : chaque tronçon (début, fin).
+PARK_ALLEY_SEGMENTS = [((42.0, -52.0), (42.0, -64.0)), ((42.0, -76.0), (42.0, -88.4)), ((31.0, -52.0), (31.0, -88.0)),
+                       ((31.0, -88.0), (41.0, -88.0)), ((30.0, -70.0), (36.0, -70.0)), ((48.0, -70.0), (55.0, -66.0))]
+
+
+def segment_distance(x, z, ax, az, bx, bz):
+    """Distance du point (x, z) au segment de (ax, az) à (bx, bz)."""
+    dx, dz = bx - ax, bz - az
+    length = dx * dx + dz * dz
+    t = 0.0 if length == 0 else max(0.0, min(1.0, ((x - ax) * dx + (z - az) * dz) / length))
+    return math.hypot(x - (ax + dx * t), z - (az + dz * t))
+
+
+# Débris de la guerre tombés dans la rivière, que le courant revenu emporte : (modèle, x, y, z, cap, échelle, palier).
+# Près du grand pont, ils partent avec sa reconstruction (premier livre) ; près de la passerelle du jardin et de la
+# forge, au deuxième livre. Au ras de l'eau (-1,1 m), à moitié immergés, loin des berges : on ne peut ni les atteindre
+# ni s'y poser, et ils n'ont pas de collision.
+RIVER_DEBRIS = [
+    ("nature_kit/log", 61.4, -1.42, -8.6, 64.0, 2.4, 1),
+    ("graveyard_kit/debris-wood", 63.6, -1.2, -5.8, 20.0, 2.2, 1),
+    ("survival_kit/resource-planks", 65.0, -1.24, 7.4, 110.0, 2.4, 1),
+    ("nature_kit/log_large", 64.6, -1.5, 12.8, 22.0, 1.8, 1),
+    ("survival_kit/resource-planks", 46.6, -0.74, -84.0, 40.0, 1.6, 1),
+    ("nature_kit/log", 62.2, -1.42, -74.0, 100.0, 2.4, 2),
+    ("graveyard_kit/debris-wood", 61.6, -1.2, -57.6, 75.0, 2.2, 2),
+    ("nature_kit/log", 67.4, -1.42, 21.6, 160.0, 2.2, 2),
+    ("graveyard_kit/debris-wood", 70.8, -1.2, 29.6, 10.0, 2.4, 2),
+    ("nature_kit/log_large", 60.6, -1.5, -40.0, 75.0, 1.6, 2),
+]
+
+
+def build_river_debris(scene):
+    for stage in (1, 2):
+        scene.repair(f"RiverDebris{stage}", stage)
+        for model, x, y, z, degrees, scale, when in RIVER_DEBRIS:
+            if when == stage:
+                scene.add(model, (x, y, z), degrees, scale)
+    scene.group = "Fixed"
+
 
 def build_quarter_paths(scene):
     """Lanternes au bout des ruelles des nouveaux lieux."""
@@ -2600,6 +2713,7 @@ def main():
     build_quarters(scene, random.Random(5820))
     build_park(scene, random.Random(5821))
     build_quarter_paths(scene)
+    build_river_debris(scene)
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(scene.text(), encoding="utf-8", newline="\n")
     print(f"{OUTPUT.name} : {len(scene.visuals)} modèles, {len(scene.colliders)} collisions")
