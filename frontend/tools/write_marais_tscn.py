@@ -72,7 +72,7 @@ EXT = [
     ("Script", "res://scenes/levels/marais/marais_life.gd", "59_life"),
     ("PackedScene", K + "survival_kit/fish-large.glb", "60_fish"),
     ("PackedScene", K + "graveyard_kit/lantern-candle.glb", "61_hanging_lantern"),
-    # Sol calculé d'avance (tools/bake_lieux.gd).
+    # Sol et décor dispersé calculés d'avance (tools/bake_lieux.gd).
     ("Resource", "res://scenes/levels/marais/marais_bake.res", "62_bake"),
 ]
 # Pierres levées (comme build_stones dans tools/build_marais.py) : les corbeaux se posent sur trois d'entre elles.
@@ -562,6 +562,8 @@ def main():
         'crypt_root = NodePath("../Interior/Crypt")',
         'moss_material = SubResource("ShaderMaterial_moss")',
         'dust_material = SubResource("ShaderMaterial_dust")',
+        # Positions du décor dispersé calculées d'avance (tools/bake_lieux.gd), avec le sol.
+        'bake = ExtResource("62_bake")',
         "",
     ]
     node(lines, "Props", instance="6_props")

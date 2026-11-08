@@ -55,6 +55,9 @@ func _run() -> void:
 		for frame in SETTLE_FRAMES:
 			await process_frame
 		var scene := current_scene
+		# Le Marais prépare sa crypte après l'arrivée, par tranches : le relevé attend qu'elle soit prête.
+		while scene.has_method("is_done") and not scene.is_done():
+			await process_frame
 		for inside in [false, true]:
 			var group := _group(scene, String(place[0]), inside)
 			if group:

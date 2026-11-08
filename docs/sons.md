@@ -94,7 +94,9 @@ Mesures du 8 novembre, dans le jeu natif : le mélange du bus Master enregistré
 | Hub, jardin reconstruit (feuillage et oiseaux) | non | -13,7 | -30,5 |
 | Hub, roue du moulin réparée | non | -15,3 | -30,9 |
 | Village, de la terre aux pavés de la grande rue | non | -13,3 | -28,8 |
-| Village, rue du pont (pavés), pont (bois), autre rive (cendre) | non | -6,8 | -21,9 |
+| Village, rue du pont (pavés), pont (bois), autre rive (cendre) : avant le plafond du ruisseau | non | -6,8 | -21,9 |
+| Village, même trajet, ruisseau plafonné (`max_db`) | non | -9,8 | -23,8 |
+| Village, arrêté au milieu du pont, au-dessus du ruisseau : avant, puis après | non | -4,9, puis -7,6 | -17,0, puis -22,4 |
 | Village, accueil de la mairie (bois) | non | -12,8 | -28,1 |
 | Village, salle secrète (pierre) | non | -14,2 | -28,3 |
 | Marais, de la boue au ponton (bois) | non | -11,8 | -27,2 |
@@ -105,12 +107,18 @@ Mesures du 8 novembre, dans le jeu natif : le mélange du bus Master enregistré
 | Plaine, de la cendre au pont de pierre | non | -14,3 | -31,2 |
 | Plaine, archives | non | -16,4 | -39,0 |
 
-- **Aucun écrêtage.** La plus haute crête des situations des nouveaux sons est à -11,8 dBFS. Celle du pont du Village (-6,8 dBFS) vient des sources du ruisseau et de la roue de ce lieu, posées avant ces changements.
+- **Aucun écrêtage.** La plus haute crête des situations des nouveaux sons est à -11,8 dBFS. Celle du pont du Village (-6,8 dBFS) venait des sources du ruisseau, posées avant ces changements, qui montaient de 7 dB au-dessus de leur volume sous le pont : elles sont plafonnées depuis (voir plus bas), et le pont passe à -9,8 dBFS de crête.
 - **Clic.** Il dépasse la musique du menu de 7 à 10 dB en crête, pendant 90 ms. Il s'entend sans couvrir la musique.
 - **Panneaux.** Le parchemin dépasse de 8 à 10 dB en crête le fond du hub (musique et ambiance) pendant un tiers de seconde. La clochette reste sous lui.
 - **Rivière et jardin.** Le fond est entre -28 et -32 dBFS RMS au bord de l'eau ou dans le jardin, comme la musique après son bus et l'ambiance générale du hub (environ -31 dBFS). Il retombe vers -37 dBFS loin de la rivière et ne joue plus du tout sur la place.
 - **Pas.** Les pas sur le bois et la pierre ont la même crête que les autres (-14 à -20 dBFS dans le jeu). Le claquement de la pierre s'entend net ; le bois sonne plus grave et plus sourd.
 - **Godot et les sources proches.** `AudioStreamPlayer3D` ajoute le gain de la distance (`unit_size`) au volume avant de plafonner à `max_db`. Une source à 1 ou 2 m monte donc de 10 à 14 dB. Les sources du hub ont un `max_db` à 1 dB (rivière, feuillage) ou 3 dB (oiseaux, roue) au-dessus de leur volume. Avant cela, le feuillage, au-dessus de l'auditeur, montait à -6 dBFS en crête.
+- **Village, ruisseau et roue** (8 novembre). Même règle, dans `tools/write_village_tscn.py` : les deux sources du ruisseau (`StreamSound0` sous le pont, `StreamSound1` en amont, volume -4 dB) ont un `max_db` à 1 dB au-dessus de leur volume (`STREAM_NEAR_GAIN`), la roue du moulin à 3 dB (`NEAR_GAIN`). Le niveau ne change qu'à moins de 5,4 m du ruisseau (6 dB de moins sur le pont), pas plus loin. Enregistrements du mélange, musique coupée, avec leur courbe de niveau : `.claude/captures/verif-marche/sons/avant/` et `apres/` (hors dépôt) :
+  - pont, en marchant de la rue à l'autre rive : de -6,3 à -9,8 dBFS de crête, de -20,7 à -23,8 dBFS RMS ; le niveau est plat sur le pont (la bosse de 6 dB au-dessus de la source a disparu) et les pas sur le bois s'entendent dans le ruisseau ;
+  - arrêté au milieu du pont : de -4,9 à -7,6 dBFS de crête, de -17,0 à -22,4 dBFS RMS ;
+  - berge est, à 5 m du pont : inchangée (-10 dBFS de crête, -25 dBFS RMS) ;
+  - berge, à 3,5 m de la roue : -6,9 dBFS de crête et -19,5 dBFS RMS (-6,5 et -18,8 avant, d'un passage à l'autre) : la roue y était déjà sous son plafond, son niveau vient de son volume (-2 dB), resté tel quel ;
+  - four de la boulangère et forge, à 1,5 m des crépitements : -10 à -14 dBFS de crête, -28 à -30 dBFS RMS, inchangés.
 
 ## Export : les sons préchargés
 

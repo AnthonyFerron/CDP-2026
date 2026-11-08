@@ -21,6 +21,12 @@ WALL_OFFSET = 0.45
 # Passage laissé libre dans les murs à porte voûtée.
 DOORWAY_WIDTH = 1.9
 DOORWAY_HEIGHT = 2.9
+# Intrados du mur voûté (fantasy_town_kit/wall-doorway-round) à l'échelle du mur : demi-largeur de l'ouverture
+# (m) par hauteur au-dessus du pied du mur, relevée sur les sommets du modèle. Droit jusqu'à 2,108 m, puis quatre
+# pans jusqu'à la pointe, que le linteau de doorway() coupe à DOORWAY_HEIGHT.
+ARCH_PROFILE = ((2.108, 0.8), (2.378, 0.668), (2.65, 0.45), (2.868, 0.178), (2.955, 0.0))
+# Écart toléré entre les marches de arch_fill() et l'arche visible, de part et d'autre.
+ARCH_TOLERANCE = 0.04
 
 # Direction du mur vers l'extérieur de la pièce, associée à l'orientation du modèle.
 OUTWARD_ANGLES = {(1, 0): 0, (-1, 0): 180, (0, -1): 90, (0, 1): -90}
@@ -887,18 +893,58 @@ def soldiers_camp(scene, rng, cx, cz, heading):
     furniture_fit(scene, "fantasy_town_kit/cart", at(-1.0, -6.4), heading + 100.0, 2.8, roll=90.0)
 
 
-def arch_fill(scene, center, outward):
+def arch_half_width(height):
+    """Demi-largeur de l'arche visible du mur voûté, à cette hauteur au-dessus du pied du mur."""
+    if height <= ARCH_PROFILE[0][0]:
+        return ARCH_PROFILE[0][1]
+    for (h0, w0), (h1, w1) in zip(ARCH_PROFILE, ARCH_PROFILE[1:]):
+        if height <= h1:
+            return w0 + (w1 - w0) * (height - h0) / (h1 - h0)
+    return 0.0
+
+
+def arch_height(half_width):
+    """Hauteur où l'arche visible du mur voûté ne laisse plus que cette demi-largeur."""
+    for (h0, w0), (h1, w1) in zip(ARCH_PROFILE, ARCH_PROFILE[1:]):
+        if half_width >= w1:
+            return h0 + (h1 - h0) * (w0 - half_width) / (w0 - w1)
+    return ARCH_PROFILE[-1][0]
+
+
+def arch_steps():
+    """Marches de arch_fill(), de l'extérieur vers la pointe : (bord intérieur, bord extérieur, bas), toutes jusqu'au
+    linteau. Chacune reste à ARCH_TOLERANCE au plus de l'arche sur sa hauteur : elle commence où l'arche passe à
+    ARCH_TOLERANCE du bord de la précédente, et son bord est au milieu de ce que l'arche gagne sur sa hauteur."""
+    straight = ARCH_PROFILE[0][1]
+    steps = [(straight, DOORWAY_WIDTH / 2, 0.0)]
+    edge = straight
+    start = straight - ARCH_TOLERANCE
+    while True:
+        low = arch_height(start)
+        end = max(start - 2 * ARCH_TOLERANCE, arch_half_width(DOORWAY_HEIGHT))
+        if DOORWAY_HEIGHT - low < 0.03:
+            break
+        inner = round((start + end) / 2, 3)
+        steps.append((inner, edge, round(low, 3)))
+        edge = inner
+        start -= 2 * ARCH_TOLERANCE
+    return steps
+
+
+def arch_fill(scene, center, outward, base=0.0):
     """Complète la collision d'un mur voûté posé par doorway() : son arche ne laisse que ±0,80 m de passage jusqu'à
-    1,8 m, puis se referme en pointe jusqu'à 2,9 m, alors que doorway() laisse ±0,95 m sur toute la hauteur."""
+    2,1 m, puis se referme en pointe jusqu'à 2,95 m, alors que doorway() laisse ±0,95 m jusqu'au linteau (2,9 m).
+    Des marches suivent l'arche à 4 cm près (5 cm dans les 4 derniers millimètres sous le linteau), d'après
+    ARCH_PROFILE et ARCH_TOLERANCE ; `base` est le pied du mur."""
     x, z = center
     along = (0, 1) if outward[0] else (1, 0)
     for sign in (-1, 1):
-        for inner, outer, low, high in ((0.8, 0.95, 0.0, DOORWAY_HEIGHT), (0.5, 0.8, 2.3, DOORWAY_HEIGHT),
-                                        (0.15, 0.5, 2.7, DOORWAY_HEIGHT)):
+        for inner, outer, low in arch_steps():
             offset = sign * (inner + outer) / 2
             width = outer - inner
+            high = DOORWAY_HEIGHT
             size = (WALL_THICKNESS, high - low, width) if outward[0] else (width, high - low, WALL_THICKNESS)
-            scene.add_box((x + along[0] * offset, (low + high) / 2, z + along[1] * offset), size)
+            scene.add_box((x + along[0] * offset, base + (low + high) / 2, z + along[1] * offset), size)
 
 
 def build_ruins():

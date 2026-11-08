@@ -5,7 +5,8 @@ extends SceneTree
 ##   cd frontend && godot --headless --fixed-fps 60 --path . --script res://tools/fingerprint_level.gd -- <lieu> <fichier> [--images N]
 ## <fichier> reçoit une ligne par objet, triée : deux empreintes se comparent avec diff. Les chemins des nœuds n'y
 ## sont pas (un calcul d'avance peut ranger autrement), seulement leur genre, leur place et leur contenu.
-## Le hub regroupe son décor au fil des images : l'outil attend qu'il ait fini.
+## Le hub regroupe son décor au fil des images, le Marais prépare sa crypte après l'arrivée : l'outil attend qu'ils aient
+## fini.
 
 const LEVELS := {
 	"hub": "res://scenes/levels/hub/hub.tscn",
@@ -44,9 +45,12 @@ func _run() -> void:
 	await process_frame
 	for frame in frames:
 		await process_frame
-	# Le regroupement du décor du hub se fait par tranches, au fil des images.
+	# Le regroupement du décor du hub se fait par tranches, au fil des images, comme la préparation de la crypte du
+	# Marais (sa racine).
 	var batches := level.find_children("*", "Node3D", true, false).filter(
 		func(node: Node) -> bool: return node.has_method("is_done"))
+	if level.has_method("is_done"):
+		batches.append(level)
 	for frame in 3000:
 		if batches.all(func(node: Node) -> bool: return node.is_done()):
 			break
