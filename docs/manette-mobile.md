@@ -80,6 +80,7 @@ La caméra au stick tourne à chaque image affichée (`_process`) : à 144 image
 - Le navigateur ne fait connaître une manette qu'après l'appui sur l'un de ses boutons, la page étant affichée.
 - **Son** : un navigateur n'ouvre le son qu'après un clic, une touche ou un toucher. Un bouton de manette ne compte pas : un joueur qui ne touche que la manette n'a pas de son tant qu'il n'a pas cliqué une fois dans la page.
 - La souris n'est pas capturée tant que le joueur n'a pas cliqué : sans effet à la manette, qui ne s'en sert pas.
+- **Vérifié** le 8 novembre dans Chromium 156, avec l'export identique à la production (`frontend/Dockerfile`, servi par Caddy et le vrai Caddyfile, sans API) : une manette standard simulée (`navigator.getGamepads()` remplacé avant le chargement, puis l'évènement `gamepadconnected`, comme le fait une vraie manette) choisit « Jouer en tant qu'invité » à la croix, valide avec A, commence la partie, marche dans le bunker au stick gauche, ouvre la pause (Menu) avec les commandes de la manette, la referme (B), ouvre et referme les indices (Y). Aucune erreur dans la console. Outil et captures : `.claude/captures/manette/outils/web_manette.py` et `.claude/captures/manette/web/` (hors dépôt).
 
 ### Fichiers
 
@@ -116,9 +117,19 @@ Question : que coûterait un vrai support tactile (stick virtuel, boutons, camé
 
 Sur ce serveur, le menu s'affiche 4 à 6 s après le début du chargement, surtout le temps de compiler `index.wasm` (`docs/navigateurs.md`). Un téléphone compile plus lentement qu'un ordinateur : non mesuré ici, faute d'appareil.
 
-**Mémoire et dessin**, mesurés en natif avec le rendu Compatibility (le même que WebGL 2), à 1280 × 720, après 4 s dans chaque lieu (`.claude/captures/manette/outils/mem_probe.gd`) :
+**Mémoire et dessin**, mesurés en natif avec le rendu Compatibility (le même que WebGL 2), à 1280 × 720, au point d'arrivée de chaque lieu, après 40 à 240 images (`.claude/captures/manette/outils/mem_probe.gd`, hors dépôt) :
 
-MESURES_MEMOIRE
+| Lieu | Mémoire du moteur | Mémoire vidéo | dont textures | dont tampons | Appels de dessin par image | Triangles par image | Objets dessinés |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Menu (prépare les shaders des lieux hors de l'écran) | 85 Mo | 33 Mo | 20 Mo | 12 Mo | 196 | 6 484 | 568 |
+| Hub | 144 Mo (pic à 161 Mo) | 113 Mo | 43 Mo | 70 Mo | 534 | 569 245 | 604 |
+| Plaine | 141 Mo | 66 Mo | 41 Mo | 25 Mo | 534 | 330 680 | 583 |
+| Désert | 133 Mo | 66 Mo | 42 Mo | 24 Mo | 651 | 283 303 | 707 |
+| Marais | 106 Mo | 70 Mo | 35 Mo | 35 Mo | 460 | 471 951 | 509 |
+| Village (dans la grande rue) | 117 Mo | 62 Mo | 37 Mo | 25 Mo | 1 268 | 317 222 | 1 318 |
+
+- La mémoire du moteur (`MEMORY_STATIC`) est celle que le paquet WebAssembly réserve dans le navigateur, à laquelle s'ajoutent le moteur lui-même, le JavaScript et la page. La mémoire vidéo est celle du pilote WebGL. Un lieu demande donc environ 300 Mo à l'onglet : supportable par un téléphone récent, juste pour un téléphone d'entrée de gamme.
+- Le coût de dessin est le vrai obstacle : de 460 à 1 300 appels de dessin et de 280 000 à 570 000 triangles par image. Dans un navigateur, chaque appel WebGL est vérifié puis traduit (ANGLE) : un téléphone de milieu de gamme tient quelques centaines d'appels à 30 images par seconde. Les lieux ont été réglés pour un ordinateur (décor dispersé par cases, ombres, distances d'affichage), et il faudrait des réglages propres au téléphone.
 
 **Textures** : le préréglage Web ne compresse les textures que pour l'ordinateur (`vram_texture_compression/for_desktop=true`, `for_mobile=false` : S3TC et BPTC). Les GPU des téléphones (Adreno, Mali, Apple) n'ont en WebGL que l'ETC2 ou l'ASTC : Godot décompresse alors ces 46 textures au chargement, ce qui allonge chaque chargement et multiplie leur mémoire par 4 à 8. Les exporter aussi en ETC2/ASTC (`for_mobile=true`) grossirait `index.pck`.
 
@@ -152,7 +163,7 @@ Total : de 1 à 2 semaines avec les essais, sans compter les corrections que dem
 
 ### Conclusion
 
-Un vrai support tactile n'est pas raisonnable maintenant : il demanderait surtout de refaire la mise en page de toute l'interface pour des écrans 3 à 5 fois plus petits, et des essais sur de vrais téléphones que le serveur ne permet pas. Les commandes tactiles seules, sans cette mise en page, laisseraient des textes de 8 px et des boutons de 20 px.
+Un vrai support tactile n'est pas raisonnable maintenant : il demanderait surtout de refaire la mise en page de toute l'interface pour des écrans 3 à 5 fois plus petits, d'alléger le dessin des lieux pour les GPU de téléphone, et des essais sur de vrais téléphones que le serveur ne permet pas. Les commandes tactiles seules, sans cette mise en page, laisseraient des textes de 8 px et des boutons de 20 px.
 
 ### Ce qui est fait
 
@@ -163,3 +174,4 @@ Un vrai support tactile n'est pas raisonnable maintenant : il demanderait surtou
   - avec un bouton « Lancer quand même » (une tablette avec un clavier, par exemple).
 - **La manette marche aussi sur un téléphone ou une tablette** : tout le jeu se joue sans toucher l'écran, avec la mise en page actuelle (lisible sur une tablette, petite sur un téléphone).
 - Le message d'erreur de démarrage dit aussi que le jeu se joue au clavier et à la souris, ou avec une manette.
+- **Vérifié** dans Chromium 156, export identique à la production : sur le bureau, pas de message, le jeu démarre comme avant ; en Pixel 7 émulé (écran tactile, `pointer: coarse`, pas de pointeur fin), le message s'affiche en portrait et en paysage, rien n'est téléchargé avant « Lancer quand même », qui télécharge et lance le jeu ; avec une manette simulée sur ce téléphone, son premier bouton lance le jeu. Captures : `.claude/captures/manette/web/mobile_*.png`.
