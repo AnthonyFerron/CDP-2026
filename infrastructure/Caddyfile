@@ -30,6 +30,8 @@
 	# L'export web utilise des fils d'exécution (le son est mixé hors du fil principal) : il lui faut
 	# SharedArrayBuffer, donc une page isolée (COOP et COEP). Tout ce que charge le jeu vient de ce même site,
 	# `require-corp` ne bloque donc rien. Voir docs/web-threads.md.
+	# Le second paquet, musique.pck, que le jeu télécharge une fois le menu affiché, passe par ici comme index.pck :
+	# mêmes en-têtes, même revalidation, même .br et .gz précompressés (docs/musique-differee.md).
 	handle {
 		root * /srv
 		header {

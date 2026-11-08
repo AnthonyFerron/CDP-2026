@@ -9,6 +9,16 @@ extends Node
 ##
 ## Sur le web, le navigateur bloque le son jusqu'au premier geste du joueur : la piste demandée attend le premier clic,
 ## la première touche ou le premier toucher pour partir, en fondu.
+##
+## Sur le web encore, le paquet du jeu (index.pck) ne contient que les pistes du menu, de l'introduction et du hub : les
+## autres (lieux, victoire, défaite) sont dans un second paquet, musique.pck (préréglage d'export « Web musique »),
+## téléchargé en arrière-plan une fois le menu affiché, puis monté. Une piste demandée avant qu'il soit là attend en
+## silence, et part dès qu'il est monté. Un téléchargement raté est retenté, de plus en plus espacé ; le jeu reste
+## jouable sans ces pistes. Le jeu natif a toutes ses pistes dans son paquet et ne télécharge rien.
+## Voir docs/musique-differee.md.
+
+## Émis quand le second paquet de musique est monté.
+signal pack_loaded
 
 const DIR := "res://assets/audio/music/"
 ## Gain propre à chaque piste, en dB : il ramène les pistes à un même niveau moyen (RMS d'environ -22 dBFS, -18 pour le
@@ -30,6 +40,12 @@ const BUS := &"Music"
 const BUS_VOLUME_DB := -10.0
 ## Durée du fondu enchaîné, en secondes.
 const FADE := 1.5
+## Second paquet de musique du web, à côté de index.html.
+const PACK_FILE := "musique.pck"
+## Attente avant chaque nouvelle tentative de téléchargement, en secondes ; la dernière se répète.
+const PACK_RETRY := [5.0, 15.0, 30.0, 60.0]
+## Un téléchargement qui ne reçoit plus rien pendant ce temps (secondes de jeu) est abandonné, puis retenté.
+const PACK_STALL := 60.0
 
 var _players: Array[AudioStreamPlayer] = []
 var _active: AudioStreamPlayer
@@ -39,6 +55,16 @@ var _tweens := {}
 var _unlocked := true
 ## Fichiers de pistes dont le chargement en arrière-plan est demandé (prefetch), pas encore repris.
 var _pending := {}
+## Dossier des pistes. music_test le change pour simuler des pistes absentes du paquet du jeu.
+var dir := DIR
+var _http: HTTPRequest
+var _pack_started := false
+var _pack_url := ""
+var _pack_path := ""
+var _pack_tries := 0
+var _pack_loaded := false
+var _pack_bytes := 0
+var _pack_idle := 0.0
 
 
 func _ready() -> void:
@@ -61,6 +87,7 @@ func _ready() -> void:
 	_active = _players[0]
 	_unlocked = not OS.has_feature("web")
 	set_process_input(not _unlocked)
+	set_process(false)
 	get_tree().scene_changed.connect(_on_scene_changed)
 	GameState.erupted.connect(stop)
 	_on_scene_changed.call_deferred()
@@ -88,17 +115,18 @@ func prefetch(scene_path: String) -> void:
 	var track := _track_for(scene_path)
 	if track == &"" or track == _track:
 		return
-	var path := DIR + String(track) + ".ogg"
-	if _pending.has(path) or ResourceLoader.has_cached(path):
+	var path := _path(track)
+	if _pending.has(path) or ResourceLoader.has_cached(path) or not ResourceLoader.exists(path):
 		return
 	if ResourceLoader.load_threaded_request(path) == OK:
 		_pending[path] = true
 
 
 ## Piste préchargée si elle l'a été (attendue si elle se charge encore), sinon chargée sur place. Les autres pistes
-## préchargées et déjà prêtes sont lâchées : le hub a pu en choisir une autre que celle prévue.
+## préchargées et déjà prêtes sont lâchées : le hub a pu en choisir une autre que celle prévue. Rien (null) si la piste
+## est dans le second paquet de musique, pas encore monté : elle attend load_pack.
 func _load_track(track: StringName) -> AudioStream:
-	var path := DIR + String(track) + ".ogg"
+	var path := _path(track)
 	var stream: AudioStream = null
 	if _pending.has(path):
 		_pending.erase(path)
@@ -107,7 +135,13 @@ func _load_track(track: StringName) -> AudioStream:
 		if ResourceLoader.load_threaded_get_status(other) != ResourceLoader.THREAD_LOAD_IN_PROGRESS:
 			ResourceLoader.load_threaded_get(other)
 			_pending.erase(other)
-	return stream if stream else load(path)
+	if stream:
+		return stream
+	return load(path) if ResourceLoader.exists(path) else null
+
+
+func _path(track: StringName) -> String:
+	return dir + String(track) + ".ogg"
 
 
 ## Coupe la musique en fondu (éruption) : rien ne joue jusqu'à la piste suivante.
@@ -126,13 +160,28 @@ func is_playing() -> bool:
 	return _track != &"" and _active.playing
 
 
+## Vrai si la piste demandée attend le second paquet de musique.
+func is_waiting_for_pack() -> bool:
+	return _track != &"" and _active.stream == null
+
+
+## Vrai une fois le second paquet de musique monté.
+func is_pack_loaded() -> bool:
+	return _pack_loaded
+
+
+## Nombre de téléchargements du second paquet ratés jusqu'ici.
+func pack_failures() -> int:
+	return _pack_tries
+
+
 ## Lecteur de la piste en cours, pour les tests.
 func active_player() -> AudioStreamPlayer:
 	return _active
 
 
 func _start() -> void:
-	if not _unlocked:
+	if not _unlocked or _active.stream == null:
 		return
 	_active.volume_linear = 0.0
 	_active.play()
@@ -156,6 +205,9 @@ func _fade(player: AudioStreamPlayer, volume: float, stop_after := false) -> voi
 
 ## Le menu principal et chaque lieu (piste du même nom que la zone) ont leur piste ; le hub choisit la sienne.
 func _on_scene_changed() -> void:
+	if not _pack_started and OS.has_feature("web"):
+		_pack_started = true
+		_fetch_web_pack()
 	var scene := get_tree().current_scene
 	if not scene or scene.scene_file_path == GameState.HUB_SCENE:
 		return
@@ -192,6 +244,106 @@ func _input(event: InputEvent) -> void:
 	set_process_input(false)
 	if _track != &"":
 		_start()
+
+
+## Sur le web, une fois la première scène (le menu) affichée : télécharge le second paquet de musique, à côté de la
+## page, si des pistes manquent au paquet du jeu.
+func _fetch_web_pack() -> void:
+	if _missing_tracks().is_empty():
+		return
+	for frame in 2:
+		await get_tree().process_frame
+	var url: Variant = JavaScriptBridge.eval("new URL('%s', document.baseURI).href" % PACK_FILE, true)
+	if url is String and not String(url).is_empty():
+		fetch_pack(url)
+
+
+## Télécharge le second paquet de musique depuis url, puis le monte (load_pack). En cas d'échec, nouvelle tentative
+## plus tard (PACK_RETRY). Le web l'appelle seul ; music_test, avec une adresse morte.
+##
+## Le paquet est écrit dans le dossier de cache, pas dans user:// : sur le web, seul user:// (/userfs) est recopié
+## dans IndexedDB. Le cache (/home/web_user/.cache) y reste en mémoire (MEMFS), comme index.pck. Dans user://, ses
+## 10 Mo seraient recopiés dans IndexedDB à chaque téléchargement, et relus en entier à chaque lancement, avant le
+## menu. Le navigateur garde de toute façon sa copie (cache HTTP, revalidée par ETag) : la visite suivante ne le
+## retélécharge que s'il a changé.
+func fetch_pack(url: String) -> void:
+	_pack_url = url
+	if not _http:
+		_http = HTTPRequest.new()
+		_http.name = "PaquetMusique"
+		# Le navigateur décode déjà la réponse (brotli, gzip) : avec accept_gzip, HTTPRequest décoderait une seconde fois
+		# un corps marqué gzip, et échouerait.
+		_http.accept_gzip = false
+		# Jusqu'à 1 Mo lu par image (64 Ko par défaut) : le téléchargement suit le réseau, même à faible cadence.
+		_http.download_chunk_size = 1 << 20
+		_http.request_completed.connect(_on_pack_downloaded)
+		add_child(_http)
+	var folder := OS.get_cache_dir()
+	DirAccess.make_dir_recursive_absolute(folder)
+	_pack_path = folder.path_join(PACK_FILE)
+	_http.download_file = _pack_path
+	_pack_bytes = 0
+	_pack_idle = 0.0
+	if _http.request(url) == OK:
+		set_process(true)
+	else:
+		_retry_pack()
+
+
+## Monte un paquet de musique, sans remplacer aucun fichier du jeu, puis lance la piste qui l'attendait.
+func load_pack(path: String) -> bool:
+	if not ProjectSettings.load_resource_pack(path, false):
+		push_warning("Musique : paquet %s illisible" % path)
+		return false
+	_pack_loaded = true
+	var missing := _missing_tracks()
+	if not missing.is_empty():
+		push_warning("Musique : pistes absentes du paquet %s : %s" % [path, missing])
+	if is_waiting_for_pack():
+		_active.stream = _load_track(_track)
+		_start()
+	pack_loaded.emit()
+	return true
+
+
+func _on_pack_downloaded(result: int, code: int, _headers: PackedStringArray, _body: PackedByteArray) -> void:
+	set_process(false)
+	if result != HTTPRequest.RESULT_SUCCESS or code != 200:
+		push_warning("Musique : %s non reçu (résultat %d, code HTTP %d)" % [_pack_url, result, code])
+		_retry_pack()
+	elif not load_pack(_pack_path):
+		_retry_pack()
+
+
+func _retry_pack() -> void:
+	set_process(false)
+	_pack_tries += 1
+	var delay: float = PACK_RETRY[mini(_pack_tries, PACK_RETRY.size()) - 1]
+	push_warning("Musique : nouvelle tentative dans %d s" % delay)
+	get_tree().create_timer(delay, true).timeout.connect(fetch_pack.bind(_pack_url))
+
+
+## Surveille le téléchargement en cours : sans un octet reçu pendant PACK_STALL secondes, il est relancé. Une image
+## compte au plus une demi-seconde : le chargement d'un lieu, qui bloque l'image, ne passe pas pour un blocage.
+func _process(delta: float) -> void:
+	var bytes := _http.get_downloaded_bytes()
+	if bytes != _pack_bytes:
+		_pack_bytes = bytes
+		_pack_idle = 0.0
+		return
+	_pack_idle += minf(delta, 0.5)
+	if _pack_idle >= PACK_STALL:
+		push_warning("Musique : %s ne reçoit plus rien" % _pack_url)
+		_http.cancel_request()
+		_retry_pack()
+
+
+func _missing_tracks() -> Array[StringName]:
+	var missing: Array[StringName] = []
+	for track: StringName in TRACKS:
+		if not ResourceLoader.exists(_path(track)):
+			missing.append(track)
+	return missing
 
 
 ## Le bus « Music » est créé ici s'il n'existe pas : le projet n'a pas de disposition de bus enregistrée.
