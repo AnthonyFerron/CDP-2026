@@ -21,9 +21,10 @@ signal state_restored
 
 ## Sauvegarde de l'invité ; un compte a la sienne, nommée d'après son profil (use_profile).
 const SAVE_PATH := "user://sauvegarde.cfg"
-## Sauvegardes d'un test lancé en script (godot --script res://tests/…) : un dossier par processus. Le dossier user://
-## est commun à toutes les copies du projet : sans cela, deux tests lancés en même temps sur la même machine
-## (plusieurs agents) écrivaient la même sauvegarde, et l'un relisait celle de l'autre.
+## Sauvegardes et session d'un test (godot --script res://tests/…, ou une scène de res://tests/ comme run_tests.tscn) :
+## un dossier par processus. Le dossier user:// est commun à toutes les copies du projet : sans cela, deux tests lancés
+## en même temps sur la même machine (plusieurs agents) écrivaient la même sauvegarde ou la même session (Account),
+## et l'un relisait celle de l'autre.
 const TEST_SAVE_DIR := "user://tests/"
 const HUB_SCENE := "res://scenes/levels/hub/hub.tscn"
 ## Scène de chaque zone ; une zone sans scène n'est pas encore construite.
@@ -96,7 +97,7 @@ var player_rotation := 0.0
 var server_game_id := 0
 
 var _since_save := 0.0
-## Dossier des sauvegardes : user://, ou celui du processus pour un test (TEST_SAVE_DIR).
+## Dossier des sauvegardes et de la session : user://, ou celui du processus pour un test (TEST_SAVE_DIR).
 var _save_dir := "user://"
 var _save_path := SAVE_PATH
 
@@ -111,10 +112,10 @@ func _exit_tree() -> void:
 		_remove_dir(_save_dir)
 
 
-## Un test lancé en script (la boucle principale est son SceneTree) garde ses sauvegardes dans son propre dossier ;
-## ceux d'anciens tests arrêtés en route sont effacés.
+## Un test garde ses sauvegardes et sa session dans son propre dossier ; ceux d'anciens tests arrêtés en route sont
+## effacés.
 func _isolate_test_saves() -> void:
-	if get_tree().get_script() == null:
+	if not _is_test_run():
 		return
 	for name in DirAccess.get_directories_at(TEST_SAVE_DIR):
 		# Un dossier à notre numéro vient d'un ancien processus : il est effacé aussi.
@@ -123,6 +124,18 @@ func _isolate_test_saves() -> void:
 	_save_dir = TEST_SAVE_DIR + "%d/" % OS.get_process_id()
 	DirAccess.make_dir_recursive_absolute(_save_dir)
 	_save_path = profile_save_path("")
+
+
+## Un test : un script lancé avec --script (la boucle principale est son SceneTree : tests/scenes, tools/), ou une
+## scène de res://tests/ lancée directement (run_tests.tscn), dont la boucle n'a pas de script. Le dossier tests/
+## n'est pas exporté : le jeu du joueur n'est jamais concerné.
+func _is_test_run() -> bool:
+	if get_tree().get_script() != null:
+		return true
+	for argument in OS.get_cmdline_args():
+		if argument.trim_prefix("res://").begins_with("tests/"):
+			return true
+	return false
 
 
 ## Le processus existe-t-il encore ? Sous Linux, on regarde /proc : OS.is_process_running ne connaît que les
@@ -378,6 +391,12 @@ func use_profile(profile: String) -> void:
 
 func save_path() -> String:
 	return _save_path
+
+
+## Dossier des fichiers du joueur sur cet appareil (sauvegardes, session du compte) : user:// dans le jeu, le dossier
+## du processus pour un test. Il finit toujours par « / ».
+func data_dir() -> String:
+	return _save_dir
 
 
 ## Sauvegarde d'un profil : l'invité (profil vide) ou un compte.

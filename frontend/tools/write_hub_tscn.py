@@ -538,7 +538,7 @@ LORE = [
      "Avant la guerre, on y apprenait aux enfants l'art des instructions : découper un problème, mettre les étapes dans l'ordre, vérifier chaque résultat. Sur le tableau, quelqu'un a écrit à la craie : « Les anciens bâtisseurs ont tout consigné dans quatre livres. »",
      "École de Codia", "WOOD", "POSTS", (1.3, 0.6)),
     ("TavernSign", -52.6, 4.6, 90.0, "La Chope du Dragon",
-     "La tavernière aime raconter l'an 5802 : Devlyn et ses compagnons y fêtaient leur victoire sur les Quatre Dragons du Chaos. Elle jure que la dernière bière tirée avant la guerre contre Vibelandia attend encore au fond d'un tonneau, pour le jour où Codia renaîtra.",
+     "La tavernière aime raconter l'an 5802 : Devlyn et ses compagnons y fêtaient leur victoire sur les Quatre Dragons du Chaos. Elle jure que la dernière bière brassée avant la guerre contre Vibelandia attend encore au fond d'un tonneau, pour le jour où Codia renaîtra.",
      "La Chope du Dragon", "WOOD", "HANGING", (1.4, 0.6)),
     ("ChapelSign", -50.8, -26.0, 90.0, "La chapelle des Quatre Livres",
      "Les anciens priaient ici devant quatre lutrins vides. Une prière est gravée au-dessus de l'autel : « Que l'ordre du Projenomicon, la rigueur de l'Algonicon, la logique du Logiconomicon et la clarté du Codonomicon veillent sur Codia. »",
@@ -550,7 +550,7 @@ LORE = [
      "Elle nourrissait tout le village, jusqu'à ce que les armées de Vibelandia brûlent ses récoltes. Mira dit que les champs repousseront quand les livres seront revenus au château.",
      "Ferme du roi", "WOOD", "POSTS", (1.2, 0.55)),
     ("MineSign", 76.2, -29.4, -15.0, "La mine d'argent",
-     "La galerie s'est effondrée pendant la guerre. Un écriteau est cloué au boisage : « Fermée par ordre du roi Codeon V. Les mineurs ont rejoint le bunker. »",
+     "La galerie s'est effondrée pendant la guerre. Un écriteau est cloué au boisage : « Fermée par ordre du roi Codeon V. » Dessous, à la craie : « Les mineurs ont rejoint le bunker. »",
      "Mine d'argent", "WOOD", "POSTS", (1.2, 0.55)),
     ("NoticeBoard", -2.6, -9.6, 0.0, "Avis à la population",
      "Par ordre du roi Codeon V : les armées de Vibelandia approchent. Que chacun rejoigne sans attendre l'ancien bunker, à l'est du village, au-delà de la rivière. N'emportez que l'essentiel, et aidez les plus faibles. Codia, an 5812.",
@@ -560,7 +560,7 @@ LORE = [
      "Château de Codeon V", "STONE", "POSTS", (1.6, 0.6)),
     # Lieux autour du village (tools/build_hub.py) : les enseignes des bâtiments sont fixées à leur façade.
     ("LavoirSign", 48.0, 3.4, 180.0, "Le lavoir de la rivière",
-     "Ici, on lavait le linge dans l'eau claire qui descend des montagnes. Le jour où le roi fit sonner les cloches, en 5812, les draps sont restés sur la corde ; deux ans plus tard, le vent les avait emportés jusqu'au pont.",
+     "Ici, on lavait le linge dans l'eau claire qui descend des montagnes. Le jour où le roi a fait sonner les cloches, en 5812, les draps sont restés sur la corde ; deux ans plus tard, le vent les avait emportés jusqu'au pont.",
      "Lavoir", "WOOD", "POSTS", (1.1, 0.5)),
     ("BakerySign", 47.74, 36.0, -90.0, "La boulangerie",
      "Chaque matin, l'odeur du pain chaud montait jusqu'au château. La farine venait du moulin voisin, le blé de la ferme du roi. Pendant la guerre, le boulanger cuisait encore pour les soldats, jusqu'à la dernière poignée de farine.",
@@ -593,7 +593,7 @@ LORE = [
      "Allées de gravier, parterres et kiosque à musique : les habitants s'y promenaient le soir, au bord de la rivière. Au centre, la statue de Devlyn rappelle la victoire de l'an 5802 sur les Quatre Dragons du Chaos.",
      "Jardin du roi", "STONE", "POSTS", (1.4, 0.5)),
     ("KingsSign", 39.4, -53.4, 0.0, "L'allée des rois",
-     "Codeon I, le bâtisseur ; Codeon II, le sage ; Codeon III, le jardinier ; Codeon IV, le prudent. Les statues des anciens rois bordent l'allée qui mène à celle de Devlyn. Renversées pendant la guerre, elles attendent qu'on les relève.",
+     "Codeon I, le Fondateur ; Codeon II, le Hardi ; Codeon III, le Prudent ; Codeon IV, le Juste. Les statues des anciens rois bordent l'allée qui mène à celle de Devlyn. Renversées pendant la guerre, elles attendent qu'on les relève.",
      "Allée des rois", "STONE", "POSTS", (1.3, 0.45)),
 ]
 
@@ -793,7 +793,7 @@ def hall(lines):
     node(lines, "Inscription", "Node3D", "Castle", props=[
         f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 0, {-HALL_HALF_DEPTH + 2.9:g})", f'script = {ext("10_readable")}',
         'title = "Le cercle des anciens bâtisseurs"',
-        'body = "Gravé dans le mur du fond, face à la porte : « Quatre livres, quatre savoirs. Posés autour du cercle, ils rendront la vie à Codia. » Les piédestaux attendent le Projenomicon, l\'Algonicon, le Logiconomicon et le Codonomicon ; chacun posé illumine son nom dans le cercle, et le rituel ne pourra commencer qu\'une fois les quatre réunis."',
+        'body = "Gravé dans le mur du fond, face à la porte : « Quatre livres, quatre savoirs. » Selon la légende, posés autour du cercle, ils rendront la vie à Codia. Les piédestaux attendent le Projenomicon, l\'Algonicon, le Logiconomicon et le Codonomicon ; chacun posé illumine son nom dans le cercle, et le rituel ne pourra commencer qu\'une fois les quatre réunis."',
         'prompt = "Lire l\'inscription"', "radius = 3.0"])
     # Sur deux lignes, entre les colonnes du mur du fond (x = ±2,4) et sous la rangée haute du donjon (y = 4,4), plus
     # épaisse que celle du bas : sur une ligne à 4,4 m, le haut des lettres rentrait dedans et les colonnes le coupaient.

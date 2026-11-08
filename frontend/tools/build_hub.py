@@ -1747,7 +1747,7 @@ def furnish_mill(scene, house, ruined, rng):
     for u, model in ((1.3, "survival_kit/tool-shovel"), (1.8, "survival_kit/tool-hoe")):
         r.put(model, u, -r.wall_v + 0.35, 0.0, 5.0, tilt=-10.0)
     back = r.reader("Notebook", -0.5, 2.0, 0.9, "Le cahier du meunier",
-                    "Sacs moulus pour la boulangerie et pour la garde, an 5812 : quatre cents, puis plus un seul grain à moudre. Dernière ligne, la veille du départ pour le bunker : « Roue arrêtée, meule calée. Si la rivière retrouve sa force, il suffira d'ôter la cale. »",
+                    "Sacs moulus pour la boulangerie et pour la garde, an 5812 : quarante, puis plus un seul grain à moudre. Dernière ligne, la veille du départ pour le bunker : « Roue arrêtée, meule calée. Si la rivière retrouve sa force, il suffira d'ôter la cale. »",
                     radius=2.0)
     scene.group = back
     r.lamp([(0.0, 0.0, 3.0)])

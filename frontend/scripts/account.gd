@@ -16,7 +16,8 @@ signal session_changed
 ## Le serveur a refusé le jeton (expiré ou révoqué) : le joueur doit se reconnecter.
 signal session_expired
 
-## Session gardée d'une visite à l'autre, sur cet appareil (IndexedDB du site sur le web).
+## Session gardée d'une visite à l'autre, sur cet appareil (IndexedDB du site sur le web). Un test garde la sienne dans
+## le dossier de son processus, comme ses sauvegardes (GameState.data_dir()) : voir session_path().
 const SESSION_PATH := "user://session.cfg"
 ## Délai des réponses simulées, en secondes.
 const SIMULATED_DELAY := 0.35
@@ -37,12 +38,21 @@ var simulated := false
 
 ## Connexion ou inscription en attente de son code de vérification : adresse et date de renvoi possible.
 var _pending := {}
+## Fichier de la session : SESSION_PATH dans le jeu, le dossier du processus pour un test.
+var _session_path := SESSION_PATH
 var _pseudo_pattern := RegEx.create_from_string("^[\\p{L}\\p{N}_ .'-]+$")
 
 
 func _ready() -> void:
+	# GameState est chargé avant Account (project.godot) : son dossier est déjà choisi.
+	_session_path = GameState.data_dir() + SESSION_PATH.get_file()
 	_load_session()
 	Api.unauthorized.connect(_on_unauthorized)
+
+
+## Fichier où la session est gardée : user://session.cfg dans le jeu.
+func session_path() -> String:
+	return _session_path
 
 
 func is_logged_in() -> bool:
@@ -263,7 +273,7 @@ func _clear_session() -> void:
 	simulated = false
 	_pending = {}
 	Api.token = ""
-	DirAccess.remove_absolute(ProjectSettings.globalize_path(SESSION_PATH))
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(_session_path))
 
 
 func _save_session(expires_at: int) -> void:
@@ -274,12 +284,12 @@ func _save_session(expires_at: int) -> void:
 	file.set_value("session", "jeton", token)
 	file.set_value("session", "expiration", expires_at)
 	file.set_value("session", "simulee", simulated)
-	file.save(SESSION_PATH)
+	file.save(_session_path)
 
 
 func _load_session() -> void:
 	var file := ConfigFile.new()
-	if file.load(SESSION_PATH) != OK:
+	if file.load(_session_path) != OK:
 		return
 	var expires_at := int(file.get_value("session", "expiration", 0))
 	if expires_at > 0 and expires_at <= int(Time.get_unix_time_from_system()):

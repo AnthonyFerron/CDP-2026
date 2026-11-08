@@ -446,11 +446,11 @@ cap_bottom = false
 """
 
 STELES = [
-    ("Levant", -17.6, -12.0, 90.0, "Stèle du levant", "LEVANT",
+    ("Levant", -17.6, -12.0, 90.0, "Stèle du couchant", "COUCHANT",
      "Les anciens bâtisseurs répétaient le même geste tant que l'ouvrage n'était pas achevé, puis seulement passaient à la suite. Ainsi la jarre se remplit, seau après seau."),
-    ("Zenith", 17.6, -12.0, -90.0, "Stèle du zénith", "ZÉNITH",
+    ("Zenith", 17.6, -12.0, -90.0, "Stèle du levant", "LEVANT",
      "Avant d'ouvrir une porte, les bâtisseurs posaient une question. Selon la réponse, ils agissaient d'une façon, sinon d'une autre."),
-    ("Couchant", -7.0, 8.0, 35.0, "Stèle du couchant", "COUCHANT",
+    ("Couchant", -7.0, 8.0, 35.0, "Stèle du midi", "MIDI",
      "Leurs instructions sont gravées sur des runes. Quand le sable a recouvert le monument, elles se sont dispersées dans ses salles, parmi les débris, et sous les dunes."),
 ]
 # Runes : identifiant, position (x, y, z), dans la cave, cachée sous le sable. Dans la cave, « si » et « fermer »

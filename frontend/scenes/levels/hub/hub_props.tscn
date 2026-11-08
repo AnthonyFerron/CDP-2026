@@ -22967,7 +22967,7 @@ color = Color(1, 0.48, 0.18, 1)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 59, 0.9, 47.5)
 script = ExtResource("3_script")
 title = "Le cahier du meunier"
-body = "Sacs moulus pour la boulangerie et pour la garde, an 5812 : quatre cents, puis plus un seul grain à moudre. Dernière ligne, la veille du départ pour le bunker : « Roue arrêtée, meule calée. Si la rivière retrouve sa force, il suffira d'ôter la cale. »"
+body = "Sacs moulus pour la boulangerie et pour la garde, an 5812 : quarante, puis plus un seul grain à moudre. Dernière ligne, la veille du départ pour le bunker : « Roue arrêtée, meule calée. Si la rivière retrouve sa force, il suffira d'ôter la cale. »"
 prompt = "Lire : Le cahier du meunier"
 radius = 2
 

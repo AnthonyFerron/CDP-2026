@@ -462,7 +462,7 @@ func _refresh_pedestals() -> void:
 		var book: StringName = GameState.ZONE_BOOKS[zone]
 		var pedestal := _pedestal(zone)
 		if GameState.has_placed(book):
-			pedestal.prompt = "%s repose ici" % _book_name(zone).capitalize()
+			pedestal.prompt = "%s repose ici" % _upper_first(_book_name(zone))
 		elif GameState.has_book(book):
 			pedestal.prompt = "Poser %s" % _book_name(zone)
 		else:
@@ -499,7 +499,7 @@ func _on_pedestal(zone: StringName) -> void:
 		_ritual()
 		return
 	if GameState.has_placed(book):
-		_hud.show_message("%s repose sur son piédestal." % _book_name(zone).capitalize())
+		_hud.show_message("%s repose sur son piédestal." % _upper_first(_book_name(zone)))
 		return
 	if not GameState.has_book(book):
 		_hud.show_message("Ce piédestal attend %s, caché dans %s." % [_book_name(zone), ZONE_NAMES[zone]])
@@ -582,7 +582,7 @@ func _ritual() -> void:
 	camera.look_at(center + Vector3(0.8, -1.8, 1.2))
 	camera.current = true
 	await _hud.fade(false)
-	_hud.show_message("Les survivants sortent du bunker. Merlon lève les mains au-dessus du cercle et prononce une ancienne incantation…")
+	_hud.show_message("Merlon lève les mains au-dessus du cercle et prononce une ancienne incantation…")
 	var beams := _raise_beams(center)
 	_raise_arms(1.2)
 	var orb: OmniLight3D = _merlon.find_child("OrbLight")

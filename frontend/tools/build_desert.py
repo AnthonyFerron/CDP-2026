@@ -1,5 +1,5 @@
 """Génère les objets fixes du désert de Pythania : l'arche d'entrée et l'allée des obélisques, le monument des
-anciens bâtisseurs (salle des colonnes, chambres du levant et du zénith, sanctuaire englouti), la caravane, l'oasis
+anciens bâtisseurs (salle des colonnes, chambres du couchant et du levant, sanctuaire englouti), la caravane, l'oasis
 asséchée, la citerne, la tête de la statue, les ruines des dunes et la cave des archives.
 
 Les scènes produites s'ouvrent et se modifient dans Godot, mais le script les écrase :
@@ -657,7 +657,7 @@ def build_avenue(scene, rng):
 
 def build_monument(scene, rng):
     """Vestiges du monument des anciens bâtisseurs, centré en z = -6 : la salle des colonnes dallée, où la trappe
-    de pierre s'ouvre sous le sable, entre les chambres du levant (ouest) et du zénith (est), devant le
+    de pierre s'ouvre sous le sable, entre les chambres du couchant (ouest) et du levant (est), devant le
     sanctuaire englouti au nord. Les pans de murs ont des hauteurs inégales et des brèches comblées de gravats."""
     for x in (-8.0, -4.0, 0.0, 4.0, 8.0):
         for z in (-14.0, -10.0, -6.0, -2.0, 2.0):
@@ -722,7 +722,7 @@ def build_monument(scene, rng):
 
 
 def build_west_room(scene, rng):
-    """Chambre du levant, à l'ouest de la salle : sa stèle (desert.tscn), une rune parmi les gravats, des jarres."""
+    """Chambre du couchant, à l'ouest de la salle : sa stèle (desert.tscn), une rune parmi les gravats, des jarres."""
     wall_piece(scene, -19.8, -14.6, 5.6, 2.8, 90.0)
     wall_piece(scene, -19.8, -7.9, 2.6, 2.0, 90.0)
     wall_piece(scene, -16.2, -17.4, 6.0, 3.0)
@@ -735,7 +735,7 @@ def build_west_room(scene, rng):
 
 
 def build_east_room(scene, rng):
-    """Chambre du zénith, à l'est : sa stèle (desert.tscn), un tas de sable vide, des tablettes brisées."""
+    """Chambre du levant, à l'est : sa stèle (desert.tscn), un tas de sable vide, des tablettes brisées."""
     wall_piece(scene, 19.8, -12.6, 9.6, 2.6, 90.0)
     wall_piece(scene, 16.2, -17.4, 6.0, 2.4)
     wall_piece(scene, 15.0, -6.6, 3.6, 2.8)

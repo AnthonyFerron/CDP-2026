@@ -313,7 +313,7 @@ CLUES = [
      "des cinq cercles, le nom du royaume transformé selon la règle gravée au mur. Je l'ai noté ici pour ne jamais l'oublier… "
      "et j'ai arraché la page le lendemain.", "Lire le journal", 2.2),
     ("KeeperTomb", 22.15, 1.6, 1.5, "Tombe du gardien",
-     "Ci-gît Aldric, gardien du marais. Né en 5761, mort en 5803. Même la mort ne lui a pas fait quitter son poste.",
+     "Ci-gît Odon, gardien du marais. Né en 5761, mort en 5803. Même la mort ne lui a pas fait quitter son poste.",
      "Lire l'épitaphe", 3.0),
     ("AdaTomb", 10.5, 1.1, 5.85, "Une tombe usée",
      "Ici repose Ada, qui cachait ses lettres en décalant l'alphabet.", "Lire l'épitaphe", 2.2),
@@ -330,7 +330,7 @@ CLUES = [
     ("Notice", 3.6, 1.3, 53.0, "Avis de la capitainerie, an 5807",
      "Par ordre du capitaine du port de Brumeval. Les soldats de Vibelandia ont ouvert les digues du nord, et l'eau "
      "monte chaque nuit. Que chaque famille charge ses barques et gagne le château avant la nouvelle lune ; ne prenez "
-     "que le nécessaire. Personne ne s'abritera dans la crypte des rois : depuis la mort du gardien Aldric, nul ne sait "
+     "que le nécessaire. Personne ne s'abritera dans la crypte des rois : depuis la mort du gardien Odon, nul ne sait "
      "plus l'ouvrir, et l'on dit que son fantôme veille encore au cimetière.", "Lire l'avis", 2.8),
     ("AdaSlate", 11.9, 1.3, 4.4, "L'ardoise d'Ada",
      "Ada apprenait aux enfants de Brumeval à cacher leurs messages. Pour chaque lettre, on avance ou l'on recule dans "
@@ -350,7 +350,7 @@ EPITAPHS = [
     "Codeon I, le Fondateur. Il donna son nom au royaume de Codia, et c'est par ce nom que tout commence.",
     "Codeon II, le Hardi. Sous son règne, le royaume avança de trois pas vers la lumière.",
     "Codeon III, le Prudent. Là où son père avait avancé, il recula de trois pas, pour garder ce qui était acquis.",
-    "Codeon IV, le Juste. Il reprit la marche en avant, de trois pas encore, puis ferma la mine d'argent. Son fils, Codeon V, règne aujourd'hui sur Codia.",
+    "Codeon IV, le Juste. Il reprit la marche en avant, de trois pas encore, et fit creuser la mine d'argent. Son fils, Codeon V, règne aujourd'hui sur Codia.",
 ]
 # Tombeaux des rois, de part et d'autre de l'allée de la chambre de l'ouest (z = -12), à 0,75 m des murs, dans
 # l'ordre de la visite : Codeon I et II face à face à l'entrée de la chambre, Codeon III et IV au fond, près de l'autel.
@@ -596,7 +596,7 @@ def main():
             f"prompt = {quote(prompt)}", f"radius = {radius:g}"])
     # Ce que l'on voit de chaque indice : le journal sur sa caisse, les plaques et les inscriptions gravées.
     node(lines, "Journal", "MeshInstance3D", "Clues/Notebook", props=[at(0.0, -0.085, 0.0, 1.0, 40.0), 'mesh = SubResource("BoxMesh_journal")'])
-    sign(lines, "Plate", "Clues/KeeperTomb", (0.57, -1.2, 0.0), -90.0, "Aldric\nGardien du marais\n5761 - 5803", 3, 1, (0.78, 0.52), 1.5, 0.12)
+    sign(lines, "Plate", "Clues/KeeperTomb", (0.57, -1.2, 0.0), -90.0, "Odon\nGardien du marais\n5761 - 5803", 3, 1, (0.78, 0.52), 1.5, 0.12)
     engraving(lines, "Name", "Clues/AdaTomb", (0.0, 0.13, 0.355), 180.0, "ADA", 0.0042)
     # Panneaux sur poteaux : texte et cadre des deux côtés, pour qu'aucun dos sombre ne se voie à contre-jour.
     sign(lines, "Board", "Clues/Plaque", (0.0, -0.85, -0.35), 0.0, "Crypte du gardien", 1, 0, (1.3, 0.55), 1.05, 0.16,

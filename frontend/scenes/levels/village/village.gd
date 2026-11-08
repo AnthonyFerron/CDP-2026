@@ -14,7 +14,7 @@ const WINDMILL_SPEED := 0.05
 const WHEEL_SPEED := 0.12
 ## Deux fragments par code : le premier explique le langage, le second aide à trouver le résultat.
 const FRAGMENTS: Array[String] = [
-	"Notes de l'archiviste : en HTML, <ul> ouvre une liste à puces. Chaque élément s'écrit entre <li> et </li>, et le navigateur l'affiche sur sa propre ligne.",
+	"Notes de l'archiviste : en HTML, <ul> ouvre une liste à puces. Chaque élément de la liste s'écrit entre <li> et </li>, et le navigateur l'affiche sur sa propre ligne.",
 	"Griffonné dans une marge : tout ce qui est enfermé entre <!-- et --> n'est qu'un commentaire laissé au développeur. Le navigateur ne l'affiche jamais.",
 	"Leçon de style : en CSS, un nom seul vise une balise (p), un point vise une classe (.annonce), un dièse vise un identifiant (#maire). La propriété color fixe la couleur du texte.",
 	"Mot du peintre de la mairie : quand plusieurs règles CSS visent le même élément, la plus précise l'emporte. L'identifiant passe avant la classe, et la classe avant la balise.",
@@ -73,7 +73,7 @@ func _ready() -> void:
 	interaction.prompt_changed.connect(_hud.set_prompt)
 	_hud.reader_closed.connect(_close_panel)
 	_portal.travel_requested.connect(GameState.return_to_hub.bind(ZONE))
-	_portal.refused.connect(_hud.show_message.bind("Le portail reste éteint : trouvez le livre du Village."))
+	_portal.refused.connect(_hud.show_message.bind("Le portail reste éteint : trouvez le livre du village détruit."))
 	_hall_door.interacted.connect(_travel.bind(true))
 	_exit.interacted.connect(_travel.bind(false))
 	for fragment: PaperFragment in _fragments.get_children():
@@ -176,7 +176,7 @@ func _on_storage_opened(had_fragment: bool, storage: Storage) -> void:
 	if had_fragment:
 		_hud.show_message("Vous ouvrez %s : un fragment de papier y est glissé." % storage.furniture_name)
 	else:
-		_hud.show_message("Vous ouvrez %s : il ne contient que de la poussière." % storage.furniture_name)
+		_hud.show_message("Vous ouvrez %s : il n'y a que de la poussière." % storage.furniture_name)
 
 
 func _open_device() -> void:
@@ -269,6 +269,6 @@ func _on_book_taken() -> void:
 	_book.hide()
 	_book_pickup.enabled = false
 	_portal.is_open = true
-	_hud.show_message("Le Codonomicon est à vous. Rapportez-le au château du hub : le portail du Village s'est rouvert.")
+	_hud.show_message("Le Codonomicon est à vous. Rapportez-le au château : le portail du village détruit s'est rouvert.")
 	GameState.collect_book(BOOK_ID)
 	book_collected.emit(BOOK_ID)
