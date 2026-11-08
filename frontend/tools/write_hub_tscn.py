@@ -63,6 +63,13 @@ EXT = [
     ("Script", "res://scenes/levels/hub/hub_sounds.gd", "54_sounds"),
     # Sol et décor dispersé calculés d'avance (tools/bake_lieux.gd).
     ("Resource", "res://scenes/levels/hub/hub_bake.res", "55_bake"),
+    # Feuillage du décor dispersé et des rives, sec avant les livres, qui reverdit à chaque livre posé.
+    ("Shader", "res://scenes/levels/hub/hub_foliage.gdshader", "56_foliage"),
+    ("Script", "res://scenes/levels/hub/hub_villagers.gd", "57_villagers"),
+    # Faune revenue avec les livres : poissons, libellules et papillons (hub_wildlife.gd).
+    ("Script", "res://scenes/levels/hub/hub_wildlife.gd", "58_wildlife"),
+    ("Shader", "res://scenes/levels/hub/hub_insect.gdshader", "59_insect"),
+    ("PackedScene", K + "food_kit/fish.glb", "60_fish"),
 ]
 
 
@@ -135,10 +142,6 @@ fog_light_color = Color(0.45, 0.42, 0.42, 1)
 fog_density = 0.02
 fog_sky_affect = 0.3
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ground"]
-render_priority = 0
-shader = ExtResource("4_ground")
-
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_ripples"]
 seed = 5831
 frequency = 0.05
@@ -149,6 +152,11 @@ width = 256
 height = 256
 seamless = true
 noise = SubResource("FastNoiseLite_ripples")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ground"]
+render_priority = 0
+shader = ExtResource("4_ground")
+shader_parameter/ash_noise = SubResource("NoiseTexture2D_ripples")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_river"]
 render_priority = 0
@@ -902,6 +910,7 @@ def main():
         'bush_models = Array[PackedScene]([ExtResource("25_bush"), ExtResource("26_bush_large")])',
         'rock_models = Array[PackedScene]([ExtResource("27_rock"), ExtResource("28_rocks")])',
         'flower_models = Array[PackedScene]([ExtResource("29_flower_red"), ExtResource("30_flower_yellow"), ExtResource("31_flower_purple")])',
+        'foliage_shader = ExtResource("56_foliage")',
         'bake = ExtResource("55_bake")',
         "",
         '[node name="River" type="Node3D" parent="." node_paths=PackedStringArray("terrain")]',
@@ -912,9 +921,14 @@ def main():
         'reed_models = Array[PackedScene]([ExtResource("32_reed_a"), ExtResource("33_reed_b"), ExtResource("34_grass")])',
         'rock_models = Array[PackedScene]([ExtResource("35_stone_a"), ExtResource("36_stone_c"), ExtResource("37_stone_flat")])',
         'lily_models = Array[PackedScene]([ExtResource("38_lily_large"), ExtResource("39_lily_small")])',
+        'foliage_shader = ExtResource("56_foliage")',
         "",
     ]
     node(lines, "Props", instance="5_props")
+    lines += [
+        '[node name="Wildlife" type="Node3D" parent="." node_paths=PackedStringArray("terrain")]',
+        'script = ExtResource("58_wildlife")', 'terrain = NodePath("../Terrain")', 'insect_shader = ExtResource("59_insect")',
+        'fish_model = ExtResource("60_fish")', ""]
     node(lines, "Campfire", "Node3D", props=[
         "transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)", 'script = ExtResource("11_fire")', "size = 2.0",
         "light_energy = 3.5", "light_range = 12.0", 'crackle_sound = ExtResource("41_crackle")', "crackle_volume_db = -4.0"])
@@ -930,6 +944,11 @@ def main():
 
     hall(lines)
     characters(lines)
+    # Après la victoire, les survivants font leurs tournées dans le village (hub_villagers.gd).
+    lines += [
+        '[node name="Villagers" type="Node3D" parent="." node_paths=PackedStringArray("terrain", "characters", "player")]',
+        'script = ExtResource("57_villagers")', 'terrain = NodePath("../Terrain")', 'characters = NodePath("../Characters")',
+        'player = NodePath("../Player")', ""]
     lore(lines)
     node(lines, "Braziers", "Node3D")
     for index, (x, z) in enumerate(BRAZIERS):

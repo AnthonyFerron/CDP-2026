@@ -25,8 +25,8 @@ const VICTORY_TITLE_HOLD := 3.5
 const ERUPTION_TITLE_HOLD := 5.0
 ## Ce qui n'est que dehors, caché dans le bunker. Les personnages n'y sont pas : le roi, Merlon et les survivants
 ## sont dans l'abri au début de la partie.
-const OUTSIDE: Array[NodePath] = [^"Terrain", ^"Scatter", ^"River", ^"Props", ^"Campfire", ^"Portals", ^"PortalSigns",
-	^"Castle", ^"Lore", ^"Braziers", ^"Bunker", ^"BunkerSign", ^"Volcano"]
+const OUTSIDE: Array[NodePath] = [^"Terrain", ^"Scatter", ^"River", ^"Props", ^"Wildlife", ^"Campfire", ^"Portals",
+	^"PortalSigns", ^"Castle", ^"Lore", ^"Braziers", ^"Bunker", ^"BunkerSign", ^"Volcano"]
 ## Regroupement du décor fixe (hub_props.tscn), et des panneaux.
 const HubBatch := preload("res://scenes/levels/hub/hub_batch.gd")
 ## Les deux personnages à écouter avant de sortir du bunker la première fois.
@@ -69,6 +69,7 @@ const VICTORY_LINES := {
 @onready var _terrain: HubTerrain = $Terrain
 @onready var _scatter: HubScatter = $Scatter
 @onready var _river: HubRiver = $River
+@onready var _wildlife: HubWildlife = $Wildlife
 @onready var _merlon: Readable = $Characters/Merlon
 @onready var _king: Readable = $Characters/Codeon
 @onready var _bunker: Interactable = $Bunker
@@ -82,6 +83,7 @@ const VICTORY_LINES := {
 @onready var _volcano: Volcano = $Volcano
 @onready var _ending: HubEnding = $Ending
 @onready var _circle: Node3D = $Castle/Circle
+@onready var _villagers: HubVillagers = $Villagers
 
 var _life := 0.0
 var _inside := false
@@ -135,6 +137,10 @@ func _ready() -> void:
 		_release_survivors()
 		if not GameState.is_victory_pending():
 			_settle_merlon()
+			# Retour au hub après la victoire : les villageois sont déjà dans leurs tournées (après la cinématique de la
+			# fin, ils partent du feu : _resume_after_victory).
+			if GameState.ending == &"" and not GameState.has_erupted:
+				_villagers.start(false)
 	elif GameState.books.size() >= GameState.BOOK_COUNT:
 		_send_merlon_to_castle()
 	_place_player()
@@ -185,6 +191,7 @@ func _play_ending(ending: StringName) -> void:
 	# La victoire continue après la fin, pendant l'épilogue ; la défaite ne joue qu'une fois, jusqu'au menu principal.
 	Music.play(&"victoire" if ending == &"victory" else &"defaite")
 	if ending == &"victory":
+		_villagers.stop()
 		_release_survivors()
 		_set_repairs(GameState.BOOK_COUNT, false)
 		_ash = 0.0
@@ -219,6 +226,8 @@ func _resume_after_victory() -> void:
 	_player.velocity = Vector3.ZERO
 	_player.get_node("CameraPivot").rotation.y = PI
 	_settle_merlon()
+	# Les survivants quittent le feu de la place, l'un après l'autre, pour leurs tournées dans le village.
+	_villagers.start(true)
 	for zone in ZONES:
 		_portal(zone).is_open = GameState.is_zone_unlocked(zone)
 	_hud.set_crosshair_visible(true)
@@ -416,7 +425,8 @@ func _ash_target() -> float:
 	return 1.0 if GameState.books.size() >= GameState.BOOK_COUNT and placed_count() < GameState.BOOK_COUNT else 0.0
 
 
-## Ciel, brume, lumière, herbe, eau et fleurs suivent les livres posés : de 0 à 1. Les cendres s'y ajoutent.
+## Ciel, brume, lumière, herbe et cendres du sol, feuillage, eau, fleurs et faune suivent les livres posés : de 0 à 1.
+## Les cendres du ciel s'y ajoutent.
 func _apply_life(life: float) -> void:
 	var sky := _environment.sky.sky_material as ProceduralSkyMaterial
 	sky.sky_top_color = dead_sky.lerp(living_sky, life).lerp(ash_sky, _ash)
@@ -432,6 +442,7 @@ func _apply_life(life: float) -> void:
 	(_terrain.ground_material as ShaderMaterial).set_shader_parameter("life", life)
 	_scatter.set_life(life)
 	_river.set_life(life)
+	_wildlife.set_life(life)
 
 
 ## Montre la version reconstruite des éléments dont le palier est atteint, la ruine des autres.
