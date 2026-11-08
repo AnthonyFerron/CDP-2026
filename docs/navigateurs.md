@@ -6,7 +6,7 @@ Vérification du 8 novembre, sur `dev` (65bf07f) puis avec les corrections de la
 
 | Navigateur testé | Démarrage, menu, son, `musique.pck` | Partie (bunker, hub, Plaine) | Ce qui reste |
 | --- | --- | --- | --- |
-| Chromium 156 | Oui | Oui : clavier, souris capturée, caméra à la souris, E, H, Échap, musique de chaque lieu | Rien de propre au jeu. Le processus graphique de Chromium a planté une fois au hub, avec un rendu logiciel |
+| Chromium 156 | Oui | Oui : clavier, souris capturée, caméra à la souris, E, H, Échap, musique de chaque lieu | Avec une fenêtre, le processus graphique (rendu logiciel) s'arrête au premier dessin du hub dehors : le joueur voit maintenant un message en français, au lieu d'un écran noir. Sans fenêtre, aucun arrêt |
 | WebKit 27.2 (moteur de Safari) | Oui, **après correction** : avant, le jeu ne démarrait pas quand le paquet arrivait en gzip | Oui : clavier, souris capturée, E, H, Échap, musique de la Plaine venue de `musique.pck` | Une erreur WebGL à chaque image (`glBlitFramebuffer`, présentation d'Emscripten), sans effet visible. Caméra à la souris non vérifiable avec l'outil |
 | Firefox 157 | Oui | Le bunker, avec un rendu logiciel plus lent (softpipe) : clavier, souris capturée, caméra à la souris, E, H, Échap, musique. Avec le rendu logiciel habituel (llvmpipe), Firefox plante au premier dessin du bunker | À essayer sur un vrai PC |
 
@@ -88,17 +88,16 @@ Ce banc n'a pas de carte graphique : chaque navigateur y dessine en logiciel. Ch
   - Godot traite le clic à l'image suivante. Si une image dure plus d'une seconde, le clic ne capture pas la souris : vu avec softpipe, où il a fallu un second clic.
   - Sur une machine normale, une image dure bien moins d'une seconde. Le joueur n'a qu'à recliquer.
 
-### Chromium : processus graphique planté une fois
+### Chromium avec fenêtre : processus graphique arrêté au hub
 
-- **Ce qui s'est passé.** Une seule fois, au premier dessin du hub dehors, dans Chromium avec fenêtre (Xvfb) : « GPU process exited unexpectedly ».
-  - Le contexte WebGL est perdu, puis Chromium le recrée, mais Godot ne sait pas s'en servir.
-  - Ensuite : écran noir, et des milliers d'erreurs `glBlitFramebuffer` (« Blit feedback loop ») sur le cadre par défaut.
-  - Le son, le clavier et les scènes continuaient.
-- **Le même parcours sans fenêtre est passé au même endroit sans plantage.**
+- **Ce qui s'est passé.** Dans Chromium lancé avec une fenêtre (Xvfb), au premier dessin du hub dehors, juste après la sortie du bunker : « GPU process exited unexpectedly: exit_code=512 ». Deux fois sur deux passages.
+  - Le contexte WebGL est perdu. Chromium en recrée un, mais Godot ne sait pas s'en servir.
+  - Avant la correction : alerte en anglais, puis écran noir et des milliers d'erreurs WebGL (« Blit feedback loop », « object does not belong to this context »). Le son, le clavier et les scènes continuaient.
+  - Après la correction : le message en français et le bouton « Recharger la page » (`mesures/ch_final/11_hub_dehors.png`).
+- **Sans fenêtre, le même parcours est passé au même endroit sans arrêt** (`mesures/ch_sonde_2/`), comme dans WebKit.
 - **Ce qu'on en conclut.**
-  - La cause n'est pas trouvée : le processus graphique (SwiftShader, rendu logiciel) s'est arrêté avec le code 512, sans pile exploitable.
-  - Pour un joueur, c'est l'équivalent d'une réinitialisation du pilote graphique.
-- **Ce qui change pour le joueur.** Le cas est maintenant expliqué en français, avec un bouton pour recharger, au lieu de l'alerte en anglais et de l'écran noir.
+  - La cause n'est pas trouvée : le processus graphique (SwiftShader, rendu logiciel) s'arrête sans pile exploitable. Avec une fenêtre, il dessine aussi la page à l'écran, et le hub dehors est la scène la plus chargée du jeu.
+  - Pour un joueur, ce serait l'équivalent d'une réinitialisation du pilote graphique. Le hub dehors est à essayer sur un PC modeste, avec une puce graphique intégrée.
 
 ### WebKit : une erreur `glBlitFramebuffer` à chaque image
 
@@ -119,14 +118,15 @@ Ce banc n'a pas de carte graphique : chaque navigateur y dessine en logiciel. Ch
 - Ce n'est qu'un avertissement, sans effet. Il partira avec un moteur compilé avec la nouvelle forme.
 - Dans le bunker, Firefox écrit aussi une trentaine de fois « getBufferSubData: Reading from a buffer with usage other than *_READ causes pipeline stalls », puis cesse de les compter. C'est un conseil de performance sur une lecture de tampon faite par le moteur, pas une erreur.
 
-### Verrou de la souris dans un navigateur sans écran
+### Verrou de la souris
 
 - **Les trois navigateurs** posent le verrou à l'image suivante d'un clic ou d'une touche, comme le fait Godot : vérifié avec fenêtre (Xvfb), sur une page de test et dans le jeu.
 - **Sans écran :**
   - WebKit refuse toujours le verrou (« Pointer lock requires the window to have focus ») ;
   - Chromium le pose, mais ses mouvements ont `movementX = 0`.
-- **Avec fenêtre, WebKit** pose le verrou, mais Playwright n'y produit pas de déplacement. La caméra à la souris n'a donc été vérifiée dans le jeu qu'avec Chromium.
-- **Au début d'un lieu**, le jeu demande la souris longtemps après le dernier geste (le chargement dure plusieurs secondes). Le navigateur refuse alors : WebKit écrit « NotAllowedError: Pointer lock requires a user gesture ». Le premier clic dans le jeu la capture (`player.gd`), comme prévu.
+- **Avec fenêtre, WebKit** pose le verrou, mais Playwright n'y produit pas de déplacement. La caméra à la souris a donc été vérifiée dans le jeu avec Chromium et Firefox, pas avec WebKit.
+- **Au début d'un lieu**, le jeu demande la souris longtemps après le dernier geste (le chargement dure plusieurs secondes). Le navigateur refuse alors (Chromium : « A user gesture is required to request Pointer Lock », WebKit : « Pointer lock requires a user gesture », Firefox : « not called from inside a short running user-generated event handler »). Le premier clic dans le jeu la capture (`player.gd`), comme prévu.
+  - Ce refus finissait en erreur non traitée dans la console (promesse rejetée). La page le note maintenant comme une information : « Souris non capturée (…) : un clic dans le jeu la capture. »
 
 ### Clavier : ZQSD et WASD
 
@@ -152,9 +152,9 @@ Le menu est repéré à la demande de `musique.pck`, que le jeu lance deux image
 | Musique du menu après le premier clic | oui | oui | oui |
 | `musique.pck` reçu et repris | oui | oui | oui |
 | Bunker, H, Échap, ZQSD | oui | oui | plantage au menu, pendant la préparation des shaders (llvmpipe) |
-| Erreurs JavaScript ou de Godot | aucune | l'erreur `glBlitFramebuffer` de WebKit | aucune avant le plantage |
+| Erreurs JavaScript ou de Godot | aucune | l'erreur `glBlitFramebuffer` de WebKit (sans compter celles des relevés de l'outil) | aucune avant le plantage |
 
-Captures et journaux : `mesures/ch_prod_1/`, `mesures/wk_prod_1/` et `mesures/ff_prod_1/`.
+Captures et journaux : `mesures/ch_prod_1/`, `mesures/wk_prod_1/` et `mesures/ff_prod_1/`. Le passage dans Chromium a été refait sur l'export final, avec toutes les corrections : `mesures/ch_final/` (fenêtre) et `mesures/ch_final_sans_ecran/`.
 
 ### Variante avec sonde : temps exacts
 
