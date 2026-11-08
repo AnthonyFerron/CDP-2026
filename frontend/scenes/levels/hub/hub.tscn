@@ -49,6 +49,7 @@
 [ext_resource type="PackedScene" path="res://scenes/levels/hub/hub_bunker.tscn" id="51_bunker"]
 [ext_resource type="Script" path="res://scenes/levels/hub/hub_river.gd" id="52_river"]
 [ext_resource type="Shader" path="res://scenes/levels/hub/hub_water.gdshader" id="53_water"]
+[ext_resource type="Resource" path="res://scenes/levels/hub/hub_bake.res" id="54_bake"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_hub"]
 sky_top_color = Color(0.3, 0.29, 0.36, 1)
@@ -438,6 +439,7 @@ directional_shadow_max_distance = 50.0
 [node name="Terrain" type="StaticBody3D" parent="."]
 script = ExtResource("2_terrain")
 ground_material = SubResource("ShaderMaterial_ground")
+bake = ExtResource("54_bake")
 
 [node name="Scatter" type="Node3D" parent="." node_paths=PackedStringArray("terrain")]
 script = ExtResource("3_scatter")
@@ -446,6 +448,7 @@ tree_models = Array[PackedScene]([ExtResource("20_tree_default"), ExtResource("2
 bush_models = Array[PackedScene]([ExtResource("25_bush"), ExtResource("26_bush_large")])
 rock_models = Array[PackedScene]([ExtResource("27_rock"), ExtResource("28_rocks")])
 flower_models = Array[PackedScene]([ExtResource("29_flower_red"), ExtResource("30_flower_yellow"), ExtResource("31_flower_purple")])
+bake = ExtResource("54_bake")
 
 [node name="River" type="Node3D" parent="." node_paths=PackedStringArray("terrain")]
 script = ExtResource("52_river")

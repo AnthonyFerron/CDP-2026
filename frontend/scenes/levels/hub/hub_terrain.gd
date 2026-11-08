@@ -131,9 +131,17 @@ const BUILDING_FLOORS: Array[Rect2] = [
 ]
 
 @export var ground_material: Material
+## Hauteurs, rives et couleurs du sol calculées d'avance (tools/bake_lieux.gd, hub_bake.res). Sans elles, ou si elles
+## ne correspondent plus aux réglages, le sol est calculé au chargement, comme avant.
+@export var bake: LevelBake
+
+## Nom du sol dans le calcul d'avance du lieu.
+const BAKE_PART := "hub/sol"
 
 var _relief := FastNoiseLite.new()
 var _peaks := FastNoiseLite.new()
+## Vrai si le sol vient du calcul d'avance : le décor dispersé peut alors lire le sien.
+var baked := false
 ## Hauteurs aux sommets de la grille du maillage, pour retrouver la hauteur exacte du sol affiché.
 var _heights := PackedFloat32Array()
 ## Distance de chaque sommet au bord de l'eau la plus proche : négative dans l'eau.
@@ -381,6 +389,45 @@ static func carve(natural: float, distance: float, half_width: float, level: flo
 
 
 func _build() -> void:
+	var signature := LevelBake.signature_of(self)
+	var scripts: Array[Script] = [get_script()]
+	var grid: Variant = bake.data(BAKE_PART, signature, scripts) if bake else null
+	baked = grid != null and _spot_check(grid[0], grid[1])
+	if grid != null and not baked:
+		push_warning("Calcul d'avance « %s » périmé (relief changé), relancer tools/bake_lieux.gd" % BAKE_PART)
+	if not baked:
+		grid = _compute_grid()
+		LevelBake.record(BAKE_PART, signature, scripts, grid)
+	var heights: PackedFloat32Array = grid[0]
+	var surface := TerrainGrid.assemble(heights, grid[2], COLUMNS, ROWS, GRID_ORIGIN.x, GRID_ORIGIN.y, CELL_SIZE)
+	var vertices: PackedVector3Array = surface[0]
+
+	var arrays := []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = vertices
+	arrays[Mesh.ARRAY_NORMAL] = surface[1]
+	arrays[Mesh.ARRAY_COLOR] = surface[2]
+	var mesh := ArrayMesh.new()
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	mesh.surface_set_material(0, ground_material)
+
+	var mesh_instance := MeshInstance3D.new()
+	mesh_instance.mesh = mesh
+	add_child(mesh_instance)
+
+	_heights = heights
+	_shore = grid[1]
+	var shape := ConcavePolygonShape3D.new()
+	shape.set_faces(vertices)
+	var collision := CollisionShape3D.new()
+	collision.shape = shape
+	add_child(collision)
+
+
+## Ce que le chargement calculait : la hauteur de chaque sommet de la grille (rivière et étangs creusés), sa distance
+## au bord de l'eau, et la couleur de chaque case (octets RGBA8, TerrainGrid). C'est la partie lente, calculée
+## d'avance par tools/bake_lieux.gd.
+func _compute_grid() -> Array:
 	var stride := COLUMNS + 1
 	var heights := PackedFloat32Array()
 	heights.resize(stride * (ROWS + 1))
@@ -391,62 +438,41 @@ func _build() -> void:
 		for column in stride:
 			heights[row * stride + column] = height_at(GRID_ORIGIN.x + column * CELL_SIZE, GRID_ORIGIN.y + row * CELL_SIZE)
 	_carve_waters(heights, shore)
-
-	var vertices := PackedVector3Array()
-	var normals := PackedVector3Array()
 	var colors := PackedColorArray()
-	for array: Variant in [vertices, normals, colors]:
-		array.resize(COLUMNS * ROWS * 6)
-	var index := 0
+	colors.resize(COLUMNS * ROWS)
 	for row in ROWS:
 		for column in COLUMNS:
 			var x := GRID_ORIGIN.x + column * CELL_SIZE
 			var z := GRID_ORIGIN.y + row * CELL_SIZE
 			var first := row * stride + column
-			var corners: Array[int] = [first, first + 1, first + stride, first + stride + 1]
-			var points: Array[Vector3] = [
-				Vector3(x, heights[first], z),
-				Vector3(x + CELL_SIZE, heights[first + 1], z),
-				Vector3(x, heights[first + stride], z + CELL_SIZE),
-				Vector3(x + CELL_SIZE, heights[first + stride + 1], z + CELL_SIZE),
-			]
 			var average := 0.0
 			var wet := 0.0
-			for corner in corners:
+			for corner: int in [first, first + 1, first + stride, first + stride + 1]:
 				average += heights[corner] * 0.25
 				wet += shore[corner] * 0.25
-			var color := _face_color(x + CELL_SIZE * 0.5, z + CELL_SIZE * 0.5, average, wet)
-			for triangle: Array in [[0, 1, 2], [1, 3, 2]]:
-				var a := points[triangle[0]]
-				var b := points[triangle[1]]
-				var c := points[triangle[2]]
-				var normal := (c - a).cross(b - a).normalized()
-				for vertex in [a, b, c]:
-					vertices[index] = vertex
-					normals[index] = normal
-					colors[index] = color
-					index += 1
+			colors[row * COLUMNS + column] = _face_color(x + CELL_SIZE * 0.5, z + CELL_SIZE * 0.5, average, wet)
+	return [heights, shore, TerrainGrid.colors_to_bytes(colors)]
 
-	var arrays := []
-	arrays.resize(Mesh.ARRAY_MAX)
-	arrays[Mesh.ARRAY_VERTEX] = vertices
-	arrays[Mesh.ARRAY_NORMAL] = normals
-	arrays[Mesh.ARRAY_COLOR] = colors
-	var mesh := ArrayMesh.new()
-	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
-	mesh.surface_set_material(0, ground_material)
 
-	var mesh_instance := MeshInstance3D.new()
-	mesh_instance.mesh = mesh
-	add_child(mesh_instance)
-
-	_heights = heights
-	_shore = shore
-	var shape := ConcavePolygonShape3D.new()
-	shape.set_faces(vertices)
-	var collision := CollisionShape3D.new()
-	collision.shape = shape
-	add_child(collision)
+## Vrai si les hauteurs calculées d'avance redonnent celles du relief en quelques sommets loin de l'eau (la rivière
+## et les étangs creusent les autres) : le relief n'a pas changé sans que ses réglages changent. Le bruit peut
+## différer d'un processeur à l'autre de quelques millionièmes, pas d'un millimètre.
+func _spot_check(heights: PackedFloat32Array, shore: PackedFloat32Array) -> bool:
+	var stride := COLUMNS + 1
+	if heights.size() != stride * (ROWS + 1) or shore.size() != heights.size():
+		return false
+	var checked := 0
+	for spot: Vector2i in [Vector2i(0, 0), Vector2i(COLUMNS / 2, ROWS / 2), Vector2i(COLUMNS / 3, ROWS * 2 / 3),
+			Vector2i(COLUMNS * 3 / 5, ROWS / 4), Vector2i(COLUMNS * 7 / 10, ROWS * 3 / 5), Vector2i(COLUMNS / 2, ROWS * 3 / 4),
+			Vector2i(COLUMNS / 4, ROWS / 4), Vector2i(COLUMNS * 3 / 4, ROWS * 3 / 4), Vector2i(COLUMNS, ROWS)]:
+		var vertex := spot.y * stride + spot.x
+		if shore[vertex] < 999.0:
+			continue
+		var height := height_at(GRID_ORIGIN.x + spot.x * CELL_SIZE, GRID_ORIGIN.y + spot.y * CELL_SIZE)
+		if absf(heights[vertex] - height) > 0.001:
+			return false
+		checked += 1
+	return checked >= 3
 
 
 ## Creuse la rivière et les étangs dans les hauteurs des sommets. Chaque tronçon ne mesure que les sommets

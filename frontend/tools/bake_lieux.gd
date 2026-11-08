@@ -16,6 +16,7 @@ const LEVELS := {
 	"village": "res://scenes/levels/village/village.tscn",
 	"desert": "res://scenes/levels/desert/desert.tscn",
 	"hub": "res://scenes/levels/hub/hub.tscn",
+	"marais": "res://scenes/levels/marais/marais.tscn",
 }
 
 
