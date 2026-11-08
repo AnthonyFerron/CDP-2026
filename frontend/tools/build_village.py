@@ -1325,8 +1325,9 @@ def build_gate_defense(scene, rng):
         lay(scene, model, (x, 0.0, z), rng.uniform(0, 360), flat(model, scale), tilt=90.0)
     # Bannière de Codia arrachée, couchée au pied de la tour.
     lay(scene, "castle_kit/flag-banner-long", (-11.5, 0.0, 35.0), 0.0, 1.4, roll=90.0)
-    # Flèches de Vibelandia fichées dans le sol et dans les charrettes.
-    for x, z, degrees, lean in ((-3.3, 33.0, 20.0, 35.0), (3.1, 31.4, 200.0, 40.0), (-4.2, 27.2, 150.0, 30.0),
+    # Flèches de Vibelandia fichées dans le sol et dans les charrettes. Celle du côté de la boulangerie se tient à
+    # l'écart de l'axe de sa porte (z = 32) : en (3,1 ; 31,4), on butait dessus en sortant tout droit, à 2,8 m de la porte.
+    for x, z, degrees, lean in ((-3.3, 33.0, 20.0, 35.0), (3.1, 30.0, 200.0, 40.0), (-4.2, 27.2, 150.0, 30.0),
                                 (3.4, 41.2, 10.0, 45.0), (-2.4, 44.0, 0.0, 50.0), (5.0, 36.1, 260.0, 30.0)):
         decor(scene, "mini_forest/weapon-arrow", (x, 0.12, z), degrees, 3.0, tilt=lean)
         shaft(scene, (x, 0.12, z), degrees, 3.0, lean, 0.23, label="flèche fichée")

@@ -2703,7 +2703,7 @@ transforms = Array[Transform3D]([Transform3D(2.95442, 0, 0.52094, 0, 3, 0, -0.52
 [node name="mini_forest_weapon_arrow" type="Node3D" parent="Instances"]
 script = ExtResource("instances")
 model = ExtResource("116_model")
-transforms = Array[Transform3D]([Transform3D(2.81908, 0.58852, 0.8405, 0, 2.45746, -1.72073, -1.02606, 1.61696, 2.30925, -3.3, 0.12, 33), Transform3D(-2.81908, -0.65954, -0.78601, 0, 2.29813, -1.92836, 1.02606, -1.81207, -2.15954, 3.1, 0.12, 31.4), Transform3D(-2.59808, 0.75, 1.29904, 0, 2.59808, -1.5, -1.5, -1.29904, -2.25, -4.2, 0.12, 27.2), Transform3D(2.95442, 0.36836, 0.36836, 0, 2.12132, -2.12132, -0.52094, 2.08909, 2.08909, 3.4, 0.12, 41.2), Transform3D(3, 0, 0, 0, 1.92836, -2.29813, 0, 2.29813, 1.92836, -2.4, 0.12, 44), Transform3D(-0.52094, -1.47721, -2.55861, 0, 2.59808, -1.5, 2.95442, -0.26047, -0.45115, 5, 0.12, 36.1)])
+transforms = Array[Transform3D]([Transform3D(2.81908, 0.58852, 0.8405, 0, 2.45746, -1.72073, -1.02606, 1.61696, 2.30925, -3.3, 0.12, 33), Transform3D(-2.81908, -0.65954, -0.78601, 0, 2.29813, -1.92836, 1.02606, -1.81207, -2.15954, 3.1, 0.12, 30), Transform3D(-2.59808, 0.75, 1.29904, 0, 2.59808, -1.5, -1.5, -1.29904, -2.25, -4.2, 0.12, 27.2), Transform3D(2.95442, 0.36836, 0.36836, 0, 2.12132, -2.12132, -0.52094, 2.08909, 2.08909, 3.4, 0.12, 41.2), Transform3D(3, 0, 0, 0, 1.92836, -2.29813, 0, 2.29813, 1.92836, -2.4, 0.12, 44), Transform3D(-0.52094, -1.47721, -2.55861, 0, 2.59808, -1.5, 2.95442, -0.26047, -0.45115, 5, 0.12, 36.1)])
 visibility_end = 45
 
 [node name="nature_kit_crops_dirtDoubleRow" type="Node3D" parent="Instances"]
@@ -6151,7 +6151,7 @@ transform = Transform3D(0.93969, 0, 0.34202, 0, 1, 0, -0.34202, 0, 0.93969, -3.3
 shape = SubResource("BoxShape3D_122")
 
 [node name="Box577" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.93969, 0, -0.34202, 0, 1, 0, 0.34202, 0, -0.93969, 3.16593, 0.28176, 31.5812)
+transform = Transform3D(-0.93969, 0, -0.34202, 0, 1, 0, 0.34202, 0, -0.93969, 3.16593, 0.28176, 30.1811)
 shape = SubResource("BoxShape3D_123")
 
 [node name="Box578" type="CollisionShape3D" parent="Collision"]
