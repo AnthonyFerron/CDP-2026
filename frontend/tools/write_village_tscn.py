@@ -209,6 +209,13 @@ CATS = [
     ("Color(0.07, 0.07, 0.08, 1)", [(-4.6, 0.0, -18.7), (-1.9, 0.0, -18.4), (-3.4, 0.0, -17.3)]),
     ("Color(0.45, 0.36, 0.27, 1)", [(-17.2, 0.0, 26.6), (-18.6, 0.0, 31.4), (-21.8, 0.0, 31.6), (-17.0, 0.0, 30.0)]),
 ]
+# Godot ajoute au volume d'une source 3D le gain de sa distance (unit_size), avant de plafonner à max_db (3 dB par
+# défaut) : une source à 1 ou 2 m montait de 7 dB au-dessus de son volume, et le ruisseau, sous le pont, poussait le
+# mélange à -6 dBFS de crête. Comme au hub (docs/sons.md) : l'eau qui coule ne dépasse pas son volume de plus de 1 dB,
+# une source ponctuelle (la roue) de plus de 3 dB.
+STREAM_VOLUME = -4.0
+STREAM_NEAR_GAIN = 1.0
+NEAR_GAIN = {"WheelSound": 3.0}
 # Sons posés sur les objets : nom, son, position, volume, portée.
 SOUNDS = [
     ("WheelSound", "41_stream", (-36.5, 0.5, -14.0), -2.0, 26.0, 0.75),
@@ -443,7 +450,8 @@ def main():
     for index, (x, z) in enumerate(((-38.0, 6.0), (-38.0, -22.0))):
         node(lines, f"StreamSound{index}", "AudioStreamPlayer3D", props=[
             f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {x:g}, 0, {z:g})", 'stream = ExtResource("41_stream")',
-            "volume_db = -4.0", "unit_size = 6.0", "max_distance = 35.0", "autoplay = true"])
+            f"volume_db = {STREAM_VOLUME:g}", f"max_db = {STREAM_VOLUME + STREAM_NEAR_GAIN:g}", "unit_size = 6.0",
+            "max_distance = 35.0", "autoplay = true"])
     node(lines, "Fires", "Node3D")
     for index, (x, z, size) in enumerate(FIRES):
         node(lines, f"Fire{index}", "Node3D", "Fires", props=[
@@ -483,9 +491,10 @@ def main():
         "kind = 2", "extents = Vector3(0.35, 0.05, 1.5)", "tint = Color(0.75, 0.86, 0.95, 1)"])
     node(lines, "Sounds", "Node3D")
     for name, stream, (x, y, z), volume, reach, pitch in SOUNDS:
+        cap = [f"max_db = {volume + NEAR_GAIN[name]:g}"] if name in NEAR_GAIN else []
         node(lines, name, "AudioStreamPlayer3D", "Sounds", props=[
             f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {x:g}, {y:g}, {z:g})", f'stream = ExtResource("{stream}")',
-            f"volume_db = {volume:g}", "unit_size = 5.0", f"max_distance = {reach:g}", f"pitch_scale = {pitch:g}",
+            f"volume_db = {volume:g}"] + cap + ["unit_size = 5.0", f"max_distance = {reach:g}", f"pitch_scale = {pitch:g}",
             "autoplay = true"])
     for index, (x, y, z) in enumerate(LANTERNS):
         node(lines, f"LanternLight{index}", "OmniLight3D", props=[
