@@ -15,7 +15,7 @@ import random
 import re
 from pathlib import Path
 
-from build_plaine import (SHELVES, DOORWAY_HEIGHT, MODEL_BOXES, WALL_HEIGHT, WALL_SCALE, WALL_THICKNESS, Scene, arch_fill, doorway,
+from build_plaine import (SHELVES, MODEL_BOXES, WALL_HEIGHT, WALL_SCALE, WALL_THICKNESS, Scene, arch_fill, doorway,
                           furniture, multiply, rotation_x, rotation_y, rotation_z, transform_text, wall)
 
 OUTPUT = Path(__file__).resolve().parent.parent / "scenes" / "levels" / "village" / "village_props.tscn"
@@ -1325,8 +1325,9 @@ def build_gate_defense(scene, rng):
         lay(scene, model, (x, 0.0, z), rng.uniform(0, 360), flat(model, scale), tilt=90.0)
     # Bannière de Codia arrachée, couchée au pied de la tour.
     lay(scene, "castle_kit/flag-banner-long", (-11.5, 0.0, 35.0), 0.0, 1.4, roll=90.0)
-    # Flèches de Vibelandia fichées dans le sol et dans les charrettes.
-    for x, z, degrees, lean in ((-3.3, 33.0, 20.0, 35.0), (3.1, 31.4, 200.0, 40.0), (-4.2, 27.2, 150.0, 30.0),
+    # Flèches de Vibelandia fichées dans le sol et dans les charrettes. Celle du côté de la boulangerie se tient à
+    # l'écart de l'axe de sa porte (z = 32) : en (3,1 ; 31,4), on butait dessus en sortant tout droit, à 2,8 m de la porte.
+    for x, z, degrees, lean in ((-3.3, 33.0, 20.0, 35.0), (3.1, 30.0, 200.0, 40.0), (-4.2, 27.2, 150.0, 30.0),
                                 (3.4, 41.2, 10.0, 45.0), (-2.4, 44.0, 0.0, 50.0), (5.0, 36.1, 260.0, 30.0)):
         decor(scene, "mini_forest/weapon-arrow", (x, 0.12, z), degrees, 3.0, tilt=lean)
         shaft(scene, (x, 0.12, z), degrees, 3.0, lean, 0.23, label="flèche fichée")
@@ -1716,14 +1717,8 @@ def room_walls(scene, cx, cz, width, depth, base, doors, skip=(), closed=(), mod
                       size, label="montant", structure=True)
             lintel = (0.5, 1.1, 1.9) if outward[0] else (1.9, 1.1, 0.5)
             scene.add_box((center[0], base + WALL_HEIGHT - 0.55, center[1]), lintel)
-            # Les montants laissent ±0,95 m comme doorway() : même complément que arch_fill(), posé à l'étage.
-            for sign in (-1, 1):
-                for inner, outer, low, high in ((0.8, 0.95, 0.0, DOORWAY_HEIGHT), (0.5, 0.8, 2.3, DOORWAY_HEIGHT),
-                                                (0.15, 0.5, 2.7, DOORWAY_HEIGHT)):
-                    offset = sign * (inner + outer) / 2
-                    width = outer - inner
-                    size = (WALL_THICKNESS, high - low, width) if outward[0] else (width, high - low, WALL_THICKNESS)
-                    scene.add_box((center[0] + along[0] * offset, base + (low + high) / 2, center[1] + along[1] * offset), size)
+            # Les montants laissent ±0,95 m comme doorway() : même complément, posé à l'étage.
+            arch_fill(scene, center, outward, base=base)
         else:
             vwall(scene, models[(index + len(side)) % len(models)], center, outward, base=base, group="murs")
     half_w, half_d = width * TILE / 2, depth * TILE / 2
