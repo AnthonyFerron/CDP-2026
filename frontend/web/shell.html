@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="fr">
+<!--
+	Page du jeu sur le web : le modèle de Godot 4.7.2 (godot.html des modèles d'export), avec des messages en français
+	quand le jeu ne peut pas démarrer, et ce qu'il faut faire. Voir docs/web-threads.md, partie « Navigateurs ».
+	Les mots commençant par $GODOT_ sont remplis par Godot à l'export (préréglage « Web », html/custom_html_shell).
+-->
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+		<title>$GODOT_PROJECT_NAME</title>
+		<style>
+html, body, #canvas {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+body {
+	color: white;
+	background-color: black;
+	overflow: hidden;
+	touch-action: none;
+}
+
+#canvas {
+	display: block;
+}
+
+#canvas:focus {
+	outline: none;
+}
+
+#status, #status-splash, #status-progress {
+	position: absolute;
+	left: 0;
+	right: 0;
+}
+
+#status, #status-splash {
+	top: 0;
+	bottom: 0;
+}
+
+#status {
+	background-color: $GODOT_SPLASH_COLOR;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	visibility: hidden;
+}
+
+#status-splash {
+	max-height: 100%;
+	max-width: 100%;
+	margin: auto;
+}
+
+#status-splash.show-image--false {
+	display: none;
+}
+
+#status-splash.fullsize--true {
+	height: 100%;
+	width: 100%;
+	object-fit: contain;
+}
+
+#status-splash.use-filter--false {
+	image-rendering: pixelated;
+}
+
+#status-progress, #status-notice {
+	display: none;
+}
+
+#status-progress {
+	bottom: 10%;
+	width: 50%;
+	margin: 0 auto;
+}
+
+#status-notice {
+	background-color: #5b3943;
+	border-radius: 0.5rem;
+	border: 1px solid #9b3943;
+	color: #e0e0e0;
+	font-family: 'Noto Sans', 'Droid Sans', Arial, sans-serif;
+	line-height: 1.3;
+	margin: 0 2rem;
+	overflow: hidden;
+	padding: 1rem;
+	text-align: center;
+	z-index: 1;
+	max-width: 46rem;
+}
+
+#status-notice .detail {
+	color: #b8a8ac;
+	font-size: 0.85em;
+}
+		</style>
+		$GODOT_HEAD_INCLUDE
+	</head>
+	<body>
+		<canvas id="canvas">
+			Votre navigateur ne sait pas afficher le jeu (balise canvas).
+		</canvas>
+
+		<noscript>
+			Le jeu a besoin de JavaScript : activez-le pour ce site, puis rechargez la page.
+		</noscript>
+
+		<div id="status">
+			<img id="status-splash" class="$GODOT_SPLASH_CLASSES" src="$GODOT_SPLASH" alt="">
+			<progress id="status-progress"></progress>
+			<div id="status-notice"></div>
+		</div>
+
+		<script src="$GODOT_URL"></script>
+		<script>
+const GODOT_CONFIG = $GODOT_CONFIG;
+const GODOT_THREADS_ENABLED = $GODOT_THREADS_ENABLED;
+const engine = new Engine(GODOT_CONFIG);
+
+(function () {
+	const statusOverlay = document.getElementById('status');
+	const statusProgress = document.getElementById('status-progress');
+	const statusNotice = document.getElementById('status-notice');
+
+	let initializing = true;
+	let statusMode = '';
+
+	function setStatusMode(mode) {
+		if (statusMode === mode || !initializing) {
+			return;
+		}
+		if (mode === 'hidden') {
+			statusOverlay.remove();
+			initializing = false;
+			return;
+		}
+		statusOverlay.style.visibility = 'visible';
+		statusProgress.style.display = mode === 'progress' ? 'block' : 'none';
+		statusNotice.style.display = mode === 'notice' ? 'block' : 'none';
+		statusMode = mode;
+	}
+
+	// Message au joueur, puis le détail technique (en anglais, celui de Godot) en plus petit.
+	function setStatusNotice(text, detail = '') {
+		while (statusNotice.lastChild) {
+			statusNotice.removeChild(statusNotice.lastChild);
+		}
+		const lines = text.split('\n');
+		lines.forEach((line) => {
+			statusNotice.appendChild(document.createTextNode(line));
+			statusNotice.appendChild(document.createElement('br'));
+		});
+		if (detail) {
+			const small = document.createElement('div');
+			small.className = 'detail';
+			detail.split('\n').forEach((line) => {
+				small.appendChild(document.createTextNode(line));
+				small.appendChild(document.createElement('br'));
+			});
+			statusNotice.appendChild(document.createElement('br'));
+			statusNotice.appendChild(small);
+		}
+	}
+
+	// Le jeu a démarré puis s'est arrêté (mémoire, téléchargement, erreur du moteur).
+	function displayFailureNotice(err) {
+		console.error(err);
+		let detail = 'An unknown error occurred.';
+		if (err instanceof Error) {
+			detail = err.message;
+		} else if (typeof err === 'string') {
+			detail = err;
+		}
+		setStatusNotice('Le jeu n\'a pas pu démarrer.\n'
+			+ 'Rechargez la page. Si cela recommence, fermez les autres onglets et applications lourdes, puis réessayez '
+			+ 'dans un navigateur à jour (Chrome, Edge, Firefox ou Safari). Le jeu se joue sur ordinateur, au clavier et à la souris.',
+		detail);
+		setStatusMode('notice');
+		initializing = false;
+	}
+
+	// Ce qu'il faut faire pour chaque fonction manquante (textes de Engine.getMissingFeatures, Godot 4.7.2).
+	const MISSING_HELP = [
+		['WebGL2', 'Le navigateur n\'a pas accès à WebGL 2, le dessin en 3D par la carte graphique.\n'
+			+ 'Activez l\'accélération matérielle (Firefox : Paramètres, Général, Performances ; Chrome et Edge : '
+			+ 'Paramètres, Système), mettez à jour le pilote de la carte graphique, puis rechargez la page. '
+			+ 'Dans une machine virtuelle ou un bureau à distance, ouvrez le jeu sur l\'ordinateur lui-même.'],
+		['Cross-Origin Isolation', 'La page n\'est pas isolée (en-têtes COOP et COEP), ce qu\'exige le son du jeu.\n'
+			+ 'Ouvrez le jeu directement à son adresse, dans un onglet, et non dans un cadre d\'un autre site. '
+			+ 'Un proxy, un antivirus ou une extension qui retire ces en-têtes peut aussi l\'empêcher.'],
+		['SharedArrayBuffer', ''],
+		['Secure Context', 'Le jeu doit être ouvert en HTTPS : vérifiez que l\'adresse commence par https://.'],
+		['Fetch', 'Ce navigateur est trop ancien : mettez-le à jour.'],
+	];
+
+	function missingFeaturesNotice(missing) {
+		const help = [];
+		MISSING_HELP.forEach(([key, text]) => {
+			if (text && missing.some((feature) => feature.startsWith(key))) {
+				help.push(text);
+			}
+		});
+		if (help.length === 0) {
+			help.push('Mettez à jour le navigateur, ou essayez Chrome, Edge, Firefox ou Safari.');
+		}
+		console.error('Missing features: ' + missing.join(', '));
+		setStatusNotice('Le jeu ne peut pas démarrer dans ce navigateur.\n\n' + help.join('\n\n'),
+			'The following features required to run Godot projects on the Web are missing:\n' + missing.join('\n'));
+		setStatusMode('notice');
+		initializing = false;
+	}
+
+	const missing = Engine.getMissingFeatures({
+		threads: GODOT_THREADS_ENABLED,
+	});
+
+	if (missing.length !== 0) {
+		if (GODOT_CONFIG['serviceWorker'] && GODOT_CONFIG['ensureCrossOriginIsolationHeaders'] && 'serviceWorker' in navigator) {
+			let serviceWorkerRegistrationPromise;
+			try {
+				serviceWorkerRegistrationPromise = navigator.serviceWorker.getRegistration();
+			} catch (err) {
+				serviceWorkerRegistrationPromise = Promise.reject(new Error('Service worker registration failed.'));
+			}
+			// There's a chance that installing the service worker would fix the issue
+			Promise.race([
+				serviceWorkerRegistrationPromise.then((registration) => {
+					if (registration != null) {
+						return Promise.reject(new Error('Service worker already exists.'));
+					}
+					return registration;
+				}).then(() => engine.installServiceWorker()),
+				// For some reason, `getRegistration()` can stall
+				new Promise((resolve) => {
+					setTimeout(() => resolve(), 2000);
+				}),
+			]).then(() => {
+				// Reload if there was no error.
+				window.location.reload();
+			}).catch((err) => {
+				console.error('Error while registering service worker:', err);
+			});
+		} else {
+			// Message en français, avec ce qu'il faut faire.
+			missingFeaturesNotice(missing);
+		}
+	} else {
+		setStatusMode('progress');
+		engine.startGame({
+			'onProgress': function (current, total) {
+				if (current > 0 && total > 0) {
+					statusProgress.value = current;
+					statusProgress.max = total;
+				} else {
+					statusProgress.removeAttribute('value');
+					statusProgress.removeAttribute('max');
+				}
+			},
+		}).then(() => {
+			setStatusMode('hidden');
+		}, displayFailureNotice);
+	}
+}());
+		</script>
+	</body>
+</html>
