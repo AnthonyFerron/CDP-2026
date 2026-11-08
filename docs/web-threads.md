@@ -103,5 +103,6 @@ Ce qu'on en retient :
 - **Le préchauffage des shaders a été essayé, puis écarté.** Sous le noir, il dessinait tout le décor une fois. Il ajoutait de 2 à 19 s par lieu dans cette mesure, sans gain mesurable en rendu logiciel. Avec les fils, une compilation de shader ne coupe de toute façon plus la musique.
 - **Les shaders sont maintenant préparés au menu d'accueil**, hors de l'écran et par petites tranches, sans rien ajouter aux transitions : voir `docs/shaders-menu.md`.
 - **La musique des lieux arrive maintenant après le menu**, dans un second paquet (`musique.pck`) que le navigateur télécharge en arrière-plan : le menu s'affiche plus tôt. Voir `docs/musique-differee.md`.
+- **Le sol et le décor dispersé des lieux sont calculés d'avance**, et la longue image où la pause se lève vient du rendu logiciel, pas du jeu : voir `docs/chargements-lieux.md`.
 
 Les outils et les relevés sont dans `.claude/captures/perf-web/` (hors dépôt).

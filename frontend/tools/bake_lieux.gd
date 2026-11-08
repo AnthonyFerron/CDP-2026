@@ -36,7 +36,7 @@ func _run() -> void:
 		var path := "res://scenes/levels/%s/%s_bake.res" % [place, place]
 		if not check and not ResourceLoader.exists(path):
 			# Le lieu s'y réfère : le fichier doit exister avant son chargement.
-			ResourceSaver.save(LevelBake.new(), path, ResourceSaver.FLAG_COMPRESS)
+			ResourceSaver.save(LevelBake.new(), path)
 		var start := Time.get_ticks_msec()
 		state.reset()
 		state.intro_done = true
@@ -64,7 +64,7 @@ func _run() -> void:
 			continue
 		if check:
 			# Comparés tels qu'enregistrés : un fichier relu ne garde pas le type des tableaux imbriqués.
-			ResourceSaver.save(bake, CHECK_PATH, ResourceSaver.FLAG_COMPRESS)
+			ResourceSaver.save(bake, CHECK_PATH)
 			var fresh := ResourceLoader.load(CHECK_PATH, "", ResourceLoader.CACHE_MODE_IGNORE) as LevelBake
 			DirAccess.remove_absolute(CHECK_PATH)
 			var saved := ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE) as LevelBake
@@ -73,7 +73,9 @@ func _run() -> void:
 				else "DONNÉES D'AVANCE PÉRIMÉES, relancer tools/bake_lieux.gd"])
 			failed = failed or not same
 			continue
-		var error := ResourceSaver.save(bake, path, ResourceSaver.FLAG_COMPRESS)
+		# Sans compression : le paquet du jeu est compressé en entier pour le web (brotli), qui gagne plus sur les données
+		# brutes (731 Ko pour les quatre lieux) que sur des données déjà compressées par Godot (845 Ko).
+		var error := ResourceSaver.save(bake, path)
 		if error == OK:
 			print("%s : %s écrit (%d octets)" % [place, path, FileAccess.get_file_as_bytes(path).size()])
 		else:
