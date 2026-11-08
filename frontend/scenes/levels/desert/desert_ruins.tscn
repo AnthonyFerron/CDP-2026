@@ -2315,8 +2315,8 @@ size = Vector3(0.832, 0.624, 0.95333)
 [sub_resource type="BoxShape3D" id="Shape_97"]
 size = Vector3(0.832, 0.624, 0.728)
 
-[sub_resource type="BoxShape3D" id="Shape_98"]
-size = Vector3(2.288, 2.08, 4.16)
+[sub_resource type="ConvexPolygonShape3D" id="Shape_98"]
+points = PackedVector3Array(0.286, -0.69648, 1.88754, 0.572, -0.20383, 1.93932, 0.286, 0.28882, 1.9911, -0.286, 0.28882, 1.9911, -0.572, -0.20383, 1.93932, -0.286, -0.69648, 1.88754, 0.572, -0.78148, -2.04288, 1.144, 0.20383, -1.93932, 0.572, 1.18914, -1.83576, -0.572, 1.18914, -1.83576, -1.144, 0.20383, -1.93932, -0.572, -0.78148, -2.04288)
 
 [node name="DesertRuins" type="Node3D"]
 
@@ -5349,5 +5349,5 @@ transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 28
 shape = SubResource("Shape_97")
 
 [node name="Shape98" type="CollisionShape3D" parent="Collision"]
-transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 29.5162, 0.884, 42.4595)
+transform = Transform3D(-0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, -0.90631, 29.6261, 0.884, 42.2239)
 shape = SubResource("Shape_98")

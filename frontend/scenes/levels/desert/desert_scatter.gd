@@ -87,6 +87,8 @@ const CACTUS_HEIGHTS: Array[float] = [0.75, 0.53]
 const ROCK_HEIGHTS: Array[float] = [0.39, 0.45, 0.51]
 ## Boîte à l'échelle 1 des ruines couchées, dans l'ordre de ruin_models : colonne abîmée, briques.
 const RUIN_BOXES: Array[Vector3] = [Vector3(0.6, 0.72, 0.6), Vector3(0.77, 0.41, 0.85)]
+## Hauteur des flancs de la collision d'un tas de briques au-dessus du sable : plus que ce que le joueur franchit à pied.
+const BRICK_RIM := 0.45
 
 var _rng := RandomNumberGenerator.new()
 ## Emprises déjà prises par les cactus, rochers et ruines dispersés : centre (x, z) et rayon au sol. Un nouvel objet
@@ -233,16 +235,21 @@ func _scatter(models: Array[PackedScene], count: int, scale_range: Vector2, soli
 		groups[group].append(Transform3D(basis.scaled(Vector3.ONE * scale_factor), origin))
 		if solid:
 			if tilted and group > 0 and group < hulls.size() and not hulls[group].is_empty():
-				# Tas de briques : un prisme droit sur l'emprise de leur enveloppe, de la base au sommet ; la pleine
-				# enveloppe, en pente douce au pied, laissait une marche de 0,42 m sur la pente d'une dune.
+				# Tas de briques : des flancs droits sur l'emprise de leur enveloppe (prise au-dessus de 15 % de leur
+				# hauteur), puis le dessus de l'enveloppe. La pleine enveloppe, en pente douce au pied, laissait une
+				# marche de 0,42 m sur la pente d'une dune : chaque flanc dépasse le sable d'au moins BRICK_RIM, on ne
+				# monte pas sur le tas en marchant. Un plateau au sommet du tas débordait de son bord visible.
 				var top := 0.0
 				for point in hulls[group]:
 					top = maxf(top, point.y)
 				var prism := PackedVector3Array()
 				for point in hulls[group]:
 					if point.y >= top * 0.15:
-						prism.append(basis * Vector3(point.x, -0.1, point.z) * scale_factor)
-						prism.append(basis * Vector3(point.x, top, point.z) * scale_factor)
+						var foot := basis * Vector3(point.x, 0.0, point.z) * scale_factor
+						var sand: float = terrain.surface_height(origin.x + foot.x, origin.z + foot.z) - origin.y
+						var height := clampf(maxf(point.y * scale_factor, sand + BRICK_RIM), 0.0, top * scale_factor)
+						prism.append(foot + Vector3.DOWN * 0.1 * scale_factor)
+						prism.append(foot + Vector3.UP * height)
 				shapes.append(["convex", prism, Transform3D(Basis(), origin)])
 			elif tilted and group < RUIN_BOXES.size() and (group >= hulls.size() or hulls[group].is_empty()):
 				# Faute d'enveloppe, une boîte tournée comme la ruine, sur toute sa longueur.

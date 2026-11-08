@@ -503,8 +503,8 @@ def skeleton_beast(scene, x, z, degrees, size, rng, horns=False, walkable=False,
             scene.box_collider(frame(0.0, v, h), (0.16 * size, 0.12 * size, min(0.14 * size, spacing) if i in (0, ribs * 2 - 2) else spacing), degrees)
     # Crâne allongé, orbites et mâchoire.
     skull = frame(0.0, length / 2 + 0.55 * size, y + 0.17 * size)
-    scene.shape("cyl", {"top": 0.11 * size, "bottom": 0.22 * size, "height": 0.75 * size, "segments": 6}, "bone",
-                skull, degrees, tilt=96.0, spin=30.0)
+    skull_cone = {"top": 0.11 * size, "bottom": 0.22 * size, "height": 0.75 * size, "segments": 6}
+    scene.shape("cyl", skull_cone, "bone", skull, degrees, tilt=96.0, spin=30.0)
     for side in (-1, 1):
         eye = frame(side * 0.13 * size, length / 2 + 0.32 * size, y + 0.27 * size)
         scene.shape("sphere", {"segments": 8, "rings": 4}, "void", eye, scale=0.06 * size, shadow=False)
@@ -535,9 +535,21 @@ def skeleton_beast(scene, x, z, degrees, size, rng, horns=False, walkable=False,
                 for dv in ((-0.05 * size, 0.05 * size) if i in (0, ribs - 1) else (0.0,)):
                     points.append((math.cos(angle) * radius, y - 0.25 * radius + math.sin(angle) * radius, v + dv))
         scene.convex_collider((x, 0.0, z), degrees, points)
-    # Le crâne : une boîte allongée, aussi sous la cage où l'on passe.
-    skull = frame(0.0, length / 2 + 0.5 * size, 0.0)
-    scene.box_collider((skull[0], y + 0.17 * size, skull[2]), (0.44 * size, 0.4 * size, 0.8 * size), degrees)
+    if not walkable:
+        # Le crâne d'une petite bête : une boîte allongée, haute comme lui ; on ne monte pas dessus.
+        skull = frame(0.0, length / 2 + 0.5 * size, 0.0)
+        scene.box_collider((skull[0], y + 0.17 * size, skull[2]), (0.44 * size, 0.4 * size, 0.8 * size), degrees)
+        return
+    # Le crâne de la grande bête : l'enveloppe de son cône à six pans, tourné comme lui (une boîte autour débordait de
+    # 0,5 à 1 m de son museau). Les sommets sont ceux du CylinderMesh de Godot.
+    tilted = multiply(rotation_x(96.0), rotation_y(30.0))
+    points = []
+    for radius, height in ((skull_cone["top"], skull_cone["height"] / 2), (skull_cone["bottom"], -skull_cone["height"] / 2)):
+        for k in range(skull_cone["segments"]):
+            angle = 2.0 * math.pi * k / skull_cone["segments"]
+            vertex = (math.sin(angle) * radius, height, math.cos(angle) * radius)
+            points.append(tuple(sum(tilted[r][c] * vertex[c] for c in range(3)) for r in range(3)))
+    scene.convex_collider(skull, degrees, points)
 
 
 def vulture_skull(scene, x, z, degrees, size=1.0, y=0.0, tilt=0.0):
