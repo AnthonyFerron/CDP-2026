@@ -1741,7 +1741,7 @@ line_height = 0.16
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -52.6, 0, 4.6)
 script = ExtResource("10_readable")
 title = "La Chope du Dragon"
-body = "La tavernière aime raconter l'an 5802 : Devlyn et ses compagnons y fêtaient leur victoire sur les Quatre Dragons du Chaos. Elle jure que la dernière bière tirée avant la guerre contre Vibelandia attend encore au fond d'un tonneau, pour le jour où Codia renaîtra."
+body = "La tavernière aime raconter l'an 5802 : Devlyn et ses compagnons y fêtaient leur victoire sur les Quatre Dragons du Chaos. Elle jure que la dernière bière brassée avant la guerre contre Vibelandia attend encore au fond d'un tonneau, pour le jour où Codia renaîtra."
 prompt = "Lire : La Chope du Dragon"
 radius = 2.6
 
@@ -1813,7 +1813,7 @@ line_height = 0.16
 transform = Transform3D(0.96593, 0, -0.25882, 0, 1, 0, 0.25882, 0, 0.96593, 76.2, 0, -29.4)
 script = ExtResource("10_readable")
 title = "La mine d'argent"
-body = "La galerie s'est effondrée pendant la guerre. Un écriteau est cloué au boisage : « Fermée par ordre du roi Codeon V. Les mineurs ont rejoint le bunker. »"
+body = "La galerie s'est effondrée pendant la guerre. Un écriteau est cloué au boisage : « Fermée par ordre du roi Codeon V. » Dessous, à la craie : « Les mineurs ont rejoint le bunker. »"
 prompt = "Lire : La mine d'argent"
 radius = 2.6
 
@@ -1868,7 +1868,7 @@ line_height = 0.13
 transform = Transform3D(-1, 0, 0, 0, 1, 0, -0, 0, -1, 48, 0, 3.4)
 script = ExtResource("10_readable")
 title = "Le lavoir de la rivière"
-body = "Ici, on lavait le linge dans l'eau claire qui descend des montagnes. Le jour où le roi fit sonner les cloches, en 5812, les draps sont restés sur la corde ; deux ans plus tard, le vent les avait emportés jusqu'au pont."
+body = "Ici, on lavait le linge dans l'eau claire qui descend des montagnes. Le jour où le roi a fait sonner les cloches, en 5812, les draps sont restés sur la corde ; deux ans plus tard, le vent les avait emportés jusqu'au pont."
 prompt = "Lire : Le lavoir de la rivière"
 radius = 2.6
 
@@ -2066,7 +2066,7 @@ line_height = 0.16
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 39.4, 0, -53.4)
 script = ExtResource("10_readable")
 title = "L'allée des rois"
-body = "Codeon I, le bâtisseur ; Codeon II, le sage ; Codeon III, le jardinier ; Codeon IV, le prudent. Les statues des anciens rois bordent l'allée qui mène à celle de Devlyn. Renversées pendant la guerre, elles attendent qu'on les relève."
+body = "Codeon I, le Fondateur ; Codeon II, le Hardi ; Codeon III, le Prudent ; Codeon IV, le Juste. Les statues des anciens rois bordent l'allée qui mène à celle de Devlyn. Renversées pendant la guerre, elles attendent qu'on les relève."
 prompt = "Lire : L'allée des rois"
 radius = 2.6
 

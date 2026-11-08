@@ -668,7 +668,7 @@ func _build_intro() -> void:
 	goal_title.name = "GoalTitle"
 	var goal := Ornate.place(frame, GoalBox.new(), Vector2(90, 580), Vector2(1020, 150))
 	goal.name = "Goal"
-	var text := Ornate.label("Retrouver les 4 livres en une heure pour éviter l'éruption du Mont Sam Altan.", 30)
+	var text := Ornate.label("Retrouver les quatre livres en une heure pour éviter l'éruption du Mont Sam Altan.", 30)
 	text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	text.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	Ornate.place(goal, text, Vector2(200, 20), Vector2(600, 110))

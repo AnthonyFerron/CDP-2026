@@ -560,7 +560,7 @@ radius = 2.2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.15, 1.6, 1.5)
 script = ExtResource("12_readable")
 title = "Tombe du gardien"
-body = "Ci-gît Aldric, gardien du marais. Né en 5761, mort en 5803. Même la mort ne lui a pas fait quitter son poste."
+body = "Ci-gît Odon, gardien du marais. Né en 5761, mort en 5803. Même la mort ne lui a pas fait quitter son poste."
 prompt = "Lire l'épitaphe"
 radius = 3
 
@@ -600,7 +600,7 @@ radius = 2.6
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.6, 1.3, 53)
 script = ExtResource("12_readable")
 title = "Avis de la capitainerie, an 5807"
-body = "Par ordre du capitaine du port de Brumeval. Les soldats de Vibelandia ont ouvert les digues du nord, et l'eau monte chaque nuit. Que chaque famille charge ses barques et gagne le château avant la nouvelle lune ; ne prenez que le nécessaire. Personne ne s'abritera dans la crypte des rois : depuis la mort du gardien Aldric, nul ne sait plus l'ouvrir, et l'on dit que son fantôme veille encore au cimetière."
+body = "Par ordre du capitaine du port de Brumeval. Les soldats de Vibelandia ont ouvert les digues du nord, et l'eau monte chaque nuit. Que chaque famille charge ses barques et gagne le château avant la nouvelle lune ; ne prenez que le nécessaire. Personne ne s'abritera dans la crypte des rois : depuis la mort du gardien Odon, nul ne sait plus l'ouvrir, et l'on dit que son fantôme veille encore au cimetière."
 prompt = "Lire l'avis"
 radius = 2.8
 
@@ -627,7 +627,7 @@ mesh = SubResource("BoxMesh_journal")
 [node name="Plate" type="Node3D" parent="Clues/KeeperTomb"]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0.57, -1.2, 0)
 script = ExtResource("17_sign")
-text = "Aldric\nGardien du marais\n5761 - 5803"
+text = "Odon\nGardien du marais\n5761 - 5803"
 style = 3
 mount = 1
 board_size = Vector2(0.78, 0.52)
@@ -1268,7 +1268,7 @@ mesh = SubResource("PrismMesh_crown_point")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 1.95)
 script = ExtResource("12_readable")
 title = "Roi Codeon IV"
-body = "Codeon IV, le Juste. Il reprit la marche en avant, de trois pas encore, puis ferma la mine d'argent. Son fils, Codeon V, règne aujourd'hui sur Codia."
+body = "Codeon IV, le Juste. Il reprit la marche en avant, de trois pas encore, et fit creuser la mine d'argent. Son fils, Codeon V, règne aujourd'hui sur Codia."
 prompt = "Lire l'épitaphe"
 radius = 2.6
 

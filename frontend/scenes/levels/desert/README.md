@@ -7,7 +7,7 @@ Ouvrir `desert.tscn` dans le projet `frontend/project.godot`, puis appuyer sur *
 ## Parcours
 
 1. Le joueur arrive devant le portail éteint, au sud, et remonte l'allée des obélisques jusqu'à l'arche de la muraille.
-2. Des runes sont posées dans les salles du monument (la chambre du levant à l'ouest), parmi les débris de l'avant-cour et dans la cave. D'autres sont enfouies sous des tas de sable : maintenir E devant un tas le dégage peu à peu, et la progression reste acquise si on relâche. Certains tas sont vides (avant-cour, chambre du zénith, cave).
+2. Des runes sont posées dans les salles du monument (la chambre du couchant à l'ouest), parmi les débris de l'avant-cour et dans la cave. D'autres sont enfouies sous des tas de sable : maintenir E devant un tas le dégage peu à peu, et la progression reste acquise si on relâche. Certains tas sont vides (avant-cour, chambre du levant, cave).
 3. La trappe de pierre, au centre de la salle des colonnes, mène par un escalier à la cave des archives, sombre et poussiéreuse. Les murs ouest et est portent chacun un algorithme gravé : remplir la jarre sacrée et garder l'entrée du temple. L'inscription est sur une plaque de la porte scellée, au fond. Deux runes sont posées sur les tables de part et d'autre de l'escalier, deux autres sont sous des tas de sable.
 4. La table ronde de pierre ouvre l'écran des runes, dans le style des menus : les deux algorithmes se font face, leurs lignes manquantes sont des cases de pierre gravées, et les runes en main des tuiles marquées chacune de son symbole (boucle, seau, jarre, question, embranchement, porte, cadenas, grains). On choisit une tuile, puis la case où la graver. « Valider » reste grisé tant que les six cases ne sont pas remplies.
 5. Erreur : les runes et les six emplacements de la table rougissent, une violente secousse ébranle la cave et le panneau, et le chronomètre du volcan perd 5 minutes.
@@ -23,7 +23,7 @@ Les sables mouvants ralentissent le joueur, puis le ramènent à son dernier poi
 | Allée des obélisques | Six obélisques couverts de symboles en relief, coiffés d'or, l'un brisé ; le panneau d'entrée et un crâne de vautour sur un pieu |
 | Muraille et arche | Bannières, braseros éteints, sable amassé contre les pans de mur |
 | Salle des colonnes | Dallage, colonnes, statue et autel des offrandes, braseros, la trappe de pierre et son cadre, des jarres, des brèches comblées de gravats |
-| Chambres du levant et du zénith | Une stèle gravée dans chacune (socle, cadre, soleil et nom sur ses deux faces, fronton), jarres, tablettes brisées, une colonne tombée |
+| Chambres du couchant (ouest) et du levant (est) | Une stèle gravée dans chacune (socle, cadre, soleil et nom sur ses deux faces, fronton), jarres, tablettes brisées, une colonne tombée |
 | Sanctuaire englouti | Façade à demi enfouie sous une dune, portique dont l'architrave de l'est a basculé |
 | Caravane | Tentes, étals de marchandises, feu éteint, charrette renversée, le squelette du caravanier près de son carnet, celui de sa bête |
 | Oasis asséchée | Bassin de boue craquelée, roseaux secs, palmiers dont un couché, puits et abreuvoir, la jarre sacrée sur son socle ; de loin, le mirage d'une nappe d'eau qui scintille au fond du bassin et s'efface quand on approche |
@@ -34,7 +34,7 @@ Les sables mouvants ralentissent le joueur, puis le ramènent à son dernier poi
 
 ## Récit du lieu
 
-Outre les stèles, le carnet du caravanier, l'inscription et les algorithmes, cinq textes se lisent avec E : la plaque du monument (mur sud de la salle des colonnes), le journal d'Elias, marchand qui a fui Vibelandia (posé sur l'abreuvoir de l'oasis), la lettre de Joran (sous la planche des tombes des caravaniers), la tablette d'un apprenti bâtisseur (chambre du zénith) et le rouleau de l'archiviste (pupitre de la cave). Ils aident à comprendre les boucles, les conditions et les leurres sans donner la solution.
+Outre les stèles, le carnet du caravanier, l'inscription et les algorithmes, cinq textes se lisent avec E : la plaque du monument (mur sud de la salle des colonnes), le journal d'Elias, marchand qui a fui Vibelandia (posé sur l'abreuvoir de l'oasis), la lettre de Joran (sous la planche des tombes des caravaniers), la tablette d'un apprenti bâtisseur (chambre du levant) et le rouleau de l'archiviste (pupitre de la cave). Ils aident à comprendre les boucles, les conditions et les leurres sans donner la solution.
 
 ## Performances
 

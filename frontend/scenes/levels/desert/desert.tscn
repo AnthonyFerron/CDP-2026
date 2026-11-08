@@ -548,7 +548,7 @@ radius = 2.6
 [node name="Levant" type="Node3D" parent="Exterior/Clues"]
 transform = Transform3D(6.12323e-17, 0, 1, 0, 1, 0, -1, 0, 6.12323e-17, -17.6, 0, -12)
 script = ExtResource("12_readable")
-title = "Stèle du levant"
+title = "Stèle du couchant"
 body = "Les anciens bâtisseurs répétaient le même geste tant que l'ouvrage n'était pas achevé, puis seulement passaient à la suite. Ainsi la jarre se remplit, seau après seau."
 prompt = "Lire la stèle"
 radius = 2.8
@@ -629,12 +629,12 @@ mesh = SubResource("BoxMesh_sun_ray")
 
 [node name="Engraving" type="Label3D" parent="Exterior/Clues/Levant/Front"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0.232)
-pixel_size = 0.00320
+pixel_size = 0.00240
 shaded = true
 double_sided = false
 alpha_cut = 1
 modulate = Color(0.3, 0.17, 0.08, 1)
-text = "LEVANT"
+text = "COUCHANT"
 font_size = 64
 outline_size = 0
 
@@ -698,12 +698,12 @@ mesh = SubResource("BoxMesh_sun_ray")
 
 [node name="Engraving" type="Label3D" parent="Exterior/Clues/Levant/Back"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0.232)
-pixel_size = 0.00320
+pixel_size = 0.00240
 shaded = true
 double_sided = false
 alpha_cut = 1
 modulate = Color(0.3, 0.17, 0.08, 1)
-text = "LEVANT"
+text = "COUCHANT"
 font_size = 64
 outline_size = 0
 
@@ -724,7 +724,7 @@ shape = SubResource("BoxShape3D_stele_cap")
 [node name="Zenith" type="Node3D" parent="Exterior/Clues"]
 transform = Transform3D(6.12323e-17, 0, -1, 0, 1, 0, 1, 0, 6.12323e-17, 17.6, 0, -12)
 script = ExtResource("12_readable")
-title = "Stèle du zénith"
+title = "Stèle du levant"
 body = "Avant d'ouvrir une porte, les bâtisseurs posaient une question. Selon la réponse, ils agissaient d'une façon, sinon d'une autre."
 prompt = "Lire la stèle"
 radius = 2.8
@@ -810,7 +810,7 @@ shaded = true
 double_sided = false
 alpha_cut = 1
 modulate = Color(0.3, 0.17, 0.08, 1)
-text = "ZÉNITH"
+text = "LEVANT"
 font_size = 64
 outline_size = 0
 
@@ -879,7 +879,7 @@ shaded = true
 double_sided = false
 alpha_cut = 1
 modulate = Color(0.3, 0.17, 0.08, 1)
-text = "ZÉNITH"
+text = "LEVANT"
 font_size = 64
 outline_size = 0
 
@@ -900,7 +900,7 @@ shape = SubResource("BoxShape3D_stele_cap")
 [node name="Couchant" type="Node3D" parent="Exterior/Clues"]
 transform = Transform3D(0.819152, 0, 0.573576, 0, 1, 0, -0.573576, 0, 0.819152, -7, 0, 8)
 script = ExtResource("12_readable")
-title = "Stèle du couchant"
+title = "Stèle du midi"
 body = "Leurs instructions sont gravées sur des runes. Quand le sable a recouvert le monument, elles se sont dispersées dans ses salles, parmi les débris, et sous les dunes."
 prompt = "Lire la stèle"
 radius = 2.8
@@ -981,12 +981,12 @@ mesh = SubResource("BoxMesh_sun_ray")
 
 [node name="Engraving" type="Label3D" parent="Exterior/Clues/Couchant/Front"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0.232)
-pixel_size = 0.00240
+pixel_size = 0.00320
 shaded = true
 double_sided = false
 alpha_cut = 1
 modulate = Color(0.3, 0.17, 0.08, 1)
-text = "COUCHANT"
+text = "MIDI"
 font_size = 64
 outline_size = 0
 
@@ -1050,12 +1050,12 @@ mesh = SubResource("BoxMesh_sun_ray")
 
 [node name="Engraving" type="Label3D" parent="Exterior/Clues/Couchant/Back"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, 0.232)
-pixel_size = 0.00240
+pixel_size = 0.00320
 shaded = true
 double_sided = false
 alpha_cut = 1
 modulate = Color(0.3, 0.17, 0.08, 1)
-text = "COUCHANT"
+text = "MIDI"
 font_size = 64
 outline_size = 0
 

@@ -73,7 +73,7 @@ func _ready() -> void:
 	interaction.prompt_changed.connect(_hud.set_prompt)
 	_hud.reader_closed.connect(_close_panel)
 	_portal.travel_requested.connect(GameState.return_to_hub.bind(ZONE))
-	_portal.refused.connect(_hud.show_message.bind("Le portail reste éteint : trouvez le livre du Village."))
+	_portal.refused.connect(_hud.show_message.bind("Le portail reste éteint : trouvez le livre du village détruit."))
 	_hall_door.interacted.connect(_travel.bind(true))
 	_exit.interacted.connect(_travel.bind(false))
 	for fragment: PaperFragment in _fragments.get_children():
@@ -176,7 +176,7 @@ func _on_storage_opened(had_fragment: bool, storage: Storage) -> void:
 	if had_fragment:
 		_hud.show_message("Vous ouvrez %s : un fragment de papier y est glissé." % storage.furniture_name)
 	else:
-		_hud.show_message("Vous ouvrez %s : il ne contient que de la poussière." % storage.furniture_name)
+		_hud.show_message("Vous ouvrez %s : il n'y a que de la poussière." % storage.furniture_name)
 
 
 func _open_device() -> void:
@@ -269,6 +269,6 @@ func _on_book_taken() -> void:
 	_book.hide()
 	_book_pickup.enabled = false
 	_portal.is_open = true
-	_hud.show_message("Le Codonomicon est à vous. Rapportez-le au château du hub : le portail du Village s'est rouvert.")
+	_hud.show_message("Le Codonomicon est à vous. Rapportez-le au château : le portail du village détruit s'est rouvert.")
 	GameState.collect_book(BOOK_ID)
 	book_collected.emit(BOOK_ID)

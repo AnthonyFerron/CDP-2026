@@ -462,7 +462,7 @@ func _refresh_pedestals() -> void:
 		var book: StringName = GameState.ZONE_BOOKS[zone]
 		var pedestal := _pedestal(zone)
 		if GameState.has_placed(book):
-			pedestal.prompt = "%s repose ici" % _book_name(zone).capitalize()
+			pedestal.prompt = "%s repose ici" % _upper_first(_book_name(zone))
 		elif GameState.has_book(book):
 			pedestal.prompt = "Poser %s" % _book_name(zone)
 		else:
@@ -499,7 +499,7 @@ func _on_pedestal(zone: StringName) -> void:
 		_ritual()
 		return
 	if GameState.has_placed(book):
-		_hud.show_message("%s repose sur son piédestal." % _book_name(zone).capitalize())
+		_hud.show_message("%s repose sur son piédestal." % _upper_first(_book_name(zone)))
 		return
 	if not GameState.has_book(book):
 		_hud.show_message("Ce piédestal attend %s, caché dans %s." % [_book_name(zone), ZONE_NAMES[zone]])

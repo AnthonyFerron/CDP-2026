@@ -395,7 +395,7 @@ shape = SubResource("BoxShape3D_obelisk")
 transform = Transform3D(0.76604, 0, 0.64279, 0, 1, 0, -0.64279, 0, 0.76604, -7.28, 1, 17.07)
 script = ExtResource("12_readable")
 title = "La stèle de la bibliothèque"
-body = "Bibliothèque d'Hexcole. Fondée au temps des anciens bâtisseurs pour garder le savoir de Codia, au milieu des prairies qui couvraient alors les plaines. Sous la date, une devise : « Un projet bien mené commence par un but, et s'achève par un bilan. »"
+body = "Bibliothèque d'Hexcole. Fondée au temps des anciens bâtisseurs pour garder le savoir de Codia, au milieu des prairies qui couvraient alors les plaines. Sous le nom, une devise : « Un projet bien mené commence par un but, et s'achève par un bilan. »"
 prompt = "Lire la stèle"
 radius = 2.6
 
@@ -443,7 +443,7 @@ mesh = SubResource("BoxMesh_journal_page")
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 16.98, 1, 50.5)
 script = ExtResource("12_readable")
 title = "La stèle des défenseurs"
-body = "Aux gardes de la bibliothèque d'Hexcole, tombés pour que les livres de Codia ne brûlent pas. Ils ont tenu la barricade trois jours contre les troupes de Vibelandia, jusqu'à ce que leurs catapultes mettent le feu au toit. Leurs noms sont gravés au dos de la pierre : Aldric, Brune, Corentin, Doria, Edmond et Faye."
+body = "Aux gardes de la bibliothèque d'Hexcole, tombés pour que les livres de Codia ne brûlent pas. Ils ont tenu la barricade trois jours contre les troupes de Vibelandia, jusqu'à ce que les catapultes ennemies mettent le feu au toit. Leurs noms sont gravés au dos de la pierre : Anselme, Brune, Corentin, Doria, Edmond et Faye."
 prompt = "Lire la stèle"
 radius = 2.6
 
@@ -742,7 +742,7 @@ script = ExtResource("12_readable")
 title = "Les notes du greffier"
 body = "Notes du greffier, réunion sur la restauration des archives.
 
-La bibliothécaire et son employé ont parlé chacun son tour : elle propose, il répond, et chaque réplique reprend le fil de la précédente. Six répliques en tout, que j'ai recopiées dans l'ordre sur une seule feuille.
+La bibliothécaire et son employé ont parlé chacun à son tour : elle propose, il répond, et chaque réplique reprend le fil de la précédente. Six répliques en tout, que j'ai recopiées dans l'ordre sur une seule feuille.
 
 Ce soir, la bibliothécaire m'a repris la feuille. Elle l'a découpée aux ciseaux, une réplique par morceau, et m'a fait promettre de ne jamais en dire l'ordre. Je tiens ma promesse."
 prompt = "Lire les notes"
@@ -866,7 +866,7 @@ radius = 2.0
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 4.92, 1.177, -5.7)
 script = ExtResource("40_searchable")
 title = "Procès-verbaux de clôture"
-body = "Des projets achevés, signés et tamponnés. La bibliothécaire ne laissait rien au hasard."
+body = "Des projets achevés, signés et scellés. La bibliothécaire ne laissait rien au hasard."
 fragment = 5
 cover_color = Color(0.3, 0.2, 0.4, 1)
 radius = 2.0
