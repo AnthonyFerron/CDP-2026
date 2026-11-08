@@ -31,13 +31,17 @@ Le journal complet de la nuit est sur le serveur, dans `~/cdp-work/JOURNAL.md`. 
   - `check_overlaps.py` sans effet de bord ;
   - changement de scène attendu après la physique quand un portail le déclenche.
 
+## Vérifié et corrigé le 8 novembre au soir (`fix/verif-marche`)
+- **Village, grille de marche complète :** fixe (0 problème) et en marchant depuis chacune des 41 932 cases du dehors, maisons comprises, et des 983 de la mairie. Deux chutes libres relevées, sur une pente continue de la colline du moulin et sur le talus de bordure : artefacts de l'essai, corrigé (`agents/village/village_walk_grid.gd`), rien dans le jeu. Les chutes du bout nord du ruisseau ne reviennent plus. Une flèche fichée dans la rue, dans l'axe de la porte de la boulangerie, reculée. Sondes de saut repassées sur le bourg et ses maisons, la mairie (énigme résolue ou non), les archives de la Plaine et tout le dehors du Désert : 0 point coincé. Détail : `agents/village/PROBLEMES.md` n° 44 à 50.
+- **Désert :** 73 relevés de la grille (70 contacts légers) à 17 (14 contacts), sans marche ni point coincé de plus : tas de briques, crâne de la grande bête, pointes d'obélisques et jarres couchées au plus près du visible (`agents/desert/PROBLEMES.md` n° 27 à 29).
+- **`arch_fill()` :** ses marches suivent l'intrados relevé du mur voûté à 4 cm près (22 cm de mur invisible et 10 cm d'entrée avant), dans les archives de la Plaine, les 12 maisons et le bureau de la mairie du Village.
+- **Ruisseau du Village :** plafonné comme les sources du hub ; sur le pont, de -6,3 à -9,8 dBFS de crête (`docs/sons.md`).
+
 ## Corrections relevées, non faites
-- **Village :**
-  - 12 chutes libres de 1,2 à 1,9 m au bout nord du ruisseau, vers (-37 à -40, -46 à -50,5) : sans doute un rocher ou le pied d'un arbre à l'entrée du talus, à confirmer sur captures ;
-  - grille de captures à 4 m du bourg (357 points prêts sur le serveur) ;
-  - marche du joueur au bout sud du ruisseau après la correction.
-- **Désert :** 60 contacts légers restants, surtout les bords hauts des prismes des tas de briques épars.
-- **`arch_fill()` :** au-dessus de 2,3 m, ses marches arrêtent la collision 0,21 m avant l'arche visible. Ça ne se sent qu'en sautant ; il faudrait une marche de plus dans `build_plaine.py`.
+- **Village :** grille de captures à 4 m du bourg (357 points prêts sur le serveur). Les chutes du bout nord du ruisseau et la marche au bout sud sont vérifiées (8 novembre, plus haut).
+- **Désert :** 14 contacts légers restants, chacun avec un triangle visible à moins de 1 m (rochers de la bordure, deux tas de briques, colonne tombée, linteau de la porte en ruine, deux enveloppes de ruines, deux collisions à la forme exacte), acceptés : liste dans `agents/desert/PROBLEMES.md`.
+- **`hub_props.tscn` à régénérer après fusion :** `arch_fill()` a changé dans `build_plaine.py` (8 novembre, `fix/verif-marche`). `build_hub.py` l'appelle pour les 54 portes voûtées du hub : relancé, il ajoute leurs marches (648 boîtes de plus, et la renumérotation des autres). Non fait sur cette branche, l'agent du hub travaillant sur ces scènes.
+- **Roue du moulin du Village :** à 3,5 m, -19,5 dBFS RMS et -7 dBFS de crête. C'est son volume (-2 dB), pas un effet de proximité ; à juger à l'oreille avant d'y toucher.
 - **Bandeau « Mauvaise réponse » :** il couvre quelques secondes le titre et la première ligne de la tablette de la Plaine (déjà le cas avant le HUD habillé).
 - **Dos des panneaux (`sign_board.gd`) :** il n'est éclairé que par la lumière ambiante. Les lieux le compensent par des lueurs ou par `double_sided`.
 - **Ombres de la Plaine :** le soleil en 2 tranches d'ombre réduirait les appels de dessin de 30 à 45 % dehors, mais fait du moiré au sol. Piste : adoucir le filtrage des ombres dans les réglages du projet.
