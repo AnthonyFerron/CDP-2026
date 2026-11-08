@@ -52,6 +52,7 @@
 [ext_resource type="Script" path="res://scenes/levels/hub/hub_sounds.gd" id="54_sounds"]
 [ext_resource type="Resource" path="res://scenes/levels/hub/hub_bake.res" id="55_bake"]
 [ext_resource type="Shader" path="res://scenes/levels/hub/hub_foliage.gdshader" id="56_foliage"]
+[ext_resource type="Script" path="res://scenes/levels/hub/hub_villagers.gd" id="57_villagers"]
 [ext_resource type="Script" path="res://scenes/levels/hub/hub_wildlife.gd" id="58_wildlife"]
 [ext_resource type="Shader" path="res://scenes/levels/hub/hub_insect.gdshader" id="59_insect"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/food_kit/fish.glb" id="60_fish"]
@@ -1732,6 +1733,12 @@ transform = Transform3D(0.70711, 0, -0.70711, 0, 1, 0, 0.70711, 0, 0.70711, 3.39
 
 [node name="GardeOutside" type="Marker3D" parent="Spots"]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 4.8, 0, 0)
+
+[node name="Villagers" type="Node3D" parent="." node_paths=PackedStringArray("terrain", "characters", "player")]
+script = ExtResource("57_villagers")
+terrain = NodePath("../Terrain")
+characters = NodePath("../Characters")
+player = NodePath("../Player")
 
 [node name="Lore" type="Node3D" parent="."]
 

@@ -65,6 +65,7 @@ EXT = [
     ("Resource", "res://scenes/levels/hub/hub_bake.res", "55_bake"),
     # Feuillage du décor dispersé et des rives, sec avant les livres, qui reverdit à chaque livre posé.
     ("Shader", "res://scenes/levels/hub/hub_foliage.gdshader", "56_foliage"),
+    ("Script", "res://scenes/levels/hub/hub_villagers.gd", "57_villagers"),
     # Faune revenue avec les livres : poissons, libellules et papillons (hub_wildlife.gd).
     ("Script", "res://scenes/levels/hub/hub_wildlife.gd", "58_wildlife"),
     ("Shader", "res://scenes/levels/hub/hub_insect.gdshader", "59_insect"),
@@ -943,6 +944,11 @@ def main():
 
     hall(lines)
     characters(lines)
+    # Après la victoire, les survivants font leurs tournées dans le village (hub_villagers.gd).
+    lines += [
+        '[node name="Villagers" type="Node3D" parent="." node_paths=PackedStringArray("terrain", "characters", "player")]',
+        'script = ExtResource("57_villagers")', 'terrain = NodePath("../Terrain")', 'characters = NodePath("../Characters")',
+        'player = NodePath("../Player")', ""]
     lore(lines)
     node(lines, "Braziers", "Node3D")
     for index, (x, z) in enumerate(BRAZIERS):

@@ -83,6 +83,7 @@ const VICTORY_LINES := {
 @onready var _volcano: Volcano = $Volcano
 @onready var _ending: HubEnding = $Ending
 @onready var _circle: Node3D = $Castle/Circle
+@onready var _villagers: HubVillagers = $Villagers
 
 var _life := 0.0
 var _inside := false
@@ -136,6 +137,10 @@ func _ready() -> void:
 		_release_survivors()
 		if not GameState.is_victory_pending():
 			_settle_merlon()
+			# Retour au hub après la victoire : les villageois sont déjà dans leurs tournées (après la cinématique de la
+			# fin, ils partent du feu : _resume_after_victory).
+			if GameState.ending == &"" and not GameState.has_erupted:
+				_villagers.start(false)
 	elif GameState.books.size() >= GameState.BOOK_COUNT:
 		_send_merlon_to_castle()
 	_place_player()
@@ -186,6 +191,7 @@ func _play_ending(ending: StringName) -> void:
 	# La victoire continue après la fin, pendant l'épilogue ; la défaite ne joue qu'une fois, jusqu'au menu principal.
 	Music.play(&"victoire" if ending == &"victory" else &"defaite")
 	if ending == &"victory":
+		_villagers.stop()
 		_release_survivors()
 		_set_repairs(GameState.BOOK_COUNT, false)
 		_ash = 0.0
@@ -220,6 +226,8 @@ func _resume_after_victory() -> void:
 	_player.velocity = Vector3.ZERO
 	_player.get_node("CameraPivot").rotation.y = PI
 	_settle_merlon()
+	# Les survivants quittent le feu de la place, l'un après l'autre, pour leurs tournées dans le village.
+	_villagers.start(true)
 	for zone in ZONES:
 		_portal(zone).is_open = GameState.is_zone_unlocked(zone)
 	_hud.set_crosshair_visible(true)
