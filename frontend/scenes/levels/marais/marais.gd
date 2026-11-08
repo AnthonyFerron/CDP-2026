@@ -29,6 +29,9 @@ const OUTSIDE_NODES: Array[NodePath] = [^"Terrain", ^"Water", ^"Scatter", ^"Prop
 	^"DoorInteractable", ^"Volcano"]
 ## Direction d'où vient la lumière de la lune (axe +Z du nœud Moon).
 const MOON_DIRECTION := Vector3(-0.5, 0.7071, 0.5)
+## Temps de préparation de la crypte par image (ms), une fois arrivé : la crypte, cachée dehors, se prépare après
+## l'arrivée (teinte des dalles, regroupement de son décor, lettres du mécanisme), comme le décor du hub.
+const CRYPT_BUDGET_MSEC := 8
 
 @export var ground_steps: Array[AudioStream]
 @export var water_steps: Array[AudioStream]
@@ -50,6 +53,11 @@ var _mist: CPUParticles3D
 ## lucioles au-dessus des roseaux. Elles s'arrêtent dans la crypte.
 var _mist_banks: Array[CPUParticles3D] = []
 var _rumble: AudioStreamPlayer3D
+## Préparation de la crypte : étape en cours (0 : la teinte, puis un regroupement par étape, puis la gravure) et
+## regroupements de son décor. Finie, elle ne change plus rien.
+var _crypt_stage := 0
+var _crypt_batches: Array[MaraisBatch] = []
+var _crypt_ready := false
 
 @onready var _player: Player = $Player
 @onready var _player_camera: Camera3D = $Player/CameraPivot/SpringArm3D/Camera3D
@@ -80,6 +88,15 @@ var _rumble: AudioStreamPlayer3D
 @onready var _tomb_sound: AudioStreamPlayer3D = $Interior/Tomb/Sound
 @onready var _book: Node3D = $Interior/Tomb/Book
 @onready var _book_pickup: Interactable = $Interior/Tomb/Book/Interactable
+
+
+func _enter_tree() -> void:
+	# Le mécanisme, dans la crypte, se grave après l'arrivée (_prepare_crypt) : son _ready passe avant celui-ci.
+	(get_node("Interior/Mechanism") as RingMechanism).engrave_later = true
+
+
+func _exit_tree() -> void:
+	MaraisBatch.forget()
 
 
 func _ready() -> void:
@@ -134,13 +151,13 @@ func _ready() -> void:
 		flies.position = swarm
 		_mist_banks.append(flies)
 		add_child(flies)
-	_tint_crypt()
 	# Pour le web : le décor fixe fondu par matériau (MaraisBatch), par cases de 32 m dehors, de 12 m (une pièce)
-	# sous terre : tombeaux des rois et niches de l'ossuaire compris.
+	# sous terre : tombeaux des rois et niches de l'ossuaire compris. Le dehors, vu à l'arrivée, est fondu ici ; la
+	# crypte, cachée dehors, le sera après l'arrivée (_prepare_crypt), au même résultat.
 	for root: Node3D in [$Props/Models, $Grounded, $Scatter/Boardwalks, $Scatter/Lanterns]:
 		MaraisBatch.merge(root, 32.0, true)
 	for root: Node3D in [$Interior/Crypt/Models, $Interior/Kings, $Interior/Niches]:
-		MaraisBatch.merge(root, 12.0, false)
+		_crypt_batches.append(MaraisBatch.new(root, 12.0, false))
 	# La lumière du feu de camp s'éteint au loin, comme les autres lumières du dehors.
 	for light: Light3D in $Campfire.find_children("*", "Light3D", true, false):
 		light.distance_fade_enabled = true
@@ -167,6 +184,8 @@ func _show_solved() -> void:
 
 
 func _process(delta: float) -> void:
+	if not _crypt_ready:
+		_crypt_ready = _prepare_crypt(Time.get_ticks_usec() + CRYPT_BUDGET_MSEC * 1000)
 	_time += delta
 	_fireflies.global_position = _player.global_position + Vector3.UP * 1.5
 	_mist.global_position = Vector3(_player.global_position.x, 0.25, _player.global_position.z)
@@ -203,6 +222,34 @@ func _physics_process(_delta: float) -> void:
 
 func mechanism() -> RingMechanism:
 	return _mechanism
+
+
+## La crypte est prête : teinte, décor regroupé, lettres gravées (pour les tests et les mesures).
+func is_done() -> bool:
+	return _crypt_ready
+
+
+## Prépare la crypte jusqu'à l'instant deadline (Time.get_ticks_usec), au moins d'un pas ; rend vrai quand elle est
+## prête. Rien n'y touche aux collisions : celles de la crypte et du mécanisme sont posées dès le chargement.
+func _prepare_crypt(deadline: int) -> bool:
+	if _crypt_stage == 0:
+		# La teinte change les matériaux des dalles : elle passe avant leur regroupement.
+		_tint_crypt()
+		_crypt_stage = 1
+		if Time.get_ticks_usec() >= deadline:
+			return false
+	while _crypt_stage <= _crypt_batches.size():
+		if not _crypt_batches[_crypt_stage - 1].step(deadline):
+			return false
+		_crypt_stage += 1
+	return _mechanism.engrave(deadline)
+
+
+## Finit d'un coup la préparation de la crypte, avant qu'on la voie : en y descendant (sous le noir du fondu), ou en
+## ouvrant le mécanisme.
+func _finish_crypt() -> void:
+	if not _crypt_ready:
+		_crypt_ready = _prepare_crypt(MaraisBatch.NO_DEADLINE)
 
 
 func _sink() -> void:
@@ -246,6 +293,8 @@ func _travel(inside: bool) -> void:
 
 
 func _apply_location() -> void:
+	if _inside:
+		_finish_crypt()
 	_moon.visible = not _inside
 	# On ne dessine que le côté où l'on est : la crypte, sous la carte, entrait dans le champ quand on regardait le
 	# sol ; le marais, au-dessus du plafond, quand on levait les yeux dans la crypte. Lumières comprises.
@@ -284,6 +333,7 @@ func _close_panel() -> void:
 
 ## Vue rapprochée : la caméra se place au-dessus du mécanisme et l'interface des cercles s'ouvre.
 func _open_mechanism() -> void:
+	_finish_crypt()
 	_player.process_mode = Node.PROCESS_MODE_DISABLED
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	_hud.set_crosshair_visible(false)
