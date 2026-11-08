@@ -39,6 +39,14 @@
 			Cross-Origin-Opener-Policy same-origin
 			Cross-Origin-Embedder-Policy require-corp
 		}
+		# Les paquets du jeu (index.pck, musique.pck) ont une extension inconnue, donc pas de type. Servis en .gz,
+		# `encode` devinait alors leur type d'après leurs premiers octets : « application/x-gzip », en plus de
+		# « Content-Encoding: gzip ». WebKit (Safari, GNOME Web) ne décompresse pas un fichier ainsi annoncé : il le
+		# prend pour une archive. Godot recevait le paquet compressé : « Cannot open resource pack 'index.pck' », et
+		# le jeu ne démarrait pas. Un navigateur reçoit le .gz s'il ne demande pas brotli, ou si un proxy ou un
+		# antivirus retire brotli de sa demande. Voir docs/web-threads.md, partie « Navigateurs ».
+		@paquets path *.pck
+		header @paquets Content-Type application/octet-stream
 		file_server {
 			precompressed br gzip
 		}
