@@ -32,6 +32,11 @@ esac
 timeout 900 "$GODOT" "${AUDIO[@]}" --headless --path . --script res://tools/bake_plaine.gd -- --check "$API" > "$LOGS/bake_plaine_check.log" 2>&1
 echo "bake_plaine_check exit=$? $(tail -n 3 "$LOGS/bake_plaine_check.log" | grep -v '^\s*$' | tail -1)"
 
+# Inventaire des matériaux préparés au menu (tools/bake_shaders.gd, assets/shader_warm_list.tres) : il doit
+# correspondre aux lieux. Sinon : godot --headless --fixed-fps 60 --path frontend --script res://tools/bake_shaders.gd
+timeout 900 "$GODOT" "${AUDIO[@]}" --headless --fixed-fps 60 --path . --script res://tools/bake_shaders.gd -- --check "$API" > "$LOGS/bake_shaders_check.log" 2>&1
+echo "bake_shaders_check exit=$? $(grep '^Shaders : ' "$LOGS/bake_shaders_check.log" | tail -1)"
+
 # run <nom> <headless|window> <script> [arguments du test...]
 run() {
 	local name="$1" mode="$2" script="$3"; shift 3
