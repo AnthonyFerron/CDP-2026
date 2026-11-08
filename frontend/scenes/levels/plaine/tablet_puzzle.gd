@@ -51,6 +51,8 @@ func _ready() -> void:
 	_slots.fill(-1)
 	_build()
 	_root.hide()
+	# Parchemin et clochette à l'ouverture, parchemin replié à la fermeture (scripts/ui_sounds.gd).
+	UiSounds.watch(_root)
 	_validate.pressed.connect(validate)
 	_close.pressed.connect(_on_close_pressed)
 

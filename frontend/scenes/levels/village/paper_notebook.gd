@@ -38,6 +38,8 @@ static func card(text: String, width: float, font_size := 22) -> PanelContainer:
 func _ready() -> void:
 	_build()
 	_root.hide()
+	# Parchemin et clochette à l'ouverture, parchemin replié à la fermeture (scripts/ui_sounds.gd).
+	UiSounds.watch(_root)
 
 
 func _unhandled_input(event: InputEvent) -> void:

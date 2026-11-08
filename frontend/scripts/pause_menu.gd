@@ -47,6 +47,8 @@ func _ready() -> void:
 	commands.bottom_diamond = false
 	commands.dividers = [Ornate.commands(commands, 70.0, 54.0, 70.0, Vector2(84, 190))]
 	_root.hide()
+	# Parchemin et clochette à l'ouverture, parchemin replié à la fermeture (scripts/ui_sounds.gd).
+	UiSounds.watch(_root)
 
 
 func _unhandled_input(event: InputEvent) -> void:
