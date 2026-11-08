@@ -233,6 +233,14 @@ jour. Sur la branche fusionnée :
   30 464 sauts, 5 233 arrivées hors du sol accessible, 0 point coincé ; non résolue, 1 864 cases, 29 824 sauts, 5 275
   arrivées, 0 point coincé. Les mêmes chiffres que la sonde du 8 novembre.
 - **Inventaire des shaders** (`bake_shaders.gd`, qui attend la crypte prête) : à jour, sans être régénéré.
+- **Générateurs** : `build_marais.py` ne change rien ; `write_marais_tscn.py` ajoute seulement la ligne du calcul
+  d'avance au décor dispersé, et relancé ne produit aucune dérive.
+- **Suite complète** (`frontend/tests/scenes/run_all.sh`, depuis la branche) : `bake_plaine_check`,
+  `bake_lieux_check` et `bake_shaders_check` à jour ; 0 échec partout, sauf `hub_walk_0` (les 2 échecs voulus,
+  « limite infranchissable (doit echouer) ») ; `marais_puzzle_test` à 0 échec ; `tree_collision_test` : Marais,
+  72 arbres, 0 sans collision ; `sound_test` à 0 ; `run_tests` à 52 réussis ; aucun avertissement de calcul d'avance.
+  `hub_walk_4` n'avait pas démarré dans son délai (les trois places Godot étaient prises par les autres agents) :
+  relancé seul, il a ses 2 échecs voulus, ni plus ni moins.
 
 ## Mesures
 
