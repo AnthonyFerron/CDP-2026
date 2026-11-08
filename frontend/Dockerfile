@@ -33,10 +33,17 @@ RUN set -eu; \
 COPY frontend /game
 COPY LICENCES.md /licences/
 
+# Second paquet (préréglage « Web musique ») : les pistes des lieux, de la victoire et de la défaite, que le jeu
+# télécharge en arrière-plan une fois le menu affiché (scripts/music.gd). Le paquet du jeu n'a que celles du menu, de
+# l'introduction et du hub : le menu arrive plus vite. Voir docs/musique-differee.md. Le .gdignore garde build/ hors
+# du projet : sans lui, le second export importerait les images que le premier vient d'y écrire.
 RUN mkdir -p /game/build/web \
+    && touch /game/build/.gdignore \
     && godot --headless --path /game --import \
     && godot --headless --path /game --export-release "Web" build/web/index.html \
+    && godot --headless --path /game --export-pack "Web musique" build/web/musique.pck \
     && test -f /game/build/web/index.html \
+    && test -f /game/build/web/musique.pck \
     && cp /licences/* /game/build/web/
 
 # Compressé une fois ici, mieux et sans coût à chaque requête : Caddy sert directement les .br et .gz du jeu.

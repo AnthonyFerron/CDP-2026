@@ -49,9 +49,14 @@ jobs:
           sed -i 's|^variant/thread_support=true$|variant/thread_support=false|' frontend/export_presets.cfg
           grep -q '^variant/thread_support=false$' frontend/export_presets.cfg
           mkdir -p frontend/build/web
+          # build/ hors du projet : sinon le second export importerait les images écrites par le premier.
+          touch frontend/build/.gdignore
           "$godot" --headless --path frontend --import
           "$godot" --headless --path frontend --export-debug "Web" build/web/index.html
+          # Pistes des lieux, téléchargées par le jeu une fois le menu affiché (docs/musique-differee.md).
+          "$godot" --headless --path frontend --export-pack "Web musique" build/web/musique.pck
           test -f frontend/build/web/index.html
+          test -f frontend/build/web/musique.pck
 
       - name: Joindre les licences au site
         run: |

@@ -53,7 +53,8 @@ Sur le web :
 - elle passe par le mélangeur de Godot (`PLAYBACK_TYPE_STREAM`), et non par le mode « sample » du web, qui décoderait chaque piste en entier en mémoire ;
 - l'export web a des fils d'exécution : le mélangeur tourne sur son propre fil, et une image lente ne coupe plus la musique (`docs/web-threads.md`) ;
 - `audio/driver/output_latency.web` vaut 200 ms. Cette réserve sert surtout à l'export sans fils, utilisé en repli et sur GitHub Pages ;
-- la piste du lieu de destination se charge en arrière-plan sous le titre de la transition (`Music.prefetch`).
+- la piste du lieu de destination se charge en arrière-plan sous le titre de la transition (`Music.prefetch`) ;
+- seules `menu.ogg`, `intro.ogg` et `hub.ogg` sont dans le paquet du jeu (`index.pck`). Les autres sont dans un second paquet, `musique.pck`, que le jeu télécharge une fois le menu affiché. Une piste demandée avant son arrivée part dès qu'il est là (`docs/musique-differee.md`).
 
 Pour ajouter une piste :
 
@@ -61,4 +62,8 @@ Pour ajouter une piste :
 2. Ajoute son gain dans `Music.TRACKS`.
 3. Appelle `Music.play(&"<nom>")`.
 
-Le motif `assets/audio/music/*.ogg` du filtre d'export (`export_presets.cfg`) l'inclut dans le paquet web. `frontend/tests/scenes/music_test.gd` vérifie la piste de chaque scène.
+4. Range-la dans un paquet web (`frontend/export_presets.cfg`) :
+   - dans le filtre d'inclusion du préréglage « Web » si elle doit jouer dès le menu ou dès « Nouvelle partie » ;
+   - sinon, dans la liste de fichiers du préréglage « Web musique » (le second paquet, téléchargé après le menu).
+
+Le préréglage « Windows Desktop » garde le motif `assets/audio/music/*.ogg` : toutes les pistes y sont, dans l'exécutable. `frontend/tests/scenes/music_test.gd` vérifie la piste de chaque scène, et l'attente d'une piste du second paquet.

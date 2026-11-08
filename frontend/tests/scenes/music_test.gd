@@ -2,8 +2,30 @@ extends "res://tests/scenes/common_test.gd"
 ## Musique : pour chaque scène, la bonne piste joue sur le bus « Music », en fondu enchaîné, sans relancer une piste
 ## déjà en cours. Menu, bunker (introduction) puis hub dehors, les quatre lieux, la bonne fin et l'épilogue au hub
 ## (victoire, qui continue), l'éruption (défaite, une seule fois, puis plus rien jusqu'au menu principal).
+## Musique différée du web : une piste absente du paquet du jeu attend en silence, sans erreur, et part dès que le
+## second paquet est monté ; un téléchargement raté est retenté plus tard.
+
+## Pistes du faux second paquet : un dossier qui n'existe pas dans le projet (tests/ n'est jamais exporté).
+const DEFERRED_DIR := "res://tests/musique_differee/"
+const DEFERRED := [&"plaine", &"desert"]
 
 var music: Node
+var errors := ErrorCounter.new()
+
+
+## Compte les erreurs et, à part, les avertissements écrits dans le journal du moteur.
+class ErrorCounter extends Logger:
+	var count := 0
+	var warnings := 0
+	var last := ""
+
+	func _log_error(function: String, file: String, line: int, code: String, rationale: String, _editor_notify: bool,
+			error_type: int, _script_backtraces: Array[ScriptBacktrace]) -> void:
+		if error_type == ERROR_TYPE_WARNING:
+			warnings += 1
+		else:
+			count += 1
+			last = "%s (%s, %s:%d %s)" % [rationale, code, file.get_file(), line, function]
 
 
 func _initialize() -> void:
@@ -129,7 +151,125 @@ func _run() -> void:
 	await wait(10)
 	check("eruption : arret, defaite, puis menu (%s)" % [heard], heard == [&"plaine", &"arret", &"defaite", &"menu"])
 	_check_track("menu principal apres l'eruption", &"menu")
+	await _check_deferred()
 	finish()
+
+
+## Sert data une seule fois, puis ferme la connexion : réponse 200 marquée gzip. La première ligne et les en-têtes de
+## la requête reçue vont dans request[0].
+func _serve_once(server: TCPServer, data: PackedByteArray, request: Array) -> void:
+	var deadline := Time.get_ticks_msec() + 15000
+	while not server.is_connection_available():
+		if Time.get_ticks_msec() > deadline:
+			return
+		await process_frame
+	var peer := server.take_connection()
+	while not "\r\n\r\n" in request[0] and Time.get_ticks_msec() < deadline:
+		peer.poll()
+		var available := peer.get_available_bytes()
+		if available > 0:
+			request[0] += peer.get_utf8_string(available)
+		else:
+			await process_frame
+	var head := "HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Encoding: gzip\r\nContent-Length: %d\r\nConnection: close\r\n\r\n" % data.size()
+	peer.put_data(head.to_utf8_buffer())
+	peer.put_data(data)
+	for frame in 5:
+		await process_frame
+	peer.disconnect_from_host()
+
+
+## Comme sur le web avant la fin du téléchargement de musique.pck : les pistes des lieux manquent (autre dossier).
+func _check_deferred() -> void:
+	OS.add_logger(errors)
+	music.dir = DEFERRED_DIR
+	var menu_player: AudioStreamPlayer = music.active_player()
+	music.prefetch(state.ZONE_SCENES[&"plaine"])
+	music.play(&"plaine")
+	var start := Time.get_ticks_msec()
+	await wait(30)
+	check("piste absente : pas de gel (30 images en %d ms)" % (Time.get_ticks_msec() - start), Time.get_ticks_msec() - start < 5000)
+	check("piste absente : demandee, en attente du paquet, silencieuse", music.current_track() == &"plaine"
+		and music.is_waiting_for_pack() and not music.is_playing() and not music.is_pack_loaded())
+	check("piste absente : l'ancienne piste s'efface", menu_player.playing and menu_player.volume_linear < db_to_linear(music.TRACKS[&"menu"]))
+	await wait(120)
+	check("piste absente : l'ancienne piste arretee apres le fondu", not menu_player.playing)
+	music.play(&"desert")
+	await wait(10)
+	check("une autre piste absente remplace la premiere, toujours en attente", music.current_track() == &"desert" and music.is_waiting_for_pack())
+	check("aucune erreur tant que le paquet manque (%d : %s)" % [errors.count, errors.last], errors.count == 0)
+
+	# Faux second paquet : les fichiers d'import des deux pistes, rangés dans le dossier simulé, renvoient aux pistes
+	# importées du projet.
+	var pack := "user://musique_test.pck"
+	var packer := PCKPacker.new()
+	var ok := packer.pck_start(pack) == OK
+	for track: StringName in DEFERRED:
+		var source := ProjectSettings.globalize_path("res://assets/audio/music/%s.ogg.import" % track)
+		ok = ok and packer.add_file(DEFERRED_DIR + "%s.ogg.import" % track, source) == OK
+	ok = ok and packer.flush() == OK
+	check("faux paquet de musique ecrit", ok)
+	# Téléchargé par HTTP : un serveur local le sert marqué gzip alors qu'il est déjà décodé, comme une réponse que le
+	# navigateur a décompressée. Sur le web, la réponse n'a en plus jamais de longueur connue (HTTPClientWeb) : ce cas,
+	# où HTTPRequest effaçait un fichier téléchargé (download_file), ne se reproduit pas ici, le client natif traitant
+	# la fermeture de la connexion comme une erreur ; il est vérifié dans le navigateur (docs/musique-differee.md).
+	var server := TCPServer.new()
+	check("serveur HTTP de test", server.listen(0, "127.0.0.1") == OK)
+	var request := [""]
+	_serve_once(server, FileAccess.get_file_as_bytes(pack), request)
+	var loaded := [false]
+	music.pack_loaded.connect(func() -> void: loaded[0] = true, CONNECT_ONE_SHOT)
+	var warnings := errors.warnings
+	music.fetch_pack("http://127.0.0.1:%d/musique.pck" % server.get_local_port())
+	start = Time.get_ticks_msec()
+	while not music.is_pack_loaded() and music.pack_failures() == 0 and Time.get_ticks_msec() - start < 15000:
+		await process_frame
+	server.stop()
+	check("requete GET /musique.pck sans demander gzip (%s)" % request[0].get_slice("\r\n", 0),
+		request[0].begins_with("GET /musique.pck ") and not "gzip" in request[0].to_lower())
+	check("paquet telecharge, ecrit puis monte (%d echec(s))" % music.pack_failures(),
+		music.is_pack_loaded() and loaded[0] and music.pack_failures() == 0)
+	# Le faux paquet n'a que deux pistes : l'avertissement qui le signale prouve que le compteur suit bien le journal.
+	check("le compteur du journal releve l'avertissement du paquet incomplet", errors.warnings == warnings + 1)
+	await wait(10)
+	var player: AudioStreamPlayer = music.active_player()
+	var path := player.stream.resource_path if player.stream else ""
+	check("la piste en attente part des que le paquet est monte (%s)" % path.get_file(), music.current_track() == &"desert"
+		and path == DEFERRED_DIR + "desert.ogg" and player.playing and not music.is_waiting_for_pack())
+	check("elle monte en fondu (%.2f)" % player.volume_linear, player.volume_linear > 0.0 and player.volume_linear < db_to_linear(music.TRACKS[&"desert"]))
+	music.play(&"plaine")
+	await wait(10)
+	player = music.active_player()
+	path = player.stream.resource_path if player.stream else ""
+	check("puis les pistes du paquet s'enchainent (%s)" % path.get_file(), music.current_track() == &"plaine"
+		and path == DEFERRED_DIR + "plaine.ogg" and player.playing)
+	check("le paquet ne remplace aucun fichier du jeu", ResourceLoader.exists("res://assets/audio/music/plaine.ogg")
+		and not ResourceLoader.exists(DEFERRED_DIR + "marais.ogg"))
+	check("aucune erreur au telechargement ni au montage (%d : %s)" % [errors.count, errors.last], errors.count == 0)
+
+	# Téléchargement raté (adresse morte) : nouvelle tentative quelques secondes plus tard, la musique continue.
+	var failures_before: int = music.pack_failures()
+	music.fetch_pack("http://127.0.0.1:9/musique.pck")
+	start = Time.get_ticks_msec()
+	while music.pack_failures() == failures_before and Time.get_ticks_msec() - start < 10000:
+		await process_frame
+	check("telechargement rate : echec releve", music.pack_failures() == failures_before + 1)
+	var first := Time.get_ticks_msec()
+	while music.pack_failures() == failures_before + 1 and Time.get_ticks_msec() - first < 20000:
+		await process_frame
+	var spacing := (Time.get_ticks_msec() - first) / 1000.0
+	check("nouvelle tentative, espacee (%.1f s)" % spacing, music.pack_failures() == failures_before + 2
+		and spacing >= music.PACK_RETRY[0] - 0.5)
+	check("la musique continue malgre les echecs", music.current_track() == &"plaine" and music.is_playing())
+	OS.remove_logger(errors)
+
+	# Retour aux pistes du jeu : celle du faux paquet s'efface et s'arrête.
+	music.dir = music.DIR
+	var deferred_player: AudioStreamPlayer = music.active_player()
+	music.play(&"menu")
+	await wait(120)
+	_check_track("retour aux pistes du jeu apres celles du paquet", &"menu")
+	check("la piste du paquet arretee apres le fondu", not deferred_player.playing)
 
 
 func _check_track(where: String, track: StringName) -> void:
