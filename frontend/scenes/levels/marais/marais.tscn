@@ -473,6 +473,7 @@ props_root = NodePath("../Props")
 crypt_root = NodePath("../Interior/Crypt")
 moss_material = SubResource("ShaderMaterial_moss")
 dust_material = SubResource("ShaderMaterial_dust")
+bake = ExtResource("62_bake")
 
 [node name="Props" parent="." instance=ExtResource("6_props")]
 

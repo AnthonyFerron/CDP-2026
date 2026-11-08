@@ -73,6 +73,12 @@ const LANTERN_SCALE := 2.3
 @export var log_count := 14
 ## Distance à laquelle les petits détails disparaissent, case par case.
 @export var detail_range := 55.0
+## Positions du décor dispersé calculées d'avance (tools/bake_lieux.gd, marais_bake.res). Sans elles, ou si elles ne
+## correspondent plus aux réglages ou au sol, le décor est calculé au chargement, comme avant.
+@export var bake: LevelBake
+
+## Nom du décor dans le calcul d'avance du lieu.
+const BAKE_PART := "marais/decor"
 
 var _rng := RandomNumberGenerator.new()
 
@@ -81,18 +87,53 @@ func _ready() -> void:
 	# Le terrain se construit avant ses voisins : il faut ses hauteurs pour poser le décor.
 	if not terrain.is_node_ready():
 		await terrain.ready
-	_rng.seed = 4040
-	_build_boardwalks()
+	var signature := LevelBake.signature_of(self, [LevelBake.signature_of(terrain)])
+	var scripts: Array[Script] = [get_script(), terrain.get_script()]
+	var plan: Variant = bake.data(BAKE_PART, signature, scripts) if bake and terrain.baked else null
+	if plan == null:
+		plan = _plan()
+		LevelBake.record(BAKE_PART, signature, scripts, plan)
+	_build_boardwalks(plan[0])
 	_build_lanterns()
-	_scatter_trees()
+	_build_trees(plan[1])
 	var reeds: Material = reed_material if reed_material else _flat_material(Color(0.2, 0.26, 0.1))
-	_scatter_by_height(reed_model, reed_count, -0.9, 0.05, Vector2(2.0, 3.2), 0.0, reeds)
-	_scatter_lilies()
-	_scatter_by_height(bush_model, bush_count, 0.25, 1.0, Vector2(3.0, 5.0), 0.0)
-	_scatter_by_height(mushroom_model, mushroom_count, 0.25, 1.0, Vector2(2.5, 4.0), 0.0)
-	_scatter_logs()
+	_add_chunked(_load_mesh(reed_model), _transforms(plan[2]), reeds)
+	for index in lily_models.size():
+		_add_chunked(_load_mesh(lily_models[index]), _transforms(plan[3][index]))
+	for index in flower_models.size():
+		_add_chunked(_load_mesh(flower_models[index]), _transforms(plan[4][index]))
+	_add_chunked(_load_mesh(bush_model), _transforms(plan[5]))
+	_add_chunked(_load_mesh(mushroom_model), _transforms(plan[6]))
+	var logs := _add_multimesh(_load_mesh(log_model), _transforms(plan[7]))
+	logs.visibility_range_end = 0.0
+	# Le décor posé au sol et la mousse dépendent des scènes générées (marais_grounded.tscn, marais_props.tscn) :
+	# calculés au chargement, ils ne sont pas dans le calcul d'avance.
 	_ground_props()
 	_apply_moss()
+
+
+## Ce que le décor tirait au hasard au chargement, dans le même ordre de tirage : le jeu de chaque planche des pontons
+## ([hauteur, angle en degrés] à la suite), les arbres ([copies de chaque modèle, [position, rayon] de chaque
+## collision]), les roseaux, les nénuphars et les fleurs (une liste par modèle), les buissons, les champignons et les
+## troncs noyés (des Transform3D). C'est la partie lente, calculée d'avance par tools/bake_lieux.gd.
+func _plan() -> Array:
+	_rng.seed = 4040
+	var plan := []
+	plan.append(_plan_planks())
+	plan.append(_plan_trees())
+	plan.append(_plan_by_height(reed_count, -0.9, 0.05, Vector2(2.0, 3.2), 0.0))
+	plan.append_array(_plan_lilies())
+	plan.append(_plan_by_height(bush_count, 0.25, 1.0, Vector2(3.0, 5.0), 0.0))
+	plan.append(_plan_by_height(mushroom_count, 0.25, 1.0, Vector2(2.5, 4.0), 0.0))
+	plan.append(_plan_logs())
+	return plan
+
+
+## Liste de Transform3D d'un calcul d'avance relu (le fichier ne garde pas le type des tableaux).
+static func _transforms(items: Array) -> Array[Transform3D]:
+	var transforms: Array[Transform3D] = []
+	transforms.assign(items)
+	return transforms
 
 
 ## Distance au ponton le plus proche, à plat.
@@ -105,11 +146,23 @@ func distance_to_boardwalk(point: Vector2) -> float:
 	return nearest
 
 
-func _build_boardwalks() -> void:
+## Le jeu de chaque planche : sa hauteur et son angle, tirés au hasard, à la suite.
+func _plan_planks() -> PackedFloat64Array:
+	var jitter := PackedFloat64Array()
+	for walk in MaraisTerrain.BOARDWALKS:
+		var count := int(Vector3(walk.x, 0.0, walk.y).distance_to(Vector3(walk.z, 0.0, walk.w)) / PLANK_STEP) + 1
+		for i in count:
+			jitter.append(_rng.randf_range(-0.03, 0.03))
+			jitter.append(_rng.randf_range(-3.0, 3.0))
+	return jitter
+
+
+func _build_boardwalks(jitter: PackedFloat64Array) -> void:
 	var body := StaticBody3D.new()
 	body.name = "Boardwalks"
 	add_child(body)
 	var wood := _flat_material(Color(0.3, 0.2, 0.12))
+	var next := 0
 	for walk in MaraisTerrain.BOARDWALKS:
 		var start := Vector3(walk.x, 0.0, walk.y)
 		var end := Vector3(walk.z, 0.0, walk.w)
@@ -121,8 +174,9 @@ func _build_boardwalks() -> void:
 		for i in count:
 			var plank: Node3D = plank_model.instantiate()
 			plank.position = start + direction * (i * PLANK_STEP) + Vector3.UP * (MaraisTerrain.DECK_HEIGHT - 0.1)
-			plank.position.y += _rng.randf_range(-0.03, 0.03)
-			plank.rotation.y = yaw + PI * 0.5 + deg_to_rad(_rng.randf_range(-3.0, 3.0))
+			plank.position.y += jitter[next]
+			plank.rotation.y = yaw + PI * 0.5 + deg_to_rad(jitter[next + 1])
+			next += 2
 			plank.scale = Vector3.ONE * PLANK_WIDTH
 			body.add_child(plank)
 			for mesh: MeshInstance3D in plank.find_children("*", "MeshInstance3D", true, false):
@@ -229,13 +283,12 @@ func _build_lanterns() -> void:
 			distance += LANTERN_SPACING
 
 
-func _scatter_trees() -> void:
-	var body := StaticBody3D.new()
-	body.name = "Trees"
-	add_child(body)
+## Arbres des îlots et de la berge : [copies de chaque modèle, [pied du tronc, rayon] de chaque collision].
+func _plan_trees() -> Array:
 	var groups: Array[Array] = []
 	for model in tree_models:
 		groups.append([])
+	var trunks := []
 	var placed := 0
 	for attempt in island_tree_count * 20:
 		if placed >= island_tree_count:
@@ -245,13 +298,7 @@ func _scatter_trees() -> void:
 			continue
 		var item := _ground_transform(spot, _rng.randf_range(3.2, 4.8))
 		groups[placed % groups.size()].append(item)
-		var shape := CylinderShape3D.new()
-		shape.radius = 0.45
-		shape.height = 4.0
-		var collision := CollisionShape3D.new()
-		collision.shape = shape
-		collision.position = item.origin + Vector3.UP * 2.0
-		body.add_child(collision)
+		trunks.append([item.origin, 0.45])
 		placed += 1
 	# Le joueur peut gravir la berge : ses arbres ont aussi leur collision au tronc.
 	for i in bank_tree_count:
@@ -259,24 +306,29 @@ func _scatter_trees() -> void:
 		var spot := Vector2.from_angle(angle) * (MaraisTerrain.PLAY_RADIUS + _rng.randf_range(3.0, 9.0))
 		var item := _ground_transform(spot, _rng.randf_range(4.5, 6.5))
 		groups[i % groups.size()].append(item)
+		trunks.append([item.origin, 0.5])
+	return [groups, trunks]
+
+
+func _build_trees(plan: Array) -> void:
+	var body := StaticBody3D.new()
+	body.name = "Trees"
+	add_child(body)
+	for trunk: Array in plan[1]:
 		var shape := CylinderShape3D.new()
-		shape.radius = 0.5
+		shape.radius = trunk[1]
 		shape.height = 4.0
 		var collision := CollisionShape3D.new()
 		collision.shape = shape
-		collision.position = item.origin + Vector3.UP * 2.0
+		collision.position = (trunk[0] as Vector3) + Vector3.UP * 2.0
 		body.add_child(collision)
 	for index in tree_models.size():
-		var transforms: Array[Transform3D] = []
-		transforms.assign(groups[index])
 		var mesh := _load_mesh(tree_models[index])
-		var instance := _add_multimesh(mesh, transforms)
+		var instance := _add_multimesh(mesh, _transforms(plan[0][index]))
 		instance.visibility_range_end = 0.0
 
 
-func _scatter_by_height(
-	model: PackedScene, count: int, low: float, high: float, scale_range: Vector2, sink: float, material: Material = null
-) -> void:
+func _plan_by_height(count: int, low: float, high: float, scale_range: Vector2, sink: float) -> Array[Transform3D]:
 	var items: Array[Transform3D] = []
 	for attempt in count * 6:
 		if items.size() >= count:
@@ -288,11 +340,13 @@ func _scatter_by_height(
 		var item := _ground_transform(spot, _rng.randf_range(scale_range.x, scale_range.y))
 		item.origin.y -= sink
 		items.append(item)
-	_add_chunked(_load_mesh(model), items, material)
+	return items
 
 
-## Nénuphars sur les eaux profondes ; une partie des grands porte une fleur, posée au cœur de la feuille.
-func _scatter_lilies() -> void:
+## Nénuphars sur les eaux profondes ; une partie des grands porte une fleur, posée au cœur de la feuille. Rend
+## [nénuphars de chaque modèle, fleurs de chaque modèle].
+func _plan_lilies() -> Array:
+	var lilies := []
 	var per_model := lily_count / lily_models.size()
 	var flowers: Array[Array] = []
 	for model in flower_models:
@@ -312,14 +366,11 @@ func _scatter_lilies() -> void:
 				var bloom := Basis(Vector3.UP, _rng.randf() * TAU).scaled(Vector3.ONE * size * 0.55)
 				var heart := Vector3(spot.x, MaraisTerrain.WATER_LEVEL - 0.03 + 0.035 * size, spot.y)
 				flowers[_rng.randi() % flowers.size()].append(Transform3D(bloom, heart))
-		_add_chunked(_load_mesh(lily_models[model_index]), items)
-	for index in flower_models.size():
-		var transforms: Array[Transform3D] = []
-		transforms.assign(flowers[index])
-		_add_chunked(_load_mesh(flower_models[index]), transforms)
+		lilies.append(items)
+	return [lilies, flowers]
 
 
-func _scatter_logs() -> void:
+func _plan_logs() -> Array[Transform3D]:
 	var items: Array[Transform3D] = []
 	for attempt in log_count * 20:
 		if items.size() >= log_count:
@@ -329,8 +380,7 @@ func _scatter_logs() -> void:
 			continue
 		var basis := Basis(Vector3.UP, _rng.randf() * TAU) * Basis(Vector3.RIGHT, deg_to_rad(_rng.randf_range(-12.0, 12.0)))
 		items.append(Transform3D(basis.scaled(Vector3.ONE * _rng.randf_range(3.0, 4.5)), Vector3(spot.x, -0.55, spot.y)))
-	var instance := _add_multimesh(_load_mesh(log_model), items)
-	instance.visibility_range_end = 0.0
+	return items
 
 
 ## Descend chaque objet de marais_grounded.tscn sur le sol maillé : son pied se pose au point le plus bas de son
