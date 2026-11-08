@@ -40,6 +40,8 @@ func _ready() -> void:
 		add_child(player)
 		_players.append(player)
 	get_tree().scene_changed.connect(_on_scene_changed)
+	# La première scène est déjà là (lancement direct d'un lieu) : son HUD est suivi aussi.
+	_on_scene_changed.call_deferred()
 
 
 func _input(event: InputEvent) -> void:
