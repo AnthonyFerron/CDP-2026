@@ -38,7 +38,7 @@ Le journal complet de la nuit est sur le serveur, dans `~/cdp-work/JOURNAL.md`. 
   - marche du joueur au bout sud du ruisseau après la correction.
 - **Désert :** 60 contacts légers restants, surtout les bords hauts des prismes des tas de briques épars.
 - **`arch_fill()` :** au-dessus de 2,3 m, ses marches arrêtent la collision 0,21 m avant l'arche visible. Ça ne se sent qu'en sautant ; il faudrait une marche de plus dans `build_plaine.py`.
-- **Chronomètre :** il passe sous le cadre des panneaux d'énigme, car le HUD est dessiné sous eux.
+- **Bandeau « Mauvaise réponse » :** il couvre quelques secondes le titre et la première ligne de la tablette de la Plaine (déjà le cas avant le HUD habillé).
 - **Dos des panneaux (`sign_board.gd`) :** il n'est éclairé que par la lumière ambiante. Les lieux le compensent par des lueurs ou par `double_sided`.
 - **Ombres de la Plaine :** le soleil en 2 tranches d'ombre réduirait les appels de dessin de 30 à 45 % dehors, mais fait du moiré au sol. Piste : adoucir le filtrage des ombres dans les réglages du projet.
 - **Regroupement :** `MaraisBatch` et `PlaineBatch` gagneraient à devenir un seul outil dans `scripts/`.
@@ -46,7 +46,7 @@ Le journal complet de la nuit est sur le serveur, dans `~/cdp-work/JOURNAL.md`. 
   - lire ce qu'un `_process` calcule juste après une action du test : sous charge, une image enchaîne jusqu'à 8 images physiques sans `_process` (hub_test « invite : » vide). `settle()` de `common_test.gd` est appelé par `face()`, `press()` et `use()` ;
   - une entrée d'`Input.parse_input_event`, vidée seulement au début de l'image suivante (menu_test « pause ouverte », « indice ferme » ; hub_test « sortie refusee ») ;
   - ce qui suit l'horloge : fil du mélangeur audio (music_test), limites en `Time.get_ticks_msec`.
-  - Reste à surveiller, sans échec relevé : `timer_test` « chronometre au rouge » (`wait(2)` puis la couleur du HUD, posée dans son `_process`) ; `quality_test` (limites de 20 s à l'horloge, larges).
+  - Reste à surveiller, sans échec relevé : `quality_test` (limites de 20 s à l'horloge, larges). `timer_test` lit le chronomètre après `settle()` depuis `features/hud-menus`.
 - **`tree_collision_test` :** il ne voit plus les arbres morts du Marais, fondus dans le décor ; la grille de marche du Marais les vérifie.
 - **Reste accepté :** Plaine, 1 732 cases sur le dessus d'objets non atteintes.
 
