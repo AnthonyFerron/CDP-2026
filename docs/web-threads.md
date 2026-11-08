@@ -101,5 +101,6 @@ Ce qu'on en retient :
 - **Les durées de chargement sont les mêmes.** Les longues tâches restent, mais elles ne touchent plus le son.
 - **Le chargement en arrière-plan a été essayé, puis écarté** : 99 s au lieu de 18 s pour le hub, 356 s au lieu de 56 s pour le Désert, 418 s au lieu de 47 s pour le Marais.
 - **Le préchauffage des shaders a été essayé, puis écarté.** Sous le noir, il dessinait tout le décor une fois. Il ajoutait de 2 à 19 s par lieu dans cette mesure, sans gain mesurable en rendu logiciel. Avec les fils, une compilation de shader ne coupe de toute façon plus la musique.
+- **Les shaders sont maintenant préparés au menu d'accueil**, hors de l'écran et par petites tranches, sans rien ajouter aux transitions : voir `docs/shaders-menu.md`.
 
 Les outils et les relevés sont dans `.claude/captures/perf-web/` (hors dépôt).
