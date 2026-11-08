@@ -1,0 +1,1107 @@
+[gd_resource type="Resource" script_class="ShaderWarmList" format=3]
+
+[ext_resource type="Shader" path="res://scenes/levels/hub/hub_ground.gdshader" id="1_prb1a"]
+[ext_resource type="Shader" path="res://scenes/levels/hub/hub_water.gdshader" id="2_qr7q2"]
+[ext_resource type="Shader" path="res://scenes/props/portal/portal.gdshader" id="3_0perr"]
+[ext_resource type="FontVariation" path="res://ui/cinzel_bold.tres" id="4_67ur3"]
+[ext_resource type="Shader" path="res://scenes/levels/plaine/lava.gdshader" id="5_2gw5p"]
+[ext_resource type="Shader" path="res://scenes/levels/plaine/plaine_ground.gdshader" id="6_b1v2h"]
+[ext_resource type="Shader" path="res://scenes/levels/plaine/soot.gdshader" id="7_8ptnn"]
+[ext_resource type="FontFile" path="res://assets/fonts/Lora.ttf" id="8_424og"]
+[ext_resource type="Shader" path="res://scenes/levels/plaine/library_floor.gdshader" id="9_bb3fg"]
+[ext_resource type="Shader" path="res://scenes/levels/desert/desert_cloth.gdshader" id="10_trcym"]
+[ext_resource type="Shader" path="res://scenes/levels/desert/desert_sand.gdshader" id="11_t26fv"]
+[ext_resource type="Shader" path="res://scenes/levels/desert/mirage_caravan.gdshader" id="12_4ymab"]
+[ext_resource type="Shader" path="res://scenes/levels/desert/mirage_pool.gdshader" id="13_sdfss"]
+[ext_resource type="Shader" path="res://scenes/levels/desert/quicksand.gdshader" id="14_cvl50"]
+[ext_resource type="Shader" path="res://scenes/levels/desert/whirlwind.gdshader" id="15_j3inu"]
+[ext_resource type="Shader" path="res://scenes/levels/desert/chest_sand.gdshader" id="16_cekdx"]
+[ext_resource type="Shader" path="res://scenes/levels/marais/marais_ground.gdshader" id="17_pdaks"]
+[ext_resource type="Shader" path="res://scenes/levels/marais/moss_overlay.gdshader" id="18_1u43v"]
+[ext_resource type="Shader" path="res://scenes/levels/marais/reeds_sway.gdshader" id="19_i5wcp"]
+[ext_resource type="Shader" path="res://scenes/levels/marais/swamp_fog.gdshader" id="20_bisxt"]
+[ext_resource type="Shader" path="res://scenes/levels/marais/swamp_water.gdshader" id="21_vvvxo"]
+[ext_resource type="Shader" path="res://scenes/levels/marais/crypt_stone.gdshader" id="22_yefff"]
+[ext_resource type="Shader" path="res://scenes/levels/village/village_cloth.gdshader" id="23_56fjn"]
+[ext_resource type="Script" path="res://scripts/shader_warm_list.gd" id="24_4ug0t"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_uor4t"]
+sky_top_color = Color(0.3, 0.29, 0.36, 1)
+sky_horizon_color = Color(0.5, 0.45, 0.45, 1)
+ground_bottom_color = Color(0.425, 0.3825, 0.3825, 1)
+ground_horizon_color = Color(0.5, 0.45, 0.45, 1)
+
+[sub_resource type="Sky" id="Sky_6cn63"]
+sky_material = SubResource("ProceduralSkyMaterial_uor4t")
+
+[sub_resource type="Environment" id="Environment_royxn"]
+background_mode = 2
+sky = SubResource("Sky_6cn63")
+ambient_light_source = 3
+ambient_light_color = Color(0.75, 0.72, 0.7, 1)
+ambient_light_energy = 0.5
+tonemap_mode = 3
+glow_enabled = true
+glow_intensity = 0.5
+glow_bloom = 0.04
+fog_enabled = true
+fog_light_color = Color(0.45, 0.42, 0.42, 1)
+fog_density = 0.014
+fog_sky_affect = 0.3
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8g3rf"]
+render_priority = 0
+shader = ExtResource("1_prb1a")
+shader_parameter/life = null
+shader_parameter/dead_tint = null
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_x02ay"]
+render_priority = 0
+shader = ExtResource("2_qr7q2")
+shader_parameter/life = null
+shader_parameter/flow_speed = null
+shader_parameter/across = null
+shader_parameter/murky_color = null
+shader_parameter/clear_color = null
+shader_parameter/foam_color = null
+shader_parameter/opacity = null
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3cbt2"]
+render_priority = 0
+shader = ExtResource("3_0perr")
+shader_parameter/inner_color = null
+shader_parameter/outer_color = null
+shader_parameter/spin_speed = null
+shader_parameter/opening_width = null
+shader_parameter/pillar_height = null
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_08veb"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2x1ka"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4bfwb"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g8nsb"]
+emission_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wqmjn"]
+vertex_color_use_as_albedo = true
+vertex_color_is_srgb = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xinqt"]
+vertex_color_use_as_albedo = true
+vertex_color_is_srgb = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vbke4"]
+vertex_color_use_as_albedo = true
+vertex_color_is_srgb = true
+emission_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wmnkh"]
+disable_fog = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_edrat"]
+cull_mode = 2
+shading_mode = 0
+disable_fog = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6cmn4"]
+cull_mode = 2
+shading_mode = 0
+disable_fog = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i42go"]
+cull_mode = 2
+texture_filter = 2
+metadata/_gltf_primary_texture_coord = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uuaqr"]
+cull_mode = 2
+texture_filter = 2
+metadata/_gltf_primary_texture_coord = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8ns6j"]
+cull_mode = 2
+texture_filter = 2
+metadata/_gltf_primary_texture_coord = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r1gii"]
+cull_mode = 2
+metadata/_gltf_primary_texture_coord = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5ko2t"]
+cull_mode = 2
+metadata/_gltf_primary_texture_coord = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wyfrm"]
+cull_mode = 2
+metadata/_gltf_primary_texture_coord = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bmntp"]
+cull_mode = 2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_drtve"]
+cull_mode = 2
+disable_fog = true
+vertex_color_use_as_albedo = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n7pis"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_75qhn"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ib6qi"]
+transparency = 4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rb284"]
+transparency = 4
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_jfjj1"]
+sky_top_color = Color(0.3, 0.29, 0.36, 1)
+sky_horizon_color = Color(0.5, 0.45, 0.45, 1)
+ground_bottom_color = Color(0.425, 0.3825, 0.3825, 1)
+ground_horizon_color = Color(0.5, 0.45, 0.45, 1)
+
+[sub_resource type="Sky" id="Sky_uv4yt"]
+sky_material = SubResource("ProceduralSkyMaterial_jfjj1")
+
+[sub_resource type="Environment" id="Environment_euihj"]
+background_mode = 2
+sky = SubResource("Sky_uv4yt")
+ambient_light_source = 3
+ambient_light_color = Color(0.75, 0.72, 0.7, 1)
+ambient_light_energy = 0.5
+tonemap_mode = 3
+glow_enabled = true
+glow_intensity = 0.5
+glow_bloom = 0.04
+fog_light_color = Color(0.45, 0.42, 0.42, 1)
+fog_density = 0.014
+fog_sky_affect = 0.3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4lf4l"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_knrnb"]
+emission_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e5n1j"]
+cull_mode = 2
+texture_filter = 2
+metadata/_gltf_primary_texture_coord = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_swmmi"]
+cull_mode = 2
+metadata/_gltf_primary_texture_coord = 0
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_me435"]
+sky_top_color = Color(0.14, 0.11, 0.16, 1)
+sky_horizon_color = Color(0.5, 0.29, 0.27, 1)
+ground_bottom_color = Color(0.09, 0.08, 0.1, 1)
+ground_horizon_color = Color(0.42, 0.28, 0.3, 1)
+
+[sub_resource type="Sky" id="Sky_2u7ye"]
+sky_material = SubResource("ProceduralSkyMaterial_me435")
+
+[sub_resource type="Environment" id="Environment_6hbyq"]
+background_mode = 2
+sky = SubResource("Sky_2u7ye")
+ambient_light_source = 3
+ambient_light_color = Color(0.6, 0.52, 0.56, 1)
+ambient_light_energy = 0.75
+tonemap_mode = 2
+glow_enabled = true
+glow_intensity = 0.7
+glow_bloom = 0.08
+glow_hdr_threshold = 0.9
+fog_enabled = true
+fog_light_color = Color(0.36, 0.29, 0.32, 1)
+fog_sun_scatter = 0.25
+fog_density = 0.018
+fog_sky_affect = 0.55
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3eedt"]
+render_priority = 0
+shader = ExtResource("5_2gw5p")
+shader_parameter/core_color = null
+shader_parameter/hot_color = null
+shader_parameter/crust_color = null
+shader_parameter/emission_strength = null
+shader_parameter/flow_speed = null
+shader_parameter/ribbon = null
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5rfry"]
+render_priority = 0
+shader = ExtResource("6_b1v2h")
+shader_parameter/ember_color = null
+shader_parameter/crack_scale = null
+shader_parameter/crack_width = null
+shader_parameter/crack_strength = null
+shader_parameter/glow_strength = null
+shader_parameter/patch_scale = null
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_s0sbp"]
+render_priority = 0
+shader = ExtResource("7_8ptnn")
+shader_parameter/soot_color = null
+shader_parameter/base_height = null
+shader_parameter/floor_height = null
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qxjo7"]
+render_priority = 0
+shader = ExtResource("7_8ptnn")
+shader_parameter/soot_color = null
+shader_parameter/base_height = null
+shader_parameter/floor_height = null
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_meosj"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_18s3t"]
+emission_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ujsp8"]
+vertex_color_use_as_albedo = true
+vertex_color_is_srgb = true
+emission_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rr0ua"]
+transparency = 1
+shading_mode = 0
+disable_fog = true
+vertex_color_use_as_albedo = true
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3b8jd"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+disable_fog = true
+billboard_mode = 1
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_8nw0r"]
+sky_top_color = Color(0.14, 0.11, 0.16, 1)
+sky_horizon_color = Color(0.5, 0.29, 0.27, 1)
+ground_bottom_color = Color(0.09, 0.08, 0.1, 1)
+ground_horizon_color = Color(0.42, 0.28, 0.3, 1)
+
+[sub_resource type="Sky" id="Sky_gi0ag"]
+sky_material = SubResource("ProceduralSkyMaterial_8nw0r")
+
+[sub_resource type="Environment" id="Environment_2kp4s"]
+background_mode = 2
+sky = SubResource("Sky_gi0ag")
+ambient_light_source = 3
+ambient_light_color = Color(0.6, 0.52, 0.56, 1)
+ambient_light_energy = 0.75
+tonemap_mode = 2
+glow_enabled = true
+glow_intensity = 0.7
+glow_bloom = 0.08
+glow_hdr_threshold = 0.9
+fog_light_color = Color(0.36, 0.29, 0.32, 1)
+fog_sun_scatter = 0.25
+fog_density = 0.018
+fog_sky_affect = 0.55
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7uhs5"]
+render_priority = 0
+shader = ExtResource("9_bb3fg")
+shader_parameter/stone_color = null
+shader_parameter/joint_color = null
+shader_parameter/tile_size = null
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2v2lr"]
+render_priority = 0
+shader = ExtResource("7_8ptnn")
+shader_parameter/soot_color = null
+shader_parameter/base_height = null
+shader_parameter/floor_height = null
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mnsbh"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p2dc3"]
+emission_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g77m7"]
+vertex_color_use_as_albedo = true
+vertex_color_is_srgb = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lqde2"]
+vertex_color_use_as_albedo = true
+vertex_color_is_srgb = true
+emission_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6v4lh"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_otbip"]
+transparency = 1
+vertex_color_use_as_albedo = true
+emission_enabled = true
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_8pl0g"]
+sky_top_color = Color(0.3, 0.5, 0.76, 1)
+sky_horizon_color = Color(0.96, 0.76, 0.5, 1)
+ground_bottom_color = Color(0.5, 0.38, 0.24, 1)
+ground_horizon_color = Color(0.96, 0.76, 0.5, 1)
+sun_angle_max = 14.0
+sun_curve = 0.1
+
+[sub_resource type="Sky" id="Sky_tsa37"]
+sky_material = SubResource("ProceduralSkyMaterial_8pl0g")
+
+[sub_resource type="Environment" id="Environment_ka8hu"]
+background_mode = 2
+sky = SubResource("Sky_tsa37")
+ambient_light_source = 3
+ambient_light_color = Color(0.85, 0.72, 0.55, 1)
+ambient_light_sky_contribution = 0.3
+ambient_light_energy = 0.3
+tonemap_mode = 3
+tonemap_exposure = 0.86
+glow_enabled = true
+glow_intensity = 0.5
+glow_bloom = 0.04
+fog_enabled = true
+fog_light_color = Color(0.9, 0.73, 0.5, 1)
+fog_density = 0.007
+fog_sky_affect = 0.2
+fog_height = 1.2
+fog_height_density = 0.035
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fmma7"]
+render_priority = 0
+shader = ExtResource("10_trcym")
+shader_parameter/color = null
+shader_parameter/speed = null
+shader_parameter/amplitude = null
+shader_parameter/phase = null
+shader_parameter/hanging = null
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4ckpn"]
+render_priority = 0
+shader = ExtResource("11_t26fv")
+shader_parameter/ripple_scale = null
+shader_parameter/ripple_depth = null
+shader_parameter/tint = null
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rskui"]
+render_priority = 0
+shader = ExtResource("11_t26fv")
+shader_parameter/ripple_scale = null
+shader_parameter/ripple_depth = null
+shader_parameter/tint = null
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hviyv"]
+render_priority = 0
+shader = ExtResource("12_4ymab")
+shader_parameter/color = null
+shader_parameter/fade_near = null
+shader_parameter/fade_far = null
+shader_parameter/strength = null
+shader_parameter/stride = null
+shader_parameter/swing = null
+shader_parameter/phase = null
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8yiss"]
+render_priority = 0
+shader = ExtResource("13_sdfss")
+shader_parameter/sky_color = null
+shader_parameter/haze_color = null
+shader_parameter/fade_near = null
+shader_parameter/fade_far = null
+shader_parameter/strength = null
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_a14yc"]
+render_priority = 0
+shader = ExtResource("14_cvl50")
+shader_parameter/sand_color = null
+shader_parameter/wet_color = null
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rhmwo"]
+render_priority = 0
+shader = ExtResource("15_j3inu")
+shader_parameter/color = null
+shader_parameter/height = null
+shader_parameter/spin = null
+shader_parameter/opacity = null
+shader_parameter/sway = null
+shader_parameter/phase = null
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8otlh"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0obg2"]
+sky_top_color = Color(0.3, 0.5, 0.76, 1)
+sky_horizon_color = Color(0.96, 0.76, 0.5, 1)
+ground_bottom_color = Color(0.5, 0.38, 0.24, 1)
+ground_horizon_color = Color(0.96, 0.76, 0.5, 1)
+sun_angle_max = 14.0
+sun_curve = 0.1
+
+[sub_resource type="Sky" id="Sky_wxmg0"]
+sky_material = SubResource("ProceduralSkyMaterial_0obg2")
+
+[sub_resource type="Environment" id="Environment_m0ypo"]
+background_mode = 2
+sky = SubResource("Sky_wxmg0")
+ambient_light_source = 3
+ambient_light_color = Color(0.85, 0.72, 0.55, 1)
+ambient_light_sky_contribution = 0.3
+ambient_light_energy = 0.3
+tonemap_mode = 3
+tonemap_exposure = 0.86
+glow_enabled = true
+glow_intensity = 0.5
+glow_bloom = 0.04
+fog_light_color = Color(0.9, 0.73, 0.5, 1)
+fog_density = 0.007
+fog_sky_affect = 0.2
+fog_height = 1.2
+fog_height_density = 0.035
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8t5d4"]
+render_priority = 0
+shader = ExtResource("16_cekdx")
+shader_parameter/spread = null
+shader_parameter/radius = null
+shader_parameter/height = null
+shader_parameter/spread_radius = null
+shader_parameter/layer = null
+shader_parameter/color = null
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ubv0d"]
+render_priority = 0
+shader = ExtResource("11_t26fv")
+shader_parameter/ripple_scale = null
+shader_parameter/ripple_depth = null
+shader_parameter/tint = null
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0m36m"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0i3dq"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i18f6"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_x46qf"]
+sky_top_color = Color(0.03, 0.045, 0.07, 1)
+sky_horizon_color = Color(0.13, 0.17, 0.17, 1)
+ground_bottom_color = Color(0.03, 0.04, 0.04, 1)
+ground_horizon_color = Color(0.13, 0.17, 0.17, 1)
+
+[sub_resource type="Sky" id="Sky_82cck"]
+sky_material = SubResource("ProceduralSkyMaterial_x46qf")
+
+[sub_resource type="Environment" id="Environment_bno0n"]
+background_mode = 2
+sky = SubResource("Sky_82cck")
+ambient_light_source = 3
+ambient_light_color = Color(0.42, 0.52, 0.5, 1)
+ambient_light_energy = 0.7
+tonemap_mode = 2
+glow_enabled = true
+glow_intensity = 0.7
+glow_bloom = 0.06
+glow_hdr_threshold = 0.9
+fog_enabled = true
+fog_light_color = Color(0.17, 0.22, 0.21, 1)
+fog_density = 0.034
+fog_sky_affect = 0.7
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sqrte"]
+render_priority = 0
+shader = ExtResource("17_pdaks")
+shader_parameter/wet_height = null
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2nxoi"]
+render_priority = 0
+shader = ExtResource("18_1u43v")
+shader_parameter/moss_color = null
+shader_parameter/damp_color = null
+shader_parameter/coverage = null
+shader_parameter/damp_height = null
+shader_parameter/damp_amount = null
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dgqrl"]
+render_priority = 0
+shader = ExtResource("19_i5wcp")
+shader_parameter/color = null
+shader_parameter/sway = null
+shader_parameter/speed = null
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_l2n1x"]
+render_priority = 0
+shader = ExtResource("20_bisxt")
+shader_parameter/fog_color = null
+shader_parameter/density = null
+shader_parameter/scale = null
+shader_parameter/drift = null
+shader_parameter/near_fade = null
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_og1hj"]
+render_priority = 0
+shader = ExtResource("21_vvvxo")
+shader_parameter/water_color = null
+shader_parameter/scum_color = null
+shader_parameter/opacity = null
+shader_parameter/ripple_strength = null
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qxfoc"]
+shading_mode = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s2ep0"]
+shading_mode = 0
+vertex_color_use_as_albedo = true
+vertex_color_is_srgb = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6byc4"]
+cull_mode = 2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l3fn7"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+billboard_mode = 1
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ojp6v"]
+sky_top_color = Color(0.03, 0.045, 0.07, 1)
+sky_horizon_color = Color(0.13, 0.17, 0.17, 1)
+ground_bottom_color = Color(0.03, 0.04, 0.04, 1)
+ground_horizon_color = Color(0.13, 0.17, 0.17, 1)
+
+[sub_resource type="Sky" id="Sky_qsmyd"]
+sky_material = SubResource("ProceduralSkyMaterial_ojp6v")
+
+[sub_resource type="Environment" id="Environment_gxfsd"]
+background_mode = 2
+sky = SubResource("Sky_qsmyd")
+ambient_light_source = 3
+ambient_light_color = Color(0.42, 0.52, 0.5, 1)
+ambient_light_energy = 0.7
+tonemap_mode = 2
+glow_enabled = true
+glow_intensity = 0.7
+glow_bloom = 0.06
+glow_hdr_threshold = 0.9
+fog_light_color = Color(0.17, 0.22, 0.21, 1)
+fog_density = 0.034
+fog_sky_affect = 0.7
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ab82e"]
+render_priority = 0
+shader = ExtResource("22_yefff")
+shader_parameter/tint = null
+shader_parameter/keep = null
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nuwll"]
+render_priority = 0
+shader = ExtResource("18_1u43v")
+shader_parameter/moss_color = null
+shader_parameter/damp_color = null
+shader_parameter/coverage = null
+shader_parameter/damp_height = null
+shader_parameter/damp_amount = null
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vig8a"]
+render_priority = 0
+shader = ExtResource("18_1u43v")
+shader_parameter/moss_color = null
+shader_parameter/damp_color = null
+shader_parameter/coverage = null
+shader_parameter/damp_height = null
+shader_parameter/damp_amount = null
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_20ttl"]
+vertex_color_use_as_albedo = true
+vertex_color_is_srgb = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8oarr"]
+cull_mode = 2
+texture_filter = 2
+metadata/_gltf_primary_texture_coord = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y6oy6"]
+cull_mode = 2
+metadata/_gltf_primary_texture_coord = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l80kq"]
+cull_mode = 2
+vertex_color_use_as_albedo = true
+vertex_color_is_srgb = true
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ii3re"]
+sky_top_color = Color(0.26, 0.28, 0.42, 1)
+sky_horizon_color = Color(0.92, 0.58, 0.38, 1)
+ground_bottom_color = Color(0.15, 0.13, 0.12, 1)
+ground_horizon_color = Color(0.92, 0.58, 0.38, 1)
+sun_angle_max = 15.0
+
+[sub_resource type="Sky" id="Sky_gi7ey"]
+sky_material = SubResource("ProceduralSkyMaterial_ii3re")
+
+[sub_resource type="Environment" id="Environment_2cv1r"]
+background_mode = 2
+sky = SubResource("Sky_gi7ey")
+ambient_light_source = 3
+ambient_light_color = Color(0.78, 0.68, 0.62, 1)
+ambient_light_energy = 0.55
+tonemap_mode = 3
+glow_enabled = true
+glow_intensity = 0.6
+glow_bloom = 0.05
+fog_enabled = true
+fog_light_color = Color(0.62, 0.5, 0.44, 1)
+fog_density = 0.012
+fog_sky_affect = 0.35
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tw6bf"]
+render_priority = 0
+shader = ExtResource("17_pdaks")
+shader_parameter/wet_height = null
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0n7gg"]
+render_priority = 0
+shader = ExtResource("21_vvvxo")
+shader_parameter/water_color = null
+shader_parameter/scum_color = null
+shader_parameter/opacity = null
+shader_parameter/ripple_strength = null
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dfym7"]
+render_priority = 0
+shader = ExtResource("23_56fjn")
+shader_parameter/albedo = null
+shader_parameter/use_texture = null
+shader_parameter/amplitude = null
+shader_parameter/speed = null
+shader_parameter/world_anchor = null
+shader_parameter/anchor = null
+shader_parameter/span = null
+shader_parameter/ground = null
+shader_parameter/sway_axis = null
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2j2l5"]
+render_priority = 0
+shader = ExtResource("3_0perr")
+shader_parameter/inner_color = null
+shader_parameter/outer_color = null
+shader_parameter/spin_speed = null
+shader_parameter/opening_width = null
+shader_parameter/pillar_height = null
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0xsal"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wa3bq"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_b55oj"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h5nrr"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c1x58"]
+emission_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m73of"]
+emission_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_eikcb"]
+emission_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yqf5c"]
+cull_mode = 2
+shading_mode = 0
+disable_fog = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wir6e"]
+cull_mode = 2
+texture_filter = 2
+metadata/_gltf_primary_texture_coord = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_05hnl"]
+cull_mode = 2
+texture_filter = 2
+metadata/_gltf_primary_texture_coord = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8ousq"]
+cull_mode = 2
+texture_filter = 2
+metadata/_gltf_primary_texture_coord = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_eb3ts"]
+cull_mode = 2
+metadata/_gltf_primary_texture_coord = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qib6r"]
+cull_mode = 2
+metadata/_gltf_primary_texture_coord = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sbje3"]
+cull_mode = 2
+metadata/_gltf_primary_texture_coord = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m4mqf"]
+cull_mode = 2
+disable_fog = true
+vertex_color_use_as_albedo = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_eghua"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l5xmr"]
+transparency = 1
+shading_mode = 0
+disable_fog = true
+vertex_color_use_as_albedo = true
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jluaf"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cmxmu"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+disable_fog = true
+billboard_mode = 1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3dbay"]
+transparency = 4
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sa48r"]
+sky_top_color = Color(0.26, 0.28, 0.42, 1)
+sky_horizon_color = Color(0.92, 0.58, 0.38, 1)
+ground_bottom_color = Color(0.15, 0.13, 0.12, 1)
+ground_horizon_color = Color(0.92, 0.58, 0.38, 1)
+sun_angle_max = 15.0
+
+[sub_resource type="Sky" id="Sky_2vfea"]
+sky_material = SubResource("ProceduralSkyMaterial_sa48r")
+
+[sub_resource type="Environment" id="Environment_gdolb"]
+background_mode = 2
+sky = SubResource("Sky_2vfea")
+ambient_light_source = 3
+ambient_light_color = Color(0.78, 0.68, 0.62, 1)
+ambient_light_energy = 0.55
+tonemap_mode = 3
+glow_enabled = true
+glow_intensity = 0.6
+glow_bloom = 0.05
+fog_light_color = Color(0.62, 0.5, 0.44, 1)
+fog_density = 0.012
+fog_sky_affect = 0.35
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_v062r"]
+render_priority = 0
+shader = ExtResource("23_56fjn")
+shader_parameter/albedo = null
+shader_parameter/use_texture = null
+shader_parameter/amplitude = null
+shader_parameter/speed = null
+shader_parameter/world_anchor = null
+shader_parameter/anchor = null
+shader_parameter/span = null
+shader_parameter/ground = null
+shader_parameter/sway_axis = null
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dgp7c"]
+cull_mode = 2
+metadata/_gltf_primary_texture_coord = 0
+
+[resource]
+script = ExtResource("24_4ug0t")
+fingerprint = PackedStringArray("hub/ext: fog=true suns=[\"true/1/false\"] omni=true labels {\"alpha_antialiasing_mode\": 0,\"alpha_cut\": 1,\"billboard\": 0,\"cast_shadow\": 0,\"double_sided\": false,\"fixed_size\": false,\"font\": Resource(\"uid://bmf6cibxclx2l\", \"res://ui/cinzel_bold.tres\"),\"no_depth_test\": false,\"shaded\": true,\"texture_filter\": 5}", "hub/ext: fog=true suns=[\"true/1/false\"] omni=true labels {\"alpha_antialiasing_mode\": 0,\"alpha_cut\": 1,\"billboard\": 0,\"cast_shadow\": 0,\"double_sided\": false,\"fixed_size\": false,\"font\": null,\"no_depth_test\": false,\"shaded\": true,\"texture_filter\": 3}", "hub/ext: fog=true suns=[\"true/1/false\"] omni=true materials ShaderMaterial res://scenes/levels/hub/hub_ground.gdshader usage=2", "hub/ext: fog=true suns=[\"true/1/false\"] omni=true materials ShaderMaterial res://scenes/levels/hub/hub_water.gdshader usage=0", "hub/ext: fog=true suns=[\"true/1/false\"] omni=true materials ShaderMaterial res://scenes/props/portal/portal.gdshader usage=0", "hub/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=1", "hub/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=2", "hub/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=3", "hub/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=true emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=2", "hub/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=true vertex_color_is_srgb=true albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=0", "hub/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=true vertex_color_is_srgb=true albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=2", "hub/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=true vertex_color_is_srgb=true albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=true emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=0", "hub/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=true disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=2", "hub/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=2 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=0 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=true disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=2", "hub/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=2 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=0 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=true disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=3", "hub/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=2 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=2 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 metadata/_gltf_primary_texture_coord=0 usage=0", "hub/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=2 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=2 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 metadata/_gltf_primary_texture_coord=0 usage=2", "hub/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=2 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=2 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 metadata/_gltf_primary_texture_coord=0 usage=3", "hub/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=2 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 metadata/_gltf_primary_texture_coord=0 usage=0", "hub/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=2 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 metadata/_gltf_primary_texture_coord=0 usage=2", "hub/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=2 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 metadata/_gltf_primary_texture_coord=0 usage=3", "hub/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=2 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=2", "hub/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=2 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=true disable_specular_occlusion=false vertex_color_use_as_albedo=true vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=2", "hub/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=1 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=0 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=true vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=3 billboard_keep_scale=false particles_anim_h_frames=1 particles_anim_v_frames=1 particles_anim_loop=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=3", "hub/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=1 blend_mode=1 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=0 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=true vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=3 billboard_keep_scale=false particles_anim_h_frames=1 particles_anim_v_frames=1 particles_anim_loop=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=3", "hub/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=4 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=2", "hub/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=4 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=3", "hub/int: fog=false suns=[] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=2", "hub/int: fog=false suns=[] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=true emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=2", "hub/int: fog=false suns=[] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=2 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=2 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 metadata/_gltf_primary_texture_coord=0 usage=2", "hub/int: fog=false suns=[] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=2 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 metadata/_gltf_primary_texture_coord=0 usage=2", "plaine/ext: fog=true suns=[\"true/1/false\"] omni=true labels {\"alpha_antialiasing_mode\": 0,\"alpha_cut\": 1,\"billboard\": 0,\"cast_shadow\": 0,\"double_sided\": false,\"fixed_size\": false,\"font\": Resource(\"uid://c4u6k6pwhhnpc\", \"res://assets/fonts/Lora.ttf\"),\"no_depth_test\": false,\"shaded\": true,\"texture_filter\": 5}", "plaine/ext: fog=true suns=[\"true/1/false\"] omni=true materials ShaderMaterial res://scenes/levels/plaine/lava.gdshader usage=0", "plaine/ext: fog=true suns=[\"true/1/false\"] omni=true materials ShaderMaterial res://scenes/levels/plaine/plaine_ground.gdshader usage=2", "plaine/ext: fog=true suns=[\"true/1/false\"] omni=true materials ShaderMaterial res://scenes/levels/plaine/soot.gdshader usage=2", "plaine/ext: fog=true suns=[\"true/1/false\"] omni=true materials ShaderMaterial res://scenes/levels/plaine/soot.gdshader usage=3", "plaine/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=0", "plaine/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=true emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=3", "plaine/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=true vertex_color_is_srgb=true albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=true emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=2", "plaine/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=1 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=0 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=true disable_specular_occlusion=false vertex_color_use_as_albedo=true vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=3 billboard_keep_scale=false particles_anim_h_frames=1 particles_anim_v_frames=1 particles_anim_loop=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=3", "plaine/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=1 blend_mode=1 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=0 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=true disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=1 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=0", "plaine/int: fog=false suns=[] omni=true labels {\"alpha_antialiasing_mode\": 0,\"alpha_cut\": 1,\"billboard\": 0,\"cast_shadow\": 0,\"double_sided\": false,\"fixed_size\": false,\"font\": Resource(\"uid://bmf6cibxclx2l\", \"res://ui/cinzel_bold.tres\"),\"no_depth_test\": false,\"shaded\": true,\"texture_filter\": 5}", "plaine/int: fog=false suns=[] omni=true labels {\"alpha_antialiasing_mode\": 0,\"alpha_cut\": 1,\"billboard\": 0,\"cast_shadow\": 0,\"double_sided\": false,\"fixed_size\": false,\"font\": Resource(\"uid://c4u6k6pwhhnpc\", \"res://assets/fonts/Lora.ttf\"),\"no_depth_test\": false,\"shaded\": true,\"texture_filter\": 3}", "plaine/int: fog=false suns=[] omni=true materials ShaderMaterial res://scenes/levels/plaine/library_floor.gdshader usage=2", "plaine/int: fog=false suns=[] omni=true materials ShaderMaterial res://scenes/levels/plaine/soot.gdshader usage=2", "plaine/int: fog=false suns=[] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=3", "plaine/int: fog=false suns=[] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=true emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=3", "plaine/int: fog=false suns=[] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=true vertex_color_is_srgb=true albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=2", "plaine/int: fog=false suns=[] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=true vertex_color_is_srgb=true albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=true emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=2", "plaine/int: fog=false suns=[] omni=true materials StandardMaterial3D transparency=1 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=0 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=true vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=3 billboard_keep_scale=false particles_anim_h_frames=1 particles_anim_v_frames=1 particles_anim_loop=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=3", "plaine/int: fog=false suns=[] omni=true materials StandardMaterial3D transparency=1 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=true vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=true emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=3 billboard_keep_scale=false particles_anim_h_frames=1 particles_anim_v_frames=1 particles_anim_loop=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=3", "desert/ext: fog=true suns=[\"true/1/false\"] omni=true materials ShaderMaterial res://scenes/levels/desert/desert_cloth.gdshader usage=2", "desert/ext: fog=true suns=[\"true/1/false\"] omni=true materials ShaderMaterial res://scenes/levels/desert/desert_sand.gdshader usage=2", "desert/ext: fog=true suns=[\"true/1/false\"] omni=true materials ShaderMaterial res://scenes/levels/desert/desert_sand.gdshader usage=3", "desert/ext: fog=true suns=[\"true/1/false\"] omni=true materials ShaderMaterial res://scenes/levels/desert/mirage_caravan.gdshader usage=0", "desert/ext: fog=true suns=[\"true/1/false\"] omni=true materials ShaderMaterial res://scenes/levels/desert/mirage_pool.gdshader usage=0", "desert/ext: fog=true suns=[\"true/1/false\"] omni=true materials ShaderMaterial res://scenes/levels/desert/quicksand.gdshader usage=0", "desert/ext: fog=true suns=[\"true/1/false\"] omni=true materials ShaderMaterial res://scenes/levels/desert/whirlwind.gdshader usage=0", "desert/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=1 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=0 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=true vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=3 billboard_keep_scale=false particles_anim_h_frames=1 particles_anim_v_frames=1 particles_anim_loop=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=1", "desert/int: fog=false suns=[] omni=true labels {\"alpha_antialiasing_mode\": 0,\"alpha_cut\": 1,\"billboard\": 0,\"cast_shadow\": 0,\"double_sided\": false,\"fixed_size\": false,\"font\": Resource(\"uid://c4u6k6pwhhnpc\", \"res://assets/fonts/Lora.ttf\"),\"no_depth_test\": false,\"shaded\": true,\"texture_filter\": 5}", "desert/int: fog=false suns=[] omni=true labels {\"alpha_antialiasing_mode\": 0,\"alpha_cut\": 1,\"billboard\": 0,\"cast_shadow\": 0,\"double_sided\": false,\"fixed_size\": false,\"font\": null,\"no_depth_test\": false,\"shaded\": true,\"texture_filter\": 3}", "desert/int: fog=false suns=[] omni=true materials ShaderMaterial res://scenes/levels/desert/chest_sand.gdshader usage=2", "desert/int: fog=false suns=[] omni=true materials ShaderMaterial res://scenes/levels/desert/desert_sand.gdshader usage=3", "desert/int: fog=false suns=[] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=0", "desert/int: fog=false suns=[] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=1", "desert/int: fog=false suns=[] omni=true materials StandardMaterial3D transparency=1 blend_mode=1 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=0 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=true vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=3 billboard_keep_scale=false particles_anim_h_frames=1 particles_anim_v_frames=1 particles_anim_loop=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=3", "marais/ext: fog=true suns=[\"true/1/false\"] omni=true materials ShaderMaterial res://scenes/levels/marais/marais_ground.gdshader usage=2", "marais/ext: fog=true suns=[\"true/1/false\"] omni=true materials ShaderMaterial res://scenes/levels/marais/moss_overlay.gdshader usage=2", "marais/ext: fog=true suns=[\"true/1/false\"] omni=true materials ShaderMaterial res://scenes/levels/marais/reeds_sway.gdshader usage=1", "marais/ext: fog=true suns=[\"true/1/false\"] omni=true materials ShaderMaterial res://scenes/levels/marais/swamp_fog.gdshader usage=0", "marais/ext: fog=true suns=[\"true/1/false\"] omni=true materials ShaderMaterial res://scenes/levels/marais/swamp_water.gdshader usage=0", "marais/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=0 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=0", "marais/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=0 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=true vertex_color_is_srgb=true albedo_texture_force_srgb=false albedo_texture_msdf=false heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=0", "marais/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=2 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=0", "marais/ext: fog=true suns=[\"true/1/false\"] omni=true materials StandardMaterial3D transparency=1 blend_mode=1 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=0 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=1 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=0", "marais/int: fog=false suns=[] omni=true materials ShaderMaterial res://scenes/levels/marais/crypt_stone.gdshader usage=0", "marais/int: fog=false suns=[] omni=true materials ShaderMaterial res://scenes/levels/marais/moss_overlay.gdshader usage=0", "marais/int: fog=false suns=[] omni=true materials ShaderMaterial res://scenes/levels/marais/moss_overlay.gdshader usage=2", "marais/int: fog=false suns=[] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=true vertex_color_is_srgb=true albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=0", "marais/int: fog=false suns=[] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=2 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=2 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 metadata/_gltf_primary_texture_coord=0 usage=0", "marais/int: fog=false suns=[] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=2 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 metadata/_gltf_primary_texture_coord=0 usage=0", "marais/int: fog=false suns=[] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=2 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=true vertex_color_is_srgb=true albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=0", "village/ext: fog=true suns=[\"true/1/false\", \"false/2/false\", \"false/2/false\"] omni=true labels {\"alpha_antialiasing_mode\": 0,\"alpha_cut\": 1,\"billboard\": 0,\"cast_shadow\": 0,\"double_sided\": false,\"fixed_size\": false,\"font\": Resource(\"uid://bmf6cibxclx2l\", \"res://ui/cinzel_bold.tres\"),\"no_depth_test\": false,\"shaded\": true,\"texture_filter\": 5}", "village/ext: fog=true suns=[\"true/1/false\", \"false/2/false\", \"false/2/false\"] omni=true labels {\"alpha_antialiasing_mode\": 0,\"alpha_cut\": 1,\"billboard\": 0,\"cast_shadow\": 0,\"double_sided\": false,\"fixed_size\": false,\"font\": Resource(\"uid://c4u6k6pwhhnpc\", \"res://assets/fonts/Lora.ttf\"),\"no_depth_test\": false,\"shaded\": true,\"texture_filter\": 5}", "village/ext: fog=true suns=[\"true/1/false\", \"false/2/false\", \"false/2/false\"] omni=true materials ShaderMaterial res://scenes/levels/marais/marais_ground.gdshader usage=2", "village/ext: fog=true suns=[\"true/1/false\", \"false/2/false\", \"false/2/false\"] omni=true materials ShaderMaterial res://scenes/levels/marais/swamp_water.gdshader usage=0", "village/ext: fog=true suns=[\"true/1/false\", \"false/2/false\", \"false/2/false\"] omni=true materials ShaderMaterial res://scenes/levels/village/village_cloth.gdshader usage=2", "village/ext: fog=true suns=[\"true/1/false\", \"false/2/false\", \"false/2/false\"] omni=true materials ShaderMaterial res://scenes/props/portal/portal.gdshader usage=0", "village/ext: fog=true suns=[\"true/1/false\", \"false/2/false\", \"false/2/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=0", "village/ext: fog=true suns=[\"true/1/false\", \"false/2/false\", \"false/2/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=1", "village/ext: fog=true suns=[\"true/1/false\", \"false/2/false\", \"false/2/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=2", "village/ext: fog=true suns=[\"true/1/false\", \"false/2/false\", \"false/2/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=3", "village/ext: fog=true suns=[\"true/1/false\", \"false/2/false\", \"false/2/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=true emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=0", "village/ext: fog=true suns=[\"true/1/false\", \"false/2/false\", \"false/2/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=true emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=2", "village/ext: fog=true suns=[\"true/1/false\", \"false/2/false\", \"false/2/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=true emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=3", "village/ext: fog=true suns=[\"true/1/false\", \"false/2/false\", \"false/2/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=2 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=0 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=true disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=2", "village/ext: fog=true suns=[\"true/1/false\", \"false/2/false\", \"false/2/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=2 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=2 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 metadata/_gltf_primary_texture_coord=0 usage=1", "village/ext: fog=true suns=[\"true/1/false\", \"false/2/false\", \"false/2/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=2 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=2 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 metadata/_gltf_primary_texture_coord=0 usage=2", "village/ext: fog=true suns=[\"true/1/false\", \"false/2/false\", \"false/2/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=2 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=2 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 metadata/_gltf_primary_texture_coord=0 usage=3", "village/ext: fog=true suns=[\"true/1/false\", \"false/2/false\", \"false/2/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=2 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 metadata/_gltf_primary_texture_coord=0 usage=1", "village/ext: fog=true suns=[\"true/1/false\", \"false/2/false\", \"false/2/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=2 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 metadata/_gltf_primary_texture_coord=0 usage=2", "village/ext: fog=true suns=[\"true/1/false\", \"false/2/false\", \"false/2/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=2 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 metadata/_gltf_primary_texture_coord=0 usage=3", "village/ext: fog=true suns=[\"true/1/false\", \"false/2/false\", \"false/2/false\"] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=2 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=true disable_specular_occlusion=false vertex_color_use_as_albedo=true vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=2", "village/ext: fog=true suns=[\"true/1/false\", \"false/2/false\", \"false/2/false\"] omni=true materials StandardMaterial3D transparency=1 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=0 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=true vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=3 billboard_keep_scale=false particles_anim_h_frames=1 particles_anim_v_frames=1 particles_anim_loop=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=3", "village/ext: fog=true suns=[\"true/1/false\", \"false/2/false\", \"false/2/false\"] omni=true materials StandardMaterial3D transparency=1 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=0 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=true disable_specular_occlusion=false vertex_color_use_as_albedo=true vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=3 billboard_keep_scale=false particles_anim_h_frames=1 particles_anim_v_frames=1 particles_anim_loop=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=3", "village/ext: fog=true suns=[\"true/1/false\", \"false/2/false\", \"false/2/false\"] omni=true materials StandardMaterial3D transparency=1 blend_mode=1 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=0 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=true vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=3 billboard_keep_scale=false particles_anim_h_frames=1 particles_anim_v_frames=1 particles_anim_loop=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=3", "village/ext: fog=true suns=[\"true/1/false\", \"false/2/false\", \"false/2/false\"] omni=true materials StandardMaterial3D transparency=1 blend_mode=1 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=0 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=true disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=1 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=0", "village/ext: fog=true suns=[\"true/1/false\", \"false/2/false\", \"false/2/false\"] omni=true materials StandardMaterial3D transparency=4 blend_mode=0 cull_mode=0 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 usage=2", "village/int: fog=false suns=[] omni=true labels {\"alpha_antialiasing_mode\": 0,\"alpha_cut\": 1,\"billboard\": 0,\"cast_shadow\": 0,\"double_sided\": true,\"fixed_size\": false,\"font\": null,\"no_depth_test\": false,\"shaded\": true,\"texture_filter\": 3}", "village/int: fog=false suns=[] omni=true materials ShaderMaterial res://scenes/levels/village/village_cloth.gdshader usage=2", "village/int: fog=false suns=[] omni=true materials StandardMaterial3D transparency=0 blend_mode=0 cull_mode=2 depth_draw_mode=0 no_depth_test=false depth_test=0 shading_mode=1 diffuse_mode=0 specular_mode=0 disable_ambient_light=false disable_fog=false disable_specular_occlusion=false vertex_color_use_as_albedo=false vertex_color_is_srgb=false albedo_texture_force_srgb=false albedo_texture_msdf=false metallic_texture_channel=0 roughness_texture_channel=0 emission_enabled=false emission_operator=0 emission_on_uv2=false normal_enabled=false bent_normal_enabled=false rim_enabled=false clearcoat_enabled=false anisotropy_enabled=false ao_enabled=false ao_on_uv2=false ao_texture_channel=0 heightmap_enabled=false heightmap_deep_parallax=false heightmap_flip_tangent=false heightmap_flip_binormal=false heightmap_flip_texture=false subsurf_scatter_enabled=false subsurf_scatter_skin_mode=false subsurf_scatter_transmittance_enabled=false backlight_enabled=false refraction_enabled=false refraction_texture_channel=0 detail_enabled=false detail_blend_mode=0 detail_uv_layer=0 uv1_triplanar=false uv1_world_triplanar=false uv2_triplanar=false uv2_world_triplanar=false texture_filter=3 texture_repeat=true disable_receive_shadows=false shadow_to_opacity=false billboard_mode=0 billboard_keep_scale=false grow=false fixed_size=false use_point_size=false use_particle_trails=false use_z_clip_scale=false use_fov_override=false proximity_fade_enabled=false distance_fade_mode=0 stencil_mode=0 stencil_flags=0 stencil_compare=0 stencil_reference=1 metadata/_gltf_primary_texture_coord=0 usage=3")
+groups = Array[Dictionary]([{
+"environment": SubResource("Environment_royxn"),
+"inside": false,
+"labels": [{
+"alpha_antialiasing_mode": 0,
+"alpha_cut": 1,
+"billboard": 0,
+"cast_shadow": 0,
+"double_sided": false,
+"fixed_size": false,
+"font": ExtResource("4_67ur3"),
+"no_depth_test": false,
+"shaded": true,
+"texture_filter": 5
+}, {
+"alpha_antialiasing_mode": 0,
+"alpha_cut": 1,
+"billboard": 0,
+"cast_shadow": 0,
+"double_sided": false,
+"fixed_size": false,
+"font": null,
+"no_depth_test": false,
+"shaded": true,
+"texture_filter": 3
+}],
+"materials": [SubResource("ShaderMaterial_8g3rf"), SubResource("ShaderMaterial_x02ay"), SubResource("ShaderMaterial_3cbt2"), SubResource("StandardMaterial3D_08veb"), SubResource("StandardMaterial3D_2x1ka"), SubResource("StandardMaterial3D_4bfwb"), SubResource("StandardMaterial3D_g8nsb"), SubResource("StandardMaterial3D_wqmjn"), SubResource("StandardMaterial3D_xinqt"), SubResource("StandardMaterial3D_vbke4"), SubResource("StandardMaterial3D_wmnkh"), SubResource("StandardMaterial3D_edrat"), SubResource("StandardMaterial3D_6cmn4"), SubResource("StandardMaterial3D_i42go"), SubResource("StandardMaterial3D_uuaqr"), SubResource("StandardMaterial3D_8ns6j"), SubResource("StandardMaterial3D_r1gii"), SubResource("StandardMaterial3D_5ko2t"), SubResource("StandardMaterial3D_wyfrm"), SubResource("StandardMaterial3D_bmntp"), SubResource("StandardMaterial3D_drtve"), SubResource("StandardMaterial3D_n7pis"), SubResource("StandardMaterial3D_75qhn"), SubResource("StandardMaterial3D_ib6qi"), SubResource("StandardMaterial3D_rb284")],
+"omni": true,
+"place": "hub",
+"process": [],
+"suns": Array[Dictionary]([{
+"blend": false,
+"mode": 1,
+"shadow": true
+}]),
+"usages": PackedByteArray(2, 0, 0, 1, 2, 3, 2, 0, 2, 0, 2, 2, 3, 0, 2, 3, 0, 2, 3, 2, 2, 3, 3, 2, 3)
+}, {
+"environment": SubResource("Environment_euihj"),
+"inside": true,
+"labels": [],
+"materials": [SubResource("StandardMaterial3D_4lf4l"), SubResource("StandardMaterial3D_knrnb"), SubResource("StandardMaterial3D_e5n1j"), SubResource("StandardMaterial3D_swmmi")],
+"omni": true,
+"place": "hub",
+"process": [],
+"suns": Array[Dictionary]([]),
+"usages": PackedByteArray(2, 2, 2, 2)
+}, {
+"environment": SubResource("Environment_6hbyq"),
+"inside": false,
+"labels": [{
+"alpha_antialiasing_mode": 0,
+"alpha_cut": 1,
+"billboard": 0,
+"cast_shadow": 0,
+"double_sided": false,
+"fixed_size": false,
+"font": ExtResource("8_424og"),
+"no_depth_test": false,
+"shaded": true,
+"texture_filter": 5
+}],
+"materials": [SubResource("ShaderMaterial_3eedt"), SubResource("ShaderMaterial_5rfry"), SubResource("ShaderMaterial_s0sbp"), SubResource("ShaderMaterial_qxjo7"), SubResource("StandardMaterial3D_meosj"), SubResource("StandardMaterial3D_18s3t"), SubResource("StandardMaterial3D_ujsp8"), SubResource("StandardMaterial3D_rr0ua"), SubResource("StandardMaterial3D_3b8jd")],
+"omni": true,
+"place": "plaine",
+"process": [],
+"suns": Array[Dictionary]([{
+"blend": false,
+"mode": 1,
+"shadow": true
+}]),
+"usages": PackedByteArray(0, 2, 2, 3, 0, 3, 2, 3, 0)
+}, {
+"environment": SubResource("Environment_2kp4s"),
+"inside": true,
+"labels": [{
+"alpha_antialiasing_mode": 0,
+"alpha_cut": 1,
+"billboard": 0,
+"cast_shadow": 0,
+"double_sided": false,
+"fixed_size": false,
+"font": ExtResource("4_67ur3"),
+"no_depth_test": false,
+"shaded": true,
+"texture_filter": 5
+}, {
+"alpha_antialiasing_mode": 0,
+"alpha_cut": 1,
+"billboard": 0,
+"cast_shadow": 0,
+"double_sided": false,
+"fixed_size": false,
+"font": ExtResource("8_424og"),
+"no_depth_test": false,
+"shaded": true,
+"texture_filter": 3
+}],
+"materials": [SubResource("ShaderMaterial_7uhs5"), SubResource("ShaderMaterial_2v2lr"), SubResource("StandardMaterial3D_mnsbh"), SubResource("StandardMaterial3D_p2dc3"), SubResource("StandardMaterial3D_g77m7"), SubResource("StandardMaterial3D_lqde2"), SubResource("StandardMaterial3D_6v4lh"), SubResource("StandardMaterial3D_otbip")],
+"omni": true,
+"place": "plaine",
+"process": [],
+"suns": Array[Dictionary]([]),
+"usages": PackedByteArray(2, 2, 3, 3, 2, 2, 3, 3)
+}, {
+"environment": SubResource("Environment_ka8hu"),
+"inside": false,
+"labels": [],
+"materials": [SubResource("ShaderMaterial_fmma7"), SubResource("ShaderMaterial_4ckpn"), SubResource("ShaderMaterial_rskui"), SubResource("ShaderMaterial_hviyv"), SubResource("ShaderMaterial_8yiss"), SubResource("ShaderMaterial_a14yc"), SubResource("ShaderMaterial_rhmwo"), SubResource("StandardMaterial3D_8otlh")],
+"omni": true,
+"place": "desert",
+"process": [],
+"suns": Array[Dictionary]([{
+"blend": false,
+"mode": 1,
+"shadow": true
+}]),
+"usages": PackedByteArray(2, 2, 3, 0, 0, 0, 0, 1)
+}, {
+"environment": SubResource("Environment_m0ypo"),
+"inside": true,
+"labels": [{
+"alpha_antialiasing_mode": 0,
+"alpha_cut": 1,
+"billboard": 0,
+"cast_shadow": 0,
+"double_sided": false,
+"fixed_size": false,
+"font": ExtResource("8_424og"),
+"no_depth_test": false,
+"shaded": true,
+"texture_filter": 5
+}, {
+"alpha_antialiasing_mode": 0,
+"alpha_cut": 1,
+"billboard": 0,
+"cast_shadow": 0,
+"double_sided": false,
+"fixed_size": false,
+"font": null,
+"no_depth_test": false,
+"shaded": true,
+"texture_filter": 3
+}],
+"materials": [SubResource("ShaderMaterial_8t5d4"), SubResource("ShaderMaterial_ubv0d"), SubResource("StandardMaterial3D_0m36m"), SubResource("StandardMaterial3D_0i3dq"), SubResource("StandardMaterial3D_i18f6")],
+"omni": true,
+"place": "desert",
+"process": [],
+"suns": Array[Dictionary]([]),
+"usages": PackedByteArray(2, 3, 0, 1, 3)
+}, {
+"environment": SubResource("Environment_bno0n"),
+"inside": false,
+"labels": [],
+"materials": [SubResource("ShaderMaterial_sqrte"), SubResource("ShaderMaterial_2nxoi"), SubResource("ShaderMaterial_dgqrl"), SubResource("ShaderMaterial_l2n1x"), SubResource("ShaderMaterial_og1hj"), SubResource("StandardMaterial3D_qxfoc"), SubResource("StandardMaterial3D_s2ep0"), SubResource("StandardMaterial3D_6byc4"), SubResource("StandardMaterial3D_l3fn7")],
+"omni": true,
+"place": "marais",
+"process": [],
+"suns": Array[Dictionary]([{
+"blend": false,
+"mode": 1,
+"shadow": true
+}]),
+"usages": PackedByteArray(2, 2, 1, 0, 0, 0, 0, 0, 0)
+}, {
+"environment": SubResource("Environment_gxfsd"),
+"inside": true,
+"labels": [],
+"materials": [SubResource("ShaderMaterial_ab82e"), SubResource("ShaderMaterial_nuwll"), SubResource("ShaderMaterial_vig8a"), SubResource("StandardMaterial3D_20ttl"), SubResource("StandardMaterial3D_8oarr"), SubResource("StandardMaterial3D_y6oy6"), SubResource("StandardMaterial3D_l80kq")],
+"omni": true,
+"place": "marais",
+"process": [],
+"suns": Array[Dictionary]([]),
+"usages": PackedByteArray(0, 0, 2, 0, 0, 0, 0)
+}, {
+"environment": SubResource("Environment_2cv1r"),
+"inside": false,
+"labels": [{
+"alpha_antialiasing_mode": 0,
+"alpha_cut": 1,
+"billboard": 0,
+"cast_shadow": 0,
+"double_sided": false,
+"fixed_size": false,
+"font": ExtResource("4_67ur3"),
+"no_depth_test": false,
+"shaded": true,
+"texture_filter": 5
+}, {
+"alpha_antialiasing_mode": 0,
+"alpha_cut": 1,
+"billboard": 0,
+"cast_shadow": 0,
+"double_sided": false,
+"fixed_size": false,
+"font": ExtResource("8_424og"),
+"no_depth_test": false,
+"shaded": true,
+"texture_filter": 5
+}],
+"materials": [SubResource("ShaderMaterial_tw6bf"), SubResource("ShaderMaterial_0n7gg"), SubResource("ShaderMaterial_dfym7"), SubResource("ShaderMaterial_2j2l5"), SubResource("StandardMaterial3D_0xsal"), SubResource("StandardMaterial3D_wa3bq"), SubResource("StandardMaterial3D_b55oj"), SubResource("StandardMaterial3D_h5nrr"), SubResource("StandardMaterial3D_c1x58"), SubResource("StandardMaterial3D_m73of"), SubResource("StandardMaterial3D_eikcb"), SubResource("StandardMaterial3D_yqf5c"), SubResource("StandardMaterial3D_wir6e"), SubResource("StandardMaterial3D_05hnl"), SubResource("StandardMaterial3D_8ousq"), SubResource("StandardMaterial3D_eb3ts"), SubResource("StandardMaterial3D_qib6r"), SubResource("StandardMaterial3D_sbje3"), SubResource("StandardMaterial3D_m4mqf"), SubResource("StandardMaterial3D_eghua"), SubResource("StandardMaterial3D_l5xmr"), SubResource("StandardMaterial3D_jluaf"), SubResource("StandardMaterial3D_cmxmu"), SubResource("StandardMaterial3D_3dbay")],
+"omni": true,
+"place": "village",
+"process": [],
+"suns": Array[Dictionary]([{
+"blend": false,
+"mode": 1,
+"shadow": true
+}, {
+"blend": false,
+"mode": 2,
+"shadow": false
+}, {
+"blend": false,
+"mode": 2,
+"shadow": false
+}]),
+"usages": PackedByteArray(2, 0, 2, 0, 0, 1, 2, 3, 0, 2, 3, 2, 1, 2, 3, 1, 2, 3, 2, 3, 3, 3, 0, 2)
+}, {
+"environment": SubResource("Environment_gdolb"),
+"inside": true,
+"labels": [{
+"alpha_antialiasing_mode": 0,
+"alpha_cut": 1,
+"billboard": 0,
+"cast_shadow": 0,
+"double_sided": true,
+"fixed_size": false,
+"font": null,
+"no_depth_test": false,
+"shaded": true,
+"texture_filter": 3
+}],
+"materials": [SubResource("ShaderMaterial_v062r"), SubResource("StandardMaterial3D_dgp7c")],
+"omni": true,
+"place": "village",
+"process": [],
+"suns": Array[Dictionary]([]),
+"usages": PackedByteArray(2, 3)
+}])

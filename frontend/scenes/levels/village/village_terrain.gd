@@ -11,6 +11,15 @@ const STREAM_DEPTH := 1.4
 const STREAM_END := Vector2(60.0, 68.0)
 ## Talus élargi le long du ruisseau (m).
 const STREAM_BORDER_WIDEN := 3.0
+## Berges au sud du pont, adoucies : part de la profondeur du lit selon la distance au milieu du lit (m), entre ces
+## points. Maillée tous les 1,25 m, la berge d'origine passait d'un coup du plat à 32°, sur 1,4 m de haut : le joueur
+## qui y quittait le sol (un saut, un pas sur le bord) ne la rattrapait plus avant le fond du lit, 1,2 m plus bas.
+## Elle descend ici à 20° au plus (24° à l'ouest, où le vallon remonte), et reste au-dessus de l'eau jusqu'au bord de
+## son plan (3,75 m du milieu du lit). Le lit garde sa profondeur au milieu, et l'eau son plan.
+const SOFT_BANK := [Vector2(0.5, 1.0), Vector2(1.75, 0.76), Vector2(3.0, 0.48), Vector2(4.25, 0.15), Vector2(5.5, 0.0)]
+## Rangées z où les berges s'adoucissent : de rien à z = 10 (le pilier de la porte de l'ouest et les culées du pont,
+## plus au nord, gardent leur berge) à tout à z = 11,25.
+const SOFT_BANK_Z := Vector2(10.0, 11.25)
 ## Colline du moulin à vent : centre (x, z), rayon et hauteur.
 const MILL_HILL := Vector4(30.0, -30.0, 12.0, 4.0)
 ## Bourg : zone plate qui porte les maisons, en x et en z.
@@ -72,7 +81,9 @@ func height_at(x: float, z: float) -> float:
 	# s'ajoutait à celle du talus (jusqu'à 55°), et le joueur glissait de la berge jusqu'au fond, 1,2 à 1,9 m plus bas.
 	# L'eau rejoint toujours le talus (jusqu'à 65 m du centre).
 	var depth := STREAM_DEPTH * (1.0 - smoothstep(STREAM_END.x, STREAM_END.y, distance))
-	height -= depth * (1.0 - smoothstep(STREAM_HALF_WIDTH * 0.6, STREAM_HALF_WIDTH + 1.5, bank))
+	var bed := 1.0 - smoothstep(STREAM_HALF_WIDTH * 0.6, STREAM_HALF_WIDTH + 1.5, bank)
+	bed = lerpf(bed, _soft_bank(bank), smoothstep(SOFT_BANK_Z.x, SOFT_BANK_Z.y, z))
+	height -= depth * bed
 	# Le long du ruisseau, le pied du talus monte plus doucement : sa pente et celle des berges ne s'additionnent plus
 	# au-delà de 45°, d'où le joueur glissait jusqu'au fond du lit.
 	var width := BORDER_WIDTH + STREAM_BORDER_WIDEN * (1.0 - smoothstep(STREAM_HALF_WIDTH + 2.0, STREAM_HALF_WIDTH + 11.0, bank))
@@ -91,6 +102,18 @@ func footing_height(x: float, z: float) -> float:
 	if _heights.is_empty():
 		return height_at(x, z)
 	return surface_height(x, z) - 0.6 * GridHeight.slope(_heights, _cells, SIZE, CELL_SIZE, x, z)
+
+
+## Part de la profondeur du lit sur une berge adoucie, à bank mètres du milieu du lit.
+func _soft_bank(bank: float) -> float:
+	if bank <= SOFT_BANK[0].x:
+		return SOFT_BANK[0].y
+	for index in range(1, SOFT_BANK.size()):
+		var high: Vector2 = SOFT_BANK[index]
+		if bank < high.x:
+			var low: Vector2 = SOFT_BANK[index - 1]
+			return lerpf(low.y, high.y, (bank - low.x) / (high.x - low.x))
+	return 0.0
 
 
 func stream_mask(x: float) -> float:
