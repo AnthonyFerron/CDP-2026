@@ -41,6 +41,47 @@ var _ripple_mesh: TorusMesh
 var _ripple_material: StandardMaterial3D
 ## Distance au-delà de laquelle les pièces des bêtes ne se dessinent plus (0 : toujours).
 var _part_range := 45.0
+## Bêtes déjà taillées, par espèce : la première grenouille, le premier corbeau, la première chauve-souris sont faits
+## pièce par pièce puis fondus (MaraisBatch) ; les suivants sont des copies de ce modèle, prises avant qu'il soit placé,
+## qui partagent ses maillages et ses matériaux. Chaque bête est la même qu'avant, pour bien moins de travail au
+## chargement (une grenouille coûtait 6 ms). Espèce -> [modèle hors de l'arbre, chemins de ses pièces mobiles].
+var _templates := {}
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_PREDELETE:
+		for kind: String in _templates:
+			(_templates[kind][0] as Node).free()
+
+
+## Copie de la bête modèle de cette espèce, ajoutée au décor, et ses pièces mobiles ; [] si l'espèce n'a pas encore de
+## modèle.
+func _copy_of(kind: String) -> Array:
+	if not _templates.has(kind):
+		return []
+	var copy := (_templates[kind][0] as Node3D).duplicate() as Node3D
+	add_child(copy)
+	var parts: Array[Node3D] = []
+	for path: PackedInt32Array in _templates[kind][1]:
+		var part: Node = copy
+		for index in path:
+			part = part.get_child(index)
+		parts.append(part)
+	return [copy, parts]
+
+
+## Retient la bête qu'on vient de tailler (encore à l'origine) comme modèle de son espèce, avec ses pièces mobiles,
+## repérées par leur rang parmi les enfants (une copie renomme les nœuds sans nom).
+func _keep_template(kind: String, node: Node3D, parts: Array[Node3D]) -> void:
+	var paths: Array[PackedInt32Array] = []
+	for part in parts:
+		var path := PackedInt32Array()
+		var current: Node = part
+		while current != node:
+			path.insert(0, current.get_index())
+			current = current.get_parent()
+		paths.append(path)
+	_templates[kind] = [node.duplicate(), paths]
 
 
 func _ready() -> void:
@@ -203,6 +244,9 @@ func _update_fish(delta: float, feet: Vector3) -> void:
 
 ## Une grenouille de formes simples : corps aplati, deux yeux saillants, pattes repliées.
 func _make_frog() -> Node3D:
+	var copy := _copy_of("frog")
+	if not copy.is_empty():
+		return copy[0]
 	var frog := Node3D.new()
 	var skin := _material(Color(0.32, 0.52, 0.16))
 	var belly := _material(Color(0.62, 0.66, 0.3))
@@ -216,6 +260,7 @@ func _make_frog() -> Node3D:
 	add_child(frog)
 	# Pour le web : une grenouille, un seul maillage (ses couleurs passent dans les sommets), un appel de dessin.
 	MaraisBatch.merge(frog, 100.0, false)
+	_keep_template("frog", frog, [])
 	return frog
 
 
@@ -285,6 +330,11 @@ func _update_frogs(delta: float, feet: Vector3) -> void:
 # --- Corbeaux --------------------------------------------------------------------------------------------
 
 func _make_crow() -> Dictionary:
+	var copy := _copy_of("crow")
+	if not copy.is_empty():
+		var parts: Array[Node3D] = copy[1]
+		var copied_wings: Array[Node3D] = [parts[1], parts[2]]
+		return {"node": copy[0], "head": parts[0], "wings": copied_wings}
 	var crow := Node3D.new()
 	var black := _material(Color(0.05, 0.05, 0.07))
 	var beak := _material(Color(0.2, 0.19, 0.18))
@@ -326,6 +376,7 @@ func _make_crow() -> Dictionary:
 	# Corps, queue et pattes en un maillage, la tête en un autre ; les ailes battent à part.
 	MaraisBatch.merge(crow, 100.0, false, false)
 	MaraisBatch.merge(head, 100.0, false)
+	_keep_template("crow", crow, [head, wings[0], wings[1]])
 	return {"node": crow, "head": head, "wings": wings}
 
 
@@ -408,6 +459,9 @@ func _update_crows(delta: float, feet: Vector3) -> void:
 # --- Chauves-souris --------------------------------------------------------------------------------------
 
 func _make_bat() -> Dictionary:
+	var copy := _copy_of("bat")
+	if not copy.is_empty():
+		return {"node": copy[0], "wings": copy[1]}
 	var bat := Node3D.new()
 	var dark := _material(Color(0.07, 0.05, 0.06))
 	var membrane := _material(Color(0.12, 0.08, 0.08))
@@ -427,6 +481,7 @@ func _make_bat() -> Dictionary:
 	bat.scale = Vector3.ONE * 1.5
 	add_child(bat)
 	MaraisBatch.merge(bat, 100.0, false, false)
+	_keep_template("bat", bat, wings)
 	return {"node": bat, "wings": wings}
 
 
