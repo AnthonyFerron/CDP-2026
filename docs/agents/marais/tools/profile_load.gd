@@ -1,5 +1,5 @@
 extends SceneTree
-## Temps de chargement du Marais, morceau par morceau : regroupement de chaque racine (MaraisBatch), mécanisme
+## Temps de chargement du Marais, morceau par morceau : regroupement de chaque racine (DecorBatch), mécanisme
 ## gravé (RingMechanism), et la scène entière.
 
 func _initialize() -> void:
@@ -26,8 +26,8 @@ func _run() -> void:
 	holder.add_child(props)
 	holder.add_child(grounded)
 	holder.add_child(crypt)
-	if ResourceLoader.exists("res://scenes/levels/marais/marais_batch.gd"):
-		var batch: GDScript = load("res://scenes/levels/marais/marais_batch.gd")
+	if ResourceLoader.exists("res://scripts/decor_batch.gd"):
+		var batch: GDScript = load("res://scripts/decor_batch.gd")
 		for entry: Array in [["Props/Models", props.get_node("Models"), 32.0, true], ["Grounded", grounded, 32.0, true],
 				["Crypt/Models", crypt.get_node("Models"), 12.0, false]]:
 			start = Time.get_ticks_usec()

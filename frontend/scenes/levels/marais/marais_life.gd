@@ -42,7 +42,7 @@ var _ripple_material: StandardMaterial3D
 ## Distance au-delà de laquelle les pièces des bêtes ne se dessinent plus (0 : toujours).
 var _part_range := 45.0
 ## Bêtes déjà taillées, par espèce : la première grenouille, le premier corbeau, la première chauve-souris sont faits
-## pièce par pièce puis fondus (MaraisBatch) ; les suivants sont des copies de ce modèle, prises avant qu'il soit placé,
+## pièce par pièce puis fondus (DecorBatch) ; les suivants sont des copies de ce modèle, prises avant qu'il soit placé,
 ## qui partagent ses maillages et ses matériaux. Chaque bête est la même qu'avant, pour bien moins de travail au
 ## chargement (une grenouille coûtait 6 ms). Espèce -> [modèle hors de l'arbre, chemins de ses pièces mobiles].
 var _templates := {}
@@ -259,7 +259,7 @@ func _make_frog() -> Node3D:
 	frog.scale = Vector3.ONE * FROG_SIZE
 	add_child(frog)
 	# Pour le web : une grenouille, un seul maillage (ses couleurs passent dans les sommets), un appel de dessin.
-	MaraisBatch.merge(frog, 100.0, false)
+	DecorBatch.merge(frog, 100.0, false)
 	_keep_template("frog", frog, [])
 	return frog
 
@@ -374,8 +374,8 @@ func _make_crow() -> Dictionary:
 	crow.scale = Vector3.ONE * 1.6
 	add_child(crow)
 	# Corps, queue et pattes en un maillage, la tête en un autre ; les ailes battent à part.
-	MaraisBatch.merge(crow, 100.0, false, false)
-	MaraisBatch.merge(head, 100.0, false)
+	DecorBatch.merge(crow, 100.0, false, false)
+	DecorBatch.merge(head, 100.0, false)
 	_keep_template("crow", crow, [head, wings[0], wings[1]])
 	return {"node": crow, "head": head, "wings": wings}
 
@@ -480,7 +480,7 @@ func _make_bat() -> Dictionary:
 		wings.append(pivot)
 	bat.scale = Vector3.ONE * 1.5
 	add_child(bat)
-	MaraisBatch.merge(bat, 100.0, false, false)
+	DecorBatch.merge(bat, 100.0, false, false)
 	_keep_template("bat", bat, wings)
 	return {"node": bat, "wings": wings}
 
@@ -588,8 +588,8 @@ func _build_gallows() -> void:
 		body.add_child(shape)
 		post.add_child(body)
 		# La potence en un maillage, la chaîne et la lanterne qui se balancent en un autre ; visibles de loin.
-		MaraisBatch.merge(post, 100.0, false, false, false)
-		MaraisBatch.merge(hook, 100.0, false, true, false)
+		DecorBatch.merge(post, 100.0, false, false, false)
+		DecorBatch.merge(hook, 100.0, false, true, false)
 		_lanterns.append({"hook": hook, "phase": _rng.randf() * TAU})
 
 
