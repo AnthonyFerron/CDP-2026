@@ -76,6 +76,7 @@ Ce que les lieux calculaient à chaque chargement, de façon déterministe, est 
 | Hub | `hub/decor` | arbres, forêt, buissons, rochers, fleurs : positions et cylindres de collision |
 | Marais | `marais/sol` | hauteurs, couleur de chaque case |
 | Marais | `marais/decor` | jeu des planches des pontons, arbres (et leurs cylindres de collision), roseaux, nénuphars, fleurs, buissons, champignons, troncs noyés : positions |
+| Plaine | `plaine/decor` | herbes, cailloux, gros rochers, arbres morts, rochers des remparts : positions ; état du tirage pour les arbres morts et les lanternes (fichier `plaine_decor_bake.res`) |
 
 Les fichiers pèsent 1 344 Ko (Village, dont 1 127 Ko pour les points des collisions des arbres et des rochers), 323 Ko
 (Désert), 410 Ko (hub) et 117 Ko (Marais). Ils sont enregistrés sans compression : le paquet du jeu est compressé en
@@ -105,7 +106,7 @@ Une partie périmée ou absente est recalculée au chargement, comme avant, avec
 cd frontend && godot --headless --path . --script res://tools/bake_lieux.gd [-- <lieu> ...]
 ```
 
-Sans lieu, il refait les quatre. Deux passages écrivent le même fichier. Avec `-- --check`, rien n'est écrit : l'outil compare chaque fichier au calcul et sort en erreur s'ils diffèrent. C'est le contrôle `bake_lieux_check` de `frontend/tests/scenes/run_all.sh`.
+Sans lieu, il refait les cinq (la Plaine pour son décor dispersé seulement). Deux passages écrivent le même fichier. Avec `-- --check`, rien n'est écrit : l'outil compare chaque fichier au calcul et sort en erreur s'ils diffèrent. C'est le contrôle `bake_lieux_check` de `frontend/tests/scenes/run_all.sh`.
 
 À relancer après tout changement :
 
@@ -164,11 +165,82 @@ Branche `perf/regroupements` (9 novembre), partie de `dev` 7488297.
 - **Mémoire vidée** quand le lieu se ferme : le Marais comme avant, le hub à la sortie de son décor (`_exit_tree` de
   `hub_batch.gd`), la Plaine après ses trois regroupements (faits à son `_ready`, rien d'autre ne se regroupe).
 
+### Plaine : le décor dispersé d'avance
+
+Branche `perf/hub-plaine` (9 novembre), partie de `dev` 6821059.
+
+Le décor dispersé de la Plaine (`plaine_scatter.gd`) tirait au hasard, à chaque chargement, ses 1 500 herbes, 219
+cailloux, 24 gros rochers, 38 arbres morts et 46 rochers des remparts, sur une dizaine d'étapes entremêlées (le même
+tirage sert aux places, aux tailles, à la forme des arbres morts et aux lanternes renversées). Il est découpé comme les
+autres : `_plan` tire tout dans le même ordre qu'avant et rend les places (les rochers déjà enfoncés dans la pente),
+l'état du tirage avant les arbres morts (leurs trois maillages sont refaits à la pose depuis cet état, comme avant) et
+l'état du tirage avant les lanternes ; `_build` pose les nœuds. Le plan est rangé dans `plaine/decor`, calculé par
+`tools/bake_lieux.gd` comme les quatre autres lieux, dans son propre fichier
+(`scenes/levels/plaine/plaine_decor_bake.res`, 95 636 octets) : `plaine_bake.res` est déjà celui du sol et de la zone
+de lave (`PlaineBake`, `tools/bake_plaine.gd`). Il ne sert que si le sol de la Plaine a lu le sien (`is_baked`).
+
+Au passage, chaque corps des rochers et des arbres morts reçoit ses collisions avant d'entrer dans le monde, comme la
+zone de lave : ajoutées une à une à un corps déjà dans le monde, chacune lui faisait refaire sa forme (8 ms pour les
+150 cailloux qui en ont une). L'ordre des nœuds et leurs noms ne changent pas.
+
+Ne sont pas dans le plan : la zone de lave (déjà dans `plaine_bake.res`, mais ses 2 634 bandes restent des nœuds à
+poser, environ 20 ms), les braises, fumées et lueurs des cratères, la coulée et les lanternes, qui ne tirent rien de
+coûteux.
+
+### Hub : le regroupement par pas, et seulement ce qui peut se voir
+
+Trois changements dans `hub_batch.gd` et `decor_batch.gd`, au même résultat (empreintes plus bas) :
+
+- **Les surfaces lues une fois, d'un coup.** Pour fondre un lot, `SurfaceTool.append_from` relisait la surface de
+  chaque morceau (`surface_get_arrays`), et l'ombre de chaque case relisait chaque lot fondu. Sur le web, chaque
+  lecture recopie un tampon de la carte graphique (`getBufferSubData`), et la première lecture d'une image attend en
+  plus que la carte ait fini l'image précédente : dans Chromium, au hub, 23 579 lectures prenaient 58 des 60 s de
+  travail du regroupement (plus bas, « Mesures »). Désormais :
+  - chaque surface de modèle n'est lue qu'une fois (260 surfaces pour 5 064 morceaux au hub), et rendue telle quelle
+    à l'outil par un petit maillage écrit en GDScript (`DecorBatch.Surface`, `DecorBatch.source`), qui lui rend les
+    mêmes tableaux : les sommets fondus sont les mêmes, à l'octet près. Les copies peintes (94) sont relues une fois
+    elles aussi : le moteur range leurs couleurs en octets, et c'est ce qu'il en rend que le lot doit prendre ;
+  - le hub regroupe en deux vagues : les groupes qu'on voit, puis les autres. Dans une vague, tous les modèles sont
+    examinés (rien n'y est lu), puis toutes leurs surfaces sont lues dans une même image (`DecorBatch.prefetch`),
+    puis tous les lots sont assemblés, puis tous les lots sont relus dans une même image pour les ombres, puis les
+    ombres sont assemblées et chaque groupe changé : deux attentes de la carte graphique par vague, au lieu d'une
+    par image. L'ombre doit relire ses lots : reprendre leurs tableaux d'avant le rangement (sans relire) donne des
+    normales et des tangentes compressées autrement, et les 376 ombres du hub changeaient (essayé, empreinte
+    différente, abandonné).
+
+  Le Marais et la Plaine, qui fondent par `DecorBatch`, lisent aussi chaque surface une fois, et la crypte du Marais,
+  regroupée par étapes après l'arrivée, lit toutes les siennes dans une même image.
+- **Par pas, et d'un coup.** Le hub regroupait un groupe entier par image (le décor fixe : 80 ms d'un bloc en natif).
+  Il avance maintenant par pas, comme `DecorBatch.step` : un modèle examiné, un morceau ajouté à un lot, un lot fini,
+  un lot ajouté à l'ombre d'une case, une ombre finie (et, deux fois par vague, une lecture groupée) ; chaque image
+  enchaîne les pas pendant 8 ms (`BUDGET_MSEC`, inchangé) quand les images sont courtes. Quand elles sont longues de
+  toute façon (le web en rendu logiciel : plus d'une seconde par image au hub), il prend jusqu'au quart de la plus
+  courte des 4 dernières images, 250 ms au plus (`FRAME_SHARE`, `MAX_BUDGET_MSEC`) : il finit en bien moins
+  d'images, sans les rallonger de plus d'un quart. Une image longue isolée (l'arrivée) n'y suffit pas, et à
+  `--fixed-fps` (tests, outils) la part reste de 8 ms. Un groupe ne change qu'au dernier pas : ses maillages
+  fondus y entrent quand ses modèles en sortent, dans la même image. On ne le voit jamais à moitié regroupé, et les
+  collisions, qui sont dans ses nœuds `Collision`, ne sont jamais touchées. Ses règles ne changent pas (modèles posés
+  seulement, ombres fondues par case, MultiMesh à part, pièces en coordonnées du monde) : elles restent dans
+  `hub_batch.gd`, qui ne prend à l'outil commun que ce qui est commun.
+- **Seulement ce qui peut se voir pendant la visite.** Chaque élément réparable a sa ruine et sa reconstruction, et
+  le hub regroupait les deux à chaque chargement, donc à chaque palier de livres, alors qu'une seule se montre : à 0
+  livre, les reconstructions cachées faisaient 63 % du travail, à 4 livres les ruines 39 %. Le hub dit au regroupement
+  (`leave_aside`, depuis `Hub._unseen_repairs`) ce qui ne peut pas paraître pendant la visite : la ruine d'un élément
+  déjà réparé (un livre posé le reste), la reconstruction d'un élément dont le palier dépasse les livres trouvés (on
+  n'en trouve pas au hub). Ces groupes ne sont pas regroupés : ils restent cachés, tels quels, rien ne les dessine.
+  S'ils paraissent quand même (l'aperçu d'une fin depuis le menu de debug), ils se regroupent aussitôt, d'un bloc,
+  comme tout groupe caché qui paraît avant son tour. Les reconstructions qu'on peut encore voir (un livre en main, pas
+  encore posé) sont regroupées comme avant, après ce qu'on voit.
+
+La mémoire du regroupement (signatures, surfaces lues, copies peintes) est vidée quand tout ce qui est prévu est fait,
+au lieu d'être gardée jusqu'à la sortie du hub.
+
 ### Ce qui n'a pas été précalculé
 
 - **Les regroupements du décor** (Marais, Plaine, ruines du Désert). Ils fondent des centaines de modèles en maillages : précalculés, ils copieraient toute leur géométrie dans le paquet, plusieurs mégaoctets de plus à télécharger avant le menu. Mesuré pour le Marais : les 103 maillages fondus du dehors font 237 401 sommets, 7,9 Mo enregistrés (2,5 Mo en gzip), ceux de la crypte 3,2 Mo (0,75 Mo en gzip).
 - **Les collisions des ruines du Désert** (enveloppes et triangles des modèles). Elles coûtent 18 ms, et elles dépendent de `desert_ruins.tscn`, que l'agent des sauts modifie.
-- **Le décor de la Plaine**, au tirage au hasard entremêlé sur une dizaine d'étapes. Son sol et sa zone de lave sont déjà calculés d'avance (`bake_plaine.gd`).
+- **Le décor de la Plaine**, au tirage au hasard entremêlé sur une dizaine d'étapes : précalculé depuis (plus haut,
+  « Plaine : le décor dispersé d'avance »). Son sol et sa zone de lave l'étaient déjà (`bake_plaine.gd`).
 
 ## Vérifications
 
@@ -297,6 +369,75 @@ jour. Sur la branche fusionnée :
   limites voulues (« limite infranchissable (doit echouer) ») ; `tree_collision_test` : mêmes comptes (hub 670 arbres
   dont 301 sans collision, Plaine 38, Désert 41, Marais 72, Village 130) ; `run_tests` : 52 réussis, 0 échec ; aucune
   erreur de script, aucun avertissement de calcul d'avance périmé.
+
+### Plaine et hub : décor dispersé d'avance, regroupement par pas
+
+« Avant » est `dev` (6821059), « après » la branche `perf/hub-plaine`.
+
+- **Empreintes** (`fingerprint_level.gd`, sous Xvfb). Pour le hub, l'outil fait désormais regrouper aussi les groupes
+  laissés de côté (`finish_all`) avant de relever : il compare tout le décor regroupé.
+
+  | Lieu | Lignes | Dessin | Collisions | Ensemble |
+  | --- | --- | --- | --- | --- |
+  | Plaine | 3 963 | `177450c3…` identique | `60a23d47…` identique | `b2041b36…` identique |
+  | Hub, 0 livre | 6 017 | `31e77c57…` identique | `9a8fb697…` identique | 5 lumières qui vacillent |
+  | Hub, 2 livres | 6 017 | 1 ligne : la roue du moulin, tournée | `9a8fb697…` identique | 6 lignes |
+  | Hub, 4 livres | 6 017 | voir plus bas | voir plus bas | 21 lignes |
+  | Marais, relevé à la 90e image | 1 438 | `a24abd9b…` identique | `dca801ca…` identique | `2db0838d…` identique |
+
+  La Plaine est identique avec le décor lu d'avance, puis avec les surfaces lues une fois. À 2 livres, la seule ligne
+  de dessin qui change est la roue du moulin (`wheel.glb`, qui tourne) : même place, même maillage, même matériau,
+  autre angle. À 4 livres, les 21 lignes sont celles qui diffèrent aussi entre deux relevés de `dev` (plus haut,
+  « Regroupements : un seul outil ») : 5 lumières qui vacillent, et 16 lignes d'objets qui ne diffèrent que par leur
+  rotation (les villageois qui se tournent, leur cylindre de collision, la roue du moulin) ; aucune autre
+  (`compare.py`). Le Marais, relevé comme d'habitude (20 images), différait par ses bêtes animées et ses lumières :
+  sa crypte se prépare plus vite, l'outil relevait donc plus tôt. Relevés tous deux à la 90e image, quand tout est
+  prêt des deux côtés, ils sont identiques, ligne pour ligne.
+- **Le hub tel qu'en jeu** (`--etat-jeu` : les groupes laissés de côté restent tels quels).
+  Tout ce qui se dessine (`visible=true`), toutes les collisions et toutes les lumières sont ceux de `dev` : à 0 livre,
+  4 905 lignes identiques sur 4 905, à part les 5 lumières qui vacillent ; à 4 livres, 5 148 lignes, dont les mêmes
+  21 écarts de rotation et de vacillement que plus haut. Ne diffèrent que des lignes cachées (`visible=false`) : à 0
+  livre, les 586 maillages fondus des reconstructions (avant) contre les 2 569 maillages de leurs modèles, laissés tels
+  quels (après) ; à 4 livres, 414 contre 1 235 pour les ruines. Rien ne les dessine. Comparaison :
+  `.claude/captures/perf-hub-plaine/outils/visibles.py`.
+- **Captures** (`captures.sh` de `perf-batch`, mêmes vues avant et après : 6 vues du hub à 0, 2 et 4 livres, 11 de
+  la Plaine dont 4 dans les archives), avant | après | écart (x 4), regardées. Les appels de dessin relevés à chaque
+  vue du hub sont les mêmes (de 95 à 631 à 0 livre, de 127 à 705 à 4 livres ; un de plus sur la place à 4 livres,
+  où passe un villageois). Écart moyen de 0 à 0,19 sur 255 au hub, sauf la vue vers les montagnes à 2 et 4 livres
+  (0,85 : 1,3 % des pixels, tous dans l'eau de la rivière, dont les rides suivent l'horloge) ; de 0,05 à 1,2 dans la
+  Plaine, au plus 0,07 % de pixels changés de plus de 24 (fumées, braises, lueur de la lave, chandelles des
+  archives). Aucun objet ne bouge ni ne manque.
+- **Pendant le regroupement** (`shots_pendant.gd`, hors dépôt : une vue fixe du hub à 4 livres, prise à la 1re,
+  3e, 6e, 10e, 15e, 25e, 40e et 60e image, puis à la fin) : les appels de dessin passent de 3 031 à 567 (village vu
+  de haut) et de 3 362 à 700 (place), et chaque capture ne diffère de la finale que de 0,1 à 0,3 % des pixels :
+  l'eau, le feu, et, sur la place, un liseré posé au même plan qu'un mur, que le mur recouvre une fois fondu. `dev`
+  montre le même passage (première image contre finale : 0,176 % des pixels ; sa première image est celle de la
+  branche, sa finale aussi, à 0,002 % près) : il vient du regroupement d'origine. On ne voit jamais un groupe à
+  moitié changé.
+- **Chaque surface lue une fois** : sur 5 surfaces de modèles Kenney, fondues 40 fois chacune à des places, rotations
+  et échelles tirées au hasard, `append_from` donne les mêmes tableaux, octet pour octet, depuis le maillage et depuis
+  sa surface déjà lue. Relu, un lot fondu ne redonne pas ses normales et ses tangentes à l'identique, et des ombres
+  bâties sans relire les lots changeaient (les 376 lignes d'ombre de l'empreinte du hub) : les ombres relisent donc
+  toujours leurs lots, tous dans une même image.
+- **Précalculs** : `bake_lieux_check` à jour pour les cinq lieux (la Plaine comprise : deux passages de
+  `bake_lieux.gd -- plaine` écrivent le même fichier) ; `bake_plaine_check` à jour sans être régénéré. Aucun
+  avertissement « Calcul d'avance … périmé ».
+- **Inventaire des shaders** (`bake_shaders.gd`) : il relevait le hub au bout de 12 images, à demi regroupé (combien,
+  selon la vitesse de la machine). Avec les vagues, aucun groupe n'y est encore changé : les matériaux des lots
+  fondus (couleur dans les sommets), des ombres seules et des MultiMesh transparents en sortaient, et ne seraient plus
+  préparés au menu. L'outil retient maintenant le regroupement pendant les 12 images, relève le hub tel qu'à
+  l'arrivée, puis le fait regrouper en entier (`finish_all`) et relève à nouveau : il garde les deux états, qui se
+  dessinent l'un après l'autre en jeu. `shader_warm_list.tres` régénéré : les mêmes 114 entrées que `dev`, dans un
+  autre ordre ; le menu prépare les mêmes shaders. Deux passages donnent le même fichier.
+- **Jeu exporté** (export de mesure du banc, plus bas) : aucun avertissement dans la console, la Plaine lit son décor
+  d'avance (`plaine_decor_bake.res` est référencé par `plaine.tscn` : rien à ajouter à `include_filter`).
+- **Suite complète** (`frontend/tests/scenes/run_all.sh`, depuis la branche, serveur chargé par les autres agents) :
+  `bake_plaine_check`, `bake_lieux_check` et `bake_shaders_check` à jour ; 0 échec partout (`hub_test`,
+  `music_test`, `sound_test`, `gamepad_test`, `plaine_puzzle_test`, `marais_puzzle_test` compris), sauf `hub_walk_0`
+  et `hub_walk_4` : 2 échecs chacun, les limites voulues (« limite infranchissable (doit echouer) ») ;
+  `tree_collision_test` : mêmes comptes (hub 670 arbres dont 301 sans collision, Plaine 38, Désert 41, Marais 72,
+  Village 130) ; `run_tests` : 52 réussis, 0 échec ; aucune erreur de script, aucun avertissement de calcul d'avance
+  périmé.
 
 ## Mesures
 
@@ -435,6 +576,94 @@ des signatures seules (environ 175 et 57 ms). Ce qui reste du regroupement est s
 Relevés : `.claude/captures/perf-batch/` (hors dépôt) : `mesures/` (séries), `outils/` (`mesure.sh`, `serie.sh`,
 `gd/batch_cost.gd`, `gd/sig_bench.gd`, `empreintes.sh`, `compare.py`, `captures.sh`, `diff_images.py`).
 
+### Plaine et hub : décor dispersé d'avance, regroupement par pas
+
+« Avant » est `dev` (6821059), « après » la branche `perf/hub-plaine`.
+
+**En natif**, sans écran, avant et après en alternance, trois passages chacun ; médianes, en millisecondes. Le
+serveur était chargé par les autres agents (charge 7,5 à 10) : d'un passage à l'autre, les écarts atteignent 30 %.
+Pour le hub, `hub_prof.gd` (hors dépôt) charge le lieu comme en jeu et relève le temps passé à regrouper
+(`batch_msec`), les images jusqu'à la fin, et la plus longue de ces images. La part adaptative n'y change rien :
+sans écran, les images durent 7 ms, et la part reste de 8 ms.
+
+| Poste | Avant | Après |
+| --- | --- | --- |
+| Hub, 0 livre : regroupement, en tout (passages : 698, 919, 980 / 327, 341, 428) | 919 | 341 (-63 %) |
+| Hub, 0 livre : images jusqu'à la fin ; la plus longue | 58 ; 115 | 38 ; 29 |
+| Hub, 2 livres : regroupement (768, 776, 918 / 464, 475, 406) | 776 | 464 (-40 %) |
+| Hub, 2 livres : images ; la plus longue | 57 ; 86 | 51 ; 40 |
+| Hub, 4 livres : regroupement (863, 964, 1 021 / 569, 552, 596) | 964 | 569 (-41 %) |
+| Hub, 4 livres : images ; la plus longue | 59 ; 103 | 60 ; 45 |
+| Plaine : `_ready` du décor dispersé (passages : 99, 110, 104 / 67, 60, 69) | 104 | 67 (-35 %) |
+| Plaine : `_ready` de toute la scène (286, 307, 327 / 291, 245, 303) | 307 | 291 |
+| Plaine, cinq passages, serveur plus chargé (charge 16) : décor | 138 | 78 (-43 %) |
+| Plaine, cinq passages, charge 16 : `_ready` de toute la scène ; première image | 552 ; 212 | 408 ; 223 |
+| Marais : `_ready` de la racine (regroupement du dehors) | 125 | 127 |
+
+Dans la Plaine, ce qui reste du décor dispersé est la pose des nœuds : la zone de lave (environ 20 ms), les
+cratères, les collisions des rochers. La première image ne bouge pas : le corps de chaque groupe de rochers, qui
+entre dans le monde avec toutes ses collisions, n'y reporte pas de travail. Le Marais ne change pas en natif : sans
+écran, une lecture ne fait que recopier et décoder des tableaux ; c'est sur le web, où elle attend la carte graphique,
+que ces lectures pèsent (plus bas).
+
+Au hub, le gain vient pour moitié des groupes laissés de côté (à 0 livre, les reconstructions faisaient 63 % du
+travail), pour le reste de l'examen allégé (ce qui ne dépend que du maillage, gardé par maillage) et des surfaces lues
+une fois. La plus longue image n'est plus celle d'un groupe entier (le décor fixe, 80 à 150 ms d'un bloc) : c'est
+celle où toutes les surfaces, ou tous les lots, sont relus d'un coup (28 à 56 ms ici).
+
+**Dans Chromium**, le banc de `perf-chargements` (une mesure à la fois, préparation des shaders retirée), avec un
+pilote qui relève aussi, au hub, le regroupement après l'arrivée (travail, images, durée, plus longue image) et
+chaque `getBufferSubData` (lecture d'un tampon de la carte graphique). Le hub part du menu ; à 0 livre, la partie
+commence au bunker.
+
+Trois versions « après » ont été mesurées. La première, par pas fins mais sans lectures groupées, a montré le
+piège : 3 246 lectures au lieu de 23 579, mais 70 s d'attente sur 298 images, chaque image qui lit attendant la carte
+graphique. La deuxième groupe les lectures, à 8 ms par image (« après, 8 ms » ci-dessous). La version livrée
+(« après ») y ajoute la part adaptative : 8 ms aux images courtes, jusqu'au quart des images longues, 250 ms au plus.
+
+| Mesure | Travail du regroupement | Lectures (`getBufferSubData`) | Leur temps | Images jusqu'à la fin | Durée jusqu'à la fin | Plus longue image |
+| --- | --- | --- | --- | --- | --- | --- |
+| Hub, 0 livre, avant (deux passages) | 59,9 s ; 52,1 s | 23 579 | 58,4 s ; 50,8 s | 86 ; 86 | 89,6 s ; 91,8 s | 2,32 s ; 2,10 s |
+| Hub, 0 livre, après, 8 ms | 2,7 s | 3 246 | 2,1 s | 95 | 101,5 s | 1,71 s |
+| Hub, 0 livre, après | 2,0 s | 3 246 | 1,4 s | 28 | 40,9 s | 2,56 s |
+| Hub, 4 livres, avant | 92,0 s | 23 579 | 90,7 s | 85 | 163,7 s | 3,58 s |
+| Hub, 4 livres, après, 8 ms | 4,4 s | 4 102 | 3,4 s | 131 | 240,3 s | 2,88 s |
+| Hub, 4 livres, après | 6,0 s | 4 102 | 4,9 s | 35 | 115,5 s | 4,49 s |
+
+| Plaine | Ajout et `_ready` | Lectures | Leur temps | Total jusqu'au dévoilement |
+| --- | --- | --- | --- | --- |
+| Avant | 3,17 s | 2 077 | 0,9 s | 65,6 s |
+| Après | 2,29 s (-28 %) | 894 | 0,3 s | 67,9 s |
+
+Ce qu'on en retient :
+
+- **Les lectures de la carte graphique faisaient presque tout le regroupement du hub sur le web** : 23 579 lectures,
+  51 à 91 s sur 52 à 92 s de travail (en natif, le même regroupement prend moins d'une seconde). Une lecture coûte
+  environ 0,6 ms d'aller-retour, et la première de chaque image attend en plus que la carte ait fini l'image
+  précédente (près d'une seconde sous SwiftShader). Après : 3 246 à 4 102 lectures, groupées dans quatre images,
+  1,4 à 4,9 s ; le travail du regroupement passe de 52 à 92 s à 2 à 6 s.
+- **Sous SwiftShader, l'image reste dominée par le dessin** (environ 1 s par image au hub) : l'attente des lectures
+  s'y recouvrait en partie avec le dessin de l'image précédente. Dans un même passage, les images pendant le
+  regroupement étaient, avant, 30 % plus longues que celles d'après (1,02 et 1,07 s contre 0,77 et 0,80 s) ; après,
+  elles ne le sont plus (1,07 s contre 1,13 s, à 8 ms). D'un passage à l'autre, en revanche, la charge du serveur
+  (11 à 17, les autres agents) fait varier le temps d'image de 0,5 à 1,9 s pour la même scène regroupée, autant que
+  ce qu'on cherche : la plus longue image et le rythme ne se comparent pas d'un passage à l'autre.
+- **La part adaptative** : à 8 ms par image, le travail du hub, désormais petit, s'étalait sur plus d'images (95 et
+  131) quand chacune dure plus d'une seconde, et le hub restait plus longtemps à 3 000 appels de dessin. En prenant
+  jusqu'au quart des images longues, il finit en 28 et 35 images (41 et 116 s, contre 92 et 164 s avant). En natif
+  et aux images courtes, rien ne change (8 ms).
+- **La Plaine** : l'ajout et les `_ready` baissent de 0,9 s (décor dispersé d'avance, surfaces lues une fois). Le
+  total reste fait de la très longue image où la pause se lève (39 s, rendu logiciel), comme pour les autres lieux.
+
+Relevés : `.claude/captures/perf-hub-plaine/` (hors dépôt) : `banc/mesures/` (JSON de chaque mesure), `banc/`
+(copies des outils de `perf-chargements`, avec `resume_hub.py` et le relevé du regroupement et des lectures),
+`mesures/` (séries natives), `outils/` (`hub_prof.gd`, `serie.sh`, `empreintes.sh`, `captures.sh`,
+`shots_pendant.gd`, `visibles.py`).
+
+**Poids** : le décor de la Plaine d'avance (`plaine_decor_bake.res`, 95 636 octets) et le code ajoutent au paquet du
+jeu 103 796 octets, 66 315 en brotli (`index.pck.br` : 10 530 777 à 10 597 092 octets, export de mesure) : les
+places des herbes et des rochers, des nombres à virgule, se compressent mal.
+
 ## Téléchargement
 
 Trois gains relevés par l'agent de la musique (`docs/musique-differee.md`, « autres gains possibles ») :
@@ -488,13 +717,21 @@ Trois gains relevés par l'agent de la musique (`docs/musique-differee.md`, « a
   comptée depuis le centre de son lot) : il faudrait ne différer que les lots de grands objets, ou prouver qu'aucun
   petit lot ne se voit depuis l'arrivée, et le vérifier par des captures prises pendant ce travail.
 - **Le sol du Marais** (environ 65 ms : assemblage du maillage et collision bâtie par Jolt), à son `_ready`.
-- **La Plaine** : son décor dispersé (112 ms) et son regroupement se calculent toujours au chargement (le `_ready` de
-  sa racine, regroupement compris, est passé de 162 à 94 ms avec les signatures par état). Le décor tire au hasard sur
-  une dizaine d'étapes entremêlées : le précalculer demande de le découper comme les autres.
-- **Le regroupement du hub** (environ 750 ms, étalé sur une soixantaine d'images après l'arrivée) : surtout
-  l'assemblage des maillages, et la recherche de ses modèles. Le hub pourrait passer à `DecorBatch.step` pour le
-  reste de son travail, mais ses règles diffèrent (modèles posés seulement, ombres fondues par case, MultiMesh à part,
-  coordonnées de groupe) : à ne faire qu'avec des empreintes identiques à 0, 2 et 4 livres.
+- **La Plaine** : son décor dispersé est précalculé. Restent à son `_ready` : la zone de lave (2 634 bandes, des
+  nœuds à poser, environ 20 ms, déjà lues d'avance), les cratères (braises, fumées, lueurs), les collisions des rochers
+  que Jolt bâtit (enveloppes des cailloux, triangles des gros rochers), et le regroupement de sa racine
+  (`DecorBatch`).
+- **Le regroupement du hub** : ce qui reste est l'assemblage des lots et des ombres (`SurfaceTool`) des groupes qu'on
+  peut voir (environ 340 à 570 ms en natif, 2 à 6 s dans Chromium), et les quatre images de lectures groupées (28 à
+  56 ms en natif). Les ombres doivent relire leurs lots (une ombre bâtie sans les relire change ses normales, donc
+  son empreinte) : une ombre sans normales ni tangentes (elle n'en a pas besoin) éviterait ces lectures, au prix
+  d'une empreinte d'ombre différente, à vérifier par des captures. Autre piste : garder les lots fondus d'une visite
+  du hub à l'autre (le résultat d'un groupe ne dépend pas du palier) ; ils resteraient alors en mémoire, sur la carte
+  graphique, pendant les autres lieux.
+- **Le rythme des images dans Chromium** : sur ce serveur, chargé par les autres agents, il varie d'un passage à
+  l'autre autant que les gains cherchés. La part adaptative du hub (plus haut) se juge mieux sur une vraie carte
+  graphique, où les lectures évitées devraient compter davantage (l'attente de la carte n'y est plus masquée par un
+  dessin d'une seconde).
 - **Les collisions des arbres du Village** : Jolt bâtit chaque enveloppe convexe depuis tous les points de son emprise
   (94 000 points, environ 60 ms en natif). Ne garder que les sommets de l'enveloppe (6 655 points) irait plus vite et
   pèserait moins, mais les données des formes ne seraient plus identiques octet pour octet : il faudrait alors
