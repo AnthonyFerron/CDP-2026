@@ -289,7 +289,14 @@ jour. Sur la branche fusionnée :
   de 24 (la porte de la crypte du Marais, où passent des lucioles). Les seuls écarts sont ce qui bouge : l'eau de la
   rivière, le feu, les villageois, la fumée du volcan, les braises et la lave de la Plaine, les lucioles et le feu de
   camp du Marais, la lueur des chandelles. Aucun objet ne bouge ni ne manque.
-- **Tests** : suite complète plus bas (« Tests après les regroupements »).
+- **Générateurs et précalculs** : aucune scène générée ne change (`hub_props.tscn` garde `hub_batch.gd`), et
+  `bake_plaine_check`, `bake_lieux_check` et `bake_shaders_check` restent à jour sans rien régénérer.
+- **Suite complète** (`frontend/tests/scenes/run_all.sh`, depuis la branche, serveur chargé par les autres agents) :
+  les trois précalculs à jour ; 0 échec partout (`hub_test`, `music_test`, `sound_test`, `gamepad_test`,
+  `plaine_puzzle_test`, `marais_puzzle_test` compris), sauf `hub_walk_0` et `hub_walk_4` : 2 échecs chacun, les
+  limites voulues (« limite infranchissable (doit echouer) ») ; `tree_collision_test` : mêmes comptes (hub 670 arbres
+  dont 301 sans collision, Plaine 38, Désert 41, Marais 72, Village 130) ; `run_tests` : 52 réussis, 0 échec ; aucune
+  erreur de script, aucun avertissement de calcul d'avance périmé.
 
 ## Mesures
 
