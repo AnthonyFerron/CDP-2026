@@ -28,10 +28,12 @@ La lave des cratères et de la coulée renvoie le joueur à son dernier point s�
 | `plaine_scatter.gd` | Herbe, rochers, arbres morts, lanternes du chemin, lave des cratères et de la coulée, fumées |
 | `plaine_ruins.tscn`, `plaine_battlefield.tscn`, `library_interior.tscn` | Ruines, champ de bataille et archives, générés par `tools/build_plaine.py` |
 | `model_multimesh.gd` | Répète un modèle (livres des rayonnages, feuillets) en un seul MultiMesh |
-| `plaine_batch.gd` | Pour le web : fond au chargement le décor fixe (ruines, champ de bataille, archives) par matériau et par case, sans rien changer à l'écran ni aux collisions ; les bannières animées restent à part |
+| `scripts/decor_batch.gd` (`DecorBatch`) | Outil commun du Marais et de la Plaine : fond au chargement le décor fixe (ruines, champ de bataille, archives) par matériau et par case, sans rien changer à l'écran ni aux collisions ; les bannières animées restent à part (voir `docs/chargements-lieux.md`) |
 | `searchable_book.gd` | Livre à fouiller, et sa mise en valeur |
 | `tablet_puzzle.tscn`, `tablet_puzzle.gd` | Écran de la tablette, dans le style des menus (`Ornate`) : cases de pierre gravées, fragments de parchemin, rouge à l'erreur, vert à la réussite ; vérification de l'ordre |
 | `plaine_life.gd` | Corbeaux qui tournent au-dessus des engins de siège ou guettent sur la tour, les croix et la stèle (ils s'envolent à l'approche), bannières qui ondulent |
 | `lava.gdshader`, `plaine_ground.gdshader`, `soot.gdshader`, `library_floor.gdshader` | Lave, sol brûlé, suie, dallage des archives |
+| `plaine_rumble.gd` | Le Mont Sam Altan gronde : panache, projections, cratère embrasé et grondement, de plus en plus souvent à mesure que l'heure tourne ; les corbeaux s'envolent (voir `docs/plaine-finitions.md`) |
+| `library_breach.gd`, `breach_light.gdshader` | Voûte de la salle de lecture crevée par une pierre de catapulte : ciel de cendre, rai de lumière, poussière, vent dans la brèche |
 
 Pour changer le décor fixe, modifier `tools/build_plaine.py` puis le relancer depuis `frontend` : `python tools/build_plaine.py`. Il imprime la place des livres à fouiller, à reporter dans `plaine.tscn` (nœuds `Interior/Books`). Les replats du champ de bataille sont décrits deux fois, dans `SITES` du script et de `plaine_terrain.gd`, et doivent rester identiques.
