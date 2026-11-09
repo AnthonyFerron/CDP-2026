@@ -84,13 +84,14 @@ static func centered_text(item: Object, font: Font, center: Vector2, text: Strin
 ## Losange doré, ornement des cadres et des boutons.
 static func diamond(item: Object, center: Vector2, radius: float, fill := GOLD) -> void:
 	var pen := Sketch.of(item)
-	var points := PackedVector2Array([center + Vector2(0, -radius), center + Vector2(radius, 0), center + Vector2(0, radius), center + Vector2(-radius, 0)])
-	pen.polygon(points, GOLD_DARK)
-	var inner := PackedVector2Array()
-	for point in points:
-		inner.append(center + (point - center) * 0.62)
-	pen.polygon(inner, fill)
-	pen.polyline(closed(points), GOLD_LIGHT, 2.0)
+	pen.shape([&"diamond", radius, fill], center, func(sketch: Sketch) -> void:
+		var points := PackedVector2Array([Vector2(0, -radius), Vector2(radius, 0), Vector2(0, radius), Vector2(-radius, 0)])
+		sketch.polygon(points, GOLD_DARK)
+		var inner := PackedVector2Array()
+		for point in points:
+			inner.append(point * 0.62)
+		sketch.polygon(inner, fill)
+		sketch.polyline(closed(points), GOLD_LIGHT, 2.0))
 	pen.done(item)
 
 
@@ -151,9 +152,18 @@ static func plaque(item: Object, center: Vector2, text: String, size: int) -> Re
 	return rect
 
 
-## Icônes au trait, dessinées dans un carré de demi-côté s autour du centre.
+## Icônes au trait, dessinées dans un carré de demi-côté s autour du centre. Chacune n'est calculée qu'une fois par
+## taille, couleur et trait (Sketch.shape), sauf le livre à point d'interrogation, qui a un texte.
 static func icon(item: Object, kind: String, c: Vector2, s: float, color := CREAM, w := 3.0) -> void:
 	var pen := Sketch.of(item)
+	if kind == "question_book":
+		_icon_shapes(pen, kind, c, s, color, w)
+	else:
+		pen.shape([&"icon", kind, s, color, w], c, func(sketch: Sketch) -> void: _icon_shapes(sketch, kind, Vector2.ZERO, s, color, w))
+	pen.done(item)
+
+
+static func _icon_shapes(pen: Sketch, kind: String, c: Vector2, s: float, color: Color, w: float) -> void:
 	match kind:
 		"user":
 			pen.arc(c + Vector2(0, -0.4 * s), 0.34 * s, 0.0, TAU, 28, color, w)
@@ -267,7 +277,6 @@ static func icon(item: Object, kind: String, c: Vector2, s: float, color := CREA
 			for spark in 5:
 				var angle := deg_to_rad(-150.0 + spark * 30.0)
 				pen.circle(c + Vector2(0, -0.5 * s) + Vector2(cos(angle), sin(angle)) * 0.32 * s, 0.06 * s, Color(1.0, 0.62, 0.2))
-	pen.done(item)
 
 
 static func _book(pen: Sketch, center: Vector2, s: float, color: Color) -> void:
@@ -436,10 +445,10 @@ static func pad_glyph_has_letter(glyph: String) -> bool:
 
 class Sketch:
 	extends RefCounted
-	## Formes d'un nœud réunies en un seul maillage indexé (sommets, couleur par sommet, triangles), envoyé d'un bloc au
-	## rendu (RenderingServer.canvas_item_add_triangle_array) : un appel de dessin pour toutes, au lieu d'un par forme.
-	## Le rendu Compatibility ne regroupe jamais deux polygones (draw_polygon, draw_polyline, draw_circle, draw_arc,
-	## draw_style_box en sont tous) : chacun lui coûtait un appel.
+	## Formes d'un nœud réunies en un seul maillage (sommets et couleur par sommet, trois sommets par triangle), envoyé
+	## d'un bloc au rendu (RenderingServer.canvas_item_add_triangle_array) : un appel de dessin pour toutes, au lieu d'un
+	## par forme. Le rendu Compatibility ne regroupe jamais deux polygones (draw_polygon, draw_polyline, draw_circle,
+	## draw_arc, draw_style_box en sont tous) : chacun lui coûtait un appel.
 	##
 	## Chaque forme reprend les sommets et les triangles que le moteur (Godot 4.7) calcule pour la fonction de dessin du
 	## même nom, sans anticrénelage comme elles : polygon (draw_colored_polygon, même triangulation), polyline
@@ -447,8 +456,21 @@ class Sketch:
 	## circle (draw_circle, 64 secteurs), arc (draw_arc), style_box (StyleBoxFlat.draw : ombre, bordure, fond et
 	## anticrénelage des coins arrondis). Les formes gardent leur ordre ; un texte (text) ferme le maillage en cours, et
 	## le suivant reprend après lui : l'ordre des formes et des textes est celui des appels.
+	##
+	## Les formes qui ne dépendent que de leur taille (cadre arrondi d'un StyleBoxFlat, arc, disque, icône, losange) sont
+	## calculées une fois, autour de l'origine, et gardées (_shapes) : les suivantes, identiques à une translation près,
+	## sont recopiées et déplacées d'un bloc (Transform2D * PackedVector2Array), sans repasser par le GDScript. Les
+	## triangles sont rangés sommet par sommet, sans indices : recopier une forme ne demande pas de renuméroter ses
+	## sommets.
 
 	const FLT_EPSILON := 1.1920929e-07
+	## Formes gardées au plus : au-delà, la réserve est vidée (les menus en utilisent quelques dizaines).
+	const SHAPES_MAX := 512
+
+	## Formes déjà calculées, autour de l'origine : clé (paramètres de la forme) -> [sommets, couleurs].
+	static var _shapes := {}
+	## Couleurs des draw_line, arrondies en demi-flottants (half).
+	static var _halves := {}
 
 	## Suréchantillonnage du nœud dessiné : StyleBoxFlat règle la largeur de son anticrénelage dessus.
 	var oversampling := 1.0
@@ -457,10 +479,13 @@ class Sketch:
 	var texts_last := false
 	var _points := PackedVector2Array()
 	var _colors := PackedColorArray()
-	var _indices := PackedInt32Array()
-	## Morceaux déjà fermés, dans l'ordre : un maillage [indices, sommets, couleurs] ou un texte (7 valeurs).
+	## Morceaux déjà fermés, dans l'ordre : un maillage [sommets, couleurs] ou un texte (7 valeurs).
 	var _pieces: Array = []
 	var _late: Array = []
+	## Maillage indexé de travail d'un StyleBoxFlat (_rounded), déplié dans _points à la fin.
+	var _mesh_points := PackedVector2Array()
+	var _mesh_colors := PackedColorArray()
+	var _mesh_indices := PackedInt32Array()
 
 	## Le maillage où tracer pour `item` : `item` lui-même s'il en est déjà un (les formes s'y ajoutent), sinon un neuf
 	## pour ce nœud, que done(item) envoie alors au rendu. Les fonctions de dessin d'Ornate s'en servent : appelées sur un
@@ -488,14 +513,14 @@ class Sketch:
 			_late.clear()
 		var rid := item.get_canvas_item()
 		for piece: Array in _pieces:
-			if piece.size() == 3:
-				RenderingServer.canvas_item_add_triangle_array(rid, piece[0], piece[1], piece[2])
+			if piece.size() == 2:
+				RenderingServer.canvas_item_add_triangle_array(rid, PackedInt32Array(), piece[0], piece[1])
 			else:
 				item.draw_string(piece[0], piece[1], piece[2], piece[3], piece[4], piece[5], piece[6])
 		_pieces.clear()
 
 	func is_empty() -> bool:
-		return _indices.is_empty() and _pieces.is_empty() and _late.is_empty()
+		return _points.is_empty() and _pieces.is_empty() and _late.is_empty()
 
 	## Texte (draw_string), dessiné après les formes déjà tracées et avant les suivantes (ou à la fin, `texts_last`).
 	func text(font: Font, position: Vector2, value: String, size: int, color: Color, alignment := HORIZONTAL_ALIGNMENT_LEFT, width := -1.0) -> void:
@@ -506,15 +531,68 @@ class Sketch:
 		_pieces.append([font, position, value, alignment, width, size, color])
 
 	func _close() -> void:
-		if not _indices.is_empty():
-			_pieces.append([_indices, _points, _colors])
-			_indices = PackedInt32Array()
+		if not _points.is_empty():
+			_pieces.append([_points, _colors])
 			_points = PackedVector2Array()
 			_colors = PackedColorArray()
 
-	func _color(color: Color, count: int) -> void:
-		for i in count:
-			_colors.append(color)
+	func _fill(color: Color, count: int) -> void:
+		var colors := PackedColorArray()
+		colors.resize(count)
+		colors.fill(color)
+		_colors.append_array(colors)
+
+	## Ajoute les triangles d'un maillage indexé, dépliés : trois sommets par triangle.
+	func _triangles(points: PackedVector2Array, colors: PackedColorArray, indices: PackedInt32Array) -> void:
+		var count := indices.size()
+		var base := _points.size()
+		_points.resize(base + count)
+		for k in count:
+			_points[base + k] = points[indices[k]]
+		if colors.size() == points.size():
+			_colors.resize(base + count)
+			for k in count:
+				_colors[base + k] = colors[indices[k]]
+		else:
+			_fill(colors[0], count)
+
+	## Bande de triangles (k, k + 1, k + 2), dépliée, d'une couleur.
+	func _strip(strip: PackedVector2Array, color: Color) -> void:
+		var triangles := strip.size() - 2
+		if triangles <= 0:
+			return
+		var base := _points.size()
+		_points.resize(base + triangles * 3)
+		var j := base
+		for k in triangles:
+			_points[j] = strip[k]
+			_points[j + 1] = strip[k + 1]
+			_points[j + 2] = strip[k + 2]
+			j += 3
+		_fill(color, triangles * 3)
+
+	## Forme gardée (_shapes), identique à une translation près d'une fois sur l'autre : calculée une fois autour de
+	## l'origine par `build` (qui trace dans le Sketch qu'on lui donne, sans texte), puis recopiée ici, déplacée de
+	## `offset`. `key` décrit tout ce dont la forme dépend, sauf sa place.
+	func shape(key: Array, offset: Vector2, build: Callable) -> void:
+		var found: Variant = _shapes.get(key)
+		if found == null:
+			var sketch := Sketch.new()
+			sketch.oversampling = oversampling
+			build.call(sketch)
+			sketch._close()
+			var points := PackedVector2Array()
+			var colors := PackedColorArray()
+			for piece: Array in sketch._pieces:
+				points.append_array(piece[0])
+				colors.append_array(piece[1])
+			if _shapes.size() >= SHAPES_MAX:
+				_shapes.clear()
+			found = [points, colors]
+			_shapes[key] = found
+		var shape_points: PackedVector2Array = found[0]
+		_points.append_array(Transform2D(0.0, offset) * shape_points if offset != Vector2.ZERO else shape_points)
+		_colors.append_array(found[1])
 
 	## draw_colored_polygon : la triangulation du moteur (Geometry2D.triangulate_polygon).
 	func polygon(points: PackedVector2Array, color: Color) -> void:
@@ -523,24 +601,18 @@ class Sketch:
 	## draw_polygon à une couleur par sommet (ou une seule).
 	func polygon_colors(points: PackedVector2Array, colors: PackedColorArray) -> void:
 		var triangles := Geometry2D.triangulate_polygon(points)
-		if triangles.is_empty():
-			return
-		var base := _points.size()
-		_points.append_array(points)
-		if colors.size() == points.size():
-			_colors.append_array(colors)
-		else:
-			_color(colors[0], points.size())
-		for index in triangles:
-			_indices.append(base + index)
+		if not triangles.is_empty():
+			_triangles(points, colors, triangles)
 
 	## draw_rect plein.
 	func rect(area: Rect2, color: Color) -> void:
 		area = area.abs()
-		var base := _points.size()
-		_points.append_array([area.position, Vector2(area.end.x, area.position.y), area.end, Vector2(area.position.x, area.end.y)])
-		_color(color, 4)
-		_indices.append_array([base, base + 1, base + 2, base, base + 2, base + 3])
+		var a := area.position
+		var b := Vector2(area.end.x, area.position.y)
+		var c := area.end
+		var d := Vector2(area.position.x, area.end.y)
+		_points.append_array([a, b, c, a, c, d])
+		_fill(color, 6)
 
 	## draw_rect vide : son contour fermé, ou le rectangle agrandi si le trait est plus large que lui.
 	func rect_outline(area: Rect2, color: Color, width: float) -> void:
@@ -555,31 +627,42 @@ class Sketch:
 	func line(from: Vector2, to: Vector2, color: Color, width: float) -> void:
 		var direction := (from - to).orthogonal().normalized()
 		var offset := direction * width * 0.5
-		var base := _points.size()
-		_points.append_array([from + offset, from - offset, to - offset, to + offset])
-		_color(Sketch.half(color), 4)
-		_indices.append_array([base, base + 1, base + 2, base, base + 2, base + 3])
+		var a := from + offset
+		var c := to - offset
+		_points.append_array([a, from - offset, c, a, c, to + offset])
+		_fill(Sketch.half(color), 6)
 
 	## draw_circle plein : 64 secteurs autour du centre.
 	func circle(center: Vector2, radius: float, color: Color) -> void:
-		var base := _points.size()
+		shape([&"circle", radius, color], center, func(sketch: Sketch) -> void: sketch._circle(radius, color))
+
+	func _circle(radius: float, color: Color) -> void:
 		var step := TAU / 64.0
+		var rim := PackedVector2Array()
+		rim.resize(65)
 		for i in 65:
 			var angle := i * step
-			_points.append(Vector2(cos(angle) * radius, sin(angle) * radius) + center)
-		_points.append(center)
-		_color(color, 66)
+			rim[i] = Vector2(cos(angle) * radius, sin(angle) * radius)
+		var base := _points.size()
+		_points.resize(base + 192)
+		var j := base
 		for i in 64:
-			_indices.append_array([base + 65, base + i, base + i + 1])
+			_points[j] = Vector2.ZERO
+			_points[j + 1] = rim[i]
+			_points[j + 2] = rim[i + 1]
+			j += 3
+		_fill(color, 192)
 
 	## draw_arc : `count` points sur l'arc, reliés par une ligne brisée.
 	func arc(center: Vector2, radius: float, start: float, end: float, count: int, color: Color, width: float) -> void:
-		var points := PackedVector2Array()
-		var delta := clampf(end - start, -TAU, TAU)
-		for i in count:
-			var theta := (i / (count - 1.0)) * delta + start
-			points.append(center + Vector2(radius * cos(theta), radius * sin(theta)))
-		polyline(points, color, width)
+		shape([&"arc", radius, start, end, count, color, width], center, func(sketch: Sketch) -> void:
+			var points := PackedVector2Array()
+			points.resize(count)
+			var delta := clampf(end - start, -TAU, TAU)
+			for i in count:
+				var theta := (i / (count - 1.0)) * delta + start
+				points[i] = Vector2(radius * cos(theta), radius * sin(theta))
+			sketch.polyline(points, color, width))
 
 	## draw_polyline épais, sans anticrénelage : une bande de triangles, deux sommets par point, en onglet aux coins
 	## (au plus trois fois la demi-largeur). Une ligne qui revient à son premier point est fermée sans rupture.
@@ -598,53 +681,50 @@ class Sketch:
 			last_direction = (points[i] - points[i - 1]).normalized()
 			if not last_direction.is_zero_approx():
 				break
-		var base := _points.size()
+		var strip := PackedVector2Array()
+		strip.resize(count * 2)
+		var half_width := width * 0.5
 		var previous := Vector2.ZERO
 		for i in count:
-			var is_first := i == 0
 			var is_last := i == count - 1
 			var direction := previous
 			if not is_last:
 				direction = (points[i + 1] - points[i]).normalized()
 				if direction.is_zero_approx():
 					direction = previous
-			if is_first and loop:
+			if i == 0 and loop:
 				previous = last_direction
 			elif is_last and loop:
 				previous = first_direction
 			var offset: Vector2
-			if is_first and not loop:
+			if i == 0 and not loop:
 				offset = first_direction.orthogonal()
 			elif is_last and not loop:
 				offset = last_direction.orthogonal()
 			else:
-				offset = Sketch._edge_offset(direction, previous)
-			var edge := offset * (width * 0.5)
-			_points.append(points[i] + edge)
-			_points.append(points[i] - edge)
+				# Bissectrice des deux segments, allongée pour garder la largeur du trait (au plus trois fois).
+				var length := 1.0
+				var bisector := (previous * direction.length() - direction * previous.length()).normalized()
+				var sine := sin(atan2(bisector.cross(previous), bisector.dot(previous)))
+				if not is_zero_approx(sine) and not direction.is_equal_approx(previous):
+					length = clampf(1.0 / sine, -3.0, 3.0)
+				else:
+					bisector = direction.orthogonal()
+				if bisector.is_zero_approx():
+					bisector = direction.orthogonal()
+				offset = bisector * length
+			var edge := offset * half_width
+			strip[i * 2] = points[i] + edge
+			strip[i * 2 + 1] = points[i] - edge
 			previous = direction
-		_color(color, count * 2)
-		for k in count * 2 - 2:
-			_indices.append_array([base + k, base + k + 1, base + k + 2])
-
-	## Décalage d'un point de la ligne brisée : la bissectrice des deux segments, allongée pour garder la largeur du
-	## trait (au plus trois fois).
-	static func _edge_offset(direction: Vector2, previous: Vector2) -> Vector2:
-		var length := 1.0
-		var bisector := (previous * direction.length() - direction * previous.length()).normalized()
-		var angle := atan2(bisector.cross(previous), bisector.dot(previous))
-		var sine := sin(angle)
-		if not is_zero_approx(sine) and not direction.is_equal_approx(previous):
-			length = clampf(1.0 / sine, -3.0, 3.0)
-		else:
-			bisector = direction.orthogonal()
-		if bisector.is_zero_approx():
-			bisector = direction.orthogonal()
-		return bisector * length
+		_strip(strip, color)
 
 	## Couleur arrondie comme le moteur l'envoie pour un draw_line : chaque composante en demi-flottant (mantisse
 	## tronquée à 10 bits, zéro sous 2^-14).
 	static func half(color: Color) -> Color:
+		var known: Variant = _halves.get(color)
+		if known != null:
+			return known
 		var bytes := PackedByteArray()
 		bytes.resize(4)
 		var result := color
@@ -656,11 +736,23 @@ class Sketch:
 			else:
 				bytes.encode_u32(0, bits & 0xFFFFE000)
 				result[k] = bytes.decode_float(0)
+		if _halves.size() < SHAPES_MAX:
+			_halves[color] = result
 		return result
 
 	## draw_style_box d'un StyleBoxFlat, comme StyleBoxFlat.draw : mêmes anneaux et mêmes triangles (ombre, bordure,
-	## fond, anticrénelage des coins arrondis), dans le même ordre.
+	## fond, anticrénelage des coins arrondis), dans le même ordre. Calculé une fois par jeu de réglages et par taille.
 	func style_box(box: StyleBoxFlat, area: Rect2) -> void:
+		var key := [&"box", area.size, oversampling, box.bg_color, box.border_color, box.border_width_left, box.border_width_top,
+			box.border_width_right, box.border_width_bottom, box.corner_radius_top_left, box.corner_radius_top_right,
+			box.corner_radius_bottom_right, box.corner_radius_bottom_left, box.corner_detail, box.expand_margin_left,
+			box.expand_margin_top, box.expand_margin_right, box.expand_margin_bottom, box.draw_center, box.shadow_color,
+			box.shadow_size, box.shadow_offset, box.anti_aliasing, box.anti_aliasing_size, box.skew, box.border_blend]
+		shape(key, area.position, func(sketch: Sketch) -> void:
+			sketch._box(box, Rect2(Vector2.ZERO, area.size))
+			sketch._triangles(sketch._mesh_points, sketch._mesh_colors, sketch._mesh_indices))
+
+	func _box(box: StyleBoxFlat, area: Rect2) -> void:
 		var widths: Array[float] = [box.border_width_left, box.border_width_top, box.border_width_right, box.border_width_bottom]
 		var radii: Array[float] = [box.corner_radius_top_left, box.corner_radius_top_right, box.corner_radius_bottom_right, box.corner_radius_bottom_left]
 		var draw_border := widths[0] > 0 or widths[1] > 0 or widths[2] > 0 or widths[3] > 0
@@ -788,10 +880,10 @@ class Sketch:
 		return scale
 
 	## Un anneau à coins arrondis entre deux rectangles (`ring` dehors, `inner` dedans), ou un rectangle arrondi plein
-	## (`filled`), comme draw_rounded_rectangle de StyleBoxFlat.
+	## (`filled`), comme draw_rounded_rectangle de StyleBoxFlat : dans le maillage indexé de travail (_mesh_*).
 	func _rounded(style_rect: Rect2, radius: Array[float], ring: Rect2, inner: Rect2, inner_color: Color, outer_color: Color,
 			detail: int, skew: Vector2, filled := false) -> void:
-		var offset := _points.size()
+		var offset := _mesh_points.size()
 		var steps := detail if radius[0] > 0 or radius[1] > 0 or radius[2] > 0 or radius[3] > 0 else 1
 		var border := not filled
 		var ring_radius := Sketch._inner_radius(style_rect, ring, radius)
@@ -808,8 +900,8 @@ class Sketch:
 			Vector2(inner.position.x + inner_radius[3] * inner_scale[3].x, inner.position.y + inner.size.y - inner_radius[3] * inner_scale[3].y)]
 		var center := style_rect.get_center()
 		var count := (steps + 1) * (8 if border else 4)
-		_points.resize(offset + count)
-		_colors.resize(offset + count)
+		_mesh_points.resize(offset + count)
+		_mesh_colors.resize(offset + count)
 		for corner in 4:
 			for step in steps + 1:
 				var index := (steps + 1) * corner + step
@@ -820,20 +912,20 @@ class Sketch:
 				var sine := sin(angle)
 				var x := inner_radius[corner] * cosine * inner_scale[corner].x + inner_points[corner].x
 				var y := inner_radius[corner] * sine * inner_scale[corner].y + inner_points[corner].y
-				_points[offset + index] = Vector2(x - skew.x * (y - center.y), y - skew.y * (x - center.x))
-				_colors[offset + index] = inner_color
+				_mesh_points[offset + index] = Vector2(x - skew.x * (y - center.y), y - skew.y * (x - center.x))
+				_mesh_colors[offset + index] = inner_color
 				if border:
 					x = ring_radius[corner] * cosine * ring_scale[corner].x + outer_points[corner].x
 					y = ring_radius[corner] * sine * ring_scale[corner].y + outer_points[corner].y
-					_points[offset + index + 1] = Vector2(x - skew.x * (y - center.y), y - skew.y * (x - center.x))
-					_colors[offset + index + 1] = outer_color
+					_mesh_points[offset + index + 1] = Vector2(x - skew.x * (y - center.y), y - skew.y * (x - center.x))
+					_mesh_colors[offset + index + 1] = outer_color
 		if border:
 			for i in count:
-				_indices.append_array([offset + i % count, offset + (i + 2) % count, offset + (i + 1) % count])
+				_mesh_indices.append_array([offset + i % count, offset + (i + 2) % count, offset + (i + 1) % count])
 		else:
 			var last := count - 1
 			for i in count / 2 - 1:
-				_indices.append_array([offset + i, offset + last - i - 1, offset + i + 1, offset + i, offset + last - i, offset + last - i - 1])
+				_mesh_indices.append_array([offset + i, offset + last - i - 1, offset + i + 1, offset + i, offset + last - i, offset + last - i - 1])
 
 
 class Frame:

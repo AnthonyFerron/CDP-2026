@@ -324,9 +324,10 @@ class KeyButton:
 		paint(pen, Rect2(Vector2.ZERO, size))
 		pen.draw(self)
 
-	## La touche dans un maillage (Ornate.Sketch), à sa place `rect`.
+	## La touche dans un maillage (Ornate.Sketch), à sa place `rect`. Sa forme ne dépend que de sa taille et de son
+	## état : elle n'est calculée qu'une fois (Ornate.Sketch.shape), le calque redessinant tout le clavier à chaque touche
+	## choisie.
 	func paint(pen: Ornate.Sketch, rect: Rect2) -> void:
-		var shape := Ornate.chamfered(rect, 10)
 		var lit := Gamepad.lit(self) or on
 		var top := Color(0.27, 0.16, 0.1) if not special else Color(0.22, 0.12, 0.08)
 		var low := Color(0.16, 0.09, 0.06)
@@ -336,11 +337,16 @@ class KeyButton:
 		if is_pressed():
 			top = top.darkened(0.2)
 			low = low.darkened(0.2)
-		pen.polygon_colors(shape, PackedColorArray([top, top, top, low, low, low, low, top]))
-		pen.polyline(Ornate.closed(shape), Ornate.GOLD_LIGHT if lit else Ornate.GOLD, 3.0)
+		var border := Ornate.GOLD_LIGHT if lit else Ornate.GOLD
+		var focused := Gamepad.focused(self)
+		pen.shape([&"pad_key", rect.size, top, low, border, focused], rect.position, func(sketch: Ornate.Sketch) -> void:
+			var area := Rect2(Vector2.ZERO, rect.size)
+			var shape := Ornate.chamfered(area, 10)
+			sketch.polygon_colors(shape, PackedColorArray([top, top, top, low, low, low, low, top]))
+			sketch.polyline(Ornate.closed(shape), border, 3.0)
+			if focused:
+				Ornate.focus_ring(sketch, area, &"chamfer", 10.0))
 		Ornate.centered_text(pen, Ornate.TEXT if not small else Ornate.SERIF, rect.position + size / 2, caption, 30 if not small else 22, Ornate.CREAM)
-		if Gamepad.focused(self):
-			Ornate.focus_ring(pen, rect, &"chamfer", 10.0)
 
 
 class PreviewBox:
