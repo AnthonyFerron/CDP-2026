@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scenes/levels/village/village.gd" id="1_village"]
 [ext_resource type="Script" path="res://scenes/levels/village/village_terrain.gd" id="2_terrain"]
 [ext_resource type="Script" path="res://scenes/levels/village/village_scatter.gd" id="3_scatter"]
-[ext_resource type="Shader" path="res://scenes/levels/marais/marais_ground.gdshader" id="4_ground"]
+[ext_resource type="Shader" path="res://scenes/levels/village/village_ground.gdshader" id="4_ground"]
 [ext_resource type="Shader" path="res://scenes/levels/marais/swamp_water.gdshader" id="5_water"]
 [ext_resource type="PackedScene" path="res://scenes/levels/village/village_props.tscn" id="6_props"]
 [ext_resource type="PackedScene" path="res://scenes/props/portal/portal.tscn" id="7_portal"]
@@ -84,7 +84,6 @@ fog_sky_affect = 0.35
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ground"]
 render_priority = 0
 shader = ExtResource("4_ground")
-shader_parameter/wet_height = -0.2
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_ripples"]
 seed = 15

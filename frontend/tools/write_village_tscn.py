@@ -16,7 +16,7 @@ EXT = [
     ("Script", "res://scenes/levels/village/village.gd", "1_village"),
     ("Script", "res://scenes/levels/village/village_terrain.gd", "2_terrain"),
     ("Script", "res://scenes/levels/village/village_scatter.gd", "3_scatter"),
-    ("Shader", "res://scenes/levels/marais/marais_ground.gdshader", "4_ground"),
+    ("Shader", "res://scenes/levels/village/village_ground.gdshader", "4_ground"),
     ("Shader", "res://scenes/levels/marais/swamp_water.gdshader", "5_water"),
     ("PackedScene", "res://scenes/levels/village/village_props.tscn", "6_props"),
     ("PackedScene", "res://scenes/props/portal/portal.tscn", "7_portal"),
@@ -100,7 +100,6 @@ fog_sky_affect = 0.35
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ground"]
 render_priority = 0
 shader = ExtResource("4_ground")
-shader_parameter/wet_height = -0.2
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_ripples"]
 seed = 15
