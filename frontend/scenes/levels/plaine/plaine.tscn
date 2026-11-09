@@ -46,6 +46,7 @@
 [ext_resource type="AudioStream" path="res://assets/audio/cave_ambience.wav" id="46_cave"]
 [ext_resource type="Resource" path="res://scenes/levels/plaine/plaine_bake.res" id="47_bake"]
 [ext_resource type="Resource" path="res://scenes/levels/plaine/plaine_decor_bake.res" id="48_decor_bake"]
+[ext_resource type="Texture2D" path="res://assets/models/kenney/castle_kit/Textures/variation-b.png" id="51_vibelandia"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_obelisk"]
 size = Vector3(1.1, 3.0, 1.1)
@@ -425,7 +426,7 @@ line_height = 0.16
 transform = Transform3D(0.98481, 0, -0.17365, 0, 1, 0, 0.17365, 0, 0.98481, 15.65, 1.03, 44.35)
 script = ExtResource("12_readable")
 title = "Le journal d'un soldat"
-body = "Jour douze. Les troupes de Vibelandia ont mis le feu à la bibliothèque à l'aube. Le capitaine Aubrac nous a ordonné de charger les livres sur les charrettes, mais le Projenomicon était déjà descendu sous la terre, avec la bibliothécaire et son registre. Si quelqu'un lit ces lignes : les archives sont sous les ruines, et leurs pages ont gardé l'ordre de la discussion."
+body = "Jour douze. À l'aube, les troupes de Vibelandia ont planté leurs étendards verts devant nos barricades et mis le feu à la bibliothèque. Le capitaine Aubrac nous a ordonné de charger les livres sur les charrettes, mais le Projenomicon était déjà descendu sous la terre, avec la bibliothécaire et son registre. Si quelqu'un lit ces lignes : les archives sont sous les ruines, et leurs pages ont gardé l'ordre de la discussion."
 prompt = "Lire le journal"
 radius = 2.4
 
@@ -570,6 +571,7 @@ serif = false
 script = ExtResource("42_life")
 player = NodePath("../../Player")
 decor = [NodePath("../Ruins"), NodePath("../Battlefield")]
+vibelandia_colors = ExtResource("51_vibelandia")
 
 [node name="Ambience" type="Node3D" parent="Exterior"]
 

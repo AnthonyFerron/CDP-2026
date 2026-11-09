@@ -1249,6 +1249,40 @@ def camp_extras(scene, rng):
     furniture_fit(scene, "mini_dungeon/chair", (cx + 3.2, 0.0, cz + 5.5), 150.0, 2.4, height=1.1)
 
 
+# Positions de Vibelandia (x, z, rayon), comme VIBELANDIA_CAMPS dans scenes/levels/plaine/plaine_life.gd : les engins de
+# siège et la batterie de balistes. Les bannières plantées là portent le vert de Vibelandia (variante b des couleurs du
+# kit Castle, posée par plaine_life.gd) ; les autres gardent le bleu de Codia, celui des bannières du château du hub.
+VIBELANDIA_CAMPS = ((-14.0, 39.0, 9.0), (17.0, -22.0, 8.0))
+
+
+def in_vibelandia_camp(x, z):
+    return any(math.hypot(x - cx, z - cz) < radius for cx, cz, radius in VIBELANDIA_CAMPS)
+
+
+def standards(scene):
+    """Les étendards des deux camps. Vibelandia : un grand étendard planté au bord du chemin, devant ses engins de
+    siège, un autre piétiné à plat dans la cendre, un troisième sur la batterie de balistes. Codia : l'étendard des
+    défenseurs, encore debout au-dessus de leurs tombes. Posés après tout le reste, avec leur propre tirage : les
+    noms et les places du décor existant ne bougent pas."""
+    rng = random.Random(5804)
+    planted = []
+    banner_pole(scene, rng, -8.6, 40.2, model="castle_kit/flag-banner-long", scale=2.1, lean=7.0, degrees=100.0)
+    planted.append((-8.6, 40.2, True))
+    # Piétiné : couché à plat dans la cendre ; à 7 cm du sol, on l'enjambe, sans collision.
+    furniture_fit(scene, "castle_kit/flag-banner-long", (-16.6, 0.0, 36.7), 196.0, 1.6, roll=90.0)
+    planted.append((-16.6, 36.7, True))
+    bx, bz, _ = SITES["battery"]
+    banner_pole(scene, rng, bx - 0.2, bz - 3.0, model="castle_kit/flag-wide", scale=3.2, lean=-12.0, degrees=225.0)
+    planted.append((bx - 0.2, bz - 3.0, True))
+    gx, gz, _ = SITES["graves"]
+    # Tourné vers le sud-ouest, vers le chemin d'arrivée : le soleil l'éclaire et son bleu se lit depuis le portail et
+    # le campement.
+    banner_pole(scene, rng, gx, gz - 5.3, model="castle_kit/flag-banner-long", scale=2.0, lean=3.0, degrees=-120.0)
+    planted.append((gx, gz - 5.3, False))
+    for x, z, enemy in planted:
+        assert in_vibelandia_camp(x, z) == enemy, (x, z)
+
+
 def build_battlefield():
     """Champ de bataille des plaines d'Hexcole, sur les replats du terrain : tout y est posé au sol, à la hauteur 0."""
     scene = PlaineScene("PlaineBattlefield")
@@ -1261,6 +1295,7 @@ def build_battlefield():
     watchtower(scene, rng)
     siege_works(scene, rng)
     battery(scene, rng)
+    standards(scene)
     return scene
 
 
