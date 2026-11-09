@@ -2,12 +2,14 @@ extends SceneTree
 ## Empreinte d'un lieu chargé comme en jeu : ce qui se dessine (maillages, MultiMesh, particules, textes, lumières)
 ## et ce qui arrête le joueur (formes de collision), avec leur place dans le monde. Sert à vérifier qu'un
 ## changement du chargement (calcul d'avance, travail étalé) ne change ni le rendu ni les collisions :
-##   cd frontend && godot --headless --fixed-fps 60 --path . --script res://tools/fingerprint_level.gd -- <lieu> <fichier> [--images N] [--livres N]
+##   cd frontend && godot --headless --fixed-fps 60 --path . --script res://tools/fingerprint_level.gd -- <lieu> <fichier> [--images N] [--livres N] [--etat-jeu]
 ## --livres N : les N premiers livres trouvés et posés au château (le hub montre alors ses reconstructions).
 ## <fichier> reçoit une ligne par objet, triée : deux empreintes se comparent avec diff. Les chemins des nœuds n'y
 ## sont pas (un calcul d'avance peut ranger autrement), seulement leur genre, leur place et leur contenu.
 ## Le hub regroupe son décor au fil des images, le Marais prépare sa crypte après l'arrivée : l'outil attend qu'ils aient
-## fini.
+## fini. Le hub laisse de côté les groupes qui ne peuvent pas se montrer pendant la visite (ruines réparées,
+## reconstructions au-delà des livres trouvés) : l'outil les fait regrouper aussi (finish_all), pour relever tout le décor
+## regroupé. Avec --etat-jeu, il relève le lieu tel qu'en jeu, ces groupes cachés laissés tels quels.
 
 ## Livres dans l'ordre des lieux, pour --livres.
 const BOOKS: Array[StringName] = [&"projenomicon", &"algonicon", &"logiconomicon", &"codonomicon"]
@@ -65,6 +67,10 @@ func _run() -> void:
 		if batches.all(func(node: Node) -> bool: return node.is_done()):
 			break
 		await process_frame
+	if not args.has("--etat-jeu"):
+		for node: Node in batches:
+			if node.has_method("finish_all"):
+				node.finish_all()
 	for frame in 3:
 		await process_frame
 

@@ -13,8 +13,9 @@ extends SceneTree
 ##
 ## À relancer après l'ajout d'un matériau, d'un shader ou d'un lieu :
 ##   cd frontend && godot --headless --fixed-fps 60 --path . --script res://tools/bake_shaders.gd
-## --fixed-fps 60 rend le relevé indépendant de la charge de la machine : certains lieux préparent leur décor au fil
-## du temps (regroupement du hub), et le relevé se fait au bout de SETTLE_FRAMES images.
+## --fixed-fps 60 rend le relevé indépendant de la charge de la machine. Le regroupement du décor du hub, étalé sur les
+## premières images, attend pendant SETTLE_FRAMES : le relevé prend le hub tel qu'à l'arrivée, puis tout regroupé
+## (finish_all), et garde les deux, qui se dessinent l'un après l'autre en jeu.
 ## Avec « -- --check », rien n'est écrit : le script compare le fichier au calcul, et sort en erreur s'ils diffèrent.
 
 const PATH := "res://assets/shader_warm_list.tres"
@@ -52,18 +53,30 @@ func _run() -> void:
 		# Chargé comme en jeu (scène courante) : certains scripts la cherchent.
 		change_scene_to_packed(packed)
 		await scene_changed
-		for frame in SETTLE_FRAMES:
-			await process_frame
 		var scene := current_scene
+		var batches := scene.find_children("*", "Node3D", true, false).filter(
+			func(node: Node) -> bool: return node.has_method("finish_all"))
+		for frame in SETTLE_FRAMES:
+			# Le regroupement du hub attend (process_frame précède les _process de l'image).
+			for batch: Node in batches:
+				batch.set_process(false)
+			await process_frame
 		# Le Marais prépare sa crypte après l'arrivée, par tranches : le relevé attend qu'elle soit prête.
 		while scene.has_method("is_done") and not scene.is_done():
 			await process_frame
-		for inside in [false, true]:
-			var group := _group(scene, String(place[0]), inside)
+		var groups: Array[Dictionary] = [_group(scene, String(place[0]), false), _group(scene, String(place[0]), true)]
+		if not batches.is_empty():
+			# Puis le décor regroupé : ses lots fondus (couleur dans les sommets), ses ombres seules, ses MultiMesh.
+			for batch: Node in batches:
+				batch.finish_all()
+			for index in groups.size():
+				groups[index] = _merge(groups[index], _group(scene, String(place[0]), index == 1))
+		for group in groups:
 			if group:
 				list.groups.append(group)
-				print("  %s, %s : %d matériaux, %d particules, %d textes" % [group.place, "intérieur" if inside else "extérieur",
-					(group.materials as Array).size(), (group.process as Array).size(), (group.labels as Array).size()])
+				print("  %s, %s : %d matériaux, %d particules, %d textes" % [group.place,
+					"intérieur" if group.inside else "extérieur", (group.materials as Array).size(),
+					(group.process as Array).size(), (group.labels as Array).size()])
 	unload_current_scene()
 	await process_frame
 	list.fingerprint = _fingerprint
@@ -155,6 +168,18 @@ func _group(scene: Node, place: String, inside: bool) -> Dictionary:
 		if entry[1] == "materials":
 			group.usages.append(entry[3])
 	return {} if entries.is_empty() else group
+
+
+## Le groupe first complété des entrées de more (même lieu, même contexte), ou celui des deux qui n'est pas vide.
+func _merge(first: Dictionary, more: Dictionary) -> Dictionary:
+	if first.is_empty() or more.is_empty():
+		return more if first.is_empty() else first
+	for field in ["materials", "process", "labels"]:
+		(first[field] as Array).append_array(more[field])
+	var usages: PackedByteArray = first.usages
+	usages.append_array(more.usages)
+	first.usages = usages
+	return first
 
 
 func _add(group: Dictionary, context: String, material: Material, usage: int, field: String) -> void:

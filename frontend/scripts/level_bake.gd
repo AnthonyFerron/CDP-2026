@@ -1,7 +1,8 @@
 class_name LevelBake
 extends Resource
 ## Ce qu'un lieu calculait à chaque chargement, calculé d'avance par tools/bake_lieux.gd et rangé dans
-## scenes/levels/<lieu>/<lieu>_bake.res : hauteurs et couleurs du sol, positions et collisions du décor dispersé.
+## scenes/levels/<lieu>/<lieu>_bake.res (plaine_decor_bake.res pour la Plaine, dont le sol a son propre calcul
+## d'avance) : hauteurs et couleurs du sol, positions et collisions du décor dispersé.
 ## Ce sont les mêmes calculs, faits une fois : rien ne change à l'écran ni sous les pieds, le chargement fond.
 ##
 ## Chaque partie porte deux empreintes :

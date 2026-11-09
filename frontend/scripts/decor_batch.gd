@@ -14,8 +14,10 @@ extends RefCounted
 ## rende vrai) pour étaler le travail sur plusieurs images. Le Marais regroupe ainsi la crypte, cachée à l'arrivée,
 ## quelques millisecondes par image (marais.gd).
 ## Servent au Marais (décor, crypte, bêtes), à la Plaine (ruines, champ de bataille, archives) et, pour la signature
-## des matériaux et leur peinture dans les sommets, au regroupement du hub (hub_batch.gd), qui garde ses propres règles
-## (groupes réparables, ombres par case, modèles posés).
+## des matériaux, leur peinture dans les sommets et la lecture des surfaces, au regroupement du hub (hub_batch.gd),
+## qui garde ses propres règles (groupes réparables, ombres par case, modèles posés).
+## Chaque surface fondue n'est lue qu'une fois par regroupement (source) : sur le web, chaque lecture
+## (surface_get_arrays) recopie le tampon de la carte graphique, et un même modèle revient des dizaines de fois.
 
 ## Plus grande dimension (m) sous laquelle un objet est petit (cierge, fleur, urne, os) : sans ombre, effacé au-delà
 ## de SMALL_RANGE, dans une brume qui en cache déjà les trois quarts.
@@ -51,7 +53,7 @@ var _groups := {}
 var _keys: Array = []
 var _built := 0
 var _merged: Array[MeshInstance3D] = []
-## Signatures par instance de matériau, matériaux et surfaces peints (voir signature).
+## Signatures par instance de matériau, matériaux et surfaces peints, surfaces lues (voir signature et source).
 var _cache := {}
 var _count := 0
 var _done := false
@@ -100,6 +102,10 @@ func step(deadline: int) -> bool:
 			return false
 	if _keys.is_empty() and not _groups.is_empty() and _built == 0:
 		_keys = _groups.keys()
+		# Toutes les surfaces lues dans la même image (voir source), avant de bâtir les lots un à un.
+		prefetch(_groups.values(), _cache)
+		if Time.get_ticks_usec() >= deadline:
+			return false
 	while _built < _keys.size():
 		_build(_groups[_keys[_built]], _built + 1)
 		_built += 1
@@ -171,10 +177,7 @@ func _build(group: Dictionary, index: int) -> void:
 	var shift := Transform3D(Basis(), -center)
 	var tool := SurfaceTool.new()
 	for part: Array in group.parts:
-		if group.paint:
-			tool.append_from(painted_mesh(part[0], part[1], part[3], _cache), 0, shift * (part[2] as Transform3D))
-		else:
-			tool.append_from(part[0], part[1], shift * (part[2] as Transform3D))
+		tool.append_from(part_source(part, group.paint, _cache), 0, shift * (part[2] as Transform3D))
 	var mesh := tool.commit()
 	mesh.surface_set_material(0, group.material)
 	var instance := MeshInstance3D.new()
@@ -255,7 +258,8 @@ static func painted_material(material: Material, cache: Dictionary) -> Material:
 static func painted_mesh(mesh: Mesh, surface: int, tint: Color, cache: Dictionary) -> Mesh:
 	var key := "%d_%d_%s" % [mesh.get_instance_id(), surface, tint.to_html()]
 	if not cache.has(key):
-		var arrays := mesh.surface_get_arrays(surface)
+		# Les tableaux lus une fois (source), copiés : seule la copie reçoit ses couleurs.
+		var arrays := (source(mesh, surface, cache) as Surface).arrays.duplicate()
 		var colors := PackedColorArray()
 		colors.resize((arrays[Mesh.ARRAY_VERTEX] as PackedVector3Array).size())
 		colors.fill(tint)
@@ -264,6 +268,38 @@ static func painted_mesh(mesh: Mesh, surface: int, tint: Color, cache: Dictionar
 		copy.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
 		cache[key] = copy
 	return cache[key]
+
+
+## La surface d'un morceau d'un lot (part : [maillage, surface, place, couleur]), telle que SurfaceTool.append_from la
+## lit : la surface du modèle, ou sa copie peinte (painted_mesh), lue une fois (source).
+static func part_source(part: Array, paint: bool, cache: Dictionary) -> Mesh:
+	if paint:
+		return source(painted_mesh(part[0], part[1], part[3], cache), 0, cache)
+	return source(part[0], part[1], cache)
+
+
+## Une surface de mesh, lue une seule fois par regroupement (gardée dans cache) : append_from(source(mesh, surface),
+## 0, place) donne exactement les sommets de append_from(mesh, surface, place), puisque l'outil lit les mêmes tableaux
+## (surface_get_arrays), sans relire le maillage. La copie peinte (painted_mesh) est relue elle aussi, une fois : le
+## moteur range ses couleurs en octets, et c'est ce qu'il en rend que les lots doivent prendre.
+## Sur le web, la première lecture d'une image attend en plus que la carte graphique ait fini l'image précédente :
+## les regroupements par étapes lisent donc toutes leurs surfaces d'un coup, dans une même image (prefetch).
+static func source(mesh: Mesh, surface: int, cache: Dictionary) -> Mesh:
+	var key := "surface_%d_%d" % [mesh.get_instance_id(), surface]
+	if not cache.has(key):
+		var array_mesh := mesh as ArrayMesh
+		cache[key] = Surface.new(mesh.surface_get_arrays(surface),
+			array_mesh.surface_get_primitive_type(surface) if array_mesh else Mesh.PRIMITIVE_TRIANGLES,
+			array_mesh.surface_get_format(surface) if array_mesh else 0)
+	return cache[key]
+
+
+## Lit d'un coup les surfaces de tous les morceaux de lots (lots : des dictionnaires « parts » et « paint », voir
+## _collect) : sur le web, une seule attente de la carte graphique au lieu d'une par image.
+static func prefetch(lots: Array, cache: Dictionary) -> void:
+	for lot: Dictionary in lots:
+		for part: Array in lot.parts:
+			part_source(part, lot.paint, cache)
 
 
 ## Clé d'un matériau : ses réglages et ses textures, sans son nom ni son instance (ni sa couleur, s'il est peint
@@ -360,3 +396,57 @@ static func _prune(node: Node) -> void:
 			continue
 		if child.get_class() == "Node3D" or (child is MeshInstance3D and not (child as MeshInstance3D).mesh):
 			child.free()
+
+
+## Une surface déjà lue (ou des tableaux en main), que SurfaceTool.append_from lit comme un maillage (voir source).
+class Surface extends Mesh:
+	var arrays: Array
+	var _primitive := Mesh.PRIMITIVE_TRIANGLES
+	var _format := 0
+
+	func _init(surface_arrays: Array, primitive := Mesh.PRIMITIVE_TRIANGLES, format := 0) -> void:
+		arrays = surface_arrays
+		_primitive = primitive
+		_format = format
+
+	func _get_surface_count() -> int:
+		return 1
+
+	func _surface_get_arrays(_index: int) -> Array:
+		return arrays
+
+	func _surface_get_primitive_type(_index: int) -> int:
+		return _primitive
+
+	func _surface_get_format(_index: int) -> int:
+		return _format
+
+	func _surface_get_array_len(_index: int) -> int:
+		return (arrays[Mesh.ARRAY_VERTEX] as PackedVector3Array).size()
+
+	func _surface_get_array_index_len(_index: int) -> int:
+		return (arrays[Mesh.ARRAY_INDEX] as PackedInt32Array).size() if arrays[Mesh.ARRAY_INDEX] != null else 0
+
+	func _surface_get_blend_shape_arrays(_index: int) -> Array[Array]:
+		return []
+
+	func _surface_get_lods(_index: int) -> Dictionary:
+		return {}
+
+	func _surface_set_material(_index: int, _material: Material) -> void:
+		pass
+
+	func _surface_get_material(_index: int) -> Material:
+		return null
+
+	func _get_blend_shape_count() -> int:
+		return 0
+
+	func _get_blend_shape_name(_index: int) -> StringName:
+		return &""
+
+	func _set_blend_shape_name(_index: int, _name: StringName) -> void:
+		pass
+
+	func _get_aabb() -> AABB:
+		return AABB()
