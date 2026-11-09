@@ -8,6 +8,9 @@ extends Node3D
 @export var waypoints: PackedVector3Array = PackedVector3Array()
 @export var speed := 0.55
 
+## Maillages partagés par les chats de même pelage.
+static var _shared := {}
+
 var _target := 0
 var _pause := 0.0
 var _time := 0.0
@@ -18,45 +21,23 @@ var _body: Node3D
 
 func _ready() -> void:
 	_time = randf() * 5.0
-	var fur := StandardMaterial3D.new()
-	fur.albedo_color = coat
-	fur.roughness = 1.0
-	var eye := StandardMaterial3D.new()
-	eye.albedo_color = Color(0.6, 0.55, 0.12)
-	eye.emission_enabled = true
-	eye.emission = Color(0.45, 0.4, 0.06)
+	var meshes := _meshes(coat)
 	_body = Node3D.new()
 	add_child(_body)
-	_sphere(_body, fur, 0.1, Vector3(0, 0.2, 0), Vector3(0.85, 0.8, 1.7))
-	var head := Node3D.new()
-	head.position = Vector3(0, 0.29, 0.19)
-	_body.add_child(head)
-	_sphere(head, fur, 0.075, Vector3.ZERO, Vector3(1.0, 0.92, 1.0))
-	for side in [-1.0, 1.0]:
-		var ear := MeshInstance3D.new()
-		var cone := CylinderMesh.new()
-		cone.top_radius = 0.0
-		cone.bottom_radius = 0.025
-		cone.height = 0.06
-		cone.radial_segments = 4
-		cone.material = fur
-		ear.mesh = cone
-		ear.position = Vector3(side * 0.04, 0.08, -0.01)
-		head.add_child(ear)
-		_sphere(head, eye, 0.011, Vector3(side * 0.032, 0.015, 0.065), Vector3.ONE)
+	# Le corps, la tête, les oreilles et les yeux ne bougent pas les uns par rapport aux autres : un seul maillage.
+	VillageMesh.instance(meshes["body"], _body)
 	for corner: Vector2 in [Vector2(-0.05, 0.11), Vector2(0.05, 0.11), Vector2(-0.05, -0.1), Vector2(0.05, -0.1)]:
 		var hip := Node3D.new()
 		hip.position = Vector3(corner.x, 0.16, corner.y)
 		_body.add_child(hip)
-		_box(hip, fur, Vector3(0.035, 0.16, 0.035), Vector3(0, -0.08, 0))
+		VillageMesh.instance(meshes["leg"], hip)
 		_legs.append(hip)
 	# La queue part de l'arrière du corps (son pivot est dans le corps) et se dresse vers l'arrière : posée plus haut
 	# et penchée vers le bas, elle flottait au-dessus de la croupe.
 	_tail = Node3D.new()
 	_tail.position = Vector3(0, 0.22, -0.14)
 	_body.add_child(_tail)
-	_box(_tail, fur, Vector3(0.03, 0.03, 0.28), Vector3(0, 0.12 * sin(deg_to_rad(35.0)), -0.12 * cos(deg_to_rad(35.0))),
-		Vector3(35, 0, 0))
+	VillageMesh.instance(meshes["tail"], _tail)
 	if not waypoints.is_empty():
 		global_position = waypoints[0]
 		_target = 1 % waypoints.size()
@@ -90,26 +71,30 @@ func _process(delta: float) -> void:
 	_body.position.y = absf(sin(_time * 9.0)) * 0.012
 
 
-func _sphere(parent: Node3D, material: Material, radius: float, at: Vector3, stretch: Vector3) -> void:
-	var mesh := SphereMesh.new()
-	mesh.radius = radius
-	mesh.height = radius * 2.0
-	mesh.radial_segments = 10
-	mesh.rings = 5
-	mesh.material = material
-	var instance := MeshInstance3D.new()
-	instance.mesh = mesh
-	instance.position = at
-	instance.scale = stretch
-	parent.add_child(instance)
+static func release() -> void:
+	_shared = {}
 
 
-func _box(parent: Node3D, material: Material, size: Vector3, at: Vector3, degrees := Vector3.ZERO) -> void:
-	var mesh := BoxMesh.new()
-	mesh.size = size
-	mesh.material = material
-	var instance := MeshInstance3D.new()
-	instance.mesh = mesh
-	instance.position = at
-	instance.rotation_degrees = degrees
-	parent.add_child(instance)
+## Les formes du chat, fondues par partie (VillageMesh) et partagées par les chats de même pelage.
+static func _meshes(fur: Color) -> Dictionary:
+	var key := fur.to_html()
+	if _shared.has(key):
+		return _shared[key]
+	var eye := Color(0.6, 0.55, 0.12)
+	var head := Vector3(0, 0.29, 0.19)
+	var body := [
+		[VillageMesh.sphere(0.1), VillageMesh.at(Vector3(0, 0.2, 0), Vector3.ZERO, Vector3(0.85, 0.8, 1.7)), fur],
+		[VillageMesh.sphere(0.075), VillageMesh.at(head, Vector3.ZERO, Vector3(1.0, 0.92, 1.0)), fur],
+	]
+	for side in [-1.0, 1.0]:
+		body.append([VillageMesh.cone(0.025, 0.06, 4), VillageMesh.at(head + Vector3(side * 0.04, 0.08, -0.01)), fur])
+		body.append([VillageMesh.sphere(0.011, 6, 3), VillageMesh.at(head + Vector3(side * 0.032, 0.015, 0.065)), eye])
+	var tilt := deg_to_rad(35.0)
+	var meshes := {
+		"body": VillageMesh.merge(body),
+		"leg": VillageMesh.merge([[VillageMesh.box(Vector3(0.035, 0.16, 0.035)), VillageMesh.at(Vector3(0, -0.08, 0)), fur]]),
+		"tail": VillageMesh.merge([[VillageMesh.box(Vector3(0.03, 0.03, 0.28)),
+			VillageMesh.at(Vector3(0, 0.12 * sin(tilt), -0.12 * cos(tilt)), Vector3(35, 0, 0)), fur]]),
+	}
+	_shared[key] = meshes
+	return meshes

@@ -65,6 +65,8 @@ EXT = [
     ("Script", "res://scenes/levels/village/village_crow.gd", "64_crow"),
     ("Script", "res://scenes/levels/village/village_cat.gd", "65_cat"),
     ("Script", "res://scenes/levels/village/village_life.gd", "66_life"),
+    ("Script", "res://scenes/levels/village/village_hen.gd", "67_hen"),
+    ("Script", "res://scenes/levels/village/village_vane.gd", "68_vane"),
     ("Script", "res://scenes/levels/hub/volcano.gd", "90_volcano"),
     # Sol et décor dispersé calculés d'avance (tools/bake_lieux.gd).
     ("Resource", "res://scenes/levels/village/village_bake.res", "91_bake"),
@@ -188,6 +190,11 @@ size = Vector3(0.55, 0.14, 0.75)
 # effondré des écuries. Fumées qui montent des ruines. La mairie, intacte, ne fume pas.
 FIRES = [(4.6, 35.6, 0.9), (-7.5, -0.7, 0.7), (26.0, -2.2, 1.0), (-27.0, -1.0, 0.9), (21.4, 34.6, 0.8)]
 SMOKES = [(-28.0, -2.0, 1.0), (27.0, -3.5, 1.4), (-8.6, -1.6, 1.0), (21.6, 34.0, 1.1), (-10.0, 20.0, 1.0)]
+# Filets de fumée pâle, à peine visibles, qui montent encore des cendres du potager brûlé (x, hauteur, z) : minces
+# et clairs, ils ne font pas de boule sombre autour du joueur qui traverse le potager.
+WISPS = [(-28.6, 0.2, 34.4), (-26.0, 0.2, 36.6)]
+# Papillons de nuit autour des deux lanternes allumées devant la porte de la mairie (x, hauteur, z).
+MOTHS = [(-2.3, 2.75, -19.3), (2.3, 2.75, -19.3)]
 # Filets de fumée claire des cheminées encore tièdes : la boulangerie et la forge (x, hauteur, z).
 CHIMNEYS = [(12.65, 4.0, 28.7), (13.45, 4.1, 18.6)]
 # Braises qui montent : les feux, la bouche du four, le foyer de la forge (x, hauteur, z, demi-largeur).
@@ -202,12 +209,30 @@ CROWS = [
     ((26.2, 0.84, 17.6), 250.0, False), ((24.0, 5.37, 31.0), 90.0, False),
     ((-6.2, 0.0, -6.4), 40.0, True), ((-5.5, 0.0, -7.3), 300.0, True), ((7.4, 0.0, 5.2), 200.0, True),
     ((-25.6, 0.0, 30.6), 90.0, True), ((-1.6, 0.0, 37.6), 120.0, True),
+    # Sur les toits de la mairie, le seul encore entier : le faîte et la cheminée.
+    ((0.0, 11.6, -21.4), 20.0, False), ((3.2, 11.9, -29.0), 200.0, False),
 ]
 # Chats qui se promènent : pelage et points de passage. Le noir devant la mairie, le tigré autour du puits.
 CATS = [
     ("Color(0.07, 0.07, 0.08, 1)", [(-4.6, 0.0, -18.7), (-1.9, 0.0, -18.4), (-3.4, 0.0, -17.3)]),
     ("Color(0.45, 0.36, 0.27, 1)", [(-17.2, 0.0, 26.6), (-18.6, 0.0, 31.4), (-21.8, 0.0, 31.6), (-17.0, 0.0, 30.0)]),
 ]
+# Poules échappées du poulailler vidé du meunier : plumage, chemin (elles vont d'un point à son voisin) et point de
+# départ. Deux autour du poulailler, sans repasser par l'enclos ni par les tas de bois ; deux dans le potager, entre
+# les rangs, loin du poteau de l'épouvantail.
+PEN_PATH = [(-26.0, 0.0, -25.9), (-24.0, 0.0, -26.2), (-22.0, 0.0, -27.0), (-20.6, 0.0, -28.8), (-21.8, 0.0, -31.0),
+            (-23.4, 0.0, -29.6)]
+GARDEN_PATH = [(-30.0, 0.0, 23.3), (-26.0, 0.0, 23.3), (-24.4, 0.0, 25.6), (-25.6, 0.0, 27.7), (-29.6, 0.0, 27.7)]
+HENS = [
+    ("Color(0.9, 0.86, 0.78, 1)", PEN_PATH, 0),
+    ("Color(0.55, 0.3, 0.14, 1)", PEN_PATH, 4),
+    ("Color(0.17, 0.15, 0.14, 1)", GARDEN_PATH, 1),
+    ("Color(0.72, 0.55, 0.34, 1)", GARDEN_PATH, 4),
+]
+# Girouette de fer sur le faîte de la mairie, au-dessus de son pignon (le faîte est à 11,6 m), assez grande pour se
+# découper sur le ciel depuis la place.
+VANE = (0.0, 11.6, -20.2)
+VANE_SCALE = 1.6
 # Godot ajoute au volume d'une source 3D le gain de sa distance (unit_size), avant de plafonner à max_db (3 dB par
 # défaut) : une source à 1 ou 2 m montait de 7 dB au-dessus de son volume, et le ruisseau, sous le pont, poussait le
 # mélange à -6 dBFS de crête. Comme au hub (docs/sons.md) : l'eau qui coule ne dépasse pas son volume de plus de 1 dB,
@@ -294,7 +319,59 @@ LORE = [
      "fournée est pour les gardes du rempart : qu'ils tiennent jusqu'au soir.",
      dict(text="Pain de seigle : 2 sous\nPain blanc : 3 sous", style=3, mount=0, board_size=(0.85, 0.62),
           board_height=1.2, line_height=0.1, serif=False, double_sided=True)),
+    # Affiche clouée par les hérauts de Vibelandia sur un poteau, hors du rempart, face au chemin du portail.
+    ("Summons", (6.0, 0.0, 51.0), -40.0, "La sommation de Vibelandia",
+     "Au nom du royaume de Vibelandia : ouvrez la porte avant la nuit et livrez à nos hérauts les écrits des anciens "
+     "bâtisseurs que garde votre mairie. Qui obéira sera épargné ; qui résistera verra son village brûler. Au bas de "
+     "l'affiche, une main de Codia a répondu au charbon : « Les savoirs des anciens ne se livrent pas. Ils se "
+     "comprennent, ou ils restent muets. »",
+     dict(text="Sommation\nde Vibelandia", style=2, mount=0, board_size=(0.95, 0.75), board_height=1.4,
+          line_height=0.12)),
+    # Lettre clouée au mur de la première maison de la grande rue, pour un frère qui reviendrait.
+    ("Letter", (-5.74, 0.0, 29.0), 90.0, "La lettre de Mahaut",
+     "Gaspard, si tu reviens et que tu lis ceci : nous sommes partis vers le bunker du roi quand le cor a sonné trois "
+     "fois. Le maire, lui, est resté. Pour que Vibelandia ne trouve rien, il a déchiré ses notes sur les langages des "
+     "anciens bâtisseurs en dix morceaux, deux par langage, et les a cachés dans la mairie : parmi les registres, dans "
+     "les tiroirs, les armoires et les coffres. Il disait qu'un morceau seul ne suffit pas : il faut les deux pour "
+     "comprendre. Ta sœur, Mahaut.",
+     dict(text="À Gaspard,\ns'il revient", style=2, mount=1, board_size=(0.75, 0.62), board_height=1.5,
+          line_height=0.1)),
+    # Ardoise accrochée au mur du fond de la maison de la famille, près du petit lit et de la poupée.
+    ("SchoolSlate", (-10.9, 0.0, -21.74), 0.0, "L'ardoise de l'écolier",
+     "Leçon du maître d'école, recopiée à la craie : « Les anciens bâtisseurs lisaient leurs instructions de haut en "
+     "bas, une ligne après l'autre, sans en sauter aucune. Le mot à gauche du signe = garde une valeur, et une ligne "
+     "suivante peut la changer. Ici, pommes vaut 4, puis pommes + 3 : le panier en compte 7, et l'ancien nombre est "
+     "oublié. Notez chaque valeur à chaque ligne. » Dessous, d'une écriture d'enfant : « Le maître dit que j'ai bon. »",
+     dict(text="pommes = 4\npommes = pommes + 3", style=3, mount=1, board_size=(1.0, 0.5), board_height=1.25,
+          line_height=0.085, serif=False)),
+    # Pierre de fondation scellée sous la fenêtre de droite de la mairie.
+    ("Cornerstone", (4.0, 0.0, -19.74), 0.0, "La pierre de fondation",
+     "Gravé sous la fenêtre de la mairie : « Cette maison commune repose sur les fondations des anciens bâtisseurs. "
+     "Ils donnaient leurs ordres en cinq langages : le premier dresse la page, le deuxième la pare de couleurs, les "
+     "trois autres comptent, décident et répètent. Ce qu'ils écrivaient pour eux seuls restait caché aux passants, et "
+     "quand deux ordres se contredisaient, le plus précis l'emportait. »",
+     dict(text="Ici reposent les pierres\ndes anciens bâtisseurs", style=1, mount=1, board_size=(1.4, 0.5),
+          board_height=0.55, line_height=0.09)),
+    # Registre posé sur la table du sergent, dans le corps de garde.
+    ("Roster", (21.6, 0.682, 13.4), -78.0, "Le registre du sergent",
+     "Relève de la garde, an 5812. Chaque soir, le sergent passe les tours du rempart une à une, de la première à la "
+     "dernière, sans en sauter aucune, et tient son compte à mesure. Les jours pairs, ceux qu'on partage en deux sans "
+     "reste, la relève monte au rempart ; les jours impairs, elle garde la porte. Ce soir, treize gardes en équipes de "
+     "quatre : trois équipes, et il en reste un pour la tour. Le reste d'un partage décide de tout.",
+     dict(text="Relève de la garde", style=2, mount=1, board_size=(0.9, 0.5), board_height=0.0,
+          line_height=0.08, collision=False, lay=True)),
+    # Carnet oublié sur la meule de rechange, au pied du moulin à vent.
+    ("MillerNotes", (31.0, 4.375, -26.9), 15.0, "Le carnet du meunier",
+     "Les catapultes de Vibelandia tonnent depuis l'aube. Cette nuit, la meule a tremblé toute seule, et l'eau du "
+     "ruisseau était tiède sous la roue. Les anciens disent que le Mont Sam Altan dort depuis des siècles ; je n'aime "
+     "pas la fumée qui monte de sa bouche. Je laisse la dernière farine à la boulangère, pour les gardes du rempart, "
+     "et je pars avec les autres.",
+     dict(text="Carnet\ndu meunier", style=2, mount=1, board_size=(0.7, 0.52), board_height=0.0, line_height=0.08,
+          collision=False, lay=True)),
 ]
+# Parchemin couché sur une table ou une meule : la planche, face vers le haut, s'enfonce de 3,5 cm dans son support,
+# pour ne dépasser que de l'épaisseur d'un feuillet ; le haut du texte regarde vers -Z du Readable.
+LAID = "transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, -0.035, 0)"
 MEMORIAL = ((12.0, 0.0, 37.5), -90.0, "Le mémorial des gardes",
             "Ici, les gardes de Codia ont tenu la porte trois jours et trois nuits face aux guerriers de Vibelandia. "
             "Quand elle a cédé, ils ont couvert la fuite des habitants jusqu'au bunker du roi. Leurs noms restent "
@@ -468,6 +545,15 @@ def main():
         node(lines, f"Chimney{index}", "CPUParticles3D", "Smokes", props=[
             f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {x:g}, {y:g}, {z:g})", 'script = ExtResource("11_smoke")',
             "radius = 0.15", "puff_size = 1.4", "rise_speed = 0.9", "smoke_color = Color(0.5, 0.47, 0.45, 1)"])
+    for index, (x, y, z) in enumerate(WISPS):
+        node(lines, f"Wisp{index}", "CPUParticles3D", "Smokes", props=[
+            f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {x:g}, {y:g}, {z:g})", 'script = ExtResource("11_smoke")',
+            "radius = 0.25", "puff_size = 0.9", "rise_speed = 0.55", "smoke_color = Color(0.52, 0.49, 0.46, 1)"])
+    node(lines, "Moths", "Node3D")
+    for index, (x, y, z) in enumerate(MOTHS):
+        node(lines, f"Moths{index}", "CPUParticles3D", "Moths", props=[
+            f"transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, {x:g}, {y:g}, {z:g})", 'script = ExtResource("60_particles")',
+            "kind = 3", "extents = Vector3(0.3, 0.2, 0.3)", "tint = Color(0.86, 0.8, 0.68, 1)"])
     node(lines, "Embers", "Node3D")
     for index, (x, y, z, half) in enumerate(EMBERS):
         node(lines, f"Embers{index}", "CPUParticles3D", "Embers", props=[
@@ -482,6 +568,13 @@ def main():
         array = ", ".join(f"{x:g}, {y:g}, {z:g}" for x, y, z in points)
         node(lines, f"Cat{index}", "Node3D", "Cats", props=[at(*points[0]), 'script = ExtResource("65_cat")',
                                                           f"coat = {coat}", f"waypoints = PackedVector3Array({array})"])
+    node(lines, "Hens", "Node3D")
+    for index, (plumage, points, start) in enumerate(HENS):
+        array = ", ".join(f"{x:g}, {y:g}, {z:g}" for x, y, z in points)
+        node(lines, f"Hen{index}", "Node3D", "Hens", props=[at(*points[start]), 'script = ExtResource("67_hen")',
+                                                          f"plumage = {plumage}", f"waypoints = PackedVector3Array({array})",
+                                                          f"start = {start}"])
+    node(lines, "Vane", "Node3D", props=[at(*VANE, VANE_SCALE), 'script = ExtResource("68_vane")'])
     # Le linge et les bannières ondulent au vent (village_life.gd).
     node(lines, "Life", "Node", props=['script = ExtResource("66_life")',
                                        'roots = Array[NodePath]([NodePath("../Props"), NodePath("../Interior/Hall")])'])
@@ -511,7 +604,9 @@ def main():
         node(lines, name, "Node3D", "Lore", props=[at(x, y, z, 1.0, degrees), 'script = ExtResource("57_readable")',
                                                    f"title = {quote(title)}", f"body = {quote(body)}",
                                                    f"prompt = {quote('Lire : ' + title)}", "radius = 2.6"])
-        node(lines, "Board", "Node3D", f"Lore/{name}", props=sign_props(board))
+        board = dict(board)
+        laid = board.pop("lay", False)
+        node(lines, "Board", "Node3D", f"Lore/{name}", props=([LAID] if laid else []) + sign_props(board))
     # Mémorial des gardes : une stèle de pierre sur son socle, la plaque gravée sur sa face.
     (x, y, z), degrees, title, body = MEMORIAL
     node(lines, "Memorial", "Node3D", "Lore", props=[at(x, y, z, 1.0, degrees), 'script = ExtResource("57_readable")',

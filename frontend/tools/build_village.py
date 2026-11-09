@@ -697,6 +697,17 @@ def axe_in_block(scene, edge, degrees, scale):
     scene.add("survival_kit/tool-axe", (edge[0] - offset[0], edge[1] - offset[1], edge[2] - offset[2]), degrees, scale, roll=roll)
 
 
+# Bougie de cire (graveyard_kit, à l'échelle 0,8 : 0,16 m) et sa flamme, qui luit sans lumière dynamique.
+CANDLE_SCALE = 0.8
+
+
+def candle(scene, base):
+    """Bougie allumée posée sur son support : la flamme, émissive, brille dans le halo du soir sans éclairer."""
+    lay(scene, "graveyard_kit/candle", base, 0.0, CANDLE_SCALE)
+    height = top_of("graveyard_kit/candle", CANDLE_SCALE)
+    sphere(scene, "flame", (base[0], base[1] + height + 0.028, base[2]), 0.017, (1.0, 1.9, 1.0))
+
+
 def doll(scene, position, degrees):
     """Poupée de chiffon couchée sur le dos : un corps de toile, une robe rouge, une tête et des bras."""
     c, s = math.cos(math.radians(degrees)), math.sin(math.radians(degrees))
@@ -1227,14 +1238,14 @@ def cooper(scene, rng, frame):
 
 
 def guard(scene, rng, frame):
-    """Corps de garde : paillasses, la table du sergent et sa carte, les boucliers, le râtelier vide."""
+    """Corps de garde : paillasses, la table du sergent et sa bougie allumée, les boucliers, le râtelier vide. Le
+    registre de la relève, posé sur la table, est un texte à lire (village.tscn, tools/write_village_tscn.py)."""
     far = frame.far
     for a in (far * 2.6, far * 1.6, far * 0.6):
         fl(scene, frame, "survival_kit/bedroll", a, -2.3, 0.0, 3.0, y=FLOOR)
     fp(scene, frame, "mini_dungeon/table", -far * 1.4, -0.6, 0.0, 2.2, height=0.68, label="table du sergent")
     top = top_of("mini_dungeon/table", 2.2)
-    box(scene, "parchment", frame.p(-far * 1.4, -0.6, top + 0.01), (0.7, 0.01, 0.5), frame.yaw(12.0))
-    lay(scene, "graveyard_kit/candle", frame.p(-far * 0.9, -0.9, top), 0.0, 0.8)
+    candle(scene, frame.p(-far * 0.9, -0.9, top))
     fp(scene, frame, "mini_dungeon/chair", -far * 1.4, 0.6, 180.0, 2.0, height=0.9, label="tabouret")
     deep = 0.45 * 2.4
     a, local = frame.wall_a(-far, deep)
@@ -1340,7 +1351,7 @@ def build_gate_defense(scene, rng):
     for z, degrees in ((36.8, -80.0), (38.2, -100.0)):
         decor(scene, "mini_dungeon/shield-round", (11.75, 0.42, z), degrees, 1.9, tilt=-12.0)
     for z in (37.1, 37.9):
-        lay(scene, "graveyard_kit/candle", (11.45, 0.0, z), 0.0, 0.8)
+        candle(scene, (11.45, 0.0, z))
     for model, x, z in (("flower_redA", 11.4, 36.5), ("flower_yellowA", 11.3, 38.4), ("flower_redA", 11.5, 38.7)):
         lay(scene, f"nature_kit/{model}", (x, 0.0, z), 0.0, 1.6)
     for x, z, radius in ((1.5, 36.0, 1.0), (-6.0, 35.0, 1.0), (1.6, 44.6, 1.3), (6.6, 34.6, 0.9)):
@@ -1398,6 +1409,10 @@ def build_gardens(scene, rng):
                 box(scene, "char", (x + rng.uniform(-0.5, 0.5), 0.3, z), (0.05, 0.6, 0.05), rng.uniform(0, 90), tilt=rng.uniform(-25, 25))
     for x, z, radius in ((-28.6, 34.4, 1.8), (-26.0, 36.6, 1.3), (-30.4, 37.2, 1.0)):
         scorch(scene, x, z, radius, y=0.06)
+    # Des braises couvent encore sous les cendres, d'où montent deux filets de fumée pâle (village.tscn).
+    for x, z, degrees, size in ((-28.75, 34.25, 20.0, 0.16), (-28.45, 34.5, 75.0, 0.12), (-28.9, 34.6, 40.0, 0.1),
+                                (-25.95, 36.5, 40.0, 0.14), (-26.2, 36.7, 110.0, 0.1)):
+        box(scene, "ember", (x, 0.068, z), (size, 0.02, size * 0.7), degrees, tilt=8.0)
     # Le puits du quartier.
     wx, wz = -20.0, 29.0
     cylinder(scene, "stone", (wx, 0.45, wz), 0.85, 0.9, top=0.8, sides=14)
@@ -1657,6 +1672,8 @@ def build_props():
     rng = random.Random(5815)
     scene = VillageScene("VillageProps")
     materials(scene)
+    # Flamme des bougies allumées (candle()) : du bourg seulement, la mairie n'en a pas.
+    scene.material("flame", (1.0, 0.78, 0.4), 1.0, emission=(1.0, 0.62, 0.22), energy=4.0)
     scene.material("plaster", (0.8, 0.74, 0.64), 1.0)
     scene.material("roof", (0.36, 0.2, 0.16), 0.9)
     scene.material("window_glow", (0.9, 0.6, 0.32), 1.0, emission=(1.0, 0.6, 0.28), energy=1.6)

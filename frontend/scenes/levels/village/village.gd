@@ -117,6 +117,10 @@ func _show_solved() -> void:
 	_book_pickup.enabled = false
 
 
+func _exit_tree() -> void:
+	VillageMesh.release()
+
+
 func _process(delta: float) -> void:
 	_windmill.rotate_object_local(Vector3.RIGHT, TAU * WINDMILL_SPEED * delta)
 	_wheel.rotate_object_local(Vector3.RIGHT, -TAU * WHEEL_SPEED * delta)

@@ -52,6 +52,8 @@
 [ext_resource type="Script" path="res://scenes/levels/village/village_crow.gd" id="64_crow"]
 [ext_resource type="Script" path="res://scenes/levels/village/village_cat.gd" id="65_cat"]
 [ext_resource type="Script" path="res://scenes/levels/village/village_life.gd" id="66_life"]
+[ext_resource type="Script" path="res://scenes/levels/village/village_hen.gd" id="67_hen"]
+[ext_resource type="Script" path="res://scenes/levels/village/village_vane.gd" id="68_vane"]
 [ext_resource type="Script" path="res://scenes/levels/hub/volcano.gd" id="90_volcano"]
 [ext_resource type="Resource" path="res://scenes/levels/village/village_bake.res" id="91_bake"]
 
@@ -577,6 +579,38 @@ puff_size = 1.4
 rise_speed = 0.9
 smoke_color = Color(0.5, 0.47, 0.45, 1)
 
+[node name="Wisp0" type="CPUParticles3D" parent="Smokes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.6, 0.2, 34.4)
+script = ExtResource("11_smoke")
+radius = 0.25
+puff_size = 0.9
+rise_speed = 0.55
+smoke_color = Color(0.52, 0.49, 0.46, 1)
+
+[node name="Wisp1" type="CPUParticles3D" parent="Smokes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26, 0.2, 36.6)
+script = ExtResource("11_smoke")
+radius = 0.25
+puff_size = 0.9
+rise_speed = 0.55
+smoke_color = Color(0.52, 0.49, 0.46, 1)
+
+[node name="Moths" type="Node3D" parent="."]
+
+[node name="Moths0" type="CPUParticles3D" parent="Moths"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3, 2.75, -19.3)
+script = ExtResource("60_particles")
+kind = 3
+extents = Vector3(0.3, 0.2, 0.3)
+tint = Color(0.86, 0.8, 0.68, 1)
+
+[node name="Moths1" type="CPUParticles3D" parent="Moths"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 2.75, -19.3)
+script = ExtResource("60_particles")
+kind = 3
+extents = Vector3(0.3, 0.2, 0.3)
+tint = Color(0.86, 0.8, 0.68, 1)
+
 [node name="Embers" type="Node3D" parent="."]
 
 [node name="Embers0" type="CPUParticles3D" parent="Embers"]
@@ -673,6 +707,14 @@ transform = Transform3D(-0.5, 0, 0.866025, 0, 1, 0, -0.866025, 0, -0.5, -1.6, 0,
 script = ExtResource("64_crow")
 pecking = true
 
+[node name="Crow13" type="Node3D" parent="Crows"]
+transform = Transform3D(0.939693, 0, 0.34202, 0, 1, 0, -0.34202, 0, 0.939693, 0, 11.6, -21.4)
+script = ExtResource("64_crow")
+
+[node name="Crow14" type="Node3D" parent="Crows"]
+transform = Transform3D(-0.939693, 0, -0.34202, 0, 1, 0, 0.34202, 0, -0.939693, 3.2, 11.9, -29)
+script = ExtResource("64_crow")
+
 [node name="Cats" type="Node3D" parent="."]
 
 [node name="Cat0" type="Node3D" parent="Cats"]
@@ -686,6 +728,40 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -17.2, 0, 26.6)
 script = ExtResource("65_cat")
 coat = Color(0.45, 0.36, 0.27, 1)
 waypoints = PackedVector3Array(-17.2, 0, 26.6, -18.6, 0, 31.4, -21.8, 0, 31.6, -17, 0, 30)
+
+[node name="Hens" type="Node3D" parent="."]
+
+[node name="Hen0" type="Node3D" parent="Hens"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -26, 0, -25.9)
+script = ExtResource("67_hen")
+plumage = Color(0.9, 0.86, 0.78, 1)
+waypoints = PackedVector3Array(-26, 0, -25.9, -24, 0, -26.2, -22, 0, -27, -20.6, 0, -28.8, -21.8, 0, -31, -23.4, 0, -29.6)
+start = 0
+
+[node name="Hen1" type="Node3D" parent="Hens"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -21.8, 0, -31)
+script = ExtResource("67_hen")
+plumage = Color(0.55, 0.3, 0.14, 1)
+waypoints = PackedVector3Array(-26, 0, -25.9, -24, 0, -26.2, -22, 0, -27, -20.6, 0, -28.8, -21.8, 0, -31, -23.4, 0, -29.6)
+start = 4
+
+[node name="Hen2" type="Node3D" parent="Hens"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -26, 0, 23.3)
+script = ExtResource("67_hen")
+plumage = Color(0.17, 0.15, 0.14, 1)
+waypoints = PackedVector3Array(-30, 0, 23.3, -26, 0, 23.3, -24.4, 0, 25.6, -25.6, 0, 27.7, -29.6, 0, 27.7)
+start = 1
+
+[node name="Hen3" type="Node3D" parent="Hens"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -29.6, 0, 27.7)
+script = ExtResource("67_hen")
+plumage = Color(0.72, 0.55, 0.34, 1)
+waypoints = PackedVector3Array(-30, 0, 23.3, -26, 0, 23.3, -24.4, 0, 25.6, -25.6, 0, 27.7, -29.6, 0, 27.7)
+start = 4
+
+[node name="Vane" type="Node3D" parent="."]
+transform = Transform3D(1.6, 0, 0, 0, 1.6, 0, -0, 0, 1.6, 0, 11.6, -20.2)
+script = ExtResource("68_vane")
 
 [node name="Life" type="Node" parent="."]
 script = ExtResource("66_life")
@@ -854,6 +930,118 @@ board_height = 1.2
 line_height = 0.1
 serif = false
 double_sided = true
+
+[node name="Summons" type="Node3D" parent="Lore"]
+transform = Transform3D(0.766044, 0, -0.642788, 0, 1, 0, 0.642788, 0, 0.766044, 6, 0, 51)
+script = ExtResource("57_readable")
+title = "La sommation de Vibelandia"
+body = "Au nom du royaume de Vibelandia : ouvrez la porte avant la nuit et livrez à nos hérauts les écrits des anciens bâtisseurs que garde votre mairie. Qui obéira sera épargné ; qui résistera verra son village brûler. Au bas de l'affiche, une main de Codia a répondu au charbon : « Les savoirs des anciens ne se livrent pas. Ils se comprennent, ou ils restent muets. »"
+prompt = "Lire : La sommation de Vibelandia"
+radius = 2.6
+
+[node name="Board" type="Node3D" parent="Lore/Summons"]
+script = ExtResource("15_sign")
+text = "Sommation
+de Vibelandia"
+style = 2
+mount = 0
+board_size = Vector2(0.95, 0.75)
+board_height = 1.4
+line_height = 0.12
+
+[node name="Letter" type="Node3D" parent="Lore"]
+transform = Transform3D(6.12323e-17, 0, 1, 0, 1, 0, -1, 0, 6.12323e-17, -5.74, 0, 29)
+script = ExtResource("57_readable")
+title = "La lettre de Mahaut"
+body = "Gaspard, si tu reviens et que tu lis ceci : nous sommes partis vers le bunker du roi quand le cor a sonné trois fois. Le maire, lui, est resté. Pour que Vibelandia ne trouve rien, il a déchiré ses notes sur les langages des anciens bâtisseurs en dix morceaux, deux par langage, et les a cachés dans la mairie : parmi les registres, dans les tiroirs, les armoires et les coffres. Il disait qu'un morceau seul ne suffit pas : il faut les deux pour comprendre. Ta sœur, Mahaut."
+prompt = "Lire : La lettre de Mahaut"
+radius = 2.6
+
+[node name="Board" type="Node3D" parent="Lore/Letter"]
+script = ExtResource("15_sign")
+text = "À Gaspard,
+s'il revient"
+style = 2
+mount = 1
+board_size = Vector2(0.75, 0.62)
+board_height = 1.5
+line_height = 0.1
+
+[node name="SchoolSlate" type="Node3D" parent="Lore"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, -10.9, 0, -21.74)
+script = ExtResource("57_readable")
+title = "L'ardoise de l'écolier"
+body = "Leçon du maître d'école, recopiée à la craie : « Les anciens bâtisseurs lisaient leurs instructions de haut en bas, une ligne après l'autre, sans en sauter aucune. Le mot à gauche du signe = garde une valeur, et une ligne suivante peut la changer. Ici, pommes vaut 4, puis pommes + 3 : le panier en compte 7, et l'ancien nombre est oublié. Notez chaque valeur à chaque ligne. » Dessous, d'une écriture d'enfant : « Le maître dit que j'ai bon. »"
+prompt = "Lire : L'ardoise de l'écolier"
+radius = 2.6
+
+[node name="Board" type="Node3D" parent="Lore/SchoolSlate"]
+script = ExtResource("15_sign")
+text = "pommes = 4
+pommes = pommes + 3"
+style = 3
+mount = 1
+board_size = Vector2(1, 0.5)
+board_height = 1.25
+line_height = 0.085
+serif = false
+
+[node name="Cornerstone" type="Node3D" parent="Lore"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 4, 0, -19.74)
+script = ExtResource("57_readable")
+title = "La pierre de fondation"
+body = "Gravé sous la fenêtre de la mairie : « Cette maison commune repose sur les fondations des anciens bâtisseurs. Ils donnaient leurs ordres en cinq langages : le premier dresse la page, le deuxième la pare de couleurs, les trois autres comptent, décident et répètent. Ce qu'ils écrivaient pour eux seuls restait caché aux passants, et quand deux ordres se contredisaient, le plus précis l'emportait. »"
+prompt = "Lire : La pierre de fondation"
+radius = 2.6
+
+[node name="Board" type="Node3D" parent="Lore/Cornerstone"]
+script = ExtResource("15_sign")
+text = "Ici reposent les pierres
+des anciens bâtisseurs"
+style = 1
+mount = 1
+board_size = Vector2(1.4, 0.5)
+board_height = 0.55
+line_height = 0.09
+
+[node name="Roster" type="Node3D" parent="Lore"]
+transform = Transform3D(0.207912, 0, -0.978148, 0, 1, 0, 0.978148, 0, 0.207912, 21.6, 0.682, 13.4)
+script = ExtResource("57_readable")
+title = "Le registre du sergent"
+body = "Relève de la garde, an 5812. Chaque soir, le sergent passe les tours du rempart une à une, de la première à la dernière, sans en sauter aucune, et tient son compte à mesure. Les jours pairs, ceux qu'on partage en deux sans reste, la relève monte au rempart ; les jours impairs, elle garde la porte. Ce soir, treize gardes en équipes de quatre : trois équipes, et il en reste un pour la tour. Le reste d'un partage décide de tout."
+prompt = "Lire : Le registre du sergent"
+radius = 2.6
+
+[node name="Board" type="Node3D" parent="Lore/Roster"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, -0.035, 0)
+script = ExtResource("15_sign")
+text = "Relève de la garde"
+style = 2
+mount = 1
+board_size = Vector2(0.9, 0.5)
+board_height = 0
+line_height = 0.08
+collision = false
+
+[node name="MillerNotes" type="Node3D" parent="Lore"]
+transform = Transform3D(0.965926, 0, 0.258819, 0, 1, 0, -0.258819, 0, 0.965926, 31, 4.375, -26.9)
+script = ExtResource("57_readable")
+title = "Le carnet du meunier"
+body = "Les catapultes de Vibelandia tonnent depuis l'aube. Cette nuit, la meule a tremblé toute seule, et l'eau du ruisseau était tiède sous la roue. Les anciens disent que le Mont Sam Altan dort depuis des siècles ; je n'aime pas la fumée qui monte de sa bouche. Je laisse la dernière farine à la boulangère, pour les gardes du rempart, et je pars avec les autres."
+prompt = "Lire : Le carnet du meunier"
+radius = 2.6
+
+[node name="Board" type="Node3D" parent="Lore/MillerNotes"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, -0.035, 0)
+script = ExtResource("15_sign")
+text = "Carnet
+du meunier"
+style = 2
+mount = 1
+board_size = Vector2(0.7, 0.52)
+board_height = 0
+line_height = 0.08
+collision = false
 
 [node name="Memorial" type="Node3D" parent="Lore"]
 transform = Transform3D(6.12323e-17, 0, -1, 0, 1, 0, 1, 0, 6.12323e-17, 12, 0, 37.5)
