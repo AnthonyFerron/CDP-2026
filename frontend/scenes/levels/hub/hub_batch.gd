@@ -4,7 +4,9 @@ extends Node3D
 ## partagent un matériau sont fondues en un seul maillage : un appel de dessin au lieu d'un par modèle et par surface.
 ## Deux matériaux qui ne diffèrent que par leur instance (chaque modèle d'un kit Kenney a le sien, sur la même
 ## texture) comptent pour un ; deux matériaux sans texture qui ne diffèrent que par leur couleur (kit Nature) aussi :
-## la couleur passe dans les sommets. Méthode reprise du marais (MaraisBatch).
+## la couleur passe dans les sommets. Signature des matériaux et peinture dans les sommets : l'outil commun
+## (DecorBatch, scripts/decor_batch.gd), dont la mémoire par état décrit chaque état de matériau une seule fois (227
+## matériaux distincts dans le décor du hub, pour 11 signatures). Elle est oubliée quand le hub se ferme.
 ## Les groupes restent séparés : les réparations continuent de montrer, cacher ou faire monter chacun d'un bloc.
 ## Les collisions ne bougent pas : elles sont dans les nœuds Collision de chaque groupe, que le regroupement ne touche pas.
 ## Chaque maillage fondu garde, en métadonnée « pieces », le nom et la boîte (monde) de chaque modèle qu'il contient.
@@ -32,8 +34,8 @@ const BUDGET_MSEC := 8
 ## Attributs de sommet comparés entre surfaces : seules des surfaces de même format se fondent ensemble.
 const FORMAT_MASK := 0xFF
 
-var _signatures := {}
-var _painted := {}
+## Signatures par instance de matériau, matériaux et surfaces peints (DecorBatch.signature), d'un groupe à l'autre.
+var _cache := {}
 var _shadow_materials := {}
 ## Groupes pas encore regroupés, pris par la fin.
 var _pending: Array[Node3D] = []
@@ -48,6 +50,10 @@ func _ready() -> void:
 	set_process(false)
 	# Le hub montre les ruines ou les reconstructions dans son propre _ready, qui passe après celui-ci.
 	_batch_shown.call_deferred()
+
+
+func _exit_tree() -> void:
+	DecorBatch.forget()
 
 
 ## Rien n'est regroupé pendant le chargement : à partir de la première image, chaque image regroupe des groupes
@@ -132,18 +138,18 @@ func _merge(group: Node3D) -> void:
 			var square := Vector2i(floori(box.get_center().x / CELL), floori(box.get_center().z / CELL))
 			for surface in item.mesh.get_surface_count():
 				var material: Material = item.material_override if item.material_override else item.mesh.surface_get_material(surface)
-				var paint := _paintable(material)
+				var paint := DecorBatch.paintable(material)
 				var tint: Color = (material as BaseMaterial3D).albedo_color if paint else Color.WHITE
-				var small := longest < SMALL and not _glows(material)
+				var small := longest < SMALL and not DecorBatch.glows(material)
 				var format: int = (item.mesh as ArrayMesh).surface_get_format(surface) & FORMAT_MASK if item.mesh is ArrayMesh else 0
 				if paint:
 					format |= Mesh.ARRAY_FORMAT_COLOR
-				var key := "%s_%d_%d_%d_%s_%d_%d" % [_signature(material), _id(item.material_overlay), format, item.cast_shadow,
-					small, square.x, square.y]
+				var key := "%s_%d_%d_%d_%s_%d_%d" % [DecorBatch.signature(material, _cache),
+					DecorBatch.instance_id(item.material_overlay), format, item.cast_shadow, small, square.x, square.y]
 				if not lots.has(key):
-					lots[key] = {"material": _painted_material(material) if paint else material, "overlay": item.material_overlay,
-						"cast": item.cast_shadow, "small": small, "paint": paint, "square": square, "parts": [], "pieces": [],
-						"center": Vector3.ZERO}
+					lots[key] = {"material": DecorBatch.painted_material(material, _cache) if paint else material,
+						"overlay": item.material_overlay, "cast": item.cast_shadow, "small": small, "paint": paint,
+						"square": square, "parts": [], "pieces": [], "center": Vector3.ZERO}
 				var lot: Dictionary = lots[key]
 				lot.parts.append([item.mesh, surface, place, tint])
 				lot.pieces.append([model, group.global_transform * box])
@@ -214,7 +220,7 @@ func _add_lot(group: Node3D, lot: Dictionary, index: int) -> MeshInstance3D:
 	var tool := SurfaceTool.new()
 	for part: Array in lot.parts:
 		if lot.paint:
-			tool.append_from(_painted_mesh(part[0], part[1], part[3]), 0, shift * (part[2] as Transform3D))
+			tool.append_from(DecorBatch.painted_mesh(part[0], part[1], part[3], _cache), 0, shift * (part[2] as Transform3D))
 		else:
 			tool.append_from(part[0], part[1], shift * (part[2] as Transform3D))
 	var mesh := tool.commit()
@@ -336,74 +342,6 @@ static func _mergeable(item: MeshInstance3D) -> bool:
 		if material and not base:
 			return false
 	return true
-
-
-static func _glows(material: Material) -> bool:
-	var base := material as BaseMaterial3D
-	return base != null and (base.shading_mode == BaseMaterial3D.SHADING_MODE_UNSHADED or base.emission_enabled)
-
-
-## Matériau sans texture, dont la couleur peut passer dans les sommets.
-static func _paintable(material: Material) -> bool:
-	return material is StandardMaterial3D and not (material as StandardMaterial3D).albedo_texture \
-		and not (material as StandardMaterial3D).vertex_color_use_as_albedo
-
-
-## Le matériau commun d'un lot peint : le même, blanc, qui prend sa couleur dans les sommets (en sRGB, comme la couleur
-## du matériau).
-func _painted_material(material: Material) -> Material:
-	var key := "matériau_" + _signature(material)
-	if not _painted.has(key):
-		var white := material.duplicate() as StandardMaterial3D
-		white.albedo_color = Color.WHITE
-		white.vertex_color_use_as_albedo = true
-		white.vertex_color_is_srgb = true
-		_painted[key] = white
-	return _painted[key]
-
-
-## Copie d'une surface dont chaque sommet porte la couleur du matériau.
-func _painted_mesh(mesh: Mesh, surface: int, tint: Color) -> Mesh:
-	var key := "%d_%d_%s" % [mesh.get_instance_id(), surface, tint.to_html()]
-	if not _painted.has(key):
-		var arrays := mesh.surface_get_arrays(surface)
-		var colors := PackedColorArray()
-		colors.resize((arrays[Mesh.ARRAY_VERTEX] as PackedVector3Array).size())
-		colors.fill(tint)
-		arrays[Mesh.ARRAY_COLOR] = colors
-		var copy := ArrayMesh.new()
-		copy.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
-		_painted[key] = copy
-	return _painted[key]
-
-
-## Clé d'un matériau : ses réglages et ses textures, sans son nom ni son instance (ni sa couleur, s'il est peint dans
-## les sommets). Deux matériaux identiques partagent ainsi un seul lot.
-func _signature(material: Material) -> String:
-	if not material:
-		return "0"
-	var id := material.get_instance_id()
-	if _signatures.has(id):
-		return _signatures[id]
-	var text := str(id)
-	if material is StandardMaterial3D or material is ORMMaterial3D:
-		var paint := _paintable(material)
-		var parts: PackedStringArray = [material.get_class(), "peint" if paint else "uni"]
-		for property in material.get_property_list():
-			var property_name: String = property.name
-			if not (property.usage & PROPERTY_USAGE_STORAGE) or property_name.begins_with("resource_"):
-				continue
-			if paint and property_name == "albedo_color":
-				continue
-			var value: Variant = material.get(property_name)
-			parts.append("%s=%s" % [property_name, str(_id(value)) if value is Resource else var_to_str(value)])
-		text = "|".join(parts).md5_text()
-	_signatures[id] = text
-	return text
-
-
-static func _id(resource: Resource) -> int:
-	return resource.get_instance_id() if resource else 0
 
 
 ## Nom d'un modèle posé, sans le numéro final (« bed_208 » → « bed »).
