@@ -2,12 +2,15 @@ extends SceneTree
 ## Empreinte d'un lieu chargé comme en jeu : ce qui se dessine (maillages, MultiMesh, particules, textes, lumières)
 ## et ce qui arrête le joueur (formes de collision), avec leur place dans le monde. Sert à vérifier qu'un
 ## changement du chargement (calcul d'avance, travail étalé) ne change ni le rendu ni les collisions :
-##   cd frontend && godot --headless --fixed-fps 60 --path . --script res://tools/fingerprint_level.gd -- <lieu> <fichier> [--images N]
+##   cd frontend && godot --headless --fixed-fps 60 --path . --script res://tools/fingerprint_level.gd -- <lieu> <fichier> [--images N] [--livres N]
+## --livres N : les N premiers livres trouvés et posés au château (le hub montre alors ses reconstructions).
 ## <fichier> reçoit une ligne par objet, triée : deux empreintes se comparent avec diff. Les chemins des nœuds n'y
 ## sont pas (un calcul d'avance peut ranger autrement), seulement leur genre, leur place et leur contenu.
 ## Le hub regroupe son décor au fil des images, le Marais prépare sa crypte après l'arrivée : l'outil attend qu'ils aient
 ## fini.
 
+## Livres dans l'ordre des lieux, pour --livres.
+const BOOKS: Array[StringName] = [&"projenomicon", &"algonicon", &"logiconomicon", &"codonomicon"]
 const LEVELS := {
 	"hub": "res://scenes/levels/hub/hub.tscn",
 	"plaine": "res://scenes/levels/plaine/plaine.tscn",
@@ -33,9 +36,16 @@ func _run() -> void:
 	var index := args.find("--images")
 	if index >= 0 and index + 1 < args.size():
 		frames = int(args[index + 1])
+	var books := 0
+	index = args.find("--livres")
+	if index >= 0 and index + 1 < args.size():
+		books = int(args[index + 1])
 	var state: Node = root.get_node("GameState")
 	state.reset()
 	state.intro_done = true
+	for book in BOOKS.slice(0, books):
+		state.books.append(book)
+		state.placed_books.append(book)
 	await process_frame
 	# Les bêtes tirent leur départ au hasard : même tirage à chaque passage.
 	seed(5814)
