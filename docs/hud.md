@@ -60,7 +60,7 @@ Profilage natif (`frontend/tests/scenes/hud_perf.gd`, avec `sans-hub`), 1920 × 
 | --- | --- | --- |
 | `_process` du HUD, par image | 2,7 à 3,3 µs | 1,0 à 1,3 µs |
 | Appels de dessin, HUD affiché | 9 | 9 (27 en polygones) |
-| Appels de dessin, lecteur ouvert | 12 | 21 (le cadre `Ornate.Frame` des menus, en polygones) |
+| Appels de dessin, lecteur ouvert | 12 | 21 (le cadre `Ornate.Frame` des menus, en polygones) ; 9 depuis que le cadre est un seul maillage (`docs/ornate-maillages.md`) |
 | Rendu CPU, HUD affiché | 8,7 à 10,4 ms | 1,7 à 3,1 ms |
 | Rendu « GPU » (llvmpipe), HUD affiché, minimum | 4,8 à 5,9 ms | 6,5 à 7,9 ms |
 

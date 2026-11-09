@@ -117,7 +117,7 @@ Au calme (2e tour), l'écart est de 1,7 %, dans le bruit de la mesure ; le 1er t
 
 ## Ce qui reste
 
-- Les cadres et boutons du menu (`ornate.gd`) coûtent à eux seuls environ 130 appels de dessin sur l'accueil : chaque polygone et chaque ligne brisée en coûte un. Les dessiner en maillages, comme le fond, allégerait encore le menu dans le rendu logiciel des navigateurs. Ils servent aussi au HUD et aux panneaux d'énigme : à faire avec leurs tests et captures.
+- Fait : les cadres et boutons du menu (`ornate.gd`), qui coûtaient à eux seuls environ 130 appels de dessin sur l'accueil, sont dessinés en maillages, comme le fond : l'accueil passe de 160 à 53 appels (fond compris). Voir `docs/ornate-maillages.md`.
 
 ## Vérifier
 

@@ -220,11 +220,14 @@ class CloseButton:
 		mouse_exited.connect(queue_redraw)
 
 	func _draw() -> void:
+		# Un seul maillage pour le fond, le bord et la croix (Ornate.Sketch).
+		var pen := Ornate.Sketch.new(self)
 		var shape := Ornate.chamfered(Rect2(Vector2.ZERO, size), size.x * 0.28)
 		var lit := Gamepad.hovered(self)
-		draw_colored_polygon(shape, Color(0.36, 0.2, 0.09) if lit else Color(0.22, 0.12, 0.08))
-		draw_polyline(Ornate.closed(shape), Ornate.GOLD_LIGHT if lit else Ornate.GOLD, 5.0)
-		Ornate.icon(self, "close", size / 2, size.x * 0.3, Ornate.CREAM, 3.5)
+		pen.polygon(shape, Color(0.36, 0.2, 0.09) if lit else Color(0.22, 0.12, 0.08))
+		pen.polyline(Ornate.closed(shape), Ornate.GOLD_LIGHT if lit else Ornate.GOLD, 5.0)
+		Ornate.icon(pen, "close", size / 2, size.x * 0.3, Ornate.CREAM, 3.5)
+		pen.draw(self)
 
 
 class ArrowButton:
@@ -245,6 +248,8 @@ class ArrowButton:
 		var lit := Gamepad.hovered(self) and not disabled
 		var fill := Color(0.24, 0.22, 0.24) if disabled else (Color(0.36, 0.2, 0.09) if lit else Color(0.22, 0.12, 0.08))
 		var border := Color(0.62, 0.62, 0.64) if disabled else (Ornate.GOLD_LIGHT if lit else Ornate.GOLD)
-		draw_colored_polygon(shape, fill)
-		draw_polyline(Ornate.closed(shape), border, 3.0)
-		Ornate.icon(self, kind, size / 2, size.y * 0.36, Color(0.6, 0.58, 0.58) if disabled else Ornate.CREAM, 3.0)
+		var pen := Ornate.Sketch.new(self)
+		pen.polygon(shape, fill)
+		pen.polyline(Ornate.closed(shape), border, 3.0)
+		Ornate.icon(pen, kind, size / 2, size.y * 0.36, Color(0.6, 0.58, 0.58) if disabled else Ornate.CREAM, 3.0)
+		pen.draw(self)

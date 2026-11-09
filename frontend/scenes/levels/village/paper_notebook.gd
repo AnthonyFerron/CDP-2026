@@ -104,7 +104,8 @@ func _build() -> void:
 	scroll.add_child(_list)
 	_own(_list, "List")
 	# Touches pour refermer le carnet ; à la manette, ses boutons.
-	var keys := Ornate.place(frame, Control.new(), Vector2.ZERO, frame.size)
+	# Calques qui dessinent leurs touches d'un bloc (Ornate.KeySheet).
+	var keys := Ornate.place(frame, Ornate.KeySheet.new(), Vector2.ZERO, frame.size)
 	keys.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	Gamepad.swap(keys, false)
 	var x := 400.0
@@ -116,7 +117,7 @@ func _build() -> void:
 		x += width + 16.0
 	var hint := Ornate.label("refermer le carnet", 24, Ornate.MUTED)
 	Ornate.place(keys, hint, Vector2(x + 8, 836), Vector2(340, 40))
-	var buttons := Ornate.place(frame, Control.new(), Vector2.ZERO, frame.size)
+	var buttons := Ornate.place(frame, Ornate.KeySheet.new(), Vector2.ZERO, frame.size)
 	buttons.name = "PadKeys"
 	buttons.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	Gamepad.swap(buttons, true)

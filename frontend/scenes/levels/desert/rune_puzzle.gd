@@ -339,45 +339,48 @@ func _on_close_pressed() -> void:
 
 
 ## Trace le symbole d'une rune, au trait, dans un carré de demi-côté s : boucle, seau, jarre, losange de la
-## question, embranchement, porte ouverte, cadenas ou grains de sable.
-static func draw_glyph(item: CanvasItem, rune: StringName, c: Vector2, s: float, color: Color, w := 3.0) -> void:
+## question, embranchement, porte ouverte, cadenas ou grains de sable. `item` : le nœud qui dessine, ou le maillage
+## (Ornate.Sketch) où ajouter le symbole.
+static func draw_glyph(item: Object, rune: StringName, c: Vector2, s: float, color: Color, w := 3.0) -> void:
+	var pen := Ornate.Sketch.of(item)
 	match rune:
 		&"tant_que":
-			item.draw_arc(c, 0.62 * s, -0.4 * PI, 1.25 * PI, 24, color, w)
+			pen.arc(c, 0.62 * s, -0.4 * PI, 1.25 * PI, 24, color, w)
 			var tip := c + Vector2.from_angle(-0.4 * PI) * 0.62 * s
-			item.draw_colored_polygon(PackedVector2Array([tip + Vector2(-0.3 * s, -0.12 * s), tip + Vector2(0.18 * s, -0.3 * s), tip + Vector2(0.12 * s, 0.22 * s)]), color)
+			pen.polygon(PackedVector2Array([tip + Vector2(-0.3 * s, -0.12 * s), tip + Vector2(0.18 * s, -0.3 * s), tip + Vector2(0.12 * s, 0.22 * s)]), color)
 		&"puiser":
-			item.draw_polyline(PackedVector2Array([c + Vector2(-0.55, -0.35) * s, c + Vector2(-0.38, 0.55) * s, c + Vector2(0.38, 0.55) * s, c + Vector2(0.55, -0.35) * s]), color, w)
-			item.draw_arc(c + Vector2(0, -0.35 * s), 0.55 * s, PI, TAU, 16, color, w * 0.8)
-			item.draw_line(c + Vector2(-0.45, 0.1) * s, c + Vector2(0.45, 0.1) * s, color, w * 0.8)
+			pen.polyline(PackedVector2Array([c + Vector2(-0.55, -0.35) * s, c + Vector2(-0.38, 0.55) * s, c + Vector2(0.38, 0.55) * s, c + Vector2(0.55, -0.35) * s]), color, w)
+			pen.arc(c + Vector2(0, -0.35 * s), 0.55 * s, PI, TAU, 16, color, w * 0.8)
+			pen.line(c + Vector2(-0.45, 0.1) * s, c + Vector2(0.45, 0.1) * s, color, w * 0.8)
 		&"porter":
-			item.draw_arc(c + Vector2(-0.12 * s, 0.2 * s), 0.42 * s, 0.0, TAU, 20, color, w)
-			item.draw_line(c + Vector2(-0.3, -0.25) * s, c + Vector2(-0.3, -0.6) * s, color, w)
-			item.draw_line(c + Vector2(0.06, -0.25) * s, c + Vector2(0.06, -0.6) * s, color, w)
-			item.draw_line(c + Vector2(0.45, 0.2) * s, c + Vector2(0.9, 0.2) * s, color, w)
-			item.draw_colored_polygon(PackedVector2Array([c + Vector2(0.95, 0.2) * s, c + Vector2(0.72, 0.02) * s, c + Vector2(0.72, 0.38) * s]), color)
+			pen.arc(c + Vector2(-0.12 * s, 0.2 * s), 0.42 * s, 0.0, TAU, 20, color, w)
+			pen.line(c + Vector2(-0.3, -0.25) * s, c + Vector2(-0.3, -0.6) * s, color, w)
+			pen.line(c + Vector2(0.06, -0.25) * s, c + Vector2(0.06, -0.6) * s, color, w)
+			pen.line(c + Vector2(0.45, 0.2) * s, c + Vector2(0.9, 0.2) * s, color, w)
+			pen.polygon(PackedVector2Array([c + Vector2(0.95, 0.2) * s, c + Vector2(0.72, 0.02) * s, c + Vector2(0.72, 0.38) * s]), color)
 		&"si":
-			item.draw_polyline(PackedVector2Array([c + Vector2(0, -0.75) * s, c + Vector2(0.75, 0) * s, c + Vector2(0, 0.75) * s, c + Vector2(-0.75, 0) * s, c + Vector2(0, -0.75) * s]), color, w)
-			item.draw_circle(c, 0.14 * s, color)
+			pen.polyline(PackedVector2Array([c + Vector2(0, -0.75) * s, c + Vector2(0.75, 0) * s, c + Vector2(0, 0.75) * s, c + Vector2(-0.75, 0) * s, c + Vector2(0, -0.75) * s]), color, w)
+			pen.circle(c, 0.14 * s, color)
 		&"sinon":
-			item.draw_line(c + Vector2(-0.75, 0) * s, c + Vector2(-0.05, 0) * s, color, w)
-			item.draw_line(c + Vector2(-0.05, 0) * s, c + Vector2(0.65, -0.55) * s, color, w)
-			item.draw_line(c + Vector2(-0.05, 0) * s, c + Vector2(0.65, 0.55) * s, color, w)
-			item.draw_circle(c + Vector2(0.65, -0.55) * s, 0.12 * s, color)
-			item.draw_circle(c + Vector2(0.65, 0.55) * s, 0.12 * s, color)
+			pen.line(c + Vector2(-0.75, 0) * s, c + Vector2(-0.05, 0) * s, color, w)
+			pen.line(c + Vector2(-0.05, 0) * s, c + Vector2(0.65, -0.55) * s, color, w)
+			pen.line(c + Vector2(-0.05, 0) * s, c + Vector2(0.65, 0.55) * s, color, w)
+			pen.circle(c + Vector2(0.65, -0.55) * s, 0.12 * s, color)
+			pen.circle(c + Vector2(0.65, 0.55) * s, 0.12 * s, color)
 		&"ouvrir":
-			item.draw_polyline(PackedVector2Array([c + Vector2(-0.5, 0.7) * s, c + Vector2(-0.5, -0.7) * s, c + Vector2(0.5, -0.7) * s, c + Vector2(0.5, 0.7) * s]), color, w)
-			item.draw_colored_polygon(PackedVector2Array([c + Vector2(-0.5, -0.7) * s, c + Vector2(0.05, -0.45) * s, c + Vector2(0.05, 0.95) * s, c + Vector2(-0.5, 0.7) * s]), Color(color, 0.55))
+			pen.polyline(PackedVector2Array([c + Vector2(-0.5, 0.7) * s, c + Vector2(-0.5, -0.7) * s, c + Vector2(0.5, -0.7) * s, c + Vector2(0.5, 0.7) * s]), color, w)
+			pen.polygon(PackedVector2Array([c + Vector2(-0.5, -0.7) * s, c + Vector2(0.05, -0.45) * s, c + Vector2(0.05, 0.95) * s, c + Vector2(-0.5, 0.7) * s]), Color(color, 0.55))
 		&"fermer":
-			item.draw_arc(c + Vector2(0, -0.15 * s), 0.36 * s, PI, TAU, 14, color, w)
-			item.draw_rect(Rect2(c + Vector2(-0.55, -0.15) * s, Vector2(1.1, 0.85) * s), color)
-			item.draw_circle(c + Vector2(0, 0.25 * s), 0.12 * s, Color(0.08, 0.06, 0.06))
+			pen.arc(c + Vector2(0, -0.15 * s), 0.36 * s, PI, TAU, 14, color, w)
+			pen.rect(Rect2(c + Vector2(-0.55, -0.15) * s, Vector2(1.1, 0.85) * s), color)
+			pen.circle(c + Vector2(0, 0.25 * s), 0.12 * s, Color(0.08, 0.06, 0.06))
 		&"pour":
 			for k in 3:
-				item.draw_circle(c + Vector2((k - 1) * 0.5 * s, 0.1 * s), 0.15 * s, color)
-			item.draw_line(c + Vector2(-0.85, -0.45) * s, c + Vector2(0.85, -0.45) * s, color, w * 0.8)
+				pen.circle(c + Vector2((k - 1) * 0.5 * s, 0.1 * s), 0.15 * s, color)
+			pen.line(c + Vector2(-0.85, -0.45) * s, c + Vector2(0.85, -0.45) * s, color, w * 0.8)
 		_:
-			Ornate.diamond(item, c, 0.6 * s)
+			Ornate.diamond(pen, c, 0.6 * s)
+	pen.done(item)
 
 
 ## Liseré de lueur autour du cadre : bleu au repos, rouge à l'erreur.
@@ -390,9 +393,11 @@ class Glow:
 		mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 	func _draw() -> void:
+		var pen := Ornate.Sketch.new(self)
 		var outline := Ornate.chamfered(Rect2(Vector2.ZERO, size).grow(7), 34)
-		draw_polyline(Ornate.closed(outline), Color(color, 0.5), 5.0)
-		draw_polyline(Ornate.closed(Ornate.chamfered(Rect2(Vector2.ZERO, size).grow(13), 38)), Color(color, 0.2), 6.0)
+		pen.polyline(Ornate.closed(outline), Color(color, 0.5), 5.0)
+		pen.polyline(Ornate.closed(Ornate.chamfered(Rect2(Vector2.ZERO, size).grow(13), 38)), Color(color, 0.2), 6.0)
+		pen.draw(self)
 
 
 ## Trait vertical doré entre les deux algorithmes.
@@ -403,10 +408,12 @@ class ColumnRule:
 		mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 	func _draw() -> void:
+		var pen := Ornate.Sketch.new(self)
 		var x := size.x / 2
-		draw_polygon(PackedVector2Array([Vector2(x, 0), Vector2(x + 1.5, size.y / 2), Vector2(x, size.y), Vector2(x - 1.5, size.y / 2)]),
+		pen.polygon_colors(PackedVector2Array([Vector2(x, 0), Vector2(x + 1.5, size.y / 2), Vector2(x, size.y), Vector2(x - 1.5, size.y / 2)]),
 			PackedColorArray([Color(Ornate.GOLD, 0.0), Ornate.GOLD, Color(Ornate.GOLD, 0.0), Ornate.GOLD]))
-		Ornate.diamond(self, Vector2(x, size.y / 2), 10)
+		Ornate.diamond(pen, Vector2(x, size.y / 2), 10)
+		pen.draw(self)
 
 
 ## Case de pierre gravée d'un algorithme : vide, elle montre une empreinte en creux ; remplie, la rune posée.
@@ -427,32 +434,36 @@ class StoneSlot:
 		mouse_exited.connect(queue_redraw)
 
 	func _draw() -> void:
+		# Un maillage pour la pierre, son bord, le cadre de la manette et la rune (Ornate.Sketch), puis le texte.
+		var pen := Ornate.Sketch.new(self)
 		var rect := Rect2(Vector2.ZERO, size)
 		var shape := Ornate.chamfered(rect, 12)
 		var top := Color(0.36, 0.31, 0.27)
 		var low := Color(0.22, 0.19, 0.17)
-		draw_polygon(shape, PackedColorArray([top, top, top, low, low, low, low, top]))
+		pen.polygon_colors(shape, PackedColorArray([top, top, top, low, low, low, low, top]))
 		var inset := Ornate.chamfered(rect.grow(-6), 8)
-		draw_polyline(Ornate.closed(inset), Color(0.12, 0.1, 0.09), 2.0)
+		pen.polyline(Ornate.closed(inset), Color(0.12, 0.1, 0.09), 2.0)
 		var border := Ornate.GOLD_DARK
 		if Gamepad.lit(self) or inviting:
 			border = Ornate.GOLD_LIGHT
 		var glow := RunePuzzle.COLOR_WRONG if wrong else RunePuzzle.COLOR_IDLE
 		if rune != &"":
 			border = glow
-		draw_polyline(Ornate.closed(shape), border, 3.0)
+		pen.polyline(Ornate.closed(shape), border, 3.0)
 		if Gamepad.focused(self):
-			Ornate.focus_ring(self, rect, &"chamfer", 12.0)
+			Ornate.focus_ring(pen, rect, &"chamfer", 12.0)
 		var middle := Vector2(30, size.y / 2)
 		if rune == &"":
 			# Empreinte en creux : le losange de la rune absente, et une invite discrète.
-			Ornate.diamond(self, middle, 10, Color(0.16, 0.13, 0.12))
+			Ornate.diamond(pen, middle, 10, Color(0.16, 0.13, 0.12))
 			var hint := "graver une rune ici" if inviting else "emplacement vide"
-			draw_string(Ornate.TEXT, Vector2(58, size.y / 2 + 8), hint, HORIZONTAL_ALIGNMENT_LEFT, -1, 21, Color(Ornate.MUTED, 0.75))
+			pen.text(Ornate.TEXT, Vector2(58, size.y / 2 + 8), hint, 21, Color(Ornate.MUTED, 0.75))
+			pen.draw(self)
 			return
-		draw_circle(middle, 17, Color(glow, 0.22))
-		RunePuzzle.draw_glyph(self, rune, middle, 14, glow, 2.5)
-		draw_string(Ornate.TEXT, Vector2(58, size.y / 2 + 8), caption, HORIZONTAL_ALIGNMENT_LEFT, size.x - 70, 22, Ornate.CREAM)
+		pen.circle(middle, 17, Color(glow, 0.22))
+		RunePuzzle.draw_glyph(pen, rune, middle, 14, glow, 2.5)
+		pen.text(Ornate.TEXT, Vector2(58, size.y / 2 + 8), caption, 22, Ornate.CREAM, HORIZONTAL_ALIGNMENT_LEFT, size.x - 70)
+		pen.draw(self)
 
 
 ## Rune en main : une tuile de pierre gravée de son symbole lumineux et de son instruction.
@@ -471,16 +482,19 @@ class RuneTile:
 		mouse_exited.connect(queue_redraw)
 
 	func _draw() -> void:
+		# Un maillage pour la tuile, le cadre de la manette et la rune (Ornate.Sketch), puis le texte.
+		var pen := Ornate.Sketch.new(self)
 		var rect := Rect2(Vector2.ZERO, size)
 		var shape := Ornate.hexagon(rect, size.y * 0.32)
 		var lit := selected or Gamepad.lit(self)
 		var top := Color(0.4, 0.34, 0.29) if not selected else Color(0.62, 0.42, 0.18)
 		var low := Color(0.24, 0.2, 0.18) if not selected else Color(0.38, 0.24, 0.1)
-		draw_polygon(shape, PackedColorArray([top, top, top.lerp(low, 0.5), low, low, top.lerp(low, 0.5)]))
-		draw_polyline(Ornate.closed(shape), Ornate.GOLD_LIGHT if lit else Ornate.GOLD_DARK, 3.0 if lit else 2.0)
+		pen.polygon_colors(shape, PackedColorArray([top, top, top.lerp(low, 0.5), low, low, top.lerp(low, 0.5)]))
+		pen.polyline(Ornate.closed(shape), Ornate.GOLD_LIGHT if lit else Ornate.GOLD_DARK, 3.0 if lit else 2.0)
 		if Gamepad.focused(self):
-			Ornate.focus_ring(self, rect, &"hex")
+			Ornate.focus_ring(pen, rect, &"hex")
 		var middle := Vector2(size.y * 0.32 + 24, size.y / 2)
-		draw_circle(middle, 19, Color(RunePuzzle.COLOR_IDLE, 0.25))
-		RunePuzzle.draw_glyph(self, rune, middle, 15, RunePuzzle.COLOR_IDLE, 2.6)
-		draw_string(Ornate.TEXT, Vector2(middle.x + 32, size.y / 2 + 8), caption, HORIZONTAL_ALIGNMENT_LEFT, size.x - middle.x - 52, 22, Ornate.CREAM)
+		pen.circle(middle, 19, Color(RunePuzzle.COLOR_IDLE, 0.25))
+		RunePuzzle.draw_glyph(pen, rune, middle, 15, RunePuzzle.COLOR_IDLE, 2.6)
+		pen.text(Ornate.TEXT, Vector2(middle.x + 32, size.y / 2 + 8), caption, 22, Ornate.CREAM, HORIZONTAL_ALIGNMENT_LEFT, size.x - middle.x - 52)
+		pen.draw(self)

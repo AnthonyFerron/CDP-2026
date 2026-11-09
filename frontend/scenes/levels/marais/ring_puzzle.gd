@@ -277,9 +277,11 @@ class Glow:
 		mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 	func _draw() -> void:
+		var pen := Ornate.Sketch.new(self)
 		var outline := Ornate.chamfered(Rect2(Vector2.ZERO, size).grow(7), 34)
-		draw_polyline(Ornate.closed(outline), Color(color, 0.45), 5.0)
-		draw_polyline(Ornate.closed(Ornate.chamfered(Rect2(Vector2.ZERO, size).grow(13), 38)), Color(color, 0.18), 6.0)
+		pen.polyline(Ornate.closed(outline), Color(color, 0.45), 5.0)
+		pen.polyline(Ornate.closed(Ornate.chamfered(Rect2(Vector2.ZERO, size).grow(13), 38)), Color(color, 0.18), 6.0)
+		pen.draw(self)
 
 
 ## Le cadran : cinq anneaux de pierre gravés de l'alphabet, qui tournent chacun sous le repère doré du haut.
@@ -297,10 +299,13 @@ class Dial:
 		var count := RingMechanism.LETTERS.length()
 		var step := TAU / count
 		var outer := RingPuzzle.DIAL_INNER + RingMechanism.RING_COUNT * RingPuzzle.DIAL_RING
+		# Un maillage pour le socle, les anneaux, la fenêtre, le moyeu et le repère (Ornate.Sketch), puis les lettres. Le
+		# moyeu, au centre, et le repère, au-delà de l'anneau extérieur, ne touchent aucune lettre : ils passent avant elles.
+		var pen := Ornate.Sketch.new(self)
 		# Socle de pierre sombre et son anneau doré.
-		draw_circle(center, outer + 22, Color(0.12, 0.1, 0.09))
-		draw_arc(center, outer + 22, 0.0, TAU, 96, Ornate.GOLD, 4.0)
-		draw_arc(center, outer + 13, 0.0, TAU, 96, Ornate.GOLD_DARK, 2.0)
+		pen.circle(center, outer + 22, Color(0.12, 0.1, 0.09))
+		pen.arc(center, outer + 22, 0.0, TAU, 96, Ornate.GOLD, 4.0)
+		pen.arc(center, outer + 13, 0.0, TAU, 96, Ornate.GOLD_DARK, 2.0)
 		# Fenêtre du repère : une bande claire du centre au bord, sous les lettres choisies.
 		var window := PackedVector2Array([center + Vector2(-16, -RingPuzzle.DIAL_INNER + 4), center + Vector2(16, -RingPuzzle.DIAL_INNER + 4),
 			center + Vector2(30, -outer), center + Vector2(-30, -outer)])
@@ -308,9 +313,18 @@ class Dial:
 			var inner := RingPuzzle.DIAL_INNER + ring * RingPuzzle.DIAL_RING
 			var middle := inner + RingPuzzle.DIAL_RING * 0.5
 			var stone := Color(0.4, 0.37, 0.34) if ring % 2 == 0 else Color(0.3, 0.28, 0.26)
-			draw_arc(center, middle, 0.0, TAU, 96, stone, RingPuzzle.DIAL_RING - 3.0)
-			draw_arc(center, inner + 0.5, 0.0, TAU, 96, Color(0.08, 0.07, 0.06), 2.0)
-		draw_colored_polygon(window, Color(puzzle._state, 0.13))
+			pen.arc(center, middle, 0.0, TAU, 96, stone, RingPuzzle.DIAL_RING - 3.0)
+			pen.arc(center, inner + 0.5, 0.0, TAU, 96, Color(0.08, 0.07, 0.06), 2.0)
+		pen.polygon(window, Color(puzzle._state, 0.13))
+		# Moyeu et repère doré, pointé vers le centre, au-dessus de l'anneau extérieur.
+		pen.circle(center, RingPuzzle.DIAL_INNER - 4, Color(0.34, 0.31, 0.29))
+		pen.arc(center, RingPuzzle.DIAL_INNER - 4, 0.0, TAU, 48, Ornate.GOLD_DARK, 3.0)
+		Ornate.diamond(pen, center, 18, puzzle._state)
+		var tip := center + Vector2(0, -outer - 4)
+		var marker := PackedVector2Array([tip, tip + Vector2(-20, -30), tip + Vector2(20, -30)])
+		pen.polygon(marker, Ornate.GOLD)
+		pen.polyline(Ornate.closed(marker), Ornate.GOLD_LIGHT, 2.0)
+		pen.draw(self)
 		for ring in RingMechanism.RING_COUNT:
 			var inner := RingPuzzle.DIAL_INNER + ring * RingPuzzle.DIAL_RING
 			var middle := inner + RingPuzzle.DIAL_RING * 0.5
@@ -330,14 +344,6 @@ class Dial:
 					Ornate.centered_text(self, Ornate.SERIF, Vector2(0.8, 1.2), RingMechanism.LETTERS[index], letter_size, Color(0.55, 0.52, 0.48, 0.55))
 				Ornate.centered_text(self, Ornate.SERIF, Vector2.ZERO, RingMechanism.LETTERS[index], letter_size, color)
 				draw_set_transform(Vector2.ZERO)
-		# Moyeu et repère doré, pointé vers le centre, au-dessus de l'anneau extérieur.
-		draw_circle(center, RingPuzzle.DIAL_INNER - 4, Color(0.34, 0.31, 0.29))
-		draw_arc(center, RingPuzzle.DIAL_INNER - 4, 0.0, TAU, 48, Ornate.GOLD_DARK, 3.0)
-		Ornate.diamond(self, center, 18, puzzle._state)
-		var tip := center + Vector2(0, -outer - 4)
-		var marker := PackedVector2Array([tip, tip + Vector2(-20, -30), tip + Vector2(20, -30)])
-		draw_colored_polygon(marker, Ornate.GOLD)
-		draw_polyline(Ornate.closed(marker), Ornate.GOLD_LIGHT, 2.0)
 
 
 ## La lettre choisie sur un cercle : une tuile de pierre, sa lettre grande, de la couleur de l'état.
@@ -351,16 +357,18 @@ class LetterTile:
 		mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 	func _draw() -> void:
+		var pen := Ornate.Sketch.new(self)
 		var rect := Rect2(Vector2.ZERO, size)
 		var shape := Ornate.chamfered(rect, 14)
 		var top := Color(0.38, 0.34, 0.3)
 		var low := Color(0.2, 0.18, 0.16)
-		draw_polygon(shape, PackedColorArray([top, top, top, low, low, low, low, top]))
-		draw_polyline(Ornate.closed(Ornate.chamfered(rect.grow(-6), 9)), Color(0.1, 0.08, 0.07), 2.0)
-		draw_polyline(Ornate.closed(shape), color, 3.0)
-		draw_circle(size / 2, size.x * 0.36, Color(color, 0.16))
-		Ornate.centered_text(self, Ornate.SERIF, size / 2 + Vector2(1.5, 2.0), letter, 62, Color(0.05, 0.04, 0.03, 0.8))
-		Ornate.centered_text(self, Ornate.SERIF, size / 2, letter, 62, color)
+		pen.polygon_colors(shape, PackedColorArray([top, top, top, low, low, low, low, top]))
+		pen.polyline(Ornate.closed(Ornate.chamfered(rect.grow(-6), 9)), Color(0.1, 0.08, 0.07), 2.0)
+		pen.polyline(Ornate.closed(shape), color, 3.0)
+		pen.circle(size / 2, size.x * 0.36, Color(color, 0.16))
+		Ornate.centered_text(pen, Ornate.SERIF, size / 2 + Vector2(1.5, 2.0), letter, 62, Color(0.05, 0.04, 0.03, 0.8))
+		Ornate.centered_text(pen, Ornate.SERIF, size / 2, letter, 62, color)
+		pen.draw(self)
 
 
 ## Flèche dessinée (les polices du jeu n'ont pas de flèches) sur un petit bouton de pierre à bord doré.
@@ -387,11 +395,13 @@ class ArrowButton:
 		if is_pressed():
 			top = top.darkened(0.2)
 			low = low.darkened(0.2)
-		draw_polygon(shape, PackedColorArray([top, top, top.lerp(low, 0.5), low, low, top.lerp(low, 0.5)]))
-		draw_polyline(Ornate.closed(shape), Ornate.GOLD_LIGHT if lit else Ornate.GOLD, 3.0)
+		var pen := Ornate.Sketch.new(self)
+		pen.polygon_colors(shape, PackedColorArray([top, top, top.lerp(low, 0.5), low, low, top.lerp(low, 0.5)]))
+		pen.polyline(Ornate.closed(shape), Ornate.GOLD_LIGHT if lit else Ornate.GOLD, 3.0)
 		var c := size / 2
 		var d := float(direction)
 		var arrow := PackedVector2Array([c + Vector2(13 * d, 0), c + Vector2(-9 * d, -13), c + Vector2(-9 * d, 13)])
-		draw_colored_polygon(arrow, Ornate.CREAM if lit else Ornate.GOLD_LIGHT)
+		pen.polygon(arrow, Ornate.CREAM if lit else Ornate.GOLD_LIGHT)
 		if Gamepad.focused(self):
-			Ornate.focus_ring(self, rect, &"chamfer", 10.0)
+			Ornate.focus_ring(pen, rect, &"chamfer", 10.0)
+		pen.draw(self)

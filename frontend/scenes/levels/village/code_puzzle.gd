@@ -377,7 +377,8 @@ func _build() -> void:
 	scroll.add_child(_fragments)
 	_own(_fragments, "Fragments")
 	# Touches rappelées sous le bandeau du HUD ; à la manette, ses boutons.
-	var keys := Ornate.place(_root, Control.new(), Vector2.ZERO, Vector2(1920, 1080))
+	# Calques qui dessinent leurs touches d'un bloc (Ornate.KeySheet).
+	var keys := Ornate.place(_root, Ornate.KeySheet.new(), Vector2.ZERO, Vector2(1920, 1080))
 	keys.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	Gamepad.swap(keys, false)
 	var x := 720.0
@@ -388,7 +389,7 @@ func _build() -> void:
 		var hint := Ornate.label(key[1], 24, Ornate.MUTED)
 		Ornate.place(keys, hint, Vector2(x + 138, 960), Vector2(140, 40))
 		x += 300.0
-	var buttons := Ornate.place(_root, Control.new(), Vector2.ZERO, Vector2(1920, 1080))
+	var buttons := Ornate.place(_root, Ornate.KeySheet.new(), Vector2.ZERO, Vector2(1920, 1080))
 	buttons.name = "PadKeys"
 	buttons.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	Gamepad.swap(buttons, true)
@@ -428,10 +429,12 @@ class Glow:
 		mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 	func _draw() -> void:
+		var pen := Ornate.Sketch.new(self)
 		for ring in 4:
 			var grow := 6.0 + ring * 9.0
 			var shape := Ornate.chamfered(Rect2(Vector2.ZERO, size).grow(grow), 30 + grow)
-			draw_polyline(Ornate.closed(shape), Color(color, strength * (0.5 - ring * 0.11)), 10.0)
+			pen.polyline(Ornate.closed(shape), Color(color, strength * (0.5 - ring * 0.11)), 10.0)
+		pen.draw(self)
 
 
 class LanguageTab:
@@ -475,19 +478,23 @@ class LanguageTab:
 		if flash.a > 0.0:
 			border = flash
 			fill = fill.lerp(flash, 0.35)
-		draw_colored_polygon(shape, fill)
-		draw_polyline(shape, border, 4.0)
+		# Un maillage pour l'onglet, son bord, le cadre de la manette et le losange (Ornate.Sketch), les textes, puis
+		# l'icône de l'état, dans cet ordre : elle peut toucher la fin d'un long nom.
+		var pen := Ornate.Sketch.new(self)
+		pen.polygon(shape, fill)
+		pen.polyline(shape, border, 4.0)
 		if Gamepad.focused(self):
-			Ornate.focus_ring(self, Rect2(Vector2.ZERO, size), &"chamfer", 22.0)
+			Ornate.focus_ring(pen, Rect2(Vector2.ZERO, size), &"chamfer", 22.0)
 		var badge := Vector2(34, size.y / 2)
-		Ornate.diamond(self, badge, 22, border if state != "sealed" else Color(0.4, 0.4, 0.42))
-		Ornate.centered_text(self, Ornate.SERIF, badge, str(number), 22, Ornate.INK)
-		Ornate.centered_text(self, Ornate.SERIF, Vector2(size.x / 2 + 18, size.y * 0.38), language_name, 24, text)
-		Ornate.centered_text(self, Ornate.TEXT, Vector2(size.x / 2 + 18, size.y * 0.72), level, 17, text.lerp(Ornate.MUTED, 0.35))
+		Ornate.diamond(pen, badge, 22, border if state != "sealed" else Color(0.4, 0.4, 0.42))
+		Ornate.centered_text(pen, Ornate.SERIF, badge, str(number), 22, Ornate.INK)
+		Ornate.centered_text(pen, Ornate.SERIF, Vector2(size.x / 2 + 18, size.y * 0.38), language_name, 24, text)
+		Ornate.centered_text(pen, Ornate.TEXT, Vector2(size.x / 2 + 18, size.y * 0.72), level, 17, text.lerp(Ornate.MUTED, 0.35))
 		if state == "solved":
-			Ornate.icon(self, "check", Vector2(size.x - 24, 26), 12, Ornate.SUCCESS if not selected else Color(0.1, 0.4, 0.15), 3.5)
+			Ornate.icon(pen, "check", Vector2(size.x - 24, 26), 12, Ornate.SUCCESS if not selected else Color(0.1, 0.4, 0.15), 3.5)
 		elif state == "sealed":
-			Ornate.icon(self, "lock", Vector2(size.x - 24, 28), 12, text, 2.5)
+			Ornate.icon(pen, "lock", Vector2(size.x - 24, 28), 12, text, 2.5)
+		pen.draw(self)
 
 
 class ArchivePage:
@@ -499,21 +506,24 @@ class ArchivePage:
 	var solved := false
 
 	func _draw() -> void:
+		# Un maillage pour le parchemin, ses traits, ses taches et le sceau (Ornate.Sketch), puis le mot du sceau.
+		var pen := Ornate.Sketch.new(self)
 		var rect := Rect2(Vector2.ZERO, size)
 		var shape := Ornate.chamfered(rect, 18)
-		draw_colored_polygon(shape, Color(0.88, 0.8, 0.63))
+		pen.polygon(shape, Color(0.88, 0.8, 0.63))
 		var inner := Ornate.chamfered(rect.grow(-10), 12)
-		draw_colored_polygon(inner, Color(0.92, 0.85, 0.69))
-		draw_polyline(Ornate.closed(shape), border, 5.0)
-		draw_polyline(Ornate.closed(inner), Color(border, 0.45), 2.0)
-		draw_line(Vector2(30, 56), Vector2(size.x - 30, 56), Color(0.5, 0.33, 0.16, 0.7), 2.0)
-		draw_line(Vector2(74, 64), Vector2(74, size.y - 16), Color(0.7, 0.3, 0.2, 0.45), 2.0)
+		pen.polygon(inner, Color(0.92, 0.85, 0.69))
+		pen.polyline(Ornate.closed(shape), border, 5.0)
+		pen.polyline(Ornate.closed(inner), Color(border, 0.45), 2.0)
+		pen.line(Vector2(30, 56), Vector2(size.x - 30, 56), Color(0.5, 0.33, 0.16, 0.7), 2.0)
+		pen.line(Vector2(74, 64), Vector2(74, size.y - 16), Color(0.7, 0.3, 0.2, 0.45), 2.0)
 		# Taches d'encre et d'humidité, pour l'usure.
 		for spot: Vector3 in [Vector3(size.x - 120, size.y - 70, 34), Vector3(150, size.y - 40, 18), Vector3(size.x - 260, 120, 12)]:
-			draw_circle(Vector2(spot.x, spot.y), spot.z, Color(0.62, 0.5, 0.32, 0.18))
+			pen.circle(Vector2(spot.x, spot.y), spot.z, Color(0.62, 0.5, 0.32, 0.18))
 		if solved:
 			var seal := Vector2(size.x - 100, size.y - 86)
-			draw_circle(seal, 62, Color(0.25, 0.55, 0.3, 0.2))
-			draw_arc(seal, 62, 0.0, TAU, 40, Color(0.2, 0.5, 0.25, 0.85), 4.0)
-			draw_arc(seal, 52, 0.0, TAU, 40, Color(0.2, 0.5, 0.25, 0.6), 2.0)
-			Ornate.centered_text(self, Ornate.SERIF, seal, "Résolu", 24, Color(0.15, 0.42, 0.2))
+			pen.circle(seal, 62, Color(0.25, 0.55, 0.3, 0.2))
+			pen.arc(seal, 62, 0.0, TAU, 40, Color(0.2, 0.5, 0.25, 0.85), 4.0)
+			pen.arc(seal, 52, 0.0, TAU, 40, Color(0.2, 0.5, 0.25, 0.6), 2.0)
+			Ornate.centered_text(pen, Ornate.SERIF, seal, "Résolu", 24, Color(0.15, 0.42, 0.2))
+		pen.draw(self)
