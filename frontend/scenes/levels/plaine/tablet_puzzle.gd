@@ -339,6 +339,9 @@ class StoneSlot:
 	func _draw() -> void:
 		if size.x < 40.0 or size.y < 30.0:
 			return
+		# Un maillage pour la pierre, ses bordures, le cadre de la manette et le médaillon (Ornate.Sketch), puis le
+		# chiffre et le texte.
+		var pen := Ornate.Sketch.new(self)
 		var rect := Rect2(Vector2.ZERO, size)
 		var shape := Ornate.chamfered(rect, 14)
 		var tint := TabletPuzzle.STONE
@@ -353,24 +356,26 @@ class StoneSlot:
 			tint = tint.lightened(0.12)
 			line = Ornate.GOLD_LIGHT
 		var low := tint.darkened(0.35)
-		draw_polygon(shape, PackedColorArray([tint, tint, tint.lerp(low, 0.5), low, low, low, tint.lerp(low, 0.5), tint]))
-		draw_polyline(Ornate.closed(shape), line, 3.0)
+		pen.polygon_colors(shape, PackedColorArray([tint, tint, tint.lerp(low, 0.5), low, low, low, tint.lerp(low, 0.5), tint]))
+		pen.polyline(Ornate.closed(shape), line, 3.0)
 		if Gamepad.focused(self):
-			Ornate.focus_ring(self, rect, &"chamfer", 14.0)
+			Ornate.focus_ring(pen, rect, &"chamfer", 14.0)
 		# Bordure gravée en creux, puis le médaillon du chiffre.
 		var inner := Ornate.chamfered(rect.grow(-7), 9)
-		draw_polyline(Ornate.closed(inner), TabletPuzzle.STONE_DARK, 2.0)
+		pen.polyline(Ornate.closed(inner), TabletPuzzle.STONE_DARK, 2.0)
 		var medal := Vector2(50, size.y / 2)
-		draw_circle(medal, 30, TabletPuzzle.STONE_DARK)
-		draw_arc(medal, 30, 0, TAU, 32, line, 2.5)
+		pen.circle(medal, 30, TabletPuzzle.STONE_DARK)
+		pen.arc(medal, 30, 0, TAU, 32, line, 2.5)
 		var digits := Ornate.GOLD if mark == TabletPuzzle.Mark.NONE else line
-		Ornate.centered_text(self, Ornate.SERIF, medal, numeral, 24, digits)
+		Ornate.centered_text(pen, Ornate.SERIF, medal, numeral, 24, digits)
 		var left := 96.0
 		var width := size.x - left - 22.0
 		if text_value.is_empty():
-			Ornate.centered_text(self, Ornate.TEXT, Vector2(left + width / 2, size.y / 2), "emplacement vide", 23,
+			Ornate.centered_text(pen, Ornate.TEXT, Vector2(left + width / 2, size.y / 2), "emplacement vide", 23,
 				Ornate.MUTED)
+			pen.draw(self)
 			return
+		pen.draw(self)
 		var font := Ornate.TEXT
 		var font_size := TabletPuzzle.TEXT_SIZE
 		var block := font.get_multiline_string_size(text_value, HORIZONTAL_ALIGNMENT_LEFT, width, font_size)
@@ -414,10 +419,13 @@ class ParchmentCard:
 		var paper := Color(0.93, 0.85, 0.66) if not Gamepad.lit(self) else Color(0.97, 0.9, 0.72)
 		if chosen:
 			paper = Color(1.0, 0.82, 0.48)
-		draw_colored_polygon(points, paper)
-		draw_polyline(Ornate.closed(points), Ornate.GOLD if chosen else Color(0.55, 0.38, 0.2), 5.0 if chosen else 1.5)
+		# Un maillage pour le papier, son bord et le cadre de la manette (Ornate.Sketch), puis le texte.
+		var pen := Ornate.Sketch.new(self)
+		pen.polygon(points, paper)
+		pen.polyline(Ornate.closed(points), Ornate.GOLD if chosen else Color(0.55, 0.38, 0.2), 5.0 if chosen else 1.5)
 		if Gamepad.focused(self):
-			Ornate.focus_ring(self, Rect2(Vector2.ZERO, size), &"chamfer", 8.0)
+			Ornate.focus_ring(pen, Rect2(Vector2.ZERO, size), &"chamfer", 8.0)
+		pen.draw(self)
 		var font := Ornate.TEXT
 		var font_size := TabletPuzzle.TEXT_SIZE
 		var width := size.x - 56.0
@@ -439,9 +447,12 @@ class Glow:
 	func _draw() -> void:
 		if color.a <= 0.0:
 			return
+		# Les quatre traits du halo en un maillage (Ornate.Sketch) : un appel de dessin.
+		var pen := Ornate.Sketch.new(self)
 		for i in 4:
 			var shape := Ornate.chamfered(Rect2(Vector2.ONE * i * 4.0, size - Vector2.ONE * i * 8.0), 34)
-			draw_polyline(Ornate.closed(shape), Color(color, 0.22 + i * 0.12), 6.0)
+			pen.polyline(Ornate.closed(shape), Color(color, 0.22 + i * 0.12), 6.0)
+		pen.draw(self)
 
 
 class CloseCross:
@@ -456,8 +467,11 @@ class CloseCross:
 		mouse_exited.connect(queue_redraw)
 
 	func _draw() -> void:
+		# L'octogone, son bord et la croix en un maillage (Ornate.Sketch) : un appel de dessin.
+		var pen := Ornate.Sketch.new(self)
 		var shape := Ornate.chamfered(Rect2(Vector2.ZERO, size), size.x * 0.28)
 		var lit := Gamepad.hovered(self)
-		draw_colored_polygon(shape, Color(0.36, 0.2, 0.09) if lit else Color(0.22, 0.12, 0.08))
-		draw_polyline(Ornate.closed(shape), Ornate.GOLD_LIGHT if lit else Ornate.GOLD, 5.0)
-		Ornate.icon(self, "close", size / 2, size.x * 0.3, Ornate.CREAM, 3.5)
+		pen.polygon(shape, Color(0.36, 0.2, 0.09) if lit else Color(0.22, 0.12, 0.08))
+		pen.polyline(Ornate.closed(shape), Ornate.GOLD_LIGHT if lit else Ornate.GOLD, 5.0)
+		Ornate.icon(pen, "close", size / 2, size.x * 0.3, Ornate.CREAM, 3.5)
+		pen.draw(self)
