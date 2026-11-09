@@ -11,6 +11,10 @@ extends Control
 ## Nouvelle partie et partie invitée passent par l'introduction, puis le jeu commence dans le bunker du hub.
 ## À la manette (scripts/gamepad.gd) : la croix choisit un bouton, A valide, B revient à l'écran précédent ou ferme la
 ## confirmation ; A sur un champ ouvre le clavier virtuel (PadKeyboard).
+##
+## Le fond (MenuBackdrop) vit doucement. D'un écran à l'autre, le suivant est construit et prend la main tout de suite
+## (clavier, souris, manette) : il apparaît en fondu en glissant de quelques pixels, pendant que l'ancien s'efface.
+## Un écran plus loin dans le parcours arrive par la droite, un retour par la gauche. Voir docs/accueil-anime.md.
 
 const SCENE := "res://scenes/ui/menus/main_menu.tscn"
 const INTRO_TEXT := [
@@ -34,12 +38,35 @@ var _offer_import := false
 var _home_notice := ""
 var _login_notice := ""
 
+## Ordre des écrans dans le parcours : le sens du glissement d'une transition en dépend.
+const ORDER: Array[StringName] = [&"home", &"login", &"register", &"verify", &"leaderboard", &"intro"]
+## Durées, en secondes : effacement de l'ancien écran, puis apparition du suivant, un peu après (fondu traversant :
+## les deux ne se superposent presque pas) ; premier écran du menu ; fenêtre de confirmation. Glissement de l'écran
+## qui arrive, et de celui qui part, en pixels de référence. Le nouvel écran répond dès la première image.
+const LEAVE_TIME := 0.11
+const ENTER_DELAY := 0.06
+const ENTER_TIME := 0.24
+const FIRST_TIME := 0.5
+const CONFIRM_TIME := 0.16
+const SLIDE := 40.0
+const LEAVE_SLIDE := 16.0
+## Groupes de la manette dont l'écran qui s'efface sort : il ne prend plus ni focus, ni bascule, ni défilement.
+const PAD_GROUPS: Array[StringName] = [Gamepad.FOCUS_GROUP, Gamepad.TEXT_GROUP, Gamepad.GLYPH_GROUP, Gamepad.SWAP_GROUP,
+	Gamepad.SCROLL_GROUP, Gamepad.MODAL_GROUP]
+
+## Calque de l'écran qui s'efface : hors de la scène du menu (les recherches de nœuds ne l'y trouvent plus), au-dessus.
+var _leaving_layer: CanvasLayer
+var _enter_tween: Tween
+var _leave_tween: Tween
+
 
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	get_tree().paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	add_child(Ornate.Backdrop.new())
+	var backdrop := MenuBackdrop.new()
+	backdrop.name = "Backdrop"
+	add_child(backdrop)
 	# Shaders des lieux compilés hors de l'écran pendant que le joueur est ici (jeu exporté seulement).
 	add_child(ShaderWarmup.new())
 	GameState.use_profile(Account.profile_id())
@@ -52,10 +79,16 @@ func _ready() -> void:
 		show_screen(&"home")
 
 
-## Remplace l'écran affiché : home, login, register, verify, leaderboard ou intro.
+## Remplace l'écran affiché : home, login, register, verify, leaderboard ou intro. Le nouvel écran répond aussitôt ;
+## seul son affichage passe par une courte transition.
 func show_screen(screen: StringName) -> void:
-	if _screen:
-		_screen.queue_free()
+	var previous := _current
+	var old := _screen
+	if old and previous != screen:
+		_leave(old, signf(ORDER.find(screen) - ORDER.find(previous)))
+	elif old:
+		# Le même écran, redessiné (lecture de la partie, message) : il prend la place de l'ancien sans bouger.
+		old.queue_free()
 	_screen = Control.new()
 	_screen.name = String(screen).capitalize().replace(" ", "")
 	_screen.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -75,10 +108,85 @@ func show_screen(screen: StringName) -> void:
 			_build_leaderboard()
 		&"intro":
 			_build_intro()
+	if old == null:
+		_enter(_screen, Vector2.ZERO, FIRST_TIME)
+	elif previous != screen:
+		_enter(_screen, Vector2(signf(ORDER.find(screen) - ORDER.find(previous)) * SLIDE, 0.0), ENTER_TIME, ENTER_DELAY)
+	else:
+		# Redessin pendant une apparition : le nouvel écran reprend où en était l'ancien.
+		_screen.modulate = old.modulate
+		_screen.position = old.position
+		if _enter_tween and _enter_tween.is_running():
+			_enter(_screen, _screen.position, ENTER_TIME * (1.0 - _screen.modulate.a), 0.0, false)
 
 
 func current_screen() -> StringName:
 	return _current
+
+
+## Apparition d'un écran : fondu depuis le transparent, en glissant depuis `from` (décalage en pixels de référence),
+## après `delay` secondes.
+func _enter(screen: Control, from: Vector2, duration: float, delay := 0.0, from_clear := true) -> void:
+	if _enter_tween:
+		_enter_tween.kill()
+	if from_clear:
+		screen.modulate.a = 0.0
+	screen.position = from
+	_enter_tween = create_tween().set_parallel().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	_enter_tween.tween_property(screen, ^"modulate:a", 1.0, maxf(duration, 0.01)).set_delay(delay)
+	_enter_tween.tween_property(screen, ^"position", Vector2.ZERO, maxf(duration, 0.01)).set_delay(delay)
+
+
+## Effacement de l'écran qu'on quitte. Il n'est plus qu'une image : sorti de la scène, sans souris, ni focus, ni manette
+## (_retire), et les réponses du serveur qu'il attendait ne le reconnaissent plus (_alive). Il glisse dans le sens
+## opposé au nouvel écran, puis il est libéré. Sans calque (menu hors de l'arbre), il disparaît aussitôt, comme avant.
+func _leave(old: Control, direction: float) -> void:
+	if _enter_tween:
+		_enter_tween.kill()
+	_retire(old)
+	if _leave_tween:
+		_leave_tween.kill()
+	if not is_inside_tree():
+		old.queue_free()
+		return
+	if not is_instance_valid(_leaving_layer):
+		_leaving_layer = CanvasLayer.new()
+		_leaving_layer.name = "MenuEcranSortant"
+		_leaving_layer.layer = 1
+		get_tree().root.add_child(_leaving_layer)
+	# Un seul écran s'efface à la fois : celui d'une transition précédente part tout de suite.
+	for ghost in _leaving_layer.get_children():
+		ghost.queue_free()
+	old.reparent(_leaving_layer)
+	_leave_tween = create_tween().set_parallel().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
+	_leave_tween.tween_property(old, ^"modulate:a", 0.0, maxf(LEAVE_TIME * old.modulate.a, 0.01))
+	_leave_tween.tween_property(old, ^"position:x", old.position.x - direction * LEAVE_SLIDE, LEAVE_TIME)
+	_leave_tween.chain().tween_callback(old.queue_free)
+
+
+## Rend un écran inerte : ni souris, ni focus (le clavier le quitte), ni groupes de la manette.
+func _retire(node: Node) -> void:
+	for group in PAD_GROUPS:
+		if node.is_in_group(group):
+			node.remove_from_group(group)
+	var control := node as Control
+	if control:
+		if control.has_focus():
+			control.release_focus()
+		control.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		control.focus_mode = Control.FOCUS_NONE
+	for child in node.get_children():
+		_retire(child)
+
+
+## Le nœud appartient encore à l'écran affiché : une réponse arrivée après un changement d'écran ne fait plus rien.
+func _alive(node: Node) -> bool:
+	return is_instance_valid(node) and _screen != null and _screen.is_ancestor_of(node)
+
+
+func _exit_tree() -> void:
+	if is_instance_valid(_leaving_layer):
+		_leaving_layer.queue_free()
 
 
 ## B de la manette : ferme la confirmation ouverte, sinon revient à l'écran précédent (le bouton « Retour » de l'écran).
@@ -307,6 +415,8 @@ func _confirm(text: String, accept: String, action: Callable) -> void:
 	shade.color = Color(0.05, 0.02, 0.06, 0.72)
 	shade.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_screen.add_child(shade)
+	shade.modulate.a = 0.0
+	create_tween().tween_property(shade, ^"modulate:a", 1.0, CONFIRM_TIME).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
 	var frame := Ornate.place(shade, Ornate.Frame.new(), Vector2(560, 360), Vector2(800, 360)) as Ornate.Frame
 	frame.title = "Attention"
 	var message := Ornate.label(text, 30)
@@ -375,7 +485,7 @@ func _build_login() -> void:
 		_show_status(status, "Connexion…", true)
 		var result: Dictionary = await Account.login(address.text.strip_edges(), password.text)
 		_busy = false
-		if not is_instance_valid(status):
+		if not _alive(status):
 			return
 		if not result.ok:
 			_show_status(status, result.error)
@@ -400,7 +510,7 @@ func _build_login() -> void:
 		_show_status(status, "Envoi du lien…", true)
 		var result: Dictionary = await Account.request_password_reset(address.text.strip_edges())
 		_busy = false
-		if not is_instance_valid(status):
+		if not _alive(status):
 			return
 		if result.ok:
 			_show_status(status, "Si le compte existe, un e-mail vient de partir : lien valable 30 minutes.", true)
@@ -443,7 +553,7 @@ func _build_register() -> void:
 		_show_status(status, "Création du compte…", true)
 		var result: Dictionary = await Account.register(pseudo.text, address.text.strip_edges(), password.text)
 		_busy = false
-		if not is_instance_valid(status):
+		if not _alive(status):
 			return
 		if not result.ok:
 			_show_status(status, result.error)
@@ -500,7 +610,7 @@ func _build_verify() -> void:
 		_show_status(status, "Vérification…", true)
 		var result: Dictionary = await Account.verify_code(boxes.code())
 		_busy = false
-		if not is_instance_valid(status):
+		if not _alive(status):
 			return
 		if result.ok:
 			GameState.use_profile(Account.profile_id())
@@ -515,7 +625,7 @@ func _build_verify() -> void:
 	boxes.submitted.connect(attempt)
 	resend.pressed.connect(func() -> void:
 		var result: Dictionary = await Account.resend_code()
-		if is_instance_valid(status):
+		if _alive(status):
 			_show_status(status, "Un nouveau code vient d'être envoyé." if result.ok else result.error, result.ok))
 	boxes.boxes[0].grab_focus.call_deferred()
 
@@ -582,7 +692,7 @@ func _show_board(frame: Control, zone: StringName) -> void:
 	var puzzle_id := 0
 	if zone != &"":
 		var puzzles: Dictionary = await GameSync.load_puzzles()
-		if not is_instance_valid(status):
+		if not _alive(status):
 			return
 		if not puzzles.ok:
 			status.text = puzzles.error
@@ -596,7 +706,7 @@ func _append_board_page(frame: Control, puzzle_id: int, offset: int) -> void:
 	var rows := frame.get_node("Rows/List") as VBoxContainer
 	var more := frame.get_node("More") as Ornate.PillButton
 	var result: Dictionary = await Account.fetch_leaderboard(puzzle_id, offset)
-	if not is_instance_valid(status):
+	if not _alive(status):
 		return
 	if not result.ok:
 		status.text = result.get("error", "Le classement est indisponible pour l'instant.")
