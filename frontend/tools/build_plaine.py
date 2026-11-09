@@ -1249,6 +1249,40 @@ def camp_extras(scene, rng):
     furniture_fit(scene, "mini_dungeon/chair", (cx + 3.2, 0.0, cz + 5.5), 150.0, 2.4, height=1.1)
 
 
+# Positions de Vibelandia (x, z, rayon), comme VIBELANDIA_CAMPS dans scenes/levels/plaine/plaine_life.gd : les engins de
+# siège et la batterie de balistes. Les bannières plantées là portent le vert de Vibelandia (variante b des couleurs du
+# kit Castle, posée par plaine_life.gd) ; les autres gardent le bleu de Codia, celui des bannières du château du hub.
+VIBELANDIA_CAMPS = ((-14.0, 39.0, 9.0), (17.0, -22.0, 8.0))
+
+
+def in_vibelandia_camp(x, z):
+    return any(math.hypot(x - cx, z - cz) < radius for cx, cz, radius in VIBELANDIA_CAMPS)
+
+
+def standards(scene):
+    """Les étendards des deux camps. Vibelandia : un grand étendard planté au bord du chemin, devant ses engins de
+    siège, un autre piétiné à plat dans la cendre, un troisième sur la batterie de balistes. Codia : l'étendard des
+    défenseurs, encore debout au-dessus de leurs tombes. Posés après tout le reste, avec leur propre tirage : les
+    noms et les places du décor existant ne bougent pas."""
+    rng = random.Random(5804)
+    planted = []
+    banner_pole(scene, rng, -8.6, 40.2, model="castle_kit/flag-banner-long", scale=2.1, lean=7.0, degrees=100.0)
+    planted.append((-8.6, 40.2, True))
+    # Piétiné : couché à plat dans la cendre ; à 7 cm du sol, on l'enjambe, sans collision.
+    furniture_fit(scene, "castle_kit/flag-banner-long", (-16.6, 0.0, 36.7), 196.0, 1.6, roll=90.0)
+    planted.append((-16.6, 36.7, True))
+    bx, bz, _ = SITES["battery"]
+    banner_pole(scene, rng, bx - 0.2, bz - 3.0, model="castle_kit/flag-wide", scale=3.2, lean=-12.0, degrees=225.0)
+    planted.append((bx - 0.2, bz - 3.0, True))
+    gx, gz, _ = SITES["graves"]
+    # Tourné vers le sud-ouest, vers le chemin d'arrivée : le soleil l'éclaire et son bleu se lit depuis le portail et
+    # le campement.
+    banner_pole(scene, rng, gx, gz - 5.3, model="castle_kit/flag-banner-long", scale=2.0, lean=3.0, degrees=-120.0)
+    planted.append((gx, gz - 5.3, False))
+    for x, z, enemy in planted:
+        assert in_vibelandia_camp(x, z) == enemy, (x, z)
+
+
 def build_battlefield():
     """Champ de bataille des plaines d'Hexcole, sur les replats du terrain : tout y est posé au sol, à la hauteur 0."""
     scene = PlaineScene("PlaineBattlefield")
@@ -1261,6 +1295,7 @@ def build_battlefield():
     watchtower(scene, rng)
     siege_works(scene, rng)
     battery(scene, rng)
+    standards(scene)
     return scene
 
 
@@ -1329,6 +1364,32 @@ SEARCHABLE_BOOKS = {
     "East30": ("east", 2, 1, 2, -0.3),
     "East33": ("east", 2, 2, 1, 0.25),
 }
+
+
+# Brèche de la voûte de la salle de lecture : centre du trou (x, z), comme le nœud Interior/Breach de plaine.tscn
+# (library_breach.gd perce le plafond et fait tomber le rai de lumière). Entre deux poutres (z = -7,5 et -10,5), au-dessus
+# des gravats bas déjà posés.
+BREACH = (-0.2, -9.2)
+CHARRED = (0.09, 0.07, 0.06)
+
+
+def breach_rubble(scene):
+    """Sous la brèche : la pierre de catapulte qui a crevé la voûte, les éclats tombés avec elle et une solive calcinée,
+    couchée à plat contre la pierre. Posés après tout le reste : les noms et les places du décor existant ne bougent
+    pas. Entre la pierre et le rayonnage du mur du fond, le passage garde 1,2 m (sonde de saut : une solive penchée de
+    la pierre au sol y fermait une poche où l'on restait coincé)."""
+    x, z = BREACH
+    # La pierre, comme les boulets des engins de siège ; 48 cm de haut, avec sa collision.
+    furniture_fit(scene, "survival_kit/resource-stone-large", (x + 0.35, 0.0, z - 0.1), 25.0, 3.0, height=0.48)
+    # Éclats de la pierre et moellons de la voûte, de part et d'autre (les tas de rochers des kits, trop sombres sous
+    # la suie, y faisaient des tas de charbon).
+    furniture_fit(scene, "survival_kit/resource-stone-large", (x + 1.15, 0.0, z + 0.55), 70.0, 1.8, height=0.3,
+                  tilt=8.0)
+    furniture_fit(scene, "survival_kit/resource-stone-large", (x - 0.65, 0.0, z - 0.85), 200.0, 1.5, height=0.26,
+                  roll=-10.0)
+    furniture_fit(scene, "survival_kit/resource-stone-large", (x + 1.0, 0.0, z - 1.0), 130.0, 1.1)
+    # Solive calcinée, à plat contre la pierre : 20 cm de haut, on l'enjambe, sans collision.
+    scene.add_shape("box", (0.22, 0.2, 1.7), CHARRED, (x + 1.55, 0.1, z - 0.55), 72.0)
 
 
 def build_interior():
@@ -1469,6 +1530,8 @@ def build_interior():
                   height=0.45)
         # Les urnes au fond, sous les bannières : au pied de l'escalier, elles fermaient les deux côtés du pupitre.
         furniture_fit(scene, "graveyard_kit/urn-round", (side * 1.35, CRYPT_FLOOR, -42.3), 0.0, 2.4, height=0.9)
+
+    breach_rubble(scene)
 
     for name in sorted(searched):
         (x, y, z), inward = searched[name]

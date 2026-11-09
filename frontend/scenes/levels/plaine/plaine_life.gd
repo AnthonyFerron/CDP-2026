@@ -1,8 +1,9 @@
 class_name PlaineLife
 extends Node3D
 ## Vie des plaines d'Hexcole : des corbeaux tournent au-dessus des engins de siège, d'autres guettent sur la tour,
-## les croix et la stèle des tombes, et s'envolent quand le joueur approche avant de revenir plus tard ;
-## les bannières déchirées ondulent dans le vent. Tout est animé par ce script, sans collision.
+## les croix et la stèle des tombes, et s'envolent quand le joueur approche ou quand le volcan gronde (startle), avant
+## de revenir plus tard ; les bannières déchirées ondulent dans le vent. Celles qui sont plantées dans les positions de
+## Vibelandia portent ses couleurs, les autres le bleu de Codia. Tout est animé par ce script, sans collision.
 
 ## Centre et rayon du vol des corbeaux, au-dessus des engins de siège et des tombes.
 const FLOCK_CENTER := Vector3(-6.0, 13.0, 42.0)
@@ -16,10 +17,15 @@ const PERCHES: Array[Vector3] = [
 ## Distance à laquelle un corbeau perché s'envole, et délai avant qu'il ne revienne.
 const ALARM_DISTANCE := 7.0
 const RETURN_DELAY := 24.0
+## Positions de Vibelandia (x, z, rayon), comme VIBELANDIA_CAMPS dans tools/build_plaine.py : engins de siège et
+## batterie de balistes.
+const VIBELANDIA_CAMPS: Array[Vector3] = [Vector3(-14.0, 39.0, 9.0), Vector3(17.0, -22.0, 8.0)]
 
 @export var player: Node3D
 ## Scènes de décor où chercher les bannières à faire onduler.
 @export var decor: Array[Node3D] = []
+## Couleurs du kit Castle pour les bannières de Vibelandia : la variante dont le bleu de Codia devient vert.
+@export var vibelandia_colors: Texture2D
 
 var _crows: Array[Crow] = []
 var _flags: Array[Node3D] = []
@@ -56,11 +62,49 @@ func _ready() -> void:
 			crow.rotation.y = random.randf() * TAU
 		add_child(crow)
 		_crows.append(crow)
+	var enemy_materials := {}
 	for root in decor:
 		for model in root.get_node("Models").get_children():
-			if String(model.name).begins_with("flag_"):
+			if not String(model.name).begins_with("flag_"):
+				continue
+			if _in_vibelandia_camp(model.global_position):
+				_dye(model, enemy_materials)
+			# Une bannière piétinée, couchée dans la cendre, ne flotte plus.
+			if model.basis.y.normalized().y > 0.5:
 				_flags.append(model)
 				_flag_bases.append(model.basis)
+
+
+func _in_vibelandia_camp(point: Vector3) -> bool:
+	for camp in VIBELANDIA_CAMPS:
+		if Vector2(point.x - camp.x, point.z - camp.y).length() < camp.z:
+			return true
+	return false
+
+
+## Le même matériau que le modèle, avec la variante de couleurs de Vibelandia : un matériau par matériau d'origine.
+func _dye(model: Node3D, materials: Dictionary) -> void:
+	if not vibelandia_colors:
+		return
+	for mesh: MeshInstance3D in model.find_children("*", "MeshInstance3D", true, false):
+		for surface in mesh.mesh.get_surface_count():
+			var source := mesh.get_active_material(surface) as StandardMaterial3D
+			if not source:
+				continue
+			if not materials.has(source):
+				var dyed := source.duplicate() as StandardMaterial3D
+				dyed.albedo_texture = vibelandia_colors
+				materials[source] = dyed
+			mesh.set_surface_override_material(surface, materials[source])
+
+
+## Le volcan gronde : les corbeaux perchés s'envolent tous, et ceux qui volent battent des ailes un moment.
+func startle() -> void:
+	for crow in _crows:
+		crow.timer = 0.0
+		if crow.perched:
+			crow.perched = false
+			crow.angle = atan2(crow.position.z - FLOCK_CENTER.z, crow.position.x - FLOCK_CENTER.x)
 
 
 ## Haut d'un modèle, au milieu de sa boîte : le sommet d'une croix.
