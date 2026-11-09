@@ -32,6 +32,10 @@ const SHAKE_AMPLITUDE := 0.035
 const SHAKE_TIME := 0.6
 ## Lumière bleutée du dispositif quand les cinq codes sont résolus.
 const DEVICE_GLOW := 6.0
+## Distance au-delà de laquelle les panneaux des textes à lire ne sont plus dessinés : chacun coûte une dizaine
+## d'appels de dessin (planche, cadre, clous, poteaux, texte), et à plus de 40 m, dans la brume du soir, on ne les
+## distingue plus. Le texte se lit de toute façon à 2,6 m.
+const LORE_RANGE := 40.0
 
 @export var shelf_duration := 3.0
 
@@ -92,6 +96,11 @@ func _ready() -> void:
 	_book_pickup.interacted.connect(_on_book_taken)
 	for note: Readable in $Lore.get_children():
 		note.interacted.connect(_read_note.bind(note))
+		for board in note.get_children():
+			if board is SignBoard:
+				for part in board.get_children(true):
+					if part is GeometryInstance3D:
+						(part as GeometryInstance3D).visibility_range_end = LORE_RANGE
 
 	_book_pickup.enabled = false
 	_secret_light.visible = false
