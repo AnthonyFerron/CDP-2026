@@ -6,10 +6,11 @@ extends Control
 ## volcan rougeoie et fume, et de temps en temps une chauve-souris sort du château et passe devant la lune.
 ##
 ## Tout est en 2D légère, sans shader ni texture. Chaque plan du décor est un nœud, du plus lointain au plus proche,
-## dessiné une seule fois. L'animation ne change que la position, l'échelle ou la teinte (modulate) de quelques petits
-## nœuds, ce qui ne redessine rien ; seules les étoiles (20 fois par seconde), et la chauve-souris pendant son vol,
-## refont leurs quelques formes. Au cran de qualité le plus bas (RenderQuality, cran 6), la brume et le scintillement
-## s'arrêtent et la fumée est réduite. Voir docs/accueil-anime.md.
+## dessiné une seule fois, en quadrilatères que le moteur regroupe en quelques appels de dessin. L'animation ne change
+## que la position, l'échelle ou la teinte (modulate) de quelques petits nœuds, ce qui ne redessine rien ; seules les
+## étoiles (20 fois par seconde), et la chauve-souris pendant son vol, refont leurs quelques formes. Au cran de qualité
+## le plus bas (RenderQuality, cran 6), la brume et le scintillement s'arrêtent et la fumée est réduite.
+## Voir docs/accueil-anime.md.
 
 ## Crans de qualité (les autoloads ne sont pas encore connus quand ce script est compilé avec un test).
 const Quality := preload("res://scripts/render_quality.gd")
@@ -35,7 +36,7 @@ const SKY_BOTTOM := Color(0.14, 0.07, 0.17)
 ## Étoiles : nombre, et rythme de leur redessin (par seconde) ; leur scintillement est lent.
 const STAR_COUNT := 64
 const STAR_RATE := 20.0
-## Bouffées de fumée du volcan (3 au cran le plus bas), et durée de vie de chacune, en secondes.
+## Bouffées de fumée du volcan (moins au cran le plus bas), durée de vie de chacune, en secondes, et hauteur de montée.
 const PUFFS := 7
 const PUFFS_REDUCED := 4
 const PUFF_LIFE := 18.0
@@ -108,17 +109,85 @@ func set_reduced(value: bool) -> void:
 ## Ciel : dégradé et facettes claires, à la manière d'un ciel low-poly. Il ne descend que jusqu'à la crête la plus
 ## basse des collines lointaines, avec la couleur du dégradé à cette hauteur.
 func _draw() -> void:
-	var low := HILLS[0][1].reduce(func(deepest: float, point: Vector2) -> float: return maxf(deepest, point.y), 0.0) as float
+	var low := _deepest(HILLS[0][1])
 	var bottom := SKY_TOP.lerp(SKY_BOTTOM, low / H)
-	draw_polygon(PackedVector2Array([Vector2(0, 0), Vector2(W, 0), Vector2(W, low), Vector2(0, low)]),
-		PackedColorArray([SKY_TOP, SKY_TOP, bottom, bottom]))
+	draw_primitive(PackedVector2Array([Vector2(0, 0), Vector2(W, 0), Vector2(W, low), Vector2(0, low)]),
+		PackedColorArray([SKY_TOP, SKY_TOP, bottom, bottom]), PackedVector2Array())
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 5814
 	for i in 26:
 		var c := Vector2(rng.randf_range(0, W), rng.randf_range(0, H * 0.8))
 		var r := rng.randf_range(60, 170)
-		var tri := PackedVector2Array([c + Vector2(-r, r * 0.4), c + Vector2(r * rng.randf_range(0.3, 1.0), -r * 0.5), c + Vector2(r, r * 0.6)])
-		draw_colored_polygon(tri, Color(0.32, 0.18, 0.36, rng.randf_range(0.18, 0.4)))
+		var peak := c + Vector2(r * rng.randf_range(0.3, 1.0), -r * 0.5)
+		_tri(self, c + Vector2(-r, r * 0.4), peak, c + Vector2(r, r * 0.6), PackedColorArray([Color(0.32, 0.18, 0.36, rng.randf_range(0.18, 0.4))]))
+
+
+# --- Tracés -------------------------------------------------------------------------------------------------
+# Tout le décor est fait de quadrilatères (draw_primitive à quatre points) : le rendu Compatibility les regroupe en
+# quelques appels de dessin, d'un nœud à l'autre, quand chaque polygone ou cercle (draw_colored_polygon,
+# draw_circle) en coûtait un à lui seul. Il ne regroupe que des primitives au même nombre de points : un triangle
+# est donc écrit comme un quadrilatère dont le dernier point répète le troisième (_tri).
+
+## Triangle, en quadrilatère dégénéré ; une couleur, ou une par sommet.
+static func _tri(item: CanvasItem, a: Vector2, b: Vector2, c: Vector2, colors: PackedColorArray) -> void:
+	if colors.size() > 1:
+		colors = PackedColorArray([colors[0], colors[1], colors[2], colors[2]])
+	item.draw_primitive(PackedVector2Array([a, b, c, c]), colors, PackedVector2Array())
+
+## Ordonnée la plus basse d'une crête.
+static func _deepest(crest: Array) -> float:
+	var deepest := 0.0
+	for point: Vector2 in crest:
+		deepest = maxf(deepest, point.y)
+	return deepest
+
+
+## Polygone rempli, découpé une fois en triangles ; une couleur, ou une par sommet.
+static func _fill(item: CanvasItem, points: PackedVector2Array, colors: PackedColorArray) -> void:
+	var triangles := Geometry2D.triangulate_polygon(points)
+	for index in range(0, triangles.size(), 3):
+		var a := triangles[index]
+		var b := triangles[index + 1]
+		var c := triangles[index + 2]
+		_tri(item, points[a], points[b], points[c], colors if colors.size() == 1 else PackedColorArray([colors[a], colors[b], colors[c]]))
+
+
+## Disque plein, en éventail de quadrilatères (deux secteurs chacun).
+static func _disc(item: CanvasItem, center: Vector2, radius: float, color: Color, segments := 48) -> void:
+	var colors := PackedColorArray([color])
+	var none := PackedVector2Array()
+	for step in range(0, segments, 2):
+		var points := PackedVector2Array([center])
+		for k in 3:
+			var angle := TAU * (step + k) / segments
+			points.append(center + Vector2(cos(angle), sin(angle)) * radius)
+		item.draw_primitive(points, colors, none)
+
+
+## Halo en paliers : des disques de même couleur et de rayons croissants, empilés. Chaque couronne est dessinée une
+## seule fois, avec l'opacité de l'empilement qu'elle remplace : la même image, sans remplir plusieurs fois les mêmes
+## pixels. Le centre, sous `hole`, reste vide quand un disque opaque le couvre (la lune).
+static func _halo_rings(item: CanvasItem, center: Vector2, hole: float, radii: Array, color: Color, segments: int) -> void:
+	var inner := hole
+	for index in radii.size():
+		var stacked := 1.0 - pow(1.0 - color.a, radii.size() - index)
+		_ring(item, center, inner, float(radii[index]), Color(color, stacked), segments)
+		inner = float(radii[index])
+
+
+## Couronne entre deux rayons, en quadrilatères.
+static func _ring(item: CanvasItem, center: Vector2, inner: float, outer: float, color: Color, segments: int) -> void:
+	var colors := PackedColorArray([color])
+	var none := PackedVector2Array()
+	for step in segments:
+		var a := Vector2.from_angle(TAU * step / segments)
+		var b := Vector2.from_angle(TAU * (step + 1) / segments)
+		item.draw_primitive(PackedVector2Array([center + a * inner, center + a * outer, center + b * outer, center + b * inner]), colors, none)
+
+
+static func _box(item: CanvasItem, rect: Rect2, color: Color) -> void:
+	item.draw_primitive(PackedVector2Array([rect.position, Vector2(rect.end.x, rect.position.y), rect.end, Vector2(rect.position.x, rect.end.y)]),
+		PackedColorArray([color]), PackedVector2Array())
 
 
 # --- Construction des plans ---------------------------------------------------------------------------------
@@ -177,19 +246,18 @@ func _paint_volcano(item: CanvasItem) -> void:
 	for point in points:
 		var heat := clampf((520.0 - point.y) / 80.0, 0.0, 1.0)
 		colors.append(Color(0.27, 0.15, 0.29).lerp(Color(0.36, 0.17, 0.27), heat))
-	item.draw_polygon(points, colors)
+	_fill(item, points, colors)
 	# Coulée qui rougeoie sur le flanc droit, et s'éteint en descendant.
 	var lava := PackedVector2Array([Vector2(262, 459), Vector2(272, 456), Vector2(300, 500), Vector2(318, 548), Vector2(306, 548), Vector2(286, 502)])
 	var glow := Color(1.0, 0.45, 0.15, 0.45)
-	item.draw_polygon(lava, PackedColorArray([glow, glow, Color(glow, 0.3), Color(glow, 0.0), Color(glow, 0.0), Color(glow, 0.3)]))
+	_fill(item, lava, PackedColorArray([glow, glow, Color(glow, 0.3), Color(glow, 0.0), Color(glow, 0.0), Color(glow, 0.3)]))
 
 
 func _paint_crater_glow(item: CanvasItem) -> void:
-	for ring in range(6, 0, -1):
-		item.draw_circle(Vector2(0, 4), 10.0 + ring * 11.0, Color(1.0, 0.42, 0.12, 0.032))
+	_halo_rings(item, Vector2(0, 4), 0.0, [21.0, 32.0, 43.0, 54.0, 65.0, 76.0], Color(1.0, 0.42, 0.12, 0.032), 20)
 	# Lave au fond du cratère, entre ses deux lèvres.
-	item.draw_colored_polygon(PackedVector2Array([Vector2(-30, 5), Vector2(-16, 2), Vector2(14, 3), Vector2(32, 5), Vector2(14, 10), Vector2(-14, 10)]),
-		Color(1.0, 0.55, 0.2, 0.5))
+	_fill(item, PackedVector2Array([Vector2(-30, 5), Vector2(-16, 2), Vector2(14, 3), Vector2(32, 5), Vector2(14, 10), Vector2(-14, 10)]),
+		PackedColorArray([Color(1.0, 0.55, 0.2, 0.5)]))
 
 
 ## Bouffée de fumée, dessinée petite (rayon 26) : sa taille, sa place et son opacité changent par le nœud. Un voile
@@ -205,80 +273,84 @@ func _paint_puff(item: CanvasItem, index: int) -> void:
 		for corner in 9:
 			var angle := TAU * corner / 9.0
 			points.append(Vector2(cos(angle), sin(angle) * 0.8) * float(layer[0]) * radii[corner])
-		item.draw_colored_polygon(points, Color(0.43, 0.31, 0.43, layer[1]))
+		_fill(item, points, PackedColorArray([Color(0.43, 0.31, 0.43, layer[1])]))
 
 
+## Six paliers autour de la lune (rayons 114 à 224). Le centre, sous la lune, n'est pas rempli : il reste une marge
+## pour la respiration du halo (± 3 %), qui ne découvre jamais le bord du disque.
 func _paint_halo(item: CanvasItem) -> void:
-	for ring in range(6, 0, -1):
-		item.draw_circle(Vector2.ZERO, 92 + ring * 22, Color(0.98, 0.75, 0.35, 0.029))
+	_halo_rings(item, Vector2.ZERO, 86.0, [114.0, 136.0, 158.0, 180.0, 202.0, 224.0], Color(0.98, 0.75, 0.35, 0.029), 40)
 
 
 func _paint_moon(item: CanvasItem) -> void:
-	item.draw_circle(Vector2.ZERO, 94, Color(0.98, 0.76, 0.38))
-	item.draw_circle(Vector2(-26, -22), 66, Color(1.0, 0.82, 0.48, 0.5))
+	_disc(item, Vector2.ZERO, 94, Color(0.98, 0.76, 0.38))
+	_disc(item, Vector2(-26, -22), 66, Color(1.0, 0.82, 0.48, 0.5))
 
 
 func _paint_castle(item: CanvasItem) -> void:
 	var castle := Color(0.1, 0.05, 0.1)
-	item.draw_rect(Rect2(1700, 330, 130, 330), castle)
-	item.draw_rect(Rect2(1780, 250, 70, 410), castle)
+	_box(item, Rect2(1700, 330, 130, 330), castle)
+	_box(item, Rect2(1780, 250, 70, 410), castle)
 	for x in [1700, 1726, 1752, 1780, 1806, 1832]:
-		item.draw_rect(Rect2(x, 316 if x < 1780 else 236, 16, 16), castle)
-	item.draw_colored_polygon(PackedVector2Array([Vector2(1776, 250), Vector2(1815, 196), Vector2(1854, 250)]), castle)
+		_box(item, Rect2(x, 316 if x < 1780 else 236, 16, 16), castle)
+	_tri(item, Vector2(1776, 250), Vector2(1815, 196), Vector2(1854, 250), PackedColorArray([castle]))
 
 
 ## Fenêtre allumée et son halo : la flamme vacille par la teinte du nœud.
 func _paint_window(item: CanvasItem) -> void:
-	item.draw_rect(Rect2(-5, -5, 24, 32), Color(1.0, 0.6, 0.25, 0.14))
-	item.draw_rect(Rect2(Vector2.ZERO, Vector2(14, 22)), Color(1.0, 0.74, 0.32))
+	_box(item, Rect2(-5, -5, 24, 32), Color(1.0, 0.6, 0.25, 0.14))
+	_box(item, Rect2(Vector2.ZERO, Vector2(14, 22)), Color(1.0, 0.74, 0.32))
 
 
 func _paint_hills(item: CanvasItem, plane: int) -> void:
 	var points := PackedVector2Array(HILLS[plane][1])
 	var floor_y := H
 	if plane + 1 < HILLS.size():
-		floor_y = HILLS[plane + 1][1].reduce(func(deepest: float, point: Vector2) -> float: return maxf(deepest, point.y), 0.0) + 2.0
+		floor_y = _deepest(HILLS[plane + 1][1]) + 2.0
 	points.append(Vector2(W, floor_y))
 	points.append(Vector2(0, floor_y))
-	item.draw_colored_polygon(points, HILLS[plane][0])
+	_fill(item, points, PackedColorArray([HILLS[plane][0]]))
 
 
-## Nappe de brume : une bande allongée, opaque au milieu et transparente sur ses bords, en un seul tracé.
+## Nappe de brume : une bande allongée, opaque au milieu et transparente sur ses bords (couleur par sommet), faite de
+## deux quadrilatères par tronçon.
 func _paint_wisp(item: CanvasItem, length: float, thickness: float, alpha: float, index: int) -> void:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 301 + index
 	var segments := 12
-	var points := PackedVector2Array()
-	var colors := PackedColorArray()
+	var top := PackedVector2Array()
+	var spine := PackedVector2Array()
+	var low := PackedVector2Array()
+	var middle := PackedColorArray()
 	for step in segments + 1:
 		var t := float(step) / segments
 		var envelope := sin(PI * t)
 		var x := (t - 0.5) * length
-		var spine := rng.randf_range(-3.0, 3.0) * envelope
-		points.append(Vector2(x, spine - thickness * envelope * rng.randf_range(0.8, 1.1)))
-		points.append(Vector2(x, spine))
-		points.append(Vector2(x, spine + thickness * 0.45 * envelope))
-		colors.append(Color(MIST, 0.0))
-		colors.append(Color(MIST, alpha * pow(envelope, 0.6)))
-		colors.append(Color(MIST, 0.0))
-	var indices := PackedInt32Array()
+		var y := rng.randf_range(-3.0, 3.0) * envelope
+		top.append(Vector2(x, y - thickness * envelope * rng.randf_range(0.8, 1.1)))
+		spine.append(Vector2(x, y))
+		low.append(Vector2(x, y + thickness * 0.45 * envelope))
+		middle.append(Color(MIST, alpha * pow(envelope, 0.6)))
+	var clear := Color(MIST, 0.0)
+	var none := PackedVector2Array()
 	for step in segments:
-		var a := step * 3
-		var b := a + 3
-		indices.append_array([a, b, a + 1, b, b + 1, a + 1, a + 1, b + 1, a + 2, b + 1, b + 2, a + 2])
-	RenderingServer.canvas_item_add_triangle_array(item.get_canvas_item(), indices, points, colors)
+		var next := step + 1
+		item.draw_primitive(PackedVector2Array([top[step], top[next], spine[next], spine[step]]),
+			PackedColorArray([clear, clear, middle[next], middle[step]]), none)
+		item.draw_primitive(PackedVector2Array([spine[step], spine[next], low[next], low[step]]),
+			PackedColorArray([middle[step], middle[next], clear, clear]), none)
 
 
 func _paint_pines(item: CanvasItem) -> void:
+	var color := Color(0.09, 0.05, 0.1)
+	var colors := PackedColorArray([color])
 	for tree: Vector2 in [Vector2(40, 780), Vector2(110, 820), Vector2(1580, 760), Vector2(1660, 720), Vector2(1880, 760), Vector2(1790, 820)]:
 		var height := 210.0 if tree.x > 1500 else 180.0
-		var color := Color(0.09, 0.05, 0.1)
 		for tier in 3:
 			var y := tree.y - height * (0.25 + tier * 0.25)
 			var half := height * (0.32 - tier * 0.07)
-			item.draw_colored_polygon(PackedVector2Array([Vector2(tree.x - half, y + height * 0.32), Vector2(tree.x, y - height * 0.18),
-				Vector2(tree.x + half, y + height * 0.32)]), color)
-		item.draw_rect(Rect2(tree.x - 8, tree.y - height * 0.12, 16, height * 0.14), color)
+			_tri(item, Vector2(tree.x - half, y + height * 0.32), Vector2(tree.x, y - height * 0.18), Vector2(tree.x + half, y + height * 0.32), colors)
+		_box(item, Rect2(tree.x - 8, tree.y - height * 0.12, 16, height * 0.14), color)
 
 
 # --- Animation ----------------------------------------------------------------------------------------------
@@ -322,9 +394,9 @@ func _process(delta: float) -> void:
 			var item: Array = wisp.get_meta(&"wisp")
 			var length: float = item[3]
 			var span := W + length + 80.0
+			# Seule la position change : un nœud déplacé reste dans le lot de ses voisins, un nœud teinté en sort.
 			wisp.position = Vector2(fposmod(float(item[1]) + float(item[5]) * t + length / 2.0 + 40.0, span) - length / 2.0 - 40.0,
 				float(item[2]) + 4.0 * sin(t * 0.25 + float(item[1])))
-			wisp.modulate.a = 0.8 + 0.2 * sin(t * 0.17 + float(item[2]))
 	_fly(delta)
 
 
@@ -432,7 +504,7 @@ class Stars:
 class Bat:
 	extends Node2D
 	## Chauve-souris en silhouette : un corps, deux oreilles et deux ailes festonnées qui battent (`flap`, de -1 à 1).
-	## Chaque forme est faite de triangles, sans découpage de polygone.
+	## Chaque forme est faite de quadrilatères (les triangles répètent leur dernier point), sans découpage de polygone.
 
 	var flap := 0.0
 
@@ -446,7 +518,7 @@ class Bat:
 			var edge := [Vector2(side * 4, -3), Vector2(side * 10, -5 - lift * 0.6), Vector2(side * 19, -3 - lift),
 				Vector2(side * 15, 2 - lift * 0.5), Vector2(side * 12, -lift * 0.3), Vector2(side * 8, 4 - lift * 0.2), Vector2(side * 3, 3)]
 			for index in edge.size() - 1:
-				draw_primitive(PackedVector2Array([shoulder, edge[index], edge[index + 1]]), colors, none)
+				draw_primitive(PackedVector2Array([shoulder, edge[index], edge[index + 1], edge[index + 1]]), colors, none)
 		draw_primitive(PackedVector2Array([Vector2(0, -6), Vector2(3.5, -1), Vector2(0, 7), Vector2(-3.5, -1)]), colors, none)
 		for side in [-1.0, 1.0]:
-			draw_primitive(PackedVector2Array([Vector2(side * 3, -4), Vector2(side * 2.5, -9), Vector2(side * 0.5, -5)]), colors, none)
+			draw_primitive(PackedVector2Array([Vector2(side * 3, -4), Vector2(side * 2.5, -9), Vector2(side * 0.5, -5), Vector2(side * 0.5, -5)]), colors, none)
