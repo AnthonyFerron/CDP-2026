@@ -141,8 +141,9 @@ gravait ses 5 cercles : 62 ms. Deux changements, au même résultat (empreintes 
   lettres du mécanisme (`RingMechanism.engrave`, une lettre taillée puis un cercle gravé à la fois). Les collisions de la crypte ne sont pas touchées : celles du décor sont dans la scène, et le cône
   du mécanisme est posé à son `_ready`, comme le socle et les cercles. En natif, la préparation tient en 8 à 18
   images. Si le joueur descend avant (il lui faut traverser le marais), elle finit d'un coup sous le noir du fondu
-  (`_apply_location`), de même quand on ouvre le mécanisme. `is_done()` dit si elle est finie : l'outil d'empreinte et
-  l'inventaire des shaders (`bake_shaders.gd`) l'attendent.
+  (`_apply_location`), de même quand on ouvre le mécanisme. `is_done()` dit si elle est finie : l'outil d'empreinte
+  l'attend. L'inventaire des shaders (`bake_shaders.gd`) la finit d'un coup (`finish_preparation()`) au bout de ses
+  12 images, pour relever le lieu toujours à la même image (`docs/shaders-menu.md`).
 
 Le dehors, vu à l'arrivée, est toujours fondu au chargement.
 
