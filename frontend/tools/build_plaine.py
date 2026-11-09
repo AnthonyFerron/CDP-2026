@@ -1366,6 +1366,32 @@ SEARCHABLE_BOOKS = {
 }
 
 
+# Brèche de la voûte de la salle de lecture : centre du trou (x, z), comme le nœud Interior/Breach de plaine.tscn
+# (library_breach.gd perce le plafond et fait tomber le rai de lumière). Entre deux poutres (z = -7,5 et -10,5), au-dessus
+# des gravats bas déjà posés.
+BREACH = (-0.2, -9.2)
+CHARRED = (0.09, 0.07, 0.06)
+
+
+def breach_rubble(scene):
+    """Sous la brèche : la pierre de catapulte qui a crevé la voûte, les éclats tombés avec elle et une solive calcinée,
+    couchée à plat contre la pierre. Posés après tout le reste : les noms et les places du décor existant ne bougent
+    pas. Entre la pierre et le rayonnage du mur du fond, le passage garde 1,2 m (sonde de saut : une solive penchée de
+    la pierre au sol y fermait une poche où l'on restait coincé)."""
+    x, z = BREACH
+    # La pierre, comme les boulets des engins de siège ; 48 cm de haut, avec sa collision.
+    furniture_fit(scene, "survival_kit/resource-stone-large", (x + 0.35, 0.0, z - 0.1), 25.0, 3.0, height=0.48)
+    # Éclats de la pierre et moellons de la voûte, de part et d'autre (les tas de rochers des kits, trop sombres sous
+    # la suie, y faisaient des tas de charbon).
+    furniture_fit(scene, "survival_kit/resource-stone-large", (x + 1.15, 0.0, z + 0.55), 70.0, 1.8, height=0.3,
+                  tilt=8.0)
+    furniture_fit(scene, "survival_kit/resource-stone-large", (x - 0.65, 0.0, z - 0.85), 200.0, 1.5, height=0.26,
+                  roll=-10.0)
+    furniture_fit(scene, "survival_kit/resource-stone-large", (x + 1.0, 0.0, z - 1.0), 130.0, 1.1)
+    # Solive calcinée, à plat contre la pierre : 20 cm de haut, on l'enjambe, sans collision.
+    scene.add_shape("box", (0.22, 0.2, 1.7), CHARRED, (x + 1.55, 0.1, z - 0.55), 72.0)
+
+
 def build_interior():
     """Intérieur sous la carte : trois salles en enfilade (lecture, scriptorium, archives) et une alcôve fermée par une
     pierre. Les rayonnages tournent leur face vers la pièce et portent leurs livres."""
@@ -1504,6 +1530,8 @@ def build_interior():
                   height=0.45)
         # Les urnes au fond, sous les bannières : au pied de l'escalier, elles fermaient les deux côtés du pupitre.
         furniture_fit(scene, "graveyard_kit/urn-round", (side * 1.35, CRYPT_FLOOR, -42.3), 0.0, 2.4, height=0.9)
+
+    breach_rubble(scene)
 
     for name in sorted(searched):
         (x, y, z), inward = searched[name]

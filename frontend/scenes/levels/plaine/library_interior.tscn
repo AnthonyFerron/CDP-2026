@@ -18,6 +18,7 @@
 [ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/box-open.glb" id="16_model"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/fantasy_town_kit/banner-red.glb" id="17_model"]
 [ext_resource type="PackedScene" path="res://assets/models/kenney/graveyard_kit/urn-round.glb" id="18_model"]
+[ext_resource type="PackedScene" path="res://assets/models/kenney/survival_kit/resource-stone-large.glb" id="19_model"]
 [ext_resource type="Script" path="res://scenes/levels/plaine/model_multimesh.gd" id="multimesh_script"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
@@ -128,6 +129,15 @@ size = Vector3(0.572, 0.45, 0.594)
 [sub_resource type="BoxShape3D" id="BoxShape3D_36"]
 size = Vector3(0.624, 0.9, 0.624)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_37"]
+size = Vector3(1.14, 0.48, 1.02)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_38"]
+size = Vector3(0.684, 0.37, 0.646)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_39"]
+size = Vector3(0.603, 0.335, 0.51)
+
 [sub_resource type="StandardMaterial3D" id="Material_1"]
 albedo_color = Color(0.2, 0.19, 0.21, 1)
 roughness = 0.9
@@ -185,6 +195,10 @@ roughness = 0.9
 
 [sub_resource type="StandardMaterial3D" id="Material_14"]
 albedo_color = Color(0.65, 0.12, 0.05, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="Material_15"]
+albedo_color = Color(0.09, 0.07, 0.06, 1)
 roughness = 0.9
 
 [sub_resource type="BoxMesh" id="Mesh_1"]
@@ -413,6 +427,10 @@ size = Vector3(0.16, 0.16, 0.008)
 [sub_resource type="BoxMesh" id="Mesh_44"]
 material = SubResource("Material_11")
 size = Vector3(0.03, 1.0813, 0.03)
+
+[sub_resource type="BoxMesh" id="Mesh_45"]
+material = SubResource("Material_15")
+size = Vector3(0.22, 0.2, 1.7)
 
 [node name="LibraryInterior" type="Node3D"]
 
@@ -675,6 +693,18 @@ transform = Transform3D(1.90526, 0, 1.1, 0, 2.2, 0, -1.1, 0, 1.90526, 1.17545, -
 
 [node name="urn_round_85" parent="Models" instance=ExtResource("18_model")]
 transform = Transform3D(2.4, 0, 0, 0, 2.4, 0, 0, 0, 2.4, 1.35, -1, -42.3)
+
+[node name="resource_stone_large_86" parent="Models" instance=ExtResource("19_model")]
+transform = Transform3D(2.71892, 0, 1.26785, 0, 3, 0, -1.26785, 0, 2.71892, 0.15, 0, -9.3)
+
+[node name="resource_stone_large_87" parent="Models" instance=ExtResource("19_model")]
+transform = Transform3D(0.61564, 0.2354, 1.67499, 0, 1.78248, -0.25051, -1.69145, 0.08568, 0.60964, 0.93117, 0.04259, -8.65685)
+
+[node name="resource_stone_large_88" parent="Models" instance=ExtResource("19_model")]
+transform = Transform3D(-1.38812, -0.24476, -0.51303, -0.26047, 1.47721, 0, 0.50524, 0.08909, -1.40954, -0.83042, 0.04949, -10.0571)
+
+[node name="resource_stone_large_89" parent="Models" instance=ExtResource("19_model")]
+transform = Transform3D(-0.70707, 0, 0.84265, 0, 1.1, 0, -0.84265, 0, -0.70707, 0.8, 0, -10.2)
 
 [node name="Shapes" type="Node3D" parent="."]
 
@@ -1486,6 +1516,10 @@ mesh = SubResource("Mesh_29")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.50912, 3.408, -32.0091)
 mesh = SubResource("Mesh_30")
 
+[node name="box_202" type="MeshInstance3D" parent="Shapes"]
+transform = Transform3D(0.30902, 0, 0.95106, 0, 1, 0, -0.95106, 0, 0.30902, 1.35, 0.1, -9.75)
+mesh = SubResource("Mesh_45")
+
 [node name="Repeated" type="Node3D" parent="."]
 
 [node name="Mesh_9_0" type="Node3D" parent="Repeated"]
@@ -2170,3 +2204,15 @@ shape = SubResource("BoxShape3D_35")
 [node name="Box163" type="CollisionShape3D" parent="Collision"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, -0, 0, 1, 1.35, -0.55, -42.3)
 shape = SubResource("BoxShape3D_36")
+
+[node name="Box164" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, 0.90631, 0.15, 0.24, -9.3)
+shape = SubResource("BoxShape3D_37")
+
+[node name="Box165" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(0.34202, 0, 0.93969, 0, 1, 0, -0.93969, 0, 0.34202, 0.95, 0.18519, -8.65)
+shape = SubResource("BoxShape3D_38")
+
+[node name="Box166" type="CollisionShape3D" parent="Collision"]
+transform = Transform3D(-0.93969, 0, -0.34202, 0, 1, 0, 0.34202, 0, -0.93969, -0.85, 0.16767, -10.05)
+shape = SubResource("BoxShape3D_39")
