@@ -102,6 +102,10 @@ func step(deadline: int) -> bool:
 			return false
 	if _keys.is_empty() and not _groups.is_empty() and _built == 0:
 		_keys = _groups.keys()
+		# Toutes les surfaces lues dans la même image (voir source), avant de bâtir les lots un à un.
+		prefetch(_groups.values(), _cache)
+		if Time.get_ticks_usec() >= deadline:
+			return false
 	while _built < _keys.size():
 		_build(_groups[_keys[_built]], _built + 1)
 		_built += 1
@@ -278,11 +282,24 @@ static func part_source(part: Array, paint: bool, cache: Dictionary) -> Mesh:
 ## 0, place) donne exactement les sommets de append_from(mesh, surface, place), puisque l'outil lit les mêmes tableaux
 ## (surface_get_arrays), sans relire le maillage. La copie peinte (painted_mesh) est relue elle aussi, une fois : le
 ## moteur range ses couleurs en octets, et c'est ce qu'il en rend que les lots doivent prendre.
+## Sur le web, la première lecture d'une image attend en plus que la carte graphique ait fini l'image précédente :
+## les regroupements par étapes lisent donc toutes leurs surfaces d'un coup, dans une même image (prefetch).
 static func source(mesh: Mesh, surface: int, cache: Dictionary) -> Mesh:
 	var key := "surface_%d_%d" % [mesh.get_instance_id(), surface]
 	if not cache.has(key):
-		cache[key] = Surface.new(mesh, surface)
+		var array_mesh := mesh as ArrayMesh
+		cache[key] = Surface.new(mesh.surface_get_arrays(surface),
+			array_mesh.surface_get_primitive_type(surface) if array_mesh else Mesh.PRIMITIVE_TRIANGLES,
+			array_mesh.surface_get_format(surface) if array_mesh else 0)
 	return cache[key]
+
+
+## Lit d'un coup les surfaces de tous les morceaux de lots (lots : des dictionnaires « parts » et « paint », voir
+## _collect) : sur le web, une seule attente de la carte graphique au lieu d'une par image.
+static func prefetch(lots: Array, cache: Dictionary) -> void:
+	for lot: Dictionary in lots:
+		for part: Array in lot.parts:
+			part_source(part, lot.paint, cache)
 
 
 ## Clé d'un matériau : ses réglages et ses textures, sans son nom ni son instance (ni sa couleur, s'il est peint
@@ -381,17 +398,16 @@ static func _prune(node: Node) -> void:
 			child.free()
 
 
-## Une surface déjà lue, que SurfaceTool.append_from lit comme le maillage d'origine (voir source).
+## Une surface déjà lue (ou des tableaux en main), que SurfaceTool.append_from lit comme un maillage (voir source).
 class Surface extends Mesh:
 	var arrays: Array
 	var _primitive := Mesh.PRIMITIVE_TRIANGLES
 	var _format := 0
 
-	func _init(mesh: Mesh, surface: int) -> void:
-		arrays = mesh.surface_get_arrays(surface)
-		if mesh is ArrayMesh:
-			_primitive = (mesh as ArrayMesh).surface_get_primitive_type(surface)
-			_format = (mesh as ArrayMesh).surface_get_format(surface)
+	func _init(surface_arrays: Array, primitive := Mesh.PRIMITIVE_TRIANGLES, format := 0) -> void:
+		arrays = surface_arrays
+		_primitive = primitive
+		_format = format
 
 	func _get_surface_count() -> int:
 		return 1

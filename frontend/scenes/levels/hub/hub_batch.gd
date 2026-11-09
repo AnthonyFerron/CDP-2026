@@ -16,8 +16,12 @@ extends Node3D
 ## lots d'une case projettent leur ombre d'un seul maillage, dessiné seulement dans les ombres (SHADOWS_ONLY). Les lots
 ## visibles n'en projettent plus. L'ombre reste exactement la même : mêmes triangles, même face cachée.
 ## Chargement : rien ne se regroupe avant la première image (le rendu est le même, en plus d'appels de dessin) ; les
-## groupes se regroupent ensuite par pas (un modèle examiné, un morceau assemblé, un lot ou une ombre bâti), pendant
-## BUDGET_MSEC par image, ceux qu'on voit d'abord. Un groupe ne change qu'à la fin de son regroupement, d'un coup : ses
+## groupes se regroupent ensuite par pas, pendant BUDGET_MSEC par image, en deux vagues : ceux qu'on voit, puis les
+## autres. Dans une vague, tous les modèles sont examinés un à un, puis toutes leurs surfaces sont lues dans une même
+## image, puis tous les lots sont assemblés morceau par morceau, puis tous les lots sont relus dans une même image pour
+## les ombres, puis chaque ombre est assemblée et chaque groupe changé. Sur le web, chaque lecture recopie un tampon de
+## la carte graphique, et la première lecture d'une image attend en plus que la carte ait fini la précédente : deux
+## attentes par vague au lieu d'une par image. Un groupe ne change qu'à la fin de son regroupement, d'un coup : ses
 ## maillages fondus y entrent quand ses modèles en sortent, on ne le voit jamais à moitié regroupé. Un groupe caché qui
 ## apparaît (une réparation, la sortie du bunker) se regroupe aussitôt, d'un bloc.
 ## Les groupes qui ne peuvent pas se montrer pendant la visite (la ruine d'un élément déjà réparé, la reconstruction
@@ -45,12 +49,15 @@ const FORMAT_MASK := 0xFF
 ## l'autre. Vidée quand tous les groupes prévus sont regroupés.
 var _cache := {}
 var _shadow_materials := {}
-## Groupes à regrouper, pris par la fin.
-var _pending: Array[Node3D] = []
+## Groupes à regrouper, dans l'ordre (ceux qu'on voit d'abord), pas encore examinés, et le nombre de ceux de la vague
+## en cours (les groupes visibles, puis les autres).
+var _queue: Array[Node3D] = []
+var _wave := 0
+## Regroupements de la vague en cours, dans le même ordre : créés au fil de l'examen, retirés quand leur groupe est
+## regroupé.
+var _jobs: Array[Job] = []
 ## Groupes laissés de côté (leave_aside) : regroupés seulement s'ils apparaissent.
 var _aside: Array[Node3D] = []
-## Groupe en cours de regroupement.
-var _job: Job
 ## Temps passé à regrouper, en millisecondes (pour les mesures).
 var batch_msec := 0.0
 
@@ -58,7 +65,7 @@ var batch_msec := 0.0
 func _ready() -> void:
 	for group in find_children("*", "Node3D", true, false):
 		if StringName(group.name) in GROUPS:
-			_pending.append(group)
+			_queue.append(group)
 	set_process(false)
 	# Le hub montre les ruines ou les reconstructions dans son propre _ready, qui passe après celui-ci.
 	_batch_shown.call_deferred()
@@ -72,8 +79,8 @@ func _exit_tree() -> void:
 ## ne sont regroupés que s'ils apparaissent quand même.
 func leave_aside(groups: Array[Node3D]) -> void:
 	for group in groups:
-		if group in _pending:
-			_pending.erase(group)
+		if group in _queue:
+			_queue.erase(group)
 			_aside.append(group)
 
 
@@ -87,8 +94,8 @@ func _batch_shown() -> void:
 		# Montré malgré tout avant la première image (aperçu d'une fin) : regroupé comme les autres.
 		if group.visible:
 			_aside.erase(group)
-			_pending.append(group)
-	for group in _pending:
+			_queue.append(group)
+	for group in _queue:
 		if group.is_visible_in_tree():
 			shown.append(group)
 		else:
@@ -96,19 +103,26 @@ func _batch_shown() -> void:
 			group.visibility_changed.connect(_batch_now.bind(group), CONNECT_ONE_SHOT)
 	for group in _aside:
 		group.visibility_changed.connect(_batch_now.bind(group), CONNECT_ONE_SHOT)
-	# _process prend les groupes par la fin : les groupes visibles passent en premier.
-	_pending.assign(hidden + shown)
-	set_process(not _pending.is_empty())
+	# Les groupes visibles d'abord, chacun dans l'ordre inverse de la scène (comme avant, où ils étaient pris par la fin).
+	shown.reverse()
+	hidden.reverse()
+	_queue.assign(shown + hidden)
+	_wave = shown.size() if not shown.is_empty() else hidden.size()
+	set_process(not _queue.is_empty())
 
 
 ## Regroupe aussitôt un groupe qui apparaît (ou tout ce qui reste de son regroupement s'il est en cours).
 func _batch_now(group: Node3D) -> void:
 	var start := Time.get_ticks_usec()
-	if _job and _job.group == group:
-		_job.step(DecorBatch.NO_DEADLINE)
-		_job = null
-	elif group in _pending or group in _aside:
-		_pending.erase(group)
+	var job: Job = null
+	for candidate in _jobs:
+		if candidate.group == group:
+			job = candidate
+	if job:
+		_jobs.erase(job)
+		job.step(DecorBatch.NO_DEADLINE)
+	elif group in _queue or group in _aside:
+		_queue.erase(group)
 		_aside.erase(group)
 		Job.new(self, group).step(DecorBatch.NO_DEADLINE)
 	_done(group)
@@ -117,21 +131,35 @@ func _batch_now(group: Node3D) -> void:
 
 func _process(_delta: float) -> void:
 	var start := Time.get_ticks_usec()
-	var deadline := start + BUDGET_MSEC * 1000
-	while true:
-		if not _job:
-			if _pending.is_empty():
-				break
-			_job = Job.new(self, _pending.pop_back())
-		if _job.step(deadline):
-			var group := _job.group
-			_job = null
-			_done(group)
-		if Time.get_ticks_usec() >= deadline:
-			break
+	_advance(start + BUDGET_MSEC * 1000)
 	batch_msec += (Time.get_ticks_usec() - start) / 1000.0
 	if is_done():
 		set_process(false)
+
+
+## Avance le regroupement jusqu'à l'instant deadline (Time.get_ticks_usec), d'au moins un pas.
+func _advance(deadline: int) -> void:
+	if _jobs.is_empty() and not _queue.is_empty():
+		# Une nouvelle vague : ses groupes, pris dans la file.
+		for index in mini(_wave, _queue.size()):
+			_jobs.append(Job.new(self, _queue.pop_front()))
+		_wave = _queue.size()
+	# Les étapes de la vague, groupe par groupe : l'examen, l'assemblage des lots et des ombres par pas ; les deux
+	# lectures (surfaces des modèles, puis lots fondus) d'un coup pour tous les groupes, sans regarder l'heure.
+	for target: int in [Job.Phase.PREFETCH, Job.Phase.LOTS, Job.Phase.READBACK, Job.Phase.SHADOWS]:
+		var atomic := target == Job.Phase.LOTS or target == Job.Phase.SHADOWS
+		for job in _jobs:
+			if not job.run_to(target, DecorBatch.NO_DEADLINE if atomic else deadline):
+				return
+		if Time.get_ticks_usec() >= deadline:
+			return
+	# Puis chaque groupe changé d'un coup, quand ses ombres sont prêtes.
+	while not _jobs.is_empty():
+		if not _jobs[0].step(deadline):
+			return
+		_done(_jobs.pop_front().group)
+		if Time.get_ticks_usec() >= deadline:
+			return
 
 
 ## Un groupe regroupé : il n'attend plus de paraître, et la mémoire des surfaces est vidée quand plus rien n'est prévu.
@@ -145,15 +173,17 @@ func _done(group: Node3D) -> void:
 
 ## Tous les groupes prévus regroupés (pour les tests et les mesures).
 func is_done() -> bool:
-	return _pending.is_empty() and not _job
+	return _queue.is_empty() and _jobs.is_empty()
 
 
 ## Regroupe d'un bloc tout ce qui reste, groupes laissés de côté compris (outils : empreinte du décor regroupé).
 func finish_all() -> void:
 	for group in _aside.duplicate():
 		_batch_now(group)
-	while not is_done():
-		_batch_now(_job.group if _job else _pending.back())
+	while not _jobs.is_empty():
+		_batch_now(_jobs[0].group)
+	while not _queue.is_empty():
+		_batch_now(_queue[0])
 
 
 ## Planches, cadres, clous et poteaux d'un panneau (SignBoard) fondus en un seul maillage, leur couleur dans les
@@ -228,7 +258,7 @@ class Job:
 	var _phase := Phase.SCAN
 	var _done := false
 
-	enum Phase { SCAN, LOTS, SHADOWS, FINISH }
+	enum Phase { SCAN, PREFETCH, LOTS, READBACK, SHADOWS, FINISH }
 
 	func _init(batch: Node3D, target: Node3D) -> void:
 		_batch = batch
@@ -249,6 +279,16 @@ class Job:
 		return _done
 
 
+	## Avance jusqu'à l'étape target (au moins d'un pas s'il le faut), ou jusqu'à l'instant deadline ; rend vrai quand
+	## l'étape est atteinte.
+	func run_to(target: int, deadline: int) -> bool:
+		while _phase < target and not _done:
+			_advance()
+			if _phase < target and Time.get_ticks_usec() >= deadline:
+				return false
+		return true
+
+
 	func _advance() -> void:
 		match _phase:
 			Phase.SCAN:
@@ -257,12 +297,23 @@ class Job:
 					_next_child += 1
 					return
 				_lot_list = _lots.values()
+				_phase = Phase.PREFETCH
+			Phase.PREFETCH:
+				DecorBatch.prefetch(_lot_list, _cache)
 				_phase = Phase.LOTS
 			Phase.LOTS:
 				if _next_lot < _lot_list.size():
 					_lot_step(_lot_list[_next_lot])
 					return
 				_shadow_list = _shadows.values()
+				_phase = Phase.READBACK
+			Phase.READBACK:
+				# Les lots relus, comme SurfaceTool.append_from les lirait : l'ombre les reprend tels que le moteur les
+				# a rangés (normales et tangentes compressées).
+				for shadow: Dictionary in _shadow_list:
+					for lot: MeshInstance3D in shadow.parts:
+						shadow.arrays.append(DecorBatch.Surface.new(lot.mesh.surface_get_arrays(0),
+							Mesh.PRIMITIVE_TRIANGLES, (lot.mesh as ArrayMesh).surface_get_format(0)))
 				_phase = Phase.SHADOWS
 			Phase.SHADOWS:
 				if _next_shadow < _shadow_list.size():
@@ -385,13 +436,13 @@ class Job:
 		# L'ombre du lot passe dans celle de sa case (les petits objets à part : elle s'efface avec eux).
 		var shadow_key := "%d_%d_%s_%d" % [lot.square.x, lot.square.y, lot.small, cull]
 		if not _shadows.has(shadow_key):
-			_shadows[shadow_key] = {"cull": cull, "small": lot.small, "square": lot.square, "parts": []}
+			_shadows[shadow_key] = {"cull": cull, "small": lot.small, "square": lot.square, "parts": [], "arrays": []}
 		_shadows[shadow_key].parts.append(instance)
 		instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
 
 	## Un pas de l'ombre d'une case : un lot ajouté, ou l'ombre finie (les maillages de ses lots fondus en un seul,
-	## dessiné seulement dans les ombres).
+	## dessiné seulement dans les ombres). Chaque lot est repris tel qu'il a été relu (étape READBACK).
 	func _shadow_step(shadow: Dictionary) -> void:
 		if _next_part == 0:
 			_tool = SurfaceTool.new()
@@ -401,7 +452,7 @@ class Job:
 			_center /= shadow.parts.size()
 		if _next_part < shadow.parts.size():
 			var lot: MeshInstance3D = shadow.parts[_next_part]
-			_tool.append_from(lot.mesh, 0, Transform3D(Basis(), lot.position - _center))
+			_tool.append_from(shadow.arrays[_next_part], 0, Transform3D(Basis(), lot.position - _center))
 			_next_part += 1
 			return
 		var mesh := _tool.commit()
