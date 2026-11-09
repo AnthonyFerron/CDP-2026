@@ -172,6 +172,10 @@ Rien à corriger dans le jeu :
   - relevés 3 à 5 sous 8 boucles de calcul (`nice -n 10`, autant que l'enveloppe de Godot) : charge de 4,6 à 8,0, en 30 à 32 s ;
   - relevés 6 à 8 sous ces boucles, avec un autre relevé lancé en même temps par l'enveloppe : charge de 9,0 à 9,9, en 33 à 36 s. Les trois relevés parallèles sont « à jour » eux aussi.
   - Journaux : `.claude/captures/shaders-stable/serie/` (hors dépôt).
+- **Suite complète** (`run_all.sh`, depuis la branche) :
+  - `bake_plaine_check`, `bake_lieux_check` et `bake_shaders_check` : à jour ;
+  - 0 échec partout (`hub_test`, `music_test`, `sound_test`, `gamepad_test`, `menu_test`, `marais_puzzle_test` et `village_test` compris), sauf `hub_walk_0` et `hub_walk_4`, qui ont leurs 2 échecs voulus ;
+  - `run_tests` : 52 réussis.
 
 ## Bruit dans les journaux de tests
 
