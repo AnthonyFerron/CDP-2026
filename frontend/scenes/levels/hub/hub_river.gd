@@ -209,6 +209,18 @@ func _is_clear(point: Vector2, margin: float) -> bool:
 	return true
 
 
+## Vrai si le disque (point, radius) touche une case gravillonnée du sol (une couleur par case de 2 m, prise au centre
+## de la case : HubTerrain.gravel_mask).
+func _on_gravel(point: Vector2, radius: float) -> bool:
+	var origin := HubTerrain.GRID_ORIGIN
+	var size := HubTerrain.CELL_SIZE
+	for i in range(floori((point.x - radius - origin.x) / size), floori((point.x + radius - origin.x) / size) + 1):
+		for j in range(floori((point.y - radius - origin.y) / size), floori((point.y + radius - origin.y) / size) + 1):
+			if terrain.gravel_mask(origin.x + (i + 0.5) * size, origin.y + (j + 0.5) * size) > 0.0:
+				return true
+	return false
+
+
 ## Roseaux en touffes au bord de l'eau, pierres sur les berges et dans le courant, nénuphars dans les eaux calmes.
 func _build_life() -> void:
 	var course := _course()
@@ -257,11 +269,18 @@ func _build_life() -> void:
 		for step in 18:
 			var spot := Vector2(pond.x, pond.y) + Vector2.from_angle(TAU * step / 18.0) * (pond.z + 0.5)
 			var ground := maxf(terrain.surface_height(spot.x, spot.y), HubTerrain.POND_LEVEL - 0.2)
+			# L'allée du jardin passe à l'ouest de l'étang : rien sur ses cases gravillonnées (les tirages restent les
+			# mêmes, pour ne rien déplacer d'autre sur les rives).
+			var on_alley := _on_gravel(spot, 0.5)
 			var group := _rng.randi() % reeds.size()
-			reeds[group].append(Transform3D(Basis(Vector3.UP, _rng.randf() * TAU).scaled(Vector3.ONE * _rng.randf_range(0.9, 1.6)), Vector3(spot.x, ground - 0.05, spot.y)))
+			var tuft := Transform3D(Basis(Vector3.UP, _rng.randf() * TAU).scaled(Vector3.ONE * _rng.randf_range(0.9, 1.6)), Vector3(spot.x, ground - 0.05, spot.y))
+			if not on_alley:
+				reeds[group].append(tuft)
 			if step % 3 == 0:
 				var stone := _rng.randi() % rocks.size()
-				rocks[stone].append(Transform3D(Basis(Vector3.UP, _rng.randf() * TAU).scaled(Vector3.ONE * 1.6), Vector3(spot.x, ground - 0.1, spot.y)))
+				var pebble := Transform3D(Basis(Vector3.UP, _rng.randf() * TAU).scaled(Vector3.ONE * 1.6), Vector3(spot.x, ground - 0.1, spot.y))
+				if not on_alley:
+					rocks[stone].append(pebble)
 	# Pierres : sur la berge, et quelques-unes à moitié dans l'eau.
 	for attempt in rock_count:
 		var index := _rng.randi_range(1, points.size() - 2)

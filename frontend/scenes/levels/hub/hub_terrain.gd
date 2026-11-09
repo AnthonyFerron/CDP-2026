@@ -60,6 +60,10 @@ const PARK_ALLEYS := [
 ]
 ## Rond-point de la statue, au croisement des allées : centre et rayon.
 const PARK_CIRCLE := Vector3(42.0, -70.0, 6.0)
+## Parterres du jardin (beds de tools/build_hub.py : build_park), carrés de 4,2 m bordés de buis. Trois d'entre eux
+## touchent le gravier du rond-point par un coin : le sol y reste de pelouse, sous les fleurs.
+const PARK_BEDS: Array[Vector2] = [Vector2(36.0, -58.0), Vector2(36.0, -64.0), Vector2(48.0, -58.0), Vector2(48.0, -64.0),
+	Vector2(47.6, -76.4)]
 
 ## Le village occupe ce rayon autour du feu de camp ; une rue en fait le tour entre ses deux rangs de maisons.
 const VILLAGE_RADIUS := 46.0
@@ -348,6 +352,9 @@ func gravel_mask(x: float, z: float) -> float:
 	var point := Vector2(x, z)
 	if not PARK_AREA.grow(2.0).has_point(point):
 		return 0.0
+	for bed in PARK_BEDS:
+		if absf(x - bed.x) < 2.0 and absf(z - bed.y) < 2.0:
+			return 0.0
 	var mask := 1.0 - smoothstep(0.9, 1.5, alley_distance(point, true, 2.0))
 	var circle := absf(point.distance_to(Vector2(PARK_CIRCLE.x, PARK_CIRCLE.y)) - PARK_CIRCLE.z)
 	return maxf(mask, 1.0 - smoothstep(0.9, 1.5, circle))
