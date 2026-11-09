@@ -37,7 +37,24 @@ Le journal complet de la nuit est sur le serveur, dans `~/cdp-work/JOURNAL.md`. 
 - **`arch_fill()` :** ses marches suivent l'intrados relevé du mur voûté à 4 cm près (22 cm de mur invisible et 10 cm d'entrée avant), dans les archives de la Plaine, les 12 maisons et le bureau de la mairie du Village.
 - **Ruisseau du Village :** plafonné comme les sources du hub ; sur le pont, de -6,3 à -9,8 dBFS de crête (`docs/sons.md`).
 
+## Vérifié et corrigé le 9 novembre (`fix/verif-hub`)
+- **Hub, passe complète** après les portes voûtées, le jardin et la rivière qui reprennent vie, les villageois et la
+  mine refaite : grille de marche (dehors, abri, 28 bâtiments et observatoire au quart de mètre) à 0, 2 et 4 livres
+  (4 livres : l'épilogue, villageois à leurs pauses) : 0 trou, 0 ressaut, 0 chute, 0 glissade, 0 mur invisible hors
+  des berges, de la limite et de pentes visibles. Sonde de saut sur tout le hub (pas d'1 m), l'abri et l'observatoire :
+  0 point coincé. Villageois : 4 tournées de chacun, départ du feu et de leur pause, 0 traversée, 0 écart au sol,
+  0 blocage, aucune pause qui ferme un passage. Captures tous les 4 m (898 vues par palier, à 0 et 4 livres).
+- **Corrigés** (`agents/hub/PROBLEMES.md` n° 37 à 43) : éboulis des maisons en ruine sans collision et devant la
+  porte ; herbe, fleurs et champignons du jardin sur le gravier des allées et dans les coins des parterres ;
+  champignons au-dessus du genou ; roseaux de l'étang sur l'allée ; gravier dans trois parterres ; rides de la rivière
+  cassées en bandes au moulin ; fentes noires au seuil des 54 portes voûtées.
+
 ## Corrections relevées, non faites
+- **Hub (9 novembre) :** restes acceptés, détaillés dans `agents/hub/PROBLEMES.md` (passe du 9 novembre) : 4 pousses
+  du jardin qui mordent de 3 à 5 cm sur une case gravillonnée ; recoins d'une à quinze cases au quart de mètre derrière
+  des meubles (aucun passage fermé) ; buissons du décor dispersé contre des troncs et des rochers, hors des zones
+  changées ; arbustes sur le pavé de la cour du château (décor voulu) ; touffes de champignons relevées par la grille
+  (0,4 à 0,5 m, sous le genou, traversables comme les fleurs).
 - **Village :** grille de captures à 4 m du bourg faite le 9 novembre (`features/village-recit`, `agents/village/PROBLEMES.md` n° 51 à 53) : reflet du soleil sur le sol corrigé (sol mat), ardoise de la boulangère élargie. Les chutes du bout nord du ruisseau et la marche au bout sud sont vérifiées (8 novembre, plus haut).
 - **Désert :** 14 contacts légers restants, chacun avec un triangle visible à moins de 1 m (rochers de la bordure, deux tas de briques, colonne tombée, linteau de la porte en ruine, deux enveloppes de ruines, deux collisions à la forme exacte), acceptés : liste dans `agents/desert/PROBLEMES.md`.
 - **`hub_props.tscn` à régénérer après fusion :** `arch_fill()` a changé dans `build_plaine.py` (8 novembre, `fix/verif-marche`). `build_hub.py` l'appelle pour les 54 portes voûtées du hub : relancé, il ajoute leurs marches (648 boîtes de plus, et la renumérotation des autres). Non fait sur cette branche, l'agent du hub travaillant sur ces scènes.

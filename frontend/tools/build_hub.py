@@ -14,7 +14,7 @@ import random
 from pathlib import Path
 
 from build_plaine import (MEDIEVAL, MODEL_BOXES, OUTWARD_ANGLES, WALL_HEIGHT, WALL_SCALE, Scene, arch_fill, doorway,
-                          multiply, rotation_x, rotation_y, rotation_z, wall)
+                          DOORWAY_WIDTH, WALL_THICKNESS, multiply, rotation_x, rotation_y, rotation_z, wall)
 from build_plaine import furniture as _furniture
 
 # Boîtes englobantes (coin, taille, à l'échelle 1) des modèles ajoutés pour le hub.
@@ -572,7 +572,12 @@ def furnish(scene, house, ruined, rng):
     if ruined:
         fallen_shelf(r, -hu + 1.0, 1.0, 90.0 + rng.uniform(-10, 10), width=1.4)
         r.add("survival_kit/resource-planks", rng.uniform(-1, 1), rng.uniform(-1, 1), rng.uniform(0, 360), 3.0)
-        r.add("castle_kit/rocks-small", -hu + 1.0, hv - 1.2, rng.uniform(0, 360), 1.4)
+        # Éboulis dans le coin de devant, du côté opposé à la porte (il était devant la porte des maisons ouvertes
+        # à gauche, et on le traversait en entrant) ; collision à sa taille : il monte à 0,7 m.
+        rubble_u = -hu + 1.0 if r.door_u >= 0 else hu - 1.0
+        rubble_yaw = rng.uniform(0, 360)
+        r.add("castle_kit/rocks-small", rubble_u, hv - 1.2, rubble_yaw, 1.4)
+        r.box(rubble_u, hv - 1.2, 0.3, (1.1, 0.6, 1.2), rubble_yaw)
         return
     shelf(r, r.wall_u - 0.3, 1.0, -90.0, width=1.4, height=1.3, depth=0.5, boards=3, books=False,
           items=[("food_kit/bowl", -0.35, 1, 0.8), ("food_kit/plate", 0.35, 1, 0.5), ("food_kit/mug", 0.0, 2, 0.6)])
@@ -643,6 +648,7 @@ def ruined_house(scene, rng, house, furnisher=None):
         if side == door_side and index == count // 2:
             doorway(scene, center, outward)
             arch_fill(scene, center, outward)
+            door_sill(scene, center, outward)
             continue
         roll = rng.random()
         if roll < 0.2:
@@ -663,6 +669,18 @@ def ruined_house(scene, rng, house, furnisher=None):
     house_floor(scene, rng, house, True)
     (furnisher or furnish)(scene, house, True, rng)
     fallen_beams(scene, rng, house, rng.randint(1, 2))
+
+
+def door_sill(scene, center, outward):
+    """Seuil de planches dans l'épaisseur du mur voûté, sous l'arche : les bouts entaillés des lattes du plancher
+    s'arrêtent au bord de la case, et sous l'arche on voyait par leurs encoches la terre sombre sous le bâtiment
+    (des fentes noires au seuil, de dedans comme de dehors). Les lattes du seuil courent le long du mur : leurs bouts
+    entaillés vont dans les jambages. 1,9 m (le passage de doorway()) sur 0,38 m (1 cm en deçà des deux faces du mur),
+    le dessus à 3,5 cm, sous le plancher (4 cm) et au-dessus du sol."""
+    x, z = center
+    # Les lattes du modèle courent sur son axe z : tourné d'un quart de tour pour un mur le long de x.
+    degrees = 0.0 if outward[0] else 90.0
+    scene.add("fantasy_town_kit/planks", (x, 0.035 - 0.06 * TILE, z), degrees, (WALL_THICKNESS - 0.12, TILE, DOORWAY_WIDTH))
 
 
 def fallen_beams(scene, rng, house, count):
@@ -700,6 +718,7 @@ def rebuilt_house(scene, rng, house, furnisher=None, kind=None):
         if side == door_side and index == count // 2:
             doorway(scene, center, outward)
             arch_fill(scene, center, outward)
+            door_sill(scene, center, outward)
             along = (outward[1], outward[0])
             lantern = (center[0] + outward[0] * 0.5 + along[0] * 1.6, center[1] + outward[1] * 0.5 + along[1] * 1.6)
             scene.add("fantasy_town_kit/lantern", (lantern[0], 0.0, lantern[1]), 0.0, 2.2)
@@ -2403,6 +2422,8 @@ def build_orchard(scene, rng):
 # ---------------------------------------------------------------------------------------------------------------
 PARK = (29.0, -90.0, 52.0, -52.0)
 PARK_CENTER = (42.0, -70.0)
+# Parterres du jardin, comme PARK_BEDS de hub_terrain.gd (le sol y reste de pelouse).
+PARK_BEDS = [(36.0, -58.0), (36.0, -64.0), (48.0, -58.0), (48.0, -64.0), (47.6, -76.4)]
 KIOSK = (36.0, -82.0)
 
 
@@ -2445,7 +2466,7 @@ def build_park(scene, rng):
         scene.add_box((x, 1.0, z), (0.45, 2.0, 0.45))
 
     # Parterres : quatre carrés bordés de buis bas, au sud et au nord-est. Fleuris au premier livre.
-    beds = [(36.0, -58.0), (36.0, -64.0), (48.0, -58.0), (48.0, -64.0), (47.6, -76.4)]
+    beds = PARK_BEDS
     scene.repair("ParkBeds", 1)
     for x, z in beds:
         for dx, dz in ((-1.4, -1.4), (1.4, 1.4), (1.4, -1.4), (-1.4, 1.4)):
@@ -2547,6 +2568,9 @@ def build_park(scene, rng):
                + [(kx, kz, 3.8), (47.4, -84.8, 5.6), (43.0, -89.0, 2.2), (cx + 2.9, cz + 2.0, 2.0)])
 
     def lawn(x, z, margin=0.0):
+        """Vrai si une pousse de rayon margin tient sur la pelouse : à l'écart des allées et du rond-point, de leurs
+        cases gravillonnées (le sol prend une couleur par case de 2 m : une allée y mord jusqu'à 2 m de son axe, plus
+        en biais), des parterres (des carrés : leurs coins débordaient d'une exclusion ronde) et de ce qui se dresse."""
         if not (x0 + 1.6 < x < x1 - 1.6 and z0 + 1.6 < z < z1 - 1.6):
             return False
         for (ax, az), (bx, bz) in PARK_ALLEY_SEGMENTS:
@@ -2555,19 +2579,26 @@ def build_park(scene, rng):
         ring = math.hypot(x - cx, z - cz)
         if abs(ring - 6.0) < 1.9 + margin or ring < 4.4:
             return False
+        if park_gravel(x, z, margin):
+            return False
+        if any(max(abs(x - bx), abs(z - bz)) < 2.4 + margin for bx, bz in beds):
+            return False
         return all(math.hypot(x - bx, z - bz) > radius + margin for bx, bz, radius in blocked)
 
     def scatter_lawn(host, count, models, scales, seed):
         rng_life = random.Random(seed)
         scene.rebuilt(host)
         placed = 0
-        for attempt in range(count * 40):
+        for attempt in range(count * 200):
             if placed >= count:
                 break
             x, z = rng_life.uniform(x0, x1), rng_life.uniform(z0, z1)
-            if not lawn(x, z):
+            model = models[placed % len(models)]
+            scale_range = PLANT_SCALES.get(model, scales)
+            # Rayon de la pousse à sa plus grande échelle : 70 % de son emprise (les feuilles débordent du pied).
+            if not lawn(x, z, PLANT_FOOT.get(model, 0.1) * scale_range[1]):
                 continue
-            scene.add(models[placed % len(models)], (x, -0.02, z), rng_life.uniform(0, 360), rng_life.uniform(*scales))
+            scene.add(model, (x, -0.02, z), rng_life.uniform(0, 360), rng_life.uniform(*scale_range))
             placed += 1
         scene.group = "Fixed"
 
@@ -2600,6 +2631,34 @@ def build_park(scene, rng):
                                        "nature_kit/flower_redC", "nature_kit/flower_yellowC", "nature_kit/flower_purpleC",
                                        "nature_kit/mushroom_redGroup", "nature_kit/flower_yellowA", "nature_kit/mushroom_tanGroup"),
                  (2.2, 3.0), 5825)
+
+
+# Demi-emprise des pousses du jardin, à l'échelle 1 : 35 % du plus grand côté de leur boîte (mesurées avec
+# tests/scenes/aabb.gd), soit 70 % de l'emprise, le pied et non la pointe des feuilles.
+PLANT_FOOT = {"nature_kit/grass": 0.137, "nature_kit/grass_large": 0.144, "nature_kit/grass_leafs": 0.091,
+              "nature_kit/grass_leafsLarge": 0.172, "nature_kit/flower_redB": 0.084, "nature_kit/flower_yellowB": 0.084,
+              "nature_kit/flower_purpleB": 0.084, "nature_kit/flower_redC": 0.063, "nature_kit/flower_yellowC": 0.063,
+              "nature_kit/flower_purpleC": 0.063, "nature_kit/flower_yellowA": 0.063, "nature_kit/mushroom_redGroup": 0.095,
+              "nature_kit/mushroom_tanGroup": 0.095}
+# Les touffes de champignons montent à 0,25 m à l'échelle 1 : jusqu'à 2,0, elles restent sous le genou (0,5 m), comme
+# le reste de la prairie, qu'on traverse (à 3,0 elles montaient à 0,75 m).
+PLANT_SCALES = {"nature_kit/mushroom_redGroup": (1.6, 2.0), "nature_kit/mushroom_tanGroup": (1.6, 2.0)}
+
+
+def park_gravel(x, z, radius):
+    """Vrai si le disque (x, z, radius) touche une case gravillonnée du sol du jardin : comme gravel_mask de
+    hub_terrain.gd, pris au centre de chaque case de 2 m (GRID_ORIGIN -140, CELL_SIZE 2), où le sol prend sa
+    couleur."""
+    for i in range(math.floor((x - radius + 140.0) / 2.0), math.floor((x + radius + 140.0) / 2.0) + 1):
+        for j in range(math.floor((z - radius + 140.0) / 2.0), math.floor((z + radius + 140.0) / 2.0) + 1):
+            px, pz = -140.0 + i * 2.0 + 1.0, -140.0 + j * 2.0 + 1.0
+            if any(abs(px - bx) < 2.0 and abs(pz - bz) < 2.0 for bx, bz in PARK_BEDS):
+                continue
+            alley = min(segment_distance(px, pz, ax, az, bx, bz) for (ax, az), (bx, bz) in PARK_ALLEY_SEGMENTS)
+            circle = abs(math.hypot(px - PARK_CENTER[0], pz - PARK_CENTER[1]) - 6.0)
+            if min(alley, circle) < 1.5:
+                return True
+    return False
 
 
 # Allées du jardin, comme PARK_ALLEYS dans hub_terrain.gd : chaque tronçon (début, fin).
