@@ -22,6 +22,10 @@ extends Node3D
 ## Le mur dépasse d'autant le plus haut point qu'un saut en courant (vitesse de course et saut du joueur) atteint
 ## en arrivant sur lui, depuis le sol des environs : un mètre de plus couvre un élan pris sur une caisse ou un rocher.
 @export var wall_margin := 1.2
+## Points du cours (1,5 m) pris de part et d'autre pour orienter les travers de la nappe d'eau (_smoothed_normals) :
+## à 6, le pire écart entre les deux bords d'une maille passe de 16,6 à 1,5, et la nappe dépasse encore le bord de
+## l'eau d'1,8 m au moins.
+const WATER_SMOOTHING := 6
 const SPRINT_SPEED := 8.0
 const JUMP_VELOCITY := 5.5
 ## Portée du regard en arrière depuis le mur, en mètres : au-delà, un saut redescend sous son point de départ.
@@ -83,7 +87,7 @@ func _build_river_water() -> void:
 	var course := _course()
 	var points: Array[Vector2] = course[0]
 	var widths: Array[float] = course[1]
-	var normals: Array[Vector2] = course[2]
+	var normals := _smoothed_normals(points, WATER_SMOOTHING)
 	var tool := SurfaceTool.new()
 	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var travelled := 0.0
@@ -110,6 +114,21 @@ func _build_river_water() -> void:
 	water.material_override = water_material
 	water.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(water)
+
+
+## Travers de la nappe d'eau : la direction du cours moyennée sur window points de part et d'autre. Au moulin, le lit
+## fait un S serré (rayon de 9 m environ) : des travers perpendiculaires au cours pinçaient la nappe côté intérieur
+## (un bord de 0,2 m en face d'un bord de 3,2 m), et les rides, tirées le long du cours (UV.y), y cassaient en bandes
+## à chaque travers. Moyennés, les travers restent presque parallèles dans le S : la nappe s'y couche en biais, sans
+## pincement, et couvre toujours le lit (2,4 m de marge sous les berges). Les berges, les roseaux et les murs gardent
+## les travers exacts du cours (_course).
+func _smoothed_normals(points: Array[Vector2], window: int) -> Array[Vector2]:
+	var normals: Array[Vector2] = []
+	for index in points.size():
+		var ahead := points[mini(index + window, points.size() - 1)]
+		var behind := points[maxi(index - window, 0)]
+		normals.append((ahead - behind).normalized().orthogonal())
+	return normals
 
 
 func _build_ponds() -> void:
