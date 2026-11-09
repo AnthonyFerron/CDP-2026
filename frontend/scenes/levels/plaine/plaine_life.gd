@@ -1,9 +1,9 @@
 class_name PlaineLife
 extends Node3D
 ## Vie des plaines d'Hexcole : des corbeaux tournent au-dessus des engins de siège, d'autres guettent sur la tour,
-## les croix et la stèle des tombes, et s'envolent quand le joueur approche, avant de revenir plus tard ; les
-## bannières déchirées ondulent dans le vent. Celles qui sont plantées dans les positions de Vibelandia portent ses
-## couleurs, les autres le bleu de Codia. Tout est animé par ce script, sans collision.
+## les croix et la stèle des tombes, et s'envolent quand le joueur approche ou quand le volcan gronde (startle), avant
+## de revenir plus tard ; les bannières déchirées ondulent dans le vent. Celles qui sont plantées dans les positions de
+## Vibelandia portent ses couleurs, les autres le bleu de Codia. Tout est animé par ce script, sans collision.
 
 ## Centre et rayon du vol des corbeaux, au-dessus des engins de siège et des tombes.
 const FLOCK_CENTER := Vector3(-6.0, 13.0, 42.0)
@@ -96,6 +96,15 @@ func _dye(model: Node3D, materials: Dictionary) -> void:
 				dyed.albedo_texture = vibelandia_colors
 				materials[source] = dyed
 			mesh.set_surface_override_material(surface, materials[source])
+
+
+## Le volcan gronde : les corbeaux perchés s'envolent tous, et ceux qui volent battent des ailes un moment.
+func startle() -> void:
+	for crow in _crows:
+		crow.timer = 0.0
+		if crow.perched:
+			crow.perched = false
+			crow.angle = atan2(crow.position.z - FLOCK_CENTER.z, crow.position.x - FLOCK_CENTER.x)
 
 
 ## Haut d'un modèle, au milieu de sa boîte : le sommet d'une croix.

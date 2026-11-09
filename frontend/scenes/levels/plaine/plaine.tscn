@@ -46,6 +46,8 @@
 [ext_resource type="AudioStream" path="res://assets/audio/cave_ambience.wav" id="46_cave"]
 [ext_resource type="Resource" path="res://scenes/levels/plaine/plaine_bake.res" id="47_bake"]
 [ext_resource type="Resource" path="res://scenes/levels/plaine/plaine_decor_bake.res" id="48_decor_bake"]
+[ext_resource type="Script" path="res://scenes/levels/plaine/plaine_rumble.gd" id="49_rumble"]
+[ext_resource type="AudioStream" path="res://assets/audio/volcano_eruption.wav" id="50_eruption"]
 [ext_resource type="Texture2D" path="res://assets/models/kenney/castle_kit/Textures/variation-b.png" id="51_vibelandia"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_obelisk"]
@@ -637,6 +639,13 @@ autoplay = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, -6, -215)
 script = ExtResource("90_volcano")
 distant = true
+
+[node name="VolcanoRumble" type="Node3D" parent="Exterior" node_paths=PackedStringArray("life", "world")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 74, -215)
+script = ExtResource("49_rumble")
+life = NodePath("../Life")
+world = NodePath("../../WorldEnvironment")
+sound = ExtResource("50_eruption")
 
 [node name="Interior" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -40, 0)
