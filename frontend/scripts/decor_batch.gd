@@ -1,4 +1,4 @@
-class_name MaraisBatch
+class_name DecorBatch
 extends RefCounted
 ## Regroupe le décor fixe par matériau pour le web : dans chaque case, toutes les surfaces qui partagent un matériau,
 ## une même surcouche de mousse ou de poussière et une même taille sont fondues en un seul maillage : un appel de
@@ -13,6 +13,9 @@ extends RefCounted
 ## Deux façons de regrouper, au même résultat : d'un bloc (merge), ou par étapes (new, puis step jusqu'à ce qu'il
 ## rende vrai) pour étaler le travail sur plusieurs images. Le Marais regroupe ainsi la crypte, cachée à l'arrivée,
 ## quelques millisecondes par image (marais.gd).
+## Servent au Marais (décor, crypte, bêtes), à la Plaine (ruines, champ de bataille, archives) et, pour la signature
+## des matériaux et leur peinture dans les sommets, au regroupement du hub (hub_batch.gd), qui garde ses propres règles
+## (groupes réparables, ombres par case, modèles posés).
 
 ## Plus grande dimension (m) sous laquelle un objet est petit (cierge, fleur, urne, os) : sans ombre, effacé au-delà
 ## de SMALL_RANGE, dans une brume qui en cache déjà les trois quarts.
@@ -28,7 +31,7 @@ const NO_DEADLINE := 9223372036854775807
 ## de ses propriétés (hors resource_*, et hors couleur s'il est peint). Deux matériaux dans le même état ont la même
 ## liste de propriétés stockées et les mêmes valeurs, donc la même signature : elle n'est calculée qu'une fois. Lire
 ## la liste des propriétés d'un matériau (get_property_list) coûtait l'essentiel du regroupement : 129 matériaux
-## distincts dans le Marais, pour 12 signatures. Vidée quand le Marais se ferme (forget).
+## distincts dans le Marais pour 12 signatures, 227 dans le hub pour 11. Vidée quand le lieu se ferme (forget).
 static var _by_state := {}
 ## Propriétés de chaque classe de matériau (ClassDB), lues une fois.
 static var _class_properties := {}
@@ -38,6 +41,7 @@ var _cell: float
 var _shadows: bool
 var _recursive: bool
 var _fade: bool
+var _skip: Array[String]
 var _inverse: Transform3D
 ## Maillages à examiner, puis le prochain à examiner.
 var _items: Array[Node] = []
@@ -47,26 +51,29 @@ var _groups := {}
 var _keys: Array = []
 var _built := 0
 var _merged: Array[MeshInstance3D] = []
-var _signatures := {}
-var _painted := {}
+## Signatures par instance de matériau, matériaux et surfaces peints (voir signature).
+var _cache := {}
 var _count := 0
 var _done := false
 
 
 ## Prépare le regroupement des maillages fixes sous root, par cases de cell mètres. shadows : faux sous terre, où
 ## aucune lumière ne projette d'ombre. recursive : faux pour ne prendre que les enfants directs (les pièces mobiles
-## d'une bête restent à part). fade : faux pour que rien ne s'efface au loin. Rien n'est lu avant le premier step.
-func _init(root: Node3D, cell: float, shadows: bool, recursive := true, fade := true) -> void:
+## d'une bête restent à part). fade : faux pour que rien ne s'efface au loin. skip : préfixes des noms de modèles
+## laissés à part (animés par un autre script, comme les bannières de la Plaine). Rien n'est lu avant le premier step.
+func _init(root: Node3D, cell: float, shadows: bool, recursive := true, fade := true, skip: Array[String] = []) -> void:
 	_root = root
 	_cell = cell
 	_shadows = shadows
 	_recursive = recursive
 	_fade = fade
+	_skip = skip
 
 
 ## Fond les maillages fixes sous root, d'un bloc (voir _init). Rend le nombre de maillages fondus.
-static func merge(root: Node3D, cell: float, shadows: bool, recursive := true, fade := true) -> int:
-	var batch := MaraisBatch.new(root, cell, shadows, recursive, fade)
+static func merge(root: Node3D, cell: float, shadows: bool, recursive := true, fade := true,
+		skip: Array[String] = []) -> int:
+	var batch := DecorBatch.new(root, cell, shadows, recursive, fade, skip)
 	batch.step(NO_DEADLINE)
 	return batch.merged_count()
 
@@ -112,8 +119,7 @@ func step(deadline: int) -> bool:
 	_merged.clear()
 	_groups.clear()
 	_keys.clear()
-	_signatures.clear()
-	_painted.clear()
+	_cache.clear()
 	_done = true
 	return true
 
@@ -129,25 +135,27 @@ func merged_count() -> int:
 func _collect(item: MeshInstance3D) -> void:
 	if not _mergeable(item, _root):
 		return
+	var model := _model_name(_root, item)
+	if _skip.any(func(prefix: String) -> bool: return model.begins_with(prefix)):
+		return
 	var place := item.global_transform
 	var box := place * item.mesh.get_aabb()
 	var longest := maxf(box.size.x, maxf(box.size.y, box.size.z))
 	var square := Vector2i(floori(box.get_center().x / _cell), floori(box.get_center().z / _cell))
-	var model := _model_name(_root, item)
 	for surface in item.mesh.get_surface_count():
 		var material: Material = item.material_override if item.material_override else item.mesh.surface_get_material(surface)
-		var paint := _paintable(material)
+		var paint := paintable(material)
 		var tint: Color = (material as BaseMaterial3D).albedo_color if paint else Color.WHITE
 		# Ce qui luit se voit de loin dans la brume : jamais effacé.
-		var small := _fade and longest < SMALL and not _glows(material)
+		var small := _fade and longest < SMALL and not glows(material)
 		var cast := _shadows and not small and item.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		var format: int = (item.mesh as ArrayMesh).surface_get_format(surface) & FORMAT_MASK if item.mesh is ArrayMesh else 0
 		if paint:
 			format |= Mesh.ARRAY_FORMAT_COLOR
-		var key := "%s_%d_%d_%s_%s_%d_%d" % [_signature(material), _id(item.material_overlay), format, cast,
+		var key := "%s_%d_%d_%s_%s_%d_%d" % [signature(material, _cache), instance_id(item.material_overlay), format, cast,
 			small, square.x, square.y]
 		if not _groups.has(key):
-			_groups[key] = {"material": _painted_material(material) if paint else material,
+			_groups[key] = {"material": painted_material(material, _cache) if paint else material,
 				"overlay": item.material_overlay, "cast": cast, "small": small, "paint": paint, "square": square,
 				"parts": [], "pieces": [], "center": Vector3.ZERO}
 		var group: Dictionary = _groups[key]
@@ -164,7 +172,7 @@ func _build(group: Dictionary, index: int) -> void:
 	var tool := SurfaceTool.new()
 	for part: Array in group.parts:
 		if group.paint:
-			tool.append_from(_painted_mesh(part[0], part[1], part[3]), 0, shift * (part[2] as Transform3D))
+			tool.append_from(painted_mesh(part[0], part[1], part[3], _cache), 0, shift * (part[2] as Transform3D))
 		else:
 			tool.append_from(part[0], part[1], shift * (part[2] as Transform3D))
 	var mesh := tool.commit()
@@ -218,34 +226,35 @@ static func _mergeable(item: MeshInstance3D, root: Node) -> bool:
 	return true
 
 
-static func _glows(material: Material) -> bool:
+## Ce qui luit (sans éclairage, ou émissif) : jamais effacé au loin.
+static func glows(material: Material) -> bool:
 	var base := material as BaseMaterial3D
 	return base != null and (base.shading_mode == BaseMaterial3D.SHADING_MODE_UNSHADED or base.emission_enabled)
 
 
 ## Matériau sans texture, dont la couleur peut passer dans les sommets.
-static func _paintable(material: Material) -> bool:
+static func paintable(material: Material) -> bool:
 	return material is StandardMaterial3D and not (material as StandardMaterial3D).albedo_texture \
 		and not (material as StandardMaterial3D).vertex_color_use_as_albedo
 
 
 ## Le matériau commun d'un maillage peint : le même, blanc, qui prend sa couleur dans les sommets (en sRGB, comme
-## la couleur du matériau).
-func _painted_material(material: Material) -> Material:
-	var key := "matériau_" + _signature(material)
-	if not _painted.has(key):
+## la couleur du matériau). Un par signature, gardé dans cache (celui de signature).
+static func painted_material(material: Material, cache: Dictionary) -> Material:
+	var key := "matériau_" + signature(material, cache)
+	if not cache.has(key):
 		var white := material.duplicate() as StandardMaterial3D
 		white.albedo_color = Color.WHITE
 		white.vertex_color_use_as_albedo = true
 		white.vertex_color_is_srgb = true
-		_painted[key] = white
-	return _painted[key]
+		cache[key] = white
+	return cache[key]
 
 
-## Copie d'une surface dont chaque sommet porte la couleur du matériau.
-func _painted_mesh(mesh: Mesh, surface: int, tint: Color) -> Mesh:
+## Copie d'une surface dont chaque sommet porte la couleur du matériau, gardée dans cache.
+static func painted_mesh(mesh: Mesh, surface: int, tint: Color, cache: Dictionary) -> Mesh:
 	var key := "%d_%d_%s" % [mesh.get_instance_id(), surface, tint.to_html()]
-	if not _painted.has(key):
+	if not cache.has(key):
 		var arrays := mesh.surface_get_arrays(surface)
 		var colors := PackedColorArray()
 		colors.resize((arrays[Mesh.ARRAY_VERTEX] as PackedVector3Array).size())
@@ -253,32 +262,37 @@ func _painted_mesh(mesh: Mesh, surface: int, tint: Color) -> Mesh:
 		arrays[Mesh.ARRAY_COLOR] = colors
 		var copy := ArrayMesh.new()
 		copy.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
-		_painted[key] = copy
-	return _painted[key]
+		cache[key] = copy
+	return cache[key]
 
 
 ## Clé d'un matériau : ses réglages et ses textures, sans son nom ni son instance (ni sa couleur, s'il est peint
-## dans les sommets). Deux matériaux identiques partagent ainsi un seul maillage fondu.
-func _signature(material: Material) -> String:
+## dans les sommets). Deux matériaux identiques partagent ainsi un seul maillage fondu. cache garde la signature de
+## chaque instance déjà vue (un dictionnaire par regroupement) ; la mémoire par état (_by_state) est commune.
+static func signature(material: Material, cache: Dictionary) -> String:
 	if not material:
 		return "0"
 	var id := material.get_instance_id()
-	if _signatures.has(id):
-		return _signatures[id]
+	if cache.has(id):
+		return cache[id]
 	var text := str(id)
 	if material is StandardMaterial3D or material is ORMMaterial3D:
-		var state := _state(material)
-		if not _by_state.has(state):
-			_by_state[state] = _describe(material)
-		text = _by_state[state]
-	_signatures[id] = text
+		if material.get_script():
+			# Les variables d'un script ne sont pas dans l'état : décrit à chaque fois.
+			text = _describe(material)
+		else:
+			var state := _state(material)
+			if not _by_state.has(state):
+				_by_state[state] = _describe(material)
+			text = _by_state[state]
+	cache[id] = text
 	return text
 
 
 ## La signature elle-même : la liste des propriétés stockées du matériau (qui dépend de ses réglages : un matériau
 ## sans éclairage n'en a pas les propriétés), chacune avec sa valeur, les ressources par leur instance.
 static func _describe(material: Material) -> String:
-	var paint := _paintable(material)
+	var paint := paintable(material)
 	var parts: PackedStringArray = [material.get_class(), "peint" if paint else "uni"]
 	for property in material.get_property_list():
 		var property_name: String = property.name
@@ -287,7 +301,7 @@ static func _describe(material: Material) -> String:
 		if paint and property_name == "albedo_color":
 			continue
 		var value: Variant = material.get(property_name)
-		parts.append("%s=%s" % [property_name, str(_id(value)) if value is Resource else var_to_str(value)])
+		parts.append("%s=%s" % [property_name, str(instance_id(value)) if value is Resource else var_to_str(value)])
 	return "|".join(parts).md5_text()
 
 
@@ -304,7 +318,7 @@ static func _state(material: Material) -> Array:
 				continue
 			names.append(StringName(property_name))
 		_class_properties[type] = names
-	var paint := _paintable(material)
+	var paint := paintable(material)
 	var state := [type, paint, material.get_script()]
 	for meta in material.get_meta_list():
 		state.append(meta)
@@ -314,11 +328,12 @@ static func _state(material: Material) -> Array:
 			state.append(null)
 			continue
 		var value: Variant = material.get(property_name)
-		state.append(_id(value) if value is Resource else value)
+		state.append(instance_id(value) if value is Resource else value)
 	return state
 
 
-static func _id(resource: Resource) -> int:
+## Instance d'une ressource, 0 pour aucune.
+static func instance_id(resource: Resource) -> int:
 	return resource.get_instance_id() if resource else 0
 
 

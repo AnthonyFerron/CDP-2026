@@ -145,6 +145,25 @@ gravait ses 5 cercles : 62 ms. Deux changements, au même résultat (empreintes 
 
 Le dehors, vu à l'arrivée, est toujours fondu au chargement.
 
+### Regroupements : un seul outil (`DecorBatch`)
+
+Branche `perf/regroupements` (9 novembre), partie de `dev` 7488297.
+
+- **Un outil commun.** `MaraisBatch` (Marais : dehors, crypte, bêtes) et `PlaineBatch` (sa copie, avec des modèles
+  laissés à part) deviennent un seul outil, `DecorBatch` (`frontend/scripts/decor_batch.gd`). Ce qui est propre à
+  chaque lieu se passe à l'appel : taille des cases, ombres, profondeur, effacement au loin, et préfixes des modèles
+  laissés à part (`skip` : les bannières de la Plaine, que `plaine_life.gd` fait onduler). Le regroupement par étapes
+  (`step`) de la crypte du Marais est le même. Les deux anciens scripts sont retirés.
+- **Le hub** garde ses propres règles (`hub_batch.gd` : groupes réparables, modèles posés seulement, ombres fondues
+  par case, MultiMesh à part, panneaux) et prend à l'outil commun la signature des matériaux et leur peinture dans
+  les sommets (`DecorBatch.signature`, `painted_material`, `painted_mesh`, `paintable`, `glows`).
+- **Les signatures une fois par état de matériau**, comme dans le Marais (plus haut), servent désormais au hub et à
+  la Plaine : `hub_batch.gd` et `plaine_batch.gd` décrivaient chaque matériau par sa liste de propriétés. Le décor du
+  hub en a 227 distincts pour 11 signatures (11 états), la Plaine 85 pour 11. Un matériau qui porte un script est
+  décrit à chaque fois, les variables de son script n'étant pas dans l'état ; il n'y en a aucun aujourd'hui.
+- **Mémoire vidée** quand le lieu se ferme : le Marais comme avant, le hub à la sortie de son décor (`_exit_tree` de
+  `hub_batch.gd`), la Plaine après ses trois regroupements (faits à son `_ready`, rien d'autre ne se regroupe).
+
 ### Ce qui n'a pas été précalculé
 
 - **Les regroupements du décor** (Marais, Plaine, ruines du Désert). Ils fondent des centaines de modèles en maillages : précalculés, ils copieraient toute leur géométrie dans le paquet, plusieurs mégaoctets de plus à télécharger avant le menu. Mesuré pour le Marais : les 103 maillages fondus du dehors font 237 401 sommets, 7,9 Mo enregistrés (2,5 Mo en gzip), ceux de la crypte 3,2 Mo (0,75 Mo en gzip).
@@ -241,6 +260,43 @@ jour. Sur la branche fusionnée :
   72 arbres, 0 sans collision ; `sound_test` à 0 ; `run_tests` à 52 réussis ; aucun avertissement de calcul d'avance.
   `hub_walk_4` n'avait pas démarré dans son délai (les trois places Godot étaient prises par les autres agents) :
   relancé seul, il a ses 2 échecs voulus, ni plus ni moins.
+
+### Regroupements : un seul outil
+
+- **Signatures, matériau par matériau** (`sig_bench.gd`, plus bas) : pour chacun des 227 matériaux du hub (à 0 et 4
+  livres) et des 85 de la Plaine, `DecorBatch.signature` rend la même chaîne que l'ancienne description : 0
+  différence. Les clés des lots sont donc les mêmes, et les lots aussi.
+- **Empreintes** (`fingerprint_level.gd`, qui prend désormais `--livres N` : les N premiers livres trouvés et posés),
+  `dev` (7488297) contre la branche :
+
+  | Lieu | Lignes | Dessin | Collisions | Ensemble |
+  | --- | --- | --- | --- | --- |
+  | Hub, 0 livre | 6 017 | `31e77c57…` identique | `9a8fb697…` identique | 5 lumières qui vacillent |
+  | Hub, 4 livres | 6 017 | voir plus bas | voir plus bas | 21 lignes, voir plus bas |
+  | Plaine | 3 963 | `177450c3…` identique | `60a23d47…` identique | `b2041b36…` identique |
+  | Marais | 1 438 | `571439cb…` identique | `dca801ca…` identique | `9f9b00b9…` identique |
+
+  Au hub reconstruit (4 livres), 21 lignes du relevé diffèrent : 5 lumières qui vacillent, et 16 lignes d'objets qui
+  ne diffèrent que par leur rotation, à la même place, avec le même maillage, le même matériau et la même forme : les
+  villageois qui se tournent (`hub_villagers.gd`, maillage et cylindre de collision) et la roue du moulin. L'outil
+  relève l'empreinte quand le regroupement a fini, qui finit maintenant quelques images plus tôt. Deux relevés de
+  `dev` lui-même diffèrent de la même façon (20 lignes : 15 rotations, 5 lumières). Comparaison :
+  `.claude/captures/perf-batch/outils/compare.py`.
+- **Captures** (`captures.sh` : 6 vues du hub à 0 et à 4 livres, 11 de la Plaine dont 4 dans les archives, 11 du
+  Marais dont 5 dans la crypte), avant | après | écart (x 4), regardées. Les appels de dessin relevés à chaque vue du
+  hub sont les mêmes, au nombre près (de 95 à 631 à 0 livre, de 127 à 705 à 4 livres). Écart moyen de 0 à 0,4 sur
+  255 au hub, de 0,05 à 0,76 dans la Plaine, de 0,05 à 1,5 dans le Marais ; au plus 0,9 % de pixels changés de plus
+  de 24 (la porte de la crypte du Marais, où passent des lucioles). Les seuls écarts sont ce qui bouge : l'eau de la
+  rivière, le feu, les villageois, la fumée du volcan, les braises et la lave de la Plaine, les lucioles et le feu de
+  camp du Marais, la lueur des chandelles. Aucun objet ne bouge ni ne manque.
+- **Générateurs et précalculs** : aucune scène générée ne change (`hub_props.tscn` garde `hub_batch.gd`), et
+  `bake_plaine_check`, `bake_lieux_check` et `bake_shaders_check` restent à jour sans rien régénérer.
+- **Suite complète** (`frontend/tests/scenes/run_all.sh`, depuis la branche, serveur chargé par les autres agents) :
+  les trois précalculs à jour ; 0 échec partout (`hub_test`, `music_test`, `sound_test`, `gamepad_test`,
+  `plaine_puzzle_test`, `marais_puzzle_test` compris), sauf `hub_walk_0` et `hub_walk_4` : 2 échecs chacun, les
+  limites voulues (« limite infranchissable (doit echouer) ») ; `tree_collision_test` : mêmes comptes (hub 670 arbres
+  dont 301 sans collision, Plaine 38, Désert 41, Marais 72, Village 130) ; `run_tests` : 52 réussis, 0 échec ; aucune
+  erreur de script, aucun avertissement de calcul d'avance périmé.
 
 ## Mesures
 
@@ -348,6 +404,37 @@ Relevés : `.claude/captures/perf-marais/` (hors dépôt) : `profils/`, `mesures
 (copies des outils de `perf-chargements`, et `gd/` : détail des regroupements, des signatures, du travail de la
 crypte).
 
+### Regroupements : signatures une fois par état
+
+« Avant » est `dev` (7488297), « après » la branche `perf/regroupements`. En natif, sans écran, avant et après en
+alternance, trois passages chacun ; médianes, en millisecondes. Le serveur était chargé par les autres agents (charge
+5,5 à 7,5).
+
+- **En place**, chargé comme en jeu (`batch_cost.gd`) : pour le hub, le temps total passé à regrouper
+  (`batch_msec`, étalé par tranches de 8 ms après l'arrivée) et le nombre d'images jusqu'à la fin ; pour la Plaine,
+  le `_ready` de sa racine (suie, enveloppes de collision, regroupement du décor).
+- **Signatures seules** (`sig_bench.gd`) : les matériaux que le regroupement décrit, dans son ordre, décrits à
+  l'ancienne (liste des propriétés de chaque matériau) puis par l'outil du dépôt.
+
+| Poste | Avant | Après |
+| --- | --- | --- |
+| Hub, 0 livre : regroupement, en tout (passages : 978, 917, 1 019 / 777, 814, 737) | 978 | 777 (-21 %) |
+| Hub, 0 livre : images jusqu'à la fin du regroupement | 64 | 59 |
+| Hub, 4 livres : regroupement, en tout (passages : 923, 980, 904 / 722, 799, 704) | 923 | 722 (-22 %) |
+| Hub, 4 livres : images jusqu'à la fin du regroupement | 63 | 59 |
+| Hub : signatures seules (227 matériaux, 6 476 appels) | 211 (0 livre), 201 (4 livres) | 32, 33 |
+| Plaine : `_ready` de la racine (passages : 162, 176, 156 / 114, 94, 91) | 162 | 94 (-42 %) |
+| Plaine : signatures seules (85 matériaux, 733 appels) | 74 | 17 |
+
+Au hub, le regroupement ne se fait pas au chargement : il est étalé sur les premières images, au plus 8 ms par image.
+Il finit 4 à 5 images plus tôt, et ces images sont plus courtes. Dans la Plaine, il se fait au `_ready` : c'est
+autant de moins avant que le lieu s'affiche. Les gains en place (200 ms au hub, 68 ms dans la Plaine) suivent ceux
+des signatures seules (environ 175 et 57 ms). Ce qui reste du regroupement est surtout l'assemblage des maillages
+(`SurfaceTool`).
+
+Relevés : `.claude/captures/perf-batch/` (hors dépôt) : `mesures/` (séries), `outils/` (`mesure.sh`, `serie.sh`,
+`gd/batch_cost.gd`, `gd/sig_bench.gd`, `empreintes.sh`, `compare.py`, `captures.sh`, `diff_images.py`).
+
 ## Téléchargement
 
 Trois gains relevés par l'agent de la musique (`docs/musique-differee.md`, « autres gains possibles ») :
@@ -401,11 +488,13 @@ Trois gains relevés par l'agent de la musique (`docs/musique-differee.md`, « a
   comptée depuis le centre de son lot) : il faudrait ne différer que les lots de grands objets, ou prouver qu'aucun
   petit lot ne se voit depuis l'arrivée, et le vérifier par des captures prises pendant ce travail.
 - **Le sol du Marais** (environ 65 ms : assemblage du maillage et collision bâtie par Jolt), à son `_ready`.
-- **Les signatures des matériaux du hub et de la Plaine** : `hub_batch.gd` et `plaine_batch.gd` décrivent leurs
-  matériaux comme le faisait `MaraisBatch` (`get_property_list` par matériau). La mémoire par état de matériau de
-  `MaraisBatch` (« Marais : la crypte après l'arrivée ») s'y applique telle quelle.
-- **La Plaine** : son décor dispersé (112 ms) et son regroupement (174 ms) se calculent toujours au chargement. Le
-  décor tire au hasard sur une dizaine d'étapes entremêlées : le précalculer demande de le découper comme les autres.
+- **La Plaine** : son décor dispersé (112 ms) et son regroupement se calculent toujours au chargement (le `_ready` de
+  sa racine, regroupement compris, est passé de 162 à 94 ms avec les signatures par état). Le décor tire au hasard sur
+  une dizaine d'étapes entremêlées : le précalculer demande de le découper comme les autres.
+- **Le regroupement du hub** (environ 750 ms, étalé sur une soixantaine d'images après l'arrivée) : surtout
+  l'assemblage des maillages, et la recherche de ses modèles. Le hub pourrait passer à `DecorBatch.step` pour le
+  reste de son travail, mais ses règles diffèrent (modèles posés seulement, ombres fondues par case, MultiMesh à part,
+  coordonnées de groupe) : à ne faire qu'avec des empreintes identiques à 0, 2 et 4 livres.
 - **Les collisions des arbres du Village** : Jolt bâtit chaque enveloppe convexe depuis tous les points de son emprise
   (94 000 points, environ 60 ms en natif). Ne garder que les sommets de l'enveloppe (6 655 points) irait plus vite et
   pèserait moins, mais les données des formes ne seraient plus identiques octet pour octet : il faudrait alors

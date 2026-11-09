@@ -56,7 +56,7 @@ var _rumble: AudioStreamPlayer3D
 ## Préparation de la crypte : étape en cours (0 : la teinte, puis un regroupement par étape, puis la gravure) et
 ## regroupements de son décor. Finie, elle ne change plus rien.
 var _crypt_stage := 0
-var _crypt_batches: Array[MaraisBatch] = []
+var _crypt_batches: Array[DecorBatch] = []
 var _crypt_ready := false
 
 @onready var _player: Player = $Player
@@ -96,7 +96,7 @@ func _enter_tree() -> void:
 
 
 func _exit_tree() -> void:
-	MaraisBatch.forget()
+	DecorBatch.forget()
 
 
 func _ready() -> void:
@@ -151,13 +151,13 @@ func _ready() -> void:
 		flies.position = swarm
 		_mist_banks.append(flies)
 		add_child(flies)
-	# Pour le web : le décor fixe fondu par matériau (MaraisBatch), par cases de 32 m dehors, de 12 m (une pièce)
+	# Pour le web : le décor fixe fondu par matériau (DecorBatch), par cases de 32 m dehors, de 12 m (une pièce)
 	# sous terre : tombeaux des rois et niches de l'ossuaire compris. Le dehors, vu à l'arrivée, est fondu ici ; la
 	# crypte, cachée dehors, le sera après l'arrivée (_prepare_crypt), au même résultat.
 	for root: Node3D in [$Props/Models, $Grounded, $Scatter/Boardwalks, $Scatter/Lanterns]:
-		MaraisBatch.merge(root, 32.0, true)
+		DecorBatch.merge(root, 32.0, true)
 	for root: Node3D in [$Interior/Crypt/Models, $Interior/Kings, $Interior/Niches]:
-		_crypt_batches.append(MaraisBatch.new(root, 12.0, false))
+		_crypt_batches.append(DecorBatch.new(root, 12.0, false))
 	# La lumière du feu de camp s'éteint au loin, comme les autres lumières du dehors.
 	for light: Light3D in $Campfire.find_children("*", "Light3D", true, false):
 		light.distance_fade_enabled = true
@@ -252,7 +252,7 @@ func _prepare_crypt(deadline: int) -> bool:
 ## ouvrant le mécanisme.
 func _finish_crypt() -> void:
 	if not _crypt_ready:
-		_crypt_ready = _prepare_crypt(MaraisBatch.NO_DEADLINE)
+		_crypt_ready = _prepare_crypt(DecorBatch.NO_DEADLINE)
 
 
 func _sink() -> void:
