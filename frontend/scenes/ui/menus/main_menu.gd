@@ -741,18 +741,22 @@ class LeaderboardHeader:
 	## En-tête du classement : rang, joueur et temps réalisé sur la durée de la partie.
 
 	func _draw() -> void:
+		# Un maillage pour la plaque et les icônes, puis les textes, à côté des icônes (Ornate.Sketch).
+		var pen := Ornate.Sketch.new(self)
+		pen.texts_last = true
 		var shape := Ornate.hexagon(Rect2(Vector2.ZERO, size), 28)
 		var top := Color(0.38, 0.22, 0.1)
 		var low := Color(0.22, 0.12, 0.07)
-		draw_polygon(shape, PackedColorArray([top, top, top.lerp(low, 0.5), low, low, top.lerp(low, 0.5)]))
-		draw_polyline(Ornate.closed(shape), Ornate.GOLD, 4.0)
+		pen.polygon_colors(shape, PackedColorArray([top, top, top.lerp(low, 0.5), low, low, top.lerp(low, 0.5)]))
+		pen.polyline(Ornate.closed(shape), Ornate.GOLD, 4.0)
 		var y := size.y / 2
-		Ornate.centered_text(self, Ornate.SERIF, Vector2(92, y), "#", 32, Ornate.CREAM)
-		Ornate.icon(self, "user", Vector2(250, y), 16, Ornate.GOLD_LIGHT, 3.0)
-		draw_string(Ornate.SERIF, Vector2(282, y + 12), "Joueur", HORIZONTAL_ALIGNMENT_LEFT, -1, 32, Ornate.CREAM)
-		Ornate.icon(self, "stopwatch", Vector2(650, y), 18, Ornate.GOLD_LIGHT, 3.0)
-		draw_string(Ornate.SERIF, Vector2(684, y + 10), "Temps réalisé", HORIZONTAL_ALIGNMENT_LEFT, -1, 28, Ornate.CREAM)
-		draw_string(Ornate.TEXT, Vector2(920, y + 10), "(sur %s)" % MainMenu.format_time(GameState.TOTAL_TIME), HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Ornate.MUTED)
+		Ornate.centered_text(pen, Ornate.SERIF, Vector2(92, y), "#", 32, Ornate.CREAM)
+		Ornate.icon(pen, "user", Vector2(250, y), 16, Ornate.GOLD_LIGHT, 3.0)
+		pen.text(Ornate.SERIF, Vector2(282, y + 12), "Joueur", 32, Ornate.CREAM)
+		Ornate.icon(pen, "stopwatch", Vector2(650, y), 18, Ornate.GOLD_LIGHT, 3.0)
+		pen.text(Ornate.SERIF, Vector2(684, y + 10), "Temps réalisé", 28, Ornate.CREAM)
+		pen.text(Ornate.TEXT, Vector2(920, y + 10), "(sur %s)" % MainMenu.format_time(GameState.TOTAL_TIME), 22, Ornate.MUTED)
+		pen.draw(self)
 
 
 class LeaderboardRow:
@@ -767,6 +771,9 @@ class LeaderboardRow:
 	var mine := false
 
 	func _draw() -> void:
+		# Un maillage pour le cadre, les lauriers et le trait (Ornate.Sketch), le portrait, puis les trois textes, de
+		# la même taille : trois appels de dessin par ligne. Le portrait ne touche pas le rang, écrit à sa gauche.
+		var pen := Ornate.Sketch.new(self)
 		var rect := Rect2(Vector2.ZERO, size)
 		var medal: Color = [Ornate.GOLD, Ornate.SILVER, Ornate.BRONZE][rank - 1] if rank <= 3 else Ornate.GOLD_DARK
 		if rank <= 3:
@@ -775,16 +782,17 @@ class LeaderboardRow:
 			box.border_color = medal
 			box.set_border_width_all(3)
 			box.set_corner_radius_all(10)
-			draw_style_box(box, rect)
-			Ornate.icon(self, "laurel_left", Vector2(78, size.y / 2), 26, medal, 2.5)
-			Ornate.icon(self, "laurel_right", Vector2(110, size.y / 2), 26, medal, 2.5)
+			pen.style_box(box, rect)
+			Ornate.icon(pen, "laurel_left", Vector2(78, size.y / 2), 26, medal, 2.5)
+			Ornate.icon(pen, "laurel_right", Vector2(110, size.y / 2), 26, medal, 2.5)
 		else:
-			draw_line(Vector2(10, size.y - 1), Vector2(size.x - 10, size.y - 1), Color(Ornate.GOLD_DARK, 0.7), 1.5)
+			pen.line(Vector2(10, size.y - 1), Vector2(size.x - 10, size.y - 1), Color(Ornate.GOLD_DARK, 0.7), 1.5)
 		if mine:
-			draw_rect(rect.grow(-2), Color(Ornate.GOLD_LIGHT, 0.12))
+			pen.rect(rect.grow(-2), Color(Ornate.GOLD_LIGHT, 0.12))
+		pen.draw(self)
+		draw_texture_rect(Ornate.PORTRAIT, Rect2(Vector2(196, size.y / 2 - 26), Vector2(50, 52)), false)
 		var font_size := 36 if rank <= 3 else 30
 		Ornate.centered_text(self, Ornate.SERIF, Vector2(94, size.y / 2), str(rank), font_size, Ornate.CREAM)
-		draw_texture_rect(Ornate.PORTRAIT, Rect2(Vector2(196, size.y / 2 - 26), Vector2(50, 52)), false)
 		draw_string(Ornate.SERIF, Vector2(276, size.y / 2 + font_size * 0.36), pseudo, HORIZONTAL_ALIGNMENT_LEFT, 420, font_size, Ornate.CREAM)
 		Ornate.centered_text(self, Ornate.SERIF, Vector2(800, size.y / 2), time_text if not time_text.is_empty() else MainMenu.format_time(seconds), font_size, Ornate.CREAM)
 
@@ -844,30 +852,36 @@ func _on_begin() -> void:
 class VerticalOrnament:
 	extends Control
 	func _draw() -> void:
+		var pen := Ornate.Sketch.new(self)
 		var x := size.x / 2
-		draw_polygon(PackedVector2Array([Vector2(x, 0), Vector2(x + 1.5, size.y / 2), Vector2(x, size.y), Vector2(x - 1.5, size.y / 2)]),
+		pen.polygon_colors(PackedVector2Array([Vector2(x, 0), Vector2(x + 1.5, size.y / 2), Vector2(x, size.y), Vector2(x - 1.5, size.y / 2)]),
 			PackedColorArray([Color(Ornate.GOLD, 0.0), Ornate.GOLD, Color(Ornate.GOLD, 0.0), Ornate.GOLD]))
-		Ornate.diamond(self, Vector2(x, size.y / 2), 12)
+		Ornate.diamond(pen, Vector2(x, size.y / 2), 12)
+		pen.draw(self)
 
 
 class GoalTitle:
 	extends Control
 	func _draw() -> void:
-		Ornate.divider(self, Vector2(40, size.y / 2), Vector2(size.x / 2 - 180, size.y / 2), false)
-		Ornate.divider(self, Vector2(size.x / 2 + 180, size.y / 2), Vector2(size.x - 40, size.y / 2), false)
+		var pen := Ornate.Sketch.new(self)
+		Ornate.divider(pen, Vector2(40, size.y / 2), Vector2(size.x / 2 - 180, size.y / 2), false)
+		Ornate.divider(pen, Vector2(size.x / 2 + 180, size.y / 2), Vector2(size.x - 40, size.y / 2), false)
 		for x in [size.x / 2 - 196, size.x / 2 + 196]:
-			Ornate.diamond(self, Vector2(x, size.y / 2), 10)
-		Ornate.plaque(self, size / 2, "But du jeu", 34)
+			Ornate.diamond(pen, Vector2(x, size.y / 2), 10)
+		Ornate.plaque(pen, size / 2, "But du jeu", 34)
+		pen.draw(self)
 
 
 class GoalBox:
 	extends Control
 	func _draw() -> void:
+		var pen := Ornate.Sketch.new(self)
 		var box := StyleBoxFlat.new()
 		box.bg_color = Color(0.17, 0.09, 0.07)
 		box.border_color = Ornate.GOLD
 		box.set_border_width_all(3)
 		box.set_corner_radius_all(14)
-		draw_style_box(box, Rect2(Vector2.ZERO, size))
-		Ornate.icon(self, "book", Vector2(110, size.y / 2 - 10), 62, Ornate.GOLD_LIGHT)
-		Ornate.icon(self, "volcano", Vector2(size.x - 110, size.y / 2 + 6), 70)
+		pen.style_box(box, Rect2(Vector2.ZERO, size))
+		Ornate.icon(pen, "book", Vector2(110, size.y / 2 - 10), 62, Ornate.GOLD_LIGHT)
+		Ornate.icon(pen, "volcano", Vector2(size.x - 110, size.y / 2 + 6), 70)
+		pen.draw(self)

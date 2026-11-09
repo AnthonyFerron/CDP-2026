@@ -237,12 +237,18 @@ func _build() -> void:
 	_preview.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_preview.text_overrun_behavior = TextServer.OVERRUN_TRIM_CHAR
 	Ornate.place(box, _preview, Vector2(24, 0), Vector2(box.size.x - 48, 50))
+	# Toutes les touches, et les boutons de la manette du pied, sont dessinés d'un bloc par ce calque (Ornate.KeySheet) :
+	# un maillage et leurs lettres, au lieu de deux ou trois appels de dessin par touche.
+	var sheet := Ornate.KeySheet.new()
+	sheet.name = "KeySheet"
+	Ornate.place(frame, sheet, Vector2.ZERO, SIZE)
 	var left := (SIZE.x - (10 * KEY.x + 9 * GAP)) / 2.0
 	for row in 4:
 		for column in 10:
 			var key := KeyButton.new()
 			key.name = "Key%d%d" % [row, column]
 			Ornate.place(frame, key, Vector2(left + column * (KEY.x + GAP), ROWS_TOP + row * (KEY.y + GAP)), KEY)
+			sheet.adopt(key)
 			key.pressed.connect(func() -> void: _type(key.value))
 			_keys.append(key)
 	var bottom := ROWS_TOP + 4 * (KEY.y + GAP)
@@ -257,6 +263,7 @@ func _build() -> void:
 		key.small = true
 		key.special = true
 		Ornate.place(frame, key, Vector2(left + index * (wide.x + GAP), bottom), wide)
+		sheet.adopt(key)
 		key.pressed.connect(spec[2])
 		if spec[0] == "Shift":
 			_shift = key
@@ -271,6 +278,7 @@ func _build() -> void:
 		cap.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		var width := 40.0 if String(item[0]).length() == 1 else 54.0
 		Ornate.place(frame, cap, Vector2(x, 408), Vector2(width, 36))
+		sheet.adopt(cap)
 		var hint := Ornate.label(item[1], 20, Ornate.MUTED)
 		Ornate.place(frame, hint, Vector2(x + width + 8, 411), Vector2(120, 30))
 		x += width + 8 + Ornate.TEXT.get_string_size(item[1], HORIZONTAL_ALIGNMENT_LEFT, -1, 20).x + 34
@@ -307,7 +315,17 @@ class KeyButton:
 		button_up.connect(queue_redraw)
 
 	func _draw() -> void:
-		var rect := Rect2(Vector2.ZERO, size)
+		var sheet := Ornate.KeySheet.of(self)
+		if sheet:
+			# Dessinée par le calque du clavier, avec les autres touches.
+			sheet.queue_redraw()
+			return
+		var pen := Ornate.Sketch.new(self)
+		paint(pen, Rect2(Vector2.ZERO, size))
+		pen.draw(self)
+
+	## La touche dans un maillage (Ornate.Sketch), à sa place `rect`.
+	func paint(pen: Ornate.Sketch, rect: Rect2) -> void:
 		var shape := Ornate.chamfered(rect, 10)
 		var lit := Gamepad.lit(self) or on
 		var top := Color(0.27, 0.16, 0.1) if not special else Color(0.22, 0.12, 0.08)
@@ -318,11 +336,11 @@ class KeyButton:
 		if is_pressed():
 			top = top.darkened(0.2)
 			low = low.darkened(0.2)
-		draw_polygon(shape, PackedColorArray([top, top, top, low, low, low, low, top]))
-		draw_polyline(Ornate.closed(shape), Ornate.GOLD_LIGHT if lit else Ornate.GOLD, 3.0)
-		Ornate.centered_text(self, Ornate.TEXT if not small else Ornate.SERIF, size / 2, caption, 30 if not small else 22, Ornate.CREAM)
+		pen.polygon_colors(shape, PackedColorArray([top, top, top, low, low, low, low, top]))
+		pen.polyline(Ornate.closed(shape), Ornate.GOLD_LIGHT if lit else Ornate.GOLD, 3.0)
+		Ornate.centered_text(pen, Ornate.TEXT if not small else Ornate.SERIF, rect.position + size / 2, caption, 30 if not small else 22, Ornate.CREAM)
 		if Gamepad.focused(self):
-			Ornate.focus_ring(self, rect, &"chamfer", 10.0)
+			Ornate.focus_ring(pen, rect, &"chamfer", 10.0)
 
 
 class PreviewBox:

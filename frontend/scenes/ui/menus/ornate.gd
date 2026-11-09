@@ -68,17 +68,7 @@ static func place(parent: Node, node: Control, position: Vector2, size: Vector2)
 # --- Dessin -------------------------------------------------------------------------------------------------------
 # Les fonctions de dessin ci-dessous prennent `item` : le nœud qui dessine (dans son _draw), ou un Sketch en cours.
 # Sur un nœud, elles envoient leurs formes d'un bloc (un appel de dessin) ; sur un Sketch, elles s'y ajoutent, et le
-# nœud qui le dessine envoie tout ensemble.
-
-## Le maillage où tracer : `item` s'il en est déjà un, sinon un neuf pour ce nœud, que `_ink` envoie au rendu.
-static func _pen(item: Object) -> Sketch:
-	return item as Sketch if item is Sketch else Sketch.new(item as CanvasItem)
-
-
-static func _ink(item: Object, pen: Sketch) -> void:
-	if pen != item:
-		pen.draw(item as CanvasItem)
-
+# nœud qui le dessine envoie tout ensemble (Sketch.of, Sketch.done).
 
 ## Écrit un texte centré sur un point, en tenant compte de la hauteur de la police.
 static func centered_text(item: Object, font: Font, center: Vector2, text: String, size: int, color: Color) -> void:
@@ -93,7 +83,7 @@ static func centered_text(item: Object, font: Font, center: Vector2, text: Strin
 
 ## Losange doré, ornement des cadres et des boutons.
 static func diamond(item: Object, center: Vector2, radius: float, fill := GOLD) -> void:
-	var pen := _pen(item)
+	var pen := Sketch.of(item)
 	var points := PackedVector2Array([center + Vector2(0, -radius), center + Vector2(radius, 0), center + Vector2(0, radius), center + Vector2(-radius, 0)])
 	pen.polygon(points, GOLD_DARK)
 	var inner := PackedVector2Array()
@@ -101,7 +91,7 @@ static func diamond(item: Object, center: Vector2, radius: float, fill := GOLD) 
 		inner.append(center + (point - center) * 0.62)
 	pen.polygon(inner, fill)
 	pen.polyline(closed(points), GOLD_LIGHT, 2.0)
-	_ink(item, pen)
+	pen.done(item)
 
 
 ## Contour à coins coupés d'un rectangle, dans le sens des aiguilles d'une montre.
@@ -130,18 +120,18 @@ static func closed(points: PackedVector2Array) -> PackedVector2Array:
 
 ## Ligne dorée qui s'efface vers ses bouts, avec un losange au milieu.
 static func divider(item: Object, from: Vector2, to: Vector2, with_diamond := true) -> void:
-	var pen := _pen(item)
+	var pen := Sketch.of(item)
 	var middle := (from + to) / 2.0
 	pen.polygon_colors(PackedVector2Array([from, middle + Vector2(0, -2), to, middle + Vector2(0, 2)]),
 		PackedColorArray([Color(GOLD, 0.0), GOLD, Color(GOLD, 0.0), GOLD]))
 	if with_diamond:
 		diamond(pen, middle, 11)
-	_ink(item, pen)
+	pen.done(item)
 
 
 ## Plaque de titre hexagonale, centrée sur un point.
 static func plaque(item: Object, center: Vector2, text: String, size: int) -> Rect2:
-	var pen := _pen(item)
+	var pen := Sketch.of(item)
 	var width := SERIF.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x + size * 2.6
 	var height := size * 1.9
 	var rect := Rect2(center - Vector2(width, height) / 2.0, Vector2(width, height))
@@ -157,13 +147,13 @@ static func plaque(item: Object, center: Vector2, text: String, size: int) -> Re
 	# Le losange du bas, sous le bord, ne touche pas le texte : il passe avant lui, dans le même maillage.
 	diamond(pen, Vector2(center.x, rect.end.y), 11)
 	centered_text(pen, SERIF, center, text, size, CREAM)
-	_ink(item, pen)
+	pen.done(item)
 	return rect
 
 
 ## Icônes au trait, dessinées dans un carré de demi-côté s autour du centre.
 static func icon(item: Object, kind: String, c: Vector2, s: float, color := CREAM, w := 3.0) -> void:
-	var pen := _pen(item)
+	var pen := Sketch.of(item)
 	match kind:
 		"user":
 			pen.arc(c + Vector2(0, -0.4 * s), 0.34 * s, 0.0, TAU, 28, color, w)
@@ -277,7 +267,7 @@ static func icon(item: Object, kind: String, c: Vector2, s: float, color := CREA
 			for spark in 5:
 				var angle := deg_to_rad(-150.0 + spark * 30.0)
 				pen.circle(c + Vector2(0, -0.5 * s) + Vector2(cos(angle), sin(angle)) * 0.32 * s, 0.06 * s, Color(1.0, 0.62, 0.2))
-	_ink(item, pen)
+	pen.done(item)
 
 
 static func _book(pen: Sketch, center: Vector2, s: float, color: Color) -> void:
@@ -344,7 +334,7 @@ static func _pad_command(sheet: Control, item: Array, at: Vector2, text_x: float
 ## losanges qui le désignent, à gauche et à droite, pour les boutons larges. `kind` : &"hex" (boutons hexagonaux),
 ## &"round" (boutons et champs arrondis, `cut` étant leur rayon), &"chamfer" (cases à coins coupés, `cut` étant le coin).
 static func focus_ring(item: Object, rect: Rect2, kind := &"chamfer", cut := 14.0) -> void:
-	var pen := _pen(item)
+	var pen := Sketch.of(item)
 	if kind == &"round":
 		for layer: Array in [[Color(GOLD_LIGHT, 0.3), 9, 11.0], [GOLD_LIGHT, 3, 7.0]]:
 			var box := StyleBoxFlat.new()
@@ -363,14 +353,14 @@ static func focus_ring(item: Object, rect: Rect2, kind := &"chamfer", cut := 14.
 		var gap := 26.0 if kind == &"hex" else 22.0
 		diamond(pen, Vector2(rect.position.x - gap, middle), 9.0, GOLD_LIGHT)
 		diamond(pen, Vector2(rect.end.x + gap, middle), 9.0, GOLD_LIGHT)
-	_ink(item, pen)
+	pen.done(item)
 
 
 ## Bouton de la manette, dessiné dans le style des touches du clavier (KeyCap) : A, B, X et Y ronds, à la lettre de leur
 ## couleur ; Menu et Affichage ronds, à leur dessin ; LB, RB, LT et RT en gâchette ; les sticks, une tête de stick ; la
 ## croix directionnelle. Sans `with_label`, seule la forme est dessinée : un texte posé dessus écrit la lettre.
 static func pad_glyph(item: Object, rect: Rect2, glyph: String, with_label := true) -> void:
-	var pen := _pen(item)
+	var pen := Sketch.of(item)
 	var center := rect.get_center()
 	var fill := KEY_FILL
 	var radius := minf(rect.size.x, rect.size.y) / 2.0 - 1.5
@@ -390,7 +380,7 @@ static func pad_glyph(item: Object, rect: Rect2, glyph: String, with_label := tr
 			pen.style_box(box, rect)
 			if with_label:
 				centered_text(pen, SERIF, center, glyph, int(clampf(rect.size.y * 0.46, 14.0, 24.0)), CREAM)
-			_ink(item, pen)
+			pen.done(item)
 			return
 		"Croix":
 			var arm := radius * 0.42
@@ -400,7 +390,7 @@ static func pad_glyph(item: Object, rect: Rect2, glyph: String, with_label := tr
 				center + Vector2(-arm, -arm)])
 			pen.polygon(cross, fill)
 			pen.polyline(closed(cross), GOLD, 3.0)
-			_ink(item, pen)
+			pen.done(item)
 			return
 	if not glyph in ["A", "B", "X", "Y", "Menu", "Affichage", "L3", "R3", "Stick gauche", "Stick droit"]:
 		# Bouton inconnu : une touche ordinaire et son nom.
@@ -412,7 +402,7 @@ static func pad_glyph(item: Object, rect: Rect2, glyph: String, with_label := tr
 		pen.style_box(key, rect)
 		if with_label:
 			centered_text(pen, SERIF, center, glyph, 22, CREAM)
-		_ink(item, pen)
+		pen.done(item)
 		return
 	pen.circle(center, radius + 3.0, Color(GOLD, 0.22))
 	pen.circle(center, radius, fill)
@@ -436,7 +426,7 @@ static func pad_glyph(item: Object, rect: Rect2, glyph: String, with_label := tr
 		_:
 			if with_label:
 				centered_text(pen, SERIF, center + Vector2(0, 1), glyph, int(clampf(s * 1.15, 14.0, 30.0)), PAD_COLORS.get(glyph, CREAM))
-	_ink(item, pen)
+	pen.done(item)
 
 
 ## Le bouton se dessine sans lettre (une lettre posée dessus l'écrit) : vrai pour les boutons à lettre.
@@ -471,6 +461,17 @@ class Sketch:
 	## Morceaux déjà fermés, dans l'ordre : un maillage [indices, sommets, couleurs] ou un texte (7 valeurs).
 	var _pieces: Array = []
 	var _late: Array = []
+
+	## Le maillage où tracer pour `item` : `item` lui-même s'il en est déjà un (les formes s'y ajoutent), sinon un neuf
+	## pour ce nœud, que done(item) envoie alors au rendu. Les fonctions de dessin d'Ornate s'en servent : appelées sur un
+	## nœud, elles coûtent un appel de dessin ; sur un Sketch, aucun de plus.
+	static func of(item: Object) -> Sketch:
+		return item as Sketch if item is Sketch else Sketch.new(item as CanvasItem)
+
+	## Fin d'un tracé commencé par of(item) : rien si `item` est ce Sketch, sinon il est envoyé au rendu de `item`.
+	func done(item: Object) -> void:
+		if item != self:
+			draw(item as CanvasItem)
 
 	func _init(item: CanvasItem = null) -> void:
 		if item and item.is_inside_tree():
@@ -901,7 +902,7 @@ class KeyCap:
 		return ""
 
 	func _draw() -> void:
-		var sheet := get_parent() as KeySheet
+		var sheet := KeySheet.of(self)
 		if sheet:
 			# Dessinée par son calque, avec les autres touches (bascule de la manette comprise).
 			sheet.queue_redraw()
@@ -936,10 +937,24 @@ class KeyCap:
 
 class KeySheet:
 	extends Control
-	## Calque qui porte des touches (KeyCap) et leurs légendes, comme les panneaux de commandes : il dessine lui-même
-	## toutes ses touches, un maillage pour leurs cadres puis leurs lettres, au lieu d'un cadre et d'une lettre par
-	## touche, chacun entre deux légendes (trois appels de dessin par ligne). Les légendes (Label), toutes de la même
-	## police, se suivent alors et ne coûtent qu'un appel ensemble.
+	## Calque qui dessine d'un bloc des touches : ses enfants KeyCap (panneaux de commandes), et les contrôles qu'il
+	## adopte (adopt), posés à côté de lui dans le même parent (touches du clavier virtuel). Un maillage pour toutes leurs
+	## formes, puis leurs lettres, rangées par police et par taille : trois ou quatre appels de dessin en tout, au lieu
+	## d'une forme et d'une lettre par touche, chacune entre deux légendes. Les légendes (Label), de la même police, se
+	## suivent alors et ne coûtent qu'un appel ensemble.
+	##
+	## Une touche ainsi dessinée (KeyCap, ou tout contrôle qui a paint(pen, rect)) ne dessine rien elle-même : son _draw
+	## demande celui du calque (KeySheet.of), qui la redessine avec les autres, dans l'ordre (enfants, puis adoptés).
+	## Le calque ne prend ni la souris ni le focus : les touches restent des boutons ordinaires.
+
+	var _members: Array[Control] = []
+
+	## Le calque qui dessine ce contrôle, ou null s'il se dessine lui-même.
+	static func of(control: Control) -> KeySheet:
+		var sheet: Variant = control.get_meta(&"key_sheet", null)
+		if sheet is KeySheet and is_instance_valid(sheet):
+			return sheet
+		return control.get_parent() as KeySheet
 
 	func _ready() -> void:
 		mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -947,10 +962,20 @@ class KeySheet:
 		for child in get_children():
 			_on_child_entered(child)
 
+	## Dessine désormais `control`, un voisin du calque (même parent) qui a une méthode paint(pen, rect).
+	func adopt(control: Control) -> void:
+		_members.append(control)
+		control.set_meta(&"key_sheet", self)
+		_watch(control)
+
 	func _on_child_entered(child: Node) -> void:
-		if child is KeyCap and not child.item_rect_changed.is_connected(queue_redraw):
-			child.item_rect_changed.connect(queue_redraw)
-			child.visibility_changed.connect(queue_redraw)
+		if child is KeyCap:
+			_watch(child as Control)
+
+	func _watch(control: Control) -> void:
+		if not control.item_rect_changed.is_connected(queue_redraw):
+			control.item_rect_changed.connect(queue_redraw)
+			control.visibility_changed.connect(queue_redraw)
 		queue_redraw()
 
 	func _draw() -> void:
@@ -960,6 +985,9 @@ class KeySheet:
 			var cap := child as KeyCap
 			if cap and cap.visible:
 				cap.paint(pen, Rect2(cap.position, cap.size))
+		for member in _members:
+			if is_instance_valid(member) and member.visible and member.get_parent() == get_parent():
+				member.call(&"paint", pen, Rect2(member.position - position, member.size))
 		pen.draw(self)
 
 
