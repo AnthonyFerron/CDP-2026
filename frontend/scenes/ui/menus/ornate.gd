@@ -1043,9 +1043,11 @@ class KeySheet:
 
 	## Le calque qui dessine ce contrôle, ou null s'il se dessine lui-même.
 	static func of(control: Control) -> KeySheet:
-		var sheet: Variant = control.get_meta(&"key_sheet", null)
-		if sheet is KeySheet and is_instance_valid(sheet):
-			return sheet
+		# get_meta sans valeur par défaut (null) se plaint d'une méta absente : on demande d'abord.
+		if control.has_meta(&"key_sheet"):
+			var sheet: Variant = control.get_meta(&"key_sheet")
+			if is_instance_valid(sheet) and sheet is KeySheet:
+				return sheet
 		return control.get_parent() as KeySheet
 
 	func _ready() -> void:
