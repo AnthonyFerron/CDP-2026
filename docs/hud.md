@@ -37,6 +37,8 @@ Une couche fille d'un `CanvasLayer` ne suit pas sa visibilité : `Clock` et `War
 
 ## Ce dont dépendent les scripts et les tests
 
+À la manette, la touche de l'invite et du lecteur devient le bouton lié à l'action (`Ornate.KeyCap.action`), et « [I] » dans un message devient le bouton Affichage : voir `docs/manette-mobile.md`.
+
 Inchangés : `%Prompt`, `%Message`, `%Reader`, `%ReaderTitle`, `%ReaderBody`, `%Fade`, `%Crosshair`, `%Timer`, `%Penalty` (mêmes types : `Label`, `ColorRect`, `Control`), le chemin `Hud/Warning/Banner`, le signal `reader_closed`, les méthodes `set_prompt`, `set_raw_prompt`, `show_message`, `show_text`, `set_crosshair_visible`, `fade`, `show_penalty_warning`, et `Hud.WARNING_TOP` / `WARNING_BOTTOM` (dispositif du Village).
 
 Deux textes changent de forme :

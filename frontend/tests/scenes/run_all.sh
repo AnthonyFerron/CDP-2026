@@ -71,6 +71,7 @@ run debug_test headless debug_test
 run music_test headless music_test
 run sound_test headless sound_test
 run fullscreen_test headless fullscreen_test
+run gamepad_test headless gamepad_test
 run quality_test headless quality_test -- --qualite-auto
 run tree_collision_test window tree_collision_test
 

@@ -1,5 +1,5 @@
 extends CanvasLayer
-## Menu pause, d'après la maquette : Échap (ou P) fige la partie et le chronomètre ; « Reprendre » relance,
+## Menu pause, d'après la maquette : Échap (ou P, ou Menu à la manette) fige la partie et le chronomètre ; « Reprendre » relance,
 ## « Menu principal » sauvegarde et revient à l'accueil. Le panneau rappelle les commandes.
 ## Il ne s'ouvre que pendant le jeu, quand le joueur a la main : ni dans un menu, ni dans une énigme ouverte,
 ## ni pendant une cinématique.
@@ -41,6 +41,11 @@ func _ready() -> void:
 	var shortcuts := Ornate.label("F : plein écran", 22, Ornate.MUTED)
 	shortcuts.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	Ornate.place(frame, shortcuts, Vector2(56, 640), Vector2(524, 34))
+	Gamepad.swap(shortcuts, false)
+	var pad_shortcuts := Ornate.label("Menu ou B : reprendre", 22, Ornate.MUTED)
+	pad_shortcuts.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	Ornate.place(frame, pad_shortcuts, Vector2(56, 640), Vector2(524, 34))
+	Gamepad.swap(pad_shortcuts, true)
 	var commands := Ornate.place(frame, Ornate.Frame.new(), Vector2(676, 120), Vector2(530, 590)) as Ornate.Frame
 	commands.title = "Commandes"
 	commands.title_size = 36
@@ -52,6 +57,11 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	# B de la manette referme aussi la pause (Échap y est déjà la touche « pause »).
+	if _root.visible and event is InputEventJoypadButton and event.is_action_pressed("ui_cancel"):
+		get_viewport().set_input_as_handled()
+		close()
+		return
 	if not event.is_action_pressed("pause"):
 		return
 	if _root.visible:

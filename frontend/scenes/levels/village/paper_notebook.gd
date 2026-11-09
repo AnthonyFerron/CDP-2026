@@ -3,6 +3,7 @@ extends CanvasLayer
 ## Carnet des fragments de papier retrouvés, consultable à tout moment avec la touche I, dans le style des menus
 ## (scenes/ui/menus/ornate.gd) : chaque fragment est une petite feuille de papier jauni, épinglée dans le carnet.
 ## Le panneau est construit à l'exécution ; Root, Title et List gardent leur nom unique (%Title…), utilisé par les tests.
+## À la manette : Affichage l'ouvre et le referme (comme I), A ou B aussi ; la croix et le stick droit le font défiler.
 
 signal closed
 
@@ -96,20 +97,42 @@ func _build() -> void:
 	var scroll := ScrollContainer.new()
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	Ornate.place(frame, scroll, Vector2(80, 150), Vector2(1100, 636))
+	scroll.name = "Scroll"
+	Gamepad.scrollable(scroll, true)
 	_list = VBoxContainer.new()
 	_list.add_theme_constant_override("separation", 16)
 	scroll.add_child(_list)
 	_own(_list, "List")
-	# Touches pour refermer le carnet.
+	# Touches pour refermer le carnet ; à la manette, ses boutons.
+	var keys := Ornate.place(frame, Control.new(), Vector2.ZERO, frame.size)
+	keys.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	Gamepad.swap(keys, false)
 	var x := 400.0
 	for key in ["I", "E", "Échap"]:
 		var cap := Ornate.KeyCap.new()
 		cap.text = key
 		var width := 64.0 if key.length() == 1 else 118.0
-		Ornate.place(frame, cap, Vector2(x, 826), Vector2(width, 56))
+		Ornate.place(keys, cap, Vector2(x, 826), Vector2(width, 56))
 		x += width + 16.0
 	var hint := Ornate.label("refermer le carnet", 24, Ornate.MUTED)
-	Ornate.place(frame, hint, Vector2(x + 8, 836), Vector2(340, 40))
+	Ornate.place(keys, hint, Vector2(x + 8, 836), Vector2(340, 40))
+	var buttons := Ornate.place(frame, Control.new(), Vector2.ZERO, frame.size)
+	buttons.name = "PadKeys"
+	buttons.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	Gamepad.swap(buttons, true)
+	x = 250.0
+	for key in [Gamepad.button_name(&"inventory"), "A", "B"]:
+		var cap := Ornate.KeyCap.new()
+		cap.pad = key
+		Ornate.place(buttons, cap, Vector2(x, 826), Vector2(56, 56))
+		x += 72.0
+	var pad_hint := Ornate.label("refermer le carnet", 24, Ornate.MUTED)
+	Ornate.place(buttons, pad_hint, Vector2(x + 8, 836), Vector2(230, 40))
+	var stick := Ornate.KeyCap.new()
+	stick.pad = "Stick droit"
+	Ornate.place(buttons, stick, Vector2(x + 260, 826), Vector2(56, 56))
+	var scroll_hint := Ornate.label("faire défiler", 24, Ornate.MUTED)
+	Ornate.place(buttons, scroll_hint, Vector2(x + 330, 836), Vector2(200, 40))
 
 
 ## Rend un nœud accessible par son nom unique (%Nom), comme s'il venait de la scène.

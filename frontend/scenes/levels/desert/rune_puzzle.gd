@@ -4,6 +4,7 @@ extends CanvasLayer
 ## lignes manquantes sont des cases de pierre gravées, et les runes ramassées sont des tuiles à poser. On choisit
 ## une rune, puis la case où la poser ; cliquer une case remplie la libère. « Valider » ne s'active qu'une fois
 ## toutes les cases remplies. À l'erreur, les runes rougissent et le panneau tremble.
+## À la manette (scripts/gamepad.gd) : la croix passe d'une case ou d'une rune à l'autre, A choisit ou grave, B quitte.
 
 signal validated(correct: bool)
 signal closed
@@ -210,8 +211,18 @@ func _own(node: Node) -> void:
 
 
 func _rebuild() -> void:
+	# À la manette, la sélection reste sur la même case, ou au même rang des runes, une fois tout reconstruit.
+	var focus_slot := -1
+	var focus_tile := -1
+	var owner := get_viewport().gui_get_focus_owner() if Gamepad.active else null
+	if owner and owner.get_parent() == _algorithms:
+		focus_slot = owner.get_meta(&"slot", -1)
+	elif owner and owner.get_parent() == _pool:
+		focus_tile = owner.get_meta(&"rank", -1)
 	for child in _algorithms.get_children() + _pool.get_children():
 		child.queue_free()
+	var slots := {}
+	var tiles: Array[Control] = []
 	for column in ALGORITHMS.size():
 		var algorithm: Array = ALGORITHMS[column]
 		var x0 := COLUMN_X[column]
@@ -245,6 +256,8 @@ func _rebuild() -> void:
 				button.inviting = _selected != &"" and _slots[slot] == &""
 				Ornate.place(_algorithms, button, Vector2(x, y), Vector2(width, 50))
 				button.pressed.connect(_on_slot_pressed.bind(slot))
+				button.set_meta(&"slot", slot)
+				slots[slot] = button
 	var free: Array[StringName] = []
 	for rune in _runes:
 		if not rune in _slots:
@@ -259,8 +272,17 @@ func _rebuild() -> void:
 		var row := index / 3
 		Ornate.place(_pool, tile, Vector2(70 + column * 515, 604 + row * 64), Vector2(490, 56))
 		tile.pressed.connect(_on_rune_pressed.bind(rune))
+		tile.set_meta(&"rank", index)
+		tiles.append(tile)
+	# À l'ouverture, la manette sélectionne d'abord une rune à graver.
+	if not tiles.is_empty():
+		tiles[0].set_meta(Gamepad.DEFAULT_META, true)
 	_validate.disabled = _solved or not is_complete()
 	_validate.queue_redraw()
+	if focus_slot >= 0 and slots.has(focus_slot):
+		Gamepad.focus(slots[focus_slot])
+	elif focus_tile >= 0:
+		Gamepad.focus(tiles[mini(focus_tile, tiles.size() - 1)] if not tiles.is_empty() else (_validate if not _validate.disabled else slots[0]))
 
 
 func _on_rune_pressed(rune: StringName) -> void:
@@ -399,7 +421,7 @@ class StoneSlot:
 
 	func _ready() -> void:
 		flat = true
-		focus_mode = Control.FOCUS_NONE
+		Gamepad.setup(self)
 		mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		mouse_entered.connect(queue_redraw)
 		mouse_exited.connect(queue_redraw)
@@ -413,12 +435,14 @@ class StoneSlot:
 		var inset := Ornate.chamfered(rect.grow(-6), 8)
 		draw_polyline(Ornate.closed(inset), Color(0.12, 0.1, 0.09), 2.0)
 		var border := Ornate.GOLD_DARK
-		if is_hovered() or inviting:
+		if Gamepad.lit(self) or inviting:
 			border = Ornate.GOLD_LIGHT
 		var glow := RunePuzzle.COLOR_WRONG if wrong else RunePuzzle.COLOR_IDLE
 		if rune != &"":
 			border = glow
 		draw_polyline(Ornate.closed(shape), border, 3.0)
+		if Gamepad.focused(self):
+			Ornate.focus_ring(self, rect, &"chamfer", 12.0)
 		var middle := Vector2(30, size.y / 2)
 		if rune == &"":
 			# Empreinte en creux : le losange de la rune absente, et une invite discrète.
@@ -441,7 +465,7 @@ class RuneTile:
 
 	func _ready() -> void:
 		flat = true
-		focus_mode = Control.FOCUS_NONE
+		Gamepad.setup(self)
 		mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		mouse_entered.connect(queue_redraw)
 		mouse_exited.connect(queue_redraw)
@@ -449,11 +473,13 @@ class RuneTile:
 	func _draw() -> void:
 		var rect := Rect2(Vector2.ZERO, size)
 		var shape := Ornate.hexagon(rect, size.y * 0.32)
-		var lit := selected or is_hovered()
+		var lit := selected or Gamepad.lit(self)
 		var top := Color(0.4, 0.34, 0.29) if not selected else Color(0.62, 0.42, 0.18)
 		var low := Color(0.24, 0.2, 0.18) if not selected else Color(0.38, 0.24, 0.1)
 		draw_polygon(shape, PackedColorArray([top, top, top.lerp(low, 0.5), low, low, top.lerp(low, 0.5)]))
 		draw_polyline(Ornate.closed(shape), Ornate.GOLD_LIGHT if lit else Ornate.GOLD_DARK, 3.0 if lit else 2.0)
+		if Gamepad.focused(self):
+			Ornate.focus_ring(self, rect, &"hex")
 		var middle := Vector2(size.y * 0.32 + 24, size.y / 2)
 		draw_circle(middle, 19, Color(RunePuzzle.COLOR_IDLE, 0.25))
 		RunePuzzle.draw_glyph(self, rune, middle, 15, RunePuzzle.COLOR_IDLE, 2.6)
