@@ -29,34 +29,33 @@ var _home: Transform3D
 var _body: Node3D
 var _head: Node3D
 var _wings: Array[Node3D] = []
-var _folded: Array[Node3D] = []
-var _legs: Array[Node3D] = []
+var _perched: MeshInstance3D
+var _flying: MeshInstance3D
 
 
 func _ready() -> void:
 	_home = transform
 	_time = randf() * 10.0
+	if _meshes.is_empty():
+		_meshes = _build_meshes()
 	_body = Node3D.new()
 	add_child(_body)
-	_part(_body, "body", Vector3(0, 0.13, 0), Vector3(1.0, 0.9, 1.75))
-	_part(_body, "tail", Vector3(0, 0.12, -0.2), Vector3.ONE, Vector3(-25, 0, 0))
+	# Le corps posé (ailes repliées le long des flancs, pattes) et le corps en vol (sans elles) : un maillage chacun.
+	_perched = VillageMesh.instance(_meshes["perched"], _body)
+	_flying = VillageMesh.instance(_meshes["flying"], _body)
 	_head = Node3D.new()
 	_head.position = Vector3(0, 0.205, 0.12)
 	_body.add_child(_head)
-	_part(_head, "head", Vector3.ZERO, Vector3(1.0, 1.0, 1.15))
-	_part(_head, "beak", Vector3(0, -0.012, 0.085), Vector3.ONE, Vector3(90, 0, 0))
+	VillageMesh.instance(_meshes["head"], _head)
 	for side in [-1.0, 1.0]:
-		_part(_head, "eye", Vector3(side * 0.04, 0.012, 0.028), Vector3.ONE)
-		# Aile repliée, couchée le long du flanc.
-		_folded.append(_part(_body, "folded", Vector3(side * 0.068, 0.145, -0.035), Vector3.ONE, Vector3(-10, 0, side * 6)))
 		# Aile ouverte, cachée tant que l'oiseau est posé.
 		var wing := Node3D.new()
 		wing.position = Vector3(side * 0.05, 0.16, 0.0)
 		_body.add_child(wing)
-		_part(wing, "wing", Vector3(side * 0.11, 0, -0.01), Vector3.ONE)
+		var blade := VillageMesh.instance(_meshes["wing"], wing)
+		blade.position = Vector3(side * 0.11, 0, -0.01)
 		wing.hide()
 		_wings.append(wing)
-		_legs.append(_part(_body, "leg", Vector3(side * 0.028, 0.035, 0.01), Vector3.ONE))
 	_settle()
 
 
@@ -96,8 +95,8 @@ func _settle() -> void:
 	_body.rotation.x = deg_to_rad(30.0) if pecking else 0.0
 	for wing in _wings:
 		wing.hide()
-	for part in _folded + _legs:
-		part.show()
+	_perched.show()
+	_flying.hide()
 
 
 ## S'envole à l'opposé du joueur, en montant, ailes ouvertes et pattes rentrées.
@@ -112,72 +111,35 @@ func _take_off(from: Vector3) -> void:
 	_body.rotation.x = 0.0
 	for wing in _wings:
 		wing.show()
-	for part in _folded + _legs:
-		part.hide()
+	_perched.hide()
+	_flying.show()
 	_timer = FLIGHT_TIME
 	_state = State.FLYING
 
 
-func _part(parent: Node3D, kind: String, at: Vector3, stretch: Vector3, degrees := Vector3.ZERO) -> MeshInstance3D:
-	if _meshes.is_empty():
-		_meshes = _build_meshes()
-	var mesh := MeshInstance3D.new()
-	mesh.mesh = _meshes[kind]
-	mesh.position = at
-	mesh.scale = stretch
-	mesh.rotation_degrees = degrees
-	mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	parent.add_child(mesh)
-	return mesh
+static func release() -> void:
+	_meshes = {}
 
 
+## Les formes du corbeau, fondues par partie (VillageMesh) : posé, il coûte deux appels de dessin au lieu de dix.
 static func _build_meshes() -> Dictionary:
-	var feathers := StandardMaterial3D.new()
-	feathers.albedo_color = FEATHERS
-	feathers.roughness = 0.55
-	var beak := StandardMaterial3D.new()
-	beak.albedo_color = BEAK
-	beak.roughness = 0.5
-	var eye := StandardMaterial3D.new()
-	eye.albedo_color = EYE
-	eye.emission_enabled = true
-	eye.emission = EYE * 0.4
-	var legs := StandardMaterial3D.new()
-	legs.albedo_color = LEGS
-	var body := SphereMesh.new()
-	body.radius = 0.08
-	body.height = 0.16
-	body.radial_segments = 10
-	body.rings = 5
-	body.material = feathers
-	var head := SphereMesh.new()
-	head.radius = 0.055
-	head.height = 0.11
-	head.radial_segments = 8
-	head.rings = 4
-	head.material = feathers
-	var bill := CylinderMesh.new()
-	bill.top_radius = 0.0
-	bill.bottom_radius = 0.02
-	bill.height = 0.09
-	bill.radial_segments = 6
-	bill.material = beak
-	var dot := SphereMesh.new()
-	dot.radius = 0.011
-	dot.height = 0.022
-	dot.radial_segments = 6
-	dot.rings = 3
-	dot.material = eye
-	var tail := BoxMesh.new()
-	tail.size = Vector3(0.09, 0.015, 0.17)
-	tail.material = feathers
-	var folded := BoxMesh.new()
-	folded.size = Vector3(0.03, 0.075, 0.2)
-	folded.material = feathers
-	var wing := BoxMesh.new()
-	wing.size = Vector3(0.22, 0.012, 0.13)
-	wing.material = feathers
-	var leg := BoxMesh.new()
-	leg.size = Vector3(0.012, 0.07, 0.012)
-	leg.material = legs
-	return {"body": body, "head": head, "beak": bill, "eye": dot, "tail": tail, "folded": folded, "wing": wing, "leg": leg}
+	var body := [VillageMesh.sphere(0.08), VillageMesh.at(Vector3(0, 0.13, 0), Vector3.ZERO, Vector3(1.0, 0.9, 1.75)), FEATHERS]
+	var tail := [VillageMesh.box(Vector3(0.09, 0.015, 0.17)), VillageMesh.at(Vector3(0, 0.12, -0.2), Vector3(-25, 0, 0)), FEATHERS]
+	var perched := [body, tail]
+	for side in [-1.0, 1.0]:
+		# Aile repliée, couchée le long du flanc, et patte.
+		perched.append([VillageMesh.box(Vector3(0.03, 0.075, 0.2)),
+			VillageMesh.at(Vector3(side * 0.068, 0.145, -0.035), Vector3(-10, 0, side * 6)), FEATHERS])
+		perched.append([VillageMesh.box(Vector3(0.012, 0.07, 0.012)), VillageMesh.at(Vector3(side * 0.028, 0.035, 0.01)), LEGS])
+	var head := [
+		[VillageMesh.sphere(0.055, 8, 4), VillageMesh.at(Vector3.ZERO, Vector3.ZERO, Vector3(1.0, 1.0, 1.15)), FEATHERS],
+		[VillageMesh.cone(0.02, 0.09), VillageMesh.at(Vector3(0, -0.012, 0.085), Vector3(90, 0, 0)), BEAK],
+	]
+	for side in [-1.0, 1.0]:
+		head.append([VillageMesh.sphere(0.011, 6, 3), VillageMesh.at(Vector3(side * 0.04, 0.012, 0.028)), EYE])
+	return {
+		"perched": VillageMesh.merge(perched),
+		"flying": VillageMesh.merge([body, tail]),
+		"head": VillageMesh.merge(head),
+		"wing": VillageMesh.merge([[VillageMesh.box(Vector3(0.22, 0.012, 0.13)), Transform3D.IDENTITY, FEATHERS]]),
+	}

@@ -1,10 +1,11 @@
 @tool
 class_name VillageParticles
 extends CPUParticles3D
-## Particules d'ambiance du Village : braises qui montent des feux et des cratères en tourbillonnant, ou poussière qui
-## flotte dans la lumière de la mairie. Tout est réglé ici : la scène ne garde que le genre et la taille de la zone.
+## Particules d'ambiance du Village : braises qui montent des feux et des cratères en tourbillonnant, poussière qui
+## flotte dans la lumière de la mairie, ou papillons de nuit qui tournent autour d'une lanterne allumée. Tout est réglé
+## ici : la scène ne garde que le genre et la taille de la zone.
 
-enum Kind { EMBERS, DUST, SPLASH }
+enum Kind { EMBERS, DUST, SPLASH, MOTHS }
 
 @export var kind := Kind.EMBERS
 ## Demi-dimensions de la zone d'émission.
@@ -25,7 +26,7 @@ func _ready() -> void:
 	dot.height = 32
 	var material := StandardMaterial3D.new()
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	if kind != Kind.SPLASH:
+	if kind != Kind.SPLASH and kind != Kind.MOTHS:
 		material.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
@@ -67,6 +68,28 @@ func _ready() -> void:
 		initial_velocity_max = 3.0
 		fade.set_color(0, Color(tint, 0.9))
 		fade.set_color(1, Color(tint, 0.0))
+	elif kind == Kind.MOTHS:
+		# Quelques papillons pâles qui volettent autour de la lanterne : rappelés vers elle (accélération radiale) et
+		# freinés, ils tournent en zigzag sans s'en éloigner.
+		quad.size = Vector2.ONE * 0.06
+		amount = 6
+		lifetime = 3.0
+		preprocess = 3.0
+		direction = Vector3.UP
+		spread = 180.0
+		gravity = Vector3.ZERO
+		initial_velocity_min = 0.4
+		initial_velocity_max = 0.8
+		tangential_accel_min = -0.8
+		tangential_accel_max = 0.8
+		radial_accel_min = -1.2
+		radial_accel_max = -0.6
+		damping_min = 0.4
+		damping_max = 0.7
+		fade.set_color(0, Color(tint, 0.0))
+		fade.set_color(1, Color(tint, 0.0))
+		fade.add_point(0.1, Color(tint, 0.95))
+		fade.add_point(0.9, Color(tint, 0.95))
 	else:
 		quad.size = Vector2.ONE * 0.045
 		amount = 70

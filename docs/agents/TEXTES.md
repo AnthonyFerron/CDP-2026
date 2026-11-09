@@ -98,3 +98,41 @@ Outils de relevé et de mesure, hors du dépôt : `~/cdp-dev/.claude/captures/ve
 - `hints_fit.gd` : indices ;
 - `village_breaks.gd` : coupures de ligne ;
 - `text_shots.gd` : captures devant un texte.
+
+## Village : six nouveaux textes à lire (9 novembre, `features/village-recit`)
+
+Récit environnemental du village détruit : la chute de la porte, la fuite vers le bunker, le maire resté, le Mont Sam Altan qui s'éveille et les anciens bâtisseurs. Chaque texte est un `Readable` sous `Lore`, que `village.gd` branche déjà ; il est écrit dans `tools/write_village_tscn.py` (`LORE`). Le panneau ne porte qu'un titre ou un court extrait, le texte entier se lit avec E. Cinq des six aident à comprendre l'énigme des cinq codes, par des exemples qui ne sont pas ceux des épreuves : aucun ne donne de réponse (3, green, 10, 2, 12). Le village n'est jamais nommé.
+
+| Titre | Où | Support | Ce qu'il raconte | Ce qu'il apporte à l'énigme |
+| --- | --- | --- | --- | --- |
+| La sommation de Vibelandia | (6, 51), hors du rempart, face au chemin du portail | affiche sur poteaux (`PARCHMENT`), « Sommation de Vibelandia » | Vibelandia exige les écrits des anciens bâtisseurs gardés à la mairie ; une main de Codia a répondu au charbon | les savoirs des anciens « se comprennent » : il faut lire leurs instructions |
+| La lettre de Mahaut | (-5.74, 29), mur de la première maison de la grande rue | parchemin cloué (`PARCHMENT`, mur), « À Gaspard, s'il revient » | la fuite au troisième son du cor ; le maire resté, ses notes déchirées et cachées | dix fragments, deux par langage, cachés dans la mairie (registres, tiroirs, armoires, coffres) ; il faut les deux d'un langage |
+| L'ardoise de l'écolier | (-10.9, -21.74), mur du fond de la maison de la famille, près du petit lit et de la poupée | ardoise (`IRON`, mur), « pommes = 4 / pommes = pommes + 3 » | la leçon du maître d'école, la fierté de l'enfant | lire de haut en bas, une ligne après l'autre ; une variable garde une valeur qu'une ligne suivante remplace ; noter chaque valeur (exemple sans lien avec les épreuves) |
+| La pierre de fondation | (4, -19.74), sous la fenêtre droite de la mairie | plaque de pierre (`STONE`, mur), « Ici reposent les pierres des anciens bâtisseurs » | la mairie bâtie sur les fondations des anciens bâtisseurs | le rôle de chaque langage (la page, ses couleurs, puis compter, décider, répéter) ; ce qui est écrit pour soi reste caché (commentaire) ; l'ordre le plus précis l'emporte (CSS) |
+| Le registre du sergent | (21.6, 0.68, 13.4), sur la table du sergent, au corps de garde | parchemin couché sur la table, près de la bougie allumée, « Relève de la garde » | la relève de la garde en 5812 | parcourir une liste une valeur à la fois (boucle) ; un nombre pair se partage en deux sans reste ; le reste d'un partage (13 en équipes de 4 : reste 1) |
+| Le carnet du meunier | (31, 4.38, -26.9), sur la meule de rechange, au pied du moulin à vent | parchemin couché sur la meule, « Carnet du meunier » | les catapultes, la meule qui tremble seule, l'eau tiède : le Mont Sam Altan s'éveille ; la dernière farine laissée à la boulangère | aucun : récit (il rejoint l'ardoise de la boulangère, « plus de farine depuis que le meunier a fui ») |
+
+Les textes entiers :
+
+- **La sommation de Vibelandia** : Au nom du royaume de Vibelandia : ouvrez la porte avant la nuit et livrez à nos hérauts les écrits des anciens bâtisseurs que garde votre mairie. Qui obéira sera épargné ; qui résistera verra son village brûler. Au bas de l'affiche, une main de Codia a répondu au charbon : « Les savoirs des anciens ne se livrent pas. Ils se comprennent, ou ils restent muets. »
+- **La lettre de Mahaut** : Gaspard, si tu reviens et que tu lis ceci : nous sommes partis vers le bunker du roi quand le cor a sonné trois fois. Le maire, lui, est resté. Pour que Vibelandia ne trouve rien, il a déchiré ses notes sur les langages des anciens bâtisseurs en dix morceaux, deux par langage, et les a cachés dans la mairie : parmi les registres, dans les tiroirs, les armoires et les coffres. Il disait qu'un morceau seul ne suffit pas : il faut les deux pour comprendre. Ta sœur, Mahaut.
+- **L'ardoise de l'écolier** : Leçon du maître d'école, recopiée à la craie : « Les anciens bâtisseurs lisaient leurs instructions de haut en bas, une ligne après l'autre, sans en sauter aucune. Dans pommes = 4, le mot pommes garde la valeur 4, et une ligne plus bas peut la changer : pommes = pommes + 3 lui donne 7, et l'ancien nombre est oublié. Notez chaque valeur à chaque ligne. » Dessous, d'une écriture d'enfant : « Le maître dit que j'ai bon. »
+- **La pierre de fondation** : Gravé sous la fenêtre de la mairie : « Cette maison commune repose sur les fondations des anciens bâtisseurs. Ils donnaient leurs ordres en cinq langages : le premier dresse la page, le deuxième la pare de couleurs, les trois autres comptent, décident et répètent. Ce qu'ils écrivaient pour eux seuls restait caché aux passants, et quand deux ordres se contredisaient, le plus précis l'emportait. »
+- **Le registre du sergent** : Relève de la garde, an 5812. Chaque soir, le sergent passe les tours du rempart une à une, de la première à la dernière, sans en sauter aucune, et tient son compte à mesure. Les jours pairs, ceux qu'on partage en deux sans reste, la relève monte au rempart ; les jours impairs, elle garde la porte. Ce soir, treize gardes en équipes de quatre : trois équipes, et il en reste un pour la tour. Le reste d'un partage décide de tout.
+- **Le carnet du meunier** : Les catapultes de Vibelandia tonnent depuis l'aube. Cette nuit, la meule a tremblé toute seule, et l'eau du ruisseau était tiède sous la roue. Les anciens disent que le Mont Sam Altan dort depuis des siècles ; je n'aime pas la fumée qui monte de sa bouche. Je laisse la dernière farine à la boulangère, pour les gardes du rempart, et je pars avec les autres.
+
+### Indices du Village (`ZONE_HINTS`, `scripts/hints.gd`)
+
+| Indice | Avant | Après |
+| --- | --- | --- |
+| 1 | Dix fragments de papier sont cachés dans la mairie, au rez-de-chaussée et dans le bureau du maire, à l'étage. Relisez-les avec I. | Dix fragments de papier, deux par langage, sont cachés dans la mairie : au rez-de-chaussée et dans le bureau du maire, à l'étage. Ouvrez tiroirs, armoires et coffres, et relisez-les avec I. |
+| 2 | Les cinq codes du bureau se résolvent dans l'ordre. Lisez chaque programme ligne par ligne, en notant la valeur de chaque variable à chaque étape. | … à chaque étape, comme sur l'ardoise de l'écolier, dans la maison voisine de la mairie. |
+| 3 | Un commentaire HTML ne s'affiche pas. En CSS, un identifiant l'emporte sur une classe. Pour les autres, suivez chaque condition et chaque boucle pas à pas. | … pas à pas : le registre du sergent, au corps de garde, rappelle ce qu'est un nombre pair. |
+
+### Vérifications
+
+- **Typographie et glyphes** (`.claude/captures/village-recit/tools/check_texts.py`, mêmes règles que `typo.py` : espace avant `: ; ! ?`, guillemets « » espacés, apostrophes droites, pas de double espace) sur les 30 textes du Village (titre, texte et panneau des neuf `LORE`, trois indices) : 0 problème. Hors ASCII, seulement « » À à â ç è é ê î ô û œ.
+- **Lecteur du HUD** (`measure_reader.gd`, vrai `hud.tscn`, 1920 × 1080) : 330 à 502 px de haut (7 lignes au plus, lettre de Mahaut, ardoise de l'écolier, registre du sergent), loin des 889 px de la lettre de la bibliothécaire.
+- **Panneaux** (`sign_fit.gd`) : les 10 panneaux du `Lore` tiennent dans leur planche ; plus petite ligne 8 cm (registre du sergent, carnet du meunier, couchés sur leur support et lus de près).
+- **Fenêtre des indices** (`hints_fit.gd`) : 160, 200 et 200 px pour les trois indices du Village, 240 px au plus tous lieux confondus, pour 350.
+- **Captures** : `.claude/captures/village-recit/apres2/` et `apres3/` (lettre, ardoise, registre, carnet) et `apres1/` (sommation, pierre de fondation).
