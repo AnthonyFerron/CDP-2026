@@ -402,68 +402,6 @@ static func pad_glyph_has_letter(glyph: String) -> bool:
 	return glyph in ["A", "B", "X", "Y", "LB", "RB", "LT", "RT"]
 
 
-class Backdrop:
-	extends Control
-	## Nuit violette : ciel à facettes, lune, collines, sapins et château sur la colline de droite.
-
-	func _ready() -> void:
-		set_anchors_preset(Control.PRESET_FULL_RECT)
-		mouse_filter = Control.MOUSE_FILTER_IGNORE
-
-	func _draw() -> void:
-		var w := 1920.0
-		var h := 1080.0
-		var top := Color(0.2, 0.1, 0.24)
-		var bottom := Color(0.14, 0.07, 0.17)
-		draw_polygon(PackedVector2Array([Vector2(0, 0), Vector2(w, 0), Vector2(w, h), Vector2(0, h)]),
-			PackedColorArray([top, top, bottom, bottom]))
-		# Facettes claires dans le ciel, à la manière d'un ciel low-poly.
-		var rng := RandomNumberGenerator.new()
-		rng.seed = 5814
-		for i in 26:
-			var c := Vector2(rng.randf_range(0, w), rng.randf_range(0, h * 0.8))
-			var r := rng.randf_range(60, 170)
-			var tri := PackedVector2Array([c + Vector2(-r, r * 0.4), c + Vector2(r * rng.randf_range(0.3, 1.0), -r * 0.5), c + Vector2(r, r * 0.6)])
-			draw_colored_polygon(tri, Color(0.32, 0.18, 0.36, rng.randf_range(0.18, 0.4)))
-		# Lune et son halo.
-		var moon := Vector2(1720, 250)
-		for ring in range(6, 0, -1):
-			draw_circle(moon, 92 + ring * 22, Color(0.98, 0.75, 0.35, 0.025))
-		draw_circle(moon, 94, Color(0.98, 0.76, 0.38))
-		draw_circle(moon + Vector2(-26, -22), 66, Color(1.0, 0.82, 0.48, 0.5))
-		# Château sur la colline de droite, fenêtres allumées.
-		var castle := Color(0.1, 0.05, 0.1)
-		draw_rect(Rect2(1700, 330, 130, 330), castle)
-		draw_rect(Rect2(1780, 250, 70, 410), castle)
-		for x in [1700, 1726, 1752, 1780, 1806, 1832]:
-			draw_rect(Rect2(x, 316 if x < 1780 else 236, 16, 16), castle)
-		draw_colored_polygon(PackedVector2Array([Vector2(1776, 250), Vector2(1815, 196), Vector2(1854, 250)]), castle)
-		for spot in [Vector2(1738, 400), Vector2(1806, 300), Vector2(1806, 380), Vector2(1742, 470)]:
-			draw_rect(Rect2(spot, Vector2(14, 22)), Color(1.0, 0.74, 0.32))
-		# Collines en plusieurs plans, du plus clair au plus sombre.
-		var layers := [
-			[Color(0.26, 0.15, 0.28), [Vector2(0, 640), Vector2(260, 560), Vector2(560, 610), Vector2(900, 540), Vector2(1240, 600), Vector2(1560, 520), Vector2(1920, 600)]],
-			[Color(0.2, 0.11, 0.22), [Vector2(0, 760), Vector2(300, 700), Vector2(650, 760), Vector2(1000, 690), Vector2(1400, 760), Vector2(1700, 650), Vector2(1920, 700)]],
-			[Color(0.15, 0.08, 0.17), [Vector2(0, 900), Vector2(380, 840), Vector2(760, 900), Vector2(1150, 840), Vector2(1500, 900), Vector2(1920, 830)]],
-		]
-		for layer in layers:
-			var points := PackedVector2Array(layer[1])
-			points.append(Vector2(w, h))
-			points.append(Vector2(0, h))
-			draw_colored_polygon(points, layer[0])
-		# Sapins en silhouette sur les bords.
-		for tree in [Vector2(40, 780), Vector2(110, 820), Vector2(1580, 760), Vector2(1660, 720), Vector2(1880, 760), Vector2(1790, 820)]:
-			_pine(tree, 210 if tree.x > 1500 else 180)
-
-	func _pine(base: Vector2, height: float) -> void:
-		var color := Color(0.09, 0.05, 0.1)
-		for tier in 3:
-			var y := base.y - height * (0.25 + tier * 0.25)
-			var half := height * (0.32 - tier * 0.07)
-			draw_colored_polygon(PackedVector2Array([Vector2(base.x - half, y + height * 0.32), Vector2(base.x, y - height * 0.18), Vector2(base.x + half, y + height * 0.32)]), color)
-		draw_rect(Rect2(base.x - 8, base.y - height * 0.12, 16, height * 0.14), color)
-
-
 class Frame:
 	extends Control
 	## Cadre sombre à double bordure dorée et coins coupés, avec, en option, une plaque de titre, des traits
