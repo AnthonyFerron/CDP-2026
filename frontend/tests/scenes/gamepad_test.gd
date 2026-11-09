@@ -236,11 +236,13 @@ func _marais() -> void:
 	event.button_index = JOY_BUTTON_X
 	event.pressed = true
 	Input.parse_input_event(event)
-	await wait(6)
+	await settle()
+	await wait(4)
 	check("X : saut", not player.is_on_floor() or player.velocity.y > 0.5)
 	event = InputEventJoypadButton.new()
 	event.button_index = JOY_BUTTON_X
 	Input.parse_input_event(event)
+	await settle()
 	await wait(60)
 	check("sprint lié à B", InputMap.event_is_action(_button(JOY_BUTTON_B), &"sprint"))
 
