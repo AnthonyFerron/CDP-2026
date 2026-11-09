@@ -1581,19 +1581,56 @@ def build_landmarks(scene, rng):
     furniture(scene, "nature_kit/statue_obelisk", (-45.0, 0.0, -36.0), 0.0, 3.4, height=3.0)
 
 
-# Mine d'argent : entrée de la galerie, dans un tertre de falaise au pied des montagnes du nord-est. Repère de l'entrée :
-# MINE_MOUTH au ras de la façade, u le long de la façade (vers la droite quand on regarde l'entrée), v vers le dehors ;
-# la façade regarde le bout de la ruelle de la mine (hub_terrain.gd : ALLEYS, 79,5 ; -38).
+# Mine d'argent : l'entrée d'une galerie au pied des montagnes du nord-est, fermée sur ordre du roi Codeon V. Une voûte
+# trapue de gros madriers posés en arc, cerclée de fer, assise sur un socle de grosses pierres et adossée à un tertre de
+# rochers ; des planches neuves clouées en travers la ferment, avec l'écriteau de l'ordre. Devant, les rails de bois
+# ferré sortent de la galerie : le wagonnet chargé de minerai d'argent y est resté, calé, à côté d'une caisse de minerai,
+# d'une pile de bois de soutènement, des outils et des gravats.
+# Repère de l'entrée : MINE_MOUTH au ras de l'entrée, u le long de la façade (vers la droite quand on regarde l'entrée),
+# v vers le dehors, y vers le haut ; l'entrée regarde le bout des deux ruelles de la mine (hub_terrain.gd : ALLEYS,
+# 79,5 ; -38 et 78,5 ; -31). Le sol est plat sur le replat de la mine (LANDMARKS de hub_terrain.gd : 84, -40, rayon 13).
+# Bois, fer (les faces gris pâle de wall-block) et planches viennent tous du même kit : un seul matériau une fois regroupé.
+from build_plaine import transform_text
+
 MINE_MOUTH = (82.6, -39.6)
 MINE_YAW = -60.0
-# Côté des blocs de falaise (nature_kit, cubes de 1 m), et enfoncement dans le sol, qui reste plat sur le replat de la
-# mine (LANDMARKS de hub_terrain.gd : 84, -40, rayon 13).
-MINE_BLOCK = 4.0
-MINE_SINK = 0.3
-# Profondeur de la façade percée (cliff_cave_rock : face avant à z = 0,5, face arrière à z = 0,33), et fond de la galerie,
-# bouché par l'éboulis : le boisage et les planches tiennent entre les deux.
-MINE_FACADE = 0.17 * MINE_BLOCK
-MINE_BACK = 2.4
+# Voûte : naissance de l'arc (centre des cercles) au-dessus du sol, rayon intérieur, épaisseur des madriers, et nombre de
+# madriers sur l'arc (de -10 à 190 degrés : les deux derniers descendent jusqu'au sol).
+MINE_SPRING = 0.6
+MINE_RADIUS = 2.4
+MINE_BOARD = 0.55
+MINE_BOARDS = 11
+# Arc de tête, plus épais que la voûte, de v = 0 à MINE_RING ; planches clouées devant, jusqu'à MINE_PLANKS. Fond de la
+# voûte, pris dans le tertre.
+MINE_RING = 0.65
+MINE_PLANKS = MINE_RING + 0.3
+MINE_BACK = -6.0
+# Rails : écartement, cap (degrés, vers la ruelle du sud) et longueur depuis l'entrée.
+MINE_GAUGE = 1.0
+MINE_TRACK = 10.0
+MINE_TRACK_END = 8.4
+MINE_WOOD = "fantasy_town_kit/wall-wood-block"
+MINE_IRON = "fantasy_town_kit/wall-block"
+MINE_PLANK = "fantasy_town_kit/planks"
+
+MODEL_BOXES.update({
+    "fantasy_town_kit/wall-wood-block": ((-0.5, 0.0, -0.5), (1.0, 1.0, 1.0)),
+    "fantasy_town_kit/wall-block": ((-0.5, 0.0, -0.5), (1.0, 1.0, 1.0)),
+    "fantasy_town_kit/planks": ((-0.5, 0.0, -0.5), (1.0, 0.06, 1.0)),
+    "fantasy_town_kit/wheel": ((0.2, 0.0, -0.23), (0.24, 0.48, 0.47)),
+    "nature_kit/stone_largeB": ((-0.38, 0.0, -0.51), (0.77, 0.43, 1.02)),
+    "nature_kit/stone_largeD": ((-0.53, 0.0, -0.52), (1.07, 0.57, 1.03)),
+    "nature_kit/stone_largeF": ((-0.55, 0.0, -0.45), (1.1, 0.48, 0.9)),
+    "nature_kit/stone_tallB": ((-0.38, 0.0, -0.39), (0.76, 0.88, 0.77)),
+    "nature_kit/log_stack": ((-0.22, 0.0, -0.35), (0.42, 0.35, 0.71)),
+    "graveyard_kit/rocks": ((-0.44, 0.0, -0.43), (1.08, 0.38, 0.96)),
+    "graveyard_kit/debris": ((-0.29, 0.0, -0.31), (0.54, 0.16, 0.55)),
+    "castle_kit/rocks-large": ((-0.6, 0.0, -0.67), (1.2, 0.5, 1.35)),
+    "castle_kit/rocks-small": ((-0.52, 0.0, -0.55), (1.03, 0.5, 1.11)),
+})
+# Planche (fantasy_town_kit/planks, mince selon y, lames le long de z) dressée face au dehors : ses lames courent le
+# long de u, sa largeur (x) passe en hauteur, son épaisseur (y) le long de v.
+MINE_BOARD_UP = [[0.0, 0.0, 1.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]]
 
 
 def mine_at(u, v, y=0.0):
@@ -1601,59 +1638,200 @@ def mine_at(u, v, y=0.0):
     return (MINE_MOUTH[0] + c * u + s * v, y, MINE_MOUTH[1] - s * u + c * v)
 
 
-def mine_box(scene, u0, u1, v0, v1, y0, y1):
-    """Collision d'un pavé du tertre, donné dans le repère de l'entrée."""
-    scene.add_box(mine_at((u0 + u1) / 2, (v0 + v1) / 2, (y0 + y1) / 2), (u1 - u0, y1 - y0, v1 - v0), MINE_YAW)
+def mine_turn(roll=0.0, yaw=0.0, pre=None):
+    """Rotation dans le repère de l'entrée : d'abord pre, puis roll autour de l'axe de la galerie (v), puis yaw."""
+    basis = multiply(rotation_y(yaw), rotation_z(roll))
+    return multiply(basis, pre) if pre else basis
+
+
+def mine_piece(scene, model, u, v, y, size, turn=None, solid=False):
+    """Pose un modèle centré en (u, v, y) du repère de l'entrée, tourné de turn (mine_turn), étiré à la taille size
+    (le long de ses axes x, y, z) ; solid ajoute une collision tournée comme lui, à sa taille."""
+    turn = turn or mine_turn()
+    (px, py, pz), (sx, sy, sz) = MODEL_BOXES[model]
+    scale = (size[0] / sx, size[1] / sy, size[2] / sz)
+    basis = multiply(rotation_y(MINE_YAW), turn)
+    center = mine_at(u, v, y)
+    offset = ((px + sx / 2) * scale[0], (py + sy / 2) * scale[1], (pz + sz / 2) * scale[2])
+    origin = tuple(center[r] - sum(basis[r][i] * offset[i] for i in range(3)) for r in range(3))
+    scene.add(model, origin)
+    name, path, _, group = scene.visuals[-1]
+    scaled = [[basis[r][i] * scale[i] for i in range(3)] for r in range(3)]
+    scene.visuals[-1] = (name, path, transform_text(scaled, origin), group)
+    if solid:
+        mine_solid(scene, u, v, y, size, turn)
+
+
+def mine_solid(scene, u, v, y, size, turn=None):
+    """Collision d'un pavé du repère de l'entrée, centré en (u, v, y), tourné de turn."""
+    basis = multiply(rotation_y(MINE_YAW), turn or mine_turn())
+    center = mine_at(u, v, y)
+    scene.add_box(center, size)
+    _, identifier, group = scene.colliders[-1]
+    scene.colliders[-1] = (transform_text(basis, center), identifier, group)
+
+
+def mine_ground(scene, model, u, v, scale, yaw=0.0, sink=0.08, solid=0.8):
+    """Pose un rocher (ou un tas) au sol, à l'échelle scale, enfoncé de sink ; solid donne la part de son emprise
+    que couvre sa collision (rochers arrondis), 0 pour aucune."""
+    (px, py, pz), (sx, sy, sz) = MODEL_BOXES[model]
+    size = (sx * scale, sy * scale, sz * scale)
+    mine_piece(scene, model, u, v, size[1] / 2 - sink, size, mine_turn(yaw=yaw))
+    if solid:
+        mine_solid(scene, u, v, (size[1] - sink) / 2, (size[0] * solid, size[1] - sink, size[2] * solid), mine_turn(yaw=yaw))
+
+
+# Gradins de collision d'un amas de colonnes (castle_kit/rocks-large, à l'échelle 1) : emprise (x0, x1, z0, z1) et
+# hauteurs (bas, haut) de chaque étage ; la colonne haute est décalée du centre de l'amas.
+MINE_ROCK_TIERS = (((-0.45, 0.45, -0.5, 0.5), 0.0, 0.15), ((-0.47, 0.27, -0.35, 0.46), 0.15, 0.25),
+                   ((-0.22, 0.07, -0.13, 0.46), 0.25, 0.44))
+
+
+def mine_rock(scene, u, v, scale, yaw, sink=0.3):
+    """Amas de rochers du tertre (castle_kit/rocks-large), enfoncé de sink, avec une collision en trois gradins qui suit
+    ses colonnes."""
+    scene.add("castle_kit/rocks-large", mine_at(u, v, -sink), MINE_YAW + yaw, scale)
+    c, s = math.cos(math.radians(yaw)), math.sin(math.radians(yaw))
+    for (x0, x1, z0, z1), y0, y1 in MINE_ROCK_TIERS:
+        mx, mz = (x0 + x1) / 2 * scale, (z0 + z1) / 2 * scale
+        bottom = max(y0 * scale - sink, 0.0)
+        top = y1 * scale - sink
+        mine_solid(scene, u + c * mx + s * mz, v - s * mx + c * mz, (bottom + top) / 2, ((x1 - x0) * scale, top - bottom, (z1 - z0) * scale),
+                   mine_turn(yaw=yaw))
+
+
+def mine_arc(index):
+    """Angle (degrés) du madrier index de l'arc, de -10 à 190."""
+    return -10.0 + index * 200.0 / (MINE_BOARDS - 1)
+
+
+def mine_track(s, across=0.0):
+    """Point (u, v) des rails, à s mètres de l'entrée le long de la voie et across mètres à sa droite."""
+    a = math.radians(MINE_TRACK)
+    return (s * math.sin(a) + across * math.cos(a), 0.3 + s * math.cos(a) - across * math.sin(a))
 
 
 def build_mine(scene, rng):
-    """Mine d'argent au pied des montagnes, au nord-est : l'entrée d'une galerie creusée dans un tertre de falaise, son
-    boisage, et des planches clouées en travers par ordre du roi Codeon V ; derrière, l'éboulis de la guerre."""
-    size, sink = MINE_BLOCK, MINE_SINK
-    top = size - sink
-    block = "nature_kit/cliff_block_stone"
-    # Cœur du tertre : la façade de pierre taillée, percée de l'entrée, puis la galerie, entre deux parois et jusqu'au
-    # bloc du fond. Les rochers l'habillent ; seule la façade reste à nu.
-    scene.add("nature_kit/cliff_cave_stone", mine_at(0.0, -size / 2, -sink), MINE_YAW, size)
-    gallery = MINE_BACK - MINE_FACADE
-    for u in (-size / 2 - 0.3, size / 2 + 0.3):
-        scene.add(block, mine_at(u, -MINE_FACADE - gallery / 2, -sink), MINE_YAW, (0.6, size, gallery))
-    depth = 1.5 * size - MINE_BACK
-    scene.add(block, mine_at(0.0, -MINE_BACK - depth / 2, -sink), MINE_YAW, (size, size, depth))
-    # Collisions du cœur : blocs pleins, galerie fermée au droit des planches, montants de la façade.
-    half = size * 1.5
-    mine_box(scene, -half, -size / 2, -size, 0.0, 0.0, top)
-    mine_box(scene, size / 2, half, -size, 0.0, 0.0, top)
-    mine_box(scene, -size / 2, size / 2, -1.5 * size, -MINE_FACADE - 0.05, 0.0, top)
-    for u0, u1 in ((-size / 2, -0.4 * size), (0.4 * size, size / 2)):
-        mine_box(scene, u0, u1, -MINE_FACADE - 0.05, 0.0, 0.0, top)
-    # Rochers du tertre, comme celui du bunker voisin : deux qui encadrent la façade, puis les flancs et le dos, tous
-    # posés au sol avec leur collision ; la crête repose sur le cœur, au-dessus de la façade, hors d'atteinte.
-    for u, v, yaw, scale in ((-5.6, 0.0, 15.0, 6.0), (5.6, -0.2, -30.0, 6.0), (-7.4, -5.4, 60.0, 7.5), (7.4, -5.6, -50.0, 7.5),
-                             (-3.4, -9.6, 100.0, 8.0), (3.8, -9.2, 160.0, 8.0)):
-        scene.add("castle_kit/rocks-large", mine_at(u, v, -0.4), MINE_YAW + yaw, scale)
-        scene.add_box(mine_at(u, v, 1.2), (0.55 * 1.2 * scale, 2.4, 0.55 * 1.35 * scale), MINE_YAW + yaw)
-    scene.add("castle_kit/rocks-large", mine_at(-0.2, -3.0, top), MINE_YAW + 10.0, 5.5)
-    # Boisage de la galerie : un cadre juste derrière la façade, un autre au fond, à moitié pris dans l'éboulis.
-    furniture(scene, "mini_dungeon/wood-support", mine_at(0.0, -MINE_FACADE - 0.4), MINE_YAW, 2.7)
-    furniture(scene, "mini_dungeon/wood-support", mine_at(0.1, -MINE_BACK + 0.35), MINE_YAW, 2.5)
-    # Éboulis qui bouche la galerie, contre le bloc du fond.
-    furniture(scene, "mini_dungeon/rocks", mine_at(0.0, -MINE_BACK + 0.6), MINE_YAW + 15.0, (2.4, 4.4, 1.1))
-    furniture(scene, "mini_dungeon/stones", mine_at(-0.7, -MINE_BACK + 1.05), MINE_YAW + 40.0, 1.2)
-    # Planches clouées en travers sur le premier cadre, et l'écriteau de l'ordre du roi.
-    for y, roll in ((0.25, 0.0), (0.95, 0.0), (1.65, 0.0)):
-        furniture(scene, "fantasy_town_kit/planks-half", mine_at(0.0, -MINE_FACADE - 0.06, y), MINE_YAW + 90.0,
-                  (1.0, 1.0, 3.6), tilt=0.0, roll=90.0)
-    scene.board("MineOrder", mine_at(0.0, -MINE_FACADE - 0.03), MINE_YAW,
-                "Fermée par ordre\ndu roi Codeon V", style=0, mount=1, size=(1.15, 0.5), height=1.3, line=0.1)
-    # Devant l'entrée : le wagonnet du minerai, ses outils et des caisses abandonnés.
-    furniture(scene, "fantasy_town_kit/cart", mine_at(-4.2, 5.0), MINE_YAW + 75.0, 2.6, height=1.4)
-    for x, z, yaw, model in ((-2.4, 4.4, 20.0, "survival_kit/tool-pickaxe"), (-2.8, 6.0, 75.0, "survival_kit/tool-shovel")):
-        furniture(scene, model, mine_at(x, z), MINE_YAW + yaw, 4.0, tilt=90.0)
-    furniture(scene, "survival_kit/box-large", mine_at(5.0, 5.0), MINE_YAW + 10.0, 3.6, height=0.9)
-    furniture(scene, "survival_kit/box-large", mine_at(5.6, 6.3), MINE_YAW - 15.0, 3.6, height=0.9)
-    # Déblais tirés de la galerie, en tas sur le côté.
-    furniture(scene, "mini_dungeon/stones", mine_at(-7.0, 4.6), MINE_YAW + 70.0, 2.6, height=0.9)
+    """Mine d'argent au pied des montagnes, au nord-est : voûte de madriers cerclée de fer sur un socle de pierres,
+    fermée de planches clouées en travers par ordre du roi Codeon V ; devant, le wagonnet de minerai arrêté sur ses
+    rails. Les collisions suivent les pièces (madriers et cercles tournés comme eux) et ferment la galerie."""
+    wood, iron, plank = MINE_WOOD, MINE_IRON, MINE_PLANK
+    step = 200.0 / (MINE_BOARDS - 1)
+    middle = MINE_RADIUS + MINE_BOARD / 2
+    outer = MINE_RADIUS + MINE_BOARD
+    # Voûte : les madriers, posés le long de la galerie, chacun tourné sur l'arc.
+    width = 2 * middle * math.sin(math.radians(step / 2)) + 0.03
+    for index in range(MINE_BOARDS):
+        angle = mine_arc(index)
+        u, y = middle * math.cos(math.radians(angle)), MINE_SPRING + middle * math.sin(math.radians(angle))
+        length = -0.05 - MINE_BACK
+        mine_piece(scene, wood, u, MINE_BACK + length / 2, y, (width, MINE_BOARD, length), mine_turn(angle - 90.0), solid=True)
+    # Arc de tête : de gros voussoirs, plus épais que la voûte, qui encadrent l'entrée ; un sur deux avance un peu.
+    ring_in, ring_out = MINE_RADIUS - 0.15, outer + 0.2
+    ring_mid = (ring_in + ring_out) / 2
+    ring_width = 2 * ring_mid * math.sin(math.radians(step / 2)) + 0.08
+    for index in range(MINE_BOARDS):
+        angle = mine_arc(index)
+        u, y = ring_mid * math.cos(math.radians(angle)), MINE_SPRING + ring_mid * math.sin(math.radians(angle))
+        depth = MINE_RING + (0.0 if index % 2 else -0.06)
+        mine_piece(scene, wood, u, depth / 2, y, (ring_width, ring_out - ring_in, depth), mine_turn(angle - 90.0), solid=True)
+    # Cercles de fer sur la voûte : un derrière l'arc de tête, un vers le fond.
+    radius = outer + 0.04
+    band_width = 2 * radius * math.sin(math.radians(step / 2)) + 0.04
+    for v in (-0.75, -3.3):
+        for index in range(MINE_BOARDS):
+            angle = mine_arc(index)
+            u, y = radius * math.cos(math.radians(angle)), MINE_SPRING + radius * math.sin(math.radians(angle))
+            mine_piece(scene, iron, u, v, y, (band_width, 0.08, 0.34), mine_turn(angle - 90.0))
+    # La galerie, fermée : un plein derrière les planches, en gradins sous la voûte (rien n'en dépasse).
+    depth = MINE_PLANKS - MINE_BACK
+    for half, y0, y1 in ((MINE_RADIUS - 0.1, 0.0, MINE_SPRING + 0.5 * MINE_RADIUS),
+                         (0.7 * MINE_RADIUS, MINE_SPRING + 0.5 * MINE_RADIUS, MINE_SPRING + 0.83 * MINE_RADIUS),
+                         (0.37 * MINE_RADIUS, MINE_SPRING + 0.83 * MINE_RADIUS, MINE_SPRING + 0.98 * MINE_RADIUS)):
+        mine_solid(scene, 0.0, MINE_BACK + depth / 2, (y0 + y1) / 2, (2 * half, y1 - y0, depth))
+    # Éboulis au fond de la galerie, qu'on devine entre les planches.
+    furniture(scene, "mini_dungeon/rocks", mine_at(0.0, MINE_BACK + 1.2), MINE_YAW + 15.0, (4.2, 4.0, 1.8))
+    furniture(scene, "mini_dungeon/stones", mine_at(-0.8, MINE_BACK + 2.4), MINE_YAW + 40.0, 2.0)
+    # Planches neuves clouées en travers de l'entrée, sur l'arc de tête : une croix, et deux traverses ; l'écriteau de
+    # l'ordre sur la plus haute.
+    for roll, v in ((38.0, MINE_RING + 0.05), (-38.0, MINE_RING + 0.15)):
+        mine_piece(scene, plank, 0.0, v, 1.6, (0.4, 0.1, 4.9), mine_turn(roll, pre=MINE_BOARD_UP))
+    for y, roll in ((0.6, -1.0), (1.85, 1.5)):
+        mine_piece(scene, plank, 0.0, MINE_PLANKS - 0.05, y, (0.44, 0.1, 5.6), mine_turn(roll, pre=MINE_BOARD_UP))
+    scene.board("MineOrder", mine_at(0.0, MINE_PLANKS), MINE_YAW,
+                "Fermée par ordre\ndu roi Codeon V", style=0, mount=1, size=(1.4, 0.6), height=1.85, line=0.12)
+    # Socle de grosses pierres le long de la voûte, et deux plus hautes qui encadrent l'entrée.
+    for side in (-1, 1):
+        mine_ground(scene, "nature_kit/stone_largeD", side * 3.75, 0.85, 2.1, 20.0 * side)
+        mine_ground(scene, "nature_kit/stone_largeB", side * 4.7, -0.2, 1.9, 60.0 * side)
+        for v, model, scale, yaw in ((-1.4, "nature_kit/stone_largeF", 2.6, 30.0), (-3.3, "nature_kit/stone_largeD", 2.5, -20.0)):
+            mine_ground(scene, model, side * 3.7, v, scale, yaw * side)
+    # Tertre de rochers où s'enfonce la galerie, derrière les cercles de fer : il monte un peu plus haut que la voûte.
+    for u, v, scale, yaw in ((-5.6, -6.8, 7.5, 20.0), (5.4, -7.0, 7.5, -40.0), (0.0, -8.6, 9.0, 70.0), (-1.4, -12.0, 9.0, 140.0),
+                             (4.0, -11.6, 8.0, 100.0)):
+        mine_rock(scene, u, v, scale, yaw)
+    # Rails de bois ferré sur leurs traverses, de l'éboulis au bout de la voie, vers la ruelle du sud.
+    start = MINE_BACK + 1.8
+    rails = MINE_TRACK_END - start
+    for side in (-1, 1):
+        u, v = mine_track(start + rails / 2, side * MINE_GAUGE / 2)
+        mine_piece(scene, wood, u, v, 0.12, (0.13, 0.12, rails), mine_turn(yaw=MINE_TRACK))
+        mine_piece(scene, iron, u, v, 0.19, (0.08, 0.025, rails), mine_turn(yaw=MINE_TRACK))
+    s = start + 0.3
+    while s < MINE_TRACK_END:
+        u, v = mine_track(s)
+        mine_piece(scene, wood, u, v, 0.03, (1.55, 0.08, 0.24), mine_turn(yaw=MINE_TRACK + (3.0 if int(s * 7) % 2 else -2.0)))
+        s += 0.75
+    # Le wagonnet, arrêté sur les rails, chargé de minerai d'argent, et calé : une caisse évasée de planches cerclée de
+    # fer, sur quatre roues.
+    cart, bottom, tub, flare = 4.6, 0.55, 0.62, 9.0
+    cu, cv = mine_track(cart)
+    turn = lambda roll=0.0, pre=None: mine_turn(roll, MINE_TRACK, pre)
+    on_cart = lambda across, along: mine_track(cart + along, across)
+    mine_piece(scene, plank, cu, cv, bottom + 0.03, (1.1, 0.06, 1.55), turn())
+    for side in (-1, 1):
+        u, v = on_cart(side * 0.6, 0.0)
+        mine_piece(scene, plank, u, v, bottom + tub / 2, (tub + 0.04, 0.07, 1.62), turn(-flare * side, rotation_z(90.0)))
+        u, v = on_cart(0.0, side * 0.82)
+        mine_piece(scene, plank, u, v, bottom + tub / 2, (tub + 0.04, 0.07, 1.22),
+                   turn(pre=multiply(rotation_x(flare * side), MINE_BOARD_UP)))
+    for side in (-1, 1):
+        # Cerclage du haut, équerres des coins, roues sur les rails.
+        u, v = on_cart(side * 0.66, 0.0)
+        mine_piece(scene, iron, u, v, bottom + tub - 0.05, (0.05, 0.1, 1.78), turn(-flare * side))
+        u, v = on_cart(0.0, side * 0.89)
+        mine_piece(scene, iron, u, v, bottom + tub - 0.05, (1.36, 0.1, 0.05), turn())
+        for end in (-1, 1):
+            u, v = on_cart(side * 0.64, end * 0.66)
+            mine_piece(scene, iron, u, v, bottom + tub / 2, (0.05, tub + 0.06, 0.16), turn(-flare * side))
+            u, v = on_cart(side * MINE_GAUGE / 2, end * 0.5)
+            mine_piece(scene, "fantasy_town_kit/wheel", u, v, 0.2 + 0.26, (0.13, 0.52, 0.52), turn())
+    mine_solid(scene, cu, cv, (bottom + tub + 0.25) / 2, (1.35, bottom + tub + 0.25, 1.8), turn())
+    mine_piece(scene, "graveyard_kit/rocks", cu, cv, bottom + tub - 0.02, (1.15, 0.55, 1.5), mine_turn(yaw=MINE_TRACK + 15.0))
+    u, v = on_cart(0.1, -0.4)
+    mine_piece(scene, "graveyard_kit/rocks", u, v, bottom + tub + 0.12, (0.65, 0.38, 0.6), mine_turn(yaw=MINE_TRACK + 70.0))
+    u, v = on_cart(MINE_GAUGE / 2, 0.92)
+    mine_piece(scene, wood, u, v, 0.29, (0.16, 0.18, 0.32), turn(10.0))
+    # Caisse de minerai à droite de l'entrée, et le bois de soutènement en pile contre le socle.
+    crate_u, crate_v, crate_yaw = 4.0, 2.9, 12.0
+    c, s = math.cos(math.radians(crate_yaw)), math.sin(math.radians(crate_yaw))
+    mine_piece(scene, plank, crate_u, crate_v, 0.04, (1.1, 0.06, 0.85), mine_turn(yaw=crate_yaw))
+    for side in (-1, 1):
+        mine_piece(scene, plank, crate_u + side * 0.52 * c, crate_v - side * 0.52 * s, 0.33, (0.6, 0.07, 0.9),
+                   mine_turn(yaw=crate_yaw, pre=rotation_z(90.0)))
+        mine_piece(scene, plank, crate_u + side * 0.42 * s, crate_v + side * 0.42 * c, 0.33, (0.6, 0.07, 1.1),
+                   mine_turn(yaw=crate_yaw, pre=MINE_BOARD_UP))
+    mine_piece(scene, "graveyard_kit/rocks", crate_u, crate_v, 0.6, (0.95, 0.42, 0.75), mine_turn(yaw=40.0))
+    mine_solid(scene, crate_u, crate_v, 0.38, (1.12, 0.76, 0.9), mine_turn(yaw=crate_yaw))
+    mine_ground(scene, "nature_kit/log_stack", 6.2, -2.4, 2.8, 5.0, sink=0.0, solid=0.9)
+    # Outils laissés là : un pic contre la caisse, une pelle couchée près des rails.
+    furniture(scene, "survival_kit/tool-pickaxe", mine_at(2.8, 4.0), MINE_YAW + 30.0, 4.4, tilt=90.0)
+    furniture(scene, "survival_kit/tool-shovel", mine_at(-1.4, 4.6), MINE_YAW + 70.0, 4.4, tilt=90.0)
+    # Gravats devant l'entrée et le long des rails.
+    for u, v, model, scale, yaw in ((-2.7, 1.8, "graveyard_kit/debris", 2.4, 10.0), (2.6, 1.7, "graveyard_kit/debris", 2.2, 80.0),
+                                    (-1.6, 6.4, "graveyard_kit/debris", 2.0, 140.0), (3.2, 6.8, "graveyard_kit/debris", 1.8, 200.0),
+                                    (5.8, 1.2, "castle_kit/rocks-small", 1.3, 30.0), (-6.0, -1.2, "castle_kit/rocks-small", 1.4, 110.0)):
+        mine_ground(scene, model, u, v, scale, yaw, sink=0.02, solid=0.6 if "rocks" in model else 0.0)
 
 
 # ---------------------------------------------------------------------------------------------------------------
