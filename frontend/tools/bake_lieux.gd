@@ -1,7 +1,7 @@
 extends SceneTree
 ## Calcule d'avance ce que les lieux calculaient à chaque chargement, et l'écrit dans
-## scenes/levels/<lieu>/<lieu>_bake.res (LevelBake) : hauteurs et couleurs du sol, positions et collisions du décor
-## dispersé. Chaque lieu est chargé comme en jeu, sans ses données d'avance : ses nœuds calculent tout et relèvent ce
+## scenes/levels/<lieu>/<lieu>_bake.res (LevelBake, FILES pour la Plaine) : hauteurs et couleurs du sol, positions et
+## collisions du décor dispersé. Chaque lieu est chargé comme en jeu, sans ses données d'avance : ses nœuds calculent tout et relèvent ce
 ## qu'ils ont calculé (LevelBake.record). Le résultat est donc celui du chargement, et deux passages écrivent le même
 ## fichier.
 ## À relancer après tout changement du relief, du décor dispersé, de leurs réglages ou de leurs scripts (sinon le lieu
@@ -17,6 +17,12 @@ const LEVELS := {
 	"desert": "res://scenes/levels/desert/desert.tscn",
 	"hub": "res://scenes/levels/hub/hub.tscn",
 	"marais": "res://scenes/levels/marais/marais.tscn",
+	"plaine": "res://scenes/levels/plaine/plaine.tscn",
+}
+## Fichiers qui ne suivent pas la règle <lieu>_bake.res : celui de la Plaine est déjà pris par son sol et sa zone de
+## lave (PlaineBake, tools/bake_plaine.gd) ; son décor dispersé a le sien.
+const FILES := {
+	"plaine": "res://scenes/levels/plaine/plaine_decor_bake.res",
 }
 
 
@@ -33,7 +39,7 @@ func _run() -> void:
 	var state: Node = root.get_node("GameState")
 	var failed := false
 	for place: String in places:
-		var path := "res://scenes/levels/%s/%s_bake.res" % [place, place]
+		var path: String = FILES.get(place, "res://scenes/levels/%s/%s_bake.res" % [place, place])
 		if not check and not ResourceLoader.exists(path):
 			# Le lieu s'y réfère : le fichier doit exister avant son chargement.
 			ResourceSaver.save(LevelBake.new(), path)

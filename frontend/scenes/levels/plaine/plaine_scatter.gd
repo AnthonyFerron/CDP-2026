@@ -52,6 +52,12 @@ const CLEARINGS: Array[Vector3] = [
 @export var border_rock_count := 46
 ## Distance à laquelle les petits détails disparaissent.
 @export var detail_range := 60.0
+## Places du décor dispersé calculées d'avance (tools/bake_lieux.gd, plaine_decor_bake.res). Sans elles, ou si elles
+## ne correspondent plus aux réglages ou au sol, le décor est calculé au chargement, comme avant.
+@export var bake: LevelBake
+
+## Nom du décor dans le calcul d'avance du lieu.
+const BAKE_PART := "plaine/decor"
 
 ## Bassins de lave : centre de la surface et rayon.
 var lava_pools: Array[Dictionary] = []
@@ -69,17 +75,96 @@ func _ready() -> void:
 	# Le terrain se construit avant ses voisins : il faut ses hauteurs pour poser le décor.
 	if not terrain.is_node_ready():
 		await terrain.ready
+	var signature := LevelBake.signature_of(self, [LevelBake.signature_of(terrain), PlaineTerrain.settings_signature()])
+	var scripts: Array[Script] = [get_script(), terrain.get_script()]
+	var plan: Variant = bake.data(BAKE_PART, signature, scripts) if bake and terrain.is_baked() else null
+	if plan == null:
+		plan = _plan()
+		LevelBake.record(BAKE_PART, signature, scripts, plan)
+	_build(plan)
+
+
+## Tirage du décor, dans l'ordre où il était fait au chargement : herbes, cailloux, gros rochers, arbres morts,
+## remparts, et l'état du tirage pour les lanternes. Rend [herbes de chaque modèle ([brûlées, rougeoyantes]),
+## cailloux de chaque modèle, gros rochers de chaque modèle (enfoncés), état du tirage avant les arbres morts, arbres
+## morts, rochers des remparts de chaque modèle (enfoncés), état du tirage avant les lanternes]. C'est la partie lente,
+## calculée d'avance par tools/bake_lieux.gd.
+func _plan() -> Array:
 	_rng.seed = 2026
-	_scatter_grass()
-	_scatter_small_rocks()
-	_scatter_large_rocks()
-	_scatter_dead_trees()
-	_add_border_rocks()
+	var grass := []
+	for model_index in grass_models.size():
+		var burnt: Array[Transform3D] = []
+		var glowing: Array[Transform3D] = []
+		for i in grass_count / grass_models.size():
+			var spot := _random_spot(0.0)
+			var scale_factor := _rng.randf_range(2.5, 5.0)
+			var item := _ground_transform(spot, scale_factor)
+			if _rng.randf() < 0.22:
+				glowing.append(item)
+			else:
+				burnt.append(item)
+		grass.append([burnt, glowing])
+	var small := []
+	for model in small_rock_models:
+		var items: Array[Transform3D] = []
+		for i in small_rock_count / small_rock_models.size():
+			items.append(_ground_transform(_random_spot(0.3), _rng.randf_range(1.5, 4.0)))
+		small.append(items)
+	var large := []
+	for model in large_rock_models:
+		var mesh := _load_mesh(model)
+		var items: Array[Transform3D] = []
+		for i in large_rock_count / large_rock_models.size():
+			items.append(_sink_rock(mesh, _ground_transform(_random_spot(1.1), _rng.randf_range(5.0, 9.0))))
+		large.append(items)
+	# Les arbres morts tirent leur forme avant leur place : leurs maillages sont refaits à la pose, depuis cet état.
+	var tree_state := _rng.state
+	for index in 3:
+		_dead_tree_mesh()
+	var trees: Array[Transform3D] = []
+	for i in dead_tree_count:
+		var spot := _random_spot(1.0)
+		trees.append(_ground_transform(spot, _rng.randf_range(0.9, 1.5)))
+	var border := []
+	for model in large_rock_models:
+		border.append([])
+	for i in border_rock_count:
+		var angle := TAU * i / border_rock_count + _rng.randf_range(-0.04, 0.04)
+		var distance := PlaineTerrain.PLAY_RADIUS + _rng.randf_range(1.5, 7.0)
+		var spot := Vector2.from_angle(angle) * distance
+		var item := _ground_transform(spot, _rng.randf_range(9.0, 16.0))
+		item.origin.y -= 0.6
+		(border[i % border.size()] as Array).append(item)
+	for index in large_rock_models.size():
+		var border_mesh := _load_mesh(large_rock_models[index])
+		var items: Array[Transform3D] = []
+		for item: Transform3D in border[index]:
+			items.append(_sink_rock(border_mesh, item))
+		border[index] = items
+	return [grass, small, large, tree_state, trees, border, _rng.state]
+
+
+## Pose le décor tiré par _plan : maillages, collisions, lanternes, lave. Chaque corps reçoit ses collisions avant
+## d'entrer dans le monde : ajoutées une à une à un corps déjà dans le monde, chacune lui faisait refaire sa forme.
+func _build(plan: Array) -> void:
+	_build_grass(plan[0])
+	_build_small_rocks(plan[1])
+	_build_large_rocks(plan[2])
+	_build_dead_trees(plan[3], _transforms(plan[4]))
+	_build_border_rocks(plan[5])
+	_rng.seed = 2026
+	_rng.state = plan[6]
 	_add_lanterns()
 	compute_lava_pools()
 	_add_crater_effects()
 	_add_lava_flow()
 	_add_lava_hazards()
+
+
+static func _transforms(items: Array) -> Array[Transform3D]:
+	var transforms: Array[Transform3D] = []
+	transforms.assign(items)
+	return transforms
 
 
 ## Bassins de lave des cratères : centre de leur surface, au niveau de la lave, et rayon.
@@ -104,74 +189,63 @@ func is_near_lava(point: Vector3, margin: float) -> bool:
 	return PlaineTerrain.flow_distance(point.x, point.z) < PlaineTerrain.flow_lava_half_width() + margin
 
 
-func _scatter_grass() -> void:
+func _build_grass(plan: Array) -> void:
 	var soot := _flat_material(Color(0.07, 0.06, 0.065))
 	var rust := _flat_material(Color(0.36, 0.13, 0.05))
 	for model_index in grass_models.size():
 		var mesh := _load_mesh(grass_models[model_index])
-		var share := grass_count / grass_models.size()
-		var burnt: Array[Transform3D] = []
-		var glowing: Array[Transform3D] = []
-		for i in share:
-			var spot := _random_spot(0.0)
-			var scale_factor := _rng.randf_range(2.5, 5.0)
-			var item := _ground_transform(spot, scale_factor)
-			if _rng.randf() < 0.22:
-				glowing.append(item)
-			else:
-				burnt.append(item)
-		_add_chunked_multimesh(mesh, burnt, soot, "Grass")
-		_add_chunked_multimesh(mesh, glowing, rust, "Grass")
+		_add_chunked_multimesh(mesh, _transforms(plan[model_index][0]), soot, "Grass")
+		_add_chunked_multimesh(mesh, _transforms(plan[model_index][1]), rust, "Grass")
 
 
-func _scatter_small_rocks() -> void:
+func _build_small_rocks(plan: Array) -> void:
 	var material := _flat_material(Color(0.2, 0.18, 0.2))
-	var count := small_rock_count / small_rock_models.size()
 	var body := StaticBody3D.new()
 	body.name = "SmallRocks"
-	add_child(body)
-	for model in small_rock_models:
-		var mesh := _load_mesh(model)
+	var meshes: Array[Mesh] = []
+	for index in small_rock_models.size():
+		var mesh := _load_mesh(small_rock_models[index])
+		meshes.append(mesh)
 		var size := mesh.get_aabb().size
-		var items: Array[Transform3D] = []
-		for i in count:
-			var item := _ground_transform(_random_spot(0.3), _rng.randf_range(1.5, 4.0))
-			items.append(item)
+		for item: Transform3D in plan[index]:
 			# Les cailloux assez hauts pour gêner le pas ont une collision à leur taille ; les plus plats se franchissent.
 			if (size * item.basis.get_scale()).y < 0.25:
 				continue
 			body.add_child(_rock_collision(mesh, item, false))
-		_add_chunked_multimesh(mesh, items, material, "Pebbles")
+	add_child(body)
+	for index in meshes.size():
+		_add_chunked_multimesh(meshes[index], _transforms(plan[index]), material, "Pebbles")
 
 
-func _scatter_large_rocks() -> void:
+func _build_large_rocks(plan: Array) -> void:
 	var material := _flat_material(Color(0.17, 0.15, 0.17))
-	var count := large_rock_count / large_rock_models.size()
 	var body := StaticBody3D.new()
 	body.name = "LargeRocks"
-	add_child(body)
-	for model in large_rock_models:
-		var mesh := _load_mesh(model)
-		var items: Array[Transform3D] = []
-		for i in count:
-			var item := _sink_rock(mesh, _ground_transform(_random_spot(1.1), _rng.randf_range(5.0, 9.0)))
-			items.append(item)
+	var meshes: Array[Mesh] = []
+	for index in large_rock_models.size():
+		var mesh := _load_mesh(large_rock_models[index])
+		meshes.append(mesh)
+		for item: Transform3D in plan[index]:
 			body.add_child(_rock_collision(mesh, item, true))
-		var instance := _add_multimesh(mesh, items, material)
+	add_child(body)
+	for index in meshes.size():
+		var instance := _add_multimesh(meshes[index], _transforms(plan[index]), material)
 		instance.name = "LargeRocksMesh%d" % get_child_count()
 		instance.visibility_range_end = 0.0
 
 
-func _scatter_dead_trees() -> void:
+## Arbres morts : leurs trois maillages, tirés depuis l'état state (comme dans _plan), et leurs places.
+func _build_dead_trees(state: int, trees: Array[Transform3D]) -> void:
 	var material := _flat_material(Color(0.08, 0.06, 0.06))
+	_rng.seed = 2026
+	_rng.state = state
+	_tree_tops.clear()
 	var meshes: Array[ArrayMesh] = [_dead_tree_mesh(), _dead_tree_mesh(), _dead_tree_mesh()]
 	var body := StaticBody3D.new()
 	body.name = "DeadTrees"
-	add_child(body)
 	var items: Array[Array] = [[], [], []]
-	for i in dead_tree_count:
-		var spot := _random_spot(1.0)
-		var item := _ground_transform(spot, _rng.randf_range(0.9, 1.5))
+	for i in trees.size():
+		var item := trees[i]
 		items[i % meshes.size()].append(item)
 		# Le tronc penche : sa collision le suit, à sa grosseur, jusqu'au-dessus de la tête.
 		var axis := (item.basis * _tree_tops[i % meshes.size()]).normalized()
@@ -182,10 +256,9 @@ func _scatter_dead_trees() -> void:
 		collision.shape = shape
 		collision.transform = Transform3D(Basis(Quaternion(Vector3.UP, axis)), item.origin + axis * 1.6)
 		body.add_child(collision)
+	add_child(body)
 	for index in meshes.size():
-		var transforms: Array[Transform3D] = []
-		transforms.assign(items[index])
-		var instance := _add_multimesh(meshes[index], transforms, material)
+		var instance := _add_multimesh(meshes[index], _transforms(items[index]), material)
 		instance.name = "DeadTreesMesh%d" % index
 		instance.visibility_range_end = 0.0
 
@@ -243,32 +316,20 @@ func _sink_rock(mesh: Mesh, item: Transform3D) -> Transform3D:
 
 
 ## Remparts : de hauts rochers sur le pourtour, pour que la zone ne s'arrête pas sur une pente nue.
-func _add_border_rocks() -> void:
+func _build_border_rocks(plan: Array) -> void:
 	var material := _flat_material(Color(0.16, 0.14, 0.16))
-	var items: Array[Array] = []
-	items.resize(large_rock_models.size())
-	for list in items:
-		list.assign([])
-	for i in border_rock_count:
-		var angle := TAU * i / border_rock_count + _rng.randf_range(-0.04, 0.04)
-		var distance := PlaineTerrain.PLAY_RADIUS + _rng.randf_range(1.5, 7.0)
-		var spot := Vector2.from_angle(angle) * distance
-		var item := _ground_transform(spot, _rng.randf_range(9.0, 16.0))
-		item.origin.y -= 0.6
-		items[i % items.size()].append(item)
 	# Les plus gros débordent en deçà de la limite : ils ont leur collision, comme les rochers de la plaine.
 	var body := StaticBody3D.new()
 	body.name = "BorderRocks"
-	add_child(body)
+	var meshes: Array[Mesh] = []
 	for index in large_rock_models.size():
-		var transforms: Array[Transform3D] = []
-		transforms.assign(items[index])
 		var border_mesh := _load_mesh(large_rock_models[index])
-		for k in transforms.size():
-			transforms[k] = _sink_rock(border_mesh, transforms[k])
-		for item: Transform3D in transforms:
+		meshes.append(border_mesh)
+		for item: Transform3D in plan[index]:
 			body.add_child(_rock_collision(border_mesh, item, true))
-		var instance := _add_multimesh(border_mesh, transforms, material)
+	add_child(body)
+	for index in meshes.size():
+		var instance := _add_multimesh(meshes[index], _transforms(plan[index]), material)
 		instance.name = "BorderRocksMesh%d" % index
 		instance.visibility_range_end = 0.0
 
