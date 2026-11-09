@@ -11,12 +11,19 @@ extends SceneTree
 ## Un matériau n'est gardé qu'une fois par contexte de rendu (brouillard, soleils et leurs ombres, lumières
 ## ponctuelles) : deux lieux éclairés de la même façon compilent les mêmes programmes.
 ##
-## À relancer après l'ajout d'un matériau, d'un shader ou d'un lieu :
-##   cd frontend && godot --headless --fixed-fps 60 --path . --script res://tools/bake_shaders.gd
-## --fixed-fps 60 rend le relevé indépendant de la charge de la machine. Le regroupement du décor du hub, étalé sur les
-## premières images, attend pendant SETTLE_FRAMES : le relevé prend le hub tel qu'à l'arrivée, puis tout regroupé
-## (finish_all), et garde les deux, qui se dessinent l'un après l'autre en jeu.
+## À relancer après l'ajout d'un matériau, d'un shader ou d'un lieu (l'import d'abord, après une fusion surtout : il
+## inscrit les nouvelles classes, class_name, dans le cache des classes) :
+##   cd frontend && godot --headless --path . --import
+##   godot --headless --fixed-fps 60 --path . --script res://tools/bake_shaders.gd
+## Le relevé ne dépend ni de la charge de la machine ni du hasard : --fixed-fps 60 fixe la durée des images, et chaque
+## lieu est relevé au bout de SETTLE_FRAMES images exactement. Le regroupement du décor du hub, étalé sur les premières
+## images, attend pendant ce temps : le relevé prend le hub tel qu'à l'arrivée, puis tout regroupé (finish_all), et
+## garde les deux, qui se dessinent l'un après l'autre en jeu. La crypte du Marais, préparée par tranches après
+## l'arrivée, est finie d'un coup (finish_preparation), comme quand on y descend.
+## Un script qui ne se compile pas (cache des classes périmé, erreur dans un lieu) ne crée pas ses nœuds, et leurs
+## matériaux manqueraient : à la moindre erreur de script, rien n'est écrit, et le contrôle échoue.
 ## Avec « -- --check », rien n'est écrit : le script compare le fichier au calcul, et sort en erreur s'ils diffèrent.
+## Avec « -- --sources », chaque entrée gardée est suivie du nœud qui l'a apportée.
 
 const PATH := "res://assets/shader_warm_list.tres"
 ## Lieux dans l'ordre où le menu les prépare : le hub d'abord, où commence une partie.
@@ -36,14 +43,36 @@ var _seen := {}
 var _fingerprint := PackedStringArray()
 ## Brouillard de l'extérieur du lieu en cours.
 var _fog := false
+var _sources := false
+var _errors := ScriptErrors.new()
+
+
+## Erreurs de script du passage : un script qui ne se compile pas (une classe absente du cache des classes, que seul
+## l'import met à jour) laisse ses nœuds sans ce qu'il crée, sans arrêter le relevé.
+class ScriptErrors extends Logger:
+	var count := 0
+	var first := PackedStringArray()
+	var _mutex := Mutex.new()
+
+	func _log_error(_function: String, file: String, line: int, code: String, rationale: String, _editor_notify: bool,
+			error_type: int, _script_backtraces: Array[ScriptBacktrace]) -> void:
+		if error_type != ERROR_TYPE_SCRIPT:
+			return
+		_mutex.lock()
+		count += 1
+		if first.size() < 3:
+			first.append("%s:%d %s" % [file, line, rationale if rationale else code])
+		_mutex.unlock()
 
 
 func _initialize() -> void:
+	OS.add_logger(_errors)
 	_run.call_deferred()
 
 
 func _run() -> void:
 	var check := OS.get_cmdline_user_args().has("--check")
+	_sources = OS.get_cmdline_user_args().has("--sources")
 	var start := Time.get_ticks_msec()
 	var list := ShaderWarmList.new()
 	for place in PLACES:
@@ -56,14 +85,19 @@ func _run() -> void:
 		var scene := current_scene
 		var batches := scene.find_children("*", "Node3D", true, false).filter(
 			func(node: Node) -> bool: return node.has_method("finish_all"))
+		for batch: Node in batches:
+			# Le regroupement du hub attend. Il se lance par un appel différé de son _ready (_batch_shown), qui peut
+			# passer après le set_process(false) d'une image : celui-ci, différé lui aussi, passe après lui.
+			batch.set_process.call_deferred(false)
 		for frame in SETTLE_FRAMES:
-			# Le regroupement du hub attend (process_frame précède les _process de l'image).
+			# Et à chaque image (process_frame précède les _process de l'image).
 			for batch: Node in batches:
 				batch.set_process(false)
 			await process_frame
-		# Le Marais prépare sa crypte après l'arrivée, par tranches : le relevé attend qu'elle soit prête.
-		while scene.has_method("is_done") and not scene.is_done():
-			await process_frame
+		# Le Marais prépare sa crypte après l'arrivée, par tranches qui dépendent de la vitesse de la machine : finie
+		# d'un coup, comme quand on y descend, le relevé se fait toujours à la même image.
+		if scene.has_method("finish_preparation"):
+			scene.finish_preparation()
 		var groups: Array[Dictionary] = [_group(scene, String(place[0]), false), _group(scene, String(place[0]), true)]
 		if not batches.is_empty():
 			# Puis le décor regroupé : ses lots fondus (couleur dans les sommets), ses ombres seules, ses MultiMesh.
@@ -84,6 +118,14 @@ func _run() -> void:
 	for group in list.groups:
 		count += (group.materials as Array).size() + (group.process as Array).size() + (group.labels as Array).size()
 	print("Shaders : %d groupes, %d entrées, relevées en %d ms" % [list.groups.size(), count, Time.get_ticks_msec() - start])
+	OS.remove_logger(_errors)
+	if _errors.count > 0:
+		for line in _errors.first:
+			print("  erreur de script : ", line)
+		print(("Shaders : RELEVÉ INCOMPLET, %d erreurs de script : leurs nœuds manquent. Cache des classes périmé ? "
+			+ "Lancer d'abord godot --headless --path . --import") % _errors.count)
+		quit(1)
+		return
 
 	if check:
 		var saved := ResourceLoader.load(PATH, "", ResourceLoader.CACHE_MODE_IGNORE) as ShaderWarmList
@@ -149,7 +191,7 @@ func _group(scene: Node, place: String, inside: bool) -> Dictionary:
 			usage |= ShaderWarmList.INSTANCED
 			for index in particles.draw_passes:
 				materials.append_array(_mesh_materials(particles.get_draw_pass_mesh(index)))
-			_add(group, context, particles.process_material, 0, "process")
+			_add(group, context, particles.process_material, 0, "process", node)
 		elif geometry is Label3D:
 			_add_label(group, context, geometry as Label3D)
 		if geometry.material_override:
@@ -157,7 +199,7 @@ func _group(scene: Node, place: String, inside: bool) -> Dictionary:
 		if geometry.material_overlay:
 			materials.append(geometry.material_overlay)
 		for material in materials:
-			_add(group, context, material, usage, "materials")
+			_add(group, context, material, usage, "materials", node)
 	# Ordre stable d'un passage à l'autre : les scripts des lieux ne créent pas toujours leurs nœuds dans le même ordre.
 	var entries: Array = group.entries
 	entries.sort_custom(func(a: Array, b: Array) -> bool: return a[0] < b[0])
@@ -182,13 +224,15 @@ func _merge(first: Dictionary, more: Dictionary) -> Dictionary:
 	return first
 
 
-func _add(group: Dictionary, context: String, material: Material, usage: int, field: String) -> void:
+func _add(group: Dictionary, context: String, material: Material, usage: int, field: String, node: Node = null) -> void:
 	if material == null:
 		return
 	var line := "%s %s %s usage=%d %s" % [context, field, _key(material), usage, ""]
 	if _seen.has(line):
 		return
 	_seen[line] = true
+	if _sources and node:
+		print("  source : %s/%s %s <- %s" % [group.place, "int" if group.inside else "ext", line.strip_edges(), node.get_path()])
 	(group.entries as Array).append(["%s/%s: %s" % [group.place, "int" if group.inside else "ext", line.strip_edges()],
 		field, _canonical(material) if field == "materials" else material.duplicate(true), usage])
 

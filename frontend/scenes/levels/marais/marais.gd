@@ -229,6 +229,12 @@ func is_done() -> bool:
 	return _crypt_ready
 
 
+## Finit d'un coup la préparation de la crypte (outils : un relevé toujours à la même image, quelle que soit la vitesse
+## de la machine).
+func finish_preparation() -> void:
+	_finish_crypt()
+
+
 ## Prépare la crypte jusqu'à l'instant deadline (Time.get_ticks_usec), au moins d'un pas ; rend vrai quand elle est
 ## prête. Rien n'y touche aux collisions : celles de la crypte et du mécanisme sont posées dès le chargement.
 func _prepare_crypt(deadline: int) -> bool:
