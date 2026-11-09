@@ -110,3 +110,91 @@ Outils et captures : `~/cdp-work/hub/` (`tools/`, `shots/`, `grid/`).
 ### Outils de la nuit (`docs/agents/hub/interieurs/`, chemins du serveur)
 - `overlaps.py` : meuble contre mur et meuble contre meuble, dans chaque ruine et chaque reconstruction ; `lamps.py` : portée de chaque lumière contre la distance au sol du dehors ; `plan.py` : plans de marche au décimètre (collisions, cases atteintes depuis le dehors de la porte, poches), sans Godot.
 - `walk_grid.gd` (grilles à 0,5 et 0,25 m, poches, plafond au-dessus de chaque case), `rooms_walk.gd` (entrer et sortir de chaque bâtiment, porte de l'observatoire avec E, lecture de chaque texte), `float_check.gd` (objets qui flottent ou s'enfoncent, petits objets compris), `shots.gd` (captures et planches), `gen_views.py` (caméras posées sur des cases atteintes), `cycle2.sh` (tout le tour).
+
+## Passe du 9 novembre (`fix/verif-hub`) : portes voûtées, jardin, parc, rivière, villageois, mine refaite
+
+Méthode et outils (copies dans `docs/agents/hub/verif/`, chemins du serveur) :
+- **Grille de marche** (`grille.gd`, `zones.py`, `rapport.py`, `grid.sh`) : décor regroupé d'un bloc (`finish_all`),
+  boîtes visibles prises des « pieces » des lots fondus (les ombres seules ignorées), abri souterrain compté. Dehors en
+  9 régions de 80 m et l'abri au demi-mètre ; chacun des 28 bâtiments, la salle de l'observatoire et l'abri au quart
+  de mètre (poches, plafond au-dessus de chaque case). À 0, 2 et 4 livres. À 4 livres, le hub est celui de l'épilogue
+  (victoire validée : les villageois sont à leur première pause, leur corps actif).
+- **Sonde de saut** (`saut.gd`, `saut.sh`, la sonde du hub avec un départ et un sol imposés pour l'abri et
+  l'observatoire) : tout le hub au pas d'1 m dans 16 directions, l'abri au pas de 0,5 m, la salle de l'observatoire.
+- **Captures** (`vues.py`, `shots.gd`, `shoot.sh`, planches `planches.py`) : à hauteur d'yeux tous les 4 m dans 4
+  directions sur le jardin du roi et le parc (étang compris), la place et la mine ; les deux rives de la rivière tous
+  les 4 m (en travers et le long) ; les deux ponts (bouts, milieu, rives) ; les 27 portes voûtées de dehors et de
+  dedans ; vues de dessus du jardin, de la mine, de la place et de la rivière. 898 vues par palier, à 0 et 4 livres.
+- **Végétation** (`pelouse.gd`) : chaque touffe, fleur, champignon et buisson posé contre les cases gravillonnées ou
+  de terre battue du sol (une couleur par case de 2 m) et contre les collisions.
+- **Villageois** (`villageois.gd`, `suivi.gd`) : tournées jouées image par image (`--fixed-fps 60`), départ du feu
+  (après la cinématique) et départ à la première pause (retour au hub), jusqu'à 4 tournées complètes de chacun ; à
+  chaque pas : cylindre du corps contre les collisions, sol sous les pieds, immobilité ; puis, à chaque pause, grille
+  de marche (0,25 m) autour du villageois avec et sans son corps.
+
+Captures et journaux : `.claude/captures/verif-hub/` (hors dépôt) : `grille4m_4/`, `grille4m_0/` (vues et planches
+`p_*`), `planches/` (avant et après), `suivi/` (villageois), `logs/`, `grille/` et `grille2/` (grilles avant et après).
+
+### Corrigés
+
+| # | Où | Constat (outil, capture) | Cause | Correction |
+|---|----|--------------------------|-------|------------|
+| 37 | Maisons en ruine (16), dont House04 à 07 et 12 à 14 | Grille : « sans collision » `rocks_small` 2 x 0,7 x 2 m dans chaque ruine ; `planches/eboulis_avant_apres.png` : un tas de pierres juste derrière la porte | L'éboulis du coin de devant (castle_kit rocks-small, 0,7 m) n'avait pas de collision, et dans les 7 maisons ouvertes à gauche il tombait devant la porte : on le traversait en entrant | Éboulis dans le coin de devant opposé à la porte, avec une collision à sa taille (`furnish`, `build_hub.py`) |
+| 38 | Jardin du roi, pelouses (4 livres) | `pelouse.gd` : 47 pousses sur les cases gravillonnées ; `planches/jardin_dessus_avant_apres.png` | Le semis des pelouses gardait 1,9 m de l'axe des allées sans compter la taille des pousses, alors que le sol gravillonne des cases entières de 2 m (jusqu'à 2 m de l'axe, plus en biais) ; les parterres, carrés, étaient exclus par un cercle (une fleur et un champignon dans le coin du parterre (47,6 ; -76,4), une touffe dans celui de (36 ; -58)) | Semis à l'emprise de chaque pousse (`PLANT_FOOT`), hors des cases gravillonnées (`park_gravel`) et des parterres en carré ; 46 touffes et 64 pousses de la prairie toujours placées. Reste : 4 pousses qui mordent de 3 à 5 cm sur une case (la boîte tournée que mesure l'outil, plus grande que la pousse) |
+| 39 | Jardin du roi, prairie (4 livres) | Grille : 15 touffes de champignons « sans collision », 0,55 à 0,75 m de haut | Échelle 2,2 à 3,0 : au-dessus du genou, alors que la prairie se traverse | Échelle 1,6 à 2,0 (0,4 à 0,5 m), sous le genou comme le reste de la prairie (`PLANT_SCALES`) |
+| 40 | Étang du jardin, rive ouest (43,7 ; -84,8) | `pelouse.gd` : 2 touffes de roseaux sur l'allée gravillonnée | L'anneau de roseaux de l'étang passe sur l'allée qui longe l'étang | Rien sur les cases gravillonnées (`_on_gravel`, `hub_river.gd`), mêmes tirages : le reste des rives ne bouge pas |
+| 41 | Parterres (36 ; -64), (48 ; -64), (47,6 ; -76,4) | Vue de dessus : un coin de gravier dans le parterre, sous les fleurs | Le gravier du rond-point teinte la case de 2 m qui porte le coin du parterre | Le sol reste de pelouse sous les parterres (`PARK_BEDS`, `gravel_mask` de `hub_terrain.gd`) ; précalcul du sol régénéré (`bake_lieux.gd -- hub`) |
+| 42 | Rivière au moulin (73 ; 40 à 50) | Grille de captures, rives 043 à 047 ; `planches/eau_moulin_avant_apres.png` : les rides cassent en bandes en travers du courant | Le lit fait un S serré (rayon de 9 m) : les travers de la nappe, perpendiculaires au cours, la pinçaient côté intérieur (un bord de maille de 0,2 m en face de 3,2 m), et les rides, tirées le long du cours, cassaient à chaque travers | Travers de la nappe orientés sur le cours moyenné sur 9 m (`_smoothed_normals`, `WATER_SMOOTHING`) : pire maille 1,5 au lieu de 16,6, nappe toujours 1,8 m au-delà du bord de l'eau ; berges, murs et roseaux gardent les travers exacts |
+| 43 | Les 54 portes voûtées (27 par palier) | Captures des portes de dedans ; `planches/seuil_avant_apres.png`, `planches/porte_dehors_avant_apres.png` : trois fentes noires ou une bande noire au seuil | Sous l'arche, les bouts entaillés des lattes du plancher laissaient voir la terre sombre sous le bâtiment | Seuil de planches dans l'épaisseur du mur (`door_sill` : 1,9 x 0,38 m, dessus à 3,5 cm), lattes le long du mur, bouts dans les jambages ; sans collision (sous le pas), même matériau que le plancher. Un premier essai (sous-plancher élargi jusqu'à la face du mur) dépassait de la façade à l'étage : abandonné |
+
+### Vérifiés sans défaut, ou acceptés
+
+- **Grille de marche, après corrections** (`grille2/`) :
+
+  | Livres | Dehors (0,5 m) | Abri (0,5 et 0,25 m) | 28 bâtiments et observatoire (0,25 m) |
+  |---|---|---|---|
+  | 0 | 116 383 cases | 2 616 | 64 682 |
+  | 2 | 115 892 | 2 616 | 62 878 |
+  | 4 (épilogue) | 115 086 | 3 044 | 61 844 |
+
+  À chaque palier : 0 trou, 0 ressaut, 0 chute, 0 glissade, 0 sortie de la vallée, 0 plafond bas ; « murs
+  invisibles » : seulement les berges fermées de la rivière et l'anneau de l'étang (`River/Banks`, voulus : on ne
+  traverse pas à gué ; 227 ou 228 dehors, 25 dans les grilles de la forge et du moulin, au bord de l'eau), la limite au
+  pied des montagnes (170) et 10 butées sur des pentes du terrain visibles (berges creusées au bord du grand pont, de la
+  forge et du moulin, (45,1 ; -48,5), (67,6 ; -33)). Avant corrections : mêmes chiffres, plus les 16 éboulis.
+- **Sans collision, acceptés** : les surfaces des portails ouverts ; les blocs de la casemate du bunker (leur collision
+  est celle du mur, à la face extérieure : la boîte visible du bloc déborde vers l'intérieur plein) ; l'enseigne
+  suspendue de la forge et de la taverne (la planche est au-dessus de la tête, entre deux poteaux qui ont leur
+  collision) ; le bâton de Merlon ; une jatte sur la table de la boulangerie ; le sac plat de la boulangerie en ruine ;
+  une bûche dans le lit de la rivière (0 livre) ; les touffes de champignons de la prairie, sous le genou (n° 39).
+- **Poches** (cases libres où l'on n'entre pas, au quart de mètre) : des recoins d'une à quelques cases derrière un lit,
+  une étagère ou l'éboulis (une case de plus dans 5 ruines depuis le n° 37), dans la caserne (15 cases), le moulin (13),
+  la grande maison House04 et House12 (10), les écuries (7) et l'école (8) : aucun passage fermé.
+- **Sonde de saut** : tout le hub au pas d'1 m, 16 directions : 0 livre 469 424 sauts, 4 livres 466 528 sauts : 0 point
+  où l'on reste coincé ; abri souterrain (pas de 0,5 m) 8 016 et 9 488 sauts : 0 ; salle de l'observatoire : 0.
+- **Villageois** : départ du feu, 4 tournées complètes de chacun (856 s de jeu) ; départ à la première pause, 4
+  tournées (777 s) : 0 traversée, 0 villageois qui en traverse un autre, 0 écart au sol de plus de 8 cm, 0 blocage,
+  à la première tournée comme à la quatrième. Pauses (14) : de 47 à 52 cases perdues sous chacun, 0 hors de son
+  emprise : aucun passage fermé. Aucune tournée ne passe un pont ; à leurs pauses, ils sont à plus de 2,5 m des
+  portes. Un premier relevé de sol « vide » à (46,6 ; 8,0) venait du rayon tiré pile sur une arête du sol maillé
+  (point de passage rond) : décalé de quelques millimètres, plus rien. Planches : `suivi/p__00.png` à `p__02.png`.
+- **Captures à 0 livre** (mêmes vues, avec les corrections) : ruines, cendres, eau trouble, nénuphars secs et débris ;
+  les 10 débris de la rivière et de l'étang sont dans l'eau, à 2,5 m au moins des berges (calcul sur le cours), et
+  rien d'autre ne flotte, ne traverse ou ne se pose hors de l'eau.
+- **Captures à 4 livres** (898 vues, toutes regardées en planches) : jardin, parc, étang, ponts, rives, mine, place,
+  portes : en dehors des n° 38 à 43, rien qui flotte, se chevauche, traverse un mur ou se pose hors de l'eau. Les
+  grandes formes vertes ou blanches au premier plan de quelques vues sont des papillons qui passent devant la caméra.
+  Rives : 30 vues sautées (gorge du sud-est, pentes sans sol où se tenir), vues de dessus faites à la place.
+- **Arbustes de la cour du château** (±8 ; -61, reconstruits) : sur le pavé de la cour ; décor voulu, laissé.
+- **Buissons du décor dispersé** contre les troncs et les rochers (83, hors des zones changées) : la touffe enveloppe
+  le pied du tronc ou du rocher ; laissés.
+
+### Contrôles finaux
+- Générateurs : `build_hub.py` et `write_hub_tscn.py` relancés après chaque correction, sans dérive. Précalculs :
+  `bake_lieux.gd -- hub` régénéré après le n° 41 (couleur du sol) ; l'inventaire des shaders ne change pas (aucun
+  matériau nouveau : le seuil prend celui du plancher).
+- Suite complète (`run_all.sh`, depuis la branche) : `bake_plaine_check`, `bake_lieux_check`, `bake_shaders_check` à
+  jour ; 0 échec partout (`hub_test`, `music_test`, `sound_test`, `gamepad_test` compris, du premier coup), sauf
+  `hub_walk_0` et `hub_walk_4` : les 2 échecs voulus « limite infranchissable (doit echouer) » ; `tree_collision_test` :
+  hub 670 arbres, dont 301 dans la forêt des montagnes, hors d'atteinte (comme avant) ; `run_tests` : 52 réussis,
+  0 échec.
