@@ -27,7 +27,7 @@ Un premier essai (agent `perf-web`, voir `docs/web-threads.md`) dessinait tout l
 - Un nœud sous `Interior` ou `BunkerInterior` va dans le groupe intérieur : sans brouillard ni soleil, comme le lieu le dessine.
 - Un matériau n'est gardé qu'une fois par contexte de rendu (brouillard, soleils et leurs ombres, lumières ponctuelles). Deux lieux éclairés de la même façon compilent les mêmes programmes.
 - Chaque matériau est réduit à ce qui choisit son shader : le même fichier `.gdshader` sans paramètres, ou un `StandardMaterial3D` neuf avec ses seuls réglages (énumérations et cases à cocher). Couleurs, nombres et textures ne changent pas le code d'un shader, et le menu n'a pas de texture à charger.
-- Résultat : 10 groupes et 113 entrées pour les cinq lieux. Deux passages écrivent le même fichier, au calme comme sous charge (voir « Relevé stable d'un passage à l'autre »).
+- Résultat : 10 groupes et 115 entrées pour les cinq lieux (113 avant les finitions de la Plaine, qui ajoutent les projections du volcan et la lumière de la brèche des archives : `docs/plaine-finitions.md`). Deux passages écrivent le même fichier, au calme comme sous charge (voir « Relevé stable d'un passage à l'autre »).
 
 `run_all.sh` vérifie que l'inventaire est à jour (`bake_shaders_check`). Après l'ajout d'un matériau, d'un shader ou d'un lieu :
 

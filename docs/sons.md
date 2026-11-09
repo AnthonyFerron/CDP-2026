@@ -73,6 +73,17 @@ Le nœud `Sounds` du hub est écrit par `tools/write_hub_tscn.py`. Il ne compte 
 - **Le village reste sobre.** Les portées s'arrêtent avant la place : à 60 m de la rivière et à plus de 40 m du jardin, la musique y reste seule avec l'ambiance générale (`hub_ambience.wav`).
 - **Le Hub est un village sinistré** (`docs/agents/SCENARIO.md`). Avant les livres, on n'entend que l'eau lente et des feuilles mortes. Le jardin reconstruit retrouve ses oiseaux, de plus en plus nombreux jusqu'à la victoire.
 
+## Plaine : grondement du volcan et vent de la brèche
+
+Deux sources de plus, avec des sons existants (`docs/plaine-finitions.md`) :
+
+| Source | Où | Portée | Volume | Quand |
+| --- | --- | --- | --- | --- |
+| Grondement du Mont Sam Altan (`volcano_eruption.wav`, `pitch_scale` 0,6) | Non positionnel : le volcan est à près de 300 m | Tout le lieu, dehors | -14 dB | 0,9 s après l'éclat du cratère : 4 s après l'arrivée, puis toutes les 80 à 110 s, jusqu'à 35 à 50 s quand l'heure tourne. Jamais dans les archives, pendant une transition ni après l'éruption |
+| Vent dans la brèche de la voûte (`plaine_wind.wav`) | Au trou du plafond de la salle de lecture, à 4,3 m de haut | `unit_size` 2,5 m, coupée à 13 m | -15 dB, `max_db` -11 dB | Toujours, dans les archives (à 40 m sous la carte, elle se tait dehors) |
+
+Joué plus grave et plus lent, le son de l'éruption du hub devient un grondement lointain. Le grondement de pierre de la tablette (`stone_door.wav`, `pitch_scale` 0,55, avec la secousse de la caméra) reste le seul signal d'une erreur.
+
 ## Mixage
 
 Repères du jeu : la musique est sur le bus « Music » à -10 dB, et chaque piste est ramenée à environ -22 dBFS RMS avant ce bus (`scripts/music.gd`). Les ambiances des lieux tournent autour de -29 dBFS. Les pas jouent à -13 dB (`Player.footstep_volume_db`).
