@@ -42,6 +42,13 @@ const SMALL_RANGE := 40.0
 const FADE_MARGIN := 6.0
 ## Temps de regroupement par image (ms), après le chargement : au moins un pas par image.
 const BUDGET_MSEC := 8
+## Quand les images sont longues de toute façon (le web en rendu logiciel, une carte graphique lente : plus d'une seconde
+## par image au hub), le regroupement prend jusqu'à FRAME_SHARE de la plus courte des RECENT_FRAMES dernières images,
+## au plus MAX_BUDGET_MSEC : il finit en bien moins d'images, sans les rallonger de plus d'un quart. Une image longue
+## isolée (l'arrivée) n'y suffit pas. Aux images courtes (et à --fixed-fps), c'est BUDGET_MSEC.
+const FRAME_SHARE := 0.25
+const RECENT_FRAMES := 4
+const MAX_BUDGET_MSEC := 250
 ## Attributs de sommet comparés entre surfaces : seules des surfaces de même format se fondent ensemble.
 const FORMAT_MASK := 0xFF
 
@@ -60,6 +67,8 @@ var _jobs: Array[Job] = []
 var _aside: Array[Node3D] = []
 ## Temps passé à regrouper, en millisecondes (pour les mesures).
 var batch_msec := 0.0
+## Durées des dernières images (s).
+var _recent := PackedFloat64Array()
 
 
 func _ready() -> void:
@@ -129,9 +138,18 @@ func _batch_now(group: Node3D) -> void:
 	batch_msec += (Time.get_ticks_usec() - start) / 1000.0
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	var start := Time.get_ticks_usec()
-	_advance(start + BUDGET_MSEC * 1000)
+	_recent.append(delta)
+	if _recent.size() > RECENT_FRAMES:
+		_recent.remove_at(0)
+	var budget := float(BUDGET_MSEC)
+	if _recent.size() == RECENT_FRAMES:
+		var shortest := _recent[0]
+		for frame in _recent:
+			shortest = minf(shortest, frame)
+		budget = clampf(shortest * 1000.0 * FRAME_SHARE, BUDGET_MSEC, MAX_BUDGET_MSEC)
+	_advance(start + int(budget * 1000.0))
 	batch_msec += (Time.get_ticks_usec() - start) / 1000.0
 	if is_done():
 		set_process(false)
