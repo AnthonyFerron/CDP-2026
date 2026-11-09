@@ -38,7 +38,7 @@ Le journal complet de la nuit est sur le serveur, dans `~/cdp-work/JOURNAL.md`. 
 - **Ruisseau du Village :** plafonné comme les sources du hub ; sur le pont, de -6,3 à -9,8 dBFS de crête (`docs/sons.md`).
 
 ## Corrections relevées, non faites
-- **Village :** grille de captures à 4 m du bourg (357 points prêts sur le serveur). Les chutes du bout nord du ruisseau et la marche au bout sud sont vérifiées (8 novembre, plus haut).
+- **Village :** grille de captures à 4 m du bourg faite le 9 novembre (`features/village-recit`, `agents/village/PROBLEMES.md` n° 51 à 53) : reflet du soleil sur le sol corrigé (sol mat), ardoise de la boulangère élargie. Les chutes du bout nord du ruisseau et la marche au bout sud sont vérifiées (8 novembre, plus haut).
 - **Désert :** 14 contacts légers restants, chacun avec un triangle visible à moins de 1 m (rochers de la bordure, deux tas de briques, colonne tombée, linteau de la porte en ruine, deux enveloppes de ruines, deux collisions à la forme exacte), acceptés : liste dans `agents/desert/PROBLEMES.md`.
 - **`hub_props.tscn` à régénérer après fusion :** `arch_fill()` a changé dans `build_plaine.py` (8 novembre, `fix/verif-marche`). `build_hub.py` l'appelle pour les 54 portes voûtées du hub : relancé, il ajoute leurs marches (648 boîtes de plus, et la renumérotation des autres). Non fait sur cette branche, l'agent du hub travaillant sur ces scènes.
 - **Roue du moulin du Village :** à 3,5 m, -19,5 dBFS RMS et -7 dBFS de crête. C'est son volume (-2 dB), pas un effet de proximité ; à juger à l'oreille avant d'y toucher.
@@ -56,7 +56,7 @@ Le journal complet de la nuit est sur le serveur, dans `~/cdp-work/JOURNAL.md`. 
 
 ## Backlog des lieux
 - Hub : villageois qui vivent après la victoire, performances web (chaque intérieur ajoute ses MultiMesh), parc et rivière qui reprennent vie par paliers.
-- Village : récit environnemental, performances web.
+- Village : performances web (récit environnemental, vie et ambiance faits le 9 novembre : `agents/TEXTES.md`, `agents/village/INVENTAIRE.md` n° 84 à 96).
 - Finitions libres : trois améliorations par lieu (Désert fait).
 - Tâches transversales :
   - HUD dans le style des menus ;

@@ -8,7 +8,7 @@ Le lieu le plus marqué par la guerre : les attaques de Vibelandia ont forcé la
 
 | Lieu | Position | Contenu |
 | --- | --- | --- |
-| Portail | sud, z = 63 | Retour au hub, éteint tant que le Codonomicon n'est pas trouvé ; panneau d'entrée « Codia » |
+| Portail | sud, z = 63 | Retour au hub, éteint tant que le Codonomicon n'est pas trouvé ; panneau d'entrée « Le village détruit » ; la sommation de Vibelandia sur son poteau, face au chemin |
 | Enceinte | z = 42 et x = ±34 | Rempart effondré, porte arrachée, tour et bélier de siège de Vibelandia devant ; porte de l'ouest sur la rue du pont ; brèche de l'est |
 | Porte du village | (0, 37) | Barricade de charrettes renversées, pieux, armes et boucliers des gardes, flèches fichées dans le sol, l'ordre du capitaine et le mémorial des gardes |
 | Grande rue | x = 0 | Maisons éventrées de part et d'autre, enseignes des boutiques, lanternes, traces de brûlure |
@@ -24,9 +24,9 @@ Le lieu le plus marqué par la guerre : les attaques de Vibelandia ont forcé la
 
 Chaque maison a son métier, meublé et pillé : auberge du Chaudron, boulangerie et son four de briques, forge et son foyer, épicerie, herboristerie, corps de garde, tonnellerie, maison du meunier, logis (dont celui d'une famille, avec la poupée et la charrette de bois de l'enfant), et une maison brûlée de fond en comble. Les boutiques ont leur enseigne pendue à une potence (`SignBoard`). Corbeaux et chats sont restés au village.
 
-L'ambiance est celle d'une fin de journée : un soleil bas et doré perce les nuages, une lumière froide du ciel éclaire le côté des murs à l'ombre, le sol renvoie un peu de lueur chaude sous les planchers effondrés et les auvents, des fumées montent encore des ruines et des cheminées de la boulangerie et de la forge, quelques feux couvent et lâchent leurs braises (barricade, cratères, maison brûlée, écuries). Les fenêtres de la mairie luisent dans le soir. On entend le ruisseau, la roue du moulin qui éclabousse, le vent dans la brèche, la porte et le moulin à vent, le four et la forge qui crépitent ; dans la mairie, la poussière flotte dans la lumière.
+L'ambiance est celle d'une fin de journée : un soleil bas et doré perce les nuages, une lumière froide du ciel éclaire le côté des murs à l'ombre, le sol renvoie un peu de lueur chaude sous les planchers effondrés et les auvents, des fumées montent encore des ruines et des cheminées de la boulangerie et de la forge, quelques feux couvent et lâchent leurs braises (barricade, cratères, maison brûlée, écuries), et des braises rougeoient encore sous les cendres du potager brûlé, d'où montent deux minces filets de fumée pâle. Les fenêtres de la mairie luisent dans le soir ; les bougies du mémorial des gardes et celle de la table du sergent, au corps de garde, sont allumées (flammes lumineuses, sans lumière dynamique). Le sol est mat (`village_ground.gdshader`) : il ne renvoie plus le soleil couchant en taches blanches. On entend le ruisseau, la roue du moulin qui éclabousse, le vent dans la brèche, la porte et le moulin à vent, le four et la forge qui crépitent ; dans la mairie, la poussière flotte dans la lumière.
 
-Le village vit encore un peu : les corbeaux picorent ou guettent et s'envolent quand on approche, puis reviennent quand on est loin ; deux chats se promènent devant la mairie et autour du puits ; le linge et les bannières ondulent au vent.
+Le village vit encore un peu : les corbeaux picorent ou guettent, jusque sur le faîte et la cheminée de la mairie, et s'envolent quand on approche, puis reviennent quand on est loin ; deux chats se promènent devant la mairie et autour du puits ; quatre poules échappées du poulailler du meunier picorent autour de lui et entre les rangs du potager, et détalent quand on s'approche ; la girouette de la mairie tourne au gré du vent au-dessus du pignon ; des papillons de nuit volettent autour des lanternes de sa porte ; le linge et les bannières ondulent au vent.
 
 Une limite invisible (`village_terrain.gd`, `LIMIT_RADIUS`, 72 m) ferme la zone au milieu du talus qui l'entoure : on ne la franchit ni en marchant, ni en sautant d'un mur, d'une tour ou d'une charrette.
 
@@ -38,8 +38,14 @@ Une limite invisible (`village_terrain.gd`, `LIMIT_RADIUS`, 72 m) ferme la zone 
 | L'ordre du capitaine | (-4.2, 35), à la porte | Tenir la porte, puis rejoindre le bunker du roi au signal |
 | L'ardoise de la boulangère | (4.55, 28.6), devant la boulangerie | Les prix du pain, la dernière fournée pour les gardes |
 | Le mémorial des gardes | (12, 37.5), près de la porte | Les gardes ont tenu trois jours face aux guerriers de Vibelandia |
+| La sommation de Vibelandia | (6, 51), hors du rempart | Vibelandia exige les écrits des anciens bâtisseurs ; « ils se comprennent », répond une main de Codia |
+| La lettre de Mahaut | (-5.74, 29), mur de la première maison | La fuite au son du cor ; le maire a caché ses notes en dix morceaux, deux par langage |
+| L'ardoise de l'écolier | (-10.9, -21.74), maison de la famille | Lire une instruction après l'autre et noter la valeur de chaque variable |
+| La pierre de fondation | (4, -19.74), sous la fenêtre de la mairie | Le rôle des cinq langages des anciens bâtisseurs |
+| Le registre du sergent | (21.6, 13.4), table du corps de garde | La relève : une tour après l'autre, jours pairs et impairs, le reste d'un partage |
+| Le carnet du meunier | (31, -26.9), meule du moulin à vent | La meule qui tremble, l'eau tiède : le Mont Sam Altan s'éveille |
 
-Chaque texte est un `Readable` (lu avec E) qui porte son panneau `SignBoard` : le panneau n'affiche que le titre.
+Chaque texte est un `Readable` (lu avec E) qui porte son panneau `SignBoard` : le panneau n'affiche que le titre ou un court extrait. Le registre et le carnet sont des parchemins couchés sur leur support. Aucun ne donne de réponse aux cinq codes (détail : `docs/agents/TEXTES.md`).
 
 ## Énigme : les cinq langages oubliés
 
@@ -77,5 +83,8 @@ Les extraits, les questions et les indices ont été écrits pour cette version,
 | `village_particles.gd` | Braises des feux, poussière de la mairie, éclaboussures de la roue |
 | `village_crow.gd`, `village_cat.gd` | Corbeaux qui s'envolent à l'approche, chats qui se promènent |
 | `village_life.gd`, `village_cloth.gdshader` | Linge et bannières qui ondulent au vent |
+| `village_hen.gd`, `village_vane.gd` | Poules qui picorent et détalent, girouette de la mairie |
+| `village_mesh.gd` | Formes simples des bêtes et de la girouette fondues par partie (un appel de dessin par partie qui bouge) |
+| `village_ground.gdshader` | Sol du Village, mat, assombri dans le bourg |
 
 `tools/build_village.py` contrôle le décor qu'il pose : il signale tout objet solide qui en traverse un autre, et tout objet posé sur un passage à garder libre (grande rue, portes, chemins de l'énigme). Les formes simples (traces de brûlure, corbeaux, chats, linge, four, épouvantail) y sont regroupées en MultiMesh, et les modèles répétés passent par `village_instances.gd`.

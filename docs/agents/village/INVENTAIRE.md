@@ -87,3 +87,16 @@ Chaque ligne est vérifiée à l'étape 4 de la passe (colonne Vérification : t
 | 81 | Codonomicon | (-12.6, 5.7, 0) | sur le pupitre de pierre | audit, village_test |
 | 82 | Arbres et rochers dispersés | hors du bourg, jusqu'à 64 m ; 60 arbres de bordure sur le talus | chênes, arbres grêles, arbres ronds, pins tordus ; rochers ; collision à l'emprise réelle (village_scatter.gd) | grille de marche, entrées dans les maillages, `passe/pin_apres.png` |
 | 83 | Herbes et gravats | rues et abords | sans collision : herbes, gravats sous la cheville (0,3 m au plus) | village_scatter_test, grille de marche |
+| 84 | La sommation de Vibelandia | (6, 51) | Readable, affiche sur poteaux, face au chemin du portail | grille de marche et sonde de saut (zone), captures `village-recit/apres1/sommation*.png` |
+| 85 | La lettre de Mahaut | (-5.74, 29), mur est de la maison 0 | Readable, parchemin cloué | grille de marche et sonde de saut (zone), `apres2/lettre.png` |
+| 86 | L'ardoise de l'écolier | (-10.9, -21.74), mur nord de la maison 9 | Readable, ardoise au mur | grille de marche et sonde de saut (zone), `apres2/ardoise.png` |
+| 87 | La pierre de fondation | (4, -19.74), façade de la mairie | Readable, plaque de pierre sous la fenêtre droite | grille de marche et sonde de saut (zone), `apres1/pierre.png` |
+| 88 | Le registre du sergent | (21.6, 0.68, 13.4), table du corps de garde | Readable, parchemin couché, sans collision (remplace la carte du sergent) | `apres3/registre.png` |
+| 89 | Le carnet du meunier | (31, 4.38, -26.9), meule de rechange du moulin à vent | Readable, parchemin couché, sans collision | `apres3/carnet.png` |
+| 90 | Poules | 2 autour du poulailler (x -26 à -20.6, z -31 à -25.9), 2 dans le potager (x -30 à -24.4, z 23.3 à 27.7) | village_hen.gd : vont d'un point à son voisin, picorent, détalent à 2,4 m, sans collision | `apres1/poules_*.png` |
+| 91 | Girouette | (0, 11.6, -20.2), faîte de la mairie, échelle 1,6 | village_vane.gd : flèche et coq qui tournent au vent | `apres2/place_girouette.png` |
+| 92 | Corbeaux du toit de la mairie | (0, 11.6, -21.4), (3.2, 11.9, -29) | village_crow.gd (Crow13, Crow14) | captures |
+| 93 | Papillons de nuit | (±2.3, 2.75, -19.3), lanternes de la porte de la mairie | village_particles.gd (MOTHS), 6 chacun | `tmp/moth2.png` |
+| 94 | Bougies allumées | mémorial (11.45, 37.1) et (11.45, 37.9) ; table du sergent (21.9, 0.68, 12.9) | flamme émissive (candle() de build_village.py), sans lumière | `apres1/bougies.png`, `apres3/registre.png` |
+| 95 | Braises et filets de fumée du potager brûlé | (-28.6, 34.4), (-26, 36.6) | braises émissives, fumée pâle (Wisp0, Wisp1) | `apres3/potager_brule.png` |
+| 96 | Sol | tout le lieu | village_ground.gdshader : mat, couleurs d'avant | grille de captures à 4 m, `apres3/lueur_nord2.png` |
