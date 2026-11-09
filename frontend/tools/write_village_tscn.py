@@ -317,7 +317,9 @@ LORE = [
     ("Slate", (4.55, 0.0, 28.6), -90.0, "L'ardoise de la boulangère",
      "Pain de seigle : deux sous. Pain blanc : trois sous. Plus de farine depuis que le meunier a fui. La dernière "
      "fournée est pour les gardes du rempart : qu'ils tiennent jusqu'au soir.",
-     dict(text="Pain de seigle : 2 sous\nPain blanc : 3 sous", style=3, mount=0, board_size=(0.85, 0.62),
+     # Planche assez large pour que chaque prix tienne sur sa ligne : à 0,85 m, « 2 sous » et « 3 sous » passaient à la
+     # ligne et séparaient le nombre de sa monnaie (grille de captures à 4 m).
+     dict(text="Pain de seigle : 2 sous\nPain blanc : 3 sous", style=3, mount=0, board_size=(1.1, 0.62),
           board_height=1.2, line_height=0.1, serif=False, double_sided=True)),
     # Affiche clouée par les hérauts de Vibelandia sur un poteau, hors du rempart, face au chemin du portail.
     ("Summons", (6.0, 0.0, 51.0), -40.0, "La sommation de Vibelandia",
@@ -339,9 +341,9 @@ LORE = [
     # Ardoise accrochée au mur du fond de la maison de la famille, près du petit lit et de la poupée.
     ("SchoolSlate", (-10.9, 0.0, -21.74), 0.0, "L'ardoise de l'écolier",
      "Leçon du maître d'école, recopiée à la craie : « Les anciens bâtisseurs lisaient leurs instructions de haut en "
-     "bas, une ligne après l'autre, sans en sauter aucune. Le mot à gauche du signe = garde une valeur, et une ligne "
-     "suivante peut la changer. Ici, pommes vaut 4, puis pommes + 3 : le panier en compte 7, et l'ancien nombre est "
-     "oublié. Notez chaque valeur à chaque ligne. » Dessous, d'une écriture d'enfant : « Le maître dit que j'ai bon. »",
+     "bas, une ligne après l'autre, sans en sauter aucune. Dans pommes = 4, le mot pommes garde la valeur 4, et une "
+     "ligne plus bas peut la changer : pommes = pommes + 3 lui donne 7, et l'ancien nombre est oublié. Notez chaque "
+     "valeur à chaque ligne. » Dessous, d'une écriture d'enfant : « Le maître dit que j'ai bon. »",
      dict(text="pommes = 4\npommes = pommes + 3", style=3, mount=1, board_size=(1.0, 0.5), board_height=1.25,
           line_height=0.085, serif=False)),
     # Pierre de fondation scellée sous la fenêtre de droite de la mairie.
