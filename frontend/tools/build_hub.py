@@ -14,7 +14,7 @@ import random
 from pathlib import Path
 
 from build_plaine import (MEDIEVAL, MODEL_BOXES, OUTWARD_ANGLES, WALL_HEIGHT, WALL_SCALE, Scene, arch_fill, doorway,
-                          multiply, rotation_x, rotation_y, rotation_z, wall)
+                          DOORWAY_WIDTH, WALL_THICKNESS, multiply, rotation_x, rotation_y, rotation_z, wall)
 from build_plaine import furniture as _furniture
 
 # Boîtes englobantes (coin, taille, à l'échelle 1) des modèles ajoutés pour le hub.
@@ -648,6 +648,7 @@ def ruined_house(scene, rng, house, furnisher=None):
         if side == door_side and index == count // 2:
             doorway(scene, center, outward)
             arch_fill(scene, center, outward)
+            door_sill(scene, center, outward)
             continue
         roll = rng.random()
         if roll < 0.2:
@@ -668,6 +669,18 @@ def ruined_house(scene, rng, house, furnisher=None):
     house_floor(scene, rng, house, True)
     (furnisher or furnish)(scene, house, True, rng)
     fallen_beams(scene, rng, house, rng.randint(1, 2))
+
+
+def door_sill(scene, center, outward):
+    """Seuil de planches dans l'épaisseur du mur voûté, sous l'arche : les bouts entaillés des lattes du plancher
+    s'arrêtent au bord de la case, et sous l'arche on voyait par leurs encoches la terre sombre sous le bâtiment
+    (des fentes noires au seuil, de dedans comme de dehors). Les lattes du seuil courent le long du mur : leurs bouts
+    entaillés vont dans les jambages. 1,9 m (le passage de doorway()) sur 0,38 m (1 cm en deçà des deux faces du mur),
+    le dessus à 3,5 cm, sous le plancher (4 cm) et au-dessus du sol."""
+    x, z = center
+    # Les lattes du modèle courent sur son axe z : tourné d'un quart de tour pour un mur le long de x.
+    degrees = 0.0 if outward[0] else 90.0
+    scene.add("fantasy_town_kit/planks", (x, 0.035 - 0.06 * TILE, z), degrees, (WALL_THICKNESS - 0.12, TILE, DOORWAY_WIDTH))
 
 
 def fallen_beams(scene, rng, house, count):
@@ -705,6 +718,7 @@ def rebuilt_house(scene, rng, house, furnisher=None, kind=None):
         if side == door_side and index == count // 2:
             doorway(scene, center, outward)
             arch_fill(scene, center, outward)
+            door_sill(scene, center, outward)
             along = (outward[1], outward[0])
             lantern = (center[0] + outward[0] * 0.5 + along[0] * 1.6, center[1] + outward[1] * 0.5 + along[1] * 1.6)
             scene.add("fantasy_town_kit/lantern", (lantern[0], 0.0, lantern[1]), 0.0, 2.2)
