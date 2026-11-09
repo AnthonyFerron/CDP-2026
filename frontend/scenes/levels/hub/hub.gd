@@ -130,6 +130,7 @@ func _ready() -> void:
 	_refresh_circle()
 	_animate_characters()
 	_set_repairs(placed_count(), false)
+	$Props.leave_aside(_unseen_repairs())
 	_life = float(placed_count()) / GameState.BOOK_COUNT
 	_ash = _ash_target()
 	_apply_life(_life)
@@ -443,6 +444,23 @@ func _apply_life(life: float) -> void:
 	_scatter.set_life(life)
 	_river.set_life(life)
 	_wildlife.set_life(life)
+
+
+## Ruines et reconstructions qui ne peuvent pas se montrer pendant cette visite : la ruine d'un élément déjà réparé
+## (les livres posés le restent), la reconstruction d'un élément dont le palier dépasse les livres trouvés (on n'en
+## trouve pas au hub). Le regroupement du décor les laisse de côté : de chaque élément, seule sa ruine ou sa
+## reconstruction peut servir, sauf au palier d'un livre trouvé mais pas encore posé.
+func _unseen_repairs() -> Array[Node3D]:
+	var unseen: Array[Node3D] = []
+	for item: Node3D in _repairs.get_children():
+		var stage := int(item.get_meta(&"stage", 1))
+		var ruins := item.get_node_or_null("Ruins") as Node3D
+		var rebuilt := item.get_node_or_null("Rebuilt") as Node3D
+		if ruins and placed_count() >= stage:
+			unseen.append(ruins)
+		if rebuilt and GameState.books.size() < stage:
+			unseen.append(rebuilt)
+	return unseen
 
 
 ## Montre la version reconstruite des éléments dont le palier est atteint, la ruine des autres.
