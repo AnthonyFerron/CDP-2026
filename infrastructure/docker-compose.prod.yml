@@ -71,6 +71,13 @@ services:
     volumes:
       - caddy_data:/data
       - caddy_config:/config
+      # Sites annexes, gérés hors du dépôt (docs/deploiement.md, « Sites annexes »)
+      - /opt/sites/caddy:/etc/caddy/sites:ro
+      - /opt/sites/www:/srv/sites:ro
+
+    # Pour un site annexe servi par une application de l'hôte : reverse_proxy host.docker.internal:<port>
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
     depends_on:
       api:

@@ -52,3 +52,8 @@
 		}
 	}
 }
+
+# Sites annexes du serveur (tests, maquettes) : un fichier par site dans /opt/sites/caddy, monté ici en lecture
+# seule, et leurs fichiers dans /srv/sites (/opt/sites/www). Ils se gèrent hors du dépôt, avec la commande
+# `sites` du serveur (docs/deploiement.md, « Sites annexes »). Sans aucun fichier, l'import ne fait rien.
+import /etc/caddy/sites/*.caddy

@@ -158,6 +158,23 @@ Ce nom ne déplace aucune sauvegarde :
 - **Sur le web**, `user://` est `/userfs`, monté dans IndexedDB par `index.js` (`persistentPaths: ['/userfs']`). Le chemin ne dépend pas du nom du projet, et la base IndexedDB est propre au domaine : `sauvegarde.cfg` et `session.cfg` des joueurs restent en place.
 - **En natif**, le dossier `user://` suit d'ordinaire le nom du projet. `config/use_custom_user_dir` et `config/custom_user_dir_name="godot/app_userdata/CDP-2026"` le gardent à son ancien chemin, `~/.local/share/godot/app_userdata/CDP-2026` sous Linux : les captures des outils (`user://captures/`) et les sauvegardes isolées des tests (`user://tests/`) n'ont pas bougé.
 
+## Sites annexes
+
+Le Caddy du jeu sert aussi des sites annexes (tests, maquettes), gérés hors du dépôt sur le serveur :
+
+- `/opt/sites/caddy/<nom>.caddy` : la config du site, importée par la dernière ligne du `Caddyfile` ;
+- `/opt/sites/www/<nom>/` : ses fichiers, vus par Caddy dans `/srv/sites/<nom>`.
+
+Les deux dossiers sont montés en lecture seule (`docker-compose.prod.yml`). Un déploiement du jeu n'y touche pas, et ajouter ou modifier un site ne redéploie pas le jeu : la commande `sites` de l'utilisateur `ubuntu` (`~/.local/bin/sites`) copie les fichiers, écrit la config, la valide dans le conteneur, puis recharge Caddy.
+
+```sh
+sites                                          # liste
+sites publier brasero ~/travail/projets/brasero/site   # brasero.anthonyferron.com
+sites retirer brasero
+```
+
+**Une config invalide dans `/opt/sites/caddy` empêche Caddy de démarrer, donc le jeu de s'afficher, au prochain déploiement.** Toujours passer par `sites`, ou lancer `sites recharger` après une modification à la main : il valide avant de recharger. Une application de l'hôte se sert avec `reverse_proxy host.docker.internal:<port>` ; elle doit alors écouter sur l'adresse du pont Docker, pas seulement sur `127.0.0.1`.
+
 ## Limites
 
 - Pendant l'étape 5, l'API est coupée quelques secondes si son image change : il n'y a qu'un conteneur.
